@@ -3,6 +3,8 @@
 // phase that builds each screen (P2 Stylist cards, P5 tabs, P6 paywall/limit/share).
 
 import type { AboutYouDemo } from '@/features/aboutYou/demo';
+import type { ProfileRow } from '@/data/types';
+import type { AboutDraft } from '@/features/onboarding/basics';
 import type { AuthProvider, MockScript } from '@/features/account/auth';
 import type { FinishDemo } from '@/features/finish/demo';
 import type { Styles } from '@kitted/core';
@@ -51,6 +53,13 @@ export interface ScreenScenario {
   looks?: Styles;
   /** Kit's "About you" card (#373, 10-onboarding.md §10): posted under an answer or on a later visit, then folded. */
   aboutYou?: AboutYouDemo;
+  /** About you's draft (T39): his pick and name waiting in kv, as if he'd tapped them before a close. */
+  about?: AboutDraft;
+  /** Kit's first-check offer (T39, OS5): setup finished through About you (no agreement), then the card as is, after
+   *  Later, after Not now on the camera's agreement, or after the agreement and one scored check. */
+  offer?: 'open' | 'later' | 'notNow' | 'checked';
+  /** Fields written over the scenario's profile (T39: his name and age band on Style profile). */
+  profilePatch?: Partial<Pick<ProfileRow, 'name' | 'ageBand' | 'ageBandAt'>>;
 }
 
 const FIRST_RUN_NOW = '2026-10-22T07:38:00';
@@ -77,8 +86,9 @@ export const STORY_DOUBT = 'story-doubt';
 export const SCREENS: readonly ScreenScenario[] = [
   { n: 1, name: 'Welcome', id: 'O1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/welcome' },
   { n: 2, name: 'Pick looks', id: 'O2', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/looks' },
-  { n: 3, name: 'Basics', id: 'O3', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/basics' },
-  { n: 4, name: 'Consent', id: 'O5', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/consent' },
+  { n: 3, name: 'About you', id: 'O3', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/basics' },
+  // Was the agreement step (O5), removed by T39: setup ends on About you; this is that step with an age picked.
+  { n: 4, name: 'About you · ready', id: 'O3', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/basics', about: { age: '22-25', name: 'Alex' } },
   { n: 5, name: 'Camera', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?freeze=1', under: '/stylist' },
   { n: 6, name: 'Reading', id: 'S5', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:42:00', href: '/stylist' },
   { n: 7, name: 'Result', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
@@ -292,6 +302,14 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 257, name: 'Beta · You', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', freeChecksUsed: 0, href: '/you', tier: 'beta' },
   { n: 258, name: 'Beta · Settings', id: 'Y4', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you', tier: 'beta' },
   { n: 259, name: 'Beta · Morning card, checks used', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:40:00', freeChecksUsed: 3, href: '/stylist', weather: 'coldRain', weatherAllowed: true, tier: 'beta' },
+  // Setup as plain screens (T39, specs/onboarding-screens.md OS4–OS5; T34 holds 270–271): Stylist right after About
+  // you with Kit's first-check offer, after Later, after Not now on the camera's agreement, after a scored check; and
+  // Style profile's Name and Age. Demo screens open the camera without the agreement (app/camera.tsx).
+  { n: 280, name: 'Stylist · Kit\'s offer', id: 'S1o', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/stylist', offer: 'open' },
+  { n: 281, name: 'Stylist · after Later', id: 'S1o', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/stylist', offer: 'later' },
+  { n: 282, name: 'Stylist · after Not now', id: 'S1o', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/stylist', offer: 'notNow' },
+  { n: 283, name: 'Stylist · after a scored check', id: 'S1o', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', offer: 'checked' },
+  { n: 284, name: 'Style profile · Name and Age', id: 'Y2', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/profile', under: '/you', profilePatch: { name: 'Alex', ageBand: '22-25', ageBandAt: Date.parse('2026-09-24T19:05:00-04:00') } },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

@@ -18,7 +18,9 @@ export interface TablePolicy {
 export const TABLE_POLICY: Readonly<Record<TableName, TablePolicy | 'local'>> = {
   // His age never leaves the phone: the age gate runs per device (§2.2).
   // Height and build never leave the phone either (#375): the columns stay, empty, and are never sent.
-  profile: { collection: 'profile', omit: { birthYear: null, heightCm: null, build: '' } },
+  // His age band, when he picked it, and his first name (T39, OS4.7, SY4.4) stay on this phone too: never sent, and a
+  // pulled row keeps this phone's values. A new phone starts without them (absent, as on a profile from before V9).
+  profile: { collection: 'profile', omit: { birthYear: null, heightCm: null, build: '', ageBand: undefined, ageBandAt: undefined, name: undefined } },
   fitChecks: { collection: 'fitChecks', omit: { demoPhotoId: null } },
   readings: { collection: 'readings', immutable: true },
   closet: { collection: 'closetItems', omit: { demoPhotoId: null } },
@@ -121,6 +123,9 @@ export const KV_LOCAL: readonly string[] = [
   // Kit's "About you" ask on this phone (#373, 10-onboarding.md §10): a nudge, like closet.fitSkip; the answers
   // themselves live in the profile.
   'aboutYou.offer',
+  // About you's draft (his pick and the name as typed, T39), deleted when setup ends: it holds his age band and name,
+  // which never leave the phone (OS4.7). And when he tapped Later on Kit's first-check offer (OS5.3): this phone's.
+  'onboarding.about', 'firstCheckOffer.laterAt',
 ];
 // account.*: who is signed in on this phone (with the email) and the save offer's state (10-onboarding.md): per device.
 // idea.touched.<id>: he changed that day's card on this phone, so a fresher forecast keeps his outfit (#338); a day old

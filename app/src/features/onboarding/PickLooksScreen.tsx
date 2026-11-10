@@ -1,12 +1,13 @@
 // O2 · Pick looks (02 D2, update Oct 9, DECISIONS-LOG #173): 7 style tiles drawn in code, up to 3 picks, a
-// "Something else?" tile for his own words, Not sure, Continue · N of 3. The picks wait in kv until O5 saves
-// the profile (onboarding.looks, onboarding.otherStyle).
+// "Something else?" tile for his own words, Not sure, Continue · N of 3. The picks wait in kv until About you ends
+// setup (onboarding.looks, onboarding.otherStyle). Since T39 (OS3) the question is a plain title and line, not a Kit
+// bubble.
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Keyboard, Pressable, ScrollView, StyleSheet, TextInput, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
-import { KButton, KText, StylistMessage, TextLink, space, useTheme } from '@/design-system';
+import { KButton, KText, TextLink, space, useTheme } from '@/design-system';
 import { CONTROL_TEXT_MAX_SCALE, radius, size } from '@/design-system/tokens';
 import { textStyles } from '@/design-system/typography';
 import { store } from '@/data/db';
@@ -84,7 +85,15 @@ export function PickLooksScreen() {
     <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: insets.top }]}>
       <OnboardingNav step={2} onBack={back} />
       <ScrollView contentContainerStyle={[styles.thread, { paddingBottom: space.xl }]} keyboardShouldPersistTaps="handled">
-        <StylistMessage showHeader>{t('onb.looks.prompt')}</StylistMessage>
+        {/* A plain title and line (T39, OS3): no Kit bubble on a setup screen. The grid sits 24 below (12 + the gap). */}
+        <View style={styles.title}>
+          <KText testID="looks-title" variant="largeTitle" accessibilityRole="header">
+            {t('onb.looks.title')}
+          </KText>
+          <KText testID="looks-line" variant="body" color="ink2">
+            {t('onb.looks.line')}
+          </KText>
+        </View>
         <View style={[styles.grid, { gap: GAP }]} onLayout={(e) => setGridW(e.nativeEvent.layout.width)}>
           {LOOKS.map((look) => (
             <LookTile key={look.style} look={look} width={tileW} selected={picks.includes(look.style)} order={picks.indexOf(look.style) + 1 || undefined} shake={shake[look.style] ?? 0} onPress={() => tap(look.style)} />
@@ -144,7 +153,8 @@ export function PickLooksScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  thread: { paddingHorizontal: space.gutter, paddingTop: space.xs, gap: space.m },
+  thread: { paddingHorizontal: space.gutter, paddingTop: space.s, gap: space.m },
+  title: { gap: space.xs, marginBottom: space.m },
   grid: { flexDirection: 'row', flexWrap: 'wrap' },
   other: { borderRadius: radius.look + 1, padding: space.m, alignItems: 'center', justifyContent: 'center', gap: space.xs },
   center: { textAlign: 'center' },

@@ -318,7 +318,19 @@ const V8: Migration = {
   statements: [`UPDATE profile SET height_cm = NULL, build = ''`],
 };
 
-export const MIGRATIONS: readonly Migration[] = [V1, V2, V3, V4, V5, V6, V7, V8];
+// V9 (Nov 10, T39, specs/onboarding-screens.md OS4, specs/setup-and-you.md SY4): About you saves his age band (with the
+// time he picked it) and an optional first name, instead of a birth year. All three are nullable with no default, so
+// every existing profile reads NULL; birth_year stays as it was (an older install keeps it). Nothing else is touched.
+const V9: Migration = {
+  version: 9,
+  statements: [
+    `ALTER TABLE profile ADD COLUMN age_band TEXT`,
+    `ALTER TABLE profile ADD COLUMN age_band_at INTEGER`,
+    `ALTER TABLE profile ADD COLUMN name TEXT`,
+  ],
+};
+
+export const MIGRATIONS: readonly Migration[] = [V1, V2, V3, V4, V5, V6, V7, V8, V9];
 
 export const LATEST_VERSION: number = MIGRATIONS[MIGRATIONS.length - 1]?.version ?? 0;
 

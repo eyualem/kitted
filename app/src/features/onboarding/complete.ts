@@ -10,9 +10,9 @@ export interface OnboardingAnswers {
   styles: Styles;
   fitPreference: string;
   birthYear: number | null;
-  /** T39 (types only until built): saved as ageBand, with ageBandAt = nowMs when given; else both null. */
+  /** T39 (About you): saved as ageBand, with ageBandAt = nowMs when given; else both null. */
   ageBand?: AgeBand | null;
-  /** T39 (types only until built): saved as given (callers pass cleanName's result); else null. */
+  /** T39 (About you): saved as given (callers pass cleanName's result); else null. */
   name?: string | null;
   /** O5: "Agree & check my fit" (true) or "Not now" (false: nothing is ever sent until he agrees later).
    *  T39: 'later' (setup's end): no consent saved, and no "Turn on fit checks" card. */
@@ -27,11 +27,14 @@ export const CONSENT_VERSION = '2';
 export const QUESTIONS_CONSENT_FROM = 2;
 
 export async function completeOnboarding(store: KittedStore, a: OnboardingAnswers, nowMs: number, ids: (p: string) => string): Promise<void> {
+  // 'later' (T39, setup's end): he hasn't been asked yet; the agreement comes on the camera's first open.
+  const agreed = a.consent === true || a.consent === undefined;
   await store.profile.put({
     id: 'me', birthYear: a.birthYear, heightCm: null, build: '', fitPreference: a.fitPreference, styles: a.styles,
     boldness: null, budget: null, lastOccasion: 'everyday',
-    consentVersion: a.consent === false ? null : CONSENT_VERSION, consentAt: a.consent === false ? null : nowMs, onboardingDone: true,
+    consentVersion: agreed ? CONSENT_VERSION : null, consentAt: agreed ? nowMs : null, onboardingDone: true,
     ideaTime: null, units: 'imperial', createdAt: nowMs,
+    ageBand: a.ageBand ?? null, ageBandAt: a.ageBand ? nowMs : null, name: a.name ?? null,
   });
   await store.chat.put(textMessage(ids('M'), nowMs, 'stylist', null, { aiNote: true }));
   // "Not now" (S26, 09-ui-review §20.8 G23): the thread says how to turn fit checks on instead of starting bare.
@@ -52,6 +55,7 @@ export async function giveConsent(store: KittedStore, nowMs: number): Promise<vo
     boldness: null, budget: null, lastOccasion: 'everyday',
     consentVersion: CONSENT_VERSION, consentAt: nowMs, onboardingDone: true,
     ideaTime: null, units: 'imperial', createdAt: nowMs,
+    ageBand: null, ageBandAt: null, name: null,
   });
 }
 

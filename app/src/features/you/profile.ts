@@ -6,6 +6,7 @@ import type { KittedStore } from '@/data/store';
 import { normStyleKey, type ProfileRow, type StyleKey } from '@/data/types';
 import { styleLabel } from '@/features/morning/copy';
 import { FITS, fitLabel, type FitPref } from '@/features/onboarding/basics';
+import { ageChoiceLabel, ageChoiceSpoken, cleanName, profileAgeBand } from '@/features/onboarding/aboutStep';
 import { MAX_PICKS, picksToStyles } from '@/features/onboarding/looks';
 import { t, type StringKey } from '@/i18n/en';
 
@@ -62,19 +63,23 @@ export interface ProfileDraft {
   fit: FitPref | null;
   picks: StyleKey[];
   budget: Budget | null;
+  /** SY4 (T39): the Name field as typed; saved through cleanName (trimmed, at most 30, blank → none). */
+  name: string;
 }
 
 export function draftOf(p: ProfileRow): ProfileDraft {
-  return { fit: asFit(p.fitPreference), picks: picksOf(p.styles), budget: asBudget(p.budget) };
+  return { fit: asFit(p.fitPreference), picks: picksOf(p.styles), budget: asBudget(p.budget), name: p.name ?? '' };
 }
+
+const nameChanged = (p: ProfileRow, d: ProfileDraft) => cleanName(d.name) !== (p.name ?? null);
 
 export function isDirty(p: ProfileRow, d: ProfileDraft): boolean {
   const o = draftOf(p);
-  return o.fit !== d.fit || o.budget !== d.budget || o.picks.join() !== d.picks.join();
+  return o.fit !== d.fit || o.budget !== d.budget || o.picks.join() !== d.picks.join() || nameChanged(p, d);
 }
 
-/** The row Y2 saves. Untouched fields keep their stored values exactly (the style pairs); birth year, boldness, consent
- *  and the rest are never changed here, and height and build aren't written at all (#375). */
+/** The row Y2 saves. Untouched fields keep their stored values exactly (the style pairs); birth year, his age band and
+ *  its time, boldness, consent and the rest are never changed here, and height and build aren't written at all (#375). */
 export function applyDraft(p: ProfileRow, d: ProfileDraft): ProfileRow {
   const o = draftOf(p);
   return {
@@ -82,7 +87,17 @@ export function applyDraft(p: ProfileRow, d: ProfileDraft): ProfileRow {
     fitPreference: d.fit === o.fit ? p.fitPreference : (d.fit ?? ''),
     styles: stylesToSave(p.styles, d.picks),
     budget: d.budget === o.budget ? p.budget : d.budget,
+    // An unchanged name keeps the row as it was (an older row without the field stays without it).
+    ...(nameChanged(p, d) ? { name: cleanName(d.name) } : {}),
   };
+}
+
+/** Style profile's Age row (OS4.6): his band, the band from an older profile's birth year, or "Not set". */
+export function ageRowValue(p: Pick<ProfileRow, 'ageBand' | 'birthYear'>, currentYear: number): { shown: string; spoken: string } {
+  const band = profileAgeBand(p, currentYear);
+  const shown = band ? ageChoiceLabel(band) : t('profile.birthYearNone');
+  const spoken = band ? ageChoiceSpoken(band) : t('profile.birthYearNone');
+  return { shown, spoken: t('settings.a11y.value', { label: t('profile.age'), value: spoken }) };
 }
 
 /** The profile Y1 and Y2 show when none is stored (a dev or demo install that skipped onboarding, #370): no looks,
