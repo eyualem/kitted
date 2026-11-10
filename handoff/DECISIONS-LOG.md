@@ -2913,9 +2913,21 @@ Contradictions settled and decisions changed during the build. Newest last.
 
 416. **The founder (Nov 9, in the Apple Connect beta session): "Keep the labels".** He had asked whether the words under the tab icons (Stylist, Closet, Lookbook, You) were redundant. Kept: Apple's HIG expects labeled tab bars, `specs.md` → Interfaces says "always labeled", and icon-only tabs are unclear to new users, which matters more now that the tips (SY2) send him to each tab by name. Any tab change keeps the labels.
 
+417. **The founder (Nov 10): "Yes, write it". The workflow is sized to the risk, with at most 3 sessions building at once.**
+    - **Why:** an audit of the 6 beta-fix sessions (Nov 8–10) counted about 9,100 model calls, about 25 times the TestFlight session that started them. The 5-hour usage limit was hit once, and that stopped every session together. Memory fell to about 120 MB free and held checks back. The pipeline caught real problems (the double card's root cause, a test that could never pass, 4 design blockers), but it ran at full size for small changes. A section removal and a one-file bug fix each got a planner, the design stage, up to 3 rounds and 16–20 planted bugs.
+    - **Sizes** (`.claude/skills/build-task/SKILL.md` → Size):
+      - S, small (a bug fix, a removal, words): no design stage, a one-page plan, at most 5 planted bugs, only the screens and flows it changes, 2 rounds.
+      - M, medium: the design stage only for a new state, the critic on changed screens only, at most 10 planted bugs, 2 rounds.
+      - L, large: everything, 3 rounds.
+      - Privacy, scoring, limits, money, the age gate and the server are never S.
+      - Tests first and locked at every size, and every flow runs once before a TestFlight build.
+    - **Sessions:** at most 3 building at once. Finish and merge before starting more, and archive finished sessions instead of reusing them (CLAUDE.md rule 8, WORKFLOW.md).
+    - **Log numbers:** a branch numbers its new entries `N.` and gives them real numbers once, at merge. This replaces the renumbering messages sessions were sending each other. This entry is the first one written that way.
+    - **Not changed:** the redesign stage in eyualem/kitted#83 (art director, interaction designer, a written debate) is still open. Claude recommends holding it until after the beta; that's the founder's call.
+
 ## Nov 10 · T34: You is the settings home (built)
 
-417. **T34 built through `/build-task` in three rounds; verified ready in round 3.** The technical calls, made by the coordinator (none is taste or words):
+418. **T34 built through `/build-task` in three rounds; verified ready in round 3.** The technical calls, made by the coordinator (none is taste or words):
     - **The plan's defaults T-1 to T-7 (tasks/T34/IMPLEMENTATION.md):** "Show me around" waits for T35 (a row that does nothing would break "hidden, not dead", #323); the rows go one card per spec bullet; the Pro row stays under the style card; an old `kitted://you/settings` link is rewritten in `+native-intent.tsx` to `/you?at=settings` and You opens scrolled to its rows (the scroll also lets demo screens 84, 141, 142, 258 and the new 270, 271 show the rows); section spacing as Settings had it.
     - **The landing:** the scroll target allows for the nav bar (the native stack's `HeaderHeightContext`, imported from expo-router's internal `build/react-navigation/elements` path, which an expo-router upgrade could move) and the tab bar (its safe-area bottom), lands at the true end on a short page, and lands again for 1.5 s while iOS settles its insets. You clears `at` when he leaves, so a return by the tab keeps his place (the HIG's tab behaviour) and the next old link lands again.
     - **Kept on purpose:** a second old link opened while You is still on screen, after he scrolled up, leaves You where he is. SY1.1 only asks that the link open You; old links live only in old messages, and closing it would need a per-link nonce. Revisit if it ever matters.
