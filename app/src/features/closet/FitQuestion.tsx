@@ -2,6 +2,8 @@
 // whose own photos disagree most (fitDoubt.fitCard). A tap opens the piece's Leg or Fit picker (§17's sheet, nothing
 // ringed); a pick settles it and the card goes. Skip keeps it quiet until a newer photo disagrees again. Never on a
 // score card, and no answer here moves a score.
+// In Closet's deck (`deck`, specs/closet-beta.md CB2) it is the last card: "Question 5 of 5." first for VoiceOver, a
+// VoiceOver "Skip" action, and Skip › trailing on its own row. Without `deck` it is exactly the Outfits card's.
 import { Pressable, View } from 'react-native';
 import { router, type Href } from 'expo-router';
 import { Icon, KText, TextLink, opacity, radius, space, useTheme } from '@/design-system';
@@ -10,12 +12,13 @@ import type { ClosetItemRow } from '@/data/types';
 import { t } from '@/i18n/en';
 import { sessionClock } from '@/state/session';
 import { ClosetTile } from './ClosetTile';
+import type { DeckSlot } from './ConfirmDeck';
 import { doubtQuestion, doubtSeen, FIT_SKIP_KEY, parseSkips, withSkip, type FitDoubt } from './fitDoubt';
 import { editHref } from './pieceActions';
 
 const THUMB = 64;
 
-export function FitQuestion({ item, doubt }: { item: ClosetItemRow; doubt: FitDoubt }) {
+export function FitQuestion({ item, doubt, deck }: { item: ClosetItemRow; doubt: FitDoubt; deck?: DeckSlot }) {
   const { isAccessibilitySize: ax } = useTheme();
   const question = doubtQuestion(doubt, item.name);
   const seen = doubtSeen(doubt);
@@ -23,6 +26,41 @@ export function FitQuestion({ item, doubt }: { item: ClosetItemRow; doubt: FitDo
     const skips = parseSkips(await store.getKv(FIT_SKIP_KEY));
     await store.setKv(FIT_SKIP_KEY, withSkip(skips, item.id, doubt, sessionClock.nowMs()));
   };
+  if (deck) {
+    const { a11yPrefix, focusRef } = deck;
+    return (
+      <View>
+        <Pressable
+          ref={focusRef}
+          testID="closet-confirm-fit"
+          onPress={() => router.push(editHref(item, doubt.field, 'card') as Href)}
+          accessibilityRole="button"
+          accessibilityLabel={`${a11yPrefix} ${question} ${seen}`}
+          accessibilityHint={t('closet.unsure.a11y.hint')}
+          accessibilityActions={[{ name: 'skip', label: t('tap.skip') }]}
+          onAccessibilityAction={(e) => {
+            if (e.nativeEvent.actionName === 'skip') void skip();
+          }}
+          style={({ pressed }) => ({ flexDirection: ax ? 'column' : 'row', alignItems: ax ? 'flex-start' : 'center', gap: space.m, opacity: pressed ? opacity.pressed : 1 })}
+        >
+          <ClosetTile item={item} size={THUMB} aspect={1} radius={radius.tile} decorative />
+          <View style={{ flex: ax ? undefined : 1, gap: 2 }}>
+            <KText variant="callout" weight="600">
+              {question}
+            </KText>
+            <KText variant="footnote" color="ink3">
+              {seen}
+            </KText>
+          </View>
+          {ax ? null : <Icon name="next" size={13} weight="semibold" color="ink3" />}
+        </Pressable>
+        {/* Skip, trailing on its own row (the card has no answers' row to share); its target uses the bottom padding. */}
+        <View testID="closet-confirm-skip" style={{ minHeight: 44, justifyContent: 'center', alignItems: 'flex-end', marginBottom: ax ? 0 : -12 }}>
+          <TextLink compact title={t('tap.skip')} trailingIcon="next" onPress={() => void skip()} />
+        </View>
+      </View>
+    );
+  }
   return (
     <View style={{ gap: space.s }}>
       <Pressable

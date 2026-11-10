@@ -249,6 +249,20 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   // Closet → Pieces head to toe (#384): a thin closet (3 pieces, one plain grid) and a small one (4 pieces, titled).
   250: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
   251: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'T2', 'B1', 'S1'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
+  // To confirm, one card at a time (specs/closet-beta.md CB2). 262: s12's check (§19), then three real checks whose
+  // pieces look like ones he has (the loafers in s25, the chinos in s15; s05's jeans and its sneakers, the sneakers with
+  // a runner-up), so four questions are open, newest first; then the jeans' earlier photos read slim, wide and wide
+  // (after the checks, so s05's jeans stay a question), and the fit question comes last: "1 of 5" … "5 of 5". 263: §19's
+  // story alone, so the fit question is the only card. 264: screen 38's story, one question ("1 of 1", no Skip).
+  262: { steps: [
+    DOUBT_STORY[0]!,
+    { at: '2026-10-22T12:12:00', do: 'check', photoId: 's25', occasion: 'everyday', checkId: 'story-t74-s25' },
+    { at: '2026-10-22T12:13:00', do: 'check', photoId: 's15', occasion: 'everyday', checkId: 'story-t74-s15' },
+    { at: '2026-10-22T12:14:00', do: 'check', photoId: 's05', occasion: 'everyday', checkId: 'story-t74-s05' },
+    { ...DOUBT_STORY[1]!, at: '2026-10-22T12:15:00' },
+  ] },
+  263: { steps: [...DOUBT_STORY, { at: '2026-10-22T12:12:00', do: 'closetYes' }] },
+  264: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
   // Closet for the beta (specs/closet-beta.md CB1.1): his last tap was Outfits, and Closet still opens on the pieces.
   260: { steps: [{ at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   // Past chats (07 §14 P4): yesterday's answers with a buy card, an answered tap question and a saved fact, read-only
