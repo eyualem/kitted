@@ -21,7 +21,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: rendering `PickLooksScreen`, `BasicsScreen` (no params; with the draft `{ age: '22-25', name: 'Alex' }` and looks `['streetwear']`), `BasicsScreen` with `restore=214,38,61`, and `WelcomeScreen` (accounts off and on): the `StylistMessage` and `UserBubble` markers are rendered **0 times** on each; no element's text is "Kit", `t('onb.looks.prompt')` ("Which of these would you actually wear? Tap up to 3."), "Streetwear", "Not sure yet", "Born in …", any `looksReply` line, or `t('acct.restore.basics')`. `ConsentScreen mode="camera"` and `mode="sheet"`: 0 `StylistMessage`; `consent-intro` reads exactly "Before I score a photo, here's what happens to it." Flow: on Looks and About you, `assertNotVisible: "Kit: .*"` and `assertNotVisible: ".*Good pick.*"`.
   · must not: a bubble or the "Kit" mark on any setup screen, including one rendered at opacity 0; the old combined Looks prompt anywhere.
   · edges: dark and accessibility sizes (the same assertions with `scheme: 'dark'` and `isAccessibilitySize: true`); Restore with accounts on.
-  · red: (test writer, at lock)
+  · red: 2 tests, both red. `Looks, About you … render no bubble`: Looks draws Kit's bubble (`[light, looks, [1,0,1,0]]` ≠ `[0,0,0,0]`); `the agreement's intro is plain text`: camera mode draws a `StylistMessage` (`[1,0,1,0]`). Flow `T39-setup-fresh.yaml`: flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet).
 
 - **OS3.2** · Setup is Welcome → Looks → About you → Stylist, with no agreement screen; the progress bar has 3 segments.
   · how: component + unit + flow
@@ -34,7 +34,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
     - Flow: Welcome → `Get started` → "Which of these would you actually wear?" → `Not sure` → "About you" → `22–25` → `Continue` → "Want to check a fit now?"; `assertNotVisible: "Before your first fit check"` on every step before Stylist.
   · must not: an agreement screen between About you and Stylist; a fourth segment; "Step 4 of 4" or "of 4"; the camera opened by setup.
   · edges: closed mid-setup on the old agreement step (above); closed on About you (OS4.1's edge).
-  · red: (test writer, at lock)
+  · red: 4 tests, all red. `each step goes to the next …`: Looks part passes today, About you fails (no `age-22-25`); `the bar has 3 segments`: `ONBOARDING_STEPS` 4 ≠ 3; `T39-aboutStep` › `an old agreement step …`: `parseStep('consent')` → `'consent'` ≠ `'basics'`; added `T39-setupScreens` › `OS3.2 · the old agreement link opens About you` (the route's `Redirect`, moved here from the aboutStep file because it renders): no `redirect` element (the route still renders the old agreement). Flow `T39-setup-fresh.yaml`: flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet).
 
 - **OS3.3** · Looks shows the new title and line word for word; its tiles and buttons behave as before.
   · how: component + the existing tests
@@ -42,7 +42,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: `looks-title` text "Which of these would you actually wear?" with `accessibilityRole` `header`; `looks-line` text "Tap up to 3.", directly after it. Tapping two tiles: `Haptics.selectionAsync` twice, Continue reads "Continue · 2 of 3"; a 4th tile after three: `Haptics.notificationAsync(Warning)` once, "Up to 3." shown, picks unchanged; `Not sure` saves `onboarding.looks` = `[]` and pushes `/onboarding/basics`; Continue is disabled with no pick and no words; "Something else?" opens the field (placeholder "Like skater, or all black").
   · must not: the old combined prompt; a Kit bubble; "Pick by name instead" shown (founder question 4, default: not shown).
   · edges: accessibility sizes (one column, as today).
-  · red: (test writer, at lock)
+  · red: 2 tests, both red. `the title and the line`: no `looks-title`; `the tiles … behave as before`: red only on Kit's bubble (`[1,0,1,0]`); its tile, haptic, Up to 3., Not sure, Something else? and Continue assertions were run against today's screen with the bubble line removed and pass (probe, not committed), so they guard "as before". `onboardingLooks.test.ts` unchanged: 4 passed.
 
 - **OS4.1** · The step shows the title, the name field and the five age choices in the stated order and words, none picked; Continue is off with the hint until one is picked.
   · how: component + flow
@@ -56,7 +56,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
     - Flow (screen 3): every word above visible; "Continue" visible and `enabled: false`.
   · must not: a choice selected on open (also with an old birth year in the draft); two selected; Continue enabled with no pick; the hint read by VoiceOver as its own stop.
   · edges: dark, accessibility sizes (same assertions; plus the UI inventory's screenshots); a bad `onboarding.about` JSON → empty draft.
-  · red: (test writer, at lock)
+  · red: 4 tests, all red: `on open …`: the About you testIDs are not in the tree (`[look, false, false]`); `one tap picks …`, `the rows are equal …`: no `age-22-25` / `age-under18`; `his name and pick come back …`: no `about-name-input`. Flow `T39-screens.yaml` (screen 3): flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet).
 
 - **OS4.2** · A blank name with an age picked is enough to go on; a name is saved trimmed, at most 30 characters (SY4.2).
   · how: unit + component
@@ -66,7 +66,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
     - Render: the field's `maxLength` is 30. With `22–25` picked and the field empty, Continue is enabled and saves the profile with `name: null`; typed "  Alex " → `name: 'Alex'`; typed "   " → `name: null`.
   · must not: `''` or spaces saved as a name; leading or trailing spaces kept; more than 30 characters saved; Continue waiting on the name.
   · edges: the name typed, the app closed, reopened (OS4.1's remount) and Continue → still saved trimmed.
-  · red: (test writer, at lock)
+  · red: 2 tests, both red: `T39-aboutStep` › `cleanName`: "T39: not built"; `T39-setupScreens` › `a blank name goes on …`: no `about-name-input`. The reopen edge is in `OS4.1 · his name and pick come back after a close` (typed "  Alex ", remount, Continue → `'Alex'`).
 
 - **OS4.3** · An 18+ band saves `ageBand` and `ageBandAt` and lands in Stylist; no birth year is saved.
   · how: unit (store) + component
@@ -77,7 +77,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
     - Render: Continue → `finishSetup` done, then kv `onboarding.done` `'1'`, then `router.replace('/')`.
   · must not: a birth year saved by a new setup; consent saved; the profile saved before Continue.
   · edges: a failed write (the store's `profile.put` rejects): Continue leaves him on About you with Continue working again, nothing navigated.
-  · red: (test writer, at lock)
+  · red: 4 tests, all red: `T39-aboutStep` › `each 18+ band is saved …` and `finishSetup refuses no pick and Under 18` (it first proves a 22–25 draft goes through, so a throwing stub can't pass it): "T39: not built"; `T39-setupScreens` › `Continue lands in Stylist`: no `about-name-input`; added `OS4.3 · a failed write leaves him on About you with Continue working again` (the edge): no `age-22-25`.
 
 - **OS4.4** · `Under 18` asks once; `Change` changes nothing; `That's right` shows the stop screen with no camera, and it stays after a relaunch and a reinstall (as today).
   · how: component + flow + manual (reinstall)
@@ -89,7 +89,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
     - Flow: fresh install → `Get started` → `Not sure` → `Under 18` → `Continue` → "Under 18?" and "Kitted is for ages 18 and up." → `Change` → "About you" still shown → `Continue` → `That's right` → "Kitted is for ages 18 and up." and "Thanks for checking it out. You can delete the app from your Home Screen." → `stopApp`, `launchApp` (no clearing) → the stop screen again, no "Back", no "Take photo" → final `clearState` + `clearKeychain` launch.
   · must not: Under 18 blocked with no confirm; `Change` setting the flag; any way from the stop screen to the camera; "Born in …?" as the title.
   · edges: relaunch (flow); reinstall (manual, Not testable yet below); "Delete all my data" keeps the flag (`privacyWipe.test.ts`, unchanged).
-  · red: (test writer, at lock)
+  · red: 3 tests, all red: `Under 18 asks once …`, `Change changes nothing`, `That's right locks the app`: no `age-under18` row. Flow `T39-under-18.yaml`: flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet). Reinstall: Not testable yet (below).
 
 - **OS4.5** · No screen before an age is picked says "18" except the `Under 18` and `18–21` choices.
   · how: component
@@ -97,7 +97,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: collect every string in the rendered tree (text children, `accessibilityLabel`, `accessibilityHint`, `placeholder`) of `WelcomeScreen` (accounts off and on), `ExampleCheckScreen` (`screen` and `sheet`), `PickLooksScreen`, and `BasicsScreen` on open and with "Alex" typed and nothing picked. The strings containing "18" are exactly: on About you, "Under 18" and "18–21" (each as text and as its row's label); on every other screen, none.
   · must not: "Kitted is for 18 and up", "18 and up", "18+" or "ages 18" anywhere before a pick (the old footnote `onb.basics.never` is not rendered).
   · edges: accessibility sizes (same strings).
-  · red: (test writer, at lock)
+  · red: 1 test, red: Welcome (accounts off/on), the Example check (screen/sheet) and Looks pass today (no "18"); About you on open gives `["Kitted is for 18 and up. It never changes your score."]` ≠ `["18–21","18–21","Under 18","Under 18"]`.
 
 - **OS4.6** · Style profile shows `Age` with the band (a band from the birth year for an older profile) and the new footnote.
   · how: unit + component + flow
@@ -110,7 +110,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
     - Name edits: typed "  Sam " then Done → `name: 'Sam'`; cleared then `beforeRemove` fired → `name: null`; in both, `ageBand`, `ageBandAt`, `birthYear`, consent fields unchanged. The Age row has no `onPress` and no role `button`.
   · must not: the age editable here; a save changing `ageBand`/`ageBandAt`/`birthYear`; the old "Birth year" row or footnote.
   · edges: dark, accessibility sizes (rows stack; nothing truncated: UI inventory).
-  · red: (test writer, at lock)
+  · red: 4 tests, all red: `T39-aboutStep` › `bandFromBirthYear and profileAgeBand`: "T39: not built"; `T39-styleProfile` › `Name, Fit you like, Age, and the footnote`: no `profile-name-row` / `profile-age-row` (`[false, false, …]`); `an older profile …`: no `profile-age-value`; `the Name row changes …`: no `profile-name-input`. Flow `T39-screens.yaml` (284, 80): flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet).
 
 - **OS4.7** · No request to the server carries the age band or the name (a test over every request builder).
   · how: unit, over every caller of `AiTransport.send` and over sync
@@ -118,7 +118,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: a store whose profile is `{ name: 'Zebulon', ageBand: '22-25', ageBandAt: 1761133260000, birthYear: null, consentVersion: '2', … }`, kv `onboarding.about` = `{"age":"22-25","name":"Zebulon"}`, and a fact and closet rows from the `full` seed. Through `serverTransport` with a recording `AiFetch` (as `serverProxy.test.ts` A2 builds them), run: one full fit check (read with close-ups, both look arms, the closet call), one question (the stylist context from `loadStylistSnapshot` → `buildAskRequest`, and the OpenAI provider), one tap answer. The recorded calls cover all four routes `read`, `look`, `closet`, `ask` (the test fails if any route has no call). For every recorded URL, header value and body: none contains "Zebulon", "22-25", "22–25", "ageBand", "ageBandAt" or "1761133260000". The same with `directTransport`. Sync: `rowToData('profile', profile)` has no `ageBand`, `ageBandAt` or `name` key; `dataToRow('profile', thatData, localProfile)` keeps the local three values; for every key in `KV_SYNCED`, its outgoing value for a stored value containing the name and band contains neither; `kvPolicy('onboarding.about')` and `kvPolicy('firstCheckOffer.laterAt')` → `'local'`.
   · must not: a route not exercised; the name or band in any header, URL or body; either new key classified as synced or unclassified (the existing "every kv key the app writes is classified" test must pass).
   · edges: a profile from before V9 (fields absent) → the same requests work.
-  · red: (test writer, at lock)
+  · red: 3 tests. `a fit check, its looks and closet call, a question and a tap answer …`: **exists: bites via** `features/ask/snapshot.ts` adding `profile.name` to `otherStyle` (fails with "Zebulon in https://srv.test/api/v1/ask?model=gpt-5.6-luna" ×2 and the Gemini ask; reverted); it covers all four routes on the server transport (2 look arms, 3 ask calls) and the direct path (Gemini + OpenAI's dev-key fetch), and a pre-V9 profile sends the same routes. `sync never sends them`: red, `dataToRow` drops the local `ageBand`/`ageBandAt`/`name` (undefined ≠ the phone's values). `the new kv keys are local`: red, `kvPolicy('onboarding.about')` → null ≠ `'local'`. Interpretation (see the return note): "every key in `KV_SYNCED`" is checked on the values the app actually holds mid-setup and after `finishSetup`, through each key's `outgoing`, since a synced key with no `outgoing` sends whatever is stored.
 
 - **OS5.1** · After About you, Stylist shows Kit's hello, then the offer card word for word, and the camera does not open.
   · how: unit (store) + component + flow
@@ -131,7 +131,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
     - Flow: after `Continue`, ".*Quick note: I'm an AI.*" (in today's AI note and in SY2's hello) above "Want to check a fit now?", "Stand back so your shoes are in the shot. Not dressed for it? Later works.", "Check my fit", "Later"; `assertNotVisible: "Take photo"` after a 3 s wait.
   · must not: the camera opening on its own; the card above Kit's first message; a header trait on the joined text; T39 posting anything above Kit's first message or editing its words.
   · edges: offline (setup's end sends nothing, OS5.7); dark and AX (UI inventory).
-  · red: (test writer, at lock)
+  · red: 3 tests, all red: `T39-aboutStep` › `setup's end posts Kit's first message, then the offer`: "T39: not built"; `T39-offerCard` › `the card's words, buttons and VoiceOver`: no `offer-card` (the stub renders nothing); `the thread renders the card through the card switch`: no `offer-card` from `ThreadRow`. The no-camera-after-Continue part is in `OS3.2 · each step …` and `F1.1`. Flow `T39-setup-fresh.yaml`: flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet).
 
 - **OS5.2** · `Check my fit` opens the camera, with the agreement on top when he hasn't agreed; `Agree` makes it live; `Not now` returns to Stylist with "Turn on fit checks" posted once and the offer's buttons gone.
   · how: component + unit + flow
@@ -144,7 +144,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
     - Flow (not now): … `Check my fit` → `Not now` → "Turn on fit checks" and "Review and turn on" visible, "Later" not visible; the accessory's "Check my fit. Opens the camera." → `Not now` → `assertNotVisible: { text: "Turn on fit checks", index: 1 }`.
   · must not: the live camera before Agree; `Not now` saving consent; a second "Turn on fit checks"; the offer's buttons after `Not now`.
   · edges: he agrees, then closes the camera without a photo → the offer's buttons stay, and `Check my fit` opens the live camera with no agreement.
-  · red: (test writer, at lock)
+  · red: 5 tests, all red: `Check my fit opens the camera`: no button labelled "Check my fit. Opens the camera."; `the camera shows the agreement first, and Agree makes it live`: no `consent-intro` (with that line removed, the rest, Agree → consent '2' at T0 and the camera in place, passes today: probe, not committed); `Not now and the X post Turn on fit checks once …`: `offer-buttons` absent before Not now (`["Not now", false]`); added `agreed, then closed without a photo …` (the edge): no `offer-buttons`; `T39-aboutStep` › `declineAgreement posts once, only after an offer`: "T39: not built". Flows `T39-setup-not-now.yaml`, `T39-setup-fresh.yaml`: flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet).
 
 - **OS5.3** · `Later` removes the buttons, posts Kit's line word for word and saves `firstCheckOffer.laterAt`.
   · how: unit + component + flow
@@ -152,7 +152,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: `tapLater(store, T1, ids)` → kv `firstCheckOffer.laterAt` = `String(T1)`; one new message `{ role 'stylist', kind 'text', text "No rush. Tap the camera button whenever you're ready." }` created after the card. A second `tapLater(store, T2, ids)` → kv still `String(T1)`, still one line. Render: press "Later" → `offer-buttons` gone; `offer-title` and `offer-body` still there; no `router` call. The thread shows the line with the "Kit" mark (its row's `showWho` true). Flow: `Later` → ".*No rush\. Tap the camera button whenever you're ready\." visible, "Later" and the card's "Check my fit" gone; `stopApp` + `launchApp` (no clearing) → still gone.
   · must not: a second line; `laterAt` overwritten; the camera opened; the buttons back after a relaunch.
   · edges: "Delete all my data" (`deleteAllData`) → kv `firstCheckOffer.laterAt` null.
-  · red: (test writer, at lock)
+  · red: 3 tests, all red: `T39-aboutStep` › `tapLater once` and added `"Delete all my data" clears firstCheckOffer.laterAt` (the edge): "T39: not built"; `T39-offerCard` › `Later: the buttons go and Kit's line follows` (also remounts: still no buttons): no "Later". Flow `T39-setup-later.yaml`: flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet).
 
 - **OS5.4** · After any scored check, the offer card shows no buttons, also after a relaunch.
   · how: unit + component
@@ -160,7 +160,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: `offerButtonsShow({ laterAt: null, hasScoredCheck: false, declined: false })` → true; each of the three set alone → false. `loadOfferState`: a fit check with status `scored` (first check or re-check) → `hasScoredCheck` true; only `failed`, `held`, `unreadable`, `notClothed`, `scoring` or `asking` checks → false. Render: buttons shown; a `scored` check written → buttons gone without a remount; unmount and remount → still gone; only a `failed` and a `held` check → buttons still shown; `readOnly` → no buttons. Flow (283): "Want to check a fit now?" visible, "Later" not visible.
   · must not: a failed or held check removing the buttons; the buttons back after a remount.
   · edges: the check on an earlier day (Past chats): the card there is read-only, no buttons.
-  · red: (test writer, at lock)
+  · red: 2 tests, both red: `T39-aboutStep` › `offerButtonsShow and loadOfferState`: "T39: not built"; `T39-offerCard` › `a scored check removes the buttons for good` (failed + held keep them, scored removes them live and after a remount, `readOnly` none): no `offer-buttons`. Flow `T39-screens.yaml` (283): flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet).
 
 - **OS5.5** · A fresh install reaches a live camera in 6 taps by the path above (F1.1), checked by a tap-through flow.
   · how: flow
@@ -168,7 +168,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: from Welcome ("Get started" visible), exactly six `tapOn` commands: "Get started", "Not sure", "22–25", "Continue", "Check my fit" (the card's, matched inside "Want to check a fit now?"'s card or by its position below it), "Agree"; then "Take photo" (the shutter) visible within 10 s. Before the sixth tap "Take photo" is not visible. No sign-in sheet and no paywall on the way (`assertNotVisible` "Continue free" and "Up to .* checks a day\.[\s\S]*" after each tap).
   · must not: a seventh tap needed; the camera before the fifth tap; the agreement before the fifth.
   · edges: the dev launcher's server tap isn't counted (it isn't in the app).
-  · red: (test writer, at lock)
+  · red: flow only, `T39-setup-fresh.yaml` (exactly six `tapOn`s in the app, "Take photo" checked absent after taps 1–5 and visible after the 6th, no "Continue free" / limit line after each tap): flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet).
 
 - **OS5.6** · An install that finished setup before this change shows no offer card.
   · how: unit + flow
@@ -176,7 +176,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: an SQLite database migrated to V8 with an onboarded profile (`birth_year` 2004) and three chat rows, then V9: the chat rows are identical (count and content), `birth_year` 2004 kept, `age_band`, `age_band_at`, `name` NULL. A memory store loaded with the `full` seed: no `firstCheckOffer` message, and `loadOfferState` runs without error. Flow: screens 12 and 212 → "Want to check a fit now?" not visible.
   · must not: an update posting the card; an older profile's birth year cleared.
   · edges: an install closed mid-setup on the old agreement step is not "finished": it reopens on About you and gets the card (OS3.2).
-  · red: (test writer, at lock)
+  · red: 2 tests, both red: `V9 adds the columns and posts nothing`: no migration 9 (`undefined`); `an older setup has no offer`: the full seed has no `firstCheckOffer` message today, then `loadOfferState` "T39: not built". Flow `T39-screens.yaml` (12, 212): flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet).
 
 - **OS5.7** · Before `Agree`, nothing is sent (F1.3).
   · how: component (integration over the setup screens)
@@ -184,7 +184,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: with the recording transport and a failing `global.fetch`, walk: Looks (a tile, Continue), About you (a name, `22–25`, Continue → `finishSetup`), the card rendered, "Later" (in one run) or "Check my fit" → the camera route's agreement → "Not now" (in another): `fetch` 0 calls, transport 0 calls, `mayUpload(store)` false.
   · must not: any call before Agree, including the guest sign-in, the server's tier check or analytics.
   · edges: offline (the same walk works with the connectivity service reporting offline). The connectivity probe (Apple's captive-portal page, no data of his) is today's behaviour, faked in this test and not counted.
-  · red: (test writer, at lock)
+  · red: 1 test, red: the walk stops at About you (no `about-name-input`). The afterEach of every render test file also asserts fetch 0 and transport 0. No connectivity service is imported by these screens; fetch rejecting (offline) is the offline case.
 
 - **F1.1** · A fresh install reaches the camera in 6 taps or fewer, with no account and no paywall on the way, and the camera never opens until he taps Check my fit.
   · how: flow + component
@@ -192,7 +192,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: OS5.5's six taps; Welcome, Looks and About you render no `router.push('/camera…')` on any tap or after 5000 ms of timers; About you's Continue replaces to `/`, never to a paywall or sign-in path.
   · must not: a camera, account or paywall step in setup.
   · edges: accounts on (Welcome shows "I already have an account", which isn't tapped; the count is the same).
-  · red: (test writer, at lock)
+  · red: 1 test, red: `nothing opens the camera before Check my fit` (accounts off and on): Welcome and Looks pass today, About you fails (no `age-22-25`). Flow `T39-setup-fresh.yaml`: flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet).
 
 - **F1.2** · The age question starts with nothing picked; "Under 18" shows the stop screen and no camera; Declared Age Range under 18 does the same.
   · how: component + flow (the first two parts); the third is Not testable yet (T32)
@@ -200,7 +200,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: as OS4.1 (no row selected on open) and OS4.4 (`That's right` → the flag, `/` → the stop screen, no camera).
   · must not: a preselected band; a camera after Under 18.
   · edges: Declared Age Range (Not testable yet).
-  · red: (test writer, at lock)
+  · red: 1 test, red: `nothing picked, then the stop`: no `age-under18`; plus OS4.1 and OS4.4 above. Flow `T39-under-18.yaml`: flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet). Declared Age Range: Not testable yet.
 
 - **F1.3** · Nothing is sent anywhere before consent is agreed; a photo taken before consent is kept and scored after Agree.
   · how: component (OS5.7) + unit (the held photo)
@@ -208,7 +208,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: OS5.7. With the fit-check service mocked to answer `noConsent` for a picked photo: `startCheck` pushes `/sheets/consent?resume=1`; `resumeAfterConsent()` → true and the same photo is started again exactly once; `dropAfterConsent()` instead → the photo's drop runs once and a later `resumeAfterConsent()` → false.
   · must not: a send before Agree; the photo lost after Agree; the photo kept after Not now.
   · edges: a second held photo replaces (and drops) the first.
-  · red: (test writer, at lock)
+  · red: `T39-offerCard` › `a photo held for the agreement is scored after Agree, dropped after Not now` (also the second held photo replacing the first): **exists: bites via** `dropAfterConsent` not calling the held photo's drop ("Expected number of calls: 1, Received: 0"; reverted). The nothing-sent half is OS5.7 (red).
 
 - **SY4.1** · The About you step shows `What should Kit call you?` with `First name (optional)` above `How old are you?`; `Continue` is enabled with an age picked and a blank name.
   · how: component + flow
@@ -216,7 +216,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: `about-name-label` and `about-name-input` come before `about-age-label` in tree order; with the field empty and `18–21` picked, Continue is enabled; no "Skip" anywhere on the screen.
   · must not: a Skip button; Continue waiting on the name; the name field on Restore (`about-name-input` absent there).
   · edges: AutoFill props (`textContentType` `givenName`, `autoComplete` `given-name`) present.
-  · red: (test writer, at lock)
+  · red: 1 test, red: `the name comes first and is optional` (AutoFill props, no Skip, no field on Restore): no `about-name-label` (index -1). Flow `T39-setup-fresh.yaml` (the name is never typed): flow not yet run (no Simulator this session; red expected: the screens and words it asserts do not exist yet).
 
 - **SY4.2** · A name is saved trimmed, at most 30 characters; spaces only means no name.
   · how: unit + component
@@ -224,7 +224,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: OS4.2's cases, and the same through Style profile: "   " → `name: null`; "  Sam " → `'Sam'`; 40 characters → the first 30.
   · must not: as OS4.2.
   · edges: none beyond OS4.2.
-  · red: (test writer, at lock)
+  · red: 1 test, red: `T39-styleProfile` › `Style profile saves the name by the same rule`: no `profile-name-input`; plus OS4.2's tests.
 
 - **SY4.4** · No request to the server (fit check, question, any other) carries the name (a test over every request builder).
   · how: unit
@@ -232,7 +232,7 @@ Plan-line criteria: OS3, OS4, OS5, F1.1–F1.3, SY4.1–SY4.2, SY4.4 → **OS3.1
   · expect: as OS4.7, for "Zebulon".
   · must not: as OS4.7.
   · edges: PostHog isn't built (T91 holds its own test); nothing to send to it yet.
-  · red: (test writer, at lock)
+  · red: as OS4.7 ("Zebulon" in the profile and the About you draft): exists, bites via the same `snapshot.ts` name leak.
 
 **Superseded tests** (replaced, not weakened; each named in REPORT.md with the T39 test that replaces it): `birthYearStep.test.ts` BY1, BY2, BY3 (they read `BasicsScreen.tsx`'s source for the birth-year card); `onboardingAccount.test.ts` › "the bar has a segment per step and fills on Consent (step 4)" (→ `OS3.2 · the bar has 3 segments`); `youTonight.test.ts` › YT6 "the birth-year row reads …" (→ `OS4.6 · Name, Fit you like, Age, and the footnote`); `heightBuildRemoved.test.ts` HB3's last line only (`profile.tsx` matching `onb.basics.birthYear`). `scenarios.test.ts` keeps passing unchanged (screen 4 stays before onboarding; 280–284 are after).
 

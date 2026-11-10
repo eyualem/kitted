@@ -22,7 +22,12 @@ export type CardType =
   /** "Keep your fits", the save offer (A3, 10-onboarding.md §3). */
   | 'account'
   /** Kit's "About you" ask: height, build and fit after the first score (10-onboarding.md §10, #373). */
-  | 'aboutYou';
+  | 'aboutYou'
+  /** Kit's first-check offer at the end of setup (T39, specs/onboarding-screens.md OS5). */
+  | 'firstCheckOffer';
+
+/** OS4 (T39): his age band from About you. Phone only, never synced. */
+export type AgeBand = '18-21' | '22-25' | '26-30' | '31+';
 
 /** The seven occasion chips (02 D6); stored as rubric occasion ids. */
 export type OccasionKey = 'everyday' | 'class' | 'date' | 'going_out' | 'interview' | 'event' | 'gym' | 'home';
@@ -529,6 +534,12 @@ export interface ProfileRow {
   ideaTime: string | null;
   units: 'imperial' | 'metric';
   createdAt: number;
+  /** OS4 (T39): his band from About you; phone only, never synced. Absent or null on older profiles. */
+  ageBand?: AgeBand | null;
+  /** When About you saved it (epoch ms). */
+  ageBandAt?: number | null;
+  /** SY4 (T39): his first name, trimmed, at most 30 characters; null = none. Never in a request; never synced. */
+  name?: string | null;
 }
 
 /** tapAnswer / tapSkip: the one quick tap (field subcategory; scoreBefore/After = the as-read and chosen option scores). */

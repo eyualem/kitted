@@ -2,6 +2,7 @@
 // then post the one AI-disclosure line at the top of the thread (ruling 17), and after "Not now" the S26 card.
 import type { Styles } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
+import type { AgeBand } from '@/data/types';
 import { textMessage } from '@/data/seedLoader';
 import { t } from '@/i18n/en';
 
@@ -9,8 +10,13 @@ export interface OnboardingAnswers {
   styles: Styles;
   fitPreference: string;
   birthYear: number | null;
-  /** O5: "Agree & check my fit" (true) or "Not now" (false: nothing is ever sent until he agrees later). */
-  consent?: boolean;
+  /** T39 (types only until built): saved as ageBand, with ageBandAt = nowMs when given; else both null. */
+  ageBand?: AgeBand | null;
+  /** T39 (types only until built): saved as given (callers pass cleanName's result); else null. */
+  name?: string | null;
+  /** O5: "Agree & check my fit" (true) or "Not now" (false: nothing is ever sent until he agrees later).
+   *  T39: 'later' (setup's end): no consent saved, and no "Turn on fit checks" card. */
+  consent?: boolean | 'later';
 }
 
 /** The consent text's version (02 D4: saved with the date; a changed text asks again). 2 (#329): questions go to
