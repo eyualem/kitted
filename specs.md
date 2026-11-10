@@ -106,7 +106,7 @@ Kit answers about clothes, shoes, accessories, fit, care and shopping, using his
 ### F6. Morning and evening card
 Once a day Kit posts an outfit from his closet with the weather, greeting him by name if he gave one ("Morning, Alex."); from 5 pm an evening card ("Evening, Alex. Heading out?"). Wear this · Swap one · "Wearing something else? Check it".
 - F6.1 Location is approximate, asked inside the card, never stored; declined, the card uses the season.
-- F6.2 A new user with an empty closet gets "Send me today's fit" instead of an outfit.
+- F6.2 Until Kit knows two different outfits of his that work (e.g. 2 tops, 1 bottom, 1 pair of shoes), the card suggests no outfit and says why: "Send me today's fit and I'll start learning your closet." with no pieces, "I only know {n} of your pieces. Check today's fit and I'll learn the rest." with some. Once he checks a fit in that window, the card reads "Today's fit" ("Tonight's fit" in the evening) with his score; "You went with your own" is only for a card that suggested an outfit. (Founder, Nov 9.)
 - F6.3 Under 50°F the outfit includes a warm layer, or says nothing warmer is in his closet.
 
 ### F7. Closet
@@ -151,6 +151,7 @@ Neck-down by default ("Neck down | Full photo"), never gated, a small "scored by
 
 ### F13. Notifications
 Two kinds, both local: the daily outfit idea, 15 minutes before the time he usually gets dressed, and "fit check ready" when he left the app while a check was being scored. At most one daily idea a day. Apple's prompt only after he says yes on Kit's card. Never "we miss you", never streak guilt. ("Trial ending" is gone with the trial.) Detail: `specs/notifications.md`.
+- F13.1 Until the card can suggest outfits (F6.2), the daily notification asks for a fit check instead: "Check today's fit. Each one teaches me your closet." The first one after it can suggest says so: "Your closet's big enough now: here's today's idea." (Founder, Nov 9.)
 
 ### F14. Voice input
 The mic in the ask bar; speech turns into text on the phone; audio never leaves it.
