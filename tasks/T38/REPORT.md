@@ -174,4 +174,39 @@ No screenshots were taken. What would verify them is unchanged (see round 1's Sc
 - **code:** none found. Round 2's hook is correct on every probe I ran.
 - Not verified (unchanged from round 1): every screen state in light, dark, xxxLarge and AX5; the T38 flow and the earlier flows; the motion and tabular figures on a device; VoiceOver itself; whether "Why 7.5?" inside the grouped `example-card` can be reached. All need the main Simulator free, with this worktree's Metro.
 
+### Round 3 (verifier, Nov 10)
+**Lock:** the Lock line is `a12bfc1f`, the test writer's commit, which adds 8 lines to `OS1.3 · Reduce Motion turned on mid-play and off again holds the after state (no second play)`. From t 1510 to 2100 it checks every 10 ms that there is no before word, no "Full check" and no chunky sneakers, and that the tree is unchanged. That is strengthening only. `a91f2593` (also the test writer's) changes only TESTING.md's lock line and red notes, plus REPORT.md → Disputes. `git diff a91f2593..HEAD` on the tests, `app/e2e/` and TESTING.md is empty. No app code changed since `cb0b3b35`. Banned shortcuts: none.
+
+**Suites:**
+- I ran `npm run check`'s commands one by one: `tsc --noEmit` exit 0, core typecheck exit 0, `expo lint` 0 errors and 1 warning (`tryOn.test.ts`, not T38's), core `Tests 853 passed (853)`.
+- Jest had to run as `npx jest --no-watchman` (the watchman socket still refuses): `Test Suites: 3 skipped, 127 passed, 127 of 130 total · Tests: 4 skipped, 1694 passed, 1698 total`. All 46 T38 tests pass.
+- Server and parity tests: not touched by this task.
+
+**Break it on purpose (round 3):** every bug from rounds 1–2 was re-run against `a12bfc1f` + `cb0b3b35` (the 7 suites, 100 tests). Each was reverted with `git checkout`, and the tree was clean after each.
+- **M23** (`if (halted.current) return;` removed) → **now caught**. Run in-band (`--runInBand -t "off again"`), the new test fails at t 1520, where `welcome-card-word-before` is back.
+  - *Polish for the test writer, not a blocker:* in the default parallel run, the failure crashes the Jest worker ("Jest worker encountered 4 child process exceptions") instead of printing the assertion. The suite still goes red. The likely cause is that `toEqual` is handed React test instances (circular objects), which the worker can't send back. Comparing `byId(...) !== null` booleans would print a readable failure.
+- M9 (the clock counting frames) → still caught by `OS1.3 · it doesn't replay from the background…`.
+- M24 (the render-time reset removed) → still caught by the off-again test.
+- M8 → passes, but this is an equivalent change, not a weak test (see round 2).
+- M1–M7 and M10–M22 → each still caught (same tests as round 1).
+- **No deliberate bug is uncaught.**
+
+**Flows and screens:** still **not run, not verified**. During this round, another session's Maestro run started on the main Simulator `111D0A09…` again, Metro on 8081 is still `you-and-first-run-c080d4`'s, and free memory was 160–700 MB. Following the coordinator's instruction, I started no second Metro or Simulator. No screenshots were taken. Still not verified:
+- every Welcome and Example check state in the UI inventory (demos 1, 130, 131 and 213; light, dark, xxxLarge and AX5), against `tasks/T38/design/01–10, 13`;
+- the small-phone frames 11–13;
+- `T38-drawn-welcome.yaml` and the earlier flows in `app/e2e/flows/`;
+- the motion on a device (the cross-fade, tabular figures keeping "Put together" still, the real Reduce Motion setting);
+- what VoiceOver actually says, including whether "Why 7.5?" inside the grouped `example-card` can be reached (a grouping that predates T38) and whether the flow's `tapOn: "Why 7\.5\?"` finds it.
+
+What would verify them: the separate screen pass, once the main Simulator is free and this worktree's Metro is running.
+
+**Verdict:** **ready** · rounds: 3 of 3
+- By the rule:
+  - nothing fails;
+  - every deliberate bug is caught (M8 is an equivalent change);
+  - the lock holds;
+  - every "not verified" names what would verify it.
+- **Ready here means the code and tests are done. Nothing has been seen on iOS yet.** OS1.4's and OS2.1's visual halves, the flows and the device checks are still not verified, and the screen pass and the critic's design review are still to come.
+- **code:** none. **test:** none blocking (the worker-crash message above is polish).
+
 ## Design review (critic)
