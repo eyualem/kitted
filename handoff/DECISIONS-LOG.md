@@ -2889,10 +2889,21 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The founder (in chat):** a card that suggested nothing, once checked, is labelled with his check's occasion ("TONIGHT · EVERYDAY" above "Tonight's fit · 7.0"); a card that suggested an outfit keeps its own occasion.
     - **Claude's defaults:** near-duplicate pieces count once (two white tees with the same chinos and sneakers are one outfit, so the card can really rotate). The waiting card's strip of known pieces stays (#380). The threshold ignores occasion and weather, like `closetState`. A waiting card doesn't re-plan mid-window when the closet crosses the threshold; the next window's card suggests. The check lives in the app (`features/morning/readiness.ts`), not core: core is the Fit check lane's, T64 reworks `ideas.ts`, and a worktree's symlinked core would test the wrong copy (#358). With two checks in a window, the label follows the check whose score the card shows. `freshen` now leaves a checked card alone, as its comment already said.
     - **For notifications (T53):** `morning.canSuggest(nowMs?)`, read-only (no writes, weather or network); it doesn't remember its last answer, so F13.1's "the first one after" is kept by the notifications side.
+## Nov 9 · Apple's weather parked: its terms (T80)
+
+414. **The founder (Nov 9): "we can use the US weather … but keep this as the tasks that we're going to be doing in the future. We're probably going to be migrating sometime soon."** The beta stays on the US National Weather Service; T80 (Apple's weather) is parked, not built. `specs.md` still names WeatherKit, so T80 must land before launch or the founder changes that line.
+    - **Why it stopped:** Apple's WeatherKit terms, read Nov 9 (Apple Developer Program License Agreement §3.3.8.B and Attachment 8; developer.apple.com/weatherkit/get-started), would be broken by switching it on as built:
+      - Attachment 8 §1.6: Apple's weather data may not be cached or stored beyond brief caching for speed. The card saves its forecast in `daily_ideas.weather` for good (it's read back for history and re-picks).
+      - The " Weather" mark and the legal "Data sources" link must show wherever Apple's data shows. Today only the morning card has them; the fit-check card's weather tip (derived from it) doesn't.
+      - Nothing in the terms allows or forbids sending Apple's numbers to OpenAI (Kit's "Weather today: …" line); the service-provider clause may cover it. Unsettled.
+      - Attachment 8 §2.2: an app giving "real-time weather guidance" must carry an "at your sole risk" line in its terms. Probably not an outfit app, but check when T80 restarts.
+    - **Checked and still true:** the paid team's ID is 6652QVRQAL (the Mac's signing certificate OU, and #404's App Store upload). The founder said yes (Nov 8) to `LOCATION_USAGE_PAID`'s words as written.
+    - **For the restart:** `tasks/T80/` holds the parked plan (what each entitlement changes per build, the portal steps, now Y21, and the traps). It needs a re-plan for the four rules above. WeatherKit needs both the App Services and the Capabilities tick on the App ID, and EAS syncs only the capability.
+    - **Lesson:** read a data provider's terms before wiring it in, not at switch-on. "Free" data often comes with rules about storage and attribution that shape the design (here: what the database may keep).
 
 ## Nov 9 · `specs/setup-and-you.md` brought in line with the new setup screens
 
-414. **The founder's yes (Nov 9, in the you-and-first-run session) to four edits,** after he approved `specs/onboarding-screens.md` (#407–408): setup ends in Stylist, not on the camera, and the birth year became an age pick on an About you step.
+415. **The founder's yes (Nov 9, in the you-and-first-run session) to four edits,** after he approved `specs/onboarding-screens.md` (#407–408): setup ends in Stylist, not on the camera, and the birth year became an age pick on an About you step.
     - **SY4:** the name field sits on About you above `How old are you?`; the step's button is `Continue`, waiting only on the age pick. Its rules (trimmed, 30 characters, never sent) don't change.
     - **SY5:** Welcome → Looks → About you → Stylist (Kit's hello, then the offer card); the camera never opens on its own, and the agreement shows over it the first time he opens it. The "6 taps settled in T33" note went: OS5.5 counts 6.
     - **SY6:** Apple's age sheet shows on `Continue` with an 18+ band; `Under 18` gets the stop with no Apple sheet; a declined or failed sheet leaves the picked band to decide.
@@ -2900,4 +2911,4 @@ Contradictions settled and decisions changed during the build. Newest last.
 
 ## Nov 9 · The tab bar keeps its labels
 
-415. **The founder (Nov 9, in the Apple Connect beta session): "Keep the labels".** He had asked whether the words under the tab icons (Stylist, Closet, Lookbook, You) were redundant. Kept: Apple's HIG expects labeled tab bars, `specs.md` → Interfaces says "always labeled", and icon-only tabs are unclear to new users, which matters more now that the tips (SY2) send him to each tab by name. Any tab change keeps the labels.
+416. **The founder (Nov 9, in the Apple Connect beta session): "Keep the labels".** He had asked whether the words under the tab icons (Stylist, Closet, Lookbook, You) were redundant. Kept: Apple's HIG expects labeled tab bars, `specs.md` → Interfaces says "always labeled", and icon-only tabs are unclear to new users, which matters more now that the tips (SY2) send him to each tab by name. Any tab change keeps the labels.

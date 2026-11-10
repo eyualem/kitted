@@ -15,7 +15,7 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 ---
 
 ## Next up
-1. Switch on the paid Apple team in the app: Apple's weather and the server lock (T80). TestFlight needs it.
+1. Apple's weather (T80) waits until after the beta (you, Nov 9): the beta keeps the US weather service, which needs no Apple step.
 2. Put the beta on TestFlight and invite your friends (T85).
 3. Start your two launch photo sets now; they take the longest (Y5, Y6).
 4. Read scanned clothes into Closet; your clothes photos are in (T70).
@@ -45,8 +45,9 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y16** · **P3** · Seven small camera and card calls from your Oct 24 walk, each with a default, in `handoff/09-ui-review.md` §29 (lands with the dark-tip fix): your photos from the chat's camera button without opening the camera; Propped stays quiet until it sees you; the Mirror tip's words; after a re-check, opening the first check opens its fixes in one tap; "1 more question in Closet"; a described piece keeps its color; a fix row shows only the outfit's number (3 min) → those small fixes
 - [ ] **Y17** · **P2** · Pick your first beta testers (friends, 18 or older) and get, with each one's OK, the email his Apple ID uses; TestFlight sends the invite there (10 min) → the beta (T85)
 - [x] **Y18** · **P2** · OK deploying the server's beta limits to Firebase and setting its live config to `beta` (1 min; Claude runs it) → testers held to 3 checks and 20 questions a day on the real server (T14) · yes, Nov 8
-- [ ] **Y20** · **P1** · Say yes (or change) the new location words iOS shows with Apple's weather on, quoted in T80's report (1 min) → Apple's weather in the app (T80)
 - [ ] **Y19** · **P3** · Sign the Paid Apps Agreement in App Store Connect → Business: tax form (W-9) and bank account; it can take a day to clear (15 min) → real purchases (T13)
+- [x] **Y20** · **P1** · Say yes (or change) the new location words iOS shows with Apple's weather on, quoted in T80's report (1 min) → Apple's weather in the app (T80) · yes, Nov 8
+- [ ] **Y21** · **P3** · Turn on WeatherKit for the app on Apple's site: developer.apple.com → Certificates, Identifiers & Profiles → Identifiers → com.trykitted.kitted → App Services tab: tick WeatherKit; Capabilities tab: tick WeatherKit, App Attest, Sign in with Apple, Declared Age Range → Save → Confirm (10 min, then up to 30 min for Apple) → Apple's weather (T80)
 - [ ] **Y22** · **P2** · OK a second TestFlight build with notifications in it, once they're built and checked (1 min; Claude runs it) → notifications on testers' phones (T53) · spec approved Nov 9
 
 ---
@@ -158,7 +159,7 @@ Lane files: `app/src/features/{closet,scan,lookbook}`, `app/src/services/closetS
 Spec: `specs.md` (no interview: the launch bars and constraints are exact there)  
 Lane files: `app/app.config.ts`, `extraction-test/results`, `market/`
 
-- [~] morning-card-weather · **T80** · Switch on the paid Apple team: Apple's weather first, the server lock's entitlement; rebuild the app · *done: Apple's weather on the Simulator · files: app.config.ts*
+- [ ] **T80** · *(after the beta)* Apple's weather, to Apple's rules: switch on the paid team (`APPLE` in app.config.ts), keep Apple's forecast in memory only (the card saves it today; Apple allows only brief caching), Apple's mark and "Data sources" link wherever its weather shows (the fit-check weather tip too), Kit not sent Apple's numbers unless Apple's terms allow it, the "at your own risk" line in the terms if Apple's real-time-guidance rule applies; the beta stays on the US weather service (founder, Nov 9) · *after Y21 · checks: specs.md weather line, F6.1, 09 §27 S1–S3, W1–W5 · plan to re-do: `tasks/T80/` (parked) · files: app.config.ts, morning/, services/weather/, fitcheck tip, ask/*
 - [~] apple-connect-beta-setup · PR #71 · **Y17** · **T85** · The beta on TestFlight: the app's App Store Connect record, a build (asks you before an EAS build), your friends invited · *after T14, T80 · done: a friend installs it from the invite · files: app.config.ts* · **console set up Nov 8:** the app record (Apple ID 6830467413), internal group "Kitted team" with you in it, the EAS project `@matemind/kitted` with the Firebase key, uploads aimed at the app (`eas.json`). **First build Nov 8:** 0.1.0 (1) built on EAS and uploaded to TestFlight for Kitted team and installed on your iPhone (before T80: NWS weather, no sign-in, no notifications). Left: Test Information and outside testers by email (needs Y2's privacy link and Y17's emails; Apple reviews the first external build)
 - [!] **Y5** · **T81** · Run the "fix works" test on the fix photos · *after T62 · checks: F3.1 (18 of 20 go up) · files: `extraction-test/results`*
 - [!] **Y6** · **T82** · Run the "fair score" test on the rating set, by age band and look · *checks: the bar in `specs.md` → "The launch" · files: `extraction-test/results`*
@@ -180,12 +181,13 @@ Claude builds with the default until you decide.
 - **Free checks after "Delete all my data":** today that wipe also clears the phone's ID, which would give 7 new free checks. Default: count them with Apple's DeviceCheck, which survives a wipe and a reinstall (T20).
 - **Scans:** their own cap of 30 a day for everyone (assumed in the spec).
 - **Sign-in in the beta build:** today Continue with Google works only on dev builds, and it backs nothing up yet (sync is T41). Default: the beta ships without sign-in; the server counts each phone's guest account. Sign-in and backup come with T40/T41, alongside Apple's, which App Review asks for next to Google's (guideline 4.8).
-- **"Get your head in the shot" (the head-not-found line, spec F2.2):** the designer and critic found it misses the usual causes (turned away, far, dim); "Face the camera…" would fit more. Default: the spec's words until you say otherwise (#407).
+- **"Get your head in the shot" (the head-not-found line, spec F2.2):** the designer and critic found it misses the usual causes (turned away, far, dim); "Face the camera…" would fit more. Default: the spec's words until you say otherwise (#414).
 
 ---
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-09 · T80 parked (founder): the beta stays on the US weather service; Apple's weather later, to Apple's rules (no stored forecasts, its mark wherever its weather shows), found in its terms · #414
 - 2026-11-09 · T55: the card waits until Kit knows two outfits that work (founder, F6.2 rewritten, F13.1); a checked card that suggested nothing reads "Today's fit" under your check's occasion; `canSuggest` for the notifications; verified ready in round 2, not on the Simulator · #412–413, PR #82
 - 2026-11-09 · T54: the double evening card's cause found (two asks while the weather loads) and fixed in the morning service; 20 tests, 20 planted bugs caught; verified ready, not yet on the Simulator or your phone · #410, PR #75
 - 2026-11-08 · beta-notifications: notifications join the beta (founder): T56 (the spec, approved Nov 9; first numbered T54, which the evening-card fix took) and T53 (the build) claimed; T57 added for the ask at Later · #409; T50 keeps the decline line and greeting
@@ -200,5 +202,5 @@ The last 15 sessions, newest first.
 - 2026-11-07 · `WORKFLOW.md`: the whole process on one page; plan.md lanes get a plain intro · #394
 - 2026-11-07 · the spec gate: each lane names its spec, specs carry the founder's approval line, `/build-task` starts the interview when one is missing · #393
 - 2026-11-07 · Maestro installed; flows in `app/e2e/`, replayed by the verifier on every task, locked like tests · #392
-- 2026-11-07 · `/build-task`: one command runs planner, test writer, implementer and verifier as separate agents with a fix loop; test lock hook and guard test · #391
+
 
