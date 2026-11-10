@@ -37,7 +37,10 @@
 ## Design review (critic)
 Only for a task with an approved `DESIGN.md`. The critic writes it from its own screenshots, and reads the Built and Verification sections only after its own checks.
 - **Round <n>** · <matches | doesn't match>
+- **First impressions** (written before reading anything): <per state: what reads first, second; the feel in three words>
+- **What works:** <two or three things to keep>
 - <state> · design `design/<NN>-light.png` ↔ built `review/<NN>-<state>-light.png` · light / dark / largest text · <matches | blockers>
-- **Blockers:** <kind code or design> · <where> · <what, measured> · <rule> · <fix>
-- **Polish:** <…>
-- **Suggestions for the founder:** <…>
+- **Rubric** (`.claude/agents/ui-critic.md` → Rubric): hierarchy · shape · density · alignment · type · color · HIG · accessibility · states and words · serious stylist: <pass | issues | fail each>
+- **Blockers:** <code or design> · severity <3–4> · <where> · <what, measured> · <rule> · <the problem for him> · <fix>
+- **Polish:** <severity 1–2 · …>
+- **Suggestions for the founder:** <high | low · …>

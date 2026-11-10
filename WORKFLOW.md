@@ -37,6 +37,24 @@ The whole process on one page, for the founder and for Claude. It explains and p
   A pull request + a plain report ──► you merge ──► the task is [x] in plan.md
 ```
 
+**Changing the whole look** (shape, type, color, density) is a different job from designing one feature, so it has its own stage, run once before any screen is redrawn:
+
+```
+  /redesign <ID>
+     ├─ your brief ......... what feels wrong, apps you like, what must stay (your words)
+     ├─ art director ....... 2–3 directions, each drawn on the same three screens
+     │                       (Stylist home, the result card, Closet) next to today's, with
+     │                       its corner sizes, type and color rules written as numbers
+     ├─ critic ............. checks each board follows its own rules, Apple's and the hard lines
+     ├─ you ................ pick one (or mix): Claude recommends, you decide
+     ├─ art director ....... turns the pick into a change list: every token and component
+     ├─ critic ............. checks the list is complete and true to your pick
+     └─ you ................ yes on the list ──► a Redesign lane of tasks in plan.md
+     │
+     ▼
+  the lane's first task changes the tokens and 03; then each screen through /build-task
+```
+
 ## The documents
 
 - **`CLAUDE.md`**: The rules every session follows. *Changed by: a lasting rule from you, or a trap every session hits.*
@@ -62,6 +80,7 @@ The whole process on one page, for the founder and for Claude. It explains and p
 **Starting things:**
 - A task: open a new session and type `/build-task T11`. If its feature has no spec yet, it walks you into the interview first.
 - An interview on its own: `/grill-me` and say which feature.
+- A new look for the whole app: `/redesign <ID>` with the redesign's task line in `plan.md`. It asks for your brief first.
 - Two tasks at once: two sessions, one task each (each gets its own copy of the code). Not tried yet; one at a time is the safe setting.
 
 ## How the tests stay honest
@@ -82,12 +101,15 @@ Tests prove a screen *works*; they can't tell you it looks off. So a task that c
 1. **A designer before any code.** It turns the spec into every state (normal, empty, loading, error, offline, the refused case) as phone frames in the mockup's own style, with the exact words, VoiceOver labels, dark mode and the largest text size. You approve the look while a change still costs one sentence.
 2. **A critic who drew nothing and built nothing.** It checks the frames against Apple's rules, §C14 and the design system before you see them. After the build it screenshots every state on the Simulator and compares each with your approved frame.
 3. **The critic only blocks on rules.** A difference from your approved design, Apple's rules or §C14 blocks the task. Its own taste goes to you as optional suggestions, so the loop can't run forever on opinion.
-4. **The cost:** about 30–45 minutes more per screen task, plus your 5–10 minutes. A task that changes no screen skips all of it.
+4. **A written rubric, so "looks off" becomes something to fix.** The critic scores every screen on ten lines (hierarchy, shape consistency, density, alignment, type, color restraint, Apple's rules, accessibility, states and words, and "does this feel like a serious stylist"), counting what can be counted (corner sizes, circles, type sizes, accent uses). Each finding has a severity from 1 (cosmetic) to 4 (unusable), Nielsen's scale.
+5. **The critic looks before it reads.** It writes its first impressions of the frames before it reads the designer's notes, and never gets the designer's reasoning, so it judges what's on the screen, not what was meant.
+6. **The cost:** about 30–45 minutes more per screen task, plus your 5–10 minutes. A task that changes no screen skips all of it.
 
 ## When a run stops
 
 - **A question only you can answer** (words, taste, money, an install): it asks, then carries on.
 - **A design is ready for your look:** it shows you the frames and waits for your yes.
+- **Redesign directions are ready:** it shows you the boards with its recommendation and waits for your pick.
 - **Its feature isn't defined yet:** it offers the interview.
 - **Three rounds and still failing:** the task shows `stuck: <why>` in `plan.md`, and the report says what's left. Nothing gets loosened to get out.
 
@@ -101,7 +123,8 @@ Tests prove a screen *works*; they can't tell you it looks off. So a task that c
 
 - The coordinator: `.claude/skills/build-task/SKILL.md`
 - The agents: `.claude/agents/task-planner.md`, `test-writer.md`, `implementer.md`, `verifier.md`
-- The design stage: `.claude/agents/ui-designer.md` and `ui-critic.md`; the frames start from `tools/mockshots/design-shell.sh` and are shot with `design-shot.sh`
+- The design stage: `.claude/agents/ui-designer.md` and `ui-critic.md` (the rubric and severity levels are in the critic's file); the frames start from `tools/mockshots/design-shell.sh` and are shot with `design-shot.sh`
+- The whole-app redesign: `.claude/skills/redesign/SKILL.md` (the coordinator), `.claude/agents/art-director.md`, the rules a direction is built and judged by in `.claude/skills/redesign/references/visual-tone.md`, the research behind them in `.claude/skills/redesign/references/design-research.md`
 - The templates: `.claude/skills/build-task/templates/`
 - The test lock: `.claude/hooks/protect-tests.sh`; the guard test: `app/src/__tests__/testGuards.test.ts`
 - The interviews: `.claude/skills/grill-me/SKILL.md`
@@ -117,5 +140,7 @@ Tests prove a screen *works*; they can't tell you it looks off. So a task that c
 - **Worktree:** a separate copy of the code for one session, so parallel work doesn't collide.
 - **Lane:** a group of tasks that share files; one session per lane at a time.
 - **Design hand-off:** the drawn, approved screen a builder works from, so nobody guesses at layout. In interviews: "the design is the spec for how it looks."
+- **Design tokens:** the named values a design is built from (a corner radius, a color, a type size), kept in one file (`tokens.ts`) so changing one number restyles every screen that uses it. A redesign is mostly a token change.
+- **Art direction:** deciding the look of the whole product before drawing its screens, so every designer draws in one style. In interviews: "we set the visual direction first, then the design system, then screens."
 - **Independent review:** a check by someone who didn't make the thing. Authors miss their own mistakes because they see what they meant, not what's there. It's why code review, QA and design critique are separate jobs.
 - **Subagent:** a helper Claude starts with a fresh mind and a narrow job; it works on its own and hands back a result, so it can't hold a conversation with you.

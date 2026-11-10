@@ -1,7 +1,7 @@
 #!/bin/sh
 # The test lock for the implementer agent (/build-task). Runs before each
 # Edit, Write, MultiEdit, NotebookEdit or Bash call the implementer makes,
-# and refuses any change to tests, TESTING.md, fixtures or the approved design. Exit 2 blocks
+# and refuses any change to tests, TESTING.md, fixtures or the approved design (a task's DESIGN.md, or a redesign's DIRECTION.md and CHANGES.md). Exit 2 blocks
 # the call and shows the message to the agent. The verifier's git check is
 # the second lock: a shell command this misses is still caught there.
 exec python3 -I -c '
@@ -9,12 +9,12 @@ import json, re, sys
 
 PROTECTED = re.compile(
     r"(^|/)(app/src/__tests__/|app/packages/kitted-core/test/|firebase/tests/|handoff/fixtures/|app/e2e/)"
-    r"|(^|/)tasks/[^/]+/(TESTING\.md|DESIGN\.md|design\.html)$|(^|/)tasks/[^/]+/design/"
+    r"|(^|/)tasks/[^/]+/(TESTING\.md|DESIGN\.md|DIRECTION\.md|CHANGES\.md|design\.html)$|(^|/)tasks/[^/]+/design/"
     r"|\.test\.(ts|tsx|js|mjs)$"
 )
 PATH_IN_TEXT = re.compile(
     r"(app/src/__tests__/|kitted-core/test/|firebase/tests/|handoff/fixtures/|app/e2e/"
-    r"|tasks/[^/\s]+/design/|\b(TESTING|DESIGN)\.md\b|\bdesign\.html\b|[\w./-]+\.test\.(ts|tsx|js|mjs))"
+    r"|tasks/[^/\s]+/design/|\b(TESTING|DESIGN|DIRECTION|CHANGES)\.md\b|\bdesign\.html\b|[\w./-]+\.test\.(ts|tsx|js|mjs))"
 )
 WRITES = re.compile(
     r"(sed\s+(-\w*\s+)*-i|perl\s+(-\w*\s+)*-i|\btee\b|\brm\b|\bmv\b|\bcp\b|\btruncate\b|\btouch\b"
