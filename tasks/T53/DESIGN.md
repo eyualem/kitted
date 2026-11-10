@@ -2,19 +2,23 @@
 
 <!-- Leave this comment. Only the coordinator replaces it with the approval line, after the founder's yes in chat. -->
 
-**From:** `plan.md` → T53 · **Spec:** `specs/notifications.md` → NT1 (except NT1.8–NT1.10, T57), NT2, NT3, NT4, NT5 · **Frames:** `tasks/T53/design.html` (open with `preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/T53/design.html`) · **PNGs:** `tasks/T53/design/`
+**From:** `plan.md` → T53 · **Spec:** `specs/notifications.md` → NT1 (except NT1.8–NT1.10, T57), NT2, NT3, NT4, NT5, NT6 · **Frames:** `tasks/T53/design.html` (open with `preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/T53/design.html`) · **PNGs:** `tasks/T53/design/`
 
 Approved, this file is the contract: the planner copies the UI inventory from it word for word, and the critic holds the build to it. It changes only with the founder's yes.
 
 ## What he sees
-After his first scored fit, Kit asks in the chat what time he usually gets dressed, with the time already filled in and two buttons. If he says yes and allows it in Apple's prompt, he gets one notification a day, 15 minutes before that time, and You → Notifications is where he changes the time or turns it off. If he doesn't open the app for a week, the nudges stop, and the next time he opens it Kit asks once whether he wants them back.
+After his first scored fit, Kit asks in the chat what time he usually gets dressed, with the time already filled in and two buttons. If he says yes and allows it in Apple's prompt, he gets at most one nudge a day, 15 minutes before that time, and You → Notifications is where he changes the time or turns things off. If he leaves the app while a fit check is still being scored, one more notification tells him it's ready. If he doesn't open the app for a week, the nudges stop, and the next time he opens it Kit asks once whether he wants them back.
 
 ## Where it lives
 - **Kit's ask and the comeback question** are Kit's lines in the Stylist thread (`StylistMessage` with a `footer`, as the ask card is built today in `features/finish/NotifyAskCard.tsx`). Around them: the Stylist header ("Stylist", no subtitle in the beta: `quotaLine` returns null for the beta tier), the "Ask Kit…" bar (`StylistBar`, the tab-bar accessory) and the tab bar. There's no Back or X: they're cards in the thread, answered in place. Once answered, each card stays as its one line for good.
 - **Apple's prompt** is iOS's own alert over whatever screen asked for it (Stylist, or You → Notifications).
-- **The nudge** is drawn by iOS (lock screen, Notification Center, banner). A tap opens the Stylist tab at today's card. That card is built by the morning lane (T55) and isn't redrawn here.
+- **The nudge and Fit check ready** are drawn by iOS (lock screen, Notification Center, banner). A tap on the nudge opens the Stylist tab at today's card (built by the morning lane, T55, not redrawn here); a tap on Fit check ready opens Stylist at that check's card (as built, not redrawn).
 - **You → Notifications** is a page pushed from the `Notifications` row on You (`app/(tabs)/you/notifications.tsx`; the row itself belongs to T34, `specs/setup-and-you.md` SY1). It has the native header "Notifications" and the system Back button (VoiceOver "You"). The tab bar stays, with You selected. He leaves with Back or a swipe from the left edge.
-- **What the switch shows** (all of phones 8–10): it shows on only when `notify.idea` is saved on **and** iOS allows notifications for Kitted. While Apple's prompt has never been shown (before Kit's ask, after `No thanks` on it, or after "Delete all my data"), it shows off and the time row is hidden, whatever the stored value: that's phone 9. The one exception is phone 10 (iOS has them off), where the greyed switch shows its saved value. *Change from today:* `prefs.ts` reads an unset `notify.idea` as on (`parseSwitch`, "Unset means on"), which would show phone 8 to someone who was never asked.
+- **What the switches show** (phones 8–10 and 16):
+  - **Daily outfit idea** shows on only when all three hold: `notify.idea` is saved on, iOS allows notifications for Kitted, and the nudges aren't paused waiting for the comeback answer (settled, Q1). Otherwise it shows off and the time row is hidden: that's phone 9. **`notify.idea` is the source of truth, and unset reads off** for this switch (settled, critic round 2): `Send me ideas`, and the switch turned on, write it on *before* asking iOS, so Don't Allow still leaves phone 10 greyed on and coming back from iOS Settings schedules; `No thanks` (on the ask or the comeback) writes it off; "Delete all my data" clears it, so it reads off again even though iOS keeps its own answer through a wipe.
+  - **Fit check ready** shows on when iOS allows notifications and `notify.ready` isn't saved off ("on by default once notifications are allowed", spec NT3). Before iOS has allowed them, it shows off.
+  - On phone 10 (iOS has them off), both greyed switches show their saved values: `notify.idea` as saved, `notify.ready` on unless saved off.
+  - *Change from today:* `prefs.ts` reads an unset `notify.idea` as on (`parseSwitch`, "Unset means on"), which would show phone 8 to someone who was never asked; for this switch it now reads off.
 
 ## States
 In the order he meets them. The must-not cases, where he sees nothing: **under the under-18 lock** no ask posts, no comeback posts, and nothing is scheduled (NT5.2); **after `No thanks`** Kit never posts the ask again (NT1.7); **after "Delete all my data"** everything scheduled is cancelled and the ask can come again after setup, like a new user (NT5.1). None of these has a frame. The data deletion screens aren't changed by this task.
@@ -60,6 +64,7 @@ Top to bottom, in VoiceOver's reading order (the thread above is as built: his f
 ### Kit's ask · allowed · when: he taps Allow · phone 4 · `design/04-light.png`, `design/04-dark.png`
 - Kit's name + Kit's bubble · "Done. Your first idea lands tomorrow at 7:45 am." (source: spec NT1 "Answers") · the time is the nudge time (his time minus 15 minutes, `ideaTimeLabel` format); "today" instead of "tomorrow" when today's nudge time hasn't passed yet ("Done. Your first idea lands today at 7:45 am.") · VoiceOver: "Kit: Done. Your first idea lands tomorrow at 7:45 am."
 - The time row and both buttons are gone for good. The time and the switch are saved, and the next 7 days are scheduled.
+- **The same line if he turns the daily idea on in You → Notifications first** while the ask is still unanswered (settled, Q8), so a later tap on its No thanks can't undo it.
 - **VoiceOver focus** moves to this line once it shows, so he hears the result (the button he tapped no longer exists). *Change from today:* focus isn't moved.
 - **Motion and haptics:** none. **Dark:** token swap. **Largest text:** the line wraps, as every Kit line does.
 
@@ -75,37 +80,55 @@ Top to bottom, in VoiceOver's reading order (the thread above is as built: his f
 - **Motion, Dark, Largest text:** as phone 1.
 
 ### The daily nudge · when: every day at his nudge time · phone 7 · `design/07-light.png`, `design/07-dark.png` (the same picture: always dark)
-iOS draws this; Kitted writes only the body line. The frame shows all four lines together for review. He gets one a day.
+iOS draws this; Kitted writes only the body line. **At most one a day** (the founder, Nov 9). The frame shows one nudge on the lock screen; the other lines it can carry instead are listed as text in the caption beside it, never drawn together.
 - Header: the app name "Kitted" and the time (iOS's). **No title** (spec NT2).
 - Body, one of:
-  - "Today: navy overshirt, grey tee, khaki chinos, white sneakers." (spec NT2 `Today: {item1}, {item2}, {item3}, {item4}.`, lowercase piece names, as many as the outfit has; here the spec's example) · the next nudge, once Kit can suggest outfits. It names the pieces on that day's morning card.
-  - "Today's outfit idea is ready." (spec) · the later queued days, once Kit can suggest.
-  - "Your closet's big enough now: here's today's idea." (spec) · the first scheduled day on which Kit can suggest, once ever.
-  - "Check today's fit. Each one teaches me your closet." (spec) · every day while Kit can't suggest yet (empty closet, or fewer than two outfits that work).
+  - "Today: navy overshirt, grey tee, khaki chinos, white sneakers." (spec NT2 `Today: {item1}, {item2}, {item3}, {item4}.`, lowercase piece names, as many as the outfit has; here the spec's example) · the next nudge, once Kit can suggest outfits. It names the pieces on that day's morning card. **This is the one drawn**, at 7:45 (for 8:00).
+  - The other three are in the caption only:
+    - "Today's outfit idea is ready." (spec) · the later queued days, once Kit can suggest.
+    - "Your closet's big enough now: here's today's idea." (spec) · the first scheduled day on which Kit can suggest, once ever.
+    - "Check today's fit. Each one teaches me your closet." (spec) · every day while Kit can't suggest yet (empty closet, or fewer than two outfits that work).
 - Default sound. No badge, no image, no actions, no Time Sensitive.
 - VoiceOver: iOS's own ("Kitted, {body}").
 - tap: opens Kitted at the Stylist tab, scrolled to today's card (posted then if it isn't yet). A tap on an older day's nudge opens today's card too.
-- **Change from today:** the lock-screen mockup (`kitted-mockups.html` screen 14) shows three kinds; the beta sends only this one (spec NT2.5).
+- **Change from today:** the lock-screen mockup (`kitted-mockups.html` screen 14) shows three kinds stacked; the beta sends at most one nudge a day plus NT6 (spec NT2.5), and never `Trial ending`.
+
+### Fit check ready · when: he left the app while a fit check was being scored, and the score came back in the background · phone 17 · `design/17-light.png`, `design/17-dark.png` (the same picture: always dark)
+Drawn last (phone 17) so the other phones keep their numbers; in his day it can come at any time after he starts a check.
+- iOS draws it: header "Kitted" and the time (iOS's), **no title**, default sound, no badge, image or actions (spec NT6).
+- Body, one of:
+  - "Your fit check is ready. 2 quick fixes inside." (spec NT6; `en.ts` `push.ready` with n = 2) · **the one drawn**, at 7:53 on the lock screen.
+  - "Your fit check is ready. 1 quick fix inside." (spec; `en.ts` `push.ready` one) · one fix. In the caption.
+  - "Your fit check is ready." (spec, **new in en.ts**: the no-fixes form) · no fixes. In the caption.
+- **Never the score** on the lock screen (NT6.5).
+- VoiceOver: iOS's own ("Kitted, {body}").
+- tap: opens Kitted at the Stylist tab, scrolled to that check's card (NT6.4).
+- **When it's sent:** once per check, only if notifications are allowed and the Fit check ready switch is on, and only when the score arrives while the app is in the background within iOS's extra time (about 30 s). **Not sent** when he's still in the app, when the check failed, was "not rated" or he was offline, or when the extra time runs out first (then the score is in the chat when he opens the app, as today). It doesn't count toward the one nudge a day and never changes the nudge.
+- **Change from today:** the mockup's line ("Your fit check is ready. 2 quick fixes inside.") is kept; the no-fixes form is added.
 
 ### You → Notifications · on · when: he opens Notifications from You, with the switch on and iOS allowing · phone 8 · `design/08-light.png`, `design/08-dark.png`
 Top to bottom, in VoiceOver's reading order:
 - Back · the native stack's back button (iOS 26 glass, chevron only) · VoiceOver: "You", back button (the previous title) · tap: back to You.
 - Title · native header title · "Notifications" (`en.ts` `notifs.title`) · `headline`, system · VoiceOver: header.
-- Header · `Section` `header` · "One outfit idea a day, 15 minutes before you get dressed. That's all I send." (source: spec NT3) · `subheadline` `ink2`, 4 pt side inset, 4 pt under it · VoiceOver: read as text.
+- Header · `Section` `header` · "An outfit idea once a day, and a heads-up when a fit check finishes after you leave. That's all I send." (source: spec NT3) · `subheadline` `ink2`, 4 pt side inset, 4 pt under it · VoiceOver: read as text.
 - Rows · `Section` card (`KCard` radius 20 (`radius.cardSmall`), `surface`, 1 pt `line`, the card shadow in light), 1 pt `RowDivider` inset 16 between rows. Page side gutter 16, 12 pt top padding (`SettingsScroll`).
   - Daily outfit idea · `ToggleRow` · "Daily outfit idea" (source: spec; `en.ts` `notifs.idea`) · title `callout` 600 `ink`, row min 44, padding 12 / 16 · the system `Switch`, track `good` when on · VoiceOver: "Daily outfit idea", switch button, on · tap: off → phone 9 (cancels everything scheduled).
   - I get dressed at · `PickerRow` · "I get dressed at" (source: spec NT3) · title `callout` 600 `ink` (hidden from VoiceOver), value `MorphPicker` inline: "8:00 am" in `subheadline` 500 `ink2` with a `chevronDown` 10 `ink2` · VoiceOver: "I get dressed at, 8:00 am", button · tap: opens the time menu as `PickerRow`'s inline `MorphPicker` does in Settings → Appearance (a `surface` panel that grows down from the value, the same 17 times; not drawn); a pick saves the time and reschedules all 7 at once.
-- No `Fit check ready` row, no `Trial ending` row.
+  - Fit check ready · `ToggleRow` · "Fit check ready" (source: spec NT3; `en.ts` `notifs.ready`) · as the first row (title `callout` 600 `ink`, the system `Switch`, track `good`) · VoiceOver: "Fit check ready", switch button, on · tap: off → `notify.ready` saved off; no Fit check ready notification is sent until it's back on. It sits under the time row (spec order) and doesn't hide when the daily idea is off.
+- No `Trial ending` row.
 - **Motion and haptics:** the switch's own. The time row appears and hides with no animation (as built).
 - **Dark:** token swap; the card loses its shadow and keeps its border.
 - **Largest text:** phone 16.
-- **Change from today:** the header ("That's all I send. No reminders to open the app."), the time row's title ("Time") and its VoiceOver ("Daily outfit idea time, {time}") change; the `Fit check ready` and `Trial ending` rows go.
+- **Change from today:** the header ("That's all I send. No reminders to open the app."), the time row's title ("Time") and its VoiceOver ("Daily outfit idea time, {time}") change; `Fit check ready` stays and moves under the time row; the `Trial ending` row goes.
 
-### You → Notifications · off · when: after No thanks, or he switched it off · phone 9 · `design/09-light.png`, `design/09-dark.png`
+### You → Notifications · never asked, or off · when: before he's ever allowed notifications (before Kit's ask, after `No thanks` on it, after "Delete all my data"), or while the nudges are paused after a week away · phone 9 · `design/09-light.png`, `design/09-dark.png`
 - Back, title, header: as phone 8.
 - Daily outfit idea · `ToggleRow`, off · VoiceOver: "Daily outfit idea", switch button, off · tap: on. If Apple's prompt was never shown, it shows now (phone 3's alert over this page). While the alert is up, the switch flips on at once (feedback within 0.1 s) and is disabled until the answer comes back, as No thanks is on phone 3. Allow → it stays on, the time row shows, all 7 are scheduled (phone 8). Don't Allow → it goes back off and the page becomes phone 10. If iOS already allows: on, and all 7 are scheduled.
-- **The same picture before he was ever asked** (before Kit's ask, after `No thanks` on it, or after "Delete all my data"): the switch off and no time row, whatever is stored (see "What the switch shows" in Where it lives).
-- The time row is hidden while the switch is off (as built). His time is kept.
+- Fit check ready · `ToggleRow`, off (iOS hasn't allowed notifications yet) · VoiceOver: "Fit check ready", switch button, off · tap: on. If Apple's prompt was never shown, it shows now, the same way as the daily switch above: Allow → on (the daily switch stays as it was); Don't Allow → back off, page becomes phone 10.
+- **While paused** (a week away, switch saved on, iOS allowing): the daily switch shows off and the time row is hidden, but Fit check ready shows on. Switching the daily idea on resumes: all 7 are scheduled and an open comeback card becomes its `Back on.` line (phone 13) (settled, Q1).
+- **If he only switched the daily idea off** (iOS allowing): the daily switch is off with no time row, and Fit check ready stays on. Not drawn.
+- The time row is hidden while the daily switch is off (as built). His time is kept.
+- See "What the switches show" in Where it lives.
 
 ### You → Notifications · off in iOS · when: iOS has notifications off for Kitted (he tapped Don't Allow, or turned them off in iOS Settings) · phone 10 · `design/10-light.png`, `design/10-dark.png`
 Top to bottom, in VoiceOver's reading order:
@@ -114,8 +137,8 @@ Top to bottom, in VoiceOver's reading order:
   - "Notifications are off for Kitted." (source: spec NT3; `en.ts` `notifs.off`) · `callout` `ink` · VoiceOver: read as text.
   - Open Settings · `KButton` secondary regular, left-aligned · "Open Settings" (`en.ts` `common.openSettings`) · VoiceOver: "Open Settings", button · tap: Kitted's page in iOS Settings (`Linking.openSettings()`).
 - Header: as phone 8.
-- Rows · the same card, **greyed out**: each row dims itself to `opacity.disabled` (0.4): `ToggleRow` `disabled` as built, and the new `PickerRow` `disabled`. The card, its border and the divider stay at full opacity (one 0.4, never stacked). The switch is disabled and shows its saved value, the time row (shown if the switch is saved on) can't be tapped · VoiceOver: "Daily outfit idea", switch button, on, dimmed; "I get dressed at, 8:00 am", button, dimmed.
-- Nothing is scheduled. Coming back to the app with iOS allowing clears the card, un-greys the rows and schedules (the page re-reads the permission when the app returns to the foreground).
+- Rows · the same card, **greyed out**: each row dims itself to `opacity.disabled` (0.4): `ToggleRow` `disabled` as built, and the new `PickerRow` `disabled`. The card, its border and the divider stay at full opacity (one 0.4, never stacked). Both switches are disabled and show their saved values, the time row (shown if the daily switch is saved on) can't be tapped · VoiceOver: "Daily outfit idea", switch button, on, dimmed; "I get dressed at, 8:00 am", button, dimmed; "Fit check ready", switch button, on, dimmed.
+- Nothing is scheduled or sent. Coming back to the app with iOS allowing clears the card, un-greys the rows and schedules (the page re-reads the permission when the app returns to the foreground).
 - **Dark:** token swap.
 - **Largest text:** phone 16.
 - **Change from today:** the card and the greyed rows are new to this page (the copy deck had them; the page never showed them).
@@ -127,7 +150,7 @@ Top to bottom, in VoiceOver's reading order:
   - Turn them back on · `KButton` primary regular · "Turn them back on" (spec) · VoiceOver: "Turn them back on", button · tap: schedules the next 7 days → phone 13.
   - Change the time · `KButton` secondary regular · "Change the time" (spec) · VoiceOver: "Change the time", button · tap: → phone 12.
   - No thanks · `KButton` secondary regular · "No thanks" (spec) · VoiceOver: "No thanks", button · tap: saves the switch off → phone 14.
-- Posted once per lapse, at the end of today's thread. Until he answers (or switches it on in You → Notifications), nothing is scheduled. Ignored, it stays answerable.
+- Posted once per lapse, at the end of today's thread (settled, Q4), and **not posted while iOS has notifications off** for Kitted (settled, Q3; phone 10 is the way back). Not re-posted on a later day (settled, Q6). Until he answers (or switches it on in You → Notifications), nothing is scheduled. Ignored, it stays answerable.
 - **Motion and haptics:** none. **Dark:** token swap.
 - **Largest text:** as phone 15: the bubble wraps and the three buttons stack full width, in this order.
 - **Change from today:** it replaces the unbuilt "I've sent 3 ideas you didn't open…" card (`unopened.*`).
@@ -157,8 +180,9 @@ Top to bottom, in VoiceOver's reading order:
 
 ### Largest text · You → Notifications (phone 10 at AX5) · phone 16 · `design/16-light.png`, `design/16-dark.png`
 - Scrolled to the end. The off card's line wraps at `callout` AX5 (51 / 61) and Open Settings stretches full width (scrolled off above in the frame).
-- The header wraps at 49 / 59.
-- Daily outfit idea: its title wraps beside the switch (`ToggleRow` keeps the row). I get dressed at: the row stacks, title then the time under it (`PickerRow` at AX sizes, as built).
+- The header wraps at 49 / 59 (about eight lines).
+- Daily outfit idea and Fit check ready: each title wraps beside its switch (`ToggleRow` keeps the row). I get dressed at: the row stacks, title then the time under it (`PickerRow` at AX sizes, as built).
+- The frame is scrolled so the last two lines of the header and all three rows show.
 - The header title is capped at 2x. Nothing truncates.
 
 ## Words
@@ -174,8 +198,11 @@ Every string he reads in this task. No NEW strings: every word is the spec's, an
 - "Today's outfit idea is ready." · spec NT2
 - "Your closet's big enough now: here's today's idea." · spec NT2
 - "Check today's fit. Each one teaches me your closet." · spec NT2
+- "Your fit check is ready. {n} quick fixes inside." / "Your fit check is ready. 1 quick fix inside." · spec NT6; `en.ts` `push.ready` (kept)
+- "Your fit check is ready." · spec NT6 (no fixes; a new key in the copy deck, the spec's words)
 - "Notifications" · `en.ts` `notifs.title`
-- "One outfit idea a day, 15 minutes before you get dressed. That's all I send." · spec NT3 (replaces `notifs.header`)
+- "An outfit idea once a day, and a heads-up when a fit check finishes after you leave. That's all I send." · spec NT3 (replaces `notifs.header`)
+- "Fit check ready" · spec NT3; `en.ts` `notifs.ready` (kept)
 - "Daily outfit idea" · spec; `en.ts` `notifs.idea`
 - "Notifications are off for Kitted." · spec; `en.ts` `notifs.off`
 - "Open Settings" · spec; `en.ts` `common.openSettings`
@@ -187,7 +214,7 @@ Every string he reads in this task. No NEW strings: every word is the spec's, an
 - "Done. You can turn them on in You → Notifications." · spec NT4
 - Unchanged chrome in the frames: "Kit" (`common.who`), "Stylist" (`stylist.title`), "Ask Kit…" (`composer.placeholder`), the tab names (`tab.*`), the day stamp (`fmt.stampRecent`), the closet card (`plan.*`), the times (`ideaTimeLabel`, `fmt.am` / `fmt.pm`).
 - Apple's alert: Apple's words, not ours.
-- Removed with no replacement: `notifs.ready` "Fit check ready", `notifs.trial` "Trial ending", `push.trial`, `push.ready` (not sent in the beta; spec "Touches").
+- Removed with no replacement: `notifs.trial` "Trial ending" and `push.trial` (spec "Touches"). `notifs.ready` and `push.ready` stay (NT6).
 
 ## New parts
 - **`PickerRow` `disabled`** (`features/settings/SettingsList.tsx`): the time row greyed out on phone 10 (opacity 0.4, not tappable, VoiceOver "dimmed"). `ToggleRow` already has `disabled`; `PickerRow` doesn't.
@@ -195,12 +222,15 @@ Every string he reads in this task. No NEW strings: every word is the spec's, an
 Nothing else: the ask and the comeback are `StylistMessage` with a footer, the time is `MorphPicker`, the page is `SettingsScroll` / `Section` / `ToggleRow` / `PickerRow`.
 
 ## Checked by the designer
-- **HIG:** *Notifications* and *Privacy → Requesting permission*: Kit's card says what he gets and when before Apple's prompt, the prompt shows only on his tap, never at launch, and a refusal is respected with the way back in You → Notifications (pass). *Toggles*: a switch for on/off, its row title says what it controls (pass). *Pop-up buttons / menus*: one choice from 17 options in a menu with the current one checked (pass). *Disabled controls* are dimmed and say so to VoiceOver (pass). One notification a day, no marketing (App Review 4.5.4, pass).
+- **HIG:** *Notifications* and *Privacy → Requesting permission*: Kit's card says what he gets and when before Apple's prompt, the prompt shows only on his tap, never at launch, and a refusal is respected with the way back in You → Notifications (pass). *Toggles*: a switch for on/off, its row title says what it controls (pass). *Pop-up buttons / menus*: one choice from 17 options in a menu with the current one checked (pass). *Disabled controls* are dimmed and say so to VoiceOver (pass). At most one nudge a day plus a one-off "ready" only after he left mid-check, both his to switch off, no marketing (App Review 4.5.4, pass). Fit check ready never shows the score on the lock screen (privacy, pass).
 - **§C14:** tab bar unchanged, no tab used as an action (pass) · "settings behind a gear": not applicable, `specs/setup-and-you.md` moved Settings into You (founder) · 44 pt targets: buttons 36 visual / 44 hit, the time capsule 32 / 44 with its hitSlop, rows 44+ (pass) · contrast 4.5:1: the label `ink2` on `bg` 5.87 / 8.00, the time `ink` on `surface2` 15.43 / 13.20, the stamp `ink3` on `bg` 4.91 / 6.51, the row value `ink2` on `surface` 6.46 / 7.21 (pass; the dimmed rows on phone 10 are disabled controls, which WCAG exempts) · Dynamic Type to AX5 (phones 15–16, pass) · feedback within 0.1 s: the spinner on Send me ideas (pass) · Back on the pushed page (pass) · notifications utility-only, never "we miss you", asked in context (pass).
 - **Design system:** only 03 / `tokens.ts` tokens and existing components, plus `PickerRow` `disabled` above. Copper appears only on the active tab (03 §1.1: it marks nothing here).
 - **Hard lines:** no face, body or photo in any frame (no photos at all); no emoji, ranks, streaks, day counts or guilt in any word; Kit is named as Kit; nothing leaves the phone.
 
 ## Open questions for the founder
+All settled by the founder (Nov 9, round 3). Each answer below is the design; the question is kept for the record.
+- **Answers:** Q1 the switch shows off while paused, and switching it on resumes · Q2 T53 merges after T34, so "You → Notifications" is true on testers' phones · Q3 no comeback post while iOS has notifications off · Q4 at the end of today's thread · Q5 keep both cards on screen · Q6 not re-posted · Q7 no message; retry on the next open, foreground or background · Q8 the ask card turns into its done line · Q9 show the time row (no auto-open) · Q10 keep as built · the critic's round 2 polish: `notify.idea` unset reads off for the daily switch, and the paused condition is in "What the switches show".
+
 1. **During a lapse, what does the switch in You → Notifications show?** The spec says turning it "back on" there resumes, but the switch is still saved on, so it would already look on. · recommended: **it shows off while paused** (until he answers the comeback), so the page tells the truth and switching it on resumes (and turns the comeback card into its `Back on.` line). · other: it shows on, and simply opening the page while it's on resumes.
 2. **The words say "You → Notifications" but today's build has it under You → Settings → Notifications** until T34 (You becomes the settings home) merges. · recommended: **T53 merges after T34**, so the words are true on the testers' phones. · other: ship T53 first and accept a wrong path for one build.
 3. **The comeback question when iOS has notifications off.** The spec asks it whenever the switch is on, but Turn them back on can't schedule anything then. · recommended: **don't post the comeback while iOS has them off**; phone 10's card is the way back. · other: post it, and Turn them back on opens phone 10.
@@ -218,7 +248,8 @@ Nothing else: the ask and the comeback are `StylistMessage` with a footer, the t
 - Today's card that a nudge opens: the morning lane (T55), unchanged here.
 - The `Notifications` row on You and where it sits: T34 (`specs/setup-and-you.md` SY1).
 - "Delete all my data" and the under-18 lock screens: unchanged; this task only cancels and clears behind them (NT5.1, NT5.2).
-- `Fit check ready` and any server push: launch (`specs.md` F13).
+- Any server push (none in the beta). `Fit check ready` is in scope now (NT6, phone 17).
+- The native code that asks iOS for extra background time while a check finishes: not visible, no design.
 
 ## Design check (critic)
 Written by the critic, round by round.
@@ -271,4 +302,5 @@ Read: the round 2 diff (c8295e09: DESIGN.md, `design.html`), and every re-shot P
 **Suggestions:** none new.
 
 ## Changes
+- **Round 3** · from the founder: "4 notifications at the same time is excessive. a max of one notification per day, unless they leave while the rating is processing. then we can tell them to check their rating out or someting." (spec NT3 and NT6 changed with his yes, 8bf79970, log #410) · phone 7 redrawn as one nudge on the lock screen, with the other three lines listed in its caption as text; phone 17 added: Fit check ready on the lock screen ("Your fit check is ready. 2 quick fixes inside."), its 1-fix and no-fix lines in the caption, a tap opening that check's card; phones 8, 9, 10 and 16 take NT3's new header and the third row, Fit check ready (phone 9 now draws the never-asked state, both switches off; phone 16 re-scrolled to show all three rows); "What the switches show" rewritten (the paused condition from Q1, `notify.idea` unset reads off, the Fit check ready rule); open questions 1–10 recorded as settled; Words updated (new header, `notifs.ready` and `push.ready` kept, the no-fix line). PNGs re-shot: 07, 08, 09, 10, 16, 17, light and dark.
 - **Round 2** · from the critic (round 1) · blocker: added "What the switch shows" (on only when saved on and iOS allows; off with no time row while Apple's prompt has never been shown, which looks like phone 9) and the matching line on phone 9. Polish: the button gaps written as 12 pt (time row to buttons) and 16 pt (wrapped rows), and the frames redrawn with 44 pt button boxes (phones 1, 2, 3, 6, 11, 12, 15); the footer's spacing corrected to 10 pt and Kit's name to 16 pt under the card; phone 3's spinner button at Send me ideas' real width (135.5 pt); phone 10 dims each row once and keeps the card at full opacity (frames 10 and 16 redrawn); phone 2's sliver of title noted as as-built; phone 15's `fullWidth` at AX sizes named as a change from today, for the ask and the comeback; the settings page's menu described (as in Settings → Appearance); phone 9's switch while Apple's prompt is up. Open questions 8–10 added from the critic's suggestions. PNGs re-shot: 01, 02, 03, 06, 10, 11, 12, 15, 16, light and dark.

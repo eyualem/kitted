@@ -620,7 +620,7 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
       <figcaption><b>Kit's ask · catch-up for earlier testers <small>PHONE 6</small></b><span>A tester who finished setup on the first TestFlight build, before notifications existed, gets the same card once, the next time Stylist opens, if Apple's prompt was never shown. It posts at the end of today's thread (anything else from today sits above it). Same answers as phones 2–5.</span></figcaption>
     </figure>
 
-    <!-- 7 · The daily nudge on the lock screen (all four lines, for review) -->
+    <!-- 7 · The daily nudge on the lock screen (one; the other lines are listed in the caption) -->
     <figure class="shot">
       <div class="phone fixed" data-status="dark" data-home="dark">
         <div class="screen lock">
@@ -630,9 +630,6 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
           </div>
           <div class="t53-lockstack">
             <div class="notif"><span class="nic"><span>K</span></span><div><div class="nh"><b>Kitted</b><span>now</span></div><p>Today: navy overshirt, grey tee, khaki chinos, white sneakers.</p></div></div>
-            <div class="notif"><span class="nic"><span>K</span></span><div><div class="nh"><b>Kitted</b><span>now</span></div><p>Today's outfit idea is ready.</p></div></div>
-            <div class="notif"><span class="nic"><span>K</span></span><div><div class="nh"><b>Kitted</b><span>now</span></div><p>Your closet's big enough now: here's today's idea.</p></div></div>
-            <div class="notif"><span class="nic"><span>K</span></span><div><div class="nh"><b>Kitted</b><span>now</span></div><p>Check today's fit. Each one teaches me your closet.</p></div></div>
           </div>
           <div style="position:absolute;left:44px;right:44px;bottom:44px;display:flex;justify-content:space-between">
             <span class="circ glass" style="width:54.5px;height:54.5px"><svg class="ic s"><use href="#i-flash"/></svg></span>
@@ -640,7 +637,7 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
           </div>
         </div>
       </div>
-      <figcaption><b>The daily nudge · its four lines <small>PHONE 7</small></b><span>Shown together for review only: he gets one a day, 15 minutes before his get-dressed time, with the default sound. iOS draws it; the header is the app name, there's no title. Top to bottom: the next nudge once Kit can suggest outfits (it names the pieces on that day's morning card); a later queued day; the first day Kit can suggest (once ever); and every day before Kit can suggest. A tap opens Stylist at today's card. Always dark here (a preview of iOS).</span></figcaption>
+      <figcaption><b>The daily nudge <small>PHONE 7</small></b><span>At most one a day, 15 minutes before his get-dressed time (7:45 for 8:00), with the default sound. iOS draws it: the header is the app name, there's no title. Shown: the next nudge once Kit can suggest outfits; it names the pieces on that day's morning card. A tap opens Stylist at today's card. Always dark here (a preview of iOS).</span><span><b style="font-size:12.5px">The other lines it can carry instead (one per day, never together):</b><br>"Today's outfit idea is ready." · a later queued day, once Kit can suggest.<br>"Your closet's big enough now: here's today's idea." · the first day Kit can suggest, once ever.<br>"Check today's fit. Each one teaches me your closet." · every day before Kit can suggest.</span></figcaption>
     </figure>
 
     <!-- 8 · You → Notifications, on -->
@@ -650,16 +647,17 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
           <div class="t53-nav"><span class="back"><svg class="ic s"><use href="#i-back"/></svg></span><div class="t">Notifications</div></div>
           <div class="t53-set">
             <div class="t53-sec">
-              <div class="hd">One outfit idea a day, 15 minutes before you get dressed. That's all I send.</div>
+              <div class="hd">An outfit idea once a day, and a heads-up when a fit check finishes after you leave. That's all I send.</div>
               <div class="t53-rows">
                 <div class="t53-row"><span class="ti">Daily outfit idea</span><span class="t53-sw on"></span></div>
                 <div class="t53-row"><span class="ti">I get dressed at</span><span class="val">8:00 am<svg class="chev"><use href="#t53-down"/></svg></span></div>
+                <div class="t53-row"><span class="ti">Fit check ready</span><span class="t53-sw on"></span></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <figcaption><b>You → Notifications · on <small>PHONE 8</small></b><span>From the Notifications row on You. One switch and the time he gets dressed; tapping the time opens the same menu as phone 2 and reschedules at once. No Fit check ready or Trial ending rows in the beta.</span></figcaption>
+      <figcaption><b>You → Notifications · on <small>PHONE 8</small></b><span>From the Notifications row on You. The daily idea's switch, the time he gets dressed (tapping it opens the time menu and reschedules at once), and the Fit check ready switch, on by default once notifications are allowed. No Trial ending row.</span></figcaption>
     </figure>
 
     <!-- 9 · You → Notifications, off -->
@@ -669,15 +667,16 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
           <div class="t53-nav"><span class="back"><svg class="ic s"><use href="#i-back"/></svg></span><div class="t">Notifications</div></div>
           <div class="t53-set">
             <div class="t53-sec">
-              <div class="hd">One outfit idea a day, 15 minutes before you get dressed. That's all I send.</div>
+              <div class="hd">An outfit idea once a day, and a heads-up when a fit check finishes after you leave. That's all I send.</div>
               <div class="t53-rows">
                 <div class="t53-row"><span class="ti">Daily outfit idea</span><span class="t53-sw"></span></div>
+                <div class="t53-row"><span class="ti">Fit check ready</span><span class="t53-sw"></span></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <figcaption><b>You → Notifications · off <small>PHONE 9</small></b><span>After No thanks, or he switched it off: everything scheduled is cancelled and the time row hides (his time is kept). Switching on when Apple's prompt was never shown asks iOS first (phone 3's alert, over this page); Don't Allow leaves the switch off.</span></figcaption>
+      <figcaption><b>You → Notifications · never asked, or off <small>PHONE 9</small></b><span>Before he's ever said yes (before Kit's ask, after No thanks on it, after "Delete all my data"), and while the daily ideas are paused after a week away: the daily switch is off and the time row hides (his time is kept). Fit check ready is off too until notifications are allowed. Turning either on when Apple's prompt was never shown asks iOS first (phone 3's alert, over this page); Don't Allow leaves it off. If he only switched the daily idea off, Fit check ready stays on.</span></figcaption>
     </figure>
 
     <!-- 10 · You → Notifications, iOS has them off -->
@@ -688,16 +687,17 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
           <div class="t53-set">
             <div class="t53-off"><p>Notifications are off for Kitted.</p><span class="btn">Open Settings</span></div>
             <div class="t53-sec">
-              <div class="hd">One outfit idea a day, 15 minutes before you get dressed. That's all I send.</div>
+              <div class="hd">An outfit idea once a day, and a heads-up when a fit check finishes after you leave. That's all I send.</div>
               <div class="t53-rows t53-dis">
                 <div class="t53-row"><span class="ti">Daily outfit idea</span><span class="t53-sw on"></span></div>
                 <div class="t53-row"><span class="ti">I get dressed at</span><span class="val">8:00 am<svg class="chev"><use href="#t53-down"/></svg></span></div>
+                <div class="t53-row"><span class="ti">Fit check ready</span><span class="t53-sw on"></span></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <figcaption><b>You → Notifications · off in iOS <small>PHONE 10</small></b><span>He tapped Don't Allow, or later turned Kitted's notifications off in iOS Settings. The card on top says so and Open Settings goes to Kitted's page there; the switch and time are greyed out and can't be changed, and nothing is scheduled. Coming back with them on clears the card and schedules.</span></figcaption>
+      <figcaption><b>You → Notifications · off in iOS <small>PHONE 10</small></b><span>He tapped Don't Allow, or later turned Kitted's notifications off in iOS Settings. The card on top says so and Open Settings goes to Kitted's page there; both switches and the time are greyed out (showing their saved values) and can't be changed, and nothing is scheduled or sent. Coming back with them on clears the card and schedules.</span></figcaption>
     </figure>
 
     <!-- 11 · The comeback question -->
@@ -810,18 +810,39 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
         <div class="screen">
           <div class="t53-nav"><span class="back"><svg class="ic s"><use href="#i-back"/></svg></span><div class="t">Notifications</div></div>
           <div class="t53-set" style="top:106px">
-            <div class="t53-off" style="margin-top:-330px"><p>Notifications are off for Kitted.</p><span class="btn">Open Settings</span></div>
+            <div class="t53-off" style="margin-top:-555px"><p>Notifications are off for Kitted.</p><span class="btn">Open Settings</span></div>
             <div class="t53-sec">
-              <div class="hd">One outfit idea a day, 15 minutes before you get dressed. That's all I send.</div>
+              <div class="hd">An outfit idea once a day, and a heads-up when a fit check finishes after you leave. That's all I send.</div>
               <div class="t53-rows t53-dis">
                 <div class="t53-row"><span class="ti">Daily outfit idea</span><span class="t53-sw on"></span></div>
                 <div class="t53-row stack"><span class="ti">I get dressed at</span><span class="val">8:00 am<svg class="chev"><use href="#t53-down"/></svg></span></div>
+                <div class="t53-row"><span class="ti">Fit check ready</span><span class="t53-sw on"></span></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <figcaption><b>Largest text · You → Notifications <small>PHONE 16</small></b><span>Phone 10 at AX5, its busiest state, scrolled to the end: the card's line and Open Settings come first (scrolled off above here), then the header and the rows. The time row stacks (title, then the time under it); the switch stays beside its title. Nothing truncates.</span></figcaption>
+      <figcaption><b>Largest text · You → Notifications <small>PHONE 16</small></b><span>Phone 10 at AX5, its busiest state, scrolled to the end: the card's line and Open Settings come first (scrolled off above here), then the header and the rows. The time row stacks (title, then the time under it); each switch stays beside its wrapped title. Nothing truncates.</span></figcaption>
+    </figure>
+
+    <!-- 17 · Fit check ready on the lock screen (NT6) -->
+    <figure class="shot">
+      <div class="phone fixed" data-status="dark" data-home="dark">
+        <div class="screen lock">
+          <div style="display:flex;flex-direction:column;align-items:center;padding-top:80.5px;gap:2.5px;color:#fff">
+            <div style="font-size:17px;font-weight:600;opacity:.85">Tuesday, November 10</div>
+            <div class="locktime">7:53</div>
+          </div>
+          <div class="t53-lockstack">
+            <div class="notif"><span class="nic"><span>K</span></span><div><div class="nh"><b>Kitted</b><span>now</span></div><p>Your fit check is ready. 2 quick fixes inside.</p></div></div>
+          </div>
+          <div style="position:absolute;left:44px;right:44px;bottom:44px;display:flex;justify-content:space-between">
+            <span class="circ glass" style="width:54.5px;height:54.5px"><svg class="ic s"><use href="#i-flash"/></svg></span>
+            <span class="circ glass" style="width:54.5px;height:54.5px"><svg class="ic s"><use href="#i-camera"/></svg></span>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Fit check ready <small>PHONE 17</small></b><span>Only when he left the app while a fit check was being scored, and the score came back in the background (iOS gives the app about 30 s; a check takes about 8 s). One per check, never the score on the lock screen, default sound, no title. A tap opens Stylist at that check's card. Not sent if he's still in the app, the check failed, wasn't rated or was offline, or the Fit check ready switch is off. It doesn't count toward the one daily nudge. Always dark here (a preview of iOS).</span><span><b style="font-size:12.5px">Its other lines, by the number of fixes:</b><br>"Your fit check is ready. 1 quick fix inside." · one fix.<br>"Your fit check is ready." · no fixes.</span></figcaption>
     </figure>
 
   </div>
