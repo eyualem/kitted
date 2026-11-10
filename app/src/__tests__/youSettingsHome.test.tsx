@@ -516,6 +516,29 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     expect(screen.queryByTestId('you-rows')).toBeNull();
   });
 
+  // Verify round 1, defect 3: each of You's three reads holds the page back on its own, not just the usage read.
+  it('SY1.2 · before its data loads You draws nothing: the profile read still pending', async () => {
+    given('free');
+    const s = mockStore;
+    mockStore = { ...s, profile: { ...s.profile, get: () => new Promise<never>(() => undefined) } };
+    await render(<YouScreen />);
+    await settle();
+    expect(screen.toJSON()).toBeNull();
+    expect(screen.queryByTestId('you-style')).toBeNull();
+    expect(screen.queryByTestId('you-rows')).toBeNull();
+  });
+
+  it('SY1.2 · before its data loads You draws nothing: the facts read still pending', async () => {
+    given('free');
+    const s = mockStore;
+    mockStore = { ...s, facts: { ...s.facts, all: () => new Promise<never>(() => undefined) } };
+    await render(<YouScreen />);
+    await settle();
+    expect(screen.toJSON()).toBeNull();
+    expect(screen.queryByTestId('you-style')).toBeNull();
+    expect(screen.queryByTestId('you-rows')).toBeNull();
+  });
+
   it('SY1.2 · with no profile (an install that skipped onboarding) the style card still comes first', async () => {
     given('free');
     mockStore = createMemoryStore();
