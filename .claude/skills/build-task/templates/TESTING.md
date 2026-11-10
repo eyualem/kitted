@@ -1,18 +1,12 @@
-# <ID> · Testing contract
+# <ID> · Testing contract (strict)
 
-Written by the planner; tests written and locked by the test writer. **Locked once the lock line below is filled.** After that only a test-writer agent changes this file or the tests, only to add or strengthen, with the reason in REPORT.md. Results never go here; they go in REPORT.md.
+Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
 **Lock:** `<commit SHA>` · <date> · tests: `<path>`, `<path>`
 
 ## Criteria
-One line per criterion on the task's `plan.md` line. Every test name starts with its criterion ID.
-- **F<n.n>** · <the criterion, as the spec says it> · how: <unit | component | server emulator | parity | flow | Simulator state | manual | launch bar> · test: `<file>` › `F<n.n> · <test name>` · expect: <exact value; copy word for word from the spec> · must not: <the case that must fail or be refused> · edges: <from the spec's failure table> · red: <the failure line when first run, or "exists: bites via <deliberate bug>">
-
-## UI inventory
-Every visible element, per state. Anything on screen that isn't here is a defect; anything here that isn't on screen is a defect.
-### <State> · demo screen <n> · light, dark, largest text
-- <element kind> · "<exact words>" · VoiceOver: "<label>" · testID `<id>`
+- **F<n.n>** · <the criterion, as the spec says it> · how: <unit | component | server emulator | parity> · test: `<file>` › `F<n.n> · <test name>` · expect: <exact value from the spec> · must not: <the case that must be refused> · red: <the failure line when first run, or "exists: bites via <deliberate bug>">
 
 ## Not testable yet
-Never dropped, never counted as pass.
-- **F<n.n>** · why: <reason> · would verify it: <a to-do for the founder (Yn), a tool, a later task>
+Never dropped, never counted as done.
+- **F<n.n>** · why: <reason> · would verify it: <a founder to-do (Yn), a tool, a later task>
