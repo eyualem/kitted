@@ -26,30 +26,22 @@ You are the coordinator. You don't write the design, the plan, the tests or the 
 - Memory: `top -l 1 | grep PhysMem`; never start while another heavy job runs (CLAUDE.md rule 8).
 - Work on a branch `claude/<id>-<short-name>` from main. Claim the line: `[~] <ID> · plan` (or `· design`, see D), commit, push.
 
-## Size (pick it before any agent runs; the founder, Nov 10)
-The checking matches how bad a mistake would be, not one size for everything. Pick the size from the plan line, the spec and the files, write it on the plan line (`[~] <ID> · S · plan`) and in your first message to the founder in one plain line ("This is a small one: …"). He can change it; if he does, his size wins.
-- **S, small:** a bug fix, a removal, words, a config value; about 3 app files or fewer; no new screen, state or flow.
-- **M, medium:** a change to an existing screen or flow, or a new state on one.
-- **L, large:** a new screen or flow.
-- **Never S, whatever its size** (at least M): it touches privacy (what leaves the phone, face blurring, consent, wipes), scoring (`@kitted/core`, the Python engine), the daily limits or money, the age gate, or the server.
-
-| | S | M | L |
-|---|---|---|---|
-| D. Design | skip | only if it adds a state or puts words in a new place | yes |
-| 1. Plan | short: one page for both files | full | full |
-| 2. Tests first, locked | yes | yes | yes |
-| 4. Deliberate bugs | 1 per criterion, at most 5 | 1 per criterion, at most 10 | 1 per criterion |
-| 4. Simulator | the states it changes, light and dark | every inventory state | every inventory state |
-| 4. Flows | the flows on the screens it changes | every flow | every flow |
-| 4b. Design review | skip | the changed screens only | yes |
-| 5. Rounds of build and verify | at most 2 | at most 2 | at most 3 |
-
-Pass the size to every agent with the task ID. Tests first and locked, and never relaxing a test, hold at every size. Before any TestFlight build, every flow runs once on the build's code, whatever the sizes of the tasks in it.
+## Lean or strict (decide before any agent runs; the founder, Nov 10)
+The beta comes first, so most tasks are **lean**: one builder, one review pass. Checking costs time and the usage limit; it goes where a mistake hurts a person, not where it only looks rough. Say which in your first message to the founder in one plain line ("Lean: one build, one review"). He can change it, and his word wins. Write it on the plan line (`[~] <ID> · lean · build`).
+- **Strict:** the task touches scoring (`@kitted/core`, the Python engine), the daily limits or money, privacy (what leaves the phone, face blurring, consent, wipes), the age gate, or the server (`firebase/`). Run steps 1–6 below: planner, tests first and locked, implementer, verifier. The verifier plants at most 10 deliberate bugs, runs only this task's flows, and gets 2 rounds at most.
+- **Lean:** everything else (screens, words, layout, removals, most bug fixes). Run these instead of steps 1–5:
+  1. **Design only for a new screen** (step D with one critic pass, then his look). A change to a screen he has needs no drawing.
+  2. **The builder** (`subagent_type: "builder"`) builds from the spec. It writes a short checklist in `tasks/<ID>/IMPLEMENTATION.md` (half a page) and tests only for logic it changes. A bug fix gets one test that reproduces the bug, shown failing before the fix. No UI-inventory tests and no new tap-through flows.
+  3. **One review pass by the verifier**, mode `lean`: `npm run check`, screenshots of the screens the task changed in light and dark, a read of the change against the spec. No planted bugs and no full flow suite.
+  4. **One fix round** (the builder again, then the review again). Anything still open goes to the founder in the summary, not into another round.
+  Then step 6 (Finish) as written.
+- **A task already underway** switches to lean where it stands if it isn't strict: tests already locked stay and must pass, and no new ones are written for its screens. The remaining review is the lean pass.
+- **Before any TestFlight build**, the core flows run once on the build's code: setup, a fit check, Kit, Closet and You (`app/e2e/flows/`). That's where regressions are caught, not on every task.
 
 ## D. Design (only for a task that changes what he sees)
-**When:** the size table says so (never for S), the task adds or changes anything on screen (a state, a card, a sheet, a row, words in a new place) **and** has no `tasks/<ID>/IMPLEMENTATION.md` yet. A task planned before this stage existed carries on without it, and a task that changes nothing on screen (server, scoring, tests only) skips it. If `tasks/<ID>/DESIGN.md` already carries the founder's approval line for every state the task shows, go to step 1; if it covers only some (its "Out of scope" says which), run D for the rest: new states take the next phone numbers so the approved PNGs keep theirs, and his yes rewrites the approval line's scope.
+**When:** a strict task, or a lean one that adds a new screen (Lean or strict above); the task adds or changes anything on screen (a state, a card, a sheet, a row, words in a new place) **and** has no `tasks/<ID>/IMPLEMENTATION.md` yet. A task planned before this stage existed carries on without it, and a task that changes nothing on screen (server, scoring, tests only) skips it. If `tasks/<ID>/DESIGN.md` already carries the founder's approval line for every state the task shows, go to step 1; if it covers only some (its "Out of scope" says which), run D for the rest: new states take the next phone numbers so the approved PNGs keep theirs, and his yes rewrites the approval line's scope.
 1. Plan line → `[~] <ID> · design`. Run the **ui-designer** agent (`subagent_type: "ui-designer"`) with the task ID, its `plan.md` line, the lane and the spec file. Wait.
-2. Run the **ui-critic** agent with the task ID and mode `design`. Blockers go back to the designer with the critic's findings; then the critic again. At most 2 rounds; a blocker still open after that goes to the founder with the rest.
+2. Run the **ui-critic** agent with the task ID and mode `design`, once. Its blockers go to the designer once, then straight to the founder with the frames; no second critic pass.
 3. Show the founder. Open the frames (`preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/<ID>/design.html`) and send the PNGs. In plain words: what he'll see in each state, the NEW words, the open questions with your pick, and the critic's suggestions (optional). Ask in one AskUserQuestion: **Looks right (Recommended)** · Change something. His yes approves the NEW words too.
 4. Changes: run the designer again with his words quoted (and the critic again if more than words changed), then show him again. After 3 rounds of changes, stop drawing and talk it through with him.
 5. His yes: add `**Approved by the founder:** <today> in chat` under DESIGN.md's title, log the NEW words and any decision in DECISIONS-LOG, commit `<ID>: design`.
@@ -72,17 +64,17 @@ Plan line → `· build`. Run the **implementer** agent with the task ID (and, o
 ## 4. Verify
 Plan line → `· verify`. Run the **verifier** agent with the task ID. Wait.
 
-## 4b. Design review (only with an approved DESIGN.md; never for S)
-After the verifier, unless it found the suites red or the lock broken (screenshots of a broken build waste a run): run the **ui-critic** agent with the task ID and mode `build` (for M, name the screens the task changed; it reviews only those). Wait.
+## 4b. Design review (only with an approved DESIGN.md)
+After the verifier, unless it found the suites red or the lock broken (screenshots of a broken build waste a run): run the **ui-critic** agent with the task ID and mode `build`, naming the screens the task changed (it reviews only those). Wait.
 - Blockers labelled **code** join the verifier's code defects.
 - Blockers labelled **design** (the approved design itself breaks a rule, or can't be built natively) go to the founder: keep the design (the implementer finds a way) or change it. A change runs the designer, then his yes, then the test writer updates the inventory's tests to the new approved words, recorded in REPORT.md → Disputes. That's the one case where a locked test's expected words may change, and only with his yes. A design change here counts as one of the task's rounds.
 - Polish goes to the implementer with the code defects if any are going anyway; it never holds the task. Suggestions go in the founder's summary.
 
-## 5. Loop (at most 2 rounds of build and verify for S and M, 3 for L)
+## 5. Loop (strict: at most 2 rounds of build and verify)
 On "not ready" (or the critic's "doesn't match"), sort each defect:
 - **code** → implementer, with the defects listed.
 - **test** (a deliberate bug went uncaught, a criterion is missing a test) → test-writer, to add or strengthen only; it re-locks.
-Then verify again (and run 4b again). After the last round for its size, stop: report what's still failing and why, and leave the line `[~] <ID> · stuck: <one line>`. Never relax a test, the inventory, the approved design or a criterion to get out of the loop. The loop ends when the verifier says ready and, for a designed task, the critic says matches.
+Then verify again (and run 4b again). After round 2, stop: report what's still failing and why, and leave the line `[~] <ID> · stuck: <one line>`. Never relax a test, the inventory, the approved design or a criterion to get out of the loop. The loop ends when the verifier says ready and, for a designed task, the critic says matches.
 
 ## 6. Finish
 - Fill REPORT.md → Summary for the founder (plain words, what he'll see, what's real and what's mocked, what wasn't checked). Commit.

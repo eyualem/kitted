@@ -2934,3 +2934,14 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **SY1.6 at the largest text size**, fixed in this task though older than it: a one-word row title (`Acknowledgements`) shrinks to fit its line instead of breaking mid-word (`LinkRow` only; titles with spaces still wrap); What Kit knows stacks over `See all {n}`; the numbered pick badge grows with its number. These apply on the Plan & usage, Privacy & data and Notifications pages and in Style profile too.
     - **Overrides `research-context.md` §C14's "Settings live behind a gear"** (#405).
     - **Lessons:** RNTL 14's `unmount()` returns a Promise; not awaiting it overlaps the next render's `act()` and silently stops every later render in the file. A Metro another session left on 8081 serves that branch's code to every flow, so check whose Metro answers (`lsof -p <pid> -d cwd`) before trusting a run.
+
+N. **The founder (Nov 10): the workflow takes too long, "particularly the testing". The beta runs lean, with heavy checks only where a mistake hurts a person.**
+    - **The report:** [Kitted workflow report](https://claude.ai/artifact/4DRgHi6445jHdEPr1jddBL).
+      - Of 6,445 agent calls (Nov 8–10), the test writer made 25%, the designer and critic 24%, the builder 18%, the checker 18% and the planner 14%.
+      - Main gained 799 lines of app code against 3,791 lines of tests and 3,251 lines of task documents.
+      - The 5-hour limit was hit twice, and each time every session stopped.
+    - **Lean**, the default for everything else: design only for a new screen (one critic pass); the `builder` agent writes the code, a half-page checklist and tests only for logic it changes (a bug fix: one reproducing test, failing first); one review pass by the verifier (the check, screenshots of changed screens in light and dark, a read of the change), with no planted bugs and no full flow suite; one fix round.
+    - **Strict**, for scoring, the daily limits or money, privacy, the age gate and the server: planner, test writer first and locked, implementer, verifier with at most 10 planted bugs and only the task's flows; 2 rounds.
+    - **Tap-through flows:** the core ones (setup, a fit check, Kit, Closet, You) run once before every TestFlight build, not on every task.
+    - **Tasks underway** switch where they stand. Locked tests stay and must pass; no new UI tests are written.
+    - **Replaces** #417's S/M/L sizes; at most 3 sessions building at once still holds.

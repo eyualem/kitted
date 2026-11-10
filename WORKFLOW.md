@@ -21,17 +21,20 @@ The whole process on one page, for the founder and for Claude. It explains and p
      ▼  for each task in the lane
   /build-task T11
      ├─ 0. spec gate ..... is the lane's spec there and approved? if not, offers the interview
-     ├─ D. design ........ only if the task changes a screen:
-     │     ├─ designer ... each state drawn as phone frames + tasks/T11/DESIGN.md
-     │     ├─ critic ..... checks the frames against Apple's rules, §C14 and the design system
-     │     └─ you ........ look at the frames: yes, or what to change
-     ├─ 1. planner ....... tasks/T11/IMPLEMENTATION.md + TESTING.md (the contract; a design's
-     │                     states and words become the UI inventory, word for word)
-     ├─ 2. test writer ... writes every test first, proves each fails, locks them
-     ├─ 3. implementer ... writes code until the locked tests pass, to the design's layout
-     ├─ 4. verifier ...... checks the lock, plants bugs, checks every screen, tries to break it
-     ├─ 4b. critic ....... (designed tasks) Simulator screenshots vs the approved frames
-     └─ loop ............. failures go back to 3 (code) or 2 (weak test), at most 3 rounds
+     ├─ lean or strict ... strict = scoring, limits, privacy, the age gate, the server
+     │
+     ├─ LEAN (most beta tasks)
+     │   ├─ design ....... only a new screen: designer, one critic pass, your look
+     │   ├─ builder ...... code + tests for the logic it changes + a short checklist
+     │   ├─ review ....... one pass: the app check, screenshots light/dark, a read of the change
+     │   └─ one fix round, then anything left comes to you
+     │
+     └─ STRICT
+         ├─ 1. planner ....... tasks/T11/IMPLEMENTATION.md + TESTING.md (the contract)
+         ├─ 2. test writer ... writes every test first, proves each fails, locks them
+         ├─ 3. implementer ... writes code until the locked tests pass
+         ├─ 4. verifier ...... checks the lock, plants up to 10 bugs, this task's flows
+         └─ loop ............. failures back to 3 (code) or 2 (weak test), at most 2 rounds
      │
      ▼
   A pull request + a plain report ──► you merge ──► the task is [x] in plan.md
@@ -59,12 +62,7 @@ The whole process on one page, for the founder and for Claude. It explains and p
 
 **Runs by itself** once you type `/build-task T11` in a session: the design (it stops once for your look), the plan, the tests, the code, the checks, the fix loop, the report and the pull request.
 
-**Sized to the risk** (Nov 10): each task is S, M or L, and the checking matches it. It says which in its first line to you, and you can change it.
-- **S** (a bug fix, a removal, words): no design stage, a one-page plan, a few deliberate bugs, 2 rounds at most.
-- **M** (a change to a screen you have): the design stage only for a new state, and the critic looks at the changed screens only.
-- **L** (a new screen or flow): everything.
-
-Anything touching privacy, scoring, limits, money, the age gate or the server is never S. Tests come first and are locked at every size. The table is in `.claude/skills/build-task/SKILL.md` → Size.
+**Lean first** (Nov 10, after the workflow report): most beta tasks are lean, with one builder and one review pass. The heavy checking stays only where a mistake hurts a person: scoring, the daily limits, privacy, the age gate and the server. Those are strict, with tests written first by a separate agent and locked. Each run says which in its first line to you, and you can change it. The core flows (setup, a fit check, Kit, Closet, You) run once before every TestFlight build instead of on every task. The detail is in `.claude/skills/build-task/SKILL.md` → Lean or strict.
 
 **Starting things:**
 - A task: open a new session and type `/build-task T11`. If its feature has no spec yet, it walks you into the interview first.
@@ -84,19 +82,19 @@ The rule: **never make a test easier so a task can pass.** Each of these makes c
 
 ## How the screens stay right
 
-Tests prove a screen *works*; they can't tell you it looks off. So a task that changes a screen gets two more minds:
+Tests prove a screen *works*; they can't tell you it looks off. So a new screen gets two more minds (a change to a screen you have gets screenshots in its review instead):
 
 1. **A designer before any code.** It turns the spec into every state (normal, empty, loading, error, offline, the refused case) as phone frames in the mockup's own style, with the exact words, VoiceOver labels, dark mode and the largest text size. You approve the look while a change still costs one sentence.
 2. **A critic who drew nothing and built nothing.** It checks the frames against Apple's rules, §C14 and the design system before you see them. After the build it screenshots every state on the Simulator and compares each with your approved frame.
 3. **The critic only blocks on rules.** A difference from your approved design, Apple's rules or §C14 blocks the task. Its own taste goes to you as optional suggestions, so the loop can't run forever on opinion.
-4. **The cost:** about 30–45 minutes more per screen task, plus your 5–10 minutes. A task that changes no screen skips all of it.
+4. **When:** only a new screen is drawn first, with one critic pass. A change to a screen you have skips the drawing; its review is screenshots.
 
 ## When a run stops
 
 - **A question only you can answer** (words, taste, money, an install): it asks, then carries on.
 - **A design is ready for your look:** it shows you the frames and waits for your yes.
 - **Its feature isn't defined yet:** it offers the interview.
-- **Three rounds and still failing:** the task shows `stuck: <why>` in `plan.md`, and the report says what's left. Nothing gets loosened to get out.
+- **Still failing after its fix round** (lean: 1, strict: 2): the task shows `stuck: <why>` in `plan.md`, and the report says what's left. Nothing gets loosened to get out.
 
 ## Reading plan.md
 

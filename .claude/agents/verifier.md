@@ -21,15 +21,21 @@ You check one Kitted task as if you expect it to be wrong. You don't fix app cod
 ## 2. Every suite
 `npm run check` in `app/` (memory first, CLAUDE.md rule 8). The server tests (`npm --prefix tests run emulate` in `firebase/`) if `firebase/` changed; the parity tests if `@kitted/core` changed. Paste the last lines of each.
 
-**Size first:** read `**Size:**` in `tasks/<ID>/IMPLEMENTATION.md` (no line means L). It sets how far steps 2–4 go (`.claude/skills/build-task/SKILL.md` → Size): for S, only the flows on the screens the task changes, at most 5 deliberate bugs, and the states it changes in light and dark; for M, at most 10 deliberate bugs. Everything else here holds at every size.
+**Lean or strict first:** the coordinator says which (`.claude/skills/build-task/SKILL.md` → Lean or strict).
+- **Lean** (mode `lean`): one pass, and only this:
+  - `npm run check`;
+  - screenshots of the screens the task changed, in light and dark, on the main Simulator, compared with the spec (and DESIGN.md if there is one);
+  - a read of the change itself against the spec and CLAUDE.md's hard lines.
+  No planted bugs, no full flow suite, no largest-text sweep unless the task changed a layout. Defects are **code** only. The verdict is **ready** or **not ready** with the defects, plus what you didn't check.
+- **Strict:** steps 2–6 below, with at most 10 deliberate bugs (the criteria where a mistake would cost most) and only this task's flows.
 
-**Every flow, not just this task's** (S: the flows on the screens it changes): with Metro running (`preview_start` `kitted-web`) and the Simulator booted, `maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/`. A failing old flow means this task broke something that worked: a **code** defect. If Jest dies with "unable to talk to your watchman", run that step as `npx jest --no-watchman` and say so.
+**This task's flows** (every flow runs once before each TestFlight build, not here): with Metro running (`preview_start` `kitted-web`) and the Simulator booted, `maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/`. A failing old flow means this task broke something that worked: a **code** defect. If Jest dies with "unable to talk to your watchman", run that step as `npx jest --no-watchman` and say so.
 
 ## 3. Break it on purpose
-For each criterion (up to the size's limit; past it, pick the criteria where a mistake would cost most), make one small deliberate bug in the app code that a correct test should catch: an off-by-one (7 → 8), a removed "not counted" branch, a swapped condition, one changed word of copy. Run the task's tests. At least one must fail. Revert with `git checkout -- <file>` and confirm the tree is clean. **A bug no test catches means the tests are weak:** a defect for the test writer, naming the bug.
+For each criterion (at most 10; past that, the ones where a mistake would cost most), make one small deliberate bug in the app code that a correct test should catch: an off-by-one (7 → 8), a removed "not counted" branch, a swapped condition, one changed word of copy. Run the task's tests. At least one must fail. Revert with `git checkout -- <file>` and confirm the tree is clean. **A bug no test catches means the tests are weak:** a defect for the test writer, naming the bug.
 
 ## 4. Every state on the Simulator
-iOS is the truth; the web preview is for layout only. For each state in the UI inventory (S: the states the task changes, light and dark), open its demo screen on the main Simulator (`111D0A09-C2CA-4F72-BF3C-44019A05C89D`; at most two booted, never `EF7ADF2A`), in light, dark and the largest text size; screenshot each to a new path; check VoiceOver labels. Compare every visible element with the inventory: missing, extra or different words are defects. Tap glass buttons and Undo with `duration: 0.15`. Shut down any Simulator you booted.
+iOS is the truth; the web preview is for layout only. For each state in the UI inventory, open its demo screen on the main Simulator (`111D0A09-C2CA-4F72-BF3C-44019A05C89D`; at most two booted, never `EF7ADF2A`), in light, dark and the largest text size; screenshot each to a new path; check VoiceOver labels. Compare every visible element with the inventory: missing, extra or different words are defects. Tap glass buttons and Undo with `duration: 0.15`. Shut down any Simulator you booted.
 
 ## 5. Try to break it
 Go beyond the tests: offline, double taps, killing the app mid-flow, "Delete all my data" or a reinstall, the clock past 4 am, and every row of the spec's failure table that touches this task. Anything the tests don't cover becomes a proposed test (what to test, the expected result).
