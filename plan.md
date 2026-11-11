@@ -212,6 +212,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-11 · hoodie-layer-credit: the launch screen's K made a bit smaller, 120 to 96 pt (your ask); seen on a Release Simulator build; PR open, waits for your OK to merge
 - 2026-11-11 · hoodie-layer-credit: main tested with all three merged (types, lint, 853 scoring and 1,941 app tests pass; a Release Simulator build shows the K launch screen, only Kit's offer before the first check, the You tiles); no-all-caps built (PR #106, waits for your OK to merge; log #444)
 - 2026-11-11 · hoodie-layer-credit: your Nov 11 phone pass split into four sessions; merged #103 (morning card waits for the first check), #104 (launch screen K on navy) and #105 (Your style tiles), log entries renumbered 441–443; the Closet's sections already show from 4 pieces, no change; none tried on your phone yet (the launch screen needs a new TestFlight build)
 - 2026-11-11 · your-style-tiles: T44 built (squared look tiles with setup's drawings on You's Your style and Style profile; light and dark screenshots, 1 and 3 looks; reviewer's notes fixed); PR open, awaiting your yes to merge; log #443
@@ -226,4 +227,3 @@ The last 15 sessions, newest first.
 - 2026-11-10 · explain-rating: `specs/explain-rating.md` approved (Kit explains the score in the chat, naming the one or two rules that made it; the card shows one number and one fix; "Not quite right?", Why and Share off the card; misreads fixed by telling Kit or on the look page); specs.md "A fit check", F2.8, F3.4, F4, F5.5, F8 and the Data row, plus one line each in setup-and-you and onboarding-screens; T26, T58, T59, T65, T66, T75, Y24, Y25 added · #433
 - 2026-11-10 · app-design-professionalism: the redesign's direction (tailored, boxier cards; the redesign tools with an interaction designer in PR #83, parked until after the beta); the card shows one number and Kit explains the rating in chat (spec in the kit-explains session); share cards cut until after launch (T67 added); height later and quiet · #432
 - 2026-11-10 · The redesign stage, kept as a one-off `/redesign` (parked until after the beta, #420): art director, interaction designer and redesign critic with a written debate; the first run leads with B Tailored; `ui-designer` gains a 3-line check for him; nothing added to `/build-task` · PR #83
-- 2026-11-09 · T73 ready in round 2: Closet without Outfits (switch, Goes with, Next best buy and the +N counts hidden); PR #84 stacked on #74 · #431
