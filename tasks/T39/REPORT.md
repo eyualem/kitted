@@ -68,3 +68,11 @@ The spec is unchanged; both files pass in full on the build (setupScreens 21/21,
 - 280 Stylist · Kit's offer · 281 after Later · 282 after Not now · 283 after a scored check.
 - 284 Style profile · Name and Age ("Alex", 22–25) · 80 Style profile, an older profile (birth year 2005 → 18–21).
 - 12 and 212: set up before this change, no offer card.
+
+## Screenshots (coordinator, Nov 10)
+On the iPhone 17 Pro Simulator, light and dark, in `tasks/T39/shots/`: Looks (demo 2), About you on open (3) and ready (4), Kit's offer (280), after Later (281), after Not now on the camera's agreement (282), Style profile with Name and Age (284).
+- **Trap hit:** the first set showed Style profile's old "Birth year" rows. Metro was bundling route files (`app/(tabs)/you/profile.tsx`) from the main checkout, through the borrowed `node_modules` (build notes #377). Re-shot with a temporary, uncommitted `app/metro.config.js` that gives this worktree its own cache. The `features/` screens were right in both sets.
+- **Checks on the merged branch (T38 + main + T39):**
+  - The T39, T38 and retargeted suites pass, 157 of 157. `tsc` is clean, and lint has 0 errors (6 warnings, all in main's test files).
+  - The full Jest run had 1826 passed and 2 failed, both timeouts under load: `outfitSpeed` (352 ms against 300 ms) and `T39-offerCard` OS5.7 (more than 5 s). Core had one parity test time out.
+  - Run alone, all three pass (15 of 15; parity 8 of 8). `T39-offerCard` OS5.7 runs close to the 5 s default, so it can flake on a loaded machine.
