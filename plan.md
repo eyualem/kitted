@@ -169,7 +169,7 @@ Lane files: `app/src/features/{closet,scan,lookbook}`, `app/src/services/closetS
 - [ ] **T75** · tiny · *(beta)* Lookbook's look page: "How I scored" (today's math sheet) and "Fix what I read" (the correction) · *after T66 · spec: `specs/explain-rating.md` · checks: ER3.2 · files: lookbook/LookPageScreen.tsx, en.ts* · *(first numbered T74, which T72–T74 had already claimed; renumbered at their merge, Nov 10)*
 - [x] 2026-11-10, #74 · **T72** · Your Nov 8 beta notes on Closet: write `specs/closet-beta.md` with you (Outfits off for now; the piece questions one card at a time), and `specs.md` F7 if you say yes · *done: your yes · files: `specs/closet-beta.md`, `specs.md` F7* · **approved Nov 8**, F7 changed
 - [x] 2026-11-10, #84 · **T73** · Closet without Outfits: no Pieces | Outfits switch, nothing elsewhere leads to it · *after T72 · checks: CB1.1–CB1.5 · files: closet/, `(tabs)/closet/index.tsx`, ask/ (buy card line), features.ts, en.ts*
-- [~] closet-beta-fixes · PR #94 · **T74** · The piece questions one card at a time: swipe or answer to move on, "2 of 5", Undo, Skip · *after T73 · checks: CB2.1–CB2.10 · files: closet/, `(tabs)/closet/index.tsx`, en.ts*
+- [x] 2026-11-10, #94 · **T74** · The piece questions one card at a time: swipe or answer to move on, "2 of 5", Undo, Skip · *after T73 · checks: CB2.1–CB2.10 · files: closet/, `(tabs)/closet/index.tsx`, en.ts*
 
 ### Launch
 *Getting into the App Store. Done means Apple's weather and app lock are on, both launch tests pass (the fix works, the score is fair), every requirement is checked, and the app is submitted.*
@@ -207,6 +207,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-10 · Closet beta fixes merged (founder's yes): the spec #74, Closet without Outfits #84, the one-card To confirm #94 (folded row with the first piece, the quick-swipe fix, the flow green); main's look-page task renumbered T75, the phone pass is Y27 · #430–437
 - 2026-11-10 · first-run-intro: T36 spec rewrite approved (SY2 the slide into Closet, SY3 removed, F5.1 in the agreement), research and frames in `tasks/T36/`; log #429
 - 2026-11-10 · Models (you): sessions start on Sonnet; the reviewer, implementer and designer on Sonnet; the strict test writer and spec interviews on Opus; a stuck task moves to Opus. Two blind reviewer trials with planted mistakes: Sonnet caught 10 of 10 · #428
 - 2026-11-10 · onboarding-screens: T38 PR #90 (the drawn Welcome and Example check, verified ready, caption fix after the screenshots) and T39 PR #93 (setup as plain screens, age bands, the name, Stylist with Kit's offer; strict review ready, 3 of 3 planted bugs caught); log #434–427
@@ -221,4 +222,3 @@ The last 15 sessions, newest first.
 - 2026-11-10 · Workflow report in `reports/` (43% of agent calls on testing and checking, 18% on building; a lean workflow proposed for a separate session); the S/M/L sizes undone; the 4 child sessions paused · #419
 - 2026-11-10 · T34: You is the settings home (no gear, no Settings page; an old Settings link lands on its rows); verified ready in round 3 of 3; also fixed at the largest text size: Acknowledgements, What Kit knows, the pick numbers · #418, PR #85
 - 2026-11-10 · Workflow sized to the risk (S, M, L) after a usage audit of the 6 beta-fix sessions; at most 3 sessions building at once; log entries numbered at merge · #417
-- 2026-11-09 · T80 parked (founder): the beta stays on the US weather service; Apple's weather later, to Apple's rules (no stored forecasts, its mark wherever its weather shows), found in its terms · #434
