@@ -70,6 +70,7 @@ const scored = (id: string, createdAt: number, added: string[], o: Partial<FitCh
   ({ id, createdAt, status: 'scored', details: { closetSummary: { matched: [], added, undone, state: 'done' } }, ...o }) as FitCheckRow;
 
 beforeEach(() => resetSlide());
+afterEach(() => resetSlide());
 
 describe('SY2.3 · the badge counts what checks added since Closet was last opened', () => {
   it('SY2.3 · a real first check that adds pieces shows them on the badge; opening Closet clears it', async () => {
