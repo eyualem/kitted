@@ -91,6 +91,15 @@ export function withoutCardGreetings(messages: readonly ChatMessage[]): ChatMess
   return messages.filter((m) => !(m.role === 'stylist' && m.kind === 'text' && (m.payload.greeting === true || cardAt.has(m.createdAt + 1))));
 }
 
+/**
+ * While Kit's first-check card is all there is to act on (setup's offer is up and no check is scored, `firstCheckPending`),
+ * a morning or evening card already in the thread stays out of sight: an install that got one before it waited (founder,
+ * Nov 11). It shows again, as the checked row, once his first check is scored.
+ */
+export function withoutMorningWhileFirstCheckPending(messages: readonly ChatMessage[], pending: boolean): readonly ChatMessage[] {
+  return pending ? messages.filter((m) => !(m.kind === 'card' && m.cardType === 'morning')) : messages;
+}
+
 export function buildThreadItems(messages: readonly ChatMessage[], nowMs: number, zone: ZoneOffset): ThreadItem[] {
   const out: ThreadItem[] = [];
   const sorted = sortMessages(withoutCardGreetings(messages));

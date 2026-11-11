@@ -54,6 +54,15 @@ export function offerButtonsShow(s: OfferState): boolean {
   return s.laterAt === null && !s.hasScoredCheck && !s.declined;
 }
 
+/** True while Kit's first-check card is the one thing in Stylist to act on: setup posted it and he has no scored check
+ *  yet (Later and "Not now" don't change that). The morning and evening card waits for it (founder, Nov 11: two cards
+ *  that both said "Check my fit" confused him; until his first check he sees only Kit's). An install with no offer card
+ *  (set up before it existed) is never held: its morning card is its first-check card. */
+export async function firstCheckPending(store: KittedStore): Promise<boolean> {
+  if (!(await store.chat.all()).some((m) => m.cardType === 'firstCheckOffer')) return false;
+  return !(await store.fitChecks.all()).some((c) => c.status === 'scored');
+}
+
 /** Later: once only. Saves when he tapped it and posts Kit's line under the card. A second call does nothing. */
 export async function tapLater(store: KittedStore, nowMs: number, ids: (p: string) => string): Promise<void> {
   if ((await store.getKv(OFFER_LATER_KEY)) !== null) return;

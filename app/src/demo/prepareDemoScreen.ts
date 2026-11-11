@@ -317,6 +317,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166].map((n) => [n, { steps: [FIRST_CHECK] }])),
   // T39: after the agreement, the first check the story screens 150–162 use.
   283: { steps: [FIRST_CHECK] },
+  291: { steps: [FIRST_CHECK] },
   // T35 (SY2.8): Closet right after that first check (its first visit), and Closet once that visit is over.
   285: { steps: [FIRST_CHECK] },
   286: { steps: [FIRST_CHECK, { at: '2026-10-22T07:45:00', do: 'firstVisitDone' }] },
