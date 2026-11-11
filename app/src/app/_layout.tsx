@@ -14,6 +14,7 @@ import { ToastHost } from '@/features/toast/ToastHost';
 import { SlideHost } from '@/features/closet/SlideHost';
 import { useDemoState } from '@/demo/demoState';
 import { useGate } from '@/state/appGate';
+import { SPLASH_FADE_MS, splashHoldLeft } from '@/state/splashHold';
 import { boot } from '@/state/boot';
 import { startConnectivity } from '@/services/connectivity';
 import { getDemoArgs } from '@/state/session';
@@ -22,6 +23,9 @@ import { demoCrashCheck } from '@/demo/demoCrash';
 import { installErrorHandler } from '@/services/errors/log';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
+// The launch screen fades out (not a cut) and holds a short floor, so a fast cold start still shows the K (T92).
+SplashScreen.setOptions({ fade: true, duration: SPLASH_FADE_MS });
+const jsStartedAt = Date.now();
 // Every uncaught JS error leaves a line in Documents/logs/errors.log, in every build (09 §23 E3, #353).
 installErrorHandler();
 
@@ -44,7 +48,9 @@ export default function RootLayout() {
       .catch((e: unknown) => console.error('Boot failed', e))
       .finally(() => {
         setBooted(true);
-        SplashScreen.hideAsync().catch(() => {});
+        // The first screen draws under the launch screen; it lifts once the floor has passed (a late boot waits for nothing).
+        const hold = splashHoldLeft(jsStartedAt, Date.now());
+        setTimeout(() => SplashScreen.hideAsync().catch(() => {}), hold);
         // The offline banner's signal (09 §20.8 G18.1): a check now and on each return to the foreground.
         startConnectivity();
       });

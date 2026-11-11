@@ -24,6 +24,7 @@ import type {
 } from '@/data/types';
 import { normStyleKey, STYLES } from '@/data/types';
 import { wornChecks } from '@/features/fitcheck/tryOn';
+import { firstCheckPending } from '@/features/onboarding/firstCheckOffer';
 import { canSuggestOutfits } from './readiness';
 import { wearOverridden } from './woreOwn';
 import type { Clock } from '@/services/clock';
@@ -284,6 +285,8 @@ export function createMorningService(deps: MorningDeps) {
     const p = await store.profile.get('me');
     // He declined fit checks in onboarding: S26 ("Turn on fit checks") owns the thread, not this card.
     if (p && p.onboardingDone && !p.consentVersion) return null;
+    // Kit's first-check card is all he sees until his first check is scored; this card comes after (founder, Nov 11).
+    if (await firstCheckPending(store)) return null;
     if (slot === 'evening') {
       const ignored = await eveningIgnoreCount(day);
       await store.setKv(KV.eveningIgnored, String(ignored));
