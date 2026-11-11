@@ -28,6 +28,15 @@
         "cd app && npx expo start --web --port 8083"
       ],
       "port": 8083
+    },
+    {
+      "name": "kitted-metro",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd app && npx expo start --dev-client --port 8081"
+      ],
+      "port": 8081
     }
   ]
 }

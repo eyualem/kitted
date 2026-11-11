@@ -3052,3 +3052,18 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **A re-check card** has no `Added` row at all: its new pieces start from its bottom edge too. The parent session settled this as an application of his answer (no new words, rows or looks), so SY2 step 1 and SY2.2 now say "from the row when it shows, otherwise from the card's bottom edge (a folded card, a re-check card)".
     - **Lesson (Nov 11): never decide "no slide" from a list that may still be loading.** One light recording had no slide. Its badge came in the very frame the reveal ended, which only the card's "no row" check could do, and that check read the card's own closet list (empty until it loads). The rule now reads the check's closet summary alone (`noRowToSlide`). The badge holds from when the card shows the check reading, since a cached closet reading writes the pieces before the score card is up; holding again restarts its 20 s limit.
     - **No badge at 0:** expo-router turns a badge with a number into that number even with `hidden` (it showed `0`), and one with no number and no `hidden` into a dot; so 0 is no number and `hidden`, tested through expo-router's own conversion (`T35-badge.test.tsx`).
+
+440. **The second TestFlight build, 0.1.0 (2), with the first-run intro (Nov 11; the founder: "Go ahead with the build", after picking "New TestFlight build" for Y28).** His TestFlight install couldn't show the intro: a reinstall only brings back build 1.
+    - **The build:** `eas build --platform ios --profile production --auto-submit --non-interactive` from main's code (`e53bb36f`, run from a worktree equal to main). EAS build `13dc510d`, build number 2 from `autoIncrement` (remote), done in about 6 minutes. The submission used the App Store Connect API key EAS stored at the first build, so no Apple login or 2FA was needed. He confirmed it on TestFlight.
+    - **In it, since build 1:** the setup screens and the drawn Welcome (T38, T39), You as the settings home (T34), the Closet fixes (T73, T74), the evening-card fix and the card threshold (T54, T55), and the intro (T35). Not in it: notifications (`NOTIFICATIONS_BUILT` is still false; Y22 still asks), sign-in (T41), Apple's weather (T80 parked).
+    - **Checks:** `npm run check` in its parts:
+      - tsc, the core typecheck and lint passed (0 errors).
+      - The core tests passed: 853/853.
+      - The app tests: 1,926 passed. `T39-setupScreens` failed once in the full run and passed alone (21/21), the timeout under memory pressure already seen in #95.
+      - `guard:release` passed (40 files, no secrets), with the main checkout's `app/.env*` linked in for the run and removed afterwards.
+    - **Not verified: the Maestro flows.** The run was stopped after 4 of 15 (1 passed, 3 failed), and none of the failures pointed at the shipped code:
+      - Expo's dev-menu welcome sheet covered Welcome in the two T39 flows. That sheet exists only in development builds.
+      - The FP7.5 flow saw the old You, with its gear: the Simulator's app was reinstalled at 09:41 during the run, likely by another session.
+    - **Lesson:** a worktree's `app/.expo/types/router.d.ts` goes stale (this one dated Oct 23), so tsc rejects a newer route (`/sheets/swap/…`). Copy a fresh one from a worktree that ran Metro recently, or start Metro once, before `npm run check`.
+    - **Lesson:** `npm run check` dies on watchman on this Mac (the socket refuses connections). Run its parts, with `jest --no-watchman` for the app tests; core uses vitest and needs no flag.
+    - **Lesson:** before a long Simulator run, say so to the other sessions, or run it in a child session. A shared Simulator can be reinstalled mid-run.
