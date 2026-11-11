@@ -3001,3 +3001,8 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **An offer card left untapped at 4 am** stays in yesterday's chat, read-only, and isn't posted again. The Later reminder in `specs/notifications.md` is the nudge. If the founder wants a fresh card each day until the first check, that's a spec change.
     - **The rest:** the other 16 technical defaults are in `tasks/T39/IMPLEMENTATION.md`. Among them: a V9 migration for the three profile columns, optional profile fields, and `/onboarding/consent` redirecting to About you.
 
+## Nov 10 · T35, the feature guide, rejected
+
+N. **The founder (Nov 10), on PR #95: "The way the chat is giving the user bullet points, if it were me, I'd think it was low quality as hell. We're not moving forward with that. I don't even want to merge it."** #95 (Kit's hello in three bullet lines, a tip under the first fit with a fix and atop Closet, Lookbook and You, "Show me around" in You) closed unmerged; the branch `claude/T35-tips` stays so the next session can see what was tried. A new session redesigns the intro for Stylist and Closet from scratch, with its own interview; `specs/setup-and-you.md` SY2–SY3 stays as written until that interview replaces it.
+    - **Lesson:** he approved the hello's words as text in the interview (Nov 8) but rejected them once he saw them as a chat bubble. Words that will sit in a chat bubble are worth showing as a picture of the bubble before they're approved.
+
