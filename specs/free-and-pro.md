@@ -15,7 +15,7 @@ The paywall and limit card were built for the old rules: a 1-week trial, Pro at 
 - **The beta** has its own rules (FP7): no paywall, no prices and no purchases until launch.
 
 ## The rules
-- **Free:** 7 free fit checks for life, at most 1 a day (days roll over at 4 am). Each check includes its re-check. 3 questions a day. Everything that runs on code stays free forever: scores, fixes, Closet, Lookbook, outfit ideas (share cards are cut until after launch, #N).
+- **Free:** 7 free fit checks for life, at most 1 a day (days roll over at 4 am). Each check includes its re-check. 3 questions a day. Everything that runs on code stays free forever: scores, fixes, Closet, Lookbook, outfit ideas (share cards are cut until after launch, #423).
 - **Pro:** up to 5 fit checks (each with its re-check) and 30 questions a day.
 - **Prices:** Yearly $39.99 and Monthly $9.99, the same at every moment, every time. Yearly is selected when the page opens. The price strings come from the store, never hard-coded.
 - **What counts:** a scored check counts. A failed, offline, "not rated" or same-photo check never counts (`specs.md` F2). A check made while he's Pro never counts against his 7 free checks.

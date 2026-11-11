@@ -146,7 +146,7 @@ Optional. Continue with Apple or Google. Signed in, his scores, closet, style pr
 - F11.5 Sign out keeps his fits on the phone **(assumed)**.
 
 ### F12. Share cards (cut until after launch)
-**Cut from the beta and the launch (founder, Nov 9, #N):** "let's not release half-assed things." The share actions and the route are switched off; F12.1 isn't checked at launch. They come back after launch only if they're rebuilt to be worth sharing. What was planned:
+**Cut from the beta and the launch (founder, Nov 9, #423):** "let's not release half-assed things." The share actions and the route are switched off; F12.1 isn't checked at launch. They come back after launch only if they're rebuilt to be worth sharing. What was planned:
 Neck-down by default ("Neck down | Full photo"), never gated, a small "scored by Kitted" mark. Save to Photos needs the add-only photo permission.
 - F12.1 The default share image shows nothing above the neck.
 

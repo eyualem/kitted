@@ -22,7 +22,7 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 
 Before launch, after the beta: the new free limits, the three upgrade moments and real purchases (T11, T12, T13).
 
-After launch: share cards come back only if they're rebuilt to be worth sharing (#N, Nov 9).
+After launch: share cards come back only if they're rebuilt to be worth sharing (#423).
 
 ---
 
@@ -145,7 +145,7 @@ Lane files: `app/packages/kitted-core`, `extraction-test/`, `app/src/features/{f
 - [ ] **T61** · Dresses, skirts and heels read as "not rated", in the Python engine first, then the app's scoring (parity tests green) · *after T60 · checks: F2.5 · files: `extraction-test/`, core*
 - [ ] **T62** · The card's words to the spec: the head-not-found line, "Taking longer…", "I did make the change" · *spec: specs.md · checks: F2.2, F2.3, F3.3 · files: camera/, fitcheck/, en.ts* · **F2.2's design approved Nov 9** (`tasks/T62/DESIGN.md`, the design-stage dry run); F2.3 and F3.3 still get designed when it runs
 - [ ] **T63** · A test proving every card with a fix has a free fix · *spec: specs.md · checks: F2.7 · files: core tests*
-- [ ] **T67** · tiny · Switch share cards off for the beta and launch (`SHARE_CARD_BUILT = false`): no share route and no share button anywhere (the explain-rating spec's card task, T66, also drops Share from the card); tests that expect them updated to the cut · *spec: specs.md F12 (cut, #N) · files: `config/features.ts` (shared), fitcheck/, lookbook/, share/ tests*
+- [ ] **T67** · tiny · Switch share cards off for the beta and launch (`SHARE_CARD_BUILT = false`): no share route and no share button anywhere (the explain-rating spec's card task, T66, also drops Share from the card); tests that expect them updated to the cut · *spec: specs.md F12 (cut, #423) · files: `config/features.ts` (shared), fitcheck/, lookbook/, share/ tests*
 - [ ] **T64** · The morning card, Kit's ideas and Swap pick outfits with the fit check's scoring, not the old rubric: rebuild #48 on today's main, keeping the warm-layer and Swap-rotation changes · *after Y3 · spec: specs.md · checks: F6, F6.3 · files: core `ideas.ts`, core tests*
 
 ### Closet
@@ -185,7 +185,7 @@ Claude builds with the default until you decide.
 - **Free checks after "Delete all my data":** today that wipe also clears the phone's ID, which would give 7 new free checks. Default: count them with Apple's DeviceCheck, which survives a wipe and a reinstall (T20).
 - **Scans:** their own cap of 30 a day for everyone (assumed in the spec).
 - **Sign-in in the beta build:** today Continue with Google works only on dev builds, and it backs nothing up yet (sync is T41). Default: the beta ships without sign-in; the server counts each phone's guest account. Sign-in and backup come with T40/T41, alongside Apple's, which App Review asks for next to Google's (guideline 4.8).
-- **Height (founder, Nov 9: "if we're genuinely going to integrate it, that would be pretty dope"):** not asked in setup. Default: later, Kit asks once only when it would change advice (jacket length, trouser break), uses it quietly to choose fixes, never says it back and never lets it change a score. Needs its own spec; it sits next to the never-about-his-body line (#N, Nov 9).
+- **Height (founder, Nov 9: "if we're genuinely going to integrate it, that would be pretty dope"):** not asked in setup. Default: later, Kit asks once only when it would change advice (jacket length, trouser break), uses it quietly to choose fixes, never says it back and never lets it change a score. Needs its own spec; it sits next to the never-about-his-body line (#423).
 - **The redesign stage (eyualem/kitted#83):** parked until after the beta (you, Nov 10); unmerged and unchanged.
 - **"Get your head in the shot" (the head-not-found line, spec F2.2):** the designer and critic found it misses the usual causes (turned away, far, dim); "Face the camera…" would fit more. Default: the spec's words until you say otherwise (#414).
 
@@ -193,7 +193,8 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
-- 2026-11-10 · app-design-professionalism: the redesign's direction (tailored, boxier cards; the redesign tools with an interaction designer in PR #83, parked until after the beta); the card shows one number and Kit explains the rating in chat (spec in the kit-explains session); share cards cut until after launch (T67 added); height later and quiet · #N
+- 2026-11-10 · app-design-professionalism: the redesign's direction (tailored, boxier cards; the redesign tools with an interaction designer in PR #83, parked until after the beta); the card shows one number and Kit explains the rating in chat (spec in the kit-explains session); share cards cut until after launch (T67 added); height later and quiet · #423
+- 2026-11-10 · The redesign stage, kept as a one-off `/redesign` (parked until after the beta, #420): art director, interaction designer and redesign critic with a written debate; the first run leads with B Tailored; `ui-designer` gains a 3-line check for him; nothing added to `/build-task` · PR #83
 - 2026-11-10 · The build workflow sized to the risk (you): tiny (the session alone, 10–20 min), normal (one quick reviewer), strict for scoring, privacy and the age gate only; existing screens aren't drawn; the planner, verifier and critic retired; the core flows run before each TestFlight build; the redesign stage parked · #420
 - 2026-11-10 · Workflow report in `reports/` (43% of agent calls on testing and checking, 18% on building; a lean workflow proposed for a separate session); the S/M/L sizes undone; the 4 child sessions paused · #419
 - 2026-11-10 · T34: You is the settings home (no gear, no Settings page; an old Settings link lands on its rows); verified ready in round 3 of 3; also fixed at the largest text size: Acknowledgements, What Kit knows, the pick numbers · #418, PR #85
@@ -207,6 +208,5 @@ The last 15 sessions, newest first.
 - 2026-11-08 · T85: console set up (Kitted team, EAS project, upload target), main merged in, then the first build 0.1.0 (1) built, uploaded to TestFlight and installed on your iPhone; check 1,648 tests and guard:release passed · #403–404, PR #71
 - 2026-11-08 · T25: the beta's limits deployed (`api`, `purgeUsage`); a live question from a fresh guest got `x-kitted-tier: beta`, so the live config isn't set to Pro by hand · #402
 - 2026-11-08 · T14 merged (#72): the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
-- 2026-11-08 · The beta first (founder): free for friends, 3 fit checks and 20 questions a day, no paywall (FP7, approved Nov 8; T14 builds it); the paywall and RevenueCat moved to launch; T85 and Y17 added · #399
 
 
