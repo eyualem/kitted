@@ -1406,14 +1406,18 @@ describe('CB2.11 · folded or open, as he left it', () => {
     expect([deckRules.confirmRowA11y('To confirm', 1), deckRules.confirmRowA11y('To confirm', 4)]).toEqual(['To confirm, 1 piece', 'To confirm, 4 pieces']);
   });
 
-  it('CB2.11 · folded by default: one row with the count, a button VoiceOver hears as collapsed; no card in sight', async () => {
+  it('CB2.11 · folded by default: one row with the first piece and its question, the count, a button VoiceOver hears as collapsed; no card in sight', async () => {
     const w = await world({ asks: FOUR, fit: true, folded: true });
     await openCloset();
     const row = one('closet-confirm-folded');
+    const a = wordsOf(QA, w.byId);
     expect(row.props.accessibilityRole).toBe('button');
-    expect(row.props.accessibilityLabel).toBe('To confirm, 5 pieces');
+    expect(row.props.accessibilityLabel).toBe(`To confirm, 5 pieces. ${a.question}`);
     expect(row.props.accessibilityState).toEqual({ expanded: false });
-    expect(textsOf(row)).toEqual(['To confirm', '5']);
+    // "A little picture of the first one" (the founder, Nov 10): the first question's own piece, then its words.
+    expect(textsOf(row)).toEqual(['To confirm', '5', a.question]);
+    expect(byTestId('closet-confirm-folded-piece', row)).toHaveLength(1);
+    expect(hostEls(row).indexOf(one('closet-confirm-folded-piece'))).toBeLessThan(hostEls(row).findIndex((e) => e.type === 'Text'));
     expect(flat(one('closet-confirm-deck')).display).toBe('none');
     expect(await w.mem.getKv('closet.confirm.open')).toBeNull();
   });
@@ -1450,17 +1454,18 @@ describe('CB2.11 · folded or open, as he left it', () => {
     });
     await settle();
     expect(await w.mem.getKv('closet.confirm.open')).toBe('folded');
-    expect(one('closet-confirm-folded').props.accessibilityLabel).toBe('To confirm, 5 pieces');
+    expect(one('closet-confirm-folded').props.accessibilityLabel).toBe(`To confirm, 5 pieces. ${wordsOf(QA, w.byId).question}`);
   });
 
   it('CB2.11 · a new question while folded changes only the count; it never opens by itself', async () => {
     const w = await world({ asks: [QA, QB, QC], fit: false, folded: true });
     await openCloset();
-    expect(one('closet-confirm-folded').props.accessibilityLabel).toBe('To confirm, 3 pieces');
+    const first = wordsOf(QA, w.byId).question;
+    expect(one('closet-confirm-folded').props.accessibilityLabel).toBe(`To confirm, 3 pieces. ${first}`);
     await setOpen(FOUR);
     await settle();
-    expect(one('closet-confirm-folded').props.accessibilityLabel).toBe('To confirm, 4 pieces');
-    expect(textsOf(one('closet-confirm-folded'))).toEqual(['To confirm', '4']);
+    expect(one('closet-confirm-folded').props.accessibilityLabel).toBe(`To confirm, 4 pieces. ${first}`);
+    expect(textsOf(one('closet-confirm-folded'))).toEqual(['To confirm', '4', first]);
     expect(flat(one('closet-confirm-deck')).display).toBe('none');
     expect(await w.mem.getKv('closet.confirm.open')).toBeNull();
   });

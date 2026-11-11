@@ -12,7 +12,9 @@ import {
   type GestureResponderEvent, type LayoutChangeEvent, type PanResponderGestureState,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { Icon, KCard, KCardSection, TagLine, space, useTheme } from '@/design-system';
+import { Icon, KCard, KCardSection, KText, TagLine, opacity, radius, space, useTheme } from '@/design-system';
+import type { ClosetItemRow } from '@/data/types';
+import { ClosetTile } from './ClosetTile';
 import {
   cardMotion, confirmRowA11y, deckA11y, deckCount, deckTag, DECK_MOTION, followsFinger, markAnswered, reconcileDeck, showsSkip, startDeck, stepDeck,
   swipeStart, swipeStep, type DeckCard, type DeckMove, type DeckState,
@@ -48,6 +50,9 @@ export interface ConfirmDeckProps<Q extends { ask: { obsId: string } }, F extend
   /** Folded: the deck stays mounted (it keeps its card) but draws out of sight. */
   folded?: boolean;
 }
+
+/** The folded row's drawing, a little smaller than the fit card's (64). */
+const FOLD_THUMB = 52;
 
 /** A second answer tap on the same card within this long is ignored (the card stays until the store drops it). */
 const DOUBLE_TAP_MS = 1000;
@@ -399,8 +404,14 @@ export function ConfirmDeck<Q extends { ask: { obsId: string } }, F extends { it
   );
 }
 
-/** Folded (CB2 "Folded", Nov 10): one row, "To confirm", the number waiting, a chevron; a tap opens the card. */
-export function ConfirmFoldRow({ tag, total, onOpen }: { tag: string; total: number; onOpen(): void }): ReactElement | null {
+/** The folded row's first waiting question: its piece's closet drawing and its words (the founder, Nov 10: "a little
+ *  picture … of the first one that's getting confirmed", so the row isn't missed). */
+export interface ConfirmPreview { item: ClosetItemRow; question: string }
+
+/** Folded (CB2 "Folded", Nov 10): the first piece's drawing, "To confirm" with the number waiting, its question in bold,
+ *  a chevron; a tap opens the card. */
+export function ConfirmFoldRow({ tag, total, preview, onOpen }: { tag: string; total: number; preview: ConfirmPreview | null; onOpen(): void }): ReactElement | null {
+  const { isAccessibilitySize: ax } = useTheme();
   if (total === 0) return null;
   return (
     <KCard>
@@ -408,12 +419,21 @@ export function ConfirmFoldRow({ tag, total, onOpen }: { tag: string; total: num
         testID="closet-confirm-folded"
         onPress={onOpen}
         accessibilityRole="button"
-        accessibilityLabel={confirmRowA11y(tag, total)}
+        accessibilityLabel={preview ? `${confirmRowA11y(tag, total)}. ${preview.question}` : confirmRowA11y(tag, total)}
         accessibilityState={{ expanded: false }}
-        style={{ flexDirection: 'row', alignItems: 'center', gap: space.s, minHeight: 44, paddingHorizontal: space.rowX, paddingVertical: space.s }}
+        style={({ pressed }) => ({
+          flexDirection: 'row', alignItems: 'center', gap: space.m, minHeight: 44, paddingHorizontal: space.rowX, paddingVertical: space.m,
+          opacity: pressed ? opacity.pressed : 1,
+        })}
       >
-        <View style={{ flex: 1 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        {preview && !ax ? (
+          <View testID="closet-confirm-folded-piece">
+            <ClosetTile item={preview.item} size={FOLD_THUMB} aspect={1} radius={radius.tile} scale={0.7} decorative />
+          </View>
+        ) : null}
+        <View style={{ flex: 1, gap: 2 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
           <TagLine left={tag} right={String(total)} />
+          {preview ? <KText variant="callout" weight="600">{preview.question}</KText> : null}
         </View>
         <Icon name="chevronDown" size={10} weight="semibold" color="ink2" scalesWithText />
       </Pressable>

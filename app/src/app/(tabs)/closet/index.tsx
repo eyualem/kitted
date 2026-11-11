@@ -24,11 +24,12 @@ import { piecePreviewSource } from '@/features/closet/piecePreview';
 import { livePhotoDeps, loadPhotoChecks } from '@/features/closet/photoChecks';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { FitQuestion } from '@/features/closet/FitQuestion';
-import { FIT_SKIP_KEY, fitCard, parseSkips } from '@/features/closet/fitDoubt';
+import { doubtQuestion, FIT_SKIP_KEY, fitCard, parseSkips } from '@/features/closet/fitDoubt';
+import { askQuestionText } from '@/features/closet/askText';
 import { closetGridItems, closetSections, pieceSectionLabel, type PieceSection } from '@/features/closet/merge';
 import type { PiecePreview } from '@/features/closet/piecePreview';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
-import { ConfirmDeck, ConfirmFoldRow } from '@/features/closet/ConfirmDeck';
+import { ConfirmDeck, ConfirmFoldRow, type ConfirmPreview } from '@/features/closet/ConfirmDeck';
 import { CONFIRM_OPEN_KEY, confirmOpen, confirmOpenValue, toConfirm } from '@/features/closet/toConfirm';
 import { answerWithUndo, type AnswerToastDeps } from '@/features/closet/answerToast';
 import { showToast } from '@/features/toast/toast';
@@ -106,6 +107,11 @@ export default function ClosetScreen() {
   // One card at a time (CB2): every open question, newest first, then the fit question; no cap.
   const deck = toConfirm(open, fit);
   const unfolded = confirmOpen(confirmSaved);
+  // The folded row shows the first waiting question: its piece's drawing and its words, as the card would ask them.
+  const first = deck[0];
+  const preview: ConfirmPreview | null = !first ? null : first.kind === 'fit'
+    ? { item: first.fit.item, question: doubtQuestion(first.fit.doubt, first.fit.item.name) }
+    : { item: first.q.candidate, question: askQuestionText(first.q.candidate.name.charAt(0).toLowerCase() + first.q.candidate.name.slice(1), first.q.candidate.slot) };
   const setConfirmOpen = (v: boolean) => void store.setKv(CONFIRM_OPEN_KEY, confirmOpenValue(v));
   const cols = isAccessibilitySize ? 2 : 3;
   const tile = width > 0 ? Math.floor((width - GAP * (cols - 1)) / cols) : 0;
@@ -147,7 +153,7 @@ export default function ClosetScreen() {
           <>
           {/* "To confirm · 2 of 5" (#117, CB2): one question per card, the fit question last; no badge, no push. It
               stays mounted with no cards (it draws nothing), so Undo after the last answer brings the card back. */}
-          {!unfolded ? <ConfirmFoldRow tag={t('closet.confirm.tag')} total={deck.length} onOpen={() => setConfirmOpen(true)} /> : null}
+          {!unfolded ? <ConfirmFoldRow tag={t('closet.confirm.tag')} total={deck.length} preview={preview} onOpen={() => setConfirmOpen(true)} /> : null}
           {/* Folded, the deck stays mounted but out of sight, so it opens again on the card he was on. */}
           <ConfirmDeck
             folded={!unfolded}
