@@ -7,9 +7,9 @@ import { weatherSource } from '@/services/weather';
 import { getDemoArgs, sessionClock } from '@/state/session';
 import { createMorningService } from './service';
 
-/** Demo screens where the card belongs: Stylist home (12), the card's own screens (25–32) and
- * the beta morning card (259). */
-export const MORNING_DEMO_SCREENS: ReadonlySet<number> = new Set([12, 25, 26, 27, 28, 29, 30, 31, 32, 259]);
+/** Demo screens where the card belongs: Stylist home (12), the card's own screens (25–32; 39, 40 and 54, the card that
+ * waits for two outfits) and the beta morning card (259). */
+export const MORNING_DEMO_SCREENS: ReadonlySet<number> = new Set([12, 25, 26, 27, 28, 29, 30, 31, 32, 39, 40, 54, 259]);
 
 export const morning = createMorningService({
   store,
