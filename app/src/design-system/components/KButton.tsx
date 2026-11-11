@@ -134,11 +134,27 @@ export interface TextLinkProps {
   compact?: boolean;
   /** "Later" is ink2; everything else ink. `accent` stays for score movement only (#231). */
   color?: 'ink' | 'ink2' | 'accent';
+  /** A symbol after the title, in the link's colour (Skip ›, specs/closet-beta.md CB2). Decorative: VoiceOver reads
+   *  the title. */
+  trailingIcon?: SymKey;
+}
+
+/** The trailing icon's size and gap at a font scale: 13 pt and 4 pt at the default size, growing with the text
+ *  (uncapped, so the chevron keeps up with the words at AX5). */
+export function trailingIconMetrics(fontScale: number): { size: number; gap: number } {
+  return { size: Math.round(13 * fontScale), gap: Math.round(4 * fontScale) };
 }
 
 /** Ink semibold text link ("Why 8.0?", "Not quite right?", "Review"): copper is kept for score
  *  movement only (founder, Oct 12, DECISIONS-LOG #231). 44 pt hit target; 24 pt between links. */
-export function TextLink({ title, onPress, accessibilityHint, accessibilityLabel, compact, color = 'ink' }: TextLinkProps) {
+export function TextLink({ title, onPress, accessibilityHint, accessibilityLabel, compact, color = 'ink', trailingIcon }: TextLinkProps) {
+  const { fontScale } = useTheme();
+  const label = (
+    <KText role="textLink" color={color}>
+      {title}
+    </KText>
+  );
+  const m = trailingIcon ? trailingIconMetrics(fontScale) : null;
   return (
     <Pressable
       onPress={onPress}
@@ -148,9 +164,14 @@ export function TextLink({ title, onPress, accessibilityHint, accessibilityLabel
       hitSlop={compact ? { top: 12, bottom: 12, left: 8, right: 8 } : undefined}
       style={({ pressed }) => ({ minHeight: compact ? undefined : size.hit, justifyContent: 'center', opacity: pressed ? opacity.pressed : 1 })}
     >
-      <KText role="textLink" color={color}>
-        {title}
-      </KText>
+      {trailingIcon && m ? (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: m.gap }}>
+          {label}
+          <Icon name={trailingIcon} size={m.size} weight="semibold" color={color} />
+        </View>
+      ) : (
+        label
+      )}
     </Pressable>
   );
 }

@@ -44,9 +44,11 @@ Checking goes where a mistake hurts a person, not where it only looks rough. A b
 |---|---|---|---|
 | **For** | Words, a row, a removal, a small fix (1–2 files) | A change to a screen or feature with real logic; the daily limits; the server | Scoring, privacy (what leaves the phone, face blur, consent, wipes), the age gate |
 | **Who** | The session alone | The session builds; one reviewer | Test writer, implementer, reviewer |
+| **Model** | Sonnet | Sonnet | Opus for the test writer; Sonnet for the rest |
 | **Tests** | One that reproduces any bug | The logic it changes | Written first by a separate mind, locked |
 | **Target** | 10–20 min, about 2–4% of a 5-hour window | 20–40 min, about 5–10% | 45–75 min, about 15–25% |
 
+- **Models switch by themselves:** every session starts on Sonnet and each agent has its own model. Two times you switch the model menu to Opus: a spec interview (it asks you), and a task still failing after its fix rounds (the session asks you).
 - **Strict depends on what the code touches, not on size.** A one-line change to face blur is strict.
 - **A task that outgrows its size moves up** (one line to you). It never moves down to skip a check.
 - **Words, labels and layout get screenshots, not tests.** You see them in the pull request.

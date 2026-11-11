@@ -22,7 +22,7 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 
 Before launch, after the beta: the new free limits, the three upgrade moments and real purchases (T11, T12, T13).
 
-After launch: share cards come back only if they're rebuilt to be worth sharing (#423).
+After launch: share cards come back only if they're rebuilt to be worth sharing (#432).
 
 ---
 
@@ -55,6 +55,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y24** · **P2** · OK the plain names Kit says for the style rules ("the waist break, the rule of thirds"), about 74 short names drafted in T65 (10 min) → Explain rating (T58)
 - [ ] **Y25** · **P2** · OK deploying the server change that doesn't count Explain rating as a question (1 min; Claude runs it) → Explain rating on testers' phones (T26, T58)
 - [ ] **Y26** · **P2** · Merge the new setup (#90, then #93), then go through it fresh on your phone (delete Kitted, reinstall): Welcome's drawing, About you, Kit's offer, Later, then Check my fit and the agreement once (10 min) → setup confirmed on a real iPhone, VoiceOver aside
+- [ ] **Y27** · **P2** · Phone pass on Closet's one-card questions (after the next TestFlight build, or demo screen 262 on your phone): swipe a card sideways, answer one and feel the buzz, tap Undo, then turn on VoiceOver and Reduce Motion and step through once, and on the score card check VoiceOver reaches "Yes, same one"; try one diagonal swipe (10 min) → the one-card review checked by hand (T74)
 
 ---
 
@@ -154,18 +155,21 @@ Lane files: `app/packages/kitted-core`, `extraction-test/`, `app/src/features/{f
 - [ ] **T63** · A test proving every card with a fix has a free fix · *spec: specs.md · checks: F2.7 · files: core tests*
 - [ ] **T65** · strict · *(beta)* The score's two picks in core: the biggest cost and the biggest credit (or the other cases in the spec; on a re-check, the rule the fix cleared), read from the scoring result; a plain name for every engine rule plus a known name for a few, drafted for your OK (Y24); a test fails on an unnamed rule; no score moves (parity 100%) · *checks: ER1.1, ER1.5, ER1.6 (the picks and names) · files: core (a new picks file and names table), core tests*
 - [ ] **T66** · normal · *(beta)* The quieter card: one number (a re-check shows was → now, no pill), the summary lines without numbers, one fix (a free one when there is one) with "2 more fixes" and the tips behind it; "Why 7.5?", "Not quite right?", the unsure-piece line and Share off both cards; the Example check the same once T38 is in. Light and dark screenshots in the PR · *checks: ER2.1–ER2.3, F2.7, F2.8, F3.4 · files: fitcheck/explain.ts, stylist/cards/{FitCheckCard,RecheckCard}.tsx (borrowed from the Kit lane; not while T58 runs), onboarding example card, en.ts*
-- [ ] **T67** · tiny · Switch share cards off for the beta and launch (`SHARE_CARD_BUILT = false`): no share route and no share button anywhere (the explain-rating spec's card task, T66, also drops Share from the card); tests that expect them updated to the cut · *spec: specs.md F12 (cut, #423) · files: `config/features.ts` (shared), fitcheck/, lookbook/, share/ tests*
+- [ ] **T67** · tiny · Switch share cards off for the beta and launch (`SHARE_CARD_BUILT = false`): no share route and no share button anywhere (the explain-rating spec's card task, T66, also drops Share from the card); tests that expect them updated to the cut · *spec: specs.md F12 (cut, #432) · files: `config/features.ts` (shared), fitcheck/, lookbook/, share/ tests*
 - [ ] **T64** · The morning card, Kit's ideas and Swap pick outfits with the fit check's scoring, not the old rubric: rebuild #48 on today's main, keeping the warm-layer and Swap-rotation changes · *after Y3 · spec: specs.md · checks: F6, F6.3 · files: core `ideas.ts`, core tests*
 
 ### Closet
 *So the closet fills from day one. Done means photos of clothes laid on a bed become Closet pieces, which makes the morning outfit idea work for a new user.*
 
-Spec: `specs/scan-reading.md` (interview: T70)  
+Spec: `specs/scan-reading.md` (interview: T70); `specs/closet-beta.md` for T72–T74  
 Lane files: `app/src/features/{closet,scan,lookbook}`, `app/src/services/closetSource`
 
 - [ ] **T70** · Write the scan-reading spec with you, then test reading on your clothes photos · *after Y9 · done: your yes and the test's result · files: `specs/scan-reading.md`, `extraction-test/`*
 - [ ] **T71** · Scanned photos become Closet pieces ("Waiting to be read" empties) · *after T70, T24 · checks: F7.2, F7.3 · files: scan/, closetSource/*
-- [ ] **T74** · tiny · *(beta)* Lookbook's look page: "How I scored" (today's math sheet) and "Fix what I read" (the correction) · *after T66 · spec: `specs/explain-rating.md` · checks: ER3.2 · files: lookbook/LookPageScreen.tsx, en.ts*
+- [ ] **T75** · tiny · *(beta)* Lookbook's look page: "How I scored" (today's math sheet) and "Fix what I read" (the correction) · *after T66 · spec: `specs/explain-rating.md` · checks: ER3.2 · files: lookbook/LookPageScreen.tsx, en.ts* · *(first numbered T74, which T72–T74 had already claimed; renumbered at their merge, Nov 10)*
+- [x] 2026-11-10, #74 · **T72** · Your Nov 8 beta notes on Closet: write `specs/closet-beta.md` with you (Outfits off for now; the piece questions one card at a time), and `specs.md` F7 if you say yes · *done: your yes · files: `specs/closet-beta.md`, `specs.md` F7* · **approved Nov 8**, F7 changed
+- [x] 2026-11-10, #84 · **T73** · Closet without Outfits: no Pieces | Outfits switch, nothing elsewhere leads to it · *after T72 · checks: CB1.1–CB1.5 · files: closet/, `(tabs)/closet/index.tsx`, ask/ (buy card line), features.ts, en.ts*
+- [~] closet-beta-fixes · PR #94 · **T74** · The piece questions one card at a time: swipe or answer to move on, "2 of 5", Undo, Skip · *after T73 · checks: CB2.1–CB2.10 · files: closet/, `(tabs)/closet/index.tsx`, en.ts*
 
 ### Launch
 *Getting into the App Store. Done means Apple's weather and app lock are on, both launch tests pass (the fix works, the score is fair), every requirement is checked, and the app is submitted.*
@@ -195,26 +199,26 @@ Claude builds with the default until you decide.
 - **Free checks after "Delete all my data":** today that wipe also clears the phone's ID, which would give 7 new free checks. Default: count them with Apple's DeviceCheck, which survives a wipe and a reinstall (T20).
 - **Scans:** their own cap of 30 a day for everyone (assumed in the spec).
 - **Sign-in in the beta build:** today Continue with Google works only on dev builds, and it backs nothing up yet (sync is T41). Default: the beta ships without sign-in; the server counts each phone's guest account. Sign-in and backup come with T40/T41, alongside Apple's, which App Review asks for next to Google's (guideline 4.8).
-- **Height (founder, Nov 9: "if we're genuinely going to integrate it, that would be pretty dope"):** not asked in setup. Default: later, Kit asks once only when it would change advice (jacket length, trouser break), uses it quietly to choose fixes, never says it back and never lets it change a score. Needs its own spec; it sits next to the never-about-his-body line (#423).
+- **Height (founder, Nov 9: "if we're genuinely going to integrate it, that would be pretty dope"):** not asked in setup. Default: later, Kit asks once only when it would change advice (jacket length, trouser break), uses it quietly to choose fixes, never says it back and never lets it change a score. Needs its own spec; it sits next to the never-about-his-body line (#432).
 - **The redesign stage (eyualem/kitted#83):** parked until after the beta (you, Nov 10); unmerged and unchanged.
-- **"Get your head in the shot" (the head-not-found line, spec F2.2):** the designer and critic found it misses the usual causes (turned away, far, dim); "Face the camera…" would fit more. Default: the spec's words until you say otherwise (#414).
+- **"Get your head in the shot" (the head-not-found line, spec F2.2):** the designer and critic found it misses the usual causes (turned away, far, dim); "Face the camera…" would fit more. Default: the spec's words until you say otherwise (#434).
 
 ---
 
 ## Session log
 The last 15 sessions, newest first.
 - 2026-11-10 · first-run-intro: T36 spec rewrite approved (SY2 the slide into Closet, SY3 removed, F5.1 in the agreement), research and frames in `tasks/T36/`; log #429
-- 2026-11-10 · onboarding-screens: T38 PR #90 (the drawn Welcome and Example check, verified ready, caption fix after the screenshots) and T39 PR #93 (setup as plain screens, age bands, the name, Stylist with Kit's offer; strict review ready, 3 of 3 planted bugs caught); log #425–427
-- 2026-11-10 · explain-rating: `specs/explain-rating.md` approved (Kit explains the score in the chat, naming the one or two rules that made it; the card shows one number and one fix; "Not quite right?", Why and Share off the card; misreads fixed by telling Kit or on the look page); specs.md "A fit check", F2.8, F3.4, F4, F5.5, F8 and the Data row, plus one line each in setup-and-you and onboarding-screens; T26, T58, T59, T65, T66, T74, Y24, Y25 added · #424
-- 2026-11-10 · app-design-professionalism: the redesign's direction (tailored, boxier cards; the redesign tools with an interaction designer in PR #83, parked until after the beta); the card shows one number and Kit explains the rating in chat (spec in the kit-explains session); share cards cut until after launch (T67 added); height later and quiet · #423
+- 2026-11-10 · Models (you): sessions start on Sonnet; the reviewer, implementer and designer on Sonnet; the strict test writer and spec interviews on Opus; a stuck task moves to Opus. Two blind reviewer trials with planted mistakes: Sonnet caught 10 of 10 · #428
+- 2026-11-10 · onboarding-screens: T38 PR #90 (the drawn Welcome and Example check, verified ready, caption fix after the screenshots) and T39 PR #93 (setup as plain screens, age bands, the name, Stylist with Kit's offer; strict review ready, 3 of 3 planted bugs caught); log #434–427
+- 2026-11-10 · explain-rating: `specs/explain-rating.md` approved (Kit explains the score in the chat, naming the one or two rules that made it; the card shows one number and one fix; "Not quite right?", Why and Share off the card; misreads fixed by telling Kit or on the look page); specs.md "A fit check", F2.8, F3.4, F4, F5.5, F8 and the Data row, plus one line each in setup-and-you and onboarding-screens; T26, T58, T59, T65, T66, T75, Y24, Y25 added · #433
+- 2026-11-10 · app-design-professionalism: the redesign's direction (tailored, boxier cards; the redesign tools with an interaction designer in PR #83, parked until after the beta); the card shows one number and Kit explains the rating in chat (spec in the kit-explains session); share cards cut until after launch (T67 added); height later and quiet · #432
 - 2026-11-10 · The redesign stage, kept as a one-off `/redesign` (parked until after the beta, #420): art director, interaction designer and redesign critic with a written debate; the first run leads with B Tailored; `ui-designer` gains a 3-line check for him; nothing added to `/build-task` · PR #83
+- 2026-11-09 · T73 ready in round 2: Closet without Outfits (switch, Goes with, Next best buy and the +N counts hidden); PR #84 stacked on #74 · #431
+- 2026-11-10 · T74: the quick-swipe bug fixed (a change ends on its animation, Closet's scrolling stays on, the deck holds the swipe); the locked flow green, 128 steps; the folded row shows the first piece and its question · #436, PR #94
+- 2026-11-10 · T74: To confirm folds to one row ("To confirm · 5") by default and opens in place (your ask, relayed); reviewed ready; the quick-swipe bug still open · #435, PR #94
+- 2026-11-10 · T74 ready (normal, one fix round): Closet's To confirm one card at a time; design approved; the locked flow red at 3 tool-limited steps, for your call; PR #94 stacked on #84 · #432–425
 - 2026-11-10 · The build workflow sized to the risk (you): tiny (the session alone, 10–20 min), normal (one quick reviewer), strict for scoring, privacy and the age gate only; existing screens aren't drawn; the planner, verifier and critic retired; the core flows run before each TestFlight build; the redesign stage parked · #420
 - 2026-11-10 · Workflow report in `reports/` (43% of agent calls on testing and checking, 18% on building; a lean workflow proposed for a separate session); the S/M/L sizes undone; the 4 child sessions paused · #419
 - 2026-11-10 · T34: You is the settings home (no gear, no Settings page; an old Settings link lands on its rows); verified ready in round 3 of 3; also fixed at the largest text size: Acknowledgements, What Kit knows, the pick numbers · #418, PR #85
 - 2026-11-10 · Workflow sized to the risk (S, M, L) after a usage audit of the 6 beta-fix sessions; at most 3 sessions building at once; log entries numbered at merge · #417
-- 2026-11-09 · T80 parked (founder): the beta stays on the US weather service; Apple's weather later, to Apple's rules (no stored forecasts, its mark wherever its weather shows), found in its terms · #414
-- 2026-11-09 · T55: the card waits until Kit knows two outfits that work (founder, F6.2 rewritten, F13.1); a checked card that suggested nothing reads "Today's fit" under your check's occasion; `canSuggest` for the notifications; verified ready in round 2, not on the Simulator · #412–413, PR #82
-- 2026-11-09 · T54: the double evening card's cause found (two asks while the weather loads) and fixed in the morning service; 20 tests, 20 planted bugs caught; verified ready, not yet on the Simulator or your phone · #410, PR #75
-- 2026-11-08 · beta-notifications: notifications join the beta (founder): T56 (the spec, approved Nov 9; first numbered T54, which the evening-card fix took) and T53 (the build) claimed; T57 added for the ask at Later · #409; T50 keeps the decline line and greeting
-- 2026-11-09 · T37: `specs/onboarding-screens.md` approved: a code-drawn Welcome and Example check (the Unsplash photo goes), setup as plain screens with age bands and the name field, setup ending in Stylist with Kit's offer; specs.md F1.1, F1.2 and the first-run list updated; T38, T39 claimed · #408
-- 2026-11-09 · The design stage (founder, Nov 8): `/build-task` step D (a designer draws every state, a critic checks it, you approve) and 4b (the critic checks the built screens against your frames), for screen tasks only; dry run on T62's head-not-found card, approved · #406–407, PR #76
+- 2026-11-09 · T80 parked (founder): the beta stays on the US weather service; Apple's weather later, to Apple's rules (no stored forecasts, its mark wherever its weather shows), found in its terms · #434

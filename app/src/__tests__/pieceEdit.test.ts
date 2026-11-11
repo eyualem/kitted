@@ -547,7 +547,8 @@ describe('X14 words and VoiceOver', () => {
       expect(Object.keys(en)).toContain(k);
     }
     expect(t('closet.edit.title')).toBe('What it is');
-    expect(t('closet.edit.foot')).toBe('Got one wrong? Change it here. The drawing and your outfits follow. Your scores stay the same.');
+    // T73 (specs/closet-beta.md CB1.3): Outfits are off for the beta, so the note no longer promises "your outfits follow".
+    expect(t('closet.edit.foot')).toBe('Got one wrong? Change it here. The drawing follows. Your scores stay the same.');
     expect(t('closet.edit.sub')).toBe('Pick what it really is.');
     expect(t('closet.edit.a11y.rowHint')).toBe('Double-tap to change.');
     const env = await setup({ only: 'all' });

@@ -5,6 +5,7 @@ import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
 import { cardControls, cardSpoken, savedUndoShows, type AskCard } from '@/features/ask/cards';
+import { setDemoOutfits } from '@/features/closet/outfitsSwitch';
 import { liveAnswer } from '@/features/ask/live';
 import { createAsk } from '@/features/ask/pipeline';
 import { createPrepare } from '@/features/ask/prepare';
@@ -21,10 +22,17 @@ const words = { nameOf: (id: string) => names[id] ?? null };
 beforeEach(() => liveAnswer.clear());
 
 describe('P1 · VoiceOver reads each card as one thing', () => {
+  // The buy card's "+N outfits" line is the Outfits build's (T73, specs/closet-beta.md CB1.5): run with the switch on.
+  // Its switch-off twin ("Next buy. Navy polo. $30–40.") is closetNoOutfits.test.tsx's CB1.2.
   it('outfit, buy, ask, link, check', () => {
     expect(cardSpoken({ type: 'outfit', itemIds: ['a', 'b', 'c', 'd'], occasion: 'everyday' }, words))
       .toBe('An outfit from your closet: olive overshirt, white tee, dark jeans, white sneakers.');
-    expect(cardSpoken({ type: 'buy', starterId: 's02', gain: 12 }, words)).toBe('Next buy. Navy polo. +12 outfits with what you own. $30–40.');
+    setDemoOutfits(true);
+    try {
+      expect(cardSpoken({ type: 'buy', starterId: 's02', gain: 12 }, words)).toBe('Next buy. Navy polo. +12 outfits with what you own. $30–40.');
+    } finally {
+      setDemoOutfits(false);
+    }
     expect(cardSpoken({ type: 'ask', question: 'Is it a suit-and-tie office?', options: ['Yes', 'Business casual', 'Not sure'] }, words))
       .toBe('Is it a suit-and-tie office? Yes, Business casual, Not sure.');
     expect(cardSpoken({ type: 'link', itemId: 'a' }, words)).toBe('Your olive overshirt');

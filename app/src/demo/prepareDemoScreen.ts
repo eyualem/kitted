@@ -49,6 +49,10 @@ type Step =
   | { at: string; do: 'closet'; ids: string[] }
   /** "Yes, same one" to every open closet question (after the closet calls land). */
   | { at: string; do: 'closetYes' }
+  /** Demo data only (T74): `n` more open questions copied from the first, each flagged copy asking about another bottom
+   *  he owns, the last with a runner-up, as the C2 test builds its five; the real checks' own questions depend on the
+   *  photo's sampled colors and come out differently on a device. */
+  | { at: string; do: 'askCopies'; n: number }
   /** "No, a new one" to every open closet question; the first piece kept that way is the `{dup}` in the screen's link (#280). */
   | { at: string; do: 'closetNo' }
   /** Clothes scans saved on the Simulator (the sample flat lay, no file), a minute apart (#280). */
@@ -260,6 +264,27 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   // Closet → Pieces head to toe (#384): a thin closet (3 pieces, one plain grid) and a small one (4 pieces, titled).
   250: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
   251: { steps: [{ at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'T2', 'B1', 'S1'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
+  // To confirm, one card at a time (specs/closet-beta.md CB2). 262: screen 264's check (the chinos question), three
+  // more questions copied from it onto his other bottoms (the last with a runner-up), then the dark jeans' photos read
+  // slim, wide, wide (screen 194's sightings), so the fit question comes last: "1 of 5" … "5 of 5". 263: screen 194's
+  // sightings alone, so the fit question is the only card. 264: screen 38's story, one question ("1 of 1", no Skip).
+  262: { asOf: '2026-10-22T07:41:00', steps: [
+    { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' },
+    { at: '2026-10-22T07:43:00', do: 'askCopies', n: 3 },
+    { at: '2026-10-22T07:44:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] },
+    { at: '2026-10-22T07:44:30', do: 'kv', key: 'closet.confirm.open', value: 'open' },
+  ] },
+  263: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.confirm.open', value: 'open' }] },
+  264: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'kv', key: 'closet.confirm.open', value: 'open' }] },
+  // To confirm folded (CB2 "Folded", Nov 10): 262 to 264 have opened the card (their checks are about the open card);
+  // 265 is 262's five questions as he first finds them, one folded row reading "To confirm · 5".
+  265: { asOf: '2026-10-22T07:41:00', steps: [
+    { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' },
+    { at: '2026-10-22T07:43:00', do: 'askCopies', n: 3 },
+    { at: '2026-10-22T07:44:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] },
+  ] },
+  // Closet for the beta (specs/closet-beta.md CB1.1): his last tap was Outfits, and Closet still opens on the pieces.
+  260: { steps: [{ at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   // Past chats (07 §14 P4): yesterday's answers with a buy card, an answered tap question and a saved fact, read-only
   // (the olive overshirt isn't in the demo closet until the 22nd, so its outfit card would rightly be dropped).
   175: { asOf: '2026-10-21T12:00:00', steps: [
@@ -389,6 +414,28 @@ async function playStory(sc: ScreenScenario): Promise<void> {
       await fitCheck.closet.settle();
       await openCloset(store, at(step.at));
       await endFirstVisit(store);
+      continue;
+    }
+    if (step.do === 'askCopies') {
+      await fitCheck.closet.settle();
+      const first = (await fitCheck.closet.openAsks())[0];
+      if (!first) continue;
+      const flagged = await store.closet.get(first.ask.itemId);
+      const obs = await store.closetObs.get(first.ask.obsId);
+      const row = await store.fitChecks.get(first.checkId);
+      if (!flagged || !obs || !row?.details.closetSummary) continue;
+      const bottoms = (await store.closet.all()).filter((c) => c.slot === 'bottom' && !c.isDeleted && !c.mergedInto && !c.maybeSameAs && c.id !== first.ask.candidateId);
+      if (bottoms.length === 0) continue;
+      const asks = [...(row.details.closetSummary.asks ?? [])];
+      for (let i = 1; i <= step.n; i++) {
+        const candidate = bottoms[(i - 1) % bottoms.length]!;
+        const runnerUp = i === step.n ? first.ask.candidateId : undefined;
+        await store.closet.put({ ...flagged, id: `${flagged.id}-copy${i}`, maybeSameAs: candidate.id, addedAt: flagged.addedAt - i });
+        await store.closetObs.put({ ...obs, id: `${obs.id}-copy${i}`, itemId: `${flagged.id}-copy${i}` });
+        const { runnerUpId: _drop, ...rest } = first.ask;
+        asks.push({ ...rest, obsId: `${obs.id}-copy${i}`, itemId: `${flagged.id}-copy${i}`, candidateId: candidate.id, answer: null, ...(runnerUp ? { runnerUpId: runnerUp } : {}) });
+      }
+      await store.fitChecks.patch(first.checkId, { details: { ...row.details, closetSummary: { ...row.details.closetSummary, asks } } });
       continue;
     }
     if (step.do === 'closetYes') {

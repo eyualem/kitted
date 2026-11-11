@@ -261,3 +261,16 @@ export function slotChecklist(closet: readonly ClosetItemRow[]): SlotState[] {
   const pieces = outfitPieces(closet);
   return (['top', 'bottom', 'shoes'] as const).map((slot) => ({ slot, have: pieces.some((c) => c.slot === slot) }));
 }
+
+/** What Closet opens on (specs/closet-beta.md CB1.1). Off: his pieces with no switcher, whatever he last tapped (the
+ *  saved segment is read but never followed). On: the switcher, and today's rule (`openingSegment`). */
+export function closetView(on: boolean, count: number, remembered: string | null): { switcher: boolean; segment: 'pieces' | 'outfits' } {
+  if (!on) return { switcher: false, segment: 'pieces' };
+  return { switcher: true, segment: openingSegment(count, remembered) };
+}
+
+/** A piece's Outfits row and Goes with (CB1.2). Off: none. On: the outfits it's in, and what goes with it, as before. */
+export function pieceOutfits(on: boolean, around: readonly Outfit[], itemId: string): { outfitsWith: number; goes: { role: GoesWithRole; outfit: Outfit }[] } {
+  if (!on) return { outfitsWith: 0, goes: [] };
+  return { outfitsWith: around.filter((o) => o.itemIds.includes(itemId)).length, goes: goesWith(itemId, around) };
+}

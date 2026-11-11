@@ -1,0 +1,161 @@
+# T73 · CB1.1–CB1.4: the beta's Closet without Outfits (the switch off). Screen 260 is Closet on the full closet with
+# "closet.segment" remembered as outfits (today it would open on Outfits); 261 is B1's page (khaki chinos, screen
+# 184's piece) with the switch off; 171 is Kit's buy card; 25 is the morning card; 13 is Kit's outfit idea.
+# (TESTING.md named screen 12 for the morning card; 12 shows a day already worn, so the card with Wear this is 25.)
+# Run: maestro --device <udid> test app/e2e/flows/T73-closet-no-outfits.yaml (Metro running; on another port: -e PORT=8082)
+# Matching: Maestro (2.12.1) matches a pattern against an element's WHOLE text or VoiceOver label, so a must-not uses
+# ".*words.*" where the words could sit inside a longer label. A must-not only sees what is on screen, so the long
+# pages are checked at each stop on the way down.
+appId: com.trykitted.kitted
+name: CB1.1–CB1.4 · Closet without Outfits (switch off)
+---
+# CB1.1, CB1.2 · 260: Closet opens on the pieces, head to toe, with no Pieces | Outfits switch and nothing of Outfits.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "260"
+- extendedWaitUntil:
+    visible: "Tops, \\d+ pieces"
+    timeout: 90000
+- assertVisible: "Jackets and layers, \\d+ pieces"
+- assertNotVisible: "Pieces"
+- assertNotVisible: "Outfits"
+- assertNotVisible: ".*Try next.*"
+- assertNotVisible: ".*Your go-tos.*"
+- assertNotVisible: ".*Next best buy.*"
+- assertNotVisible: ".*No outfits yet.*"
+- assertNotVisible: ".*outfits with what you own.*"
+- assertNotVisible: "\\d+ pieces · \\d+ outfits?.*"
+- scrollUntilVisible:
+    element:
+      text: "Shoes, \\d+ pieces"
+    direction: DOWN
+    timeout: 15000
+- assertNotVisible: ".*Try next.*"
+- assertNotVisible: ".*Your go-tos.*"
+- assertNotVisible: ".*Next best buy.*"
+- assertNotVisible: ".*No outfits yet.*"
+- assertNotVisible: ".*outfits with what you own.*"
+
+# CB1.2, CB1.3 · 261: B1's page. The note's new words; no Outfits row, no Goes with.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "261"
+- extendedWaitUntil:
+    visible: "What it is"
+    timeout: 90000
+- assertVisible: "Got one wrong\\? Change it here\\. The drawing follows\\. Your scores stay the same\\."
+- assertNotVisible: ".*your outfits follow.*"
+- scrollUntilVisible:
+    element:
+      text: "Added, .*"
+    direction: DOWN
+    timeout: 15000
+    centerElement: true
+- assertNotVisible: "Outfits, .*"
+- assertNotVisible: ".*Goes with.*"
+- assertNotVisible: ".*Best match.*"
+- assertNotVisible: ".*More relaxed.*"
+# B1 has no photos in the demo closet, so the page's photo part is its "No photos of it yet." line (as on 184), then
+# "Remove from Closet" at the bottom (round 2: "Your photos" never shows for B1). The must-nots run at both stops.
+- scrollUntilVisible:
+    element:
+      text: "No photos of it yet\\. Wear it in a fit check and they'll show here\\."
+    direction: DOWN
+    timeout: 15000
+- assertNotVisible: "Outfits, .*"
+- assertNotVisible: ".*Goes with.*"
+- assertNotVisible: ".*Best match.*"
+- assertNotVisible: ".*Dressier.*"
+- assertNotVisible: ".*More relaxed.*"
+- scrollUntilVisible:
+    element:
+      text: "Remove from Closet"
+    direction: DOWN
+    timeout: 15000
+- assertNotVisible: "Outfits, .*"
+- assertNotVisible: ".*Goes with.*"
+- assertNotVisible: ".*Best match.*"
+- assertNotVisible: ".*Dressier.*"
+- assertNotVisible: ".*More relaxed.*"
+
+# CB1.2 · 171: Kit's buy card keeps its tag, name and price, and has no outfits line.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "171"
+- extendedWaitUntil:
+    visible: "Next buy\\. Brown work boots\\..*"
+    timeout: 90000
+- assertNotVisible: ".*outfits with what you own.*"
+- assertVisible: "Next buy\\. Brown work boots\\. \\$50–70\\."
+
+# CB1.4 · 25: the morning card. Swap one opens the swap; Wear this logs the day with Undo; Undo puts it back.
+# The toast lasts 5 seconds and each Maestro step takes about one, so Undo gets its own launch and is tapped at once.
+# Undo works when the card is back to "Wear this" without its "Logged for today" row; a do-nothing Undo leaves both.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "25"
+- extendedWaitUntil:
+    visible: "Swap one"
+    timeout: 90000
+- tapOn: "Swap one"
+- extendedWaitUntil:
+    visible: "Swap one piece"
+    timeout: 10000
+- assertVisible: "Tap the piece to change\\."
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "25"
+- extendedWaitUntil:
+    visible: "Wear this"
+    timeout: 90000
+- assertNotVisible: "Logged for today"
+- tapOn: "Wear this"
+- extendedWaitUntil:
+    visible: ".*Logged for today\\..*"
+    timeout: 10000
+- assertVisible: "Undo"
+# The card itself now says so ("Logged for today", no period: the toast's has one).
+- assertVisible: "Logged for today"
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "25"
+- extendedWaitUntil:
+    visible: "Wear this"
+    timeout: 90000
+- tapOn: "Wear this"
+- extendedWaitUntil:
+    visible: "Undo"
+    timeout: 5000
+# Undo by where it sits (the toast's right end, just above the composer, on iPhone 17e and 17 Pro): Maestro's tap on
+# the "Undo" element lands on the card's "Check it on" under the toast instead (seen Nov 9: the camera opened).
+- tapOn:
+    point: "71%,79%"
+- extendedWaitUntil:
+    visible: "Wear this"
+    timeout: 10000
+- assertNotVisible: "Logged for today"
+
+# CB1.4 · 13: Kit's outfit idea. Its Wear this logs the day. The card is one VoiceOver element (Wear this is its
+# accessibility action, not an element Maestro can find), so the button is tapped where it sits: bottom left of the
+# card, which on this screen ends just above the composer (iPhone 17e and 17 Pro). A miss fails the step below; it
+# can't pass by accident, since only Wear this logs the day.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "13"
+- extendedWaitUntil:
+    visible: "Outfit idea, .*"
+    timeout: 90000
+- assertNotVisible: ".*Logged for today\\..*"
+- tapOn:
+    point: "22%,77%"
+- extendedWaitUntil:
+    visible: ".*Logged for today\\..*"
+    timeout: 10000
+- assertVisible: ".*Undo.*"

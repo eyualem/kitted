@@ -4,6 +4,7 @@
 // them again later; a piece removed since then shows "No longer in your closet".
 import { outfitKey, outfitValid, type ClosetItem, type Styles } from '@kitted/core';
 import { OCCASIONS, type ClosetItemRow, type FitCheckRow, type OccasionKey } from '@/data/types';
+import { outfitsOn } from '@/features/closet/outfitsSwitch';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { starterGain } from '@/features/finish/gains';
 import { starterList } from '@/features/finish/packs';
@@ -158,12 +159,8 @@ export function cardSpoken(card: AskCard | null, w: CardWords): string | null {
       return t('ask.card.startCheck');
     case 'ask':
       return `${card.question} ${card.options.join(', ')}.`;
-    case 'buy': {
-      const row = catalogRow(card.starterId);
-      if (!row) return null;
-      const gain = card.gain === null || card.gain <= 0 ? null : card.gain === 1 ? t('ask.card.buy.gainOne') : t('ask.card.buy.gain', { n: card.gain });
-      return [t('ask.card.buy.tag'), row.pick?.name ?? row.name, gain, row.budget].filter(Boolean).join('. ') + '.';
-    }
+    case 'buy':
+      return buySpoken(card, outfitsOn());
     case 'link': {
       if ('itemId' in card) {
         const n = w.nameOf(card.itemId);
@@ -213,4 +210,20 @@ export function linkedPiece(id: string, closet: readonly ClosetItemRow[]): Close
     it = closet.find((c) => c.id === into) ?? null;
   }
   return it && isOwned(it) ? it : null;
+}
+
+/** The buy card's "+N outfits with what you own" line (specs/closet-beta.md CB1.2): only while Outfits are on, and only
+ *  for a real gain. Off, the card keeps its tag, name and price; the gain stays on the message as Kit's private
+ *  evidence (`buildCard`). */
+export function buyGainLine(gain: number | null, on: boolean): string | null {
+  if (!on || gain === null || gain <= 0) return null;
+  return gain === 1 ? t('ask.card.buy.gainOne') : t('ask.card.buy.gain', { n: gain });
+}
+
+/** The buy card as VoiceOver reads it: tag, name, the gain line when shown, price. `on` is the Outfits switch, passed
+ *  in so the card's label follows the same value as its visible line. */
+export function buySpoken(card: Extract<AskCard, { type: 'buy' }>, on: boolean): string | null {
+  const row = catalogRow(card.starterId);
+  if (!row) return null;
+  return [t('ask.card.buy.tag'), row.pick?.name ?? row.name, buyGainLine(card.gain, on), row.budget].filter(Boolean).join('. ') + '.';
 }

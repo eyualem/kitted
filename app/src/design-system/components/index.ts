@@ -6,7 +6,7 @@ export { WovenLabel, type WovenLabelProps } from './WovenLabel';
 export { Numeral, type NumeralProps } from './Numeral';
 export { ScoreBlock, PartialLabel, ScoreWordText, type ScoreBlockProps, type ScoreBlockReveal } from './ScoreBlock';
 export { Chip, ChipFlow, Pill, type ChipProps, type ChipState, type ChipFlowProps, type PillTone } from './Chip';
-export { KButton, TextLink, TextLinkRow, type KButtonProps, type ButtonKind, type ButtonSize, type TextLinkProps } from './KButton';
+export { KButton, TextLink, TextLinkRow, trailingIconMetrics, type KButtonProps, type ButtonKind, type ButtonSize, type TextLinkProps } from './KButton';
 export { IconButton, type IconButtonProps } from './IconButton';
 export { FixRow, TipLine, type FixRowProps } from './FixRow';
 export { MonoLabel, TagLine, type TagLineProps } from './MonoLabel';
