@@ -211,6 +211,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-11 · hoodie-layer-credit: the launch screen's K made a bit smaller, 120 to 96 pt (your ask); seen on a Release Simulator build; PR open, waits for your OK to merge
 - 2026-11-11 · hoodie-layer-credit: your Nov 11 phone pass split into four sessions; merged #103 (morning card waits for the first check), #104 (launch screen K on navy) and #105 (Your style tiles), log entries renumbered 441–443; the Closet's sections already show from 4 pieces, no change; none tried on your phone yet (the launch screen needs a new TestFlight build)
 - 2026-11-11 · your-style-tiles: T44 built (squared look tiles with setup's drawings on You's Your style and Style profile; light and dark screenshots, 1 and 3 looks; reviewer's notes fixed); PR open, awaiting your yes to merge; log #443
 - 2026-11-11 · launch-splash: T92 built: the launch screen is the icon's navy with a big white K (light and dark), fades out, holds at most 0.4 s; seen on a Release build on the Simulator, not yet on your phone; options for the look sent for your pick · #442
@@ -225,4 +226,3 @@ The last 15 sessions, newest first.
 - 2026-11-10 · app-design-professionalism: the redesign's direction (tailored, boxier cards; the redesign tools with an interaction designer in PR #83, parked until after the beta); the card shows one number and Kit explains the rating in chat (spec in the kit-explains session); share cards cut until after launch (T67 added); height later and quiet · #432
 - 2026-11-10 · The redesign stage, kept as a one-off `/redesign` (parked until after the beta, #420): art director, interaction designer and redesign critic with a written debate; the first run leads with B Tailored; `ui-designer` gains a 3-line check for him; nothing added to `/build-task` · PR #83
 - 2026-11-09 · T73 ready in round 2: Closet without Outfits (switch, Goes with, Next best buy and the +N counts hidden); PR #84 stacked on #74 · #431
-- 2026-11-10 · T74: the quick-swipe bug fixed (a change ends on its animation, Closet's scrolling stays on, the deck holds the swipe); the locked flow green, 128 steps; the folded row shows the first piece and its question · #436, PR #94
