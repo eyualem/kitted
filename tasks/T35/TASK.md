@@ -42,6 +42,7 @@
   - The haptic (the Simulator has none) and VoiceOver (`New, {name}`, the heading, the row's `Added {n} to Closet`): in code, not heard on a device.
   - The landing point is measured on the iPhone 17 Pro only (the real Closet icon within ~2 pt); other iPhone sizes not checked.
   - Reduce Motion, and a card off screen: in code and tests (`shouldSlide`), not seen on the Simulator.
+  - The re-check slide: in code, the same bottom-edge path as the folded card (seen in `05-slide-*.mp4`), but not seen itself: no demo re-check adds a new piece (screen 10's p01a re-check only matches the first check's 4, and correctly nothing slides and the badge stays at 4).
   - A real fit check on the founder's phone (the demo story's check stands in).
 
 ## Disputes
