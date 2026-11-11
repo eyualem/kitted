@@ -353,6 +353,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
   // The slide into Closet (SY2.2): only for a check new to him, on its own card; until its pieces land (or the row says
   // they won't fly), the Closet badge leaves them out, so it counts them as they arrive.
   const [fresh] = useState(() => !readOnly && wasLive(row.id));
+  const foldAnchor = useRef<View | null>(null);
   useEffect(() => {
     if (!fresh) return;
     holdBadge(row.id);
@@ -544,7 +545,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
         <KCardSection gap={6}>
           {showCloset && closetLine ? <ClosetSummaryRow
               items={addedItems} text={closetLine.text} onReview={readOnly ? undefined : go.review}
-              slide={{ checkId: row.id, fresh, ready: revealDone, added: addedIds(cs), pending: closetLine.pending, visible: open }}
+              slide={{ checkId: row.id, fresh, ready: revealDone, added: addedIds(cs), pending: closetLine.pending, visible: open, foldAnchor }}
             /> : null}
           {firstAsk && askPhoto && askCandidate ? (
             <View style={{ paddingTop: 6, paddingBottom: 4, gap: 8 }}>
@@ -588,7 +589,10 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
         </KCardSection>
         </RevealStepView>
         </Expandable>
-        <ExpandHandle open={open} onPress={() => setOpen(!open)} />
+        {/* Folded, the slide into Closet starts here, just above the ⌄ (the row is out of sight inside the fold). */}
+        <View ref={foldAnchor} collapsable={false}>
+          <ExpandHandle open={open} onPress={() => setOpen(!open)} />
+        </View>
       </KCard>
     </View>
   );
