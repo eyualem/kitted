@@ -97,3 +97,12 @@ export const followsFinger = (reduceMotion: boolean): boolean => !reduceMotion;
 
 export const deckTag = (n: number, total: number): string => t('closet.confirm.count', { n, total });
 export const deckA11y = (n: number, total: number): string => t('closet.confirm.a11y.question', { n, total });
+
+/** Folded or open (CB2 "Folded", Nov 10): kept as he left it; nothing saved yet means folded. A new question never
+ *  opens it: only the count on the folded row changes. */
+export const CONFIRM_OPEN_KEY = 'closet.confirm.open';
+export const confirmOpen = (saved: string | null | undefined): boolean => saved === 'open';
+export const confirmOpenValue = (open: boolean): 'open' | 'folded' => (open ? 'open' : 'folded');
+/** The folded row for VoiceOver: "To confirm, 4 pieces" (the section headers' words), a button with its state. */
+export const confirmRowA11y = (tag: string, n: number): string =>
+  n === 1 ? t('closet.section.a11y.one', { section: tag }) : t('closet.section.a11y', { section: tag, n });

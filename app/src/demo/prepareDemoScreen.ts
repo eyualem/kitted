@@ -266,9 +266,17 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
     { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' },
     { at: '2026-10-22T07:43:00', do: 'askCopies', n: 3 },
     { at: '2026-10-22T07:44:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] },
+    { at: '2026-10-22T07:44:30', do: 'kv', key: 'closet.confirm.open', value: 'open' },
   ] },
-  263: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }] },
-  264: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
+  263: { steps: [{ at: '2026-10-22T07:30:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] }, { at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.confirm.open', value: 'open' }] },
+  264: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'kv', key: 'closet.confirm.open', value: 'open' }] },
+  // To confirm folded (CB2 "Folded", Nov 10): 262 to 264 have opened the card (their checks are about the open card);
+  // 265 is 262's five questions as he first finds them, one folded row reading "To confirm · 5".
+  265: { asOf: '2026-10-22T07:41:00', steps: [
+    { at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' },
+    { at: '2026-10-22T07:43:00', do: 'askCopies', n: 3 },
+    { at: '2026-10-22T07:44:00', do: 'sightings', itemId: 'B3', legs: ['slim', 'wide', 'wide', 'straight'] },
+  ] },
   // Closet for the beta (specs/closet-beta.md CB1.1): his last tap was Outfits, and Closet still opens on the pieces.
   260: { steps: [{ at: '2026-10-22T07:31:00', do: 'kv', key: 'closet.segment', value: 'outfits' }] },
   // Past chats (07 §14 P4): yesterday's answers with a buy card, an answered tap question and a saved fact, read-only

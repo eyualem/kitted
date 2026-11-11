@@ -8,13 +8,13 @@
 // sideways, never after 10 pt up or down first, and the screen stops scrolling while it holds.
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactElement, type ReactNode } from 'react';
 import {
-  AccessibilityInfo, Animated, Easing, findNodeHandle, PanResponder, Platform, View, useWindowDimensions,
+  AccessibilityInfo, Animated, Easing, findNodeHandle, PanResponder, Platform, Pressable, View, useWindowDimensions,
   type GestureResponderEvent, type LayoutChangeEvent, type PanResponderGestureState,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { KCard, KCardSection, TagLine, space, useTheme } from '@/design-system';
+import { Icon, KCard, KCardSection, TagLine, space, useTheme } from '@/design-system';
 import {
-  cardMotion, deckA11y, deckCount, deckTag, DECK_MOTION, followsFinger, markAnswered, reconcileDeck, showsSkip, startDeck, stepDeck,
+  cardMotion, confirmRowA11y, deckA11y, deckCount, deckTag, DECK_MOTION, followsFinger, markAnswered, reconcileDeck, showsSkip, startDeck, stepDeck,
   swipeStart, swipeStep, type DeckCard, type DeckMove, type DeckState,
 } from './toConfirm';
 
@@ -43,6 +43,10 @@ export interface ConfirmDeckProps<Q extends { ask: { obsId: string } }, F extend
   onSwipingChange?(swiping: boolean): void;
   /** Once, when the deck goes from 1+ cards to none. */
   onEmptied?(): void;
+  /** Folds the card back to its one-line row (CB2 "Folded"): a tap on the tag line, or VoiceOver's fold button. */
+  onFold?(): void;
+  /** Folded: the deck stays mounted (it keeps its card) but draws out of sight. */
+  folded?: boolean;
 }
 
 /** A second answer tap on the same card within this long is ignored (the card stays until the store drops it). */
@@ -121,7 +125,7 @@ function stepped<Q, F>(d: Deck<Q, F>, dir: 1 | -1, o: { reduce: boolean; width: 
 }
 
 export function ConfirmDeck<Q extends { ask: { obsId: string } }, F extends { item: { id: string } }>({
-  cards, tag, renderCard, onSwipingChange, onEmptied,
+  cards, tag, renderCard, onSwipingChange, onEmptied, onFold, folded,
 }: ConfirmDeckProps<Q, F>): ReactElement | null {
   const theme = useTheme();
   // Optional: a test's stand-in theme may have no a11y settings.
@@ -299,10 +303,38 @@ export function ConfirmDeck<Q extends { ask: { obsId: string } }, F extends { it
   const face = (card: Card<Q, F>, slot: DeckSlot, shown: boolean) => (
     <KCard>
       <KCardSection gap={12}>
-        <View testID={shown ? 'closet-confirm-tag' : undefined} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-          <TagLine left={tag} right={deckTag(slot.n, slot.total)} />
-        </View>
+        {/* Open (CB2 "Folded", Nov 10): a tap on the tag line folds the card, its chevron turned up. Hidden from
+            VoiceOver like the tag (the question comes first); VoiceOver has its own fold button after the answers. */}
+        <Pressable
+          onPress={onFold}
+          disabled={!onFold || !shown}
+          hitSlop={{ top: 10, bottom: 10 }}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{ flexDirection: 'row', alignItems: 'center', gap: space.s, minHeight: onFold ? 24 : undefined }}
+        >
+          <View testID={shown ? 'closet-confirm-tag' : undefined} style={{ flex: 1 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+            <TagLine left={tag} right={deckTag(slot.n, slot.total)} />
+          </View>
+          {onFold ? (
+            <View style={{ transform: [{ rotate: '180deg' }] }}>
+              <Icon name="chevronDown" size={10} weight="semibold" color="ink2" scalesWithText />
+            </View>
+          ) : null}
+        </Pressable>
         {renderCard(card, slot)}
+        {/* VoiceOver's fold, after the question and its answers (the question stays first), over the tag line. */}
+        {shown && onFold ? (
+          <View
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel={confirmRowA11y(tag, slot.total)}
+            accessibilityState={{ expanded: true }}
+            onAccessibilityTap={onFold}
+            pointerEvents="none"
+            style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 44 }}
+          />
+        ) : null}
       </KCardSection>
     </KCard>
   );
@@ -341,7 +373,10 @@ export function ConfirmDeck<Q extends { ask: { obsId: string } }, F extends { it
   return (
     <Animated.View
       testID="closet-confirm-deck"
-      style={locked ? { height, marginBottom: height.interpolate({ inputRange: [0, space.stack], outputRange: [-space.stack, 0], extrapolate: 'clamp' }) } : undefined}
+      style={[
+        locked ? { height, marginBottom: height.interpolate({ inputRange: [0, space.stack], outputRange: [-space.stack, 0], extrapolate: 'clamp' }) } : null,
+        folded ? { display: 'none' } : null,
+      ]}
     >
       {active?.from ? (
         <Animated.View {...hidden} style={[over, outStyle]}>
@@ -359,5 +394,27 @@ export function ConfirmDeck<Q extends { ask: { obsId: string } }, F extends { it
         </Animated.View>
       ) : null}
     </Animated.View>
+  );
+}
+
+/** Folded (CB2 "Folded", Nov 10): one row, "To confirm", the number waiting, a chevron; a tap opens the card. */
+export function ConfirmFoldRow({ tag, total, onOpen }: { tag: string; total: number; onOpen(): void }): ReactElement | null {
+  if (total === 0) return null;
+  return (
+    <KCard>
+      <Pressable
+        testID="closet-confirm-folded"
+        onPress={onOpen}
+        accessibilityRole="button"
+        accessibilityLabel={confirmRowA11y(tag, total)}
+        accessibilityState={{ expanded: false }}
+        style={{ flexDirection: 'row', alignItems: 'center', gap: space.s, minHeight: 44, paddingHorizontal: space.rowX, paddingVertical: space.s }}
+      >
+        <View style={{ flex: 1 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+          <TagLine left={tag} right={String(total)} />
+        </View>
+        <Icon name="chevronDown" size={10} weight="semibold" color="ink2" scalesWithText />
+      </Pressable>
+    </KCard>
   );
 }

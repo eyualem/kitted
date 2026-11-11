@@ -112,6 +112,8 @@ export const KV_LOCAL: readonly string[] = [
   'onboard.finish',
   // Closet's last Pieces | Outfits tap (#307): a view setting on this phone, like camera.mode.
   'closet.segment',
+  // To confirm folded or open (specs/closet-beta.md CB2 "Folded", Nov 10): a view setting on this phone, like closet.segment.
+  'closet.confirm.open',
   // His Skips on the "How do your … fit?" card (09-ui-review §18, #316): a nudge he dismissed on this phone.
   'closet.fitSkip',
   // The fit-check card line's cap and the answer log (§19, #322): this phone's, never synced.

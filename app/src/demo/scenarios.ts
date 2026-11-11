@@ -308,6 +308,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 262, name: 'Closet · To confirm, 5 questions', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   { n: 263, name: 'Closet · To confirm, the fit question only', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   { n: 264, name: 'Closet · To confirm, one question', id: 'C1', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
+  { n: 265, name: 'Closet · To confirm, folded', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   // You as the settings home (T34, specs/setup-and-you.md SY1): Pro bought with the paywall on, at the rows and at the top.
   { n: 270, name: 'You · Pro, settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', finish: { paywall: 'ok', pro: true } },
   { n: 271, name: 'You · Pro', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you', finish: { paywall: 'ok', pro: true } },

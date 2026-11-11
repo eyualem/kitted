@@ -28,8 +28,8 @@ import { FIT_SKIP_KEY, fitCard, parseSkips } from '@/features/closet/fitDoubt';
 import { closetGridItems, closetSections, pieceSectionLabel, type PieceSection } from '@/features/closet/merge';
 import type { PiecePreview } from '@/features/closet/piecePreview';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
-import { ConfirmDeck } from '@/features/closet/ConfirmDeck';
-import { toConfirm } from '@/features/closet/toConfirm';
+import { ConfirmDeck, ConfirmFoldRow } from '@/features/closet/ConfirmDeck';
+import { CONFIRM_OPEN_KEY, confirmOpen, confirmOpenValue, toConfirm } from '@/features/closet/toConfirm';
 import { answerWithUndo, type AnswerToastDeps } from '@/features/closet/answerToast';
 import { showToast } from '@/features/toast/toast';
 import { INBOX_KEY, parseInbox, waitingRow } from '@/features/scan/inbox';
@@ -80,6 +80,8 @@ export default function ClosetScreen() {
     return { items, byId, previews, asks: await fitCheck.closet.openAsks(), all, fitChecks, styles, count, fit };
   }, [fitSkips, on]);
   const remembered = useLive(['kv'], () => store.getKv(SEGMENT_KEY), [], SEGMENT_KEY);
+  // To confirm folded or open, as he left it (CB2 "Folded"); nothing saved yet means folded.
+  const confirmSaved = useLive(['kv'], () => store.getKv(CONFIRM_OPEN_KEY), [], CONFIRM_OPEN_KEY);
   // Clothes scans waiting to be read (#280): one row on top while any wait.
   const inbox = useLive(['kv'], async () => waitingRow(parseInbox(await store.getKv(INBOX_KEY))), [], INBOX_KEY);
   const [width, setWidth] = useState(0);
@@ -103,6 +105,8 @@ export default function ClosetScreen() {
   });
   // One card at a time (CB2): every open question, newest first, then the fit question; no cap.
   const deck = toConfirm(open, fit);
+  const unfolded = confirmOpen(confirmSaved);
+  const setConfirmOpen = (v: boolean) => void store.setKv(CONFIRM_OPEN_KEY, confirmOpenValue(v));
   const cols = isAccessibilitySize ? 2 : 3;
   const tile = width > 0 ? Math.floor((width - GAP * (cols - 1)) / cols) : 0;
   return (
@@ -143,9 +147,13 @@ export default function ClosetScreen() {
           <>
           {/* "To confirm · 2 of 5" (#117, CB2): one question per card, the fit question last; no badge, no push. It
               stays mounted with no cards (it draws nothing), so Undo after the last answer brings the card back. */}
+          {!unfolded ? <ConfirmFoldRow tag={t('closet.confirm.tag')} total={deck.length} onOpen={() => setConfirmOpen(true)} /> : null}
+          {/* Folded, the deck stays mounted but out of sight, so it opens again on the card he was on. */}
           <ConfirmDeck
+            folded={!unfolded}
             cards={deck}
             tag={t('closet.confirm.tag')}
+            onFold={() => setConfirmOpen(false)}
             onSwipingChange={setSwiping}
             onEmptied={focusFirstSection}
             renderCard={(card, slot) => {

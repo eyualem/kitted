@@ -151,7 +151,7 @@ const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 /** The demo's full closet, each question's own piece beside it (waiting on his answer), and the dark jeans read slim,
  *  wide, wide when `fit`. Returns the store and the words each card says. */
-async function world(o: { asks: Q[]; fit: boolean }) {
+async function world(o: { asks: Q[]; fit: boolean; folded?: true }) {
   const mem = createMemoryStore();
   await loadScenario(mem, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: AS_OF });
   for (const [i, q] of [QA, QB, QC, QD, QZ].entries()) {
@@ -170,6 +170,9 @@ async function world(o: { asks: Q[]; fit: boolean }) {
     }
   }
   mockOpen.current = o.asks.map((q) => ({ checkId: q.checkId, ask: askOf(q) }));
+  // These tests are about the open card: since To confirm folds (CB2 "Folded", the founder, Nov 10) he has opened it.
+  // The folded row has its own tests (CB2.11, at the end; `folded: true` leaves it as he first finds it).
+  if (!o.folded) await mem.setKv('closet.confirm.open', 'open');
   jest.requireMock<{ store: unknown }>('@/data/db').store = mem;
   const all = await mem.closet.all();
   const byId = new Map(all.map((c) => [c.id, c]));
@@ -1391,5 +1394,75 @@ describe('the real closet service', () => {
     expect(keys2).toEqual([keys[0], keys[1], keys[3], keys[4]]);
     expect(reconcileDeck({ key: keys[0]!, undoKey: null }, keys, keys2)).toEqual({ state: { key: keys[0]!, undoKey: null }, move: 'none' });
     expect(deckCount(keys2, keys[0]!)).toEqual({ n: 1, total: 4 });
+  });
+});
+
+// ================================================================== CB2.11 · To confirm folds (the founder, Nov 10)
+describe('CB2.11 · folded or open, as he left it', () => {
+  it('CB2.11 · folded or open is read from his saved choice; nothing saved means folded', () => {
+    expect([null, undefined, 'folded', 'yes', ''].map((v) => deckRules.confirmOpen(v as string | null | undefined))).toEqual([false, false, false, false, false]);
+    expect(deckRules.confirmOpen('open')).toBe(true);
+    expect([deckRules.confirmOpenValue(true), deckRules.confirmOpenValue(false)]).toEqual(['open', 'folded']);
+    expect([deckRules.confirmRowA11y('To confirm', 1), deckRules.confirmRowA11y('To confirm', 4)]).toEqual(['To confirm, 1 piece', 'To confirm, 4 pieces']);
+  });
+
+  it('CB2.11 · folded by default: one row with the count, a button VoiceOver hears as collapsed; no card in sight', async () => {
+    const w = await world({ asks: FOUR, fit: true, folded: true });
+    await openCloset();
+    const row = one('closet-confirm-folded');
+    expect(row.props.accessibilityRole).toBe('button');
+    expect(row.props.accessibilityLabel).toBe('To confirm, 5 pieces');
+    expect(row.props.accessibilityState).toEqual({ expanded: false });
+    expect(textsOf(row)).toEqual(['To confirm', '5']);
+    expect(flat(one('closet-confirm-deck')).display).toBe('none');
+    expect(await w.mem.getKv('closet.confirm.open')).toBeNull();
+  });
+
+  it('CB2.11 · a tap opens the card at the current question and keeps it open; the tag line folds it again', async () => {
+    const w = await world({ asks: FOUR, fit: true, folded: true });
+    await openCloset();
+    await act(async () => {
+      fireEvent.press(one('closet-confirm-folded') as never);
+      await sleep(0);
+    });
+    await settle();
+    expect(await w.mem.getKv('closet.confirm.open')).toBe('open');
+    expect(byTestId('closet-confirm-folded')).toHaveLength(0);
+    expect(flat(one('closet-confirm-deck')).display).toBeUndefined();
+    expect(shown().tag).toEqual(tagOf(1, 5));
+    // VoiceOver: the question still comes first; the fold button comes after it, expanded.
+    const card = one('closet-confirm-card');
+    const folds = hostEls(card).filter((e) => e.props.accessibilityRole === 'button' && e.props.accessibilityLabel === 'To confirm, 5 pieces');
+    expect(folds).toHaveLength(1);
+    expect(folds[0]!.props.accessibilityState).toEqual({ expanded: true });
+    expect(hostEls(card).indexOf(one('closet-confirm-question'))).toBeLessThan(hostEls(card).indexOf(folds[0]!));
+    // Fold again, from the tag line's row.
+    const tagRow = one('closet-confirm-tag').parent!;
+    await act(async () => {
+      fireEvent.press(tagRow as never);
+      await sleep(0);
+    });
+    await settle();
+    expect(await w.mem.getKv('closet.confirm.open')).toBe('folded');
+    expect(one('closet-confirm-folded').props.accessibilityLabel).toBe('To confirm, 5 pieces');
+  });
+
+  it('CB2.11 · a new question while folded changes only the count; it never opens by itself', async () => {
+    const w = await world({ asks: [QA, QB, QC], fit: false, folded: true });
+    await openCloset();
+    expect(one('closet-confirm-folded').props.accessibilityLabel).toBe('To confirm, 3 pieces');
+    await setOpen(FOUR);
+    await settle();
+    expect(one('closet-confirm-folded').props.accessibilityLabel).toBe('To confirm, 4 pieces');
+    expect(textsOf(one('closet-confirm-folded'))).toEqual(['To confirm', '4']);
+    expect(flat(one('closet-confirm-deck')).display).toBe('none');
+    expect(await w.mem.getKv('closet.confirm.open')).toBeNull();
+  });
+
+  it('CB2.11 · with nothing left to confirm there is no row', async () => {
+    await world({ asks: [], fit: false, folded: true });
+    await openCloset();
+    expect(byTestId('closet-confirm-folded')).toHaveLength(0);
+    expect(allTexts()).not.toContain('To confirm');
   });
 });
