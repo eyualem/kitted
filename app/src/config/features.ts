@@ -22,3 +22,8 @@ export const NOTIFICATIONS_BUILT = false;
  *  code route. Signing in backs nothing up yet (sync isn't wired), which is why the save offer and Welcome's "I already
  *  have an account" stay hidden. */
 export const SIGN_IN_LIVE: readonly ('apple' | 'google' | 'email')[] = __DEV__ ? ['google'] : [];
+
+/** Outfits, Next best buy and Goes with (specs/closet-beta.md CB1): off for the beta. Closet opens on his pieces with no
+ *  Pieces | Outfits switch, a piece's page has no Outfits row or Goes with, and nothing shows an outfit count. The code
+ *  stays; demo screens 182, 183, 184, 193 and 202 turn it on (features/closet/outfitsSwitch.ts). */
+export const OUTFITS_BUILT: boolean = false;

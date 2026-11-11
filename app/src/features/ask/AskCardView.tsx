@@ -8,6 +8,7 @@ import { Chip, ChipFlow, KButton, KCard, KCardSection, KText, TagLine, TextLink,
 import { store } from '@/data/db';
 import type { ChatMessage, OutfitRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
+import { useOutfitsOn } from '@/features/closet/outfitsSwitch';
 import { openPiece } from '@/features/closet/pieceActions';
 import { catalogRow } from '@/features/finish/starter';
 import { openLookPage } from '@/features/lookbook/lookPage';
@@ -17,7 +18,7 @@ import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
-import { cardControls, cardSpoken, linkedPiece, outfitNow, savedUndoShows, storedCard, type AskCard } from './cards';
+import { buyGainLine, buySpoken, cardControls, cardSpoken, linkedPiece, outfitNow, savedUndoShows, storedCard, type AskCard } from './cards';
 import { undoRemember } from './memory';
 import { tapAnswer } from './session';
 
@@ -144,11 +145,13 @@ function AskQuestion({ m, card, readOnly }: { m: ChatMessage; card: Extract<AskC
 }
 
 function BuyCard({ card }: { card: Extract<AskCard, { type: 'buy' }> }) {
+  // The "+N outfits" line only while Outfits are on (specs/closet-beta.md CB1.2); VoiceOver reads what's drawn.
+  const on = useOutfitsOn();
   const row = catalogRow(card.starterId);
   if (!row) return null;
-  const gain = card.gain === null || card.gain <= 0 ? null : card.gain === 1 ? t('ask.card.buy.gainOne') : t('ask.card.buy.gain', { n: card.gain });
+  const gain = buyGainLine(card.gain, on);
   return (
-    <KCard accessibilityLabel={cardSpoken(card, { nameOf: () => null }) ?? ''}>
+    <KCard accessibilityLabel={buySpoken(card, on) ?? ''}>
       <KCardSection gap={4}>
         <TagLine left={t('ask.card.buy.tag')} right={row.budget} />
         <KText variant="headline">{row.pick?.name ?? row.name}</KText>

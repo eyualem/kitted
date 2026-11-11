@@ -1,6 +1,7 @@
 # Opens Kitted on a demo screen. The development build first shows its
 # launcher ("Development servers"): tap the running Metro server.
 # Usage: - runFlow: { file: ../common/open-demo.yaml, env: { SCREEN: "12", THEME: "light" } }
+# Metro on another port (a second worktree's, e.g. 8082): pass it to the run, `maestro test -e PORT=8082 …`.
 appId: com.trykitted.kitted
 ---
 - launchApp:
@@ -13,4 +14,4 @@ appId: com.trykitted.kitted
     when:
       visible: "DEVELOPMENT SERVERS"
     commands:
-      - tapOn: "http://.*:8081"
+      - tapOn: "http://.*:${PORT || '8081'}"

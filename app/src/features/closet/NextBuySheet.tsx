@@ -1,14 +1,16 @@
 // C7 · Next best buy (09-ui-review §14, #308; #87; 02 C7): the piece by kind (never a brand), what it adds with what he
 // owns, its price, and the outfits it would make with the new piece drawn dashed. No shop links. Free on every plan.
 // The number is ink (copper is for a score that moves, #231); the first 6 outfits show, the rest behind "Show {n} more" (#312).
+// Off for the beta behind the Outfits switch (specs/closet-beta.md CB1): the route sends him to Closet.
 import { useState } from 'react';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { View } from 'react-native';
 import { KButton, KText, Numeral, TagLine, TextLink, space } from '@/design-system';
 import { useLive } from '@/data/useLive';
 import { SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { t } from '@/i18n/en';
 import { gainLine, loadNextBuy } from './nextBuyData';
+import { useOutfitsOn } from './outfitsSwitch';
 import { StandingOutfit } from './StandingOutfit';
 
 /** Outfits shown before "Show {n} more". */
@@ -16,7 +18,11 @@ const FIRST = 6;
 
 export function NextBuySheet() {
   const [all, setAll] = useState(false);
-  const nb = useLive(['closet', 'fitChecks', 'kv'], loadNextBuy, []);
+  const on = useOutfitsOn();
+  const nb = useLive(['closet', 'fitChecks', 'kv'], () => (on ? loadNextBuy() : Promise.resolve(null)), [on]);
+  // Off for the beta (specs/closet-beta.md CB1): nothing links here, but the route stays registered, so an old link
+  // lands on Closet instead of the sheet.
+  if (!on) return <Redirect href="/closet" />;
   if (nb === undefined) return <SheetScaffold title={t('closet.nextBuy.tag')} />;
   if (!nb) return <SheetScaffold title={t('closet.nextBuy.tag')} />;
   return (

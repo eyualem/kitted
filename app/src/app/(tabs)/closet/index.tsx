@@ -4,7 +4,9 @@
 // opens its page (#276); a long-press is the shortcut menu. While clothes scans wait to be read, one row on top
 // ("Waiting to be read · 2 photos", #280) opens the scan inbox.
 // Pieces | Outfits (09-ui-review §13, #307; #84, #87): opens on Outfits once he can make 3+, else Pieces, then
-// remembers his tap.
+// remembers his tap. Off for the beta behind the Outfits switch (OUTFITS_BUILT, specs/closet-beta.md CB1): Closet is the
+// pieces, with no switcher and nothing from Outfits, and his saved tap is never followed or written; demo screens turn
+// it on.
 // Pieces runs head to toe (founder, Oct 28; #384): Jackets and layers · Tops · Bottoms · Shoes, each under a quiet title
 // with its count, on the same scroll; a thin closet (under 4 pieces, or one section) is one plain grid.
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
@@ -33,7 +35,8 @@ import { LinkRow, Section } from '@/features/settings/SettingsList';
 import { fitCheck } from '@/features/fitcheck/session';
 import { goToStylist } from '@/router/stylistAction';
 import { OutfitsView } from '@/features/closet/OutfitsView';
-import { openingSegment, outfitCount, SEGMENT_KEY } from '@/features/closet/outfits';
+import { closetView, outfitCount, SEGMENT_KEY } from '@/features/closet/outfits';
+import { useOutfitsOn } from '@/features/closet/outfitsSwitch';
 import { Segmented } from '@/features/onboarding/Segmented';
 import { t } from '@/i18n/en';
 
@@ -52,6 +55,7 @@ const PIECE_HEADER: 'tag' | 'title' = 'tag';
 
 export default function ClosetScreen() {
   const { colors, isAccessibilitySize } = useTheme();
+  const on = useOutfitsOn();
   // His Skips on the fit card (§18), watched on their own key so other kv writes don't reload the closet.
   const fitSkips = useLive(['kv'], () => store.getKv(FIT_SKIP_KEY), [], FIT_SKIP_KEY);
   const data = useLive(['closet', 'fitChecks', 'closetObs'], async () => {
@@ -69,15 +73,18 @@ export default function ClosetScreen() {
     // One "How do your … fit?" at most (§18, #316): the piece whose own photos disagree most, unless he skipped it.
     const owned = all.filter(isOwned);
     const fit = fitCard(owned.filter((c) => !isAwaitingAnswer(c, owned)), obs, parseSkips(fitSkips));
-    return { items, byId, previews, asks: await fitCheck.closet.openAsks(), all, fitChecks, styles, count: outfitCount(all, fitChecks, styles), fit };
-  }, [fitSkips]);
+    // The outfit count only matters while Outfits are on (it picks the opening segment).
+    const count = on ? outfitCount(all, fitChecks, styles) : 0;
+    return { items, byId, previews, asks: await fitCheck.closet.openAsks(), all, fitChecks, styles, count, fit };
+  }, [fitSkips, on]);
   const remembered = useLive(['kv'], () => store.getKv(SEGMENT_KEY), [], SEGMENT_KEY);
   // Clothes scans waiting to be read (#280): one row on top while any wait.
   const inbox = useLive(['kv'], async () => waitingRow(parseInbox(await store.getKv(INBOX_KEY))), [], INBOX_KEY);
   const [width, setWidth] = useState(0);
   if (!data) return null;
   const { items, byId, previews, asks, all, fitChecks, styles, count, fit } = data;
-  const segment = openingSegment(count, remembered ?? null);
+  const view = closetView(on, count, remembered ?? null);
+  const segment = view.segment;
   const pick = (v: 'pieces' | 'outfits') => void store.setKv(SEGMENT_KEY, v);
   const open = asks.flatMap(({ checkId, ask }) => {
     const photo = byId.get(ask.itemId), candidate = byId.get(ask.candidateId);
@@ -103,13 +110,15 @@ export default function ClosetScreen() {
         </EmptyState>
       ) : (
         <>
-          <Segmented<'pieces' | 'outfits'>
-            label={t('closet.title')}
-            shrinkToFit={false}
-            value={segment}
-            onChange={pick}
-            options={[{ value: 'pieces', label: t('closet.seg.pieces') }, { value: 'outfits', label: t('closet.seg.outfits') }]}
-          />
+          {view.switcher ? (
+            <Segmented<'pieces' | 'outfits'>
+              label={t('closet.title')}
+              shrinkToFit={false}
+              value={segment}
+              onChange={pick}
+              options={[{ value: 'pieces', label: t('closet.seg.pieces') }, { value: 'outfits', label: t('closet.seg.outfits') }]}
+            />
+          ) : null}
           {/* The same one fit card on Outfits (§19, #322): Closet opens there once he has 3+ outfits. */}
           {segment === 'outfits' && fit ? (
             <KCard>

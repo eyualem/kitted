@@ -1,0 +1,71 @@
+# T73 · CB1.5: with the Outfits switch on (the demo screens that show it), Outfits, Next best buy and Goes with are
+# exactly as before the beta. Screens 182 (Closet · Outfits), 183 (No outfits yet) and 184 (a piece and what goes
+# with it). Each step opens its screen fresh (open-demo's launchApp stops the app), so 182's switch can't leak into
+# a switch-off screen (that is T73-closet-no-outfits.yaml, a separate run).
+# Run: maestro --device <udid> test app/e2e/flows/T73-outfits-on.yaml (Metro running; on another port: -e PORT=8082)
+# Matching: Maestro (2.12.1) matches a pattern against an element's WHOLE text or VoiceOver label.
+appId: com.trykitted.kitted
+name: CB1.5 · Outfits on for the demo screens that show it
+---
+# 182 · Closet on the Outfits view: the Pieces | Outfits switch, the count line, Next best buy, Try next.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "182"
+- extendedWaitUntil:
+    visible: "Outfits"
+    timeout: 90000
+- assertVisible: "Pieces"
+- assertVisible: "Outfits"
+- assertVisible: "\\d+ pieces · \\d+ outfits.*"
+- scrollUntilVisible:
+    element:
+      text: "Next best buy: .*"
+    direction: DOWN
+    timeout: 15000
+- assertVisible: "Next best buy: Brown work boots\\. \\+18 outfits with what you own\\. \\$50–70"
+- scrollUntilVisible:
+    element:
+      text: ".*Try next.*"
+    direction: DOWN
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      text: "Next best buy: .*"
+    direction: UP
+    timeout: 15000
+# Next best buy opens its sheet: what the boots unlock.
+- tapOn: "Next best buy: .*"
+- extendedWaitUntil:
+    visible: ".*What it unlocks.*"
+    timeout: 15000
+
+# 183 · Closet, Outfits remembered, too few pieces: No outfits yet.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "183"
+- extendedWaitUntil:
+    visible: ".*No outfits yet.*"
+    timeout: 90000
+- assertVisible: "Pieces"
+- assertVisible: "Outfits"
+
+# 184 · B1's page (khaki chinos): its Outfits row and Goes with.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "184"
+- extendedWaitUntil:
+    visible: "What it is"
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      text: "Outfits, \\d+ outfits?"
+    direction: DOWN
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      text: ".*Goes with.*"
+    direction: DOWN
+    timeout: 15000

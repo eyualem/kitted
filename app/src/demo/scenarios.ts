@@ -53,6 +53,9 @@ export interface ScreenScenario {
   looks?: Styles;
   /** Kit's "About you" card (#373, 10-onboarding.md §10): posted under an answer or on a later visit, then folded. */
   aboutYou?: AboutYouDemo;
+  /** Outfits on for this screen (specs/closet-beta.md CB1): the Pieces | Outfits switch, Next best buy and Goes with, as
+   *  before the beta. Every other screen has them off, as his phone does (features/closet/outfitsSwitch.ts). */
+  outfits?: true;
   /** About you's draft (T39): his pick and name waiting in kv, as if he'd tapped them before a close. */
   about?: AboutDraft;
   /** Kit's first-check offer (T39, OS5): setup finished through About you (no agreement), then the card as is, after
@@ -249,9 +252,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   // Two pieces added from the list (#343): the belt and a tee (its first choice, black), the next morning.
   { n: 180, name: 'What you already own · two added', id: 'C5', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/closet/starter', under: '/closet', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
   { n: 181, name: 'Lookbook · the re-check story', id: 'L1', scenario: 'firstRun', onboarded: true, now: ALL_DONE_NOW, href: '/lookbook', finish: { steps: ['later', { mark: 's12' }, { mark: 's01' }] } },
-  { n: 182, name: 'Closet · Outfits', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
-  { n: 183, name: 'Closet · No outfits yet', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
-  { n: 184, name: 'Closet · a piece and what goes with it', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B1', under: '/closet' },
+  { n: 182, name: 'Closet · Outfits', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', outfits: true },
+  { n: 183, name: 'Closet · No outfits yet', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet', outfits: true },
+  { n: 184, name: 'Closet · a piece and what goes with it', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B1', under: '/closet', outfits: true },
   // The two-shot check, step 0 (#313, 12-two-shot-check.md §10): a short mirror's top-only check, finished by a photo of
   // the pants and shoes; the bottom snap's camera; the short-mirror tip in Mirror.
   { n: 185, name: 'Partial check · top only', id: 'S6p', scenario: 'full', onboarded: true, now: '2026-10-20T08:11:00', href: '/stylist' },
@@ -260,7 +263,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 188, name: 'Camera · short mirror', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?guide=shortMirror&camMode=mirror', under: '/stylist' },
   // Starter basics by look (#364, 09-ui-review §16): Closet's next best buy for a streetwear pick (190–192, the
   // Starter list for other picks, were dropped at the merge: "What you already own" keeps one list, #343).
-  { n: 193, name: 'Closet · Outfits · streetwear pick', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', looks: [['streetwear', 0.5]] },
+  { n: 193, name: 'Closet · Outfits · streetwear pick', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', looks: [['streetwear', 0.5]], outfits: true },
   // How baggy a piece is (09-ui-review §18, #316): the dark jeans' photos disagree (194–196: PR #7 holds 190–193, the piece-edit screens 197–200).
   { n: 194, name: 'Closet · How do your dark jeans fit?', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   { n: 195, name: 'Closet · Leg, Not sure', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B3', under: '/closet' },
@@ -273,7 +276,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 200, name: 'What it is · Color', id: 'C3', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/sheets/edit-item/B3?field=color', under: '/closet/item/B3' },
   // Bagginess on the fit-check card (09-ui-review §19, #322): s12's jeans are Not sure (201–203).
   { n: 201, name: 'Fit check · Not sure about your jeans', id: 'S6', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: '/stylist' },
-  { n: 202, name: 'Closet · Outfits with the fit card', id: 'C1', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: '/closet' },
+  { n: 202, name: 'Closet · Outfits with the fit card', id: 'C1', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: '/closet', outfits: true },
   { n: 203, name: 'Not quite right? · from the line', id: 'S8', scenario: 'full', onboarded: true, now: '2026-10-22T12:20:00', freeChecksUsed: 0, href: `/sheets/correct/${STORY_DOUBT}?reason=detail&garment=1&only=slim,straight,wide`, under: '/stylist' },
   // The Undo countdown ring (09-ui-review §21, #324): a removal toast held mid-way, and a 5 s one counting live.
   { n: 204, name: 'Undo toast · held, 5 of 8 s left', id: 'G2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', toast: { text: 'removed', removal: true, heldAtMs: 4_200 } },
@@ -306,6 +309,10 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 257, name: 'Beta · You', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', freeChecksUsed: 0, href: '/you', tier: 'beta' },
   { n: 258, name: 'Beta · You, settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', tier: 'beta' },
   { n: 259, name: 'Beta · Morning card, checks used', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:40:00', freeChecksUsed: 3, href: '/stylist', weather: 'coldRain', weatherAllowed: true, tier: 'beta' },
+  // Closet for the beta (specs/closet-beta.md CB1): Outfits off, as on his phone. 260 has Outfits saved as his last tap
+  // on a closet that makes 3+ outfits (it opens on the pieces anyway); 261 is screen 184's piece without Goes with.
+  { n: 260, name: 'Closet · beta, Outfits remembered', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
+  { n: 261, name: 'Closet · a piece, beta', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B1', under: '/closet' },
   // You as the settings home (T34, specs/setup-and-you.md SY1): Pro bought with the paywall on, at the rows and at the top.
   { n: 270, name: 'You · Pro, settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', finish: { paywall: 'ok', pro: true } },
   { n: 271, name: 'You · Pro', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you', finish: { paywall: 'ok', pro: true } },

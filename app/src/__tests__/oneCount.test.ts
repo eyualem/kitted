@@ -18,6 +18,7 @@ import { ghostPiece, nextBestBuy, starterGain } from '@/features/finish/gains';
 import { starterList } from '@/features/finish/packs';
 import { ownership, STARTER } from '@/features/finish/starter';
 import { pickStarter } from '@/features/finish/starterActions';
+import { setDemoOutfits } from '@/features/closet/outfitsSwitch';
 import { t } from '@/i18n/en';
 import { manualClock } from '@/services/clock';
 import { counterIds } from '@/services/ids';
@@ -76,14 +77,21 @@ describe('G1 · every "+N" is the Closet\'s count with it minus without it', () 
     expect(nb.gain).toBe(closetGain(closet, styles, nb.entry));
   });
 
+  // The "+N fits" toast is the Outfits build's (T73, specs/closet-beta.md CB1.5): run with the switch on. Its switch-off
+  // twin ("Added {item}.") is closetNoOutfits.test.tsx's CB1.2.
   it('the "What you already own" toast says the same "+N" as the count it adds', async () => {
-    const { store, closet, styles } = await setup();
-    const e = missing(closet).find((x) => closetGain(closet, styles, x) > 1)!;
-    const n = closetGain(closet, styles, e);
-    const g = e.pick!.garment;
-    const toast = await pickStarter(store, e, { subcategory: String(g.subcategory), color: String(g.color_family) }, counterIds(), AS_OF + 1000);
-    expect(toast?.text).toBe(t('toast.fits', { n }));
-    expect(outfitCount(await store.closet.all(), [], styles) - outfitCount(closet, [], styles)).toBe(n);
+    setDemoOutfits(true);
+    try {
+      const { store, closet, styles } = await setup();
+      const e = missing(closet).find((x) => closetGain(closet, styles, x) > 1)!;
+      const n = closetGain(closet, styles, e);
+      const g = e.pick!.garment;
+      const toast = await pickStarter(store, e, { subcategory: String(g.subcategory), color: String(g.color_family) }, counterIds(), AS_OF + 1000);
+      expect(toast?.text).toBe(t('toast.fits', { n }));
+      expect(outfitCount(await store.closet.all(), [], styles) - outfitCount(closet, [], styles)).toBe(n);
+    } finally {
+      setDemoOutfits(false);
+    }
   });
 });
 

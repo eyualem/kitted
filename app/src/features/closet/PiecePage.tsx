@@ -39,7 +39,8 @@ import { editRows } from './pieceEdit';
 import { piecePhotos, type PiecePhoto } from './piecePhotos';
 import { livePhotoDeps, loadPhotoChecks } from './photoChecks';
 import { OutfitCard } from './OutfitsView';
-import { buildOutfits, goesWith } from './outfits';
+import { buildOutfits, pieceOutfits } from './outfits';
+import { useOutfitsOn } from './outfitsSwitch';
 import type { PhotoAction } from './PiecePhotoTile';
 import { PhotoMenu } from './PhotoMenu';
 import { isOwned } from './profile';
@@ -83,6 +84,8 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
   const [showFolded, setShowFolded] = useState(false);
   // Removed from this page: it closes, so it doesn't say "isn't here anymore" on its way out.
   const [leaving, setLeaving] = useState(false);
+  // Outfits, Next best buy and Goes with are off for the beta; demo screens turn them on (specs/closet-beta.md CB1).
+  const on = useOutfitsOn();
   const data = useLive(['closet', 'closetObs', 'fitChecks'], async () => {
     const all = await store.closet.all();
     const item = all.find((c) => c.id === id) ?? null;
@@ -95,13 +98,15 @@ export function PiecePage({ id, mergedFrom = null }: { id: string; mergedFrom?: 
     // What each photo's menu offers: Not this piece and It's another piece… (§8, #289).
     const ctx = { all, obs, checks };
     const offers = new Map([...photos.shown, ...photos.folded].map((ph) => [ph.obsId, photoOffer(item, ph.obsId, ctx)]));
-    // Goes with (09-ui-review §13 O9, #307): the outfits with this piece; a layer gets the list built around it.
+    // Goes with (09-ui-review §13 O9, #307): the outfits with this piece; a layer gets the list built around it. Only
+    // while Outfits are on (specs/closet-beta.md CB1.2): off, no Outfits row and no Goes with, and nothing is built.
     const fitRows = [...rows.values()];
-    const styles = (await store.profile.get('me'))?.styles ?? null;
-    const around = buildOutfits({ closet: all, checks: fitRows, styles, occasion: 'everyday', ...(item.slot === 'outer' ? { withLayer: item.id } : {}) });
-    const outfitsWith = around.filter((o) => o.itemIds.includes(item.id));
-    return { item, photos, inLookbook, offers, merge: mergeOffer(item, all), all, goes: goesWith(item.id, around), outfitsWith: outfitsWith.length, doubt: fitDoubt(item, obs) };
-  }, [id]);
+    const around = on
+      ? buildOutfits({ closet: all, checks: fitRows, styles: (await store.profile.get('me'))?.styles ?? null, occasion: 'everyday', ...(item.slot === 'outer' ? { withLayer: item.id } : {}) })
+      : [];
+    const { outfitsWith, goes } = pieceOutfits(on, around, item.id);
+    return { item, photos, inLookbook, offers, merge: mergeOffer(item, all), all, goes, outfitsWith, doubt: fitDoubt(item, obs) };
+  }, [id, on]);
   // Folded into another piece (#280): back on this page after the picker closes, it shows the kept piece instead.
   const mergedInto = data && !data.item ? data.mergedInto : null;
   useFocusEffect(useCallback(() => {
