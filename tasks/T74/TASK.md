@@ -36,4 +36,34 @@ The full plan, the locked testing contract, the approved design and the build no
 - `closetDeck.test.tsx` › `CB2.2 · No, a new one and the runner-up chip` · expected `1 of 3` where the spec gives `1 of 4` · settled by: the test writer (the implementer was right; fixed, strengthened, re-locked at `dd92b898`) · outcome: see `REPORT.md` → Disputes
 
 ## Review
-Written by the reviewer.
+### Round 1 (reviewer, normal mode)
+Read: plan line, CB2, What changes, the diff against T73's branch (app code, the locked deck test's header, demo files, no `.only`/`.skip` in `closetDeck.test.tsx`), every screenshot and the design frames; Built last. Did not re-run the Simulator, the flows or `npm run check`.
+
+**Criteria**
+- CB2.1 done (shot 03: one card, `1 of 5`; `toConfirm(open, fit)` has no cap, the screen builds it from every open question plus the fit one).
+- CB2.2 done (shot 07: `1 of 4` and "Saved as your khaki chinos." with Undo; the answer still goes through `answerWithUndo`).
+- CB2.3 can't tell from here: the unit tests and the by-hand run in REPORT cover it, the toast's Undo was never tapped by the flow. A 0.15 s press on the Simulator would show it.
+- CB2.4 done in code (`stepDeck` wraps both ways, a lone question has no Skip and the swipe springs back; shots 01 show no Skip). The last-card swipe wrap was checked by hand only.
+- CB2.5 done for the fit card at 5 of 5 (shot 06, Skip on its own row, `FIT_SKIP_KEY`). A lone fit card (`1 of 1` with Skip) is **not shown**, see defect 1.
+- CB2.6 done in code (deck empties, `onEmptied`); the pieces moving up is not in a shot.
+- CB2.7 done: pictures 96 x 110, the card is clearly shorter than today's (about 110 against 172 for the pictures).
+- CB2.8 can't tell: labels, `Question {n} of {total}.` first, the hidden tag line, the "Skip" action and 44 pt boxes are in the code and unit-tested; what VoiceOver says needs his phone.
+- CB2.9 can't tell: cross-fade is unit-tested, not seen; needs Reduce Motion on a device.
+- CB2.10 done in code (`reconcileDeck` drops the key; the count follows); screen 70 was checked by hand.
+
+**Hard lines:** nothing rates a face, body or skin; nothing new leaves the phone; no emoji, ranks or streaks; the only new words are the two spec'd ones (`{n} of {total}`, `Question {n} of {total}.`). Spec edits (Skip placement, wrapping swipe) carry the founder's yes in the log.
+
+**Defects**
+1. **Screenshots 02 are the wrong state** (`tasks/T74/shots/02-fit-only-light.png`, `02-fit-only-dark.png`). TASK.md says they show the fit card alone, `1 of 1` with Skip (screen 263). Both show Closet with no To confirm card at all (taken 8:55, before the demo fix the Built note describes). The lone fit card is a spec'd layout (CB2 item 5: "a lone fit card keeps it") and has no picture. Who: **code** (the builder retakes both from 263 and fixes the Built line).
+2. **The locked flow `app/e2e/flows/T74-confirm-one-card.yaml` is red as committed** at three steps (CB2.3 Undo tap, CB2.4's last swipe, CB2.10 on screen 70), by the builder's own account. These are **test** defects (the flow was written without a device run). Normal mode has no test-writer; the builder left it for the founder's call in the PR. Not a risk to the app, but a red flow in the repo should be fixed or have those steps marked, or the next session will read it as a regression.
+
+Neither defect shows a bug in the app. I saw no code bug: the Undo-back, answered-elsewhere, last-answer and wrap paths in `toConfirm.ts` and `ConfirmDeck.tsx` read correctly.
+
+**Later look (never blocks)**
+- Largest text (shots 08, 09): the card is taller than the screen and Skip's chevron is as large as the words; nothing is cut off, but a person scrolls inside the card's area. Fine for a beta; look again with real use.
+- Mid-slide frame (Skip 1 to 2) showed the outgoing card already reading `2 of 5` and the incoming one without pictures for a moment (REPORT). Watch it on a phone.
+- After the last answer on a one-grid closet, VoiceOver focus has nowhere to land (`ClosetTile` takes no ref).
+- Demo 262's questions are copies on the same chinos photo, so two cards ask about the navy chinos: fine for a demo, not evidence of the matcher.
+- `closetDeck.test.tsx` is 1,395 lines; the C2 rewrite in `closetBatch287.test.ts` keeps the same five-question set-up and is stronger, not weaker.
+
+**Verdict: not ready** (two open defects: reshoot 02, and the red flow, which needs the founder's call). Nothing else blocks.
