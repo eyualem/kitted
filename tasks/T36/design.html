@@ -327,14 +327,14 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
   </div>
 </header>
 
-<!-- DESIGN: three directions, A, B, C; two phones each (figure.shot 1-6, in order) -->
+<!-- DESIGN: three directions, A, B, C; figure.shot 1-6 in order, then 7 (A0, shown under A by flex order) -->
 <!-- T36:BEGIN -->
 <style>
 /* T36: three directions for how he learns Stylist and Closet by doing his first check */
 .t36p .tabbar a{position:relative}
 .t36p .tabbar a.on{color:var(--ink);background:var(--surface-2)}
-/* Apple's standard tab badge (system red, system font), top-right of the tab icon */
-.t36p.bc4 .tabbar a:nth-child(2)::after,.t36p.bl1 .tabbar a:nth-child(3)::after{position:absolute;top:3px;left:calc(50% + 5px);min-width:18px;height:18px;padding:0 5px;box-sizing:border-box;border-radius:9px;background:#FF3B30;color:#fff;font-family:var(--ios);font-size:12px;line-height:18px;font-weight:600;text-align:center}
+/* the tab badge, top-right of the tab icon: navy (the app's ink) instead of Apple's red (round 2, the coordinator's default) */
+.t36p.bc4 .tabbar a:nth-child(2)::after,.t36p.bl1 .tabbar a:nth-child(3)::after{position:absolute;top:3px;left:calc(50% + 5px);min-width:18px;height:18px;padding:0 5px;box-sizing:border-box;border-radius:9px;background:var(--ink);color:var(--bg);font-family:var(--ios);font-size:12px;line-height:18px;font-weight:600;text-align:center}
 .t36p.bc4 .tabbar a:nth-child(2)::after{content:"4"}
 .t36p.bl1 .tabbar a:nth-child(3)::after{content:"1"}
 /* Stylist (as T39's frames, from today's StylistScreen) */
@@ -400,31 +400,32 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
 </svg>
 <!-- T36:END -->
 
-<section class="flow" id="dir-a">
+<div style="display:flex;flex-direction:column">
+<section class="flow" id="dir-a" style="order:0">
   <div class="flow-head">
     <div><span class="eyebrow">T36 · Direction A</span><h2>A. Show where it went</h2></div>
-    <p>Motion and marks, almost no new words. His pieces fly from the score card into the Closet tab, the tab gets Apple's standard badge, and on his first visit the new pieces wait at the top with a small New mark.</p>
+    <p>Motion and marks, almost no new words. His pieces fly from the score card into the Closet tab, the Closet tab gets a navy badge, and on his first visit the new pieces wait at the top with a small New mark.</p>
   </div>
   <div class="row">
     <figure class="shot">
-      <div class="phone t36p bc4 bl1" data-time="7:43" data-tab="stylist">
+      <div class="phone t36p bc4" data-time="7:43" data-tab="stylist">
         <div class="screen">
-<div class="t36-snav"><span class="hist"><svg width="24" height="24"><use href="#t36-hist"/></svg></span><div class="t">Stylist<small>Re-check included</small></div><span style="width:30px"></span></div><div class="t36-thread end"><div class="t36-me"><div class="ph" data-photo="p01b" data-crop="blur"></div><div class="cap"><span>Date</span><span>7:42</span></div></div><div class="card t36-res" style="margin-top:16px"><div class="t36-gf"><span>Going for <b>smart casual</b> · Date</span><b>Change</b></div><div class="seam"></div><div class="card-pad" style="display:flex;flex-direction:column;gap:10px"><div class="tagline"><span>Fit check · Full</span></div><div class="score-row"><div class="score">7.5<sub>/10</sub></div><div class="verdict"><b>Put together</b><span>Clean base. The overshirt in your hand finishes it.</span></div></div></div><div class="seam"></div><div class="card-pad fixes" style="padding-block:4px"><div class="fix"><span class="n">1</span><div class="what"><b>Wear the overshirt, open</b><span>Free · it's already in your hand</span></div><span class="gain">→ 8.0</span></div></div><div class="seam"></div><div class="card-pad" style="display:flex;flex-direction:column;gap:10px"><div class="added" id="addedrow"><span class="thumbs"><span data-gi="tee:#F2F0EA"></span><span data-gi="chino:#B98E62"></span><span data-gi="sneaker:#F2F1EC"></span><span data-gi="overshirt:#D8CDB8"></span></span>Added 4 to Closet<a href="#">Review</a></div><div class="actions"><button class="btn p" type="button" style="flex:1"><svg class="ic xs"><use href="#i-redo"/></svg>Re-check after fixing</button><button class="btn icon" type="button" aria-label="Share"><svg class="ic s"><use href="#i-share"/></svg></button></div><div class="links"><a href="#">Why 7.5?</a><a href="#">Not quite right?</a></div></div></div></div><div class="t36-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t36-mic"/></svg></span></div><div class="t36-fly"><svg class="path" viewBox="0 0 402 874"><path d="M78,611 C40,665 140,715 157,806" fill="none" stroke="var(--ink-3)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round" opacity=".8"/></svg><div class="t36-ghost" style="left:68px;top:647px;opacity:0.6"><span data-gi="tee:#F2F0EA" style="width:20px;height:20px"></span><span data-gi="chino:#B98E62" style="width:20px;height:20px"></span><span data-gi="sneaker:#F2F1EC" style="width:20px;height:20px"></span><span data-gi="overshirt:#D8CDB8" style="width:20px;height:20px"></span></div><div class="t36-ghost" style="left:111px;top:714px;opacity:0.8"><span data-gi="tee:#F2F0EA" style="width:18px;height:18px"></span><span data-gi="chino:#B98E62" style="width:18px;height:18px"></span><span data-gi="sneaker:#F2F1EC" style="width:18px;height:18px"></span><span data-gi="overshirt:#D8CDB8" style="width:18px;height:18px"></span></div><div class="t36-ghost" style="left:152px;top:786px;opacity:0.95"><span data-gi="tee:#F2F0EA" style="width:14px;height:14px"></span><span data-gi="chino:#B98E62" style="width:14px;height:14px"></span><span data-gi="sneaker:#F2F1EC" style="width:14px;height:14px"></span><span data-gi="overshirt:#D8CDB8" style="width:14px;height:14px"></span></div></div>
+<div class="t36-snav"><span class="hist"><svg width="24" height="24"><use href="#t36-hist"/></svg></span><div class="t">Stylist<small>Re-check included</small></div><span style="width:30px"></span></div><div class="t36-thread end"><div class="t36-me"><div class="ph" data-photo="p01b" data-crop="blur"></div><div class="cap"><span>Date</span><span>7:42</span></div></div><div class="card t36-res" style="margin-top:16px"><div class="t36-gf"><span>Going for <b>smart casual</b> · Date</span><b>Change</b></div><div class="seam"></div><div class="card-pad" style="display:flex;flex-direction:column;gap:10px"><div class="tagline"><span>Fit check · Full</span></div><div class="score-row"><div class="score">7.5<sub>/10</sub></div><div class="verdict"><b>Put together</b><span>Good base. One easy change sharpens it.</span></div></div></div><div class="seam"></div><div class="card-pad fixes" style="padding-block:4px"><div class="fix"><span class="n">1</span><div class="what"><b>Wear the overshirt, open</b><span>Free · it's already in your hand</span></div></div></div><div class="seam"></div><div class="card-pad" style="display:flex;flex-direction:column;gap:10px"><div class="added"><span class="thumbs"><span data-gi="tee:#F2F0EA"></span><span data-gi="chino:#B98E62"></span><span data-gi="sneaker:#F2F1EC"></span><span data-gi="overshirt:#D8CDB8"></span></span>Added 4 to Closet<a href="#">Review</a></div><button class="btn p" type="button" style="width:100%"><svg class="ic xs"><use href="#i-redo"/></svg>Re-check after fixing</button><button class="btn s t36-explain" type="button" style="width:100%">Explain rating</button></div></div></div><div class="t36-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t36-mic"/></svg></span></div><div class="t36-fly"><svg class="path" viewBox="0 0 402 874"><path d="M78,597 C40,660 110,740 157,806" fill="none" stroke="var(--ink-3)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round" opacity=".8"/></svg><div class="t36-ghost" style="left:67px;top:637px;opacity:0.6"><span data-gi="tee:#F2F0EA" style="width:20px;height:20px"></span><span data-gi="chino:#B98E62" style="width:20px;height:20px"></span><span data-gi="sneaker:#F2F1EC" style="width:20px;height:20px"></span><span data-gi="overshirt:#D8CDB8" style="width:20px;height:20px"></span></div><div class="t36-ghost" style="left:98px;top:722px;opacity:0.8"><span data-gi="tee:#F2F0EA" style="width:18px;height:18px"></span><span data-gi="chino:#B98E62" style="width:18px;height:18px"></span><span data-gi="sneaker:#F2F1EC" style="width:18px;height:18px"></span><span data-gi="overshirt:#D8CDB8" style="width:18px;height:18px"></span></div><div class="t36-ghost" style="left:142px;top:786px;opacity:0.95"><span data-gi="tee:#F2F0EA" style="width:14px;height:14px"></span><span data-gi="chino:#B98E62" style="width:14px;height:14px"></span><span data-gi="sneaker:#F2F1EC" style="width:14px;height:14px"></span><span data-gi="overshirt:#D8CDB8" style="width:14px;height:14px"></span></div></div>
         </div>
       </div>
-      <figcaption class="t36-cap"><b>A1 · Stylist, the first score card lands <small>PHONE 1</small></b><span>His first check (the demo story's 7.5 smart-casual Date check). As the score settles, small copies of the 4 piece drawings in <b>Added 4 to Closet</b> lift off the row and arc down into the Closet tab (drawn here as ghosts along the dashed path: about 0.6 s, ease-in-out, staggered 40 ms per piece, shrinking as they go). One light haptic as they land; Closet then shows the badge 4 and Lookbook 1. The row's own drawings stay put. Reduce Motion: no flight, the badges just appear. VoiceOver hears today's "Added to your closet." No new words.</span></figcaption>
+      <figcaption class="t36-cap"><b>A1 · Stylist, the first score card lands <small>PHONE 1</small></b><span>His first check (the demo story's 7.5 smart-casual Date check), on the quieter card from specs/explain-rating.md: the score and its word, the summary line with no number, one fix with no gain, <b>Added 4 to Closet</b>, Re-check after fixing, then Explain rating. As the score settles, small copies of the 4 piece drawings lift off the summary row and arc into the Closet tab (drawn as ghosts along the dashed path: about 0.6 s, ease-in-out, staggered 40 ms per piece, shrinking as they go). One light haptic as they land; Closet then shows a navy badge 4 (Closet only). The row's own drawings stay put. Reduce Motion: no flight, the badge just appears. VoiceOver hears today's "Added to your closet." No new words.</span></figcaption>
     </figure>
     <figure class="shot">
-      <div class="phone t36p bl1" data-time="7:45" data-tab="closet">
+      <div class="phone t36p " data-time="7:45" data-tab="closet">
         <div class="screen">
 <div class="t36-ctitle"><span class="circ"><svg class="ic s"><use href="#i-plus"/></svg></span></div><div class="t36-cscroll"><div class="t36-big">Closet</div><div class="segs wide"><i class="on">Pieces</i><i>Outfits</i></div><div class="t36-secl"><div class="tagline"><span>From your first check</span><b>4</b></div><div class="t36-grid"><div style="position:relative"><span class="tile" data-gi="overshirt:#D8CDB8"></span><span class="t36-newmark">New</span><span class="minilabel">Beige overshirt</span></div><div style="position:relative"><span class="tile" data-gi="tee:#F2F0EA"></span><span class="t36-newmark">New</span><span class="minilabel">White tee</span></div><div style="position:relative"><span class="tile" data-gi="chino:#B98E62"></span><span class="t36-newmark">New</span><span class="minilabel">Tan chinos</span></div><div style="position:relative"><span class="tile" data-gi="sneaker:#F2F1EC"></span><span class="t36-newmark">New</span><span class="minilabel">White sneakers</span></div></div></div></div>
         </div>
       </div>
-      <figcaption class="t36-cap"><b>A2 · Closet, his first visit after that check <small>PHONE 2</small></b><span>He taps Closet: its badge goes. The 4 pieces sit first under <span class="nw">NEW</span><b>From your first check</b> (today's section label style, with its count), each with a <span class="nw">NEW</span><b>New</b> mark. Lookbook keeps its 1 until he opens it. The marks and the label go after this visit (or once he opens a piece). Everything else is today's Closet: Pieces and Outfits, the add button, a piece opens its page.</span></figcaption>
+      <figcaption class="t36-cap"><b>A2 · Closet, his first visit after that check <small>PHONE 2</small></b><span>He taps Closet: its badge goes (no tab has a badge now). The 4 pieces sit first under <span class="nw">NEW</span><b>From your first check</b> (today's section label style, with its count), each with a <span class="nw">NEW</span><b>New</b> mark. The marks and the label go after this visit (or once he opens a piece). Everything else is today's Closet: Pieces and Outfits, the add button, a piece opens its page.</span></figcaption>
     </figure>
   </div>
 </section>
-<section class="flow" id="dir-b">
+<section class="flow" id="dir-b" style="order:2">
   <div class="flow-head">
     <div><span class="eyebrow">T36 · Direction B</span><h2>B. Kit says it once</h2></div>
     <p>One short Kit line per moment, in the chat, never a list. Kit tells him the next move under his first score, then where his clothes went, with the pieces drawn in the bubble and a way to go look.</p>
@@ -448,7 +449,7 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
     </figure>
   </div>
 </section>
-<section class="flow" id="dir-c">
+<section class="flow" id="dir-c" style="order:3">
   <div class="flow-head">
     <div><span class="eyebrow">T36 · Direction C</span><h2>C. Tap to try</h2></div>
     <p>Suggestion chips instead of explanation. The chips the composer already has show above it without opening the field, so his first move in Stylist is a tap, and after the first score they turn into questions about that score.</p>
@@ -472,6 +473,23 @@ h1.board-title em{font-style:normal;font-stretch:72%;font-weight:500;color:var(-
     </figure>
   </div>
 </section>
+<section class="flow" id="dir-a0" style="order:1">
+  <div class="flow-head">
+    <div><span class="eyebrow">T36 · Direction A</span><h2>A, before the check</h2></div>
+    <p>Round 2 (Nov 10): where setup ends in direction A. Kit says one short line, then the offer. Drawn last in the file so phones 1 to 6 keep their numbers.</p>
+  </div>
+  <div class="row">
+    <figure class="shot">
+      <div class="phone t36p " data-time="7:40" data-tab="stylist">
+        <div class="screen">
+<div class="t36-snav"><span class="hist"><svg width="24" height="24"><use href="#t36-hist"/></svg></span><div class="t">Stylist<small>1 free check today</small></div><span style="width:30px"></span></div><div class="t36-thread"><div class="t36-stamp">Thursday 7:40 am</div><div style="margin-top:8px;flex:none"><div class="t36-who">Kit</div><div class="t36-kit" style="width:fit-content">I'm Kit, your stylist.</div></div><div class="card" style="margin-top:12px;border-radius:26px"><div class="t36-sec"><div class="t36-ct"><b>Want to check a fit now?</b><span>Stand back so your shoes are in the shot. Not dressed for it? Later works.</span></div><div class="t36-cbtns"><button class="btn p" type="button"><svg class="ic xs"><use href="#i-camera"/></svg>Check my fit</button><button class="btn s" type="button">Later</button></div></div></div></div><div class="t36-acc"><span class="cam"><svg class="ic s"><use href="#i-camera"/></svg></span><span class="field">Ask Kit…</span><span class="mic"><svg class="ic s" viewBox="0 0 24 24"><use href="#t36-mic"/></svg></span></div>
+        </div>
+      </div>
+      <figcaption class="t36-cap"><b>A0 · Stylist, setup's end <small>PHONE 7</small></b><span>Continue on About you lands here, as today, without the chips. Kit's first bubble is only <span class="nw">NEW</span><b>I'm Kit, your stylist.</b> (the AI note is gone from this message). Then Kit's offer card, unchanged: Check my fit opens the camera (the agreement first), Later posts today's No rush line.</span></figcaption>
+    </figure>
+  </div>
+</section>
+</div>
 </div>
 
 <style>

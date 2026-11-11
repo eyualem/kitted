@@ -69,7 +69,7 @@ Offered on Welcome ("I already have an account"), in one chat card after he's se
 ## Features
 
 ### F1. Onboarding
-The first run above, 6 taps to the first check. Goal, boldness and fit are asked later by Kit, when they change an answer. New users learn each feature from a short tip the first time they reach it, never a tour before the first check (`specs/setup-and-you.md`).
+The first run above, 6 taps to the first check. Goal, boldness and fit are asked later by Kit, when they change an answer. New users learn by doing: the first check is the lesson, and its pieces slide into Closet, which shows a badge; no tour, no tips (`specs/setup-and-you.md` SY2).
 - F1.1 A fresh install reaches the camera in 6 taps or fewer, with no account and no paywall on the way, and the camera never opens until he taps Check my fit.
 - F1.2 The age question starts with nothing picked; "Under 18" shows the stop screen and no camera; Declared Age Range under 18 does the same.
 - F1.3 Nothing is sent anywhere before consent is agreed; a photo taken before consent is kept and scored after Agree.
@@ -100,7 +100,7 @@ He tells Kit a piece was read wrong ("those jeans are straight") and taps Re-sco
 
 ### F5. Kit (questions)
 Kit answers about clothes, shoes, accessories, fit, care and shopping, using his looks, his fit if given, what he told Kit and his closet as words, never a photo.
-- F5.1 The first chat message says Kit is an AI; asked, Kit says so plainly.
+- F5.1 The agreement says Kit is an AI, before his first check or question; asked, Kit says so plainly.
 - F5.2 Off-topic questions (haircuts, grooming, fitness, dating) get a short friendly decline, and don't count: "I stick to clothes. Ask me what to wear to it." (draft)
 - F5.3 Kit never comments on his face, body, weight or skin.
 - F5.4 Offline: "You're offline, so I couldn't answer that. It doesn't count."
@@ -125,7 +125,7 @@ Every past check with its photo, score and fixes; a look's page with "Show in ch
 - F8.1 Past scores stay visible forever, free, never blurred.
 
 ### F9. You
-The settings home, named You, with no gear and no separate Settings page (`specs/setup-and-you.md`): Style profile (name, looks 1·2·3, fit), What Kit knows (each fact with its source, removable), today's checks, then the settings rows: Notifications, Appearance, Plan & usage, Privacy & data ("See what I send" shows the real blurred copy; "Delete all my data"), and Help & about with "Show me around".
+The settings home, named You, with no gear and no separate Settings page (`specs/setup-and-you.md`): Style profile (name, looks 1·2·3, fit), What Kit knows (each fact with its source, removable), today's checks, then the settings rows: Notifications, Appearance, Plan & usage, Privacy & data ("See what I send" shows the real blurred copy; "Delete all my data"), and Help & about.
 - F9.1 "Delete all my data" (and "Delete account and all data" when signed in) removes everything on the phone and on our server, with no way back.
 - F9.2 Picked looks change the order of fixes and advice, never a score.
 

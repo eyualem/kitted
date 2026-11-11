@@ -2,33 +2,42 @@
 
 <!-- Leave this comment. Only the session replaces it with the approval line, after the founder's yes in chat. -->
 
-**From:** `plan.md` → T36 · **Replaces:** `specs/setup-and-you.md` → SY2–SY3 (the Got-it tips and Kit's bullet-list hello) · **Research:** `tasks/T36/research.md` · **Frames:** `tasks/T36/design.html` (`preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/T36/design.html`) · **PNGs:** `tasks/T36/design/01-light.png` … `06-light.png`
+**From:** `plan.md` → T36 · **Replaces:** `specs/setup-and-you.md` → SY2–SY3 (the Got-it tips and Kit's bullet-list hello) · **Research:** `tasks/T36/research.md` · **Frames:** `tasks/T36/design.html` (`preview_start` name `mockups`, then `http://127.0.0.1:8095/tasks/T36/design.html`) · **PNGs:** `tasks/T36/design/01-light.png` … `07-light.png`
 
 This is a direction exploration, not a build design: the founder picks one, then SY2–SY3 get rewritten to match it. Light only.
 
 **Stays in every direction (main today):** setup ends in Stylist with Kit's AI note (`stylist.aiNote`) and the offer card (`offer.*`); the score card with its score, word, fix, `Re-check after fixing` and `Added {n} to Closet`; the optional "Tap the clothes you already own" card after the first check; the empty Closet's `Your closet builds itself.`; Apple's iOS 26 tab bar. No list in chat, no Got-it card, no emoji in any of them.
 
-## A. Show where it went (motion and marks)
+## A. Show where it went (motion and marks) · the founder's pick (Nov 10)
+
+### A0 · Stylist, setup's end · phone 7 · `design/07-light.png`
+- Today's end of setup without any chips. Kit's first bubble says only **NEW** `I'm Kit, your stylist.` (no AI note in this message), then Kit's offer card unchanged: `Want to check a fit now?` / `Stand back so your shoes are in the shot. Not dressed for it? Later works.` / `Check my fit` / `Later`.
+- It's drawn last in the file (phone 7) so phones 1–6 keep their numbers; the page shows it right under A.
 
 ### A1 · Stylist, the first score card lands · phone 1 · `design/01-light.png`
-- His first check (the demo story's 7.5 smart-casual Date check: white tee, tan chinos, white sneakers, beige overshirt). The card is today's.
+- His first check (the demo story's 7.5 smart-casual Date check: white tee, tan chinos, white sneakers, beige overshirt), on the quieter card from `specs/explain-rating.md` → "The result card (a first check)": the Going-for line, `7.5 Put together` with the summary `Good base. One easy change sharpens it.`, one fix numbered 1 with no gain (`Wear the overshirt, open` / `Free · it's already in your hand`), `Added 4 to Closet` with `Review`, `Re-check after fixing` (full width), then `Explain rating` (a secondary button under it). Off the card: `Why 7.5?`, `Not quite right?`, the share button and the gain. `2 more fixes` isn't shown (this check has one).
 - As the score settles, small copies of the 4 drawings in `Added 4 to Closet` lift off the row and arc into the Closet tab: ~0.6 s, ease-in-out, 40 ms apart, shrinking as they go. One light haptic as they land. The row keeps its own drawings.
-- The Closet tab shows Apple's badge `4`, Lookbook `1`.
-- Reduce Motion: no flight, the badges just appear. VoiceOver hears today's `Added to your closet.` (`toast.addedCloset`); iOS reads the badge itself.
+- The Closet tab shows a badge `4`, drawn navy (the app's ink) rather than Apple's red. Closet only; Lookbook gets no badge.
+- Reduce Motion: no flight, the badge just appears. VoiceOver hears today's `Added to your closet.` (`toast.addedCloset`); iOS reads the badge itself.
 
 ### A2 · Closet, his first visit after that check · phone 2 · `design/02-light.png`
-- Opening Closet clears its badge. Lookbook keeps `1` until he opens it.
+- Opening Closet clears its badge. No tab has a badge after that.
 - The 4 pieces sit first under the section label **NEW** `From your first check` (today's section label style, with its count `4`), each tile with a small **NEW** `New` mark (ink on white, not copper).
 - The marks and the label go after this visit. Everything else is today's Closet: Pieces / Outfits, the add button, a tap opens the piece.
 
-**Words:** `From your first check` · **NEW** (yours, kept) · `New` · **NEW** (yours, kept). Everything else exists.
+**Words:**
+- `I'm Kit, your stylist.` · **NEW** (the founder's, Nov 10: "'I'm Kit. I'm your stylist' is enough"; drawn as one sentence, the way today's note starts).
+- `From your first check` · **NEW** · `New` · **NEW**.
+- `Good base. One easy change sharpens it.` and `Explain rating` · words from `specs/explain-rating.md` (approved Nov 10), not in en.ts yet.
+- Everything else exists in en.ts.
 
-**For him:** he came for his score. Elements added: 1 motion and 2 badges on Stylist, 1 label and 4 marks on Closet. Each one answers "where did my clothes go?" exactly when it happens, with no reading. Nothing extra to tap: the badge goes away when he opens the tab.
+**For him:** he came for his score. Elements added: 1 motion and 1 badge on Stylist, 1 label and 4 marks on Closet. Each one answers "where did my clothes go?" exactly when it happens, with no reading. Nothing extra to tap: the badge goes away when he opens the tab.
 
 **Risks:**
 - **Placing the flight on the native tab bar.** The iOS 26 tab bar is drawn by UIKit above the screen (build notes trap), so a view inside the Stylist screen can't draw over it. The flight needs an overlay at the root, above the tabs. React Native can't ask the native bar where its Closet item is, so the landing point is worked out from the bar's width (4 equal items in a floating capsule). That's likely within a few points on every iPhone in portrait, and the fade at the end plus the native badge hide a small miss. It needs a phone check before anyone commits to it. Fallback if it can't be placed well: the badge alone (still clear, just less of a moment).
 - The motion has to feel quick, not cute: it has to finish within 0.6 s and must never delay the score or block a tap.
-- A badge on Lookbook is a second new thing at the same moment. Badging only Closet keeps one hint at a time (research point 7). The founder decides.
+- **The AI note leaves the first message.** `handoff/03-design-system.md` §10 (from `app-build-spec.md`, ruling 17) asks for one AI-disclosure line "in consent and the first message". With A0, the only line left is the agreement's `Kit, your stylist, is an AI.` on the first camera open. The founder's word in chat wins over 03, but this is a written rule he is changing. Log it in DECISIONS-LOG and fix 03 §10 when SY2 is rewritten. If App Review asks, the agreement still says it before any AI call.
+- A navy badge is less standard than Apple's red: it reads as calmer and more on-brand, but it's easier to miss. Native tabs may only allow the system color, or a tint for the whole badge. Check what expo-router's native tabs accept before promising navy.
 
 ## B. Kit says it once (one Kit line per moment)
 
@@ -96,17 +105,22 @@ This is a direction exploration, not a build design: the founder picks one, then
 
 ## Open questions for the founder
 - **Which direction?** Recommended: A with C2's chips. Other: A alone, or C alone.
-- **A · Badge Lookbook too?** Recommended: Closet only on the first check (one new thing at a time); Lookbook's empty state already explains itself. Other: both, as drawn.
+- **A · Badge color?** Navy (the app's ink) is drawn, the coordinator's default. Other: Apple's standard red.
 - **A · Every check, or only the first?** Recommended: the flight and badge on every check that adds pieces (it's just feedback); the `From your first check` label and `New` marks only once. Other: all of it only once.
 - **B · B1 at all?** Recommended: cut B1, keep B2. Other: both, as drawn.
 - **SY3 "Show me around":** with no tips left to bring back, recommended: remove the row (each direction teaches by doing, again on every check). Other: keep it, replaying direction A's flight on the next check.
 - **Not drawn (need a call before the spec):** a first check with no fix (the demo's real 7.5 has none: no Re-check, so B1 never shows); after `Later` (C: the chips stay; A/B: nothing until a check); a failed or refused check (nothing flies, no lines).
 
 ## Drawn differently from today, on purpose or by limit
-- The demo's real 7.5 card says `No quick fixes for this one.` with no Re-check button. To show a fix, as asked, the frames use the copy deck's example fix (`Wear the overshirt, open` / `Free · it's already in your hand`, `card.example.*`) and an illustrative `→ 8.0` (not computed by core).
+- The demo's real 7.5 card says `No quick fixes for this one.` with no Re-check button. To show a fix, as asked, the frames use the copy deck's example fix (`Wear the overshirt, open` / `Free · it's already in your hand`, `card.example.*`) and, on phones 3–6 only, an illustrative `→ 8.0` (not computed by core). Phone 1 has no gain, per explain-rating.
 - The card's `Next level` line is left out to save room; it's unchanged.
 - The native tab bar is the mockup's glass capsule, and the badge is an approximation of Apple's.
 - Closet's native large-title header is approximated. A "To confirm" card that can appear after a check is not drawn.
 - The web preview didn't hold a Closet with pieces (it went back to Welcome), so Closet is drawn from `app/(tabs)/closet/index.tsx` and the mockup.
 
 ## Changes
+- **Round 2 (Nov 10)** · the founder picked A. His notes: "Are you using old screenshots? It's not supposed to say 'Why 7.5' but instead 'explain score'." And Kit's first message after setup: "'I'm Kit. I'm your stylist' is enough."
+  - Phone 1 (A1): the card follows `specs/explain-rating.md` (one number; summary `Good base. One easy change sharpens it.`; the fix has no gain; `Explain rating` under a full-width Re-check; no `Why 7.5?`, `Not quite right?`, share or `→ 8.0`). The flight was moved to start from the summary row's new position. Badge on Closet only, navy.
+  - Phone 2 (A2): the Lookbook badge is gone.
+  - Phone 7 (A0, new): setup's end with `I'm Kit, your stylist.` and the offer card unchanged, no chips.
+  - Phones 3–6 (B, C) unchanged; the ranking stands. B and C still show the old card, from before explain-rating.
