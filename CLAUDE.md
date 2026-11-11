@@ -45,7 +45,7 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 - **The Python engine in `extraction-test/` is the scoring source of truth.** `@kitted/core` must match it exactly (the parity tests). Never edit fixtures to make tests pass.
 - **Privacy:** only the copy with every face blurred is sent for scoring; if the head can't be found, nothing is sent. The server keeps no questions or answers, and no photos unless he turns on photo backup (off by default; his own photos, readable only by his account). Location is approximate, for weather only, never stored.
 - **18+, US App Store only.** Marketing speaks to adults (college, first job, dates), never high school.
-- **Words:** no emoji, no RPG ranks or anime theme, no daily streaks. Never "unlimited", never "AI stylist". The stylist is Kit, an AI persona, and says so plainly if asked; the app is Kitted.
+- **Words:** no emoji, no all-caps text, no RPG ranks or anime theme, no daily streaks. Never "unlimited", never "AI stylist". The stylist is Kit, an AI persona, and says so plainly if asked; the app is Kitted.
 
 ## Which document wins
 1. The founder, in chat.
