@@ -58,7 +58,7 @@ Guys who aren't into fashion don't know if an outfit works or what one change wo
 - **Way back:** onboarding has Back; every camera, sheet and paywall has a visible X or Done from the first frame. Closing mid-setup reopens on the step he reached.
 
 ### A fit check
-Stylist → camera (propped with 3-2-1 auto-capture, mirror, or a library photo) → the reading card → the score card (score, word, fixes with what they raise, "Why 7.5?", "Not quite right?") → the pieces land in Closet (Undo).
+Stylist → camera (propped with 3-2-1 auto-capture, mirror, or a library photo) → the reading card → the score card (the score and its word, one fix with the rest a tap away, Re-check, Explain rating) → the pieces land in Closet (Undo). Explain rating has Kit say in the chat which one or two rules made the score (`specs/explain-rating.md`).
 
 ### Free checks running out
 Check 1 → the soft page ("6 free checks left") → any day, a second check → the limit card with "Save for tomorrow" and an upgrade button → check 8 → the full paywall, the photo saved and scored at once if he subscribes.
@@ -85,15 +85,17 @@ Photo → reading → code score → words, as above.
 - F2.5 Traditional clothing and womenswear pieces are "not rated"; a check where nothing can be rated doesn't count. Line: "I'm built for menswear for now, so I can't score this fairly." (draft)
 - F2.6 A partial photo (no shoes) never loses points for what's missing, says so in words, and offers one way to finish (a shoe snap or a pick from Closet). Skip means he's never asked again for that check.
 - F2.7 Every card has at least one free fix whenever any fix exists.
+- F2.8 The result card shows one number, the score with its word: no gain on a fix, no pill, no math sheet. One fix shows (a free one when there is one); the rest open from one tap.
 
 ### F3. Re-check
 One re-check per check, open 30 minutes (his first-ever check: until the 4 am reset).
 - F3.1 Meets the "fix works" launch bar.
 - F3.2 Pieces he didn't change keep their first reading.
 - F3.3 When the photo can't show the fix, "I did make the change" scores from what he says, and the card says so ("Scored from what you told me.").
+- F3.4 A re-check shows the old score and the new one (6.5 → 7.5) with no "+1.0" pill.
 
-### F4. "Not quite right?"
-He corrects a piece the app read wrong; it re-scores at once.
+### F4. Fixing a misread
+He tells Kit a piece was read wrong ("those jeans are straight") and taps Re-score, or uses Fix what I read on the look's page in Lookbook; it re-scores at once. There's no correction button on the result card.
 - F4.1 A correction changes only that check (and that piece in Closet), and the card shows the new number before Save.
 
 ### F5. Kit (questions)
@@ -102,6 +104,7 @@ Kit answers about clothes, shoes, accessories, fit, care and shopping, using his
 - F5.2 Off-topic questions (haircuts, grooming, fitness, dating) get a short friendly decline, and don't count: "I stick to clothes. Ask me what to wear to it." (draft)
 - F5.3 Kit never comments on his face, body, weight or skin.
 - F5.4 Offline: "You're offline, so I couldn't answer that. It doesn't count."
+- F5.5 Explain rating: Kit names at most two rules, only ones the code used for that check, and says no number but the score. It's free (never a question) and once per check; offline or when the AI fails, a code-written line says the same.
 
 ### F6. Morning and evening card
 Once a day Kit posts an outfit from his closet with the weather, greeting him by name if he gave one ("Morning, Alex."); from 5 pm an evening card ("Evening, Alex. Heading out?"). Wear this · Swap one · "Wearing something else? Check it".
@@ -118,7 +121,7 @@ Pieces (head-to-toe sections), Outfits, Starter essentials, Next best buy, the p
 - F7.5 Tiles are code-drawn pictures; his photos appear only as evidence, never above the neck.
 
 ### F8. Lookbook
-Every past check with its photo, score and fixes; a look's page; "Show in chat".
+Every past check with its photo, score and fixes; a look's page with "Show in chat", "How I scored" (the math behind the score) and "Fix what I read".
 - F8.1 Past scores stay visible forever, free, never blurred.
 
 ### F9. You
@@ -175,7 +178,7 @@ About 15 named events to PostHog (e.g. first check, re-check went up, free check
 | Fit checks | reading, score, fixes, occasion, look | the phone; Firestore if signed in | until deleted |
 | Closet pieces | kind, color, fit, cut-out, wears | the phone; Firestore if signed in | until deleted |
 | Style profile, what Kit knows | name (optional), looks, fit, facts with sources; the name is never sent to the AI | the phone; Firestore if signed in | until deleted |
-| Questions to Kit | text + closet as words | OpenAI | up to 30 days (abuse checks; no training); never by us |
+| Questions to Kit | text + closet as words; for Explain rating, that check's two rules as words | OpenAI | up to 30 days (abuse checks; no training); never by us |
 | Usage counts | free checks used, today's checks and questions, Pro status | our server, by device ID (+ account) | while the app is used |
 | Spend | today's AI spend | our server | rolling |
 | Events | named events, random ID | PostHog | PostHog's retention |

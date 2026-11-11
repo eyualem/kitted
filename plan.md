@@ -50,6 +50,8 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y21** · **P3** · Turn on WeatherKit for the app on Apple's site: developer.apple.com → Certificates, Identifiers & Profiles → Identifiers → com.trykitted.kitted → App Services tab: tick WeatherKit; Capabilities tab: tick WeatherKit, App Attest, Sign in with Apple, Declared Age Range → Save → Confirm (10 min, then up to 30 min for Apple) → Apple's weather (T80)
 - [ ] **Y22** · **P2** · OK a second TestFlight build with notifications in it, once they're built and checked (1 min; Claude runs it) → notifications on testers' phones (T53) · spec approved Nov 9
 - [ ] **Y23** · **P3** · VoiceOver pass on You: turn on VoiceOver (Settings → Accessibility), open You and swipe through every row; each should read its name and value as a button (5 min) → You's accessibility confirmed (T34)
+- [ ] **Y24** · **P2** · OK the plain names Kit says for the style rules ("the waist break, the rule of thirds"), about 74 short names drafted in T65 (10 min) → Explain rating (T58)
+- [ ] **Y25** · **P2** · OK deploying the server change that doesn't count Explain rating as a question (1 min; Claude runs it) → Explain rating on testers' phones (T26, T58)
 
 ---
 
@@ -90,6 +92,7 @@ Lane files: `firebase/`
 - [ ] **T23** · The server lock (App Check): the app sends proof it's the real app, and the server refuses anything else · *after T80 · checks: F15.3 · files: `firebase/`, `app/src/services/server/`, package.json*
 - [x] 2026-11-08, deployed · **T25** · Deploy the beta's limits to the live server, then check live that it really answers `beta`: one real question from a fresh guest account (about 0.01¢) reads the tier the server sends back. If it says `pro`, the live `server/config` was set by hand, and it's changed to `beta` only with your OK · *after T14 · checks: FP7.1 on the live server · files: none (deploy only)*
 - [ ] **T24** · A cap of 30 scanned photos a day, free and Pro alike · *after T20 · checks: F7.3 · files: `firebase/functions/src/api/limits.ts`*
+- [ ] **T26** · normal · *(beta)* Explain rating isn't a question: the ask route takes an explain call without counting it, at most 2 per fit check counted that day; deployed with your OK · *after Y25 for the deploy · spec: `specs/explain-rating.md` · checks: ER1.3 (server side), ER1.8 · files: `firebase/functions/src/api/{limits,store,handler}.ts`*
 
 ### Setup and You
 *The first minute in the app and the You tab. Done means setup reaches the first check in 6 taps, asks his name (optional) and checks his age the Apple way.*
@@ -121,7 +124,7 @@ Lane files: `app/src/features/account`, `app/src/sync`, `app/src/features/privac
 ### Kit and the morning card
 *How the app talks to him every day. Done means the morning card says "Morning, Alex.", Kit politely declines anything that isn't about clothes, and the daily idea and "fit check ready" arrive as notifications.*
 
-Spec: `specs/kit-and-morning.md` (interview: T50); notifications: `specs/notifications.md` (interview: T56, approved Nov 9)  
+Spec: `specs/kit-and-morning.md` (interview: T50); notifications: `specs/notifications.md` (interview: T56, approved Nov 9); for T58–T59, `specs/explain-rating.md` (approved Nov 10)  
 Lane files: `app/src/features/{stylist,ask,morning}`
 
 - [ ] **T50** · Write the Kit-and-morning spec with you: the decline line, greeting by name (notifications moved to T54) · *done: your yes · files: `specs/kit-and-morning.md`*
@@ -132,17 +135,21 @@ Lane files: `app/src/features/{stylist,ask,morning}`
 - [ ] **T57** · *(beta)* Kit's ask at Later on the first-check card (the first-check reminder) · *after T53, T39 (kv `firstCheckOffer.laterAt`, card `firstCheckOffer`, `specs/onboarding-screens.md` OS5) · checks: NT1.8–NT1.10 · files: finish/, en.ts*
 - [x] 2026-11-09, #75 · **T54** · Bug from the beta (Nov 8): two evening cards on one evening. One card per day and window, even when Stylist asks twice while the weather loads · *spec: specs.md · checks: F6 · files: morning/service.ts*
 - [x] 2026-11-09, #82 · **T55** · The card waits for enough closet: it suggests outfits only once Kit knows two that work (else it says why); checked before then it reads "Today's fit" / "Tonight's fit" with the score, not "You went with your own"; a read-only "can the card suggest yet?" for the notifications (F13.1) · *after T54 · spec: specs.md · checks: F6.2, F13.1 (its read side) · files: morning/, core `ideas.ts` (a new function only), en.ts*
+- [ ] **T58** · normal · *(beta)* Explain rating: the button on the result and re-check cards, Kit's explanation in the chat from T65's two picks in the friend voice, the three checks on his answer (names the rule, no number but the score, nothing about his body), the code-written fallback (offline, error, 6 s), once per check and never a question · *after T65, T66, T26, Y24 · checks: ER1.1–ER1.5, ER1.7, ER2.4 · files: ask/, stylist/cards/{FitCheckCard,RecheckCard}.tsx (the button only), en.ts*
+- [ ] **T59** · normal · *(beta)* Fixing a misread by telling Kit: "those jeans are straight" gets a "Re-score with straight jeans" tap card (Kit's existing tap card) that opens the correction with his answer filled in · *after T58 · checks: ER3.1, F4.1 · files: ask/ (router, cards), correct/, en.ts*
 
 ### Fit check and scoring
 *The core promise: a score he trusts. Done means a dress or skirt is marked "not rated" instead of scored wrong, the card's words match the spec, and every card with a fix offers a free one.*
 
-Spec: `specs/not-rated.md` (interview: T60)  
+Spec: `specs/not-rated.md` (interview: T60); for T65–T66, `specs/explain-rating.md` (approved Nov 10)  
 Lane files: `app/packages/kitted-core`, `extraction-test/`, `app/src/features/{fitcheck,camera}`
 
 - [ ] **T60** · Write the "not rated" spec with you: womenswear and the card's words · *done: your yes · files: `specs/not-rated.md`*
 - [ ] **T61** · Dresses, skirts and heels read as "not rated", in the Python engine first, then the app's scoring (parity tests green) · *after T60 · checks: F2.5 · files: `extraction-test/`, core*
 - [ ] **T62** · The card's words to the spec: the head-not-found line, "Taking longer…", "I did make the change" · *spec: specs.md · checks: F2.2, F2.3, F3.3 · files: camera/, fitcheck/, en.ts* · **F2.2's design approved Nov 9** (`tasks/T62/DESIGN.md`, the design-stage dry run); F2.3 and F3.3 still get designed when it runs
 - [ ] **T63** · A test proving every card with a fix has a free fix · *spec: specs.md · checks: F2.7 · files: core tests*
+- [ ] **T65** · strict · *(beta)* The score's two picks in core: the biggest cost and the biggest credit (or the other cases in the spec; on a re-check, the rule the fix cleared), read from the scoring result; a plain name for every engine rule plus a known name for a few, drafted for your OK (Y24); a test fails on an unnamed rule; no score moves (parity 100%) · *checks: ER1.1, ER1.5, ER1.6 (the picks and names) · files: core (a new picks file and names table), core tests*
+- [ ] **T66** · normal · *(beta)* The quieter card: one number (a re-check shows was → now, no pill), the summary lines without numbers, one fix (a free one when there is one) with "2 more fixes" and the tips behind it; "Why 7.5?", "Not quite right?", the unsure-piece line and Share off both cards; the Example check the same once T38 is in. Light and dark screenshots in the PR · *checks: ER2.1–ER2.3, F2.7, F2.8, F3.4 · files: fitcheck/explain.ts, stylist/cards/{FitCheckCard,RecheckCard}.tsx (borrowed from the Kit lane; not while T58 runs), onboarding example card, en.ts*
 - [ ] **T64** · The morning card, Kit's ideas and Swap pick outfits with the fit check's scoring, not the old rubric: rebuild #48 on today's main, keeping the warm-layer and Swap-rotation changes · *after Y3 · spec: specs.md · checks: F6, F6.3 · files: core `ideas.ts`, core tests*
 
 ### Closet
@@ -153,6 +160,7 @@ Lane files: `app/src/features/{closet,scan,lookbook}`, `app/src/services/closetS
 
 - [ ] **T70** · Write the scan-reading spec with you, then test reading on your clothes photos · *after Y9 · done: your yes and the test's result · files: `specs/scan-reading.md`, `extraction-test/`*
 - [ ] **T71** · Scanned photos become Closet pieces ("Waiting to be read" empties) · *after T70, T24 · checks: F7.2, F7.3 · files: scan/, closetSource/*
+- [ ] **T72** · tiny · *(beta)* Lookbook's look page: "How I scored" (today's math sheet) and "Fix what I read" (the correction) · *after T66 · spec: `specs/explain-rating.md` · checks: ER3.2 · files: lookbook/LookPageScreen.tsx, en.ts*
 
 ### Launch
 *Getting into the App Store. Done means Apple's weather and app lock are on, both launch tests pass (the fix works, the score is fair), every requirement is checked, and the app is submitted.*
@@ -189,6 +197,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-10 · explain-rating: `specs/explain-rating.md` approved (Kit explains the score in the chat, naming the one or two rules that made it; the card shows one number and one fix; "Not quite right?", Why and Share off the card; misreads fixed by telling Kit or on the look page); specs.md "A fit check", F2.8, F3.4, F4, F5.5, F8 and the Data row, plus one line each in setup-and-you and onboarding-screens; T26, T58, T59, T65, T66, T72, Y24, Y25 added · log N.
 - 2026-11-10 · The build workflow sized to the risk (you): tiny (the session alone, 10–20 min), normal (one quick reviewer), strict for scoring, privacy and the age gate only; existing screens aren't drawn; the planner, verifier and critic retired; the core flows run before each TestFlight build; the redesign stage parked · #420
 - 2026-11-10 · Workflow report in `reports/` (43% of agent calls on testing and checking, 18% on building; a lean workflow proposed for a separate session); the S/M/L sizes undone; the 4 child sessions paused · #419
 - 2026-11-10 · T34: You is the settings home (no gear, no Settings page; an old Settings link lands on its rows); verified ready in round 3 of 3; also fixed at the largest text size: Acknowledgements, What Kit knows, the pick numbers · #418, PR #85
@@ -203,6 +212,3 @@ The last 15 sessions, newest first.
 - 2026-11-08 · T25: the beta's limits deployed (`api`, `purgeUsage`); a live question from a fresh guest got `x-kitted-tier: beta`, so the live config isn't set to Pro by hand · #402
 - 2026-11-08 · T14 merged (#72): the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
 - 2026-11-08 · The beta first (founder): free for friends, 3 fit checks and 20 questions a day, no paywall (FP7, approved Nov 8; T14 builds it); the paywall and RevenueCat moved to launch; T85 and Y17 added · #399
-- 2026-11-07 · T10: `specs/free-and-pro.md` approved: one paywall page, $39.99/yr ("Best value") and $9.99/mo with no offers, the soft page, the limit card's "Score it now with Pro", check 8, Pro ended · #398
-
-
