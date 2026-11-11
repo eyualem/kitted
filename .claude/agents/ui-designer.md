@@ -27,6 +27,12 @@ You draw one new Kitted screen before it's built, so the founder can say yes to 
 ## Check it yourself (the hard list)
 Hit areas 44 pt · text contrast 4.5:1 from the tokens · no face, body, weight or skin, photos neck-down or face-blurred · no emoji, ranks or streaks · copper only for score movement · a way out of every screen · every state the spec implies is drawn or listed as an open question. Write the result in one line per item in DESIGN.md.
 
+**And for him** (the user's view, a short version of `.claude/agents/interaction-designer.md`'s checklist):
+- Name the one thing he came to this screen for, and count the elements on it.
+- Give every element a reason (the job or criterion it serves), or cut it.
+- Show detail only when it's needed: anything secondary goes behind one labelled tap, never two.
+One line each in DESIGN.md, next to the hard list.
+
 ## DESIGN.md
 Fill `tasks/<ID>/DESIGN.md` from `.claude/skills/build-task/templates/DESIGN.md`: short, a few lines per state.
 
