@@ -19,6 +19,7 @@ import {
   KV_SYNCED, SYNCED_COLLECTIONS, SYNCED_TABLES, TABLE_POLICY, fileRefs, kvPolicy, syncedFilePath, tablePolicy, type SyncedTable,
 } from '@/sync/schema';
 import { FIT_SKIP_KEY } from '@/features/closet/fitDoubt';
+import { FIRST_VISIT_KEY, LAST_OPENED_KEY } from '@/features/closet/arrivals';
 import { CONFIRM_OPEN_KEY } from '@/features/closet/toConfirm';
 import { FIT_LINE_KEY } from '@/features/closet/fitLine';
 import { FIT_LOG_KEY } from '@/features/closet/fitLog';
@@ -142,6 +143,7 @@ describe('S5 and S6 everything is classified', () => {
       PERMISSION_KV: WEATHER_PERMISSION_KV, MODE_KEY: 'camera.mode', REVEAL_KV: KV.revealFullShown,
       ACCOUNT_KEY: 'account.user', OFFER_KEY: 'account.offer', ONBOARDING_STEP_KEY: KV.onboardingStep,
       FINISH_KEY, STARTER_MARKS_KEY, SEGMENT_KEY, CONFIRM_OPEN_KEY, FIT_SKIP_KEY, FIT_LINE_KEY, FIT_LOG_KEY, SERVER_TIER_KV, ABOUT_YOU_KEY,
+      LAST_OPENED_KEY, FIRST_VISIT_KEY,
     };
     const resolve = (expr: string): string[] | null => {
       const e = expr.trim();
