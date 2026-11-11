@@ -193,6 +193,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-10 · T74: To confirm folds to one row ("To confirm · 5") by default and opens in place (your ask, relayed); reviewed ready; the quick-swipe bug still open · #426, PR #94
 - 2026-11-10 · T74 ready (normal, one fix round): Closet's To confirm one card at a time; design approved; the locked flow red at 3 tool-limited steps, for your call; PR #94 stacked on #84 · #423–425
 - 2026-11-09 · T73 ready in round 2: Closet without Outfits (switch, Goes with, Next best buy and the +N counts hidden); PR #84 stacked on #74 · #422
 - 2026-11-10 · The build workflow sized to the risk (you): tiny (the session alone, 10–20 min), normal (one quick reviewer), strict for scoring, privacy and the age gate only; existing screens aren't drawn; the planner, verifier and critic retired; the core flows run before each TestFlight build; the redesign stage parked · #420
@@ -207,6 +208,5 @@ The last 15 sessions, newest first.
 - 2026-11-09 · The design stage (founder, Nov 8): `/build-task` step D (a designer draws every state, a critic checks it, you approve) and 4b (the critic checks the built screens against your frames), for screen tasks only; dry run on T62's head-not-found card, approved · #406–407, PR #76
 - 2026-11-08 · T72: `specs/closet-beta.md` approved (Outfits off for the beta; To confirm one card at a time, swipe or Skip moves on, buttons answer); `specs.md` F7 updated · #421
 - 2026-11-08 · T85: console set up (Kitted team, EAS project, upload target), main merged in, then the first build 0.1.0 (1) built, uploaded to TestFlight and installed on your iPhone; check 1,648 tests and guard:release passed · #403–404, PR #71
-- 2026-11-08 · T25: the beta's limits deployed (`api`, `purgeUsage`); a live question from a fresh guest got `x-kitted-tier: beta`, so the live config isn't set to Pro by hand · #402
 
 
