@@ -78,7 +78,7 @@ Metro running (`preview_start` name `kitted-web`), the main Simulator `111D0A09-
 - Note the task's rough agent calls and minutes in the PR body (`get_usage` before and after gives the 5-hour %), so the sizes can be tuned.
 
 ## Before a TestFlight build
-The core flows run once on the build's code: `maestro --device <udid> test app/e2e/flows/` with Metro running (setup, a fit check, Kit, Closet, You). This is where regressions are caught, not on every task.
+`/test-build` (`.claude/skills/test-build/SKILL.md`): one script runs every automatic check and the 5 core flows (setup, a fit check, Kit, Closet, You) on the build's code. This is where regressions are caught, not on every task. A task that changes a screen on one of those 5 paths updates its core flow in the same PR.
 
 ## Rules
 - Run agents one at a time and wait for each; they share this worktree and branch. Never `isolation: worktree`.

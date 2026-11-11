@@ -213,6 +213,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-11 · `/test-build` (you): one script checks the whole app before each TestFlight build (every check, the 5 core flows, one summary), then your OK, the build, one phone checklist, and `/test-build feedback` to sort testers' words; build 2 tagged `testflight/0.1.0-2`; the new flows not yet run on the Simulator
 - 2026-11-11 · hoodie-layer-credit: the result card's one "Why 7.5?" button checked on a Release Simulator build (light and dark, the button opens the Why sheet), then merged (#108, your "Check, then merge")
 - 2026-11-11 · result-card-actions: the result card's bottom row is one "Why 7.5?" button (you picked it from three), "Not quite right?" off the card as the explain-rating spec already says; checked on the web preview in light and dark, not yet on the Simulator; PR open
 - 2026-11-11 · hoodie-layer-credit: the launch screen's K made a bit smaller, 120 to 96 pt (your ask); seen on a Release Simulator build; merged (#107); on your phone after the next TestFlight build
@@ -227,4 +228,3 @@ The last 15 sessions, newest first.
 - 2026-11-10 · first-run-intro: T36 spec rewrite approved (SY2 the slide into Closet, SY3 removed, F5.1 in the agreement), research and frames in `tasks/T36/`; log #429
 - 2026-11-10 · Models (you): sessions start on Sonnet; the reviewer, implementer and designer on Sonnet; the strict test writer and spec interviews on Opus; a stuck task moves to Opus. Two blind reviewer trials with planted mistakes: Sonnet caught 10 of 10 · #428
 - 2026-11-10 · onboarding-screens: T38 PR #90 (the drawn Welcome and Example check, verified ready, caption fix after the screenshots) and T39 PR #93 (setup as plain screens, age bands, the name, Stylist with Kit's offer; strict review ready, 3 of 3 planted bugs caught); log #434–427
-- 2026-11-10 · explain-rating: `specs/explain-rating.md` approved (Kit explains the score in the chat, naming the one or two rules that made it; the card shows one number and one fix; "Not quite right?", Why and Share off the card; misreads fixed by telling Kit or on the look page); specs.md "A fit check", F2.8, F3.4, F4, F5.5, F8 and the Data row, plus one line each in setup-and-you and onboarding-screens; T26, T58, T59, T65, T66, T75, Y24, Y25 added · #433

@@ -32,8 +32,11 @@ The whole process on one page, for the founder and for Claude. It explains and p
      ▼
   A pull request with screenshots ──► you merge ──► the task is [x] in plan.md
      │
-     ▼  before each TestFlight build
-  the core tap-through flows run once (setup, a fit check, Kit, Closet, You)
+     ▼  before each TestFlight build: /test-build
+  one script: every check + the 5 core flows ──► your OK ──► the build ──► one phone checklist
+     │
+     ▼  after friends try it: /test-build feedback
+  their words sorted into tasks (bugs) and your decisions (taste)
 ```
 
 ## The three sizes
@@ -100,6 +103,17 @@ The rule: **never make a test easier so a task can pass.** How much proof a task
 - **A change to a screen you already have isn't drawn.** It's built, and you see the real screenshots, light and dark, in the pull request.
 - **The reviewer compares the built screens** with the screenshots (and the frames, for a new screen): something missing, extra, cut off or in the wrong words gets fixed. Spacing differences don't block.
 - **TestFlight is the last check** for small rough edges.
+
+## Testing a build (`/test-build`)
+
+Each task checks only what it changed. The whole app is checked once per TestFlight build:
+
+1. **One script** (`tools/test-build.sh`, about 15–25 minutes, unattended): `npm run check`, the release guard, the server tests if the server changed, and the 5 core tap-through flows (setup, a fit check, Kit, Closet, You) plus the flows of tasks merged since the last build. It prints one PASS/FAIL summary. Anything red stops the build and becomes a fix first.
+2. **Your OK** (1 minute): what's new in plain words, then the build. It uploads itself to TestFlight, and its commit gets a `testflight/<version>-<build>` tag, so the next run knows what's new.
+3. **One phone checklist** (10–15 minutes): the 5 core paths and each new thing, in one to-do instead of several.
+4. **Feedback** (`/test-build feedback`): paste what testers send. Bugs become sized tasks (score, privacy and the age gate first), taste goes to your decisions, duplicates are merged, and testers' names never go in the repo.
+
+Cost: about 2–4% of a 5-hour window per build, since the session reads a summary instead of running each check. No agents, and no AI calls (the flows use the demo's recorded answers).
 
 ## When a run stops
 
