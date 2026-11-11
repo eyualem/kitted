@@ -115,9 +115,12 @@ export function DrawnOutfitBubble({ pieces, occasion, time, label, testID }: Dra
             paddingHorizontal: 9,
             opacity: 0.9,
             gap: 4,
+            // "Everyday" beside "Example" doesn't fit 109 pt: the shrinking label broke it to "Everyda / y" on the
+            // Simulator. Wrapping the row moves "Example" to its own line, and neither word is split.
+            flexWrap: 'wrap',
           }}
         >
-          <KText role="photoCaption" numberOfLines={2} style={{ flexShrink: 1 }}>
+          <KText role="photoCaption" numberOfLines={1} style={{ flexShrink: 0 }}>
             {occasion}
           </KText>
           <KText role="photoCaption" tabular numberOfLines={1} style={{ flexShrink: 0 }}>
