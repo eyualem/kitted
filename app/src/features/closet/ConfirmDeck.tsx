@@ -41,7 +41,7 @@ export interface ConfirmDeckProps<Q extends { ask: { obsId: string } }, F extend
   /** The tag line's left words ("To confirm"). */
   tag: string;
   renderCard(card: DeckCard<Q, F>, slot: DeckSlot): ReactNode;
-  /** True while a swipe holds the touch (the screen stops scrolling). */
+  /** True while a swipe holds the touch. (Closet no longer turns its scrolling off for it: on iOS that made the page jump.) */
   onSwipingChange?(swiping: boolean): void;
   /** Once, when the deck goes from 1+ cards to none. */
   onEmptied?(): void;
@@ -50,6 +50,9 @@ export interface ConfirmDeckProps<Q extends { ask: { obsId: string } }, F extend
   /** Folded: the deck stays mounted (it keeps its card) but draws out of sight. */
   folded?: boolean;
 }
+
+/** How long past a change's time the deck waits for its animation's end before ending the change anyway. */
+const SETTLE_BACKSTOP_MS = 600;
 
 /** The folded row's drawing, a little smaller than the fit card's (64). */
 const FOLD_THUMB = 52;
@@ -180,7 +183,6 @@ export function ConfirmDeck<Q extends { ask: { obsId: string } }, F extends { it
   useLayoutEffect(() => {
     if (!tr) return;
     progress.setValue(tr.p0);
-    Animated.timing(progress, { toValue: 1, duration: tr.animMs, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
     if (tr.heightFrom !== null) {
       height.setValue(tr.heightFrom);
       heightGoal.current = { seq: tr.seq, endAt: Date.now() + DECK_MOTION.slideMs };
@@ -203,12 +205,31 @@ export function ConfirmDeck<Q extends { ask: { obsId: string } }, F extends { it
       const tagId = node ? findNodeHandle(node) : null;
       if (tagId != null) AccessibilityInfo.setAccessibilityFocus(tagId);
     };
-    const end = setTimeout(() => {
+    // The change has ended once the card's own animation says so (it runs on the native side and can lag the JS clock
+    // on a busy phone) and the change's time is up. Ending on the clock alone let the card switch to following the
+    // finger while the native slide was still short of 0: it stayed off to the side, and the next swipe missed it.
+    let animDone = false;
+    let timeUp = false;
+    const finish = () => {
+      if (moved) return;
       moved = true;
       heightGoal.current = null;
       setDeck((d) => (d.tr === tr ? { ...d, settled: tr.seq } : d));
       land();
+    };
+    const both = () => {
+      if (animDone && timeUp) finish();
+    };
+    Animated.timing(progress, { toValue: 1, duration: tr.animMs, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start(() => {
+      animDone = true;
+      both();
+    });
+    const end = setTimeout(() => {
+      timeUp = true;
+      both();
     }, tr.totalMs);
+    // A backstop: never stuck mid-change if the animation's end never reports.
+    const backstop = setTimeout(finish, tr.totalMs + SETTLE_BACKSTOP_MS);
     let cap: ReturnType<typeof setTimeout> | null = null;
     let sub: { remove(): void } | null = null;
     if (!heard) {
@@ -225,6 +246,7 @@ export function ConfirmDeck<Q extends { ask: { obsId: string } }, F extends { it
     }
     return () => {
       clearTimeout(end);
+      clearTimeout(backstop);
       if (cap) clearTimeout(cap);
       sub?.remove();
     };
@@ -378,8 +400,11 @@ export function ConfirmDeck<Q extends { ask: { obsId: string } }, F extends { it
   const over = { position: 'absolute' as const, top: 0, left: 0, right: 0 };
 
   return (
+    // The swipe lives on the deck, which doesn't move, not on the sliding card: a swipe that starts while the last card
+    // is still sliding in lands on the deck either way (on the card, it could miss).
     <Animated.View
       testID="closet-confirm-deck"
+      {...pan.panHandlers}
       style={[
         locked ? { height, marginBottom: height.interpolate({ inputRange: [0, space.stack], outputRange: [-space.stack, 0], extrapolate: 'clamp' }) } : null,
         folded ? { display: 'none' } : null,
@@ -391,7 +416,7 @@ export function ConfirmDeck<Q extends { ask: { obsId: string } }, F extends { it
         </Animated.View>
       ) : null}
       {current ? (
-        <Animated.View key={current.key} testID="closet-confirm-card" onLayout={onCardLayout} style={inStyle} {...pan.panHandlers}>
+        <Animated.View key={current.key} testID="closet-confirm-card" onLayout={onCardLayout} style={inStyle}>
           {face(current, slotFor(current, true, { n: deckCount(keys, current.key).n, total }), true)}
         </Animated.View>
       ) : null}

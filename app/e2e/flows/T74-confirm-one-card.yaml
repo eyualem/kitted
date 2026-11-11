@@ -116,15 +116,15 @@ name: CB2 · To confirm, one card at a time
 - assertNotVisible: ".*Saved as your .*"
 - assertNotVisible: ".*Kept as a new piece\\..*"
 - assertNotVisible: "Question \\d of 4\\..*"
-# A mostly vertical drag that starts on the card scrolls Closet (the Shoes section comes into view) and leaves the card
-# as it was (scrolling back up finds the same card).
-- assertNotVisible: "Shoes, \\d+ pieces"
+# A mostly vertical drag that starts on the card scrolls Closet (the Bottoms section comes into view: one drag is about
+# 350 pt on the 17e, short of Shoes) and leaves the card as it was (scrolling back up finds the same card).
+- assertNotVisible: "Bottoms, \\d+ pieces"
 - swipe:
     start: "50%,45%"
     end: "50%,5%"
     duration: 800
 - extendedWaitUntil:
-    visible: "Shoes, \\d+ pieces"
+    visible: "Bottoms, \\d+ pieces"
     timeout: 5000
 - scrollUntilVisible:
     element:
@@ -263,32 +263,33 @@ name: CB2 · To confirm, one card at a time
     file: ../common/open-demo.yaml
     env:
       SCREEN: "70"
-# The score card folds to its rating (#341); a tap on its body opens it, and the question is inside.
+# The score card folds to its rating (#341); a tap on its body opens it, and the question is inside. Its line wraps
+# ("No quick fixes for this / one."), hence (?s).
 - extendedWaitUntil:
-    visible: "No quick fixes.*"
+    visible: "(?s).*No quick fixes.*"
     timeout: 90000
 - tapOn: "Closet"
+# Closet's To confirm starts folded (CB2 "Folded", Nov 10): its one row, read as "To confirm, 1 piece. …".
 - extendedWaitUntil:
-    visible: "Question 1 of 1\\. .*"
+    visible: "To confirm, 1 piece\\. .*"
     timeout: 10000
 - tapOn: "Stylist"
 - extendedWaitUntil:
-    visible: "No quick fixes.*"
+    visible: "(?s).*No quick fixes.*"
     timeout: 10000
-- runFlow:
-    when:
-      notVisible: "Yes, same one"
-    commands:
-      - tapOn: "No quick fixes.*"
-- extendedWaitUntil:
-    visible: "Yes, same one"
-    timeout: 10000
-- tapOn: "Yes, same one"
+- tapOn: "(?s).*No quick fixes.*"
+# Opened, the score card is one accessibility element ("Fit check"), so Maestro can't see its text or chips: "Yes,
+# same one" is tapped where it sits on the 17e (about 24%, 66%), as T73's flow taps the toast's Undo.
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn:
+    point: "24%,66%"
 - extendedWaitUntil:
     visible: ".*Saved as your .*"
     timeout: 5000
 - tapOn: "Closet"
 - extendedWaitUntil:
-    notVisible: "Question .*"
+    notVisible: "To confirm, .*"
     timeout: 10000
+- assertNotVisible: "Question .*"
 - assertNotVisible: ".*Are these your khaki chinos\\?.*"

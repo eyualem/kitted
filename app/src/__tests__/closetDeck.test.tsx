@@ -344,8 +344,9 @@ class Finger {
 }
 /** The card's View with the pan handlers. */
 const panCard = () => {
-  const xs = byTestId('closet-confirm-card');
-  const card = xs.find((e) => typeof e.props.onResponderGrant === 'function') ?? xs[0];
+  // The swipe's handlers sit on the deck (it doesn't slide; Nov 10's quick-swipe fix) or, before that, on the card.
+  const xs = [...byTestId('closet-confirm-deck'), ...byTestId('closet-confirm-card')];
+  const card = xs.find((e) => typeof e.props.onResponderGrant === 'function') ?? byTestId('closet-confirm-card')[0];
   if (!card) throw new Error('no closet-confirm-card to swipe');
   return card;
 };
@@ -782,12 +783,13 @@ describe('CB2.4 · Skip and swipe', () => {
     const w = await world({ asks: FOUR, fit: true });
     await openCloset();
     expect(scrollView().props.scrollEnabled).not.toBe(false);
-    // While a sideways drag holds the card, Closet doesn't scroll; after it, it does.
+    // A sideways drag holds the card (the deck claims the touch). Closet's scrolling is never switched off for it:
+    // on iOS that made the page jump on a quick second swipe (the founder's "fix it here", Nov 10; was `toBe(false)`).
     const f = await down();
     await move(f, -12, 0, 16);
     expect(f.granted).toBe(true);
     await move(f, -200, 0, 100);
-    expect(scrollView().props.scrollEnabled).toBe(false);
+    expect(scrollView().props.scrollEnabled).not.toBe(false);
     await move(f, 0, 0, 1000);
     await lift(f);
     expect(scrollView().props.scrollEnabled).not.toBe(false);
@@ -1475,5 +1477,33 @@ describe('CB2.11 · folded or open, as he left it', () => {
     await openCloset();
     expect(byTestId('closet-confirm-folded')).toHaveLength(0);
     expect(allTexts()).not.toContain('To confirm');
+  });
+});
+
+// ================================================================== two quick swipes (found on the Simulator, Nov 10)
+describe('CB2.4 · two quick swipes', () => {
+  it('CB2.4 · a second swipe right after the first still moves the deck (back to the fit card, then on to card 1)', async () => {
+    await world({ asks: FOUR, fit: true });
+    await openCloset();
+    expect(shown().tag).toEqual(tagOf(1, 5));
+    await swipe(200);
+    await act(async () => {
+      await sleep(60); // the first move has barely started
+    });
+    await swipe(-200);
+    await settle();
+    expect(shown().tag).toEqual(tagOf(1, 5));
+  });
+
+  it('CB2.4 · a swipe never turns Closet\'s scrolling off (on iOS that made the page jump)', async () => {
+    await world({ asks: FOUR, fit: true });
+    await openCloset();
+    const f = await down();
+    await move(f, -12, 0, 16);
+    await move(f, -120, 0, 100);
+    expect(scrollView().props.scrollEnabled).not.toBe(false);
+    await lift(f);
+    await settle();
+    expect(scrollView().props.scrollEnabled).not.toBe(false);
   });
 });

@@ -86,8 +86,6 @@ export default function ClosetScreen() {
   // Clothes scans waiting to be read (#280): one row on top while any wait.
   const inbox = useLive(['kv'], async () => waitingRow(parseInbox(await store.getKv(INBOX_KEY))), [], INBOX_KEY);
   const [width, setWidth] = useState(0);
-  // A swipe on the To confirm card holds the touch: Closet doesn't scroll under it (CB2.4).
-  const [swiping, setSwiping] = useState(false);
   // After the last question leaves, VoiceOver goes to the first section title, where the card was (CB2.6).
   const firstTitle = useRef<View | null>(null);
   const focusFirstSection = () => {
@@ -116,7 +114,7 @@ export default function ClosetScreen() {
   const cols = isAccessibilitySize ? 2 : 3;
   const tile = width > 0 ? Math.floor((width - GAP * (cols - 1)) / cols) : 0;
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic" scrollEnabled={!swiping} style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
+    <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
       {inbox ? (
         <Section>
           <LinkRow title={inbox.title} hint={t('scan.inbox.a11y.rowHint')} onPress={() => router.push(inbox.href as Href)} />
@@ -160,7 +158,6 @@ export default function ClosetScreen() {
             cards={deck}
             tag={t('closet.confirm.tag')}
             onFold={() => setConfirmOpen(false)}
-            onSwipingChange={setSwiping}
             onEmptied={focusFirstSection}
             renderCard={(card, slot) => {
               if (card.kind === 'fit') return <FitQuestion item={card.fit.item} doubt={card.fit.doubt} deck={slot} />;
