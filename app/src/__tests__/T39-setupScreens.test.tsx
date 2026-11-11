@@ -143,7 +143,8 @@ describe('OS3.1 · setup screens are plain', () => {
         await r.unmount();
       }
     }
-  });
+    // 4 looks × 2 account states × 4 screens: 32 mounts, past jest's 5 s default when the suite runs in parallel.
+  }, 30_000);
 
   it("OS3.1 · the agreement's intro is plain text (camera and sheet)", async () => {
     for (const mode of ['camera', 'sheet'] as const) {

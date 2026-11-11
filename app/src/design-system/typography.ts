@@ -135,12 +135,12 @@ export const monoValue = { fontSize: 15, lineHeight: 20, fontWeight: '500' as We
 export const monoSmall = { fontSize: 13, lineHeight: 18, fontWeight: '500' as Weight, ramp: 'footnote' as DynamicTypeRamp };
 
 /**
- * DECIDED (founder, Oct 12, DECISIONS-LOG #231): spaced capitals on card labels ("FIT CHECK · FULL").
- * true = the mockup's uppercase + 1 pt tracking at normal sizes, display-only (VoiceOver gets
- * the sentence-case string via accessibilityLabel), and still sentence case at AX sizes
- * (KText checks theme.isAccessibilitySize). false = sentence case everywhere (ruling 29).
+ * DECIDED (founder, Nov 11, DECISIONS-LOG #444, replacing Oct 12's #231): no all-caps anywhere;
+ * card labels are sentence case ("Fit check · Full"), because capitals read slower.
+ * true = the mockup's uppercase + 1 pt tracking at normal sizes (display-only, sentence case at
+ * AX sizes). false = sentence case everywhere (ruling 29).
  */
-export const MONO_UPPERCASE_AT_NORMAL_SIZES = true;
+export const MONO_UPPERCASE_AT_NORMAL_SIZES = false;
 
 /**
  * FOUNDER DECIDES (README open decision #8). Default true: stat numerals (Rotation "37",
