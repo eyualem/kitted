@@ -76,3 +76,54 @@ On the iPhone 17 Pro Simulator, light and dark, in `tasks/T39/shots/`: Looks (de
   - The T39, T38 and retargeted suites pass, 157 of 157. `tsc` is clean, and lint has 0 errors (6 warnings, all in main's test files).
   - The full Jest run had 1826 passed and 2 failed, both timeouts under load: `outfitSpeed` (352 ms against 300 ms) and `T39-offerCard` OS5.7 (more than 5 s). Core had one parity test time out.
   - Run alone, all three pass (15 of 15; parity 8 of 8). `T39-offerCard` OS5.7 runs close to the 5 s default, so it can flake on a loaded machine.
+
+## Review
+
+### Round 1 (reviewer, strict, 2026-11-10)
+There is no `TASK.md` for T39, so the verdict goes here. I read the plan line, OS3–OS5, F1.1–F1.3 and SY4, IMPLEMENTATION.md, the diff against `origin/main` (T38's files skimmed only), the 14 shots, and this report last.
+
+**Criteria**
+- OS3.1 (no bubbles in setup): done. Tests pass, and shots 2, 3 and 4 show no bubble. The agreement's intro is plain text (`consent-intro`).
+- OS3.2 (Welcome → Looks → About you → Stylist, 3 segments): done. `/onboarding/consent` redirects, and `parseStep('consent')` returns `basics`. Shots show 3 segments.
+- OS3.3 (Looks title and line): done (shot 2 and tests). "Pick by name instead" is still absent, the same as today (#423).
+- OS4.1 (words, order, nothing picked, Continue off with hint): done (shot 3 and tests).
+- OS4.2 (blank name goes on; trimmed, 30): done (`cleanName` and tests).
+- OS4.3 (band and time saved, no birth year, lands in Stylist): done. Planted bug 2 was caught here.
+- OS4.4 (Under 18 asks once; Change does nothing; That's right shows the stop): done in unit tests. Planted bug 1 was caught. Can't tell whether the stop survives a relaunch and a reinstall: `T39-under-18.yaml` was never run.
+- OS4.5 (no "18" before a pick except two choices): done (test).
+- OS4.6 (Style profile Age, older birth year, footnote): done (shot 284 and tests).
+- OS4.7 / SY4.4 (no request carries the band or name; sync omits them; kv local): done (`T39-noLeak`). I checked that `codec.ts`'s `field in omit` drops the `undefined`-valued omits.
+- OS5.1 (hello, then the offer word for word, no camera): done (shot 280 and tests).
+- OS5.2 (Check my fit → agreement → Agree live; Not now → "Turn on fit checks" once, buttons gone): done in unit tests (shot 282). Planted bug 3 was caught.
+- OS5.3 (Later): done (shot 281 and tests).
+- OS5.4 (any scored check removes the buttons for good): done in unit tests (`loadOfferState` reads the store, so it holds after a relaunch). Can't tell on screen: demo 283 wasn't shot.
+- OS5.5 / F1.1 (6 taps to a live camera): can't tell. The unit walk passes, but `T39-setup-fresh.yaml` was never run. Running the five T39 flows on the Simulator would settle it.
+- OS5.6 (older install: no offer): done (tests).
+- OS5.7 / F1.3 (nothing sent before Agree; a held photo is scored after Agree): done (tests, fetch and transport asserted 0). Planted bugs 2 and 3 were caught.
+- F1.2 (nothing picked; Under 18 → stop): done. The Declared Age Range part is SY6, which isn't built yet.
+- SY4.1 / SY4.2: done (tests, shots 3 and 4).
+
+**Strict checks**
+- Test lock: `git diff 49d26f88..HEAD` over the 15 locked and retargeted files plus TESTING.md shows only the Lock line, from `9f23eb03` (re-lock 2). There are no `.only` or `.skip` calls in the T39 files.
+- `npm run check`, one step at a time because memory was low (about 160 MB free):
+  - `tsc --noEmit` is clean.
+  - `expo lint`: 0 errors, 6 warnings, none in T39 files.
+  - Core typecheck is clean, and core tests pass (30 files, 853 tests).
+  - Jest ran one file at a time (`--runInBand --no-watchman`): 139 of 139 files pass, with 1828 tests passed and 4 skipped. The T39 files: aboutStep 12/12, noLeak 3/3, offerCard 10/10, setupScreens 21/21, styleProfile 4/4.
+  - The task touched no files in `firebase/`, `@kitted/core` or `extraction-test/`.
+- Planted bugs, each reverted with `git checkout` and the tree confirmed clean:
+  1. `BasicsScreen.tsx`: That's right without `setAgeBlocked(true)`, so an under-18 user isn't locked. Caught by `OS4.4 · That's right locks the app` and `F1.2 · nothing picked, then the stop`.
+  2. `complete.ts`: `agreed = a.consent !== false`, so setup's end counts as agreed and the camera opens live with no agreement. Caught by aboutStep `OS4.3 · each 18+ band …`, `OS5.2 · declineAgreement …` and `OS5.3 · tapLater once`, and by offerCard `OS5.7 · … send nothing`.
+  3. `ConsentScreen.tsx`: camera Not now also calls `giveConsent`. Caught by `OS5.2 · Not now and the X …` and `OS5.7 · … send nothing`.
+
+**Defects:** none in the code or the tests.
+
+**Before merge (the session, not a code defect):** the DECISIONS-LOG numbers collide again. `origin/main` (5c5f846b, PR #83) now has its own #421 (redesign) and #422 (the first run's candidates). This branch's #421 (T38), #422 and #423 have to be renumbered to the next free numbers on main, and the references updated in IMPLEMENTATION.md, plan.md and the code comments. `ConsentScreen.tsx`'s header comment still says "#412".
+
+**Small things (none blocks)**
+- `tapLater` and About you's Continue have no in-flight guard. `KButton` doesn't debounce, `tapLater` reads kv and then writes it, and `busy` is React state. A very fast double tap could post Kit's Later line twice. Continue uses the same pattern the old agreement step had.
+- `T39-offerCard` OS5.7 runs close to Jest's 5 s timeout on a loaded machine, so it can flake.
+- On 282, the "Turn on fit checks" card opens with "Send me a fit…" right after he said Not now. Those are today's words, so the wording is the founder's call, not this task's.
+- No flows were run and VoiceOver wasn't heard: reading order, the keyboard over the dock, and the Name row's tap-to-focus.
+
+**Verdict: ready.** No defect is open. Renumber the log entries before merging.
