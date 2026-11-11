@@ -67,3 +67,13 @@ Neither defect shows a bug in the app. I saw no code bug: the Undo-back, answere
 - `closetDeck.test.tsx` is 1,395 lines; the C2 rewrite in `closetBatch287.test.ts` keeps the same five-question set-up and is stronger, not weaker.
 
 **Verdict: not ready** (two open defects: reshoot 02, and the red flow, which needs the founder's call). Nothing else blocks.
+
+### Round 2 (reviewer, after the fix round `ddf562a3`)
+Looked at the three screenshots from the fix round; no app code changed in it.
+
+- Defect 1 (shots 02): **closed.** `02-fit-only-light.png` and `02-fit-only-dark.png` now show the fit card alone: `TO CONFIRM` / `1 OF 1`, the jeans drawing, "How do your dark jeans fit?", "Seen as slim and as wide.", the row chevron, and `Skip >` trailing on its own row, with the pieces right under the card. Both themes read cleanly. CB2.5's lone fit card is now shown.
+- New shot `10-after-last-answer-light.png` (264 after "No, a new one"): no To confirm card, the pieces grid starts under the title, and the toast reads "Kept as a new piece." with Undo. CB2.6 is now shown (the card goes, the pieces move up; Undo bringing it back stays covered by the unit tests).
+- Defect 2 (the red locked flow `T74-confirm-one-card.yaml`, three steps): **still open, a test defect, left on purpose for the founder's call in the PR.** It does not touch the app.
+- Still can't tell, as in Round 1: CB2.3's toast Undo on a device, CB2.8 (what VoiceOver says), CB2.9 (Reduce Motion), the real-finger swipe.
+
+**Verdict: ready for the app.** No code defect is open. The one open item is test defect 2 (flow), which the founder decides in the PR.
