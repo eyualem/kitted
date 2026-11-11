@@ -58,7 +58,7 @@ Guys who aren't into fashion don't know if an outfit works or what one change wo
 - **Way back:** onboarding has Back; every camera, sheet and paywall has a visible X or Done from the first frame. Closing mid-setup reopens on the step he reached.
 
 ### A fit check
-Stylist → camera (propped with 3-2-1 auto-capture, mirror, or a library photo) → the reading card → the score card (score, word, fixes with what they raise, "Why 7.5?", "Not quite right?") → the pieces land in Closet (Undo).
+Stylist → camera (propped with 3-2-1 auto-capture, mirror, or a library photo) → the reading card → the score card (the score and its word, one fix with the rest a tap away, Re-check, Explain rating) → the pieces land in Closet (Undo). Explain rating has Kit say in the chat which one or two rules made the score (`specs/explain-rating.md`).
 
 ### Free checks running out
 Check 1 → the soft page ("6 free checks left") → any day, a second check → the limit card with "Save for tomorrow" and an upgrade button → check 8 → the full paywall, the photo saved and scored at once if he subscribes.
@@ -69,7 +69,7 @@ Offered on Welcome ("I already have an account"), in one chat card after he's se
 ## Features
 
 ### F1. Onboarding
-The first run above, 6 taps to the first check. Goal, boldness and fit are asked later by Kit, when they change an answer. New users learn each feature from a short tip the first time they reach it, never a tour before the first check (`specs/setup-and-you.md`).
+The first run above, 6 taps to the first check. Goal, boldness and fit are asked later by Kit, when they change an answer. New users learn by doing: the first check is the lesson, and its pieces slide into Closet, which shows a badge; no tour, no tips (`specs/setup-and-you.md` SY2).
 - F1.1 A fresh install reaches the camera in 6 taps or fewer, with no account and no paywall on the way, and the camera never opens until he taps Check my fit.
 - F1.2 The age question starts with nothing picked; "Under 18" shows the stop screen and no camera; Declared Age Range under 18 does the same.
 - F1.3 Nothing is sent anywhere before consent is agreed; a photo taken before consent is kept and scored after Agree.
@@ -85,23 +85,26 @@ Photo → reading → code score → words, as above.
 - F2.5 Traditional clothing and womenswear pieces are "not rated"; a check where nothing can be rated doesn't count. Line: "I'm built for menswear for now, so I can't score this fairly." (draft)
 - F2.6 A partial photo (no shoes) never loses points for what's missing, says so in words, and offers one way to finish (a shoe snap or a pick from Closet). Skip means he's never asked again for that check.
 - F2.7 Every card has at least one free fix whenever any fix exists.
+- F2.8 The result card shows one number, the score with its word: no gain on a fix, no pill, no math sheet. One fix shows (a free one when there is one); the rest open from one tap.
 
 ### F3. Re-check
 One re-check per check, open 30 minutes (his first-ever check: until the 4 am reset).
 - F3.1 Meets the "fix works" launch bar.
 - F3.2 Pieces he didn't change keep their first reading.
 - F3.3 When the photo can't show the fix, "I did make the change" scores from what he says, and the card says so ("Scored from what you told me.").
+- F3.4 A re-check shows the old score and the new one (6.5 → 7.5) with no "+1.0" pill.
 
-### F4. "Not quite right?"
-He corrects a piece the app read wrong; it re-scores at once.
+### F4. Fixing a misread
+He tells Kit a piece was read wrong ("those jeans are straight") and taps Re-score, or uses Fix what I read on the look's page in Lookbook; it re-scores at once. There's no correction button on the result card.
 - F4.1 A correction changes only that check (and that piece in Closet), and the card shows the new number before Save.
 
 ### F5. Kit (questions)
 Kit answers about clothes, shoes, accessories, fit, care and shopping, using his looks, his fit if given, what he told Kit and his closet as words, never a photo.
-- F5.1 The first chat message says Kit is an AI; asked, Kit says so plainly.
+- F5.1 The agreement says Kit is an AI, before his first check or question; asked, Kit says so plainly.
 - F5.2 Off-topic questions (haircuts, grooming, fitness, dating) get a short friendly decline, and don't count: "I stick to clothes. Ask me what to wear to it." (draft)
 - F5.3 Kit never comments on his face, body, weight or skin.
 - F5.4 Offline: "You're offline, so I couldn't answer that. It doesn't count."
+- F5.5 Explain rating: Kit names at most two rules, only ones the code used for that check, and says no number but the score. It's free (never a question) and once per check; offline or when the AI fails, a code-written line says the same.
 
 ### F6. Morning and evening card
 Once a day Kit posts an outfit from his closet with the weather, greeting him by name if he gave one ("Morning, Alex."); from 5 pm an evening card ("Evening, Alex. Heading out?"). Wear this · Swap one · "Wearing something else? Check it".
@@ -118,16 +121,16 @@ Pieces (head-to-toe sections), Starter essentials, the piece page, and **scan cl
 - F7.5 Tiles are code-drawn pictures; his photos appear only as evidence, never above the neck.
 
 ### F8. Lookbook
-Every past check with its photo, score and fixes; a look's page; "Show in chat".
+Every past check with its photo, score and fixes; a look's page with "Show in chat", "How I scored" (the math behind the score) and "Fix what I read".
 - F8.1 Past scores stay visible forever, free, never blurred.
 
 ### F9. You
-The settings home, named You, with no gear and no separate Settings page (`specs/setup-and-you.md`): Style profile (name, looks 1·2·3, fit), What Kit knows (each fact with its source, removable), today's checks, then the settings rows: Notifications, Appearance, Plan & usage, Privacy & data ("See what I send" shows the real blurred copy; "Delete all my data"), and Help & about with "Show me around".
+The settings home, named You, with no gear and no separate Settings page (`specs/setup-and-you.md`): Style profile (name, looks 1·2·3, fit), What Kit knows (each fact with its source, removable), today's checks, then the settings rows: Notifications, Appearance, Plan & usage, Privacy & data ("See what I send" shows the real blurred copy; "Delete all my data"), and Help & about.
 - F9.1 "Delete all my data" (and "Delete account and all data" when signed in) removes everything on the phone and on our server, with no way back.
 - F9.2 Picked looks change the order of fixes and advice, never a score.
 
 ### F10. Free checks, Pro and the paywall
-- **Free:** 7 free fit checks (each with its re-check), at most 1 a day, used whenever he likes. Then new checks need Pro. 3 questions a day, forever. Everything that runs on code (scores, fixes, Closet, Lookbook, outfit ideas, share cards) stays free forever.
+- **Free:** 7 free fit checks (each with its re-check), at most 1 a day, used whenever he likes. Then new checks need Pro. 3 questions a day, forever. Everything that runs on code (scores, fixes, Closet, Lookbook, outfit ideas) stays free forever.
 - **Pro:** $9.99 a month or $39.99 a year. **No free trial.** "Up to 5 fit checks and 30 questions a day."
 - **When he sees it:** the soft page after his first result; the upgrade button on the limit card when he tries a second check in a day; the full paywall when he tries an 8th check.
 - F10.1 Free checks are counted on our server against the phone's Keychain ID and his account; deleting and reinstalling doesn't reset them.
@@ -145,7 +148,8 @@ Optional. Continue with Apple or Google. Signed in, his scores, closet, style pr
 - F11.4 Backed-up photos are readable only by his account (security rules tested).
 - F11.5 Sign out keeps his fits on the phone **(assumed)**.
 
-### F12. Share cards
+### F12. Share cards (cut until after launch)
+**Cut from the beta and the launch (founder, Nov 9, #423):** "let's not release half-assed things." The share actions and the route are switched off; F12.1 isn't checked at launch. They come back after launch only if they're rebuilt to be worth sharing. What was planned:
 Neck-down by default ("Neck down | Full photo"), never gated, a small "scored by Kitted" mark. Save to Photos needs the add-only photo permission.
 - F12.1 The default share image shows nothing above the neck.
 
@@ -175,7 +179,7 @@ About 15 named events to PostHog (e.g. first check, re-check went up, free check
 | Fit checks | reading, score, fixes, occasion, look | the phone; Firestore if signed in | until deleted |
 | Closet pieces | kind, color, fit, cut-out, wears | the phone; Firestore if signed in | until deleted |
 | Style profile, what Kit knows | name (optional), looks, fit, facts with sources; the name is never sent to the AI | the phone; Firestore if signed in | until deleted |
-| Questions to Kit | text + closet as words | OpenAI | up to 30 days (abuse checks; no training); never by us |
+| Questions to Kit | text + closet as words; for Explain rating, that check's two rules as words | OpenAI | up to 30 days (abuse checks; no training); never by us |
 | Usage counts | free checks used, today's checks and questions, Pro status | our server, by device ID (+ account) | while the app is used |
 | Spend | today's AI spend | our server | rolling |
 | Events | named events, random ID | PostHog | PostHog's retention |

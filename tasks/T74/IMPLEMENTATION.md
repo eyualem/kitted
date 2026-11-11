@@ -1,6 +1,6 @@
 # T74 · The piece questions, one card at a time
 
-**From:** `plan.md` → T74 · **Spec:** `specs/closet-beta.md` → CB2 and CB2.1–CB2.10 (approved by the founder 2026-11-08; CB2 item 5 and CB2.4 changed with his yes on 2026-11-10, DECISIONS-LOG #423) · **Design:** `tasks/T74/DESIGN.md` (approved 2026-11-10; frames `tasks/T74/design.html`, `tasks/T74/design/*.png`) · **Lane:** Closet · **Stacked on:** T73 (`claude/t73-closet-no-outfits`, PR #84)
+**From:** `plan.md` → T74 · **Spec:** `specs/closet-beta.md` → CB2 and CB2.1–CB2.10 (approved by the founder 2026-11-08; CB2 item 5 and CB2.4 changed with his yes on 2026-11-10, DECISIONS-LOG #432) · **Design:** `tasks/T74/DESIGN.md` (approved 2026-11-10; frames `tasks/T74/design.html`, `tasks/T74/design/*.png`) · **Lane:** Closet · **Stacked on:** T73 (`claude/t73-closet-no-outfits`, PR #84)
 
 ## Goal
 Closet's To confirm card shows one question at a time with `{n} of {total}` in its tag line; he answers with today's buttons (the next card slides in, toast with Undo) or moves on with `Skip ›` or a sideways swipe, which never answer; the pictures are 96 × 110 so the card is about 312 pt tall instead of about 378.
@@ -122,7 +122,7 @@ What the tests call. The test writer reads only this section.
 None new. Answers go through the closet service as today (`fitCheck.answerDuplicate` / `unanswerDuplicate` via `answerWithUndo`); the fit card's Skip writes today's `FIT_SKIP_KEY`. Which card shows (`DeckState`) is component state only: never stored, lost on a fresh launch (card 1), kept while the tab screen stays mounted. Skipped questions stay open in the store.
 
 ## Steps
-1. `toConfirm.ts`: replace the cap with the pure rules above (`toConfirm`, keys, `showsSkip`, `deckCount`, `stepDeck`, `startDeck`, `markAnswered`, `reconcileDeck`, `swipeStart`, `swipeStep`, `cardMotion`, `followsFinger`, constants, `deckTag`, `deckA11y`). New header comment (CB2; DECISIONS-LOG #423), without the forbidden words.
+1. `toConfirm.ts`: replace the cap with the pure rules above (`toConfirm`, keys, `showsSkip`, `deckCount`, `stepDeck`, `startDeck`, `markAnswered`, `reconcileDeck`, `swipeStart`, `swipeStep`, `cardMotion`, `followsFinger`, constants, `deckTag`, `deckA11y`). New header comment (CB2; DECISIONS-LOG #432), without the forbidden words.
 2. `en.ts`: the two strings in `addedInBuild`.
 3. `KButton.tsx`: `trailingIcon` and `trailingIconMetrics`.
 4. `DuplicateQuestion.tsx`: the `deck` mode (question block, 96 × 110 pictures, AX captions, the answer guard, Skip placement rules). Today's path untouched.

@@ -1,26 +1,24 @@
-// O5 · Consent (02 D4; text from inputs/app-store-and-age-rules.md §3, ruling 16). Three ways in: step 4 of
-// onboarding; inside the camera, the first time he opens it without having agreed ("Agree" turns the same screen
-// into the camera); and as a sheet with an X (You › Privacy, or a photo that was held back). Nothing is pre-checked:
-// only "Agree" counts, and "Not now" is the same size. "See an example first" (O1e, #289) shows in onboarding; the
-// privacy-policy link waits for PRIVACY_URL (config/links.ts) rather than leading nowhere. Outside onboarding the intro
-// and the button don't talk about "your first check" (09 UI review).
+// The agreement (02 D4; text from inputs/app-store-and-age-rules.md §3, ruling 16). Two ways in: inside the camera,
+// the first time he opens it without having agreed ("Agree" turns the same screen into the camera); and as a sheet
+// with an X (You › Privacy, the "Turn on fit checks" card, or a photo that was held back). Nothing is pre-checked: only
+// "Agree" counts, and "Not now" is the same size. The privacy-policy link waits for PRIVACY_URL (config/links.ts)
+// rather than leading nowhere. Since T39 (specs/onboarding-screens.md OS3) setup has no agreement step, the intro is
+// plain text (no Kit bubble), and in the camera "Not now" or the X after a new setup posts "Turn on fit checks" once
+// (declineAgreement); the camera's words stay today's (DECISIONS-LOG #426).
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Icon, IconButton, KButton, KCard, KText, StylistMessage, TextLink, UserBubble, space, useTheme } from '@/design-system';
+import { Icon, IconButton, KButton, KCard, KText, TextLink, space, useTheme } from '@/design-system';
 import * as WebBrowser from 'expo-web-browser';
 import { PRIVACY_URL } from '@/config/links';
-import { clearResumeStep } from './resume';
 import { store } from '@/data/db';
 import { t, type StringKey } from '@/i18n/en';
 import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
-import { setOnboarded } from '@/state/appGate';
-import { answersFromDraft, basicsEcho, BASICS_KEY, EMPTY_BASICS, loadDraft, LOOKS_KEY, type BasicsDraft } from './basics';
 import { dropAfterConsent, resumeAfterConsent } from '@/features/camera/startCheck';
-import { completeOnboarding, giveConsent } from './complete';
-import { OnboardingNav } from './OnboardingNav';
+import { giveConsent } from './complete';
+import { declineAgreement } from './firstCheckOffer';
 
 type Row = { icon: string; title: StringKey; body?: StringKey; bullets?: StringKey[] };
 const ROWS: Row[] = [
@@ -34,16 +32,11 @@ const ROWS: Row[] = [
  *  photo that was waiting for the agreement (startCheck). In the camera (`onAgreed`), the camera takes over in place. */
 export type AfterAgree = 'camera' | 'close' | 'resume';
 
-export function ConsentScreen({ mode, after = 'camera', onAgreed }: { mode: 'onboarding' | 'sheet' | 'camera'; after?: AfterAgree; onAgreed?: () => void }) {
+export function ConsentScreen({ mode, after = 'camera', onAgreed }: { mode: 'sheet' | 'camera'; after?: AfterAgree; onAgreed?: () => void }) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const [basics, setBasics] = useState<BasicsDraft>(EMPTY_BASICS);
   const [busy, setBusy] = useState(false);
   const provider = t('config.providerDefault');
-
-  useEffect(() => {
-    if (mode === 'onboarding') void loadDraft(store).then((d) => setBasics(d.basics));
-  }, [mode]);
   // A photo held for the agreement is dropped however the sheet closes without "Agree" (X, Not now, a swipe down).
   useEffect(() => (after === 'resume' ? dropAfterConsent : undefined), [after]);
 
@@ -63,26 +56,33 @@ export function ConsentScreen({ mode, after = 'camera', onAgreed }: { mode: 'onb
   const save = async (consent: boolean) => {
     const now = sessionClock.nowMs();
     if (mode === 'camera') {
-      if (!consent) return router.back();
+      if (!consent) return decline();
       await giveConsent(store, now);
       return onAgreed?.();
     }
-    if (mode === 'sheet') {
-      if (consent) await giveConsent(store, now);
-      router.back();
-      if (consent && after === 'resume') resumeAfterConsent();
-      if (consent && after === 'camera') setTimeout(() => router.push('/camera'), 350);
+    if (consent) await giveConsent(store, now);
+    router.back();
+    if (consent && after === 'resume') resumeAfterConsent();
+    if (consent && after === 'camera') setTimeout(() => router.push('/camera'), 350);
+  };
+
+  // Not now or the X in the camera: after a new setup, Stylist says how to turn fit checks on (once); then close.
+  const decline = async () => {
+    try {
+      await declineAgreement(store, sessionClock.nowMs(), newId);
+    } catch (e: unknown) {
+      console.error('Consent decline failed', e);
+    }
+    router.back();
+  };
+  const close = () => {
+    if (mode === 'camera') {
+      if (busy) return;
+      setBusy(true);
+      void decline().finally(() => setBusy(false));
       return;
     }
-    await completeOnboarding(store, answersFromDraft(await loadDraft(store), consent), now, newId);
-    // His own words from "Something else?" stay in kv for later; the step drafts are done.
-    await store.deleteKv(LOOKS_KEY);
-    await store.deleteKv(BASICS_KEY);
-    await clearResumeStep(store);
-    await setOnboarded(true);
-    // The gate swaps the onboarding stack for the tabs; "/" sends him through it to Stylist.
-    router.replace('/');
-    if (consent) setTimeout(() => router.push('/camera'), 600);
+    router.back();
   };
 
   const rows = (
@@ -117,31 +117,26 @@ export function ConsentScreen({ mode, after = 'camera', onAgreed }: { mode: 'onb
 
   return (
     <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: mode === 'sheet' ? space.l : insets.top }]}>
-      {mode === 'onboarding' ? (
-        <OnboardingNav step={4} onBack={() => (router.canGoBack() ? router.back() : router.replace('/onboarding/basics'))} />
-      ) : (
-        <View style={styles.closeRow}>
-          <IconButton icon="close" label={t('common.close')} onPress={() => router.back()} />
-        </View>
-      )}
+      <View style={styles.closeRow}>
+        <IconButton icon="close" label={t('common.close')} onPress={close} />
+      </View>
       <ScrollView contentContainerStyle={styles.thread}>
-        {mode === 'onboarding' ? <UserBubble>{basicsEcho(basics)}</UserBubble> : null}
-        <StylistMessage>{t(mode === 'onboarding' ? 'onb.consent.intro' : 'onb.consent.introLater')}</StylistMessage>
+        {/* Plain text, no Kit bubble (T39, OS3). */}
+        <KText testID="consent-intro" variant="body" color="ink">
+          {t('onb.consent.introLater')}
+        </KText>
         {rows}
         <KText variant="footnote" color="ink3" style={{ paddingHorizontal: 4 }}>
           {t('onb.consent.footerPath')}
         </KText>
-        {mode === 'onboarding' || PRIVACY_URL ? (
+        {PRIVACY_URL ? (
           <View style={styles.links}>
-            {mode === 'onboarding' ? (
-              <TextLink title={t('onb.consent.example')} color="ink2" onPress={() => router.push({ pathname: '/onboarding/example', params: { from: 'consent' } })} />
-            ) : null}
-            {PRIVACY_URL ? <TextLink title={t('acct.privacy')} color="ink2" onPress={() => void WebBrowser.openBrowserAsync(PRIVACY_URL!)} /> : null}
+            <TextLink title={t('acct.privacy')} color="ink2" onPress={() => void WebBrowser.openBrowserAsync(PRIVACY_URL!)} />
           </View>
         ) : null}
       </ScrollView>
       <View style={[styles.dock, { paddingBottom: Math.max(insets.bottom, space.l), borderTopColor: colors.line }]}>
-        <KButton title={t(mode === 'onboarding' ? 'onb.consent.agree' : 'onb.consent.agreeLater')} onPress={() => void finish(true)} disabled={busy} />
+        <KButton title={t('onb.consent.agreeLater')} onPress={() => void finish(true)} disabled={busy} />
         <KButton title={t('onb.consent.notNow')} kind="secondary" onPress={() => void finish(false)} disabled={busy} />
       </View>
     </View>

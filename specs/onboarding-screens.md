@@ -40,7 +40,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 - VoiceOver: the drawing is hidden. The card reads `Example fit check. Everyday. {before} out of 10, {beforeWord}. One fix: {fix}. {after} out of 10, {afterWord}.`
 
 ## OS2. The Example check
-- It shows Welcome's drawn outfit in place of the photo bubble, with the full result card for its **before** state: score, word, fixes with what they raise, and `Why {score}?` opening the math in place. It stays read-only, as today.
+- It shows Welcome's drawn outfit in place of the photo bubble, with the full result card for its **before** state, drawn the way `specs/explain-rating.md` draws every card: score, word, one fix with the rest a tap away, no gains and no Why. It stays read-only, as today, and has no Explain rating (there's no chat in setup).
 - Changed words:
   - the intro: `Here's an example check. This is what you'll get.`
   - the caption: `A drawn example, scored by the same code as your photos. Nothing was sent.`

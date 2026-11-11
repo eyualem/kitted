@@ -135,7 +135,7 @@ Read the diff since `a43ace27` (`ConfirmDeck.tsx`, `closet/index.tsx`, the CB2.1
 **Follow-ups (never block)**
 - `specs/closet-beta.md` CB2 "Folded" still says the folded row is `To confirm`, the count and a chevron. The founder chose "Picture + question" in chat, so the spec should get a line saying so (his yes is in chat; only he or the coordinator edits it, with a log entry). Until then the spec and the build disagree.
 - The row shows the *first* waiting question, but a tap opens the card at the one he was on last (spec: "at the current question"), so after he skipped to card 3 the row names card 1 and opens on card 3. Harmless; the row could name the card it opens on if that feels odd on the phone.
-- Still unchecked on a device: VoiceOver's actual words and order (Y24), and the one-frame folded flash on a fresh open.
+- Still unchecked on a device: VoiceOver's actual words and order (Y27), and the one-frame folded flash on a fresh open.
 
 **Verdict: ready.**
 

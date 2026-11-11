@@ -11,7 +11,10 @@ import { morning } from '@/features/morning';
 import { createMemoryStore } from '@/data/memoryStore';
 import type { OccasionKey, StyleKey } from '@/data/types';
 import { WEATHER_PERMISSION_KV } from '@/services/weather';
-import { completeOnboarding } from '@/features/onboarding/complete';
+import { completeOnboarding, giveConsent } from '@/features/onboarding/complete';
+import { finishSetup, saveAbout } from '@/features/onboarding/aboutStep';
+import { LOOKS_KEY } from '@/features/onboarding/basics';
+import { declineAgreement, tapLater } from '@/features/onboarding/firstCheckOffer';
 import { picksToStyles } from '@/features/onboarding/looks';
 import { newId } from '@/services/ids';
 import { parseZonedIso } from '@/services/clock';
@@ -308,7 +311,20 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   258: { asOf: ASK_AS_OF, steps: [] },
   259: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
   ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166].map((n) => [n, { steps: [FIRST_CHECK] }])),
+  // T39: after the agreement, the first check the story screens 150–162 use.
+  283: { steps: [FIRST_CHECK] },
 };
+
+/** T39's offer screens (280–283): setup finished through About you at 7:40 (his looks smart casual + workwear, 22–25,
+ *  no name, no agreement), then the card's state. 283 agrees here; its check is the story's FIRST_CHECK. */
+async function prepareOffer(offer: NonNullable<ScreenScenario['offer']>): Promise<void> {
+  await store.setKv(LOOKS_KEY, JSON.stringify(['smart_casual', 'workwear']));
+  await saveAbout(store, { age: '22-25', name: '' });
+  await finishSetup(store, at('2026-10-22T07:40:00'), newId);
+  if (offer === 'later') await tapLater(store, at('2026-10-22T07:40:30'), newId);
+  if (offer === 'notNow') await declineAgreement(store, at('2026-10-22T07:40:30'), newId);
+  if (offer === 'checked') await giveConsent(store, at('2026-10-22T07:41:00'));
+}
 
 /** Ids a story made that its screen's link names (`{dup}`): applyDemoScreen fills them in (#280). */
 export const demoLinkIds: Record<string, string> = {};
@@ -341,6 +357,8 @@ async function playStory(sc: ScreenScenario): Promise<void> {
 
   if (sc.scenario === 'full') {
     await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: at(story.asOf ?? sc.now) });
+  } else if (sc.offer) {
+    await prepareOffer(sc.offer);
   } else if (sc.onboarded) {
     const a = seed.scenarios.firstRun.onboardingAnswers;
     await completeOnboarding(
@@ -349,6 +367,12 @@ async function playStory(sc: ScreenScenario): Promise<void> {
       at('2026-10-22T07:40:00'),
       newId,
     );
+  }
+  // T39: About you's draft (screen 4), and his name and band on Style profile (284).
+  if (sc.about) await saveAbout(store, sc.about);
+  if (sc.profilePatch) {
+    const p = await store.profile.get('me');
+    if (p) await store.profile.put({ ...p, ...sc.profilePatch });
   }
   await store.setKv(KV.scenario, sc.scenario);
   await store.setKv(KV.seedLoaded, sc.scenario);

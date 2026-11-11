@@ -4,7 +4,7 @@
 import { scoreParts } from '@kitted/core';
 import { newProblemLines, recheckMove, recheckSummary } from '@/features/fitcheck/explain';
 import { midSentenceNames, overallFor, scoreOptions } from '@/features/fitcheck/scoring';
-import { WELCOME_PHOTO, welcomeExample } from '@/features/onboarding/welcomeExample';
+import { WELCOME_READING, welcomeExample } from '@/features/onboarding/welcomeExample';
 import { partText } from '@/features/why/partsRows';
 import { demoReadingById } from '@/services/readingSource/demoReadings';
 import { scoreWordLabel } from '@/design-system/score';
@@ -39,11 +39,11 @@ describe('re-check summary (#276)', () => {
 describe('the Welcome card (#276)', () => {
   it('shows the score the app gives the s15 photo, with its word', () => {
     const ex = welcomeExample()!;
-    const expectedScore = overallFor(demoReadingById(WELCOME_PHOTO)!, scoreOptions({ occasion: 'everyday', styles: [], boldness: null }));
+    const expectedScore = overallFor(demoReadingById(WELCOME_READING)!, scoreOptions({ occasion: 'everyday', styles: [], boldness: null }));
     expect(ex.score).toBe(expectedScore);
     expect(ex.word).toBe(scoreWordLabel(ex.score));
     // The card says "Full check": the example must be one.
-    const scored = scoreParts(demoReadingById(WELCOME_PHOTO)!, { occasion: 'everyday', styles: [], boldness: 'a_little' }) as unknown as { partial: boolean };
+    const scored = scoreParts(demoReadingById(WELCOME_READING)!, { occasion: 'everyday', styles: [], boldness: 'a_little' }) as unknown as { partial: boolean };
     expect(scored.partial).toBe(false);
   });
 });

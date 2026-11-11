@@ -40,7 +40,7 @@ Top to bottom, in VoiceOver's reading order:
   - **Not shown** when the deck is a single "Is this your …?" question (phone 6).
   - VoiceOver: "Skip", button (no hint: it says what it does) · tap: shows the next card, saves nothing; on the last card it shows card 1.
 - Pieces · unchanged: `PieceSections` 16 pt under the card.
-- **Swipe:** a horizontal pan on the card (the whole card, not only the pictures) moves to the next card (finger to the left) or the previous one (finger to the right), wrapping at both ends (DECISIONS-LOG #423). It never answers. Phone 3 draws it.
+- **Swipe:** a horizontal pan on the card (the whole card, not only the pictures) moves to the next card (finger to the left) or the previous one (finger to the right), wrapping at both ends (DECISIONS-LOG #432). It never answers. Phone 3 draws it.
   - **Start rule:** the pan starts once the finger has moved 12 pt sideways (`activeOffsetX` ±12) and fails if it moves 10 pt up or down first (`failOffsetY` ±10), so a vertical drag always scrolls Closet. A pan that starts on a chip or on Skip cancels that press: lifting the finger after a swipe never answers or skips.
   - **Commit rule:** past a third of the card's width, or a flick faster than 500 pt/s, moves to the next or previous card; anything less springs back (a spring, about 200 ms).
   - With a single card (either kind), a swipe springs back.
@@ -60,7 +60,7 @@ Same parts as phone 1, with:
 
 ### Mid-swipe · 2 of 5 to 3 of 5 · when: his finger drags card 2 to the left · phone 3 · `design/03-light.png`, `design/03-dark.png`
 - Card 2 follows his finger sideways; card 3 ("Is this your white tee?" · "I could only see part of it under your beige overshirt." `closet.q.why.halfSeen`) follows 16 pt behind it from the trailing side, top-aligned. The cards slide under the screen's edges (not clipped at the gutter).
-- **Let go** past a third of the card's width, or with a flick: card 3 settles (the rest of the 240 ms move). Short of that: card 2 springs back. Swiping right does the same toward the previous card; on card 1 it shows the last card (wraps, DECISIONS-LOG #423).
+- **Let go** past a third of the card's width, or with a flick: card 3 settles (the rest of the 240 ms move). Short of that: card 2 springs back. Swiping right does the same toward the previous card; on card 1 it shows the last card (wraps, DECISIONS-LOG #432).
 - While dragging, the card section keeps card 2's height; when card 3 settles it eases to card 3's.
 - **Reduce Motion:** the card doesn't follow the finger; a swipe past the same distance cross-fades to the next card (150 ms).
 - **Haptics:** none on a swipe (a swipe saves nothing; only an answer gets the haptic).
@@ -151,7 +151,7 @@ Every string he reads or hears in this task.
 None open. Answered on Nov 10 and written in above:
 - Picture shape: tall, 96 × 110 (the recommended pick; the critic agreed).
 - Skip on a lone "Is this your …?" question: hidden, a swipe springs back; a lone fit card keeps it ("Hide it (Recommended)"; spec CB2 item 5, CB2.4).
-- Swipe right on card 1: shows the last card (DECISIONS-LOG #423).
+- Swipe right on card 1: shows the last card (DECISIONS-LOG #432).
 - Card size: Skip on the answers' row ("Skip on the answers row (Recommended)"; spec CB2 item 5).
 - Not added: a VoiceOver hint on the fit card's Skip (it would need new words).
 
@@ -199,12 +199,12 @@ Read: CLAUDE.md, `specs/closet-beta.md` CB2 and CB2.1–CB2.10, this file, all 1
 - **Swipe right on card 1:** agree with wrapping to the last card. Forward already wraps (spec), "n of total" says where he is, and wrapping one way while springing back the other reads like a bug.
 
 ### Round 2 · 2026-11-10 · verdict: matches (no blockers)
-Read: the spec change (d1ba28be, CB2 item 5 and CB2.4), DECISIONS-LOG #423, this file in full (Changes → Round 2), the 16 re-shot PNGs (phones 1–6, 8, 9, light and dark), the `.t74-*` rules in `design.html`, `ChipFlow` (`Chip.tsx`). Phone 7 is unchanged from round 1. No Simulator (memory).
+Read: the spec change (d1ba28be, CB2 item 5 and CB2.4), DECISIONS-LOG #432, this file in full (Changes → Round 2), the 16 re-shot PNGs (phones 1–6, 8, 9, light and dark), the `.t74-*` rules in `design.html`, `ChipFlow` (`Chip.tsx`). Phone 7 is unchanged from round 1. No Simulator (memory).
 
 **Round 1 polish 1–9: all folded in.** Checked each: `TextLink` `trailingIcon` is listed (1); Skip's target is its own 64 × 44 box (2); both fit-card chevrons are 13 pt, the colour difference written as intended (3); gap 4 (4); 378 pt (5); "Jackets and layers. 4" (6); "Closet opens" and a new question arriving are under Where it lives (7); start and commit rules with numbers (8); 375 pt measured (9). The VoiceOver "Skip" action is added, only where Skip shows.
 
 **Checked and passing**
-- **The spec as changed:** Skip trails the Yes / No row (phones 1, 4); it gets its own row with a third answer (phone 2), at AX5 (phone 9) and on the fit card (phone 5); there's no Skip and no Skip action on a lone question (phone 6). A swipe back on card 1 wraps (phone 3 text, #423).
+- **The spec as changed:** Skip trails the Yes / No row (phones 1, 4); it gets its own row with a third answer (phone 2), at AX5 (phone 9) and on the fit card (phone 5); there's no Skip and no Skip action on a lone question (phone 6). A swipe back on card 1 wraps (phone 3 text, #432).
 - **Measured at 2x:** phone 1's card is 159–469 pt, so 310 pt (DESIGN.md says 312: within 2 pt, an HTML rendering difference). Phone 6 is 289 (says 291). Phone 5 is about 156 (says 158). Under every chip row the visible gap is 22.5 pt: the chip's 6 pt hit padding plus the card's 16. It's the same on phones 1 and 6, so the row keeps its rhythm with or without Skip.
 - **Skip on the row:** "Skip" starts 35 pt after "No, a new one" on phone 1 (x 282.5 → 317.5), so its 8 pt hit slop never meets the chip. Its trailing edge sits at 361.5 against the 365 inner edge (the chevron's side bearing).
 - **Contrast** is unchanged from round 1 (no new colours), so it passes in light and dark. Hit areas: Skip is 64 × 44; the chips are 44 tall (code).
@@ -222,7 +222,7 @@ Read: the spec change (d1ba28be, CB2 item 5 and CB2.4), DECISIONS-LOG #423, this
 - Skip now sits at a different height from card to card: on the answers' row on two-answer cards (phone 1, y ≈ 431 pt), but on its own row with a runner-up (phone 2, y ≈ 519) and on the fit card. Tapping Skip over and over means re-aiming each time. This comes with the founder's pick and the VoiceOver action covers VoiceOver users, so nothing to do now. Worth watching in the beta if testers skip a lot.
 
 ## Changes
-- **Round 2** · from the founder (Nov 10): "Skip on the answers row (Recommended)" and, for 1 of 1, "Hide it (Recommended)"; picture shape stays tall; a swipe back on card 1 wraps (DECISIONS-LOG #423); and the critic's round 1 polish and VoiceOver suggestion.
+- **Round 2** · from the founder (Nov 10): "Skip on the answers row (Recommended)" and, for 1 of 1, "Hide it (Recommended)"; picture shape stays tall; a swipe back on card 1 wraps (DECISIONS-LOG #432); and the critic's round 1 polish and VoiceOver suggestion.
   - Skip moved to the trailing end of the Yes / No row; its own row only with a third answer, at the largest sizes, or on a narrow phone. Phone 1's card is now 312 pt (was 341; today 378). Re-shot phones 1–6, 8, 9 (light and dark); phone 7 has no card and is unchanged.
   - No Skip (and no Skip action) on a lone "Is this your …?" question; a swipe springs back (phone 6, 291 pt). A lone fit card keeps Skip.
   - Swipe right on card 1 shows the last card; open questions closed.

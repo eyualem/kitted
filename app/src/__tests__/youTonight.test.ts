@@ -103,9 +103,9 @@ describe('YT5: the editor says Done, since leaving already saves', () => {
 });
 
 describe('YT6: VoiceOver', () => {
-  it('the birth-year row reads "Birth year, 2005"', () => {
-    expect(src(`${YOU}/profile.tsx`)).toMatch(/t\('settings\.a11y\.value', \{ label: t\('onb\.basics\.birthYear'\)/);
-  });
+  // "the birth-year row reads …" retired by T39 (#412–#413, OS4.6): the row is now Age, one VoiceOver element
+  // ("Age, 22–25"; an older profile's band from its birth year, "Age, 18–21"), held by T39-styleProfile
+  // "OS4.6 · Name, Fit you like, Age, and the footnote" and "OS4.6 · an older profile shows the band from its birth year".
   it('"Score my fits" says what turning it on or off does', () => {
     expect(src('src/features/settings/SettingsList.tsx')).toMatch(/accessibilityHint=\{hint\}/);
     const priv = src(`${YOU}/privacy.tsx`);

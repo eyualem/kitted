@@ -4,14 +4,16 @@ import type { KittedStore } from '@/data/store';
 import { KV } from '@/data/store';
 
 export const ONBOARDING_STEP_KEY = KV.onboardingStep;
-/** The progress bar's segments: Welcome, Looks, Basics, Consent (it fills on Consent, #276). */
-export const ONBOARDING_STEPS = 4;
-export type ResumeStep = 'looks' | 'basics' | 'consent';
-const STEPS: readonly ResumeStep[] = ['looks', 'basics', 'consent'];
+/** The progress bar's segments: Welcome, Looks, About you (it fills on About you, #276; T39 removed the agreement step). */
+export const ONBOARDING_STEPS = 3;
+export type ResumeStep = 'looks' | 'basics';
+const STEPS: readonly ResumeStep[] = ['looks', 'basics'];
 
-/** '1' was written by Welcome before #289 (it meant "past Welcome"). */
+/** '1' was written by Welcome before #289 (it meant "past Welcome"). 'consent' is an install closed on the agreement
+ *  step that T39 removed: it reopens on About you (OS3.2). */
 export function parseStep(raw: string | null): ResumeStep | null {
   if (raw === '1') return 'looks';
+  if (raw === 'consent') return 'basics';
   return STEPS.includes(raw as ResumeStep) ? (raw as ResumeStep) : null;
 }
 
