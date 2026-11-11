@@ -110,3 +110,27 @@ Read at HEAD `16170d7a`: `git diff db9a1ded..HEAD -- app/ specs/ handoff/`, the 
 - Still open from round 1: `RestoreScreen` (a stand-in) calls `completeOnboarding`, so a restored user could get `From your first check`. `closetTabPoint` is fixed iPhone-portrait geometry, measured on the 17 Pro only. The SY2.1 bullet scan covers three key prefixes.
 
 **Verdict: ready.** No defect is open. Still unverified: the re-check slide (needs a demo re-check that adds a piece), the haptic, VoiceOver, Reduce Motion and an off-screen card on a device, other iPhone sizes, and a real fit check on his phone.
+
+### Round 3 (the change after the PR opened)
+Read only `git diff a7fecaf4..14d0e586 -- app/` (slide.ts, useSlide.ts, FitCheckCard.tsx, prepareDemoScreen.ts, the two new tests), against SY2.2, SY2.4 and SY2.5, and the fit-check service's retry path (`retryInner`, `features/fitcheck/service.ts`). The three T35 test files run alone: 28 passed. `npm run check` not re-run (the session: exit 0, 1926 passed). No `.only` or `.skip`. Frames pulled from both new recordings with ffmpeg (every 5th frame of the reveal and the slide, and 2 per second across the whole clip).
+
+- SY2.2, first check: done in both recordings. Four copies leave the folded card's ⌄ and land on Closet, and the badge `4` comes only after they land. No badge shows before the card in any frame, so round 2's early flash is gone.
+- SY2.2, the lost-slide fix: done. `noRowToSlide` reads the check's own summary, so a closet list that's still loading no longer ends the slide. A partial check or one that adds nothing still gives the badge alone.
+- SY2.2, a check that **failed and was retried**: **not done** (D1, a regression from this change).
+- SY2.4: done for failed, refused and unreadable checks. The badge isn't held once they end.
+- SY2.5: done in code. The retry runs only while Reduce Motion is off (with it on, the hook decides at once), and it stops on unmount (`alive` and `clearTimeout` on the latest timer). Not seen on a device.
+- The hold's limit: done. Holding again restarts the 20 s limit (tested). A held check is let go by its card's decision, by its unmount, or after 20 s at most.
+- Past chats: done. Neither hold runs for a read-only card.
+
+**Defects**
+- **D1 (code):** `FitCheckCard.tsx` ~line 116. When a live check ends `failed`, the card calls `noSlide(checkId)`, and that marks the check as already slid. But "Try again" (`retryInner`) re-reads the **same** check id: it goes `failed` → `scoring` → `scored`. On the retry, `holdBadge` returns early, `shouldSlide` is false because the check is marked slid, and the new pieces never slide. SY2.2 is lost for every retried check, the usual case after a network blip. Before this change, a failed check didn't touch the slide state, so its retry slid. The fix: let go with `release(checkId)` for an unscored end (the comment already says "lets go"), not `noSlide`. That frees the badge without blocking a later slide. A test would fail a live check, retry it to scored, and expect `shouldSlide` to still allow it. `notClothed` and `unreadable` can't hit this, since their retake starts a new check, and a live check never turns `held` (`holdPhoto` creates `held` rows directly). So `release` is right for all four.
+
+**Small things for later (not blocking)**
+- Paths where nothing decides, so the hold waits out the full 20 s. None of them shows a wrong count, only a late badge:
+  - A scored check whose added pieces never appear in the card's closet list (for example, one deleted from Closet before the list loads). The old rule gave up at once; the new one waits.
+  - A card unmounted while still reading. The reading hold has no unmount cleanup. The Stylist thread is a plain ScrollView, so this is rare.
+  - Before the story's card mounts fresh, a demo screen holds its armed check. On screen 12 (`FC3R`), check that it releases.
+- The retry lets a card that comes on screen within 1 s of landing still slide (by design: the list scrolls the card into view). It's a loose reading of SY2.5's "off screen as it lands". That's fine, but it's worth naming in the spec's notes if it ever matters.
+- The first new test checks `noRowToSlide` on its own. If `FitCheckCard` went back to the card's closet list, the test would still pass. The second test fails on the old `holdBadge`, which returned early while held, so the timer was never restarted.
+
+**Verdict: not ready.** D1 is open (code). Still unverified, as in round 2: the re-check slide, the haptic, VoiceOver, Reduce Motion and an off-screen card on a device, and other iPhone sizes.
