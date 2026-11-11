@@ -63,3 +63,17 @@
 - The dev build's Tools button covers `Got it` in shot 02 (not in the shipped app, as Built says).
 
 **Not ready** (defects 1 and 2 open, both code).
+
+### Round 2 (reviewer, 2026-11-10)
+- Defect 1 fixed: `showMeAround` now counts only today's chat (`dayKey` with `sessionClock.offset`, passed in from both callers), and the hello still lands after the newest message overall. A new test covers yesterday's hello not stopping today's (SY3.1).
+- Defect 2 fixed: `Got it` is its own Pressable with `minWidth` and `minHeight` of 44 pt, `accessibilityRole="button"` and its label (SY2.8). It looks the same in shots 01–04.
+- After the merge: Kit's hello ends "Tell me when I do.", matching `specs/setup-and-you.md` SY2 on main and shots 02 and 05. A new test puts the hello above Kit's first-check offer card, which settles the SY2.1 "above the offer card" part I couldn't tell in Round 1. `MessageView`, `complete.ts`, the tab tips and the demo screens are otherwise unchanged since Round 1.
+- Criteria: SY2.1–SY2.9 and SY3.1–SY3.3 done. VoiceOver by ear and real taps on the Simulator are still not checked; Built says so.
+
+**Defects:** none open.
+
+**Worth a later look (never blocks)**
+- Old AI-note messages still end with the earlier line (`stylist.aiNote`: Tap "Not quite right?" when I do), while the hello ends "Tell me when I do." That's main's string, and old messages reading as before is what the task asked for. It's worth a look when the explain-rating work lands.
+- Round 1's notes still stand (a very fast double tap on Show me around; one live query per fit-check card; the dev Tools button over `Got it` in shot 02).
+
+**Ready.**
