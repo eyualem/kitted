@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Style screen wording</title>
+<style>
+  :root {
+    --page: #E9EBEF; --card: #FFFFFF; --text: #121628; --muted: #585E70; --line: #D5D9E0; --pick: #121628;
+    --app-bg: #F3F4F6; --app-ink: #121628; --app-ink2: #585E70;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --page: #0C0E14; --card: #171A23; --text: #ECEEF3; --muted: #A1A7B5; --line: #2A2F3B; --pick: #ECEEF3; }
+  }
+  :root[data-theme="dark"] { --page: #0C0E14; --card: #171A23; --text: #ECEEF3; --muted: #A1A7B5; --line: #2A2F3B; --pick: #ECEEF3; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); font: 15px/1.45 -apple-system, "SF Pro Text", system-ui, sans-serif; }
+  header { max-width: 1760px; margin: 0 auto; padding: 32px 16px 8px; }
+  h1 { font: 700 26px/1.2 -apple-system, "SF Pro Display", system-ui, sans-serif; margin: 0 0 8px; }
+  header p { margin: 0 0 6px; color: var(--muted); max-width: 760px; }
+  .row { max-width: 1760px; margin: 0 auto; padding: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(402px, 1fr)); gap: 28px; }
+  figure { margin: 0; }
+  .label { display: flex; align-items: baseline; gap: 8px; margin: 0 0 10px; font-weight: 700; font-size: 17px; }
+  .tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; padding: 4px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  .tag.rec { background: var(--pick); color: var(--page); border-color: var(--pick); }
+  .phone { position: relative; width: 402px; height: 874px; max-width: 100%; border-radius: 48px; overflow: hidden; background: var(--app-bg);
+           box-shadow: 0 0 0 10px #111, 0 18px 40px rgba(0,0,0,.25); margin: 10px auto 22px; }
+  .phone img { display: block; width: 402px; }
+  .phone .shot { width: 402px; height: 874px; }
+  .title { padding: 0 16px 24px; }
+  .title h2 { font: 700 34px/41px -apple-system, "SF Pro Display", system-ui, sans-serif; color: var(--app-ink); margin: 8px 0 4px; letter-spacing: .2px; }
+  .title p { font: 400 17px/22px -apple-system, "SF Pro Text", system-ui, sans-serif; color: var(--app-ink2); margin: 0; }
+  .grid { margin-top: -20px; }
+  .dock { position: absolute; left: 0; bottom: 0; width: 402px; }
+  .notes { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; max-width: 402px; margin: 0 auto; }
+  .notes p { margin: 0 0 6px; }
+  .notes p:last-child { margin: 0; }
+  .notes b { color: var(--text); }
+  .muted { color: var(--muted); }
+  @media (max-width: 460px) { .phone { transform: scale(.85); transform-origin: top center; margin-bottom: -110px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Setup: the style screen, three ways to word it</h1>
+  <p>A tester read "Which of these would you actually wear?" as "what are you wearing right now". These mockups use the real screen (tiles, progress bar, Continue) from the Simulator; only the title and the line under it change. Nothing is built yet.</p>
+  <p>Same in all three: the tiles, up to 3 picks, Something else, Not sure, Continue · n of 3. A one-line title also lifts the tiles about 40 pt, so more of the second row shows.</p>
+</header>
+
+<div class="row">
+  <figure>
+    <div class="label">Today <span class="tag">what he saw</span></div>
+    <div class="phone"><img class="shot" src="design/shot-1.png" alt="The current style screen: Which of these would you actually wear? Tap up to 3."></div>
+    <div class="notes">
+      <p><b>Which of these would you actually wear?</b><br><span class="muted">Tap up to 3.</span></p>
+      <p class="muted">"Wear" can mean right now, and the next thing the app asks for is a photo of today's outfit.</p>
+    </div>
+  </figure>
+
+  <figure>
+    <div class="label">A <span class="tag">taste, said outright</span></div>
+    <div class="phone">
+      <img src="design/shot-2.png" alt="">
+      <div class="title"><h2>Which styles are you into?</h2><p>Tap up to 3. Your taste, not today's outfit.</p></div>
+      <img class="grid" src="design/shot-3.png" alt="">
+      <img class="dock" src="design/shot-4.png" alt="">
+    </div>
+    <div class="notes">
+      <p><b>Which styles are you into?</b><br><span class="muted">Tap up to 3. Your taste, not today's outfit.</span></p>
+      <p class="muted">Rules out the misread in the line itself. The title still runs two lines.</p>
+    </div>
+  </figure>
+
+  <figure>
+    <div class="label">B <span class="tag rec">recommended</span></div>
+    <div class="phone">
+      <img src="design/shot-2.png" alt="">
+      <div class="title"><h2>What's your style?</h2><p>Pick up to 3 looks you like. Today's outfit comes next.</p></div>
+      <img class="grid" src="design/shot-3.png" alt="">
+      <img class="dock" src="design/shot-4.png" alt="">
+    </div>
+    <div class="notes">
+      <p><b>What's your style?</b><br><span class="muted">Pick up to 3 looks you like. Today's outfit comes next.</span></p>
+      <p class="muted">The shortest title: it reads as taste at a glance, and the line tells him where today's outfit fits (the next step), so he isn't wondering. One line of title shows more tiles.</p>
+    </div>
+  </figure>
+
+  <figure>
+    <div class="label">C <span class="tag">plain instruction</span></div>
+    <div class="phone">
+      <img src="design/shot-2.png" alt="">
+      <div class="title"><h2>Pick your styles</h2><p>Up to 3 looks you'd go for. Not what you have on now.</p></div>
+      <img class="grid" src="design/shot-3.png" alt="">
+      <img class="dock" src="design/shot-4.png" alt="">
+    </div>
+    <div class="notes">
+      <p><b>Pick your styles</b><br><span class="muted">Up to 3 looks you'd go for. Not what you have on now.</span></p>
+      <p class="muted">An instruction instead of a question. Clear, but a bit flat, and "not what you have on now" names the misread, which can plant it.</p>
+    </div>
+  </figure>
+</div>
+</body>
+</html>

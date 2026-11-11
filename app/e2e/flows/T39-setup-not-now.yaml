@@ -20,7 +20,7 @@ name: T39 · Not now on the agreement after the offer
     timeout: 90000
 - tapOn: "Get started"
 - extendedWaitUntil:
-    visible: "Which of these would you actually wear\\?"
+    visible: "What's your style\\?"
     timeout: 10000
 - tapOn: "Not sure"
 - extendedWaitUntil:

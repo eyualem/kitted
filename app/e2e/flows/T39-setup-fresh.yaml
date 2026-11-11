@@ -29,9 +29,9 @@ name: T39 · fresh install to a live camera in six taps
 # Tap 1 of 6.
 - tapOn: "Get started"
 - extendedWaitUntil:
-    visible: "Which of these would you actually wear\\?"
+    visible: "What's your style\\?"
     timeout: 10000
-- assertVisible: "Tap up to 3\\."
+- assertVisible: "Pick up to 3 looks you like\\. Today's outfit comes next\\."
 - assertNotVisible: "Kit: .*"
 - assertNotVisible: ".*Good pick.*"
 - assertNotVisible: "Which of these would you actually wear\\? Tap up to 3\\."

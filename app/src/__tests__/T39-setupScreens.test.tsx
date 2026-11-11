@@ -30,8 +30,8 @@ const life = setUpT39Tests();
 
 // ── The words (TESTING.md, exact) ─────────────────────────────────────────────────────────────────────────────────
 const OLD_LOOKS_PROMPT = 'Which of these would you actually wear? Tap up to 3.';
-const LOOKS_TITLE = 'Which of these would you actually wear?';
-const LOOKS_LINE = 'Tap up to 3.';
+const LOOKS_TITLE = "What's your style?"; // founder, Nov 11 (#447)
+const LOOKS_LINE = "Pick up to 3 looks you like. Today's outfit comes next.";
 const ABOUT_TITLE = 'About you';
 const NAME_Q = 'What should Kit call you?';
 const NAME_PLACEHOLDER = 'First name (optional)';

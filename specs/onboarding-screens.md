@@ -50,7 +50,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 - Setup is plain screens: a large title question, its choices, one button at the bottom. No echo bubbles and no Kit bubbles anywhere in setup. Kit's first words are in the Stylist chat after setup (SY2's hello).
 - The steps: **Welcome → Looks → About you → Stylist.** Setup has no agreement step (SY5).
 - The progress bar has 3 segments (Welcome, Looks, About you) and fills on About you. Back works as today.
-- **Looks:** the large title `Which of these would you actually wear?`, then `Tap up to 3.` under it. The Kit bubble goes; the tiles, `Something else?`, `Pick by name instead`, `Not sure` and `Continue · {n} of 3` stay as they are.
+- **Looks:** the large title `What's your style?`, then `Pick up to 3 looks you like. Today's outfit comes next.` under it (founder, Nov 11, after a tester read the old title as "what are you wearing now"; DECISIONS-LOG #447). The Kit bubble goes; the tiles, `Something else?`, `Pick by name instead`, `Not sure` and `Continue · {n} of 3` stay as they are.
 - **The agreement** (now first shown on the camera, SY5): its Kit bubble becomes plain text at the top. Its words and buttons don't change.
 - **Restore** (from "I already have an account", only once sign-in exists): the About you step with the title `Welcome back` and the line `Your age first, then I'll bring back your fits.` Age only, no name field.
 - **The Example check stays chat-shaped:** it's a preview of the chat itself.
