@@ -4,7 +4,7 @@
 // "Agree" counts, and "Not now" is the same size. The privacy-policy link waits for PRIVACY_URL (config/links.ts)
 // rather than leading nowhere. Since T39 (specs/onboarding-screens.md OS3) setup has no agreement step, the intro is
 // plain text (no Kit bubble), and in the camera "Not now" or the X after a new setup posts "Turn on fit checks" once
-// (declineAgreement); the camera's words stay today's (DECISIONS-LOG #412).
+// (declineAgreement); the camera's words stay today's (DECISIONS-LOG #426).
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
