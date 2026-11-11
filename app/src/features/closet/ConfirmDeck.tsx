@@ -323,16 +323,18 @@ export function ConfirmDeck<Q extends { ask: { obsId: string } }, F extends { it
           ) : null}
         </Pressable>
         {renderCard(card, slot)}
-        {/* VoiceOver's fold, after the question and its answers (the question stays first), over the tag line. */}
+        {/* VoiceOver's fold, the card's last element: VoiceOver reads by place on screen, so it sits below the answers
+            (a 1 pt strip, the section's gap taken back) and the question stays first. Touch folds from the tag line. */}
         {shown && onFold ? (
           <View
+            testID="closet-confirm-fold"
             accessible
             accessibilityRole="button"
             accessibilityLabel={confirmRowA11y(tag, slot.total)}
             accessibilityState={{ expanded: true }}
             onAccessibilityTap={onFold}
             pointerEvents="none"
-            style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 44 }}
+            style={{ height: 1, marginTop: -12 }}
           />
         ) : null}
       </KCardSection>

@@ -1436,6 +1436,12 @@ describe('CB2.11 · folded or open, as he left it', () => {
     expect(folds).toHaveLength(1);
     expect(folds[0]!.props.accessibilityState).toEqual({ expanded: true });
     expect(hostEls(card).indexOf(one('closet-confirm-question'))).toBeLessThan(hostEls(card).indexOf(folds[0]!));
+    // VoiceOver reads by place on screen: the fold is laid out last in the card (never over the tag line), so it's
+    // the last element VoiceOver reaches.
+    expect(folds[0]!.props.testID).toBe('closet-confirm-fold');
+    expect(flat(folds[0]!).position).toBeUndefined();
+    const reachable = hostEls(card).filter((e) => e.props.accessible === true && !hiddenFromVoiceOver(e));
+    expect(reachable[reachable.length - 1]).toBe(folds[0]);
     // Fold again, from the tag line's row.
     const tagRow = one('closet-confirm-tag').parent!;
     await act(async () => {
