@@ -695,7 +695,7 @@ Every layout list runs top to bottom. "Pad" means padding. The screen is 402 pt 
 | A held photo is waiting | `1 photo waiting to score` |
 | Pro or trial | (none) |
 
-**AI note (ruling 17):** the very first message in the Stylist thread, posted once when onboarding ends (above his first photo bubble, or above S26 if he chose "Not now"), is the stylist text `stylist.aiNote` with the "who" header. It's not drawn in the mockup because the mockup's thread starts mid-conversation. In the `full` seed it sits at the top of the history, so it doesn't show in screenshot 12.
+**Kit's hello (SY2, Nov 10; was the AI note of ruling 17):** the very first message in the Stylist thread, posted once when setup ends (above Kit's offer, or above S26 if he chose "Not now"), is the stylist text `stylist.aiNote` (`I'm Kit, your stylist.`) with the "who" header. The AI disclosure is in the agreement (specs.md F5.1). It's not drawn in the mockup because the mockup's thread starts mid-conversation. In the `full` seed it sits at the top of the history, so it doesn't show in screenshot 12.
 
 **Thread** (ScrollView + LazyVStack, pad 4 / 16 / 0, gap 12, bottom-anchored; newest 50 messages first, older on scroll):
 1. **Day stamp** (centered, `.footnote.weight(.medium)`, `ink3`): `Thursday 8:00 am` (format: weekday + time within 6 days; `Oct 14, 8:00 am` older).
@@ -1849,7 +1849,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | Key | String | Src |
 |---|---|---|
 | `stylist.title` | Stylist | M |
-| `stylist.aiNote` | I'm Kit, your stylist. Quick note: I'm an AI. I read clothes, never faces, and I can get things wrong. Tap "Not quite right?" when I do. | R (ruling 17; first message in the Stylist thread, posted once when onboarding ends, above his first photo bubble) |
+| `stylist.aiNote` | I'm Kit, your stylist. | R (Kit's hello, SY2; the first message in the Stylist thread, posted once when setup ends, above Kit's offer; the AI disclosure is in the agreement since Nov 10, specs.md F5.1) |
 | `stylist.quota.free` | 1 free check today | M |
 | `stylist.quota.recheck` | Re-check included | M |
 | `stylist.quota.used` | Check used today | M |

@@ -69,10 +69,10 @@ name: T39 · fresh install to a live camera in six taps
 - extendedWaitUntil:
     visible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
     timeout: 15000
-- assertVisible: ".*Quick note: I'm an AI.*"
+- assertVisible: ".*I'm Kit, your stylist\\."
 - assertVisible:
     text: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
-    below: ".*Quick note: I'm an AI.*"
+    below: ".*I'm Kit, your stylist\\."
 - assertVisible: "Later"
 - assertNotVisible: "Before your first fit check"
 - assertNotVisible: "Continue free"

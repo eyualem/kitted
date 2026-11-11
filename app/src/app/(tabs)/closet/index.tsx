@@ -7,6 +7,8 @@
 // remembers his tap.
 // Pieces runs head to toe (founder, Oct 28; #384): Jackets and layers · Tops · Bottoms · Shoes, each under a quiet title
 // with its count, on the same scroll; a thin closet (under 4 pieces, or one section) is one plain grid.
+// His first visit after his first adding check (SY2.8): that check's pieces come first, under "From your first check",
+// each marked New; the visit is kept by the tab bar (features/closet/useArrivals.ts).
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
 // minimize behavior).
 import { useState } from 'react';
@@ -23,6 +25,8 @@ import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { FitQuestion } from '@/features/closet/FitQuestion';
 import { FIT_SKIP_KEY, fitCard, parseSkips } from '@/features/closet/fitDoubt';
 import { closetGridItems, closetSections, pieceSectionLabel, type PieceSection } from '@/features/closet/merge';
+import { firstVisitPieces } from '@/features/closet/arrivals';
+import { useFirstVisitCheck } from '@/features/closet/useArrivals';
 import type { PiecePreview } from '@/features/closet/piecePreview';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { toConfirm } from '@/features/closet/toConfirm';
@@ -75,8 +79,12 @@ export default function ClosetScreen() {
   // Clothes scans waiting to be read (#280): one row on top while any wait.
   const inbox = useLive(['kv'], async () => waitingRow(parseInbox(await store.getKv(INBOX_KEY))), [], INBOX_KEY);
   const [width, setWidth] = useState(0);
+  const firstVisit = useFirstVisitCheck();
   if (!data) return null;
   const { items, byId, previews, asks, all, fitChecks, styles, count, fit } = data;
+  const fresh = firstVisitPieces(firstVisit ? fitChecks.find((c) => c.id === firstVisit) : undefined, items);
+  const freshIds = new Set(fresh.map((c) => c.id));
+  const rest = fresh.length > 0 ? items.filter((c) => !freshIds.has(c.id)) : items;
   const segment = openingSegment(count, remembered ?? null);
   const pick = (v: 'pieces' | 'outfits') => void store.setKv(SEGMENT_KEY, v);
   const open = asks.flatMap(({ checkId, ask }) => {
@@ -144,7 +152,8 @@ export default function ClosetScreen() {
             </KCard>
           ) : null}
           <View style={{ gap: space.xxl }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
-            {tile > 0 ? <PieceSections items={items} tile={tile} previews={previews} /> : null}
+            {tile > 0 && fresh.length > 0 ? <FirstCheckSection items={fresh} tile={tile} previews={previews} /> : null}
+            {tile > 0 && rest.length > 0 ? <PieceSections items={rest} tile={tile} previews={previews} /> : null}
           </View>
           </>
           ) : null}
@@ -173,7 +182,22 @@ function PieceSections({ items, tile, previews }: { items: readonly ClosetItemRo
   ));
 }
 
-function PieceSectionTitle({ section }: { section: PieceSection }) {
+/** "From your first check" (SY2.8): the section title's look, each piece marked New (tasks/T36 phone 2). */
+function FirstCheckSection({ items, tile, previews }: { items: ClosetItemRow[]; tile: number; previews: Map<string, PiecePreview> }) {
+  const section = { title: t('closet.firstCheck'), items };
+  return (
+    <View style={{ gap: PIECE_HEADER === 'tag' ? space.s : space.m }}>
+      <PieceSectionTitle section={section} />
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: GAP }}>
+        {items.map((it) => (
+          <PieceMenu key={it.id} item={it} size={tile} aspect={0.92} radius={radius.tile} preview={previews.get(it.id) ?? { kind: 'drawn' }} isNew />
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function PieceSectionTitle({ section }: { section: Pick<PieceSection, 'title' | 'items'> }) {
   const n = String(section.items.length);
   return (
     <View accessible accessibilityRole="header" accessibilityLabel={pieceSectionLabel(section)}>

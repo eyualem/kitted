@@ -10,4 +10,6 @@ export interface PieceMenuProps {
   radius?: number;
   /** What the long-press preview shows (piecePreviewSource). */
   preview: PiecePreview;
+  /** His first Closet visit's pieces: marked `New` (SY2.8). */
+  isNew?: boolean;
 }

@@ -33,11 +33,12 @@ import { tipLeadText } from '@/features/fitcheck/scoring';
 import { justAnswered, TapCard, tapChoice } from '@/features/tap/TapCard';
 import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
 import { DoubtLine } from '@/features/closet/DoubtLine';
-import { closetSummaryText, openAsks } from '@/features/closet/summaryText';
+import { addedIds, closetSummaryText, openAsks } from '@/features/closet/summaryText';
+import { holdBadge, noSlide, release } from '@/features/closet/slide';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { askQuestionText, askReasonText, isPluralPiece } from '@/features/closet/askText';
 import { PieceArt } from '@/features/closet/GarmentArt';
-import { noteLive } from '@/features/fitcheck/reveal';
+import { noteLive, wasLive } from '@/features/fitcheck/reveal';
 import { useCheckReveal } from './useReveal';
 import { useLaterShows } from '@/features/finish/hooks';
 import { finish as finishSequence } from '@/features/finish/session';
@@ -348,7 +349,20 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
   const moveIsFix = moveFix >= 0 ? moveFix + 1 : null;
   // The score reveal (#242, #246 (16)): once per new check; the quick tap's own announcement already says the score.
   const [viaTap] = useState(() => justAnswered.has(row.id));
-  const { t: revealT, plan, values: tapeVals, attachScore, onScoreLayout, touch } = useCheckReveal(row, dialed ? 0 : fixes.length, { announce: !viaTap });
+  const { t: revealT, plan, values: tapeVals, attachScore, onScoreLayout, touch, done: revealDone } = useCheckReveal(row, dialed ? 0 : fixes.length, { announce: !viaTap });
+  // The slide into Closet (SY2.2): only for a check new to him, on its own card; until its pieces land (or the row says
+  // they won't fly), the Closet badge leaves them out, so it counts them as they arrive.
+  const [fresh] = useState(() => !readOnly && wasLive(row.id));
+  useEffect(() => {
+    if (!fresh) return;
+    holdBadge(row.id);
+    return () => release(row.id);
+  }, [fresh, row.id]);
+  // No row to slide from (a partial check, or nothing added or matched): the badge alone.
+  const noRow = fresh && revealDone && !showCloset && !!cs && cs.state !== 'pending';
+  useEffect(() => {
+    if (noRow) noSlide(row.id);
+  }, [noRow, row.id]);
   const rt = plan ? revealT : undefined;
   const afterFixes = plan ? plan.fixes[plan.fixes.length - 1] ?? plan.summary : null;
   const blockReveal = plan
@@ -527,7 +541,10 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
         <Seam />
         <RevealStepView t={rt} step={afterFixes}>
         <KCardSection gap={6}>
-          {showCloset && closetLine ? <ClosetSummaryRow items={addedItems} text={closetLine.text} onReview={readOnly ? undefined : go.review} /> : null}
+          {showCloset && closetLine ? <ClosetSummaryRow
+              items={addedItems} text={closetLine.text} onReview={readOnly ? undefined : go.review}
+              slide={{ checkId: row.id, fresh, ready: revealDone, added: addedIds(cs), pending: closetLine.pending }}
+            /> : null}
           {firstAsk && askPhoto && askCandidate ? (
             <View style={{ paddingTop: 6, paddingBottom: 4, gap: 8 }}>
               <DuplicateQuestion ask={firstAsk} photo={askPhoto} candidate={askCandidate} runnerUp={askRunnerUp} compact onAnswer={answerAsk} />

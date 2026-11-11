@@ -1,9 +1,11 @@
 // Finishing onboarding (minimal for P2; P4 builds the screens): save the profile and consent,
-// then post the one AI-disclosure line at the top of the thread (ruling 17), and after "Not now" the S26 card.
+// then post Kit's hello at the top of the thread (SY2.1; the AI disclosure is the agreement's, F5.1), and after "Not now"
+// the S26 card.
 import type { Styles } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type { AgeBand } from '@/data/types';
 import { textMessage } from '@/data/seedLoader';
+import { startArrivals } from '@/features/closet/arrivals';
 import { t } from '@/i18n/en';
 
 export interface OnboardingAnswers {
@@ -29,6 +31,9 @@ export const QUESTIONS_CONSENT_FROM = 2;
 export async function completeOnboarding(store: KittedStore, a: OnboardingAnswers, nowMs: number, ids: (p: string) => string): Promise<void> {
   // 'later' (T39, setup's end): he hasn't been asked yet; the agreement comes on the camera's first open.
   const agreed = a.consent === true || a.consent === undefined;
+  // Closet's badge and his first visit start here (SY2), before the profile says setup is done: the launch check reads
+  // a missing key on a finished setup as an install from before them.
+  await startArrivals(store, nowMs);
   await store.profile.put({
     id: 'me', birthYear: a.birthYear, heightCm: null, build: '', fitPreference: a.fitPreference, styles: a.styles,
     boldness: null, budget: null, lastOccasion: 'everyday',

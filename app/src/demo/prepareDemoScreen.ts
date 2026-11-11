@@ -24,6 +24,7 @@ import { armDemoReveal, setDemoPreparing } from '@/features/fitcheck/reveal';
 import { askService } from '@/features/ask/session';
 import { saveDemoScan } from '@/features/scan/inbox';
 import { liveAnswer } from '@/features/ask/live';
+import { endFirstVisit, openCloset } from '@/features/closet/arrivals';
 import { connectivity } from '@/services/connectivity';
 import { t } from '@/i18n/en';
 import type { DemoFault } from './demoArgs';
@@ -57,6 +58,8 @@ type Step =
   | { at: string; do: 'hold'; photoId: string; saved?: boolean; spend?: boolean }
   /** The app opened after 4 am (#281): "Ready to score last night's photo?" for the held photo. */
   | { at: string; do: 'openApp' }
+  /** His first Closet visit after his first check, already over (SY2.8): Closet opened, then left. */
+  | { at: string; do: 'firstVisitDone' }
   | { at: string; do: 'recheckPrompt' }
   | { at: string; do: 'recheck'; photoId: string }
   /** The partial check's snap (S9): the shoes, or the pants and shoes on a top-only check (#313). */
@@ -288,9 +291,12 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166].map((n) => [n, { steps: [FIRST_CHECK] }])),
   // T39: after the agreement, the first check the story screens 150–162 use.
   283: { steps: [FIRST_CHECK] },
+  // T35 (SY2.8): Closet right after that first check (its first visit), and Closet once that visit is over.
+  285: { steps: [FIRST_CHECK] },
+  286: { steps: [FIRST_CHECK, { at: '2026-10-22T07:45:00', do: 'firstVisitDone' }] },
 };
 
-/** T39's offer screens (280–283): setup finished through About you at 7:40 (his looks smart casual + workwear, 22–25,
+/** T39's offer screens (280–283; T35's 285–286 reuse 283's): setup finished through About you at 7:40 (his looks smart casual + workwear, 22–25,
  *  no name, no agreement), then the card's state. 283 agrees here; its check is the story's FIRST_CHECK. */
 async function prepareOffer(offer: NonNullable<ScreenScenario['offer']>): Promise<void> {
   await store.setKv(LOOKS_KEY, JSON.stringify(['smart_casual', 'workwear']));
@@ -377,6 +383,12 @@ async function playStory(sc: ScreenScenario): Promise<void> {
       await loadScenario(tmp, sub, { scenario: 'full', zone: US_EASTERN });
       for (const c of await tmp.closet.all()) if (step.ids.includes(c.id)) await store.closet.put(c);
       for (const o of await tmp.closetObs.all()) if (step.ids.includes(o.itemId)) await store.closetObs.put(o);
+      continue;
+    }
+    if (step.do === 'firstVisitDone') {
+      await fitCheck.closet.settle();
+      await openCloset(store, at(step.at));
+      await endFirstVisit(store);
       continue;
     }
     if (step.do === 'closetYes') {

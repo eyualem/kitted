@@ -126,6 +126,9 @@ export const KV_LOCAL: readonly string[] = [
   // About you's draft (his pick and the name as typed, T39), deleted when setup ends: it holds his age band and name,
   // which never leave the phone (OS4.7). And when he tapped Later on Kit's first-check offer (OS5.3): this phone's.
   'onboarding.about', 'firstCheckOffer.laterAt',
+  // When Closet was last opened (its badge) and the first-visit mark (SY2, features/closet/arrivals.ts): this phone's,
+  // never backed up; "Delete all my data" empties them with the rest of the kv table.
+  'closet.lastOpened', 'closet.firstVisit',
 ];
 // account.*: who is signed in on this phone (with the email) and the save offer's state (10-onboarding.md): per device.
 // idea.touched.<id>: he changed that day's card on this phone, so a fresher forecast keeps his outfit (#338); a day old

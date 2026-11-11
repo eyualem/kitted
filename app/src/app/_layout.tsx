@@ -11,6 +11,7 @@ import { DEMO_ENABLED } from '@/demo/config';
 import { SHARE_CARD_BUILT } from '@/config/features';
 import { usePaywallOn } from '@/features/paywall/switch';
 import { ToastHost } from '@/features/toast/ToastHost';
+import { SlideHost } from '@/features/closet/SlideHost';
 import { useDemoState } from '@/demo/demoState';
 import { useGate } from '@/state/appGate';
 import { boot } from '@/state/boot';
@@ -65,6 +66,8 @@ export default function RootLayout() {
         <NavThemeFromTokens>
           <View style={{ flex: 1 }}>
             <RootStack booted={booted} />
+            {/* The slide into Closet (SY2.2): above the iOS tab bar, which draws above every screen. */}
+            <SlideHost />
             <ToastHost />
             {/* After boot: the demo arguments are read then (and the compiler would keep a first-render read). */}
             {DEMO_ENABLED && booted ? <DemoCrash /> : null}

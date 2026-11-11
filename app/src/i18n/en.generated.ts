@@ -296,7 +296,7 @@ export const enGenerated = {
   "value.tuck.halfTuck": "Half tuck",
   "value.tuck.untucked": "Untucked",
   "stylist.title": "Stylist",
-  "stylist.aiNote": "I'm Kit, your stylist. Quick note: I'm an AI. I read clothes, never faces, and I can get things wrong. Tap \"Not quite right?\" when I do.",
+  "stylist.aiNote": "I'm Kit, your stylist.",
   "stylist.quota.free": "1 free check today",
   "stylist.quota.recheck": "Re-check included",
   "stylist.quota.used": "Check used today",

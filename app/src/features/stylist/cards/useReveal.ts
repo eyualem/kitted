@@ -36,6 +36,8 @@ interface Common {
   onScoreLayout: () => void;
   /** Tap the card to skip to the final state. */
   touch: { onTouchStart: (e: GestureResponderEvent) => void; onTouchEnd: (e: GestureResponderEvent) => void };
+  /** The reveal is over, or never ran: the card is in its final state (the slide into Closet waits for it, SY2.2). */
+  done: boolean;
 }
 
 export interface CheckReveal extends Common {
@@ -247,5 +249,5 @@ function useRunner(o: RunnerOpts): Omit<Common, 'active'> {
   const onScoreLayout = useCallback(() => {
     if (waiting) setLaidOut(true);
   }, [waiting]);
-  return { t, attachScore, onScoreLayout, touch };
+  return { t, attachScore, onScoreLayout, touch, done: phase === 'done' };
 }
