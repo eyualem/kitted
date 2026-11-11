@@ -144,7 +144,9 @@ const config: ExpoConfig = {
     ['expo-build-properties', { ios: { deploymentTarget: '26.0' } }],
     [
       'expo-splash-screen',
-      { backgroundColor: '#F3F4F6', dark: { backgroundColor: '#0C0E14' }, image: './assets/images/splash-icon.png', imageWidth: 76 },
+      // The launch screen (T92): the icon's own navy and its K, 120 pt wide, the same in light and dark so opening the app
+      // from its icon feels like one motion. iOS shows it only when it starts the app, never on a return from the background.
+      { backgroundColor: '#1D2851', dark: { backgroundColor: '#1D2851' }, image: './assets/images/splash-k.png', imageWidth: 120 },
     ],
     // Archivo (OFL 1.1, assets/fonts/OFL.txt): score numerals + wordmark only (03 §3.4). Founder OK Oct 12.
     ['expo-font', { fonts: ['./assets/fonts/ArchivoCondensed-SemiBold.ttf', './assets/fonts/ArchivoCondensed-Medium.ttf', './assets/fonts/ArchivoExpanded-Bold.ttf'] }],
