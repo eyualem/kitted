@@ -282,6 +282,8 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   257: { asOf: ASK_AS_OF, steps: [] },
   258: { asOf: ASK_AS_OF, steps: [] },
   259: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
+  // The first-score tip (T35): a first check with a fix, with the tips left showing.
+  272: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 's14', occasion: 'everyday' }] },
   ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166].map((n) => [n, { steps: [FIRST_CHECK] }])),
 };
 

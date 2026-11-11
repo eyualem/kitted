@@ -38,7 +38,7 @@ Short tips in Kit's voice, each shown where it applies, each with a `Got it` but
 | Tip | Where and when | Words (approved Nov 8) |
 |---|---|---|
 | Kit's hello | Kit's first chat message at the end of setup, in place of today's AI note (it keeps the note word for word). Once per setup. | `I'm Kit, your stylist. Here's how this works:` / `· Send me a photo of your fit. I'll score it out of 10 and give you the fix that raises it.` / `· Ask me anything about clothes, like what to wear to a career fair.` / `· Every fit check adds your pieces to Closet, so my ideas get better.` / `Quick note: I'm an AI. I read clothes, never faces, and I can get things wrong. Tap "Not quite right?" when I do.` |
-| First score | Under the score card of his first scored check, in the chat. Also goes once he re-checks that fit. | `Do one of the fixes, then tap Re-check and I'll score it again.` |
+| First score | Under the score card of his first scored check that has a fix, in the chat (a fit with no fixes is skipped; the founder, Nov 10). Also goes once he re-checks that fit. | `Do one of the fixes, then tap Re-check and I'll score it again.` |
 | Closet | At the top of Closet, on visits once it has at least one piece (the empty Closet already explains itself). | `Every fit check adds its pieces here. Tap a piece to fix its name or color.` |
 | Lookbook | At the top of Lookbook, on visits once it has at least one look (the empty Lookbook already explains itself). | `Every fit you check lands here with its score and fixes. Tap one to see it again.` |
 | You | At the top of You. | `Your style and what I've learned about you, plus your settings. Change your looks any time.` |
@@ -89,7 +89,7 @@ The `Show me around` row in You → Help & about:
 
 **SY2. Tips**
 - SY2.1 A new setup's end (About you's Continue) posts Kit's hello with exactly the approved words, once, above Kit's offer card, and no separate AI note.
-- SY2.2 The first-score tip shows under the first scored check's card only; `Got it` removes it for good (it stays gone after closing and reopening the app); re-checking that fit also removes it.
+- SY2.2 The first-score tip shows under the first scored check with a fix, and under no other card; `Got it` removes it for good (it stays gone after closing and reopening the app); re-checking that fit also removes it.
 - SY2.3 The Closet tip shows at the top of Closet while it has at least one piece and the tip isn't done; never on the empty Closet. `Got it` removes it for good.
 - SY2.4 The Lookbook tip: the same, with at least one look.
 - SY2.5 The You tip shows at the top of You until `Got it`, then never again.

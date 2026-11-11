@@ -2952,3 +2952,10 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Tasks already underway** carry on at their size where they stand: locked tests stay and must pass, no new UI tests, and the check still to come is their size's review.
     - **The redesign stage** (eyualem/kitted#83: art director, interaction designer, a written debate) is parked until after the beta (his pick): unmerged and unchanged.
     - **Lesson:** this is risk-based testing. Spend proof where a failure hurts most, and measure what the checking costs, not only what it finds.
+
+## Nov 10 · T35: the feature guide (built)
+
+N. **T35 built as a normal task** (`tasks/T35/TASK.md`).
+    - **The founder (Nov 10):** when his first scored fit has no fixes, the first-score tip skips it and waits for the first fit with a fix, since it asks him to "Do one of the fixes". Added to `specs/setup-and-you.md` SY2 and SY2.2 with his yes.
+    - **Technical:** Kit's hello is a Kit message with no text of its own (`payload.kitHello`), drawn from `stylist.hello`, so the approved words can't drift and a question's history (which reads only text) never carries it; old AI-note messages keep their key. Tip marks are kv `tip.<id>.done` plus `tip.firstScore.after`, a phone-only prefix in `sync/schema.ts` (a new phone shows the tips again, as the spec assumes). Every tip waits for his first scored check (SY2.9's "nothing before his first check"). Every existing demo screen is an established user with the tips dismissed, so their pictures don't move; 272–276 show each tip.
+

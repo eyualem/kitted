@@ -21,11 +21,12 @@ function scored(checks: readonly FitCheckRow[]): FitCheckRow[] {
   return checks.filter((c) => c.status === 'scored' && c.score !== null);
 }
 
-/** The check the first-score tip belongs under: the earliest scored first check (not a re-check) made at or after
- *  `afterMs` (0 before any "Show me around"). Null once that fit has been re-checked (SY2.2), or if there's none. */
+/** The check the first-score tip belongs under: the earliest scored first check (not a re-check) with a fix, made at
+ *  or after `afterMs` (0 before any "Show me around"). A fit with no fixes is skipped, since the tip asks him to do one
+ *  (the founder, Nov 10). Null once that fit has been re-checked (SY2.2), or if there's none. */
 export function firstScoreTipCheck(checks: readonly FitCheckRow[], afterMs: number): string | null {
   const all = scored(checks);
-  const target = all.filter((c) => !c.parentId && c.createdAt >= afterMs).sort((a, b) => a.createdAt - b.createdAt || a.id.localeCompare(b.id))[0];
+  const target = all.filter((c) => !c.parentId && c.fixes.length > 0 && c.createdAt >= afterMs).sort((a, b) => a.createdAt - b.createdAt || a.id.localeCompare(b.id))[0];
   if (!target) return null;
   const rechecked = target.recheckUsed || checks.some((c) => c.parentId === target.id);
   return rechecked ? null : target.id;

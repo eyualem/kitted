@@ -11,7 +11,7 @@ import { t } from '@/i18n/en';
 import { counterIds } from '@/services/ids';
 
 function check(id: string, createdAt: number, over: Partial<FitCheckRow> = {}): FitCheckRow {
-  return { id, createdAt, status: 'scored', score: 7.5, parentId: null, recheckUsed: false, ...over } as FitCheckRow;
+  return { id, createdAt, status: 'scored', score: 7.5, parentId: null, recheckUsed: false, fixes: [{}], ...over } as FitCheckRow;
 }
 
 const answers = { styles: [] as never, fitPreference: '', birthYear: 2004 };
@@ -50,6 +50,12 @@ describe('SY2.2, SY2.9 · the first-score tip', () => {
     // C1 has a re-check (R1): the tip is gone, and it never moves to C2.
     expect(firstScoreTipCheck(checks, 0)).toBeNull();
     expect(firstScoreTipCheck([check('C2', 200), check('C1', 100), check('C0', 50, { status: 'scoring', score: null })], 0)).toBe('C1');
+  });
+
+  it('skips a fit with no fixes and waits for the first one with a fix (the founder, Nov 10)', () => {
+    const noFix = check('C1', 100, { fixes: [] });
+    expect(firstScoreTipCheck([noFix], 0)).toBeNull();
+    expect(firstScoreTipCheck([noFix, check('C2', 200), check('C3', 300)], 0)).toBe('C2');
   });
 
   it('ends once the fit is re-checked (recheckUsed) as well', () => {
