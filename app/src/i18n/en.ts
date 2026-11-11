@@ -983,7 +983,12 @@ const addedInBuild = {
   'onb.basics.echoYear': 'Born in {year}',
   'onb.example.whyHide': 'Hide the math',
   'onb.example.time': 'Example',
-  'onb.example.note': 'A real photo, scored by the same code as yours. Nothing was sent.',
+  // T38 (#411): Welcome and the Example check draw the outfit in code instead of a stranger's photo. The intro
+  // overrides 02 §5's line (en.generated.ts, "Here's a real check."), as recheck.tell.confirmed does.
+  'onb.example.intro': "Here's an example check. This is what you'll get.",
+  'onb.example.note': 'A drawn example, scored by the same code as your photos. Nothing was sent.',
+  'onb.example.a11yOutfit': 'Drawn example outfit, {occasion}: {pieces}.',
+  'onb.welcome.cardA11y': 'Example fit check. {occasion}. {before} out of 10, {beforeWord}. One fix: {fix}. {after} out of 10, {afterWord}.',
   'onb.example.a11y': 'Example fit check. {occasion}. Score {score} out of 10, {word}. {summary}',
   'onb.basics.yearHint': 'Pick your birth year to go on.',
   'onb.basics.never': 'Kitted is for 18 and up. It never changes your score.',
@@ -1100,6 +1105,33 @@ const addedInBuild = {
   'card.a11y.recheckHeld': 'Score stays {now}.',
   'card.a11y.fitCheckNoFix': 'Fit check, {occasion}. Score {score} out of 10, {word}. {partial}{summary}',
   'onb.progress.a11y': 'Step {n} of {total}',
+  // T39 (specs/onboarding-screens.md OS3–OS5, specs/setup-and-you.md SY4; approved 2026-11-09): setup as plain screens.
+  // Looks' title and line (replacing Kit's bubble, onb.looks.prompt), About you (an optional first name and five age
+  // choices, nothing picked), Restore's plain title and line (replacing acct.restore.basics), Kit's first-check offer and
+  // its Later line, and Style profile's Name and Age rows. Outward-facing: on the founder's skim list.
+  'onb.looks.title': 'Which of these would you actually wear?',
+  'onb.looks.line': 'Tap up to 3.',
+  'onb.about.title': 'About you',
+  'onb.about.nameLabel': 'What should Kit call you?',
+  'onb.about.namePlaceholder': 'First name (optional)',
+  'onb.about.ageLabel': 'How old are you?',
+  'onb.about.age.under18': 'Under 18',
+  'onb.about.age.18to21': '18–21',
+  'onb.about.age.22to25': '22–25',
+  'onb.about.age.26to30': '26–30',
+  'onb.about.age.31plus': '31 or older',
+  'onb.about.footnote': 'Stays on your phone. It never changes your score.',
+  'onb.about.hint': 'Pick your age to go on.',
+  'onb.about.under18.title': 'Under 18?',
+  'onb.restore.title': 'Welcome back',
+  'onb.restore.line': "Your age first, then I'll bring back your fits.",
+  'offer.title': 'Want to check a fit now?',
+  'offer.body': 'Stand back so your shoes are in the shot. Not dressed for it? Later works.',
+  'offer.later': 'Later',
+  'offer.laterLine': "No rush. Tap the camera button whenever you're ready.",
+  'profile.name': 'Name',
+  'profile.age': 'Age',
+  'profile.ageNote': "Age can't be changed here.",
   // Scan inbox + merge (#280): the Closet row and sheet for scans waiting to be read (the sheet's line is the existing
   // scan.saved.body), and "Same as another piece…" on the piece page (its confirm reuses item.q.duplicate and
   // item.dup.yes, its toast item.dup.saidSame).

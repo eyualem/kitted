@@ -1,0 +1,110 @@
+# T39 · OS3.1, OS3.2, OS5.1, OS5.2 (Agree), OS5.5, F1.1, SY4.1 (tasks/T39/TESTING.md): a fresh install reaches a live
+# camera in exactly six taps: Get started, Not sure, 22–25, Continue, the card's Check my fit, Agree. No bubble on Looks
+# or About you, no agreement screen in setup, no sign-in and no paywall on the way, and the camera never opens on its
+# own. The name is never typed (it's optional).
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T39-setup-fresh.yaml (Metro running)
+# No demo arguments: a demo screen opens the camera without the agreement. The development launcher's server tap is
+# not one of the six (it isn't in the app).
+# Matching: Maestro matches an element's WHOLE text or label. A Kit line is one element "Kit: <text>"; the offer's title
+# and body are one VoiceOver element.
+appId: com.trykitted.kitted
+name: T39 · fresh install to a live camera in six taps
+---
+- launchApp:
+    clearState: true
+    clearKeychain: true
+    permissions:
+      camera: allow
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn: "http://.*:8081"
+- extendedWaitUntil:
+    visible: "Get started"
+    timeout: 90000
+- assertNotVisible: "Take photo"
+- assertNotVisible: "Continue free"
+
+# Tap 1 of 6.
+- tapOn: "Get started"
+- extendedWaitUntil:
+    visible: "Which of these would you actually wear\\?"
+    timeout: 10000
+- assertVisible: "Tap up to 3\\."
+- assertNotVisible: "Kit: .*"
+- assertNotVisible: ".*Good pick.*"
+- assertNotVisible: "Which of these would you actually wear\\? Tap up to 3\\."
+- assertNotVisible: "Before your first fit check"
+- assertNotVisible: "Take photo"
+- assertNotVisible: "Continue free"
+- assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
+- assertVisible: "Step 2 of 3"
+
+# Tap 2 of 6.
+- tapOn: "Not sure"
+- extendedWaitUntil:
+    visible: "About you"
+    timeout: 10000
+- assertVisible: "Step 3 of 3"
+- assertVisible: "What should Kit call you\\?"
+- assertVisible: "How old are you\\?"
+- assertNotVisible: "Kit: .*"
+- assertNotVisible: ".*Good pick.*"
+- assertNotVisible: "Not sure yet"
+- assertNotVisible: "Before your first fit check"
+- assertNotVisible: "Take photo"
+- assertNotVisible: "Continue free"
+- assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
+- assertNotVisible: "Skip"
+
+# Tap 3 of 6.
+- tapOn: "22–25"
+- assertNotVisible: "Take photo"
+- assertNotVisible: "Continue free"
+- assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
+
+# Tap 4 of 6.
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
+    timeout: 15000
+- assertVisible: ".*Quick note: I'm an AI.*"
+- assertVisible:
+    text: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
+    below: ".*Quick note: I'm an AI.*"
+- assertVisible: "Later"
+- assertNotVisible: "Before your first fit check"
+- assertNotVisible: "Continue free"
+- assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
+# The camera doesn't open on its own: wait 3 s, then check.
+- extendedWaitUntil:
+    visible: "T39 · this never appears"
+    timeout: 3000
+    optional: true
+- assertNotVisible: "Take photo"
+- assertNotVisible: "Before I score a photo, here's what happens to it\\."
+
+# Tap 5 of 6: the card's Check my fit (the first of the two "Check my fit" buttons; the accessory's is below it).
+- tapOn:
+    text: "Check my fit\\. Opens the camera\\."
+    below: "Want to check a fit now\\?.*"
+    index: 0
+- extendedWaitUntil:
+    visible: "Before your first fit check"
+    timeout: 10000
+- assertVisible: "Before I score a photo, here's what happens to it\\."
+- assertVisible: "Agree"
+- assertVisible: "Not now"
+- assertNotVisible: "Kit: .*"
+- assertNotVisible: "Take photo"
+- assertNotVisible: "Continue free"
+- assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
+
+# Tap 6 of 6.
+- tapOn: "Agree"
+- extendedWaitUntil:
+    visible: "Take photo"
+    timeout: 10000
+- assertNotVisible: "Continue free"
+- assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"

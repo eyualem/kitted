@@ -1,6 +1,6 @@
 // The onboarding nav (02 D2 §1): a Back circle, the progress bar, and a matching spacer. The bar counts the steps
-// that exist today (Welcome, Looks, Basics, Consent), so it fills on the last one; 02's 6 come back with the example
-// check and the first-3-moves card (#276: with 6 it never filled and jumped straight into Stylist).
+// that exist today (Welcome, Looks, About you; T39 removed the agreement step), so it fills on the last one (#276:
+// with 6 it never filled and jumped straight into Stylist).
 import { StyleSheet, View } from 'react-native';
 import { IconButton, useTheme } from '@/design-system';
 import { size } from '@/design-system/tokens';
@@ -19,9 +19,9 @@ export function OnboardingNav({ step, onBack }: { step?: number; onBack: () => v
       {step === undefined ? (
         <View style={styles.bar} />
       ) : (
-        <View style={styles.bar} accessible accessibilityRole="progressbar" accessibilityLabel={t('onb.progress.a11y', { n: step, total: ONBOARDING_STEPS })}>
+        <View testID="onb-progress" style={styles.bar} accessible accessibilityRole="progressbar" accessibilityLabel={t('onb.progress.a11y', { n: step, total: ONBOARDING_STEPS })}>
           {Array.from({ length: ONBOARDING_STEPS }, (_, i) => (
-            <View key={i} style={[styles.seg, { backgroundColor: i < step ? colors.ink : colors.line }]} />
+            <View key={i} testID={`onb-progress-seg-${i}`} style={[styles.seg, { backgroundColor: i < step ? colors.ink : colors.line }]} />
           ))}
         </View>
       )}

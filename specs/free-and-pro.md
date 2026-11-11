@@ -15,7 +15,7 @@ The paywall and limit card were built for the old rules: a 1-week trial, Pro at 
 - **The beta** has its own rules (FP7): no paywall, no prices and no purchases until launch.
 
 ## The rules
-- **Free:** 7 free fit checks for life, at most 1 a day (days roll over at 4 am). Each check includes its re-check. 3 questions a day. Everything that runs on code stays free forever: scores, fixes, Closet, Lookbook, outfit ideas, share cards.
+- **Free:** 7 free fit checks for life, at most 1 a day (days roll over at 4 am). Each check includes its re-check. 3 questions a day. Everything that runs on code stays free forever: scores, fixes, Closet, Lookbook, outfit ideas (share cards are cut until after launch, #423).
 - **Pro:** up to 5 fit checks (each with its re-check) and 30 questions a day.
 - **Prices:** Yearly $39.99 and Monthly $9.99, the same at every moment, every time. Yearly is selected when the page opens. The price strings come from the store, never hard-coded.
 - **What counts:** a scored check counts. A failed, offline, "not rated" or same-photo check never counts (`specs.md` F2). A check made while he's Pro never counts against his 7 free checks.
@@ -188,7 +188,7 @@ Friends testing the app never pay and never see a price. The server says which r
 **Check 8 (T12)**
 - FP4.1 `Continue free` leaves the photo in the chat as `Saved. Not scored yet.` with `Score it with Pro` and `Don't score it`, and in Lookbook as `Not scored`; it's never uploaded.
 - FP4.2 `Don't score it` removes the card and the saved photo.
-- FP4.3 Scores, fixes, Closet, Lookbook, outfit ideas and share cards keep working with no free checks left (never blurred, never charged).
+- FP4.3 Scores, fixes, Closet, Lookbook and outfit ideas keep working with no free checks left (never blurred, never charged).
 
 **Pro ended (T11 + T12)**
 - FP5.1 With the entitlement expired, the app is on free rules at the next launch or foreground, and no message is posted.
