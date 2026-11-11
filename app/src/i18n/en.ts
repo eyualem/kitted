@@ -307,6 +307,9 @@ const addedInBuild = {
   'own.a11yHint': 'Opens the camera',
   'idea.went.own': 'You went with your own',
   'idea.went.pick': 'You wore my pick',
+  // A checked card that suggested no outfit (F6.2, T55): his own fit, no "your own" to set against a pick.
+  'idea.went.today': "Today's fit",
+  'idea.went.tonight': "Tonight's fit",
   'idea.stayingIn': 'Staying in tonight',
   // The card re-planned after he corrected or removed one of its pieces (09-ui-review §26, #365).
   'idea.updatedFor': 'Updated for your {item}.',

@@ -137,9 +137,13 @@ describe('R4 · a failed scan never says "Saved"', () => {
 
 describe('R5 · Settings hides what does nothing', () => {
   it('Notifications only once they are built; Subscription and Restore only with the paywall', () => {
-    const settings = src('app/(tabs)/you/settings.tsx');
-    expect(settings).toMatch(/\{NOTIFICATIONS_BUILT \? <LinkRow title=\{t\('settings\.notifications'\)\}/);
-    expect(settings).toMatch(/\{paywall \? \(\s*<Section label=\{t\('settings\.subscription'\)\}>/);
+    // T34: Settings' rows live on You (features/settings/SettingsRows.tsx). Their rendered behaviour (Notifications only
+    // when built, Subscription only with the paywall and never on beta, mail and web rows only with an address) is
+    // youSettingsHome.test.tsx › SY1.2; here, that the rows' defaults are the build's own switches.
+    const rows = src('features/settings/SettingsRows.tsx');
+    expect(rows).toMatch(/import \{[^}]*\bNOTIFICATIONS_BUILT\b[^}]*\} from '@\/config\/features'/);
+    expect(rows).toMatch(/import \{[^}]*\bSUPPORT_EMAIL\b[^}]*\} from '@\/config\/links'/);
+    expect(rows).toMatch(/\busePaywallOn\(\)/);
     const plan = src('app/(tabs)/you/plan.tsx');
     expect(plan).toMatch(/\{paywall \? \(\s*<Section>\s*<LinkRow title=\{t\('settings\.restore'\)\}/);
   });

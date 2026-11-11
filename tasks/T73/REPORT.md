@@ -10,7 +10,7 @@
 ## Built (implementer)
 - **Changed:** For the beta, Outfits, Next best buy and Goes with sit behind `OUTFITS_BUILT = false`. Closet opens on his pieces, head to toe, with no Pieces | Outfits control; a saved `closet.segment` is ignored and never written. A piece's page has no Outfits row and no Goes with (no outfit lists are built). Kit's buy card keeps its tag, name and price but drops "+N outfits with what you own", on screen and for VoiceOver; Kit's ranking and the stored gain are unchanged. Adding a basic from Starter essentials says "Added {item}." with Undo. The Next best buy route sends him to Closet. The piece page's note has the new words. Demo screens 182, 183, 184, 193 and 202 turn the switch on; every other screen turns it off.
 - **Files:** `app/src/config/features.ts`, `app/src/features/closet/outfitsSwitch.ts` (new), `app/src/features/closet/outfits.ts`, `app/src/app/(tabs)/closet/index.tsx`, `app/src/features/closet/PiecePage.tsx`, `app/src/features/closet/NextBuySheet.tsx`, `app/src/features/ask/cards.ts`, `app/src/features/ask/AskCardView.tsx`, `app/src/features/finish/starterActions.ts`, `app/src/i18n/en.ts`, `app/src/demo/scenarios.ts`, `app/src/demo/prepareDemoScreen.ts`, `app/src/demo/applyDemoScreen.ts`
-- **Deviations from IMPLEMENTATION.md:** `starterActions.ts` (Paywall lane) and the three demo files edited with the coordinator's OK (IMPLEMENTATION.md → Answers; DECISIONS-LOG #411). One helper the plan didn't name: `cards.ts` exports `buySpoken(card, on)`; `cardSpoken`'s buy case returns `buySpoken(card, outfitsOn())` (same output), and `BuyCard`'s VoiceOver label uses the same `on` as its visible line, so the React Compiler can't keep a label from before the switch flipped.
+- **Deviations from IMPLEMENTATION.md:** `starterActions.ts` (Paywall lane) and the three demo files edited with the coordinator's OK (IMPLEMENTATION.md → Answers; DECISIONS-LOG #422). One helper the plan didn't name: `cards.ts` exports `buySpoken(card, on)`; `cardSpoken`'s buy case returns `buySpoken(card, outfitsOn())` (same output), and `BuyCard`'s VoiceOver label uses the same `on` as its visible line, so the React Compiler can't keep a label from before the switch flipped.
 - **Not done:** the two Maestro flows (`T73-closet-no-outfits.yaml`, `T73-outfits-on.yaml`) and the 182/183/184/193/202 screenshot comparison with main were not run (the Mac had ~150 MB free and the iPhone 17e's launcher held a dead saved Metro address). Locked unit tests and `npm run check` (1,662 passed, 4 skipped; one existing lint warning in `tryOn.test.ts`) pass. Copied from the implementer's hand-back by the coordinator (the harness refused the implementer's write).
 - **See it:** demo 260 (Closet with Outfits remembered, opening on the pieces) · 261 (B1's page, no Outfits row or Goes with, the new note) · 171 (the buy card with no gain line) · 161 (Starter's "Added {item}." toast) · 182, 183, 184, 193, 202 (switch on) · 25 and 13 (the morning card and Kit's idea, unchanged)
 
@@ -73,7 +73,7 @@
 - "Added {item}." with Undo → confirmed (unit, screen 161).
 - Next best buy redirects → confirmed (unit, and `openLink` on the Simulator).
 - Demo screens 182/183/184/193/202 on, every other screen off → confirmed (unit, flows).
-- Deviations: `starterActions.ts` and the demo files with the coordinator's OK (DECISIONS-LOG #411 exists); `buySpoken` → confirmed.
+- Deviations: `starterActions.ts` and the demo files with the coordinator's OK (DECISIONS-LOG #422 exists); `buySpoken` → confirmed.
 - `npm run check` "1,662 passed, 4 skipped; one existing lint warning" → confirmed for app jest and lint. On this run core had 2 timeouts under memory pressure, which pass when run on their own.
 - "flows and screenshot comparison not run" → true at hand-back; this verification ran the flows (above).
 
@@ -85,7 +85,7 @@
 ### Not verified
 - Pixel comparison of 182/183/184/193/202 with main · needs a second Metro from main on the same Simulator (memory) · the diff review says the switch-on paths are unchanged.
 - `T14-beta-limits.yaml` on this branch · on the 17e the dev Tools button covers You's Settings gear · would verify it: a run on the iPhone 17 Pro when it's free (T73 touches no file that flow covers).
-- CB1.2 Kit's own words · the founder decided "leave Kit alone" (DECISIONS-LOG #411): not a defect.
+- CB1.2 Kit's own words · the founder decided "leave Kit alone" (DECISIONS-LOG #422): not a defect.
 - CB1.1–CB1.3 on his phone · the next TestFlight build on his iPhone (founder to-do, P2, 2 minutes).
 
 **Verdict (round 1):** not ready: one locked flow (`T73-closet-no-outfits.yaml`) is red on correct code, and deliberate bug F3 isn't caught. Both are **test** defects for the test writer; there are no code defects. · rounds: 1 of 3
@@ -137,7 +137,7 @@ So no round-1 Simulator result came from 8081.
 ### Not verified
 - Pixel comparison of 182/183/184/193/202 with main · needs a second Metro from main on one Simulator; the diff review shows the switch-on paths are unchanged.
 - `T14-beta-limits.yaml` on this branch · needs the iPhone 17 Pro (on the 17e the dev build's Tools button covers You's Settings gear); T73 touches nothing that flow covers.
-- CB1.2 Kit's own words · the founder's call ("leave Kit alone", DECISIONS-LOG #411), not a defect.
+- CB1.2 Kit's own words · the founder's call ("leave Kit alone", DECISIONS-LOG #422), not a defect.
 - CB1.1–CB1.3 on his phone · the next TestFlight build on his iPhone (founder to-do, P2, 2 minutes).
 
 **Verdict:** ready · nothing fails, every deliberate bug is caught, the lock holds, and each "not verified" item names what would verify it. · rounds: 2 of 3

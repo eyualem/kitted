@@ -15,7 +15,7 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 ---
 
 ## Next up
-1. Switch on the paid Apple team in the app: Apple's weather and the server lock (T80). TestFlight needs it.
+1. Apple's weather (T80) waits until after the beta (you, Nov 9): the beta keeps the US weather service, which needs no Apple step.
 2. Put the beta on TestFlight and invite your friends (T85).
 3. Start your two launch photo sets now; they take the longest (Y5, Y6).
 4. Read scanned clothes into Closet; your clothes photos are in (T70).
@@ -46,14 +46,17 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y17** · **P2** · Pick your first beta testers (friends, 18 or older) and get, with each one's OK, the email his Apple ID uses; TestFlight sends the invite there (10 min) → the beta (T85)
 - [x] **Y18** · **P2** · OK deploying the server's beta limits to Firebase and setting its live config to `beta` (1 min; Claude runs it) → testers held to 3 checks and 20 questions a day on the real server (T14) · yes, Nov 8
 - [ ] **Y19** · **P3** · Sign the Paid Apps Agreement in App Store Connect → Business: tax form (W-9) and bank account; it can take a day to clear (15 min) → real purchases (T13)
+- [x] **Y20** · **P1** · Say yes (or change) the new location words iOS shows with Apple's weather on, quoted in T80's report (1 min) → Apple's weather in the app (T80) · yes, Nov 8
+- [ ] **Y21** · **P3** · Turn on WeatherKit for the app on Apple's site: developer.apple.com → Certificates, Identifiers & Profiles → Identifiers → com.trykitted.kitted → App Services tab: tick WeatherKit; Capabilities tab: tick WeatherKit, App Attest, Sign in with Apple, Declared Age Range → Save → Confirm (10 min, then up to 30 min for Apple) → Apple's weather (T80)
 - [ ] **Y22** · **P2** · OK a second TestFlight build with notifications in it, once they're built and checked (1 min; Claude runs it) → notifications on testers' phones (T53) · spec approved Nov 9
+- [ ] **Y23** · **P3** · VoiceOver pass on You: turn on VoiceOver (Settings → Accessibility), open You and swipe through every row; each should read its name and value as a button (5 min) → You's accessibility confirmed (T34)
 
 ---
 
 ## Tasks
 > **Reading a task line:** **ID** · what it does · *what it waits on · which spec checks it must pass · which files it touches*. The whole process is in `WORKFLOW.md`.
 
-> **Marks:** `[ ]` to do · `[~] session name` someone's on it, or its pull request is open · `[x] date, PR` merged to main · `[!] Yn` waiting on you. Each lane names its spec; a task marked `spec: specs.md` needs no interview. `/build-task` won't start a task until its spec carries the founder's approval line, and offers to start the interview. A code task in `/build-task` shows its stage: `[~] T11 · plan`, `· tests`, `· build`, `· verify`, `· PR #n`, or `· stuck: why`.
+> **Marks:** `[ ]` to do · `[~] session name` someone's on it, or its pull request is open · `[x] date, PR` merged to main · `[!] Yn` waiting on you. Each lane names its spec; a task marked `spec: specs.md` needs no interview. `/build-task` won't start a task until its spec carries the founder's approval line, and offers to start the interview. A code task in `/build-task` shows its size and stage: `[~] T11 · tiny · build`, `· normal · review`, `· strict · tests`, `· design`, `· PR #n`, or `· stuck: why`.
 
 > **For sessions:** IDs never change; each lane counts in its own tens and new work takes the next free number. "checks" names the spec criteria that must pass. A session works only in its lane's files. These shared files take one session at a time: `app/src/i18n/en.ts`, `app/app.config.ts`, `app/package.json`, `app/src/config/features.ts`, `app/src/data/types.ts`, `handoff/DECISIONS-LOG.md`, `plan.md`.
 
@@ -94,8 +97,8 @@ Lane files: `firebase/`
 Spec: `specs/setup-and-you.md` (interview: T30); for T37–T39, `specs/onboarding-screens.md` (interview: T37)  
 Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `privacy/wipe.ts`)
 
-- [~] you-and-first-run · PR #78 · **T30** · Write the setup-and-You spec with you: the name field, where consent shows, Apple's age check; You as the settings home, the feature guide (your beta feedback, Nov 8) · *done: approved Nov 9 · files: `specs/setup-and-you.md`*
-- [~] you-and-first-run · **T34** · *(beta)* You becomes the settings home: Settings' rows move into You, the gear and the separate Settings page go; Notifications keeps working there · *after T30 · checks: SY1 · files: you/, `app/(tabs)/you/`, settings/, en.ts*
+- [x] 2026-11-09, #78 · **T30** · Write the setup-and-You spec with you: the name field, where consent shows, Apple's age check; You as the settings home, the feature guide (your beta feedback, Nov 8) · *done: approved Nov 9 · files: `specs/setup-and-you.md`*
+- [x] 2026-11-10, #85 · **T34** · *(beta)* You becomes the settings home: Settings' rows move into You, the gear and the separate Settings page go; Notifications keeps working there · *after T30 · checks: SY1 · files: you/, `app/(tabs)/you/`, settings/, en.ts*
 - [~] you-and-first-run · **T35** · *(beta)* The feature guide for new users: Kit's hello, then a tip the first time he reaches the score card, Closet, Lookbook and You; "Show me around" in You brings them back · *after T34 · checks: SY2, SY3 · files: onboarding/, you/, en.ts, a few tab screens*
 - [~] onboarding-screens · PR #79 · **T37** · Write the setup-screens spec with you, from your Nov 9 walk through the TestFlight build: a Welcome picture of our own (today's is a stranger's Unsplash photo), setup as plain screens instead of a pretend chat (the birth-year step first), and setup ending in Stylist with Kit offering a fit check instead of opening the camera on its own; built with T30's name field and agreement · *done: your yes (Nov 9) · files: `specs/onboarding-screens.md`*
 - [~] onboarding-screens · **T38** · *(beta)* Welcome and the Example check drawn in code: no photo, an outfit drawn like Closet's pieces with its score card playing one fix · *after T37 · checks: OS1, OS2 · files: onboarding/{WelcomeScreen,welcomeExample,ExampleCheckScreen,exampleCheck}, a drawn-outfit view, a bundled reading, en.ts*
@@ -127,6 +130,8 @@ Lane files: `app/src/features/{stylist,ask,morning}`
 - [~] **T56** · PR #80 · *(beta)* Write the notifications spec with you: the daily nudge 15 minutes before he usually gets dressed, the ask (also at Later on the first-check card), the words, local only · *done: approved Nov 9 · files: `specs/notifications.md`*
 - [~] beta-notifications · **T53** · *(beta)* Notifications in the beta: install expo-notifications (OK'd Nov 9), the ask for his get-dressed time after his first fit, the daily nudge scheduled on the phone, You → Settings → Notifications; testers who finished setup before it get the ask once; remove "trial ending" · *after T56 · checks: specs/notifications.md NT1–NT5 except NT1.8–NT1.10 (T57) · files: services/notifications.ts, finish/, settings/prefs.ts, you/notifications.tsx, morning/, en.ts, package.json, app.config.ts, config/features.ts*
 - [ ] **T57** · *(beta)* Kit's ask at Later on the first-check card (the first-check reminder) · *after T53, T39 (kv `firstCheckOffer.laterAt`, card `firstCheckOffer`, `specs/onboarding-screens.md` OS5) · checks: NT1.8–NT1.10 · files: finish/, en.ts*
+- [x] 2026-11-09, #75 · **T54** · Bug from the beta (Nov 8): two evening cards on one evening. One card per day and window, even when Stylist asks twice while the weather loads · *spec: specs.md · checks: F6 · files: morning/service.ts*
+- [x] 2026-11-09, #82 · **T55** · The card waits for enough closet: it suggests outfits only once Kit knows two that work (else it says why); checked before then it reads "Today's fit" / "Tonight's fit" with the score, not "You went with your own"; a read-only "can the card suggest yet?" for the notifications (F13.1) · *after T54 · spec: specs.md · checks: F6.2, F13.1 (its read side) · files: morning/, core `ideas.ts` (a new function only), en.ts*
 
 ### Fit check and scoring
 *The core promise: a score he trusts. Done means a dress or skirt is marked "not rated" instead of scored wrong, the card's words match the spec, and every card with a fix offers a free one.*
@@ -158,7 +163,7 @@ Lane files: `app/src/features/{closet,scan,lookbook}`, `app/src/services/closetS
 Spec: `specs.md` (no interview: the launch bars and constraints are exact there)  
 Lane files: `app/app.config.ts`, `extraction-test/results`, `market/`
 
-- [ ] **T80** · Switch on the paid Apple team: Apple's weather first, the server lock's entitlement; rebuild the app · *done: Apple's weather on the Simulator · files: app.config.ts*
+- [ ] **T80** · *(after the beta)* Apple's weather, to Apple's rules: switch on the paid team (`APPLE` in app.config.ts), keep Apple's forecast in memory only (the card saves it today; Apple allows only brief caching), Apple's mark and "Data sources" link wherever its weather shows (the fit-check weather tip too), Kit not sent Apple's numbers unless Apple's terms allow it, the "at your own risk" line in the terms if Apple's real-time-guidance rule applies; the beta stays on the US weather service (founder, Nov 9) · *after Y21 · checks: specs.md weather line, F6.1, 09 §27 S1–S3, W1–W5 · plan to re-do: `tasks/T80/` (parked) · files: app.config.ts, morning/, services/weather/, fitcheck tip, ask/*
 - [~] apple-connect-beta-setup · PR #71 · **Y17** · **T85** · The beta on TestFlight: the app's App Store Connect record, a build (asks you before an EAS build), your friends invited · *after T14, T80 · done: a friend installs it from the invite · files: app.config.ts* · **console set up Nov 8:** the app record (Apple ID 6830467413), internal group "Kitted team" with you in it, the EAS project `@matemind/kitted` with the Firebase key, uploads aimed at the app (`eas.json`). **First build Nov 8:** 0.1.0 (1) built on EAS and uploaded to TestFlight for Kitted team and installed on your iPhone (before T80: NWS weather, no sign-in, no notifications). Left: Test Information and outside testers by email (needs Y2's privacy link and Y17's emails; Apple reviews the first external build)
 - [!] **Y5** · **T81** · Run the "fix works" test on the fix photos · *after T62 · checks: F3.1 (18 of 20 go up) · files: `extraction-test/results`*
 - [!] **Y6** · **T82** · Run the "fair score" test on the rating set, by age band and look · *checks: the bar in `specs.md` → "The launch" · files: `extraction-test/results`*
@@ -180,24 +185,27 @@ Claude builds with the default until you decide.
 - **Free checks after "Delete all my data":** today that wipe also clears the phone's ID, which would give 7 new free checks. Default: count them with Apple's DeviceCheck, which survives a wipe and a reinstall (T20).
 - **Scans:** their own cap of 30 a day for everyone (assumed in the spec).
 - **Sign-in in the beta build:** today Continue with Google works only on dev builds, and it backs nothing up yet (sync is T41). Default: the beta ships without sign-in; the server counts each phone's guest account. Sign-in and backup come with T40/T41, alongside Apple's, which App Review asks for next to Google's (guideline 4.8).
-- **"Get your head in the shot" (the head-not-found line, spec F2.2):** the designer and critic found it misses the usual causes (turned away, far, dim); "Face the camera…" would fit more. Default: the spec's words until you say otherwise (#407).
+- **The redesign stage (eyualem/kitted#83):** parked until after the beta (you, Nov 10); unmerged and unchanged.
+- **"Get your head in the shot" (the head-not-found line, spec F2.2):** the designer and critic found it misses the usual causes (turned away, far, dim); "Face the camera…" would fit more. Default: the spec's words until you say otherwise (#425).
 
 ---
 
 ## Session log
 The last 15 sessions, newest first.
-- 2026-11-09 · T73 ready in round 2: Closet without Outfits (switch, Goes with, Next best buy and the +N counts hidden); PR #84 stacked on #74 · #411
+- 2026-11-09 · T73 ready in round 2: Closet without Outfits (switch, Goes with, Next best buy and the +N counts hidden); PR #84 stacked on #74 · #422
+- 2026-11-10 · The build workflow sized to the risk (you): tiny (the session alone, 10–20 min), normal (one quick reviewer), strict for scoring, privacy and the age gate only; existing screens aren't drawn; the planner, verifier and critic retired; the core flows run before each TestFlight build; the redesign stage parked · #420
+- 2026-11-10 · Workflow report in `reports/` (43% of agent calls on testing and checking, 18% on building; a lean workflow proposed for a separate session); the S/M/L sizes undone; the 4 child sessions paused · #419
+- 2026-11-10 · T34: You is the settings home (no gear, no Settings page; an old Settings link lands on its rows); verified ready in round 3 of 3; also fixed at the largest text size: Acknowledgements, What Kit knows, the pick numbers · #418, PR #85
+- 2026-11-10 · Workflow sized to the risk (S, M, L) after a usage audit of the 6 beta-fix sessions; at most 3 sessions building at once; log entries numbered at merge · #417
+- 2026-11-09 · T80 parked (founder): the beta stays on the US weather service; Apple's weather later, to Apple's rules (no stored forecasts, its mark wherever its weather shows), found in its terms · #425
+- 2026-11-09 · T55: the card waits until Kit knows two outfits that work (founder, F6.2 rewritten, F13.1); a checked card that suggested nothing reads "Today's fit" under your check's occasion; `canSuggest` for the notifications; verified ready in round 2, not on the Simulator · #423–413, PR #82
+- 2026-11-09 · T54: the double evening card's cause found (two asks while the weather loads) and fixed in the morning service; 20 tests, 20 planted bugs caught; verified ready, not yet on the Simulator or your phone · #421, PR #75
 - 2026-11-08 · beta-notifications: notifications join the beta (founder): T56 (the spec, approved Nov 9; first numbered T54, which the evening-card fix took) and T53 (the build) claimed; T57 added for the ask at Later · #409; T50 keeps the decline line and greeting
 - 2026-11-09 · T37: `specs/onboarding-screens.md` approved: a code-drawn Welcome and Example check (the Unsplash photo goes), setup as plain screens with age bands and the name field, setup ending in Stylist with Kit's offer; specs.md F1.1, F1.2 and the first-run list updated; T38, T39 claimed · #408
 - 2026-11-09 · The design stage (founder, Nov 8): `/build-task` step D (a designer draws every state, a critic checks it, you approve) and 4b (the critic checks the built screens against your frames), for screen tasks only; dry run on T62's head-not-found card, approved · #406–407, PR #76
-- 2026-11-08 · T72: `specs/closet-beta.md` approved (Outfits off for the beta; To confirm one card at a time, swipe or Skip moves on, buttons answer); `specs.md` F7 updated · #410
+- 2026-11-08 · T72: `specs/closet-beta.md` approved (Outfits off for the beta; To confirm one card at a time, swipe or Skip moves on, buttons answer); `specs.md` F7 updated · #421
 - 2026-11-08 · T85: console set up (Kitted team, EAS project, upload target), main merged in, then the first build 0.1.0 (1) built, uploaded to TestFlight and installed on your iPhone; check 1,648 tests and guard:release passed · #403–404, PR #71
 - 2026-11-08 · T25: the beta's limits deployed (`api`, `purgeUsage`); a live question from a fresh guest got `x-kitted-tier: beta`, so the live config isn't set to Pro by hand · #402
 - 2026-11-08 · T14 merged (#72): the beta's 3 checks and 20 questions a day, its limit card, Plan row and morning line, no paywall; verified ready in round 2; server not deployed · #400–401
-- 2026-11-08 · The beta first (founder): free for friends, 3 fit checks and 20 questions a day, no paywall (FP7, approved Nov 8; T14 builds it); the paywall and RevenueCat moved to launch; T85 and Y17 added · #399
-- 2026-11-07 · T10: `specs/free-and-pro.md` approved: one paywall page, $39.99/yr ("Best value") and $9.99/mo with no offers, the soft page, the limit card's "Score it now with Pro", check 8, Pro ended · #398
-- 2026-11-07 · T1: the 10 waiting pull requests reviewed against the spec (fix 4, close 5, one line for the founder); the scan triangle and the camera's dark tip merged; T41 corrected, T64 and Y16 added · #395–397
-- 2026-11-07 · `WORKFLOW.md`: the whole process on one page; plan.md lanes get a plain intro · #394
-- 2026-11-07 · the spec gate: each lane names its spec, specs carry the founder's approval line, `/build-task` starts the interview when one is missing · #393
-- 2026-11-07 · Maestro installed; flows in `app/e2e/`, replayed by the verifier on every task, locked like tests · #392
-- 2026-11-07 · `/build-task`: one command runs planner, test writer, implementer and verifier as separate agents with a fix loop; test lock hook and guard test · #391
+
+
