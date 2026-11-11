@@ -90,7 +90,7 @@ describe('YT4: a 4th style tap answers, like onboarding', () => {
     const p = src(`${YOU}/profile.tsx`);
     expect(p).toContain('NotificationFeedbackType.Warning');
     expect(p).toMatch(/announceForAccessibility\?\.\(t\('profile\.stylesFull'\)\)/);
-    expect(src('src/features/you/NumberedPill.tsx')).toContain('shake');
+    expect(src('src/features/you/StyleTile.tsx')).toContain('shake');
   });
 });
 

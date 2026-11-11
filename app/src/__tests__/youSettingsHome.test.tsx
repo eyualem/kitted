@@ -12,7 +12,7 @@ import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
 import { KV, type KittedStore } from '@/data/store';
-import { space } from '@/design-system/tokens';
+import { radius, space } from '@/design-system/tokens';
 import { textStyles } from '@/design-system/typography';
 import { HeaderHeightContext } from 'expo-router/build/react-navigation/elements';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
@@ -25,7 +25,9 @@ import { mailtoUrl, openLink, openManageSubscription } from '@/features/settings
 import { appVersion, versionLine } from '@/features/settings/plan';
 import { LinkRow } from '@/features/settings/SettingsList';
 import { SettingsRows } from '@/features/settings/SettingsRows';
-import { NumberedPill } from '@/features/you/NumberedPill';
+import { StyleTile } from '@/features/you/StyleTile';
+import { picksOf } from '@/features/you/profile';
+import { styleLabel } from '@/features/morning/copy';
 import { showToast } from '@/features/toast/toast';
 import { factTitle, liveFacts } from '@/features/you/facts';
 import { demoEntitlements } from '@/services/entitlements';
@@ -937,7 +939,7 @@ describe('verify round 2 · the landing, its bars, and the largest text', () => 
 
   it("SY1.6 · at the accessibility sizes the style card's pick numbers fit their badge", async () => {
     mockAx = true;
-    await render(<NumberedPill n={1} title="Streetwear" filled />);
+    await render(<StyleTile look="streetwear" width={104} n={1} first />);
     const digit = screen.getByText('1');
     const title = screen.getByText('Streetwear');
     const variant = (digit.props.variant ?? 'body') as keyof typeof textStyles;
@@ -951,5 +953,79 @@ describe('verify round 2 · the landing, its bars, and the largest text', () => 
     expect(title).toBeTruthy();
     const fixed = boxes.flatMap((b) => [b.height, b.maxHeight]).filter((h): h is number => typeof h === 'number');
     for (const h of fixed) expect([h, h >= tallest]).toEqual([h, true]);
+  });
+});
+
+// ── T44 · your Nov 11 phone pass: the style card shows setup's drawings on squared tiles ─────────────────────────────
+describe('T44 · Your style shows each look as a squared tile with its drawing', () => {
+  /** The first element at or above `el` whose style has a borderRadius (the tile's own box). */
+  const cornerAround = (el: ReactTestInstance): number | undefined => {
+    for (let n: ReactTestInstance | null = el; n; n = n.parent) {
+      const r = (StyleSheet.flatten(n.props.style) ?? {}).borderRadius;
+      if (typeof r === 'number') return r;
+    }
+    return undefined;
+  };
+
+  it("the card lists his picks in pick order, each with its drawn outfits, and the card stays one button", async () => {
+    given('free');
+    await renderYou();
+    const card = within(screen.getByTestId('you-style'));
+    const picks = picksOf((await mockStore.profile.get('me'))?.styles);
+    expect(picks.length).toBeGreaterThan(0);
+    // The card's own rendered tree, in reading order.
+    type Node = { type: string; props: Record<string, unknown>; children: (Node | string)[] | null };
+    const find = (n: Node | string, test: (x: Node) => boolean, out: Node[] = []): Node[] => {
+      if (typeof n === 'string') return out;
+      if (test(n)) out.push(n);
+      for (const c of n.children ?? []) find(c, test, out);
+      return out;
+    };
+    const root = find(screen.toJSON() as unknown as Node, (x) => x.props.testID === 'you-style')[0];
+    const words = find(root, (x) => x.type === 'Text').flatMap((x) => (x.children ?? []).filter((c): c is string => typeof c === 'string'));
+    // His looks in his order, each with its number ...
+    const labels = picks.map((k) => styleLabel(k));
+    expect(words.filter((c) => labels.includes(c))).toEqual(labels);
+    expect(words.filter((c) => /^[123]$/.test(c))).toEqual(picks.map((_, i) => String(i + 1)));
+    // ... each with its drawing (two outfits, hidden from VoiceOver); the card is still the one button.
+    const art = find(root, (x) => typeof x.props.testID === 'string' && x.props.testID.startsWith('style-art-'));
+    expect(art.map((x) => x.props.testID)).toEqual(picks.map((k) => `style-art-${k}`));
+    for (const a of art) expect(find(a, (x) => x.type === 'RNSVGSvgView' || x.type === 'Svg' || x.type === 'RNSVGSvgViewAndroid').length).toBeGreaterThan(0);
+    expect(card.getAllByRole('button')).toHaveLength(1);
+  });
+
+  it('a tile is a rounded rectangle with setup\'s tile corner, not a capsule', async () => {
+    await render(<StyleTile look="streetwear" width={104} n={1} first />);
+    const corner = cornerAround(screen.getByText('Streetwear'));
+    expect(corner).toBe(radius.look + 1);
+    // A capsule would be half the tile's height (about 70+ pt here); this is the same few points setup uses.
+    expect(corner).toBeLessThan(20);
+  });
+
+  it('on Style profile a tile is a button that says its pick order; an unpicked one is not selected', async () => {
+    const onPress = jest.fn();
+    await render(
+      <>
+        <StyleTile look="minimalist" width={104} n={2} ring onPress={onPress} accessibilityLabel="Minimal, pick 2" />
+        <StyleTile look="workwear" width={104} onPress={onPress} accessibilityLabel="Workwear" />
+      </>,
+    );
+    const picked = screen.getByRole('button', { name: 'Minimal, pick 2' });
+    fireEvent.press(picked);
+    expect(onPress).toHaveBeenCalledTimes(1);
+    expect(picked.props.accessibilityState).toMatchObject({ selected: true });
+    expect(screen.getByRole('button', { name: 'Workwear' }).props.accessibilityState).toMatchObject({ selected: false });
+    // Its number shows only when picked.
+    expect(screen.getAllByText(/^[123]$/)).toHaveLength(1);
+  });
+
+  it('at the accessibility sizes a tile is a row: the drawing on the left, the name and number beside it', async () => {
+    mockAx = true;
+    await render(<StyleTile look="streetwear" width={300} row n={1} first />);
+    const art = screen.getByTestId('style-art-streetwear', { includeHiddenElements: true });
+    // The tile's own box (the nearest ancestor with a border) lays its art and words out in a row.
+    let box: ReactTestInstance | null = art.parent;
+    while (box && !(StyleSheet.flatten(box.props.style) ?? {}).borderWidth) box = box.parent;
+    expect((StyleSheet.flatten(box?.props.style) ?? {}).flexDirection).toBe('row');
   });
 });
