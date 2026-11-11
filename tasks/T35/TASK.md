@@ -79,3 +79,30 @@ Read at HEAD `fcb3c71b` (`git diff origin/main...HEAD`), plus the uncommitted SY
 - The SY2.1 "no bullets" test scans only `stylist.`, `offer.` and `noConsent.` keys.
 
 **Verdict: not ready.** D1 closes once the tree's dark-mode change is committed and checked. D2 needs the founder's answer, or the row. Screenshots (283 slide, 285, 286, the badge light and dark) are still owed for the visible parts of SY2.2, SY2.5, SY2.7, SY2.8 and SY2.11.
+
+### Round 2 (normal; the fixes, the founder's two answers, the screenshots and recordings)
+Read at HEAD `16170d7a`: `git diff db9a1ded..HEAD -- app/ specs/ handoff/`, the full task diff against main, and every file under `tasks/T35/shots/`. Compared with T36's phones 07, 01 and 02. Frames pulled from both recordings with ffmpeg: every native frame from the reveal to the badge. The three T35 test files run alone: 26 passed (arrivals 21, hello 3, badge 2). `npm run check` not re-run (the session: exit 0, 1924 passed). No `.only` or `.skip`.
+
+- SY2.1 done: shot 01, light and dark, shows `I'm Kit, your stylist.` above the offer, as in phone 07. No list.
+- SY2.2 done for a first check. In both recordings, once the reveal ends, four copies appear on the folded card's ⌄, slide down to the Closet icon and fade out, with nothing drawn. The badge `4` shows only after they land. This matches the founder's answer for a folded card (#439, the spec's step 1 and SY2.2). For a **re-check**: done in code, not seen. `RecheckCard` holds the badge, waits for the reveal, the closet call and the closet rows, then uses the same hook (`useSlide.ts`) from its bottom edge, and on unmount gives the badge alone. Reading it, I found no bug. What would tell: a recording of a demo re-check that adds a new piece. The haptic isn't heard on the Simulator.
+- SY2.3 done: tested 4 then 2 = 6, a relaunch, opening Closet clears it. No badge at 0 is now tested through expo-router's own conversion (`T35-badge.test.tsx`). Shot 04 shows no badge on Closet.
+- SY2.4 done (unchanged since round 1, tests pass).
+- SY2.5 done in code and tests, not seen (TASK.md → Not done says the same).
+- SY2.6 done: shots 02 have no badge on Lookbook.
+- SY2.7 done: `badgeColor` gives `primary` in light and `me` in dark, tested at 4.5:1 or better on white digits. Shots 02 show a navy `4` that reads clearly in both modes, never red.
+- SY2.8 done: shot 03 (light and dark) has `FROM YOUR FIRST CHECK · 4` first, each tile marked `New` top left, as in phone 02. Shot 04 shows the plain sections after the visit. Phone 02's Pieces/Outfits switch is missing in both shots, which is right: Outfits is off for the beta (CB1). A first visit now ends only if that visit showed it (round 1's small thing, fixed).
+- SY2.9 done (tests). SY2.10 done (tests).
+- SY2.11 done in code. VoiceOver not heard on a device.
+- Round 1's D1 is **closed**: the dark color is committed, checked, tested and shown in shot 02 (dark). The spec edit cites the founder's words as relayed in chat (#439).
+- Round 1's D2 is **closed**: re-checks now get the slide, from the card's bottom edge, per his answer as the parent session applied it (#439). It's built; only seeing it is left (above).
+
+**Defects**
+- none
+
+**Small things for later (not blocking)**
+- Both recordings show the badge `4` for about a third of a second before the card appears, then it goes and comes back after the slide. It's probably the demo writing its rows before the card mounts and holds. On a real check the pieces arrive after the card mounts. Worth one look on the founder's phone.
+- `BOTTOM_COVER` is 110 pt, but in shot 02 the composer and tab bar cover about 140 pt of the iPhone 17 Pro's bottom. A start point 110–140 pt from the bottom would count as on screen while it sits under the composer. The folded case starts higher, so it's fine there. A tall open re-check whose foot sits just above the tab bar is the case to watch.
+- `RecheckCard` loads the whole closet for every scored re-check card, Past chats included, even when no slide can play. It's cheap today.
+- Still open from round 1: `RestoreScreen` (a stand-in) calls `completeOnboarding`, so a restored user could get `From your first check`. `closetTabPoint` is fixed iPhone-portrait geometry, measured on the 17 Pro only. The SY2.1 bullet scan covers three key prefixes.
+
+**Verdict: ready.** No defect is open. Still unverified: the re-check slide (needs a demo re-check that adds a piece), the haptic, VoiceOver, Reduce Motion and an off-screen card on a device, other iPhone sizes, and a real fit check on his phone.
