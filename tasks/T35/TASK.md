@@ -135,3 +135,12 @@ Read only `git diff a7fecaf4..14d0e586 -- app/` (slide.ts, useSlide.ts, FitCheck
 - The first new test checks `noRowToSlide` on its own. If `FitCheckCard` went back to the card's closet list, the test would still pass. The second test fails on the old `holdBadge`, which returned early while held, so the timer was never restarted.
 
 **Verdict: not ready.** D1 is open (code). Still unverified, as in round 2: the re-check slide, the haptic, VoiceOver, Reduce Motion and an off-screen card on a device, and other iPhone sizes.
+
+### Round 3b (D1 fix)
+Read only `git diff 58daac03..22987f03 -- app/`. The three T35 test files run alone: 29 passed. `npm run check` not re-run (the session: exit 0, 1927 passed).
+
+- D1 is **closed**. An unscored end now calls `endedUnscored`, which only calls `release`: the badge lets go, and the check is never marked as slid. So "Try again" (the same check id) holds again and slides when it scores. `noSlide` is still used where it belongs: the scored card's unmount and its no-row case.
+- The new test can fail. With `noSlide` in place of `release`, the hold would be refused on retry and `shouldSlide` would be false. The session confirmed it goes red that way.
+- Small, not blocking: the last test leaves a real 20 s hold timer running, so Jest prints "did not exit one second after the test run" when the T35 files run alone. A `resetSlide()` in an `afterEach` would clear it.
+
+**Verdict: ready.** No defect is open. Still unverified, as in rounds 2–3: the re-check slide, the haptic, VoiceOver, Reduce Motion and an off-screen card on a device, and other iPhone sizes.
