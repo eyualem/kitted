@@ -10,6 +10,7 @@ import { t } from '@/i18n/en';
 import { StylistBar } from '@/features/stylist/StylistBar';
 import { useComposerOpen } from '@/features/stylist/composerState';
 import { badgeColor } from '@/features/closet/arrivals';
+import { closetBadge } from '@/features/closet/ClosetBadge';
 import { useClosetArrivals } from '@/features/closet/useArrivals';
 
 export default function TabsLayout() {
@@ -46,8 +47,7 @@ export default function TabsLayout() {
       <NativeTabs.Trigger name="closet">
         <NativeTabs.Trigger.Label>{t('tab.closet')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={sym.tabCloset} md="checkroom" />
-        {/* None: no number AND hidden (a number always shows, even with hidden; no number alone draws a dot). */}
-        <NativeTabs.Trigger.Badge hidden={added === 0} selectedBackgroundColor={badge}>{added > 0 ? String(added) : undefined}</NativeTabs.Trigger.Badge>
+        {closetBadge(added, badge)}
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="lookbook">
         <NativeTabs.Trigger.Label>{t('tab.lookbook')}</NativeTabs.Trigger.Label>

@@ -545,7 +545,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
         <KCardSection gap={6}>
           {showCloset && closetLine ? <ClosetSummaryRow
               items={addedItems} text={closetLine.text} onReview={readOnly ? undefined : go.review}
-              slide={{ checkId: row.id, fresh, ready: revealDone, added: addedIds(cs), pending: closetLine.pending, visible: open, foldAnchor }}
+              slide={{ checkId: row.id, fresh, ready: revealDone, added: addedIds(cs), pending: closetLine.pending, visible: open, edge: foldAnchor }}
             /> : null}
           {firstAsk && askPhoto && askCandidate ? (
             <View style={{ paddingTop: 6, paddingBottom: 4, gap: 8 }}>
