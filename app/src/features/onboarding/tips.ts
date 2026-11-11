@@ -2,6 +2,7 @@
 // reaches his first score, Closet, Lookbook and You. A tip shows on every visit until Got it, then never again, unless
 // "Show me around" (You → Help & about) brings them all back. The done marks live in kv on this iPhone only, so
 // "Delete all my data" (store.wipe) clears them. Nothing shows before his first scored check (SY2.9).
+import { dayKey, type ZoneOffset } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type { ChatMessage, FitCheckRow } from '@/data/types';
 import { textMessage } from '@/data/seedLoader';
@@ -65,12 +66,18 @@ export function isKitHello(m: Pick<ChatMessage, 'payload'>): boolean {
 }
 
 /** "Show me around" (SY3): every tip back, the first-score tip moved to the next check, and Kit's hello posted as the
- *  newest message unless it already is (SY3.2). The caller switches to Stylist. */
-export async function showMeAround(store: Pick<KittedStore, 'getKv' | 'setKv' | 'deleteKv' | 'chat'>, nowMs: number, ids: (p: string) => string): Promise<void> {
+ *  newest message in today's chat unless it already is (SY3.2). Only today's chat counts, since Stylist shows only
+ *  today's: a hello left from yesterday doesn't stop today's. The caller switches to Stylist. */
+export async function showMeAround(
+  store: Pick<KittedStore, 'getKv' | 'setKv' | 'deleteKv' | 'chat'>, nowMs: number, ids: (p: string) => string, zone: ZoneOffset,
+): Promise<void> {
   for (const id of TIP_IDS) await store.deleteKv(tipKey(id));
   await store.setKv(FIRST_SCORE_AFTER_KEY, String(nowMs));
-  const newest = (await store.chat.all()).sort((a, b) => b.createdAt - a.createdAt || b.id.localeCompare(a.id))[0];
-  if (newest && isKitHello(newest)) return;
+  const byNewest = (await store.chat.all()).sort((a, b) => b.createdAt - a.createdAt || b.id.localeCompare(a.id));
+  const today = dayKey(nowMs, zone);
+  const newestToday = byNewest.find((m) => dayKey(m.createdAt, zone) === today);
+  if (newestToday && isKitHello(newestToday)) return;
+  const newest = byNewest[0];
   // After the newest message even if the clock reads earlier (a demo clock), so it's always last.
   await store.chat.put(kitHello(ids('M'), Math.max(nowMs, (newest?.createdAt ?? 0) + 1)));
 }

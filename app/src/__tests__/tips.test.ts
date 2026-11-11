@@ -9,6 +9,11 @@ import {
 } from '@/features/onboarding/tips';
 import { t } from '@/i18n/en';
 import { counterIds } from '@/services/ids';
+import { fixedZone } from '@kitted/core';
+
+const Z = fixedZone(0);
+const DAY = 24 * 3600 * 1000;
+const NOON_DAY1 = Date.UTC(2026, 10, 9, 12);
 
 function check(id: string, createdAt: number, over: Partial<FitCheckRow> = {}): FitCheckRow {
   return { id, createdAt, status: 'scored', score: 7.5, parentId: null, recheckUsed: false, fixes: [{}], ...over } as FitCheckRow;
@@ -121,7 +126,7 @@ describe('SY3 · Show me around', () => {
     await completeOnboarding(store, { ...answers, consent: true }, 1000, ids);
     await store.chat.put({ id: 'U1', createdAt: 5000, role: 'user', kind: 'text', text: 'hi', cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {} });
     for (const id of TIP_IDS) await dismissTip(store, id);
-    await showMeAround(store, 9000, ids);
+    await showMeAround(store, 9000, ids, Z);
     for (const id of TIP_IDS) expect(await isTipDone(store, id)).toBe(false);
     const ms = (await store.chat.all()).sort((a, b) => b.createdAt - a.createdAt);
     expect(isKitHello(ms[0]!)).toBe(true);
@@ -131,22 +136,31 @@ describe('SY3 · Show me around', () => {
   it('SY3.2 a second tap while the hello is still newest posts no second copy', async () => {
     const store = createMemoryStore();
     const ids = counterIds();
-    await showMeAround(store, 1000, ids);
-    await showMeAround(store, 2000, ids);
+    await showMeAround(store, 1000, ids, Z);
+    await showMeAround(store, 2000, ids, Z);
     expect((await store.chat.all()).filter(isKitHello)).toHaveLength(1);
+  });
+
+  it('SY3.1 a hello left in yesterday\'s chat doesn\'t stop today\'s (Stylist shows only today)', async () => {
+    const store = createMemoryStore();
+    const ids = counterIds();
+    await showMeAround(store, NOON_DAY1, ids, Z);
+    await showMeAround(store, NOON_DAY1 + DAY, ids, Z);
+    const hellos = (await store.chat.all()).filter(isKitHello).map((m) => m.createdAt).sort((a, b) => a - b);
+    expect(hellos).toEqual([NOON_DAY1, NOON_DAY1 + DAY]);
   });
 
   it('SY3.2 the hello lands last even when the clock reads earlier than the newest message', async () => {
     const store = createMemoryStore();
     await store.chat.put({ id: 'U1', createdAt: 9000, role: 'user', kind: 'text', text: 'hi', cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {} });
-    await showMeAround(store, 1000, counterIds());
+    await showMeAround(store, 1000, counterIds(), Z);
     const newest = (await store.chat.all()).sort((a, b) => b.createdAt - a.createdAt)[0]!;
     expect(isKitHello(newest)).toBe(true);
   });
 
   it('SY3.3 afterwards the first-score tip waits for the next scored check, never an older one', async () => {
     const store = createMemoryStore();
-    await showMeAround(store, 1000, counterIds());
+    await showMeAround(store, 1000, counterIds(), Z);
     const after = await firstScoreAfter(store);
     expect(after).toBe(1000);
     expect(firstScoreTipCheck([check('OLD', 500)], after)).toBeNull();

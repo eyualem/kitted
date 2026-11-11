@@ -1,7 +1,7 @@
 // The tips (specs/setup-and-you.md SY2): a small card in Kit's voice with Got it, at the top of Closet, Lookbook and
 // You, and under the first score card. Each reads its own done mark live, so Got it (or Show me around) shows at once.
-import { View } from 'react-native';
-import { KCard, KText, TextLink, radius, space } from '@/design-system';
+import { Pressable, View } from 'react-native';
+import { KCard, KText, opacity, radius, size, space } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { t, type StringKey } from '@/i18n/en';
@@ -14,7 +14,7 @@ const WORDS: Record<TipId, StringKey> = {
   you: 'tips.you',
 };
 
-/** The card itself: the words, then Got it at the trailing edge (a 44 pt target). */
+/** The card itself: the words, then Got it at the trailing edge (at least 44 × 44 pt). */
 export function TipCard({ id }: { id: TipId }) {
   return (
     <View testID={`tip-${id}`}>
@@ -24,7 +24,17 @@ export function TipCard({ id }: { id: TipId }) {
             {t(WORDS[id])}
           </KText>
           <View style={{ alignItems: 'flex-end' }}>
-            <TextLink title={t('tips.gotIt')} onPress={() => void dismissTip(store, id)} />
+            {/* Its own Pressable, not TextLink: "Got it" is narrower than 44 pt, and SY2.8 asks for 44 × 44. */}
+            <Pressable
+              onPress={() => void dismissTip(store, id)}
+              accessibilityRole="button"
+              accessibilityLabel={t('tips.gotIt')}
+              style={({ pressed }) => ({ minHeight: size.hit, minWidth: size.hit, paddingLeft: space.m, alignItems: 'flex-end', justifyContent: 'center', opacity: pressed ? opacity.pressed : 1 })}
+            >
+              <KText role="textLink" color="ink">
+                {t('tips.gotIt')}
+              </KText>
+            </Pressable>
           </View>
         </View>
       </KCard>

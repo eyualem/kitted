@@ -39,7 +39,7 @@ export interface SettingsRowsProps {
 }
 
 async function showMeAroundNow(): Promise<void> {
-  await showMeAround(store, sessionClock.nowMs(), newId);
+  await showMeAround(store, sessionClock.nowMs(), newId, sessionClock.offset);
   router.navigate('/stylist');
 }
 
