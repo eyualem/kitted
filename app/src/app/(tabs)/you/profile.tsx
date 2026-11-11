@@ -15,7 +15,7 @@ import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
 import { styleLabel } from '@/features/morning/copy';
 import { LOOKS, MAX_PICKS, togglePick } from '@/features/onboarding/looks';
-import { NumberedPill } from '@/features/you/NumberedPill';
+import { StyleTile, StyleTileGrid } from '@/features/you/StyleTile';
 import { BasicsFields } from '@/features/you/BasicsFields';
 import { BUDGETS, ageRowValue, blankProfile, budgetLabel, draftOf, saveDraft, type ProfileDraft } from '@/features/you/profile';
 import { NAME_MAX } from '@/features/onboarding/aboutStep';
@@ -84,33 +84,38 @@ export default function StyleProfileScreen() {
             <Section title={t('profile.styles')} right={t('profile.stylesMax')}>
               <KCard radius={radius.cardSmall}>
                 <View style={{ paddingHorizontal: space.rowX, paddingVertical: space.xs }}>
-                  <ChipFlow accessibilityLabel={t('profile.styles')}>
-                    {LOOKS.map(({ style }) => {
-                      const at = draft.picks.indexOf(style);
-                      const picked = at >= 0;
-                      return (
-                        <NumberedPill
-                          key={style}
-                          n={picked ? at + 1 : undefined}
-                          title={styleLabel(style)}
-                          filled={picked}
-                          accessibilityLabel={picked ? t('profile.a11y.pick', { style: styleLabel(style), n: at + 1 }) : styleLabel(style)}
-                          shake={shake[style] ?? 0}
-                          onPress={() => {
-                            const r = togglePick(draft.picks, style);
-                            if (!r.full) {
-                              update({ picks: r.picks });
-                              return;
-                            }
-                            // A 4th look: answer like onboarding (buzz, shake, the line read out; the footer says it).
-                            void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-                            setShake((m) => ({ ...m, [style]: (m[style] ?? 0) + 1 }));
-                            AccessibilityInfo.announceForAccessibility?.(t('profile.stylesFull'));
-                          }}
-                        />
-                      );
-                    })}
-                  </ChipFlow>
+                  <StyleTileGrid
+                    accessibilityLabel={t('profile.styles')}
+                    render={(w, row) =>
+                      LOOKS.map(({ style }) => {
+                        const at = draft.picks.indexOf(style);
+                        const picked = at >= 0;
+                        return (
+                          <StyleTile
+                            key={style}
+                            look={style}
+                            width={w}
+                            row={row}
+                            n={picked ? at + 1 : undefined}
+                            ring={picked}
+                            accessibilityLabel={picked ? t('profile.a11y.pick', { style: styleLabel(style), n: at + 1 }) : styleLabel(style)}
+                            shake={shake[style] ?? 0}
+                            onPress={() => {
+                              const r = togglePick(draft.picks, style);
+                              if (!r.full) {
+                                update({ picks: r.picks });
+                                return;
+                              }
+                              // A 4th look: answer like onboarding (buzz, shake, the line read out; the footer says it).
+                              void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+                              setShake((m) => ({ ...m, [style]: (m[style] ?? 0) + 1 }));
+                              AccessibilityInfo.announceForAccessibility?.(t('profile.stylesFull'));
+                            }}
+                          />
+                        );
+                      })
+                    }
+                  />
                 </View>
               </KCard>
               <Footer>{draft.picks.length >= MAX_PICKS ? t('profile.stylesFull') : t('profile.stylesOrder')}</Footer>

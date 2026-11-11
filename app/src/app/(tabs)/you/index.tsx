@@ -14,10 +14,9 @@ import { store } from '@/data/db';
 import type { ProfileRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { quota } from '@/features/fitcheck/session';
-import { styleLabel } from '@/features/morning/copy';
 import { FactCard } from '@/features/you/FactRows';
 import { FACTS_ON_YOU, liveFacts } from '@/features/you/facts';
-import { NumberedPill } from '@/features/you/NumberedPill';
+import { StyleTile, StyleTileGrid } from '@/features/you/StyleTile';
 import { basicsLine, blankProfile, picksOf, styleCardSpoken } from '@/features/you/profile';
 import { todayAction } from '@/features/you/today';
 import { t } from '@/i18n/en';
@@ -196,11 +195,10 @@ function StyleCard({ p }: { p: ProfileRow }) {
             </View>
           </View>
           {picks.length ? (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.s }}>
-              {picks.map((s, i) => (
-                <NumberedPill key={s} n={i + 1} title={styleLabel(s)} filled={i === 0} />
-              ))}
-            </View>
+            // T44: each look is a squared tile with setup's drawn outfits, in pick order (the card is still the one button).
+            <StyleTileGrid
+              render={(w, row) => picks.map((s, i) => <StyleTile key={s} look={s} width={w} row={row} n={i + 1} first={i === 0} />)}
+            />
           ) : (
             <KText variant="subheadline" color="ink2">
               {t('you.style.none')}
