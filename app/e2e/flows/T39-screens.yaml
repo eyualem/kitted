@@ -1,0 +1,165 @@
+# T39 · OS3.1, OS3.3, OS4.1, OS4.6, OS5.4, OS5.6 (tasks/T39/TESTING.md): the demo screens of each state. Looks (2) is
+# plain; About you on open (3) shows every word with nothing picked and Continue off; ready (4); Restore (136) has no
+# name field; Kit's offer (280), after Later (281), after Not now (282), after a scored check (283); set up before this
+# change (12, 212) shows no offer; Style profile with Name and Age (284) and an older profile (80).
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T39-screens.yaml (Metro running)
+appId: com.trykitted.kitted
+name: T39 · setup, offer and Style profile screens
+---
+# 2 · Looks
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "2"
+- extendedWaitUntil:
+    visible: "Which of these would you actually wear\\?"
+    timeout: 90000
+- assertVisible: "Tap up to 3\\."
+- assertNotVisible: "Kit: .*"
+- assertNotVisible: "Pick by name instead"
+- assertVisible: "Step 2 of 3"
+
+# 3 · About you, on open
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "3"
+- extendedWaitUntil:
+    visible: "About you"
+    timeout: 90000
+- assertVisible: "Step 3 of 3"
+- assertVisible: "What should Kit call you\\?"
+- assertVisible: "How old are you\\?"
+- assertVisible: "Under 18"
+- assertVisible: "18–21"
+- assertVisible: "22–25"
+- assertVisible: "26–30"
+- assertVisible: "31 or older"
+- assertVisible: "Stays on your phone\\. It never changes your score\\."
+- assertVisible:
+    text: "Continue"
+    enabled: false
+- assertNotVisible: "Kit: .*"
+- assertNotVisible: "Birth year"
+- assertNotVisible: "Kitted is for 18 and up\\. It never changes your score\\."
+- assertNotVisible:
+    text: "22–25"
+    selected: true
+
+# 4 · About you, ready
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "4"
+- extendedWaitUntil:
+    visible: "About you"
+    timeout: 90000
+- assertVisible:
+    text: "22–25"
+    selected: true
+- assertVisible:
+    text: "Continue"
+    enabled: true
+- assertNotVisible: "Pick your age to go on\\."
+
+# 136 · Restore
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "136"
+- extendedWaitUntil:
+    visible: "Welcome back"
+    timeout: 90000
+- assertVisible: "Your age first, then I'll bring back your fits\\."
+- assertVisible: "How old are you\\?"
+- assertNotVisible: "What should Kit call you\\?"
+- assertNotVisible: "Kit: .*"
+- assertNotVisible: "Step .* of .*"
+
+# 280 · Kit's offer
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "280"
+- extendedWaitUntil:
+    visible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
+    timeout: 90000
+- assertVisible: ".*Quick note: I'm an AI.*"
+- assertVisible: "Later"
+
+# 281 · after Later
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "281"
+- extendedWaitUntil:
+    visible: "Kit: No rush\\. Tap the camera button whenever you're ready\\."
+    timeout: 90000
+- assertVisible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
+- assertNotVisible: "Later"
+
+# 282 · after Not now
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "282"
+- extendedWaitUntil:
+    visible: "Turn on fit checks"
+    timeout: 90000
+- assertVisible: "Review and turn on"
+- assertNotVisible: "Later"
+- assertNotVisible:
+    text: "Turn on fit checks"
+    index: 1
+
+# 283 · after a scored check
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "283"
+- extendedWaitUntil:
+    visible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
+    timeout: 90000
+- assertNotVisible: "Later"
+
+# 12 and 212 · set up before this change: no offer
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "12"
+- extendedWaitUntil:
+    visible: "Stylist"
+    timeout: 90000
+- assertNotVisible: "Want to check a fit now\\?.*"
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "212"
+- extendedWaitUntil:
+    visible: "Turn on fit checks"
+    timeout: 90000
+- assertNotVisible: "Want to check a fit now\\?.*"
+
+# 284 · Style profile, Name and Age
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "284"
+- extendedWaitUntil:
+    visible: "Style profile"
+    timeout: 90000
+- assertVisible: "Age, 22–25"
+- assertVisible: "Age can't be changed here\\."
+- assertVisible: "Fit you like"
+- assertNotVisible: "Birth year.*"
+
+# 80 · an older profile
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "80"
+- extendedWaitUntil:
+    visible: "Style profile"
+    timeout: 90000
+- assertVisible: "Age, 18–21"
+- assertNotVisible: "Birth year.*"

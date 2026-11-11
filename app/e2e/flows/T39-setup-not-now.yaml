@@ -1,0 +1,68 @@
+# T39 · OS5.2 (Not now) (tasks/T39/TESTING.md): from a fresh install, Check my fit on Kit's offer shows the agreement in
+# the camera; Not now returns to Stylist with "Turn on fit checks" posted once and the offer's buttons gone; opening the
+# camera again from the accessory and saying Not now again posts nothing more.
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T39-setup-not-now.yaml (Metro running)
+appId: com.trykitted.kitted
+name: T39 · Not now on the agreement after the offer
+---
+- launchApp:
+    clearState: true
+    clearKeychain: true
+    permissions:
+      camera: allow
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn: "http://.*:8081"
+- extendedWaitUntil:
+    visible: "Get started"
+    timeout: 90000
+- tapOn: "Get started"
+- extendedWaitUntil:
+    visible: "Which of these would you actually wear\\?"
+    timeout: 10000
+- tapOn: "Not sure"
+- extendedWaitUntil:
+    visible: "About you"
+    timeout: 10000
+- tapOn: "22–25"
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
+    timeout: 15000
+- tapOn:
+    text: "Check my fit\\. Opens the camera\\."
+    below: "Want to check a fit now\\?.*"
+    index: 0
+- extendedWaitUntil:
+    visible: "Before your first fit check"
+    timeout: 10000
+- assertNotVisible: "Take photo"
+- tapOn: "Not now"
+- extendedWaitUntil:
+    visible: "Turn on fit checks"
+    timeout: 10000
+- assertVisible: "Review and turn on"
+- assertVisible: ".*Send me a fit\\. I'll score it and start your closet\\."
+- assertVisible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
+- assertNotVisible: "Later"
+# The offer's own Check my fit is gone: only the accessory's is left.
+- assertNotVisible:
+    text: "Check my fit\\. Opens the camera\\."
+    index: 1
+- assertNotVisible: "Take photo"
+
+# The camera again, from the accessory: the agreement again, Not now again, still one "Turn on fit checks".
+- tapOn: "Check my fit\\. Opens the camera\\."
+- extendedWaitUntil:
+    visible: "Before your first fit check"
+    timeout: 10000
+- tapOn: "Not now"
+- extendedWaitUntil:
+    visible: "Turn on fit checks"
+    timeout: 10000
+- assertNotVisible:
+    text: "Turn on fit checks"
+    index: 1
+- assertNotVisible: "Take photo"

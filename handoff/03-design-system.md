@@ -471,7 +471,7 @@ Components marked **[RN]** are already built in `ts/design-system/components/` (
 
 **StylistMessage [RN, `Chat.tsx`]** (`.say`, `.who`)
 - **Anatomy:** no bubble. Plain `.body` ink text up to 92% wide. On the first message of a run, a header: an 18 pt avatar square (radius 5, `kFixedLabel`, a "K" in Archivo 125 / 760 at 10.5 pt, `kFixedOnDark`) + "Your stylist" in `.footnote.weight(.semibold)` ink3, then a 4 pt gap.
-- **Copy rule:** always "your stylist," never "AI stylist." The one AI-disclosure line lives in consent and the first message (ruling 17).
+- **Copy rule:** always "your stylist," never "AI stylist." The one AI-disclosure line lives in the agreement (ruling 17; the first message's copy left it Nov 10, specs.md F5.1).
 - **A11y:** "Your stylist: …"
 
 **UserBubble [RN, `Chat.tsx`]** (`.me`)
@@ -772,7 +772,7 @@ Kitted's promise is "your face is never kept or sent" (ruling 11, default). That
 
 ## 10. Copy rules (kept from `app-build-spec.md` §6)
 
-- "Your stylist," never "AI stylist." One AI-disclosure line in consent and the first message (ruling 17).
+- "Your stylist," never "AI stylist." One AI-disclosure line, in the agreement (ruling 17; out of the first message Nov 10, specs.md F5.1).
 - The stylist's voice lives in model prompts and rule copy, not in UI labels. Buttons are plain verbs: "Check my fit", "Wear this", "Save correction".
 - No emoji in the UI. No RPG or anime words: no ranks, XP, quests or levels.
 - Never "we miss you," never streak guilt. After time away: "Welcome back."

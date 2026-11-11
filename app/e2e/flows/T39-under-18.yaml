@@ -1,0 +1,74 @@
+# T39 · OS4.4, F1.2 (tasks/T39/TESTING.md): Under 18 on About you asks once; Change changes nothing; That's right shows
+# the age stop with no way to the camera, and it stays after a relaunch. The flow ends by clearing the app and the
+# Keychain, so the Simulator is never left on the stop screen.
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T39-under-18.yaml (Metro running)
+appId: com.trykitted.kitted
+name: T39 · Under 18 stops the app
+---
+- launchApp:
+    clearState: true
+    clearKeychain: true
+    permissions:
+      camera: allow
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn: "http://.*:8081"
+- extendedWaitUntil:
+    visible: "Get started"
+    timeout: 90000
+- tapOn: "Get started"
+- extendedWaitUntil:
+    visible: "Which of these would you actually wear\\?"
+    timeout: 10000
+- tapOn: "Not sure"
+- extendedWaitUntil:
+    visible: "About you"
+    timeout: 10000
+- assertVisible: "Under 18"
+- assertNotVisible: "Born in .*"
+- tapOn: "Under 18"
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "Under 18\\?"
+    timeout: 5000
+- assertVisible: "Kitted is for ages 18 and up\\."
+- tapOn: "Change"
+- extendedWaitUntil:
+    visible: "About you"
+    timeout: 5000
+- assertNotVisible: "Thanks for checking it out\\. You can delete the app from your Home Screen\\."
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "Under 18\\?"
+    timeout: 5000
+- tapOn: "That's right"
+- extendedWaitUntil:
+    visible: "Thanks for checking it out\\. You can delete the app from your Home Screen\\."
+    timeout: 10000
+- assertVisible: "Kitted is for ages 18 and up\\."
+- assertNotVisible: "Back"
+- assertNotVisible: "Take photo"
+- assertNotVisible: "Check my fit\\. Opens the camera\\."
+
+# Relaunch (no clearing): the stop screen again.
+- stopApp
+- launchApp
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn: "http://.*:8081"
+- extendedWaitUntil:
+    visible: "Thanks for checking it out\\. You can delete the app from your Home Screen\\."
+    timeout: 90000
+- assertVisible: "Kitted is for ages 18 and up\\."
+- assertNotVisible: "Back"
+- assertNotVisible: "Take photo"
+- assertNotVisible: "Get started"
+
+# Leave the Simulator clean.
+- launchApp:
+    clearState: true
+    clearKeychain: true

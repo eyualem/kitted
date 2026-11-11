@@ -1,0 +1,74 @@
+# T38 · OS1.4 and OS2.1 (tasks/T38/TESTING.md): Welcome with the drawn outfit and its card's VoiceOver line after the
+# swap (demo screen 1, light, accounts off), then the Example check from Welcome (the new intro, the drawn bubble's
+# label, Why 7.5? opening and closing the math, the new caption, Back to Welcome), then the Example check as a sheet
+# (demo screen 213: Check my own fit, Close back to the Stylist).
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T38-drawn-welcome.yaml (Metro running)
+# Matching: Maestro matches a pattern against an element's WHOLE text or VoiceOver label (a full regex match). The mini
+# card and the bubble are each ONE VoiceOver element, so their exact labels are matched; Kit's intro is one element
+# labelled "Kit: <text>", so it's matched as ".*<text>".
+appId: com.trykitted.kitted
+name: T38 · Welcome and the Example check, drawn in code
+---
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "1"
+      THEME: "light"
+- extendedWaitUntil:
+    visible: "Get started"
+    timeout: 90000
+- assertVisible: "See an example check"
+- assertVisible: "Look put together\\.[\\s\\S]*"
+# Accounts are off on demo screen 1.
+- assertNotVisible: "I already have an account"
+# After the swap (about 2 s): the card is one element, read the same in every frame.
+- extendedWaitUntil:
+    visible: "Example fit check\\. Everyday\\. 7\\.5 out of 10, Put together\\. One fix: Swap the chunky sneakers for low-profile sneakers\\. 8 out of 10, Sharp\\."
+    timeout: 10000
+# No photo: the old photo's words are gone from Welcome.
+- assertNotVisible: ".*A real photo.*"
+
+# The Example check from Welcome.
+- tapOn: "See an example check"
+- extendedWaitUntil:
+    visible: ".*Here's an example check\\. This is what you'll get\\."
+    timeout: 10000
+- assertVisible: "Drawn example outfit, Everyday: .*"
+- assertVisible: "Drawn example outfit, Everyday: Charcoal denim jacket, White sweater, Grey drawstring trousers, Grey chunky sneakers\\."
+- assertNotVisible: ".*Here's a real check.*"
+- tapOn: "Why 7\\.5\\?"
+- extendedWaitUntil:
+    visible: "Hide the math"
+    timeout: 5000
+- tapOn: "Hide the math"
+- extendedWaitUntil:
+    visible: "Why 7\\.5\\?"
+    timeout: 5000
+- scrollUntilVisible:
+    element:
+      text: "A drawn example, scored by the same code as your photos\\. Nothing was sent\\."
+    direction: DOWN
+    timeout: 10000
+- assertNotVisible: ".*A real photo.*"
+- assertVisible: "Get started"
+- tapOn: "Back"
+- extendedWaitUntil:
+    visible: "See an example check"
+    timeout: 10000
+- assertVisible: "Get started"
+
+# The Example check as a sheet (after setup, from "See an example").
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "213"
+      THEME: "light"
+- extendedWaitUntil:
+    visible: "Check my own fit"
+    timeout: 90000
+- assertVisible: ".*Here's an example check\\. This is what you'll get\\."
+- assertVisible: "Drawn example outfit, Everyday: .*"
+- tapOn: "Close"
+- extendedWaitUntil:
+    visible: "Stylist"
+    timeout: 10000

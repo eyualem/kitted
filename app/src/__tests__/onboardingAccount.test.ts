@@ -267,9 +267,11 @@ describe('F4–F5 · resume and progress', () => {
     expect(resumeStepAtLaunch()).toBeNull();
   });
 
-  it('the bar has a segment per step and fills on Consent (step 4)', () => {
-    expect(ONBOARDING_STEPS).toBe(4);
-    expect(t('onb.progress.a11y', { n: 4, total: ONBOARDING_STEPS })).toBe('Step 4 of 4');
+  // Retargeted by T39 (#412–#413, OS3.2): no agreement step, so three segments, filled on About you. The rendered
+  // bar is T39-setupScreens "OS3.2 · the bar has 3 segments".
+  it('the bar has a segment per step and fills on About you (step 3)', () => {
+    expect(ONBOARDING_STEPS).toBe(3);
+    expect(t('onb.progress.a11y', { n: 3, total: ONBOARDING_STEPS })).toBe('Step 3 of 3');
   });
 });
 
