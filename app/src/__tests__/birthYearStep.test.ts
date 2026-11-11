@@ -1,5 +1,5 @@
 // Onboarding down to the birth year (10-onboarding.md §10, #373): O3 asks only the birth year; height, build and fit
-// move to Kit's "About you" card after the first score. Checks BY1–BY8, written before the code (BY9, the tap count,
+// move to Kit's "About you" card after the first score. Checks BY4–BY8 (BY1–BY3 retired by T39, below), written before the code (BY9, the tap count,
 // is walked on the Simulator).
 import { createMemoryStore } from '@/data/memoryStore';
 import { answersFromDraft, basicsEcho, BASICS_KEY, EMPTY_BASICS, loadDraft, LOOKS_KEY, looksReply } from '@/features/onboarding/basics';
@@ -7,36 +7,17 @@ import { completeOnboarding, CONSENT_VERSION } from '@/features/onboarding/compl
 import { parseStep } from '@/features/onboarding/resume';
 import { t } from '@/i18n/en';
 
-declare const __dirname: string;
-const { readFileSync } = jest.requireActual<{ readFileSync(p: string, enc: 'utf8'): string }>('fs');
-const { join } = jest.requireActual<{ join(...p: string[]): string }>('path');
-const source = (...p: string[]) => readFileSync(join(__dirname, '..', ...p), 'utf8');
 
 const ids = (() => { let n = 0; return (p: string) => `${p}-${++n}`; })();
 
 describe('the birth-year step (BY)', () => {
-  test('BY1: O3 shows only the birth year, in both paths', () => {
-    const s = source('features', 'onboarding', 'BasicsScreen.tsx');
-    for (const gone of ['Segmented', 'Silhouette', 'stepHeight', "'onb.basics.height'", "'onb.basics.build'", "'onb.basics.fit'"]) expect(s).not.toContain(gone);
-    expect(s).toContain("t('onb.basics.birthYear')");
-    // One layout for the new setup and the restore path: no branch hides fields any more.
-    expect(s).not.toMatch(/restoring \? null : \(/);
-  });
-
-  test('BY2: Continue waits for a year; the hint shows only while none is picked', () => {
-    expect(t('onb.basics.cta')).toBe('Continue');
-    expect(t('onb.basics.yearHint')).toBe('Pick your birth year to go on.');
-    const s = source('features', 'onboarding', 'BasicsScreen.tsx');
-    expect(s).toMatch(/disabled=\{b\.birthYear === null\}/);
-    expect(s).toMatch(/b\.birthYear === null \? \(\s*<KText[^>]*>\s*\{t\('onb\.basics\.yearHint'\)\}/);
-  });
-
-  test('BY3: under 18 still asks once, then sets the Keychain lock', () => {
-    const s = source('features', 'onboarding', 'BasicsScreen.tsx');
-    expect(s).toMatch(/isUnderAge\(b\.birthYear, year\)/);
-    expect(s).toMatch(/Alert\.alert\(t\('onb\.age\.confirm\.title'/);
-    expect(s).toMatch(/await setAgeBlocked\(true\)/);
-  });
+  // BY1–BY3 retired by T39 (#412–#413, specs/onboarding-screens.md OS3–OS4): the birth-year card they read in
+  // BasicsScreen.tsx's source is gone. Their promises now live in rendered T39 tests (tasks/T39/TESTING.md, Superseded):
+  // BY1 (only the age is asked, no height, build or fit; one layout for setup and Restore) → T39-setupScreens
+  // "OS4.1 · on open: …" and "SY4.1 · the name comes first and is optional"; BY2 (Continue waits for the answer, the
+  // hint only while none is picked) → "OS4.1 · on open: …" and "OS4.1 · one tap picks, another moves the pick"; BY3
+  // (under 18 asks once, then the Keychain lock) → "OS4.4 · Under 18 asks once with the new title" and
+  // "OS4.4 · That's right locks the app".
 
   test('BY4: Consent echoes the year alone; its text and version are unchanged', () => {
     expect(basicsEcho({ ...EMPTY_BASICS, birthYear: 2004 })).toBe('Born in 2004');

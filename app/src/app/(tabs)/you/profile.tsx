@@ -1,4 +1,5 @@
-// Y2 · Style profile (02 §3.6 Y2; revised #246): Basics (fit; birth year read-only; height and build gone since #375), Styles (up to 3,
+// Y2 · Style profile (02 §3.6 Y2; revised #246): Basics (his first name, editable; fit; his age band read-only, T39 OS4.6
+// and SY4; height and build gone since #375), Styles (up to 3,
 // numbered in pick order) and Budget per piece (only ever asked; "Prefer not to say" is an answer). Leaving any way
 // saves, so the header says `Done` (#370), not Save. It writes the profile row the way onboarding does (a blank one
 // when none is stored); none of this moves a score (picks only order tips and break "Reads as" ties, #211). A 4th
@@ -7,7 +8,7 @@
 // focal allowance) and the Why sheet re-explains old checks with it, so editing it here would change scores.
 import * as Haptics from 'expo-haptics';
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Pressable, ScrollView, View } from 'react-native';
+import { AccessibilityInfo, Pressable, ScrollView, TextInput, View } from 'react-native';
 import { Stack, router, useNavigation } from 'expo-router';
 import { Chip, ChipFlow, KCard, KText, MonoLabel, RowDivider, opacity, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
@@ -15,8 +16,11 @@ import { useLive } from '@/data/useLive';
 import { styleLabel } from '@/features/morning/copy';
 import { LOOKS, MAX_PICKS, togglePick } from '@/features/onboarding/looks';
 import { NumberedPill } from '@/features/you/NumberedPill';
-import { BasicsFields, Row } from '@/features/you/BasicsFields';
-import { BUDGETS, blankProfile, budgetLabel, draftOf, saveDraft, type ProfileDraft } from '@/features/you/profile';
+import { BasicsFields } from '@/features/you/BasicsFields';
+import { BUDGETS, ageRowValue, blankProfile, budgetLabel, draftOf, saveDraft, type ProfileDraft } from '@/features/you/profile';
+import { NAME_MAX } from '@/features/onboarding/aboutStep';
+import { CONTROL_TEXT_MAX_SCALE } from '@/design-system/tokens';
+import { textStyles } from '@/design-system/typography';
 import { sessionClock } from '@/state/session';
 import { t } from '@/i18n/en';
 
@@ -68,18 +72,13 @@ export default function StyleProfileScreen() {
           <>
             <Section title={t('profile.basics')}>
               <KCard radius={radius.cardSmall}>
+                <NameRow value={draft.name} onChange={(name) => update({ name })} />
+                <RowDivider inset={space.rowX} />
                 <BasicsFields value={draft} onChange={update} />
                 <RowDivider inset={space.rowX} />
-                <Row
-                  label={t('onb.basics.birthYear')}
-                  spoken={t('settings.a11y.value', { label: t('onb.basics.birthYear'), value: profile.birthYear !== null ? String(profile.birthYear) : t('profile.birthYearNone') })}
-                >
-                  <KText variant="callout" color="ink2" tabular>
-                    {profile.birthYear !== null ? String(profile.birthYear) : t('profile.birthYearNone')}
-                  </KText>
-                </Row>
+                <AgeRow profile={profile} />
               </KCard>
-              <Footer>{t('profile.birthYearNote')}</Footer>
+              <Footer testID="profile-basics-note">{t('profile.ageNote')}</Footer>
             </Section>
 
             <Section title={t('profile.styles')} right={t('profile.stylesMax')}>
@@ -172,10 +171,70 @@ function Section({ title, right, children }: { title: string; right?: string; ch
   );
 }
 
-function Footer({ children }: { children: string }) {
+function Footer({ children, testID }: { children: string; testID?: string }) {
   return (
-    <KText variant="footnote" color="ink3" style={{ paddingHorizontal: space.xs }}>
+    <KText testID={testID} variant="footnote" color="ink3" style={{ paddingHorizontal: space.xs }}>
       {children}
     </KText>
+  );
+}
+
+/** A 52 pt row: label left, value right; stacked at accessibility sizes (as BasicsFields' Row). */
+function rowStyle(stacked: boolean) {
+  return [
+    { minHeight: 52, paddingHorizontal: space.rowX, paddingVertical: space.s },
+    stacked ? { gap: space.xs } : { flexDirection: 'row' as const, alignItems: 'center' as const, justifyContent: 'space-between' as const, gap: space.m },
+  ];
+}
+
+/** Name (SY4): an inline field, in ink so it reads as editable next to Age's ink2 value. A tap anywhere on the row
+ *  focuses it; VoiceOver reads the field itself ("Name", text field). Saved the way the page saves (Done, Back, a swipe). */
+function NameRow({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const { colors, isAccessibilitySize } = useTheme();
+  const input = useRef<TextInput>(null);
+  return (
+    <Pressable testID="profile-name-row" accessible={false} onPress={() => input.current?.focus()} style={rowStyle(isAccessibilitySize)}>
+      <KText variant="callout" weight="500" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        {t('profile.name')}
+      </KText>
+      <TextInput
+        ref={input}
+        testID="profile-name-input"
+        value={value}
+        onChangeText={onChange}
+        placeholder={t('onb.about.namePlaceholder')}
+        placeholderTextColor={colors.ink3}
+        accessibilityLabel={t('profile.name')}
+        maxLength={NAME_MAX}
+        autoCapitalize="words"
+        autoComplete="given-name"
+        textContentType="givenName"
+        autoCorrect={false}
+        returnKeyType="done"
+        clearButtonMode="while-editing"
+        allowFontScaling
+        maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
+        style={{
+          flex: isAccessibilitySize ? undefined : 1, color: colors.ink, fontSize: textStyles.callout.fontSize, textAlign: isAccessibilitySize ? 'left' : 'right',
+          paddingVertical: space.xs,
+        }}
+      />
+    </Pressable>
+  );
+}
+
+/** Age (OS4.6): read-only, one VoiceOver element ("Age, 22–25"); an older profile shows the band from its birth year. */
+function AgeRow({ profile }: { profile: Parameters<typeof ageRowValue>[0] }) {
+  const { isAccessibilitySize } = useTheme();
+  const v = ageRowValue(profile, sessionClock.now().getFullYear());
+  return (
+    <View testID="profile-age-row" accessible accessibilityLabel={v.spoken} style={rowStyle(isAccessibilitySize)}>
+      <KText variant="callout" weight="500" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        {t('profile.age')}
+      </KText>
+      <KText testID="profile-age-value" variant="callout" color="ink2">
+        {v.shown}
+      </KText>
+    </View>
   );
 }

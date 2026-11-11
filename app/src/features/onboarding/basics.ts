@@ -3,7 +3,7 @@
 // until he taps, #276) is asked by Kit after the first score (features/aboutYou) and edited in You. Height and build
 // are no longer asked at all (#375).
 import type { KittedStore } from '@/data/store';
-import { normStyleKey, type StyleKey } from '@/data/types';
+import { normStyleKey, type AgeBand, type StyleKey } from '@/data/types';
 import { styleLabel } from '@/features/morning/copy';
 import { t, type StringKey } from '@/i18n/en';
 import type { OnboardingAnswers } from './complete';
@@ -67,11 +67,48 @@ export function parseLooks(raw: string | null): StyleKey[] {
   }
 }
 
+// ── About you's draft (T39, OS4) ─────────────────────────────────────────────────────────────────────────────────
+// Kept here, next to the other drafts, so loadDraft can read it without an import cycle; aboutStep.ts re-exports it.
+
+/** One of About you's five answers: under 18, or his band. */
+export type AgeChoice = 'under18' | AgeBand;
+/** In the order shown. */
+export const AGE_CHOICES: readonly AgeChoice[] = ['under18', '18-21', '22-25', '26-30', '31+'];
+const AGE_BANDS: readonly AgeBand[] = ['18-21', '22-25', '26-30', '31+'];
+
+export function isAgeBand(x: unknown): x is AgeBand {
+  return typeof x === 'string' && (AGE_BANDS as readonly string[]).includes(x);
+}
+
+/** The About you draft, kv `onboarding.about` (local, never synced): his pick and the field's text as typed. */
+export const ABOUT_KEY = 'onboarding.about';
+export interface AboutDraft {
+  age: AgeChoice | null;
+  name: string;
+}
+export const EMPTY_ABOUT: AboutDraft = { age: null, name: '' };
+
+/** Bad JSON or an unknown age: that field empty. */
+export function parseAbout(raw: string | null): AboutDraft {
+  if (!raw) return { ...EMPTY_ABOUT };
+  try {
+    const v = JSON.parse(raw) as Partial<Record<keyof AboutDraft, unknown>> | null;
+    if (!v || typeof v !== 'object') return { ...EMPTY_ABOUT };
+    return {
+      age: (AGE_CHOICES as readonly unknown[]).includes(v.age) ? (v.age as AgeChoice) : null,
+      name: typeof v.name === 'string' ? v.name : '',
+    };
+  } catch {
+    return { ...EMPTY_ABOUT };
+  }
+}
+
 export async function loadDraft(store: Pick<KittedStore, 'getKv'>) {
   return {
     looks: parseLooks(await store.getKv(LOOKS_KEY)),
     otherStyle: await store.getKv(OTHER_STYLE_KEY),
     basics: parseBasics(await store.getKv(BASICS_KEY)),
+    about: parseAbout(await store.getKv(ABOUT_KEY)),
   };
 }
 

@@ -1,0 +1,58 @@
+# T39 · OS5.3 (tasks/T39/TESTING.md): from a fresh install, Later on Kit's offer removes its buttons and posts Kit's line,
+# and after a relaunch the buttons stay gone.
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T39-setup-later.yaml (Metro running)
+appId: com.trykitted.kitted
+name: T39 · Later on the offer
+---
+- launchApp:
+    clearState: true
+    clearKeychain: true
+    permissions:
+      camera: allow
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn: "http://.*:8081"
+- extendedWaitUntil:
+    visible: "Get started"
+    timeout: 90000
+- tapOn: "Get started"
+- extendedWaitUntil:
+    visible: "Which of these would you actually wear\\?"
+    timeout: 10000
+- tapOn: "Not sure"
+- extendedWaitUntil:
+    visible: "About you"
+    timeout: 10000
+- tapOn: "22–25"
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
+    timeout: 15000
+- tapOn: "Later"
+- extendedWaitUntil:
+    visible: ".*No rush\\. Tap the camera button whenever you're ready\\."
+    timeout: 10000
+- assertNotVisible: "Later"
+- assertNotVisible:
+    text: "Check my fit\\. Opens the camera\\."
+    index: 1
+- assertVisible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
+- assertNotVisible: "Take photo"
+
+# Relaunch (no clearing): still no buttons, the line still there.
+- stopApp
+- launchApp
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn: "http://.*:8081"
+- extendedWaitUntil:
+    visible: ".*No rush\\. Tap the camera button whenever you're ready\\."
+    timeout: 90000
+- assertNotVisible: "Later"
+- assertNotVisible:
+    text: "Check my fit\\. Opens the camera\\."
+    index: 1

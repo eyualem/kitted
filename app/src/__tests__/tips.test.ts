@@ -3,6 +3,7 @@
 import { createMemoryStore } from '@/data/memoryStore';
 import type { FitCheckRow } from '@/data/types';
 import { completeOnboarding } from '@/features/onboarding/complete';
+import { postFirstCheckOffer } from '@/features/onboarding/firstCheckOffer';
 import {
   FIRST_SCORE_AFTER_KEY, TIP_IDS, dismissTip, firstScoreAfter, firstScoreTipCheck, hasScoredCheck, isKitHello, isTipDone, showMeAround,
   tabTipShows, tipKey,
@@ -22,8 +23,8 @@ function check(id: string, createdAt: number, over: Partial<FitCheckRow> = {}): 
 const answers = { styles: [] as never, fitPreference: '', birthYear: 2004 };
 
 describe('SY2.1 · Kit\'s hello at setup\'s end', () => {
-  it('posts the hello once, with no separate AI note, on Agree and on Not now', async () => {
-    for (const consent of [true, false]) {
+  it('posts the hello once, with no separate AI note, at setup\'s end (About you, "later") and on the older paths', async () => {
+    for (const consent of ['later', true, false] as const) {
       const store = createMemoryStore();
       await completeOnboarding(store, { ...answers, consent }, 1000, counterIds());
       const ms = (await store.chat.all()).sort((a, b) => a.createdAt - b.createdAt);
@@ -33,11 +34,19 @@ describe('SY2.1 · Kit\'s hello at setup\'s end', () => {
     }
   });
 
-  it('reads exactly the approved words, ending with the AI note word for word', () => {
+  it('sits above Kit\'s first-check offer card (SY2.1, OS5)', async () => {
+    const store = createMemoryStore();
+    const ids = counterIds();
+    await completeOnboarding(store, { ...answers, consent: 'later' }, 1000, ids);
+    await postFirstCheckOffer(store, 1000, ids);
+    const ms = (await store.chat.all()).sort((a, b) => a.createdAt - b.createdAt);
+    expect(ms.map((m) => (isKitHello(m) ? 'hello' : m.cardType))).toEqual(['hello', 'firstCheckOffer']);
+  });
+
+  it('reads exactly the approved words (its last line follows the explain-rating spec, Nov 10)', () => {
     expect(t('stylist.hello')).toBe(
-      "I'm Kit, your stylist. Here's how this works:\n· Send me a photo of your fit. I'll score it out of 10 and give you the fix that raises it.\n· Ask me anything about clothes, like what to wear to a career fair.\n· Every fit check adds your pieces to Closet, so my ideas get better.\nQuick note: I'm an AI. I read clothes, never faces, and I can get things wrong. Tap \"Not quite right?\" when I do.",
+      "I'm Kit, your stylist. Here's how this works:\n· Send me a photo of your fit. I'll score it out of 10 and give you the fix that raises it.\n· Ask me anything about clothes, like what to wear to a career fair.\n· Every fit check adds your pieces to Closet, so my ideas get better.\nQuick note: I'm an AI. I read clothes, never faces, and I can get things wrong. Tell me when I do.",
     );
-    expect(t('stylist.hello').endsWith(t('stylist.aiNote').replace("I'm Kit, your stylist. ", ''))).toBe(true);
   });
 
   it('never reaches a question\'s history (it has no text of its own)', async () => {

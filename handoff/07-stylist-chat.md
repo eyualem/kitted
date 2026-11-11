@@ -160,7 +160,7 @@ his question
 ### 5.1 Kinds of question and their evidence
 | Kind (router) | Typical words | Evidence computed by code | Usual attachment |
 |---|---|---|---|
-| **explain** | why, my score, my 7, today's check | The named check's parts, reasons, fixes with targets, Reads as, Going for | Link to the check |
+| **explain** | why, my score, my 7, today's check | The named check's parts, reasons, fixes with targets, Reads as, Going for | Link to the check (Explain rating on the card uses this kind with code-picked evidence: `specs/explain-rating.md`) |
 | **what-if** | if I swap, what if I wore, tucked | `applyPartsFix` / a swap on that check's reading → the code's new score (§D3) | Link, or "Check it" |
 | **goes with** | goes with, wear with, match, pair | `pickOutfit` with the piece pinned, 3 versions (best, dressier, more relaxed) | Outfit card |
 | **what to wear** | what should I wear, tonight, tomorrow, for [occasion] | `pickOutfit` for the occasion + today's weather (or season) | Outfit card |
@@ -169,7 +169,7 @@ his question
 | **fit / how-to** | how should, how do I, hem, cuff, tuck, size | Guide section only | None |
 | **shape** (proportions) | too long, baggy, tuck, crop, how should it sit, does it look off | The check's Proportions reasons, plus what the photo **couldn't** show (the stack at the shoe, where a jacket ends, a top running long are tips only, [PRO-10]); his pieces' leg shapes | None, or "Check it" |
 | **remember** | I'm a…, I have…, my budget, I hate | None | Saved chip |
-| **feedback** | wrong, unfair, should be higher | The named check | Opens "Not quite right?" |
+| **feedback** | wrong, unfair, should be higher | The named check | Offers "Re-score with …" for the piece he names (`specs/explain-rating.md`; "Not quite right?" is off the card) |
 | **general** | anything else about clothes | None (guide only) | None |
 
 If the router isn't sure, it sends the pack with no evidence, and the model may ask for **one** lookup (`need: goes_with P7` etc.); the phone computes it and makes a second call. At most one extra round, so the slow path is about 2× the fast one. The plan is to make the router good enough that this is rare (measured in the test, §10).

@@ -144,6 +144,8 @@ export const profileSpec: TableSpec<ProfileRow> = {
     id: 'text', birthYear: 'int', heightCm: 'real', build: 'text', fitPreference: 'text', styles: 'json', boldness: 'text',
     budget: 'text', lastOccasion: 'text', consentVersion: 'text', consentAt: 'int', onboardingDone: 'bool', ideaTime: 'text',
     units: 'text', createdAt: 'int',
+    // T39 (V9): his age band from About you, when he picked it, and his first name. Phone only (sync/schema.ts omit).
+    ageBand: 'text', ageBandAt: 'int', name: 'text',
   },
 };
 

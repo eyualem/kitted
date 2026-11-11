@@ -52,6 +52,8 @@ export interface KTextProps {
   importantForAccessibility?: 'auto' | 'yes' | 'no' | 'no-hide-descendants';
   accessibilityElementsHidden?: boolean;
   onPress?: () => void;
+  /** For tests and Maestro (T39): passed to the Text as is. */
+  testID?: string;
 }
 
 export function KText(props: KTextProps) {
@@ -101,6 +103,7 @@ export function KText(props: KTextProps) {
       importantForAccessibility={props.importantForAccessibility}
       accessibilityElementsHidden={props.accessibilityElementsHidden}
       onPress={props.onPress}
+      testID={props.testID}
     >
       {props.children}
     </Text>
