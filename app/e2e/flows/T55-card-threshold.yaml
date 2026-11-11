@@ -1,0 +1,68 @@
+# T55 · F6.2 · demo 39, 40, 54 (and 29, unchanged): the morning card waits until Kit knows two outfits, and a checked
+# card that suggested nothing reads "Today's fit" / "Tonight's fit" under his check's occasion.
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T55-card-threshold.yaml (Metro running)
+# Matching: Maestro matches a pattern against an element's WHOLE text or VoiceOver label (a full regex match). The
+# checked row is ONE VoiceOver element (a button, testID idea-checked) whose label joins its parts ("Today, Everyday:
+# Today's fit, 7.5, Put together. Shows the result."); the tag, title and score inside it aren't in the hierarchy, so the
+# steps match that label. A must-not uses ".*words.*" so it can't pass just because the words sit inside a longer label.
+# The card's own label for Class is "Class/Work" (cardOccasionLabel), so screen 29's tag reads "Today · Class/Work".
+appId: com.trykitted.kitted
+name: F6.2 · demo 39, 40, 54
+---
+# 39 · three pieces (T1 white tee, B1 khaki chinos, S1 white sneakers): one outfit, so the card suggests none and says why.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "39"
+- extendedWaitUntil:
+    visible: "3 pieces so far"
+    timeout: 90000
+- assertVisible: "I only know 3 of your pieces. Check today's fit and I'll learn the rest."
+- assertVisible: "Check my fit"
+- assertNotVisible: ".*Wear this.*"
+- assertNotVisible: ".*Swap.*"
+- assertNotVisible: ".*Wearing something else\\? Check it.*"
+
+# 40 · the day card (empty closet at 7:40, its own occasion Class) collapsed by his Everyday check at 7:42.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "40"
+- extendedWaitUntil:
+    visible:
+      id: "idea-checked"
+    timeout: 90000
+- assertVisible:
+    id: "idea-checked"
+    text: "Today, Everyday: Today's fit, \\d+\\.\\d, .+\\. Shows the result\\."
+- assertNotVisible: ".*You went with your own.*"
+- assertNotVisible: "Today, Class/Work: .*"
+
+# 54 · the evening card (its own occasion Going out) collapsed by his Everyday check at 6:32 pm.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "54"
+- extendedWaitUntil:
+    visible:
+      id: "idea-checked"
+    timeout: 90000
+- assertVisible:
+    id: "idea-checked"
+    text: "Tonight, Everyday: Tonight's fit, \\d+\\.\\d, .+\\. Shows the result\\."
+- assertNotVisible: ".*You went with your own.*"
+- assertNotVisible: "Tonight, Going out: .*"
+
+# 29 · unchanged: a card that suggested an outfit, then his own check: "You went with your own" under the card's occasion.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "29"
+- extendedWaitUntil:
+    visible:
+      id: "idea-checked"
+    timeout: 90000
+- assertVisible:
+    id: "idea-checked"
+    text: "Today, Class/Work: You went with your own, \\d+\\.\\d, .+\\. Shows the result\\."
+- assertNotVisible: "Today, .*: Today's fit, .*"

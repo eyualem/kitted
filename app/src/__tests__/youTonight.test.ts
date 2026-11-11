@@ -57,14 +57,8 @@ describe("YT1: Today's card can be acted on", () => {
   });
 });
 
-describe('YT2: Privacy & data is one tap from You', () => {
-  it('a Privacy & data row on You itself, still in Settings too', () => {
-    const you = src(`${YOU}/index.tsx`);
-    expect(you).toContain("t('settings.privacy')");
-    expect(you).toContain("'/you/privacy'");
-    expect(src(`${YOU}/settings.tsx`)).toContain("'/you/privacy'");
-  });
-});
+// YT2 (Privacy & data one tap from You, and still in Settings) moved to youSettingsHome.test.tsx › SY1.4 (T34): the
+// Settings page is gone, so You renders the one Privacy & data row, and that test renders You and taps it.
 
 describe('YT3: no profile still has a way into the editor', () => {
   it('a blank profile has no looks, no basics, no birth year and no consent', () => {

@@ -1,6 +1,6 @@
 #!/bin/sh
 # usage: design-shot.sh <task ID> <phone 1-n> <light|dark>   -> tasks/<ID>/design/NN-theme.png (804x1748)
-# Screenshots one phone of tasks/<ID>/design.html on its own, at 2x, for DESIGN.md, the PR and the critic.
+# Screenshots one phone of tasks/<ID>/design.html on its own, at 2x, for DESIGN.md and the PR.
 set -e
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 ID=${1:?task ID}; N=${2:?phone number}; THEME=${3:-light}

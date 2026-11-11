@@ -1,7 +1,23 @@
 # T38 · Report
 
 ## Summary for the founder
-<filled in at the end>
+- **What you'll see:** Welcome has no photo now. A drawn outfit (denim jacket, white sweater, grey trousers, grey chunky sneakers) sits next to a score card that opens at **7.5 Put together**. The sneakers swap to white low-profile ones and the card counts up to **8.0 Sharp** with the fix's words, then holds. With Reduce Motion on, it shows 8.0 straight away. The Example check shows the same drawing with its full result card and the new intro and caption.
+- **What's real:** every score, word and fix comes from the real scoring code run on the drawn outfit's reading. Nothing is typed in by hand, nothing is sent and nothing is saved.
+- **Checked:**
+  - 46 locked tests, plus the whole app suite (1694 passed).
+  - Three review rounds, which planted 24 deliberate bugs. Every one that changes behaviour is caught.
+  - Simulator screenshots of Welcome, the Example check, its sheet and the sign-in variant, light and dark (`tasks/T38/review/`).
+- **Fixed after the review:** the screenshots showed "Everyday" broken mid-word in the Example check's bubble caption ("Everyda / y"). The caption row now wraps, so "Example" moves to its own line (`DrawnOutfit.tsx`, one style change; the T38 tests pass, tsc is clean). Re-shot: `04-example-{light,dark}-top-fixed.png`.
+- **Not checked:**
+  - the largest text sizes on the Simulator;
+  - the small iPhones (SE, mini);
+  - the tap-through flow;
+  - what VoiceOver actually says;
+  - whether VoiceOver can reach "Why 7.5?" inside the grouped result card.
+  
+  The new workflow (#89, #420) skips the full flow suite per task. The core flows run once before the next TestFlight build.
+- **The stranger photos:** none is shown on a real iPhone any more. The stock photo files still ship inside the app, for the Simulator's sample-photo picker and the demo stories. Taking them out of the app is a separate cleanup.
+- **Verdict:** ready (the verifier's round 3), with the caption fix.
 
 ## Built (implementer)
 *Transcribed by the coordinator from the implementer's report: the harness refused the implementer's own write to this file.*
