@@ -15,7 +15,7 @@ import {
   parseFirstVisit, parseLastOpened, piecesAddedBy, seeCloset,
 } from '@/features/closet/arrivals';
 import { createClosetService } from '@/features/closet/service';
-import { heldChecks, holdBadge, HOLD_MAX_MS, landed, launch, noRowToSlide, noSlide, release, resetSlide, shouldSlide } from '@/features/closet/slide';
+import { endedUnscored, heldChecks, holdBadge, HOLD_MAX_MS, landed, launch, noRowToSlide, noSlide, release, resetSlide, shouldSlide } from '@/features/closet/slide';
 import { createFitCheckService, DEFAULT_TIMERS } from '@/features/fitcheck/service';
 import { completeOnboarding } from '@/features/onboarding/complete';
 import type { PrivacyFiles } from '@/features/privacy/files';
@@ -322,5 +322,17 @@ describe('SY2.2 · the slide is never given up too early (the light recording wi
     } finally {
       jest.useRealTimers();
     }
+  });
+});
+
+describe('SY2.2 · a failed check that is tried again still slides (review round 3, D1)', () => {
+  it('SY2.2 · failed lets the badge go but keeps the slide; Try again (the same check id) scores and slides', () => {
+    const base = { fresh: true, readOnly: false, reduceMotion: false, onScreen: true, pieces: 4, checkId: 'R1' };
+    holdBadge('R1'); // reading
+    endedUnscored('R1'); // failed: the badge isn't held for nothing
+    expect(heldChecks().has('R1')).toBe(false);
+    holdBadge('R1'); // "Try again" reads the same check
+    expect(heldChecks().has('R1')).toBe(true);
+    expect(shouldSlide(base)).toBe(true);
   });
 });

@@ -102,6 +102,12 @@ export function landed(checkId: string): void {
   emit();
 }
 
+/** A check ended without a score (failed, refused, unreadable): the badge isn't held for it, and nothing is marked, so
+ *  "Try again", which reads the same check again, still slides when it scores. */
+export function endedUnscored(checkId: string): void {
+  release(checkId);
+}
+
 /** The card decided there's no slide: mark it, so a remount (a scroll, a relaunch of the list) never plays it later. */
 export function noSlide(checkId: string): void {
   // A card unmounting mid-flight (its copies already in the air) leaves them to land.

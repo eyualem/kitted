@@ -34,7 +34,7 @@ import { justAnswered, TapCard, tapChoice } from '@/features/tap/TapCard';
 import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
 import { DoubtLine } from '@/features/closet/DoubtLine';
 import { addedIds, closetSummaryText, openAsks } from '@/features/closet/summaryText';
-import { holdBadge, noRowToSlide, noSlide } from '@/features/closet/slide';
+import { endedUnscored, holdBadge, noRowToSlide, noSlide } from '@/features/closet/slide';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { askQuestionText, askReasonText, isPluralPiece } from '@/features/closet/askText';
 import { PieceArt } from '@/features/closet/GarmentArt';
@@ -114,7 +114,8 @@ export function FitCheckCard({ checkId, readOnly = false }: { checkId: string; r
       noteLive(checkId);
       if (!readOnly) holdBadge(checkId);
     } else if (status === 'failed' || status === 'notClothed' || status === 'unreadable' || status === 'held') {
-      if (wasLive(checkId)) noSlide(checkId);
+      // Let go only: "Try again" reads this same check again, and its score must still slide.
+      if (wasLive(checkId)) endedUnscored(checkId);
     }
   }, [status, checkId, readOnly]);
   if (!row) return null;
