@@ -138,3 +138,28 @@ Read the diff since `a43ace27` (`ConfirmDeck.tsx`, `closet/index.tsx`, the CB2.1
 - Still unchecked on a device: VoiceOver's actual words and order (Y24), and the one-frame folded flash on a fresh open.
 
 **Verdict: ready.**
+
+### Round 6 (reviewer, the quick-swipe fix, `07bfcfb4`)
+Read the diff since `85a8e748` (`ConfirmDeck.tsx`, `closet/index.tsx`, `closetDeck.test.tsx`, the flow, the spec's two Folded lines); Built last. Ran nothing.
+
+**What changed and whether it's sound**
+- A change now ends when the card's animation reports done *and* its time is up, with a 600 ms backstop, instead of on a JS timer alone. That matches the failure described (the card switching to follow the finger while the native slide was unfinished), and the backstop means it can't stick.
+- Closet no longer turns its scrolling off during a swipe (the `swiping` state and `scrollEnabled` are gone from the screen); the pan handlers moved from the sliding card to the deck, which doesn't move. Both reasons are written beside the code.
+- The spec's Folded section now describes the picture and question row and the new VoiceOver words (this closes Round 5's follow-up).
+
+**Tests: nothing weakened beyond the fix.**
+- `scrollEnabled toBe(false)` became `not.toBe(false)` in "a swipe moves, wraps and never answers": a reversal of a locked assertion, but the fix removes that behaviour, the reason is in a comment, and the founder said to fix it here. A new test asserts the same thing again on its own, so it can't silently return.
+- `panCard()` now looks on the deck first and falls back to the card; every swipe test still drives the real handlers.
+- Two new CB2.4 tests (a second swipe right after the first moves the deck; scrolling is never switched off); the builder says the second failed on the old code.
+- The flow's four edits keep what each step proves: Undo by point (the toast's known limit), the drag's target Bottoms instead of Shoes (one drag is about 350 pt; the check, that a vertical drag scrolls Closet and leaves the card, is the same), screen 70 now expects the folded row and taps the chip by point (the opened score card is one accessibility element) and still ends on "Saved as your …" and a Closet with no question. Slightly weaker in that "Yes, same one" is no longer found by name there, which the builder explains and notes for the fit-check lane.
+
+**Defects:** none.
+
+**Small things (never block)**
+- With scrolling no longer locked, a swipe with a lot of vertical drift can move the page a few points while the card moves sideways. The 10 pt "vertical first means no swipe" rule keeps it small; check with a real finger.
+- A second swipe within about a second can be dropped by iOS before the app sees it (the builder measured it: no touch event); the next swipe works. Known, left as is.
+- `TESTING.md` line 39 still says the handlers are on `closet-confirm-card`; they're on the deck now (the doc is locked, so left alone, but it is stale).
+- `onSwipingChange` is still a prop on the deck but nothing on the screen uses it.
+- In `ConfirmDeck.tsx`, an animation cut short by a new change reports "done" for the old change; its timers are cleared, so I see no visible effect, but a late focus move after a very fast pair of changes is possible.
+
+**Verdict: ready.**
