@@ -117,6 +117,7 @@ The rule: **never make a test easier so a task can pass.** How much proof a task
 - The skill: `.claude/skills/build-task/SKILL.md`
 - The agents: `.claude/agents/reviewer.md` (normal and strict), `test-writer.md` and `implementer.md` (strict)
 - The design step: `.claude/agents/ui-designer.md`; the frames start from `tools/mockshots/design-shell.sh` and are shot with `design-shot.sh`
+- A new look for the whole app is a one-off stage, run only when you type `/redesign` (parked until after the beta, #420): `.claude/skills/redesign/SKILL.md`. It adds nothing to `/build-task`.
 - The templates: `.claude/skills/build-task/templates/`
 - The test lock: `.claude/hooks/protect-tests.sh`; the guard test: `app/src/__tests__/testGuards.test.ts`
 - The interviews: `.claude/skills/grill-me/SKILL.md`
