@@ -56,7 +56,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y25** · **P2** · OK deploying the server change that doesn't count Explain rating as a question (1 min; Claude runs it) → Explain rating on testers' phones (T26, T58)
 - [ ] **Y26** · **P2** · Merge the new setup (#90, then #93), then go through it fresh on your phone (delete Kitted, reinstall): Welcome's drawing, About you, Kit's offer, Later, then Check my fit and the agreement once (10 min) → setup confirmed on a real iPhone, VoiceOver aside
 - [ ] **Y27** · **P2** · Phone pass on Closet's one-card questions (after the next TestFlight build, or demo screen 262 on your phone): swipe a card sideways, answer one and feel the buzz, tap Undo, then turn on VoiceOver and Reduce Motion and step through once, and on the score card check VoiceOver reaches "Yes, same one"; try one diagonal swipe (10 min) → the one-card review checked by hand (T74)
-- [ ] **Y28** · **P2** · Phone pass on the first-run intro once the T35 PR is merged (delete Kitted, reinstall, about 5 min): do your first check, watch the pieces slide into Closet and feel the light buzz as they land, see the navy number on Closet (and in dark mode), open Closet for `From your first check` with `New`, leave and come back (gone). With VoiceOver on, a new piece reads "New, …" → the beta's first-run intro (T35)
+- [ ] **Y28** · **P2** · Phone pass on the first-run intro, now in TestFlight build 0.1.0 (2) (delete Kitted, reinstall it from TestFlight, about 5 min): do your first check, watch the pieces slide into Closet and feel the light buzz as they land, see the navy number on Closet (and in dark mode), open Closet for `From your first check` with `New`, leave and come back (gone). With VoiceOver on, a new piece reads "New, …" → the beta's first-run intro (T35)
 
 ---
 
@@ -208,6 +208,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-11 · first-run-intro: TestFlight build 0.1.0 (2) with the intro (EAS `13dc510d`, auto-submitted with the stored App Store Connect key, the founder: "Go ahead with the build"); check and guard:release passed, Maestro flows interrupted (not verified); log #440
 - 2026-11-11 · first-run-intro: T35 merged (#100, the founder: "Merge #100"): Kit's one-line hello, the slide into Closet with a navy badge, `New` on the first visit; a lost light-mode slide caught by frame-checking the recording, fixed with a test; Y28 is the phone pass
 - 2026-11-11 · first-run-intro: T35 built (Kit's hello `I'm Kit, your stylist.`; the slide into Closet from the card's row, or its bottom edge while folded or on a re-check; the navy badge, `me` in dark; `From your first check` with `New` on the first visit); check green, screenshots and recordings in `tasks/T35/shots/`; log #438–439
 - 2026-11-10 · first-run-intro: T36 spec rewrite approved (SY2 the slide into Closet, SY3 removed, F5.1 in the agreement), research and frames in `tasks/T36/`; log #429
@@ -222,4 +223,3 @@ The last 15 sessions, newest first.
 - 2026-11-10 · T74 ready (normal, one fix round): Closet's To confirm one card at a time; design approved; the locked flow red at 3 tool-limited steps, for your call; PR #94 stacked on #84 · #432–425
 - 2026-11-10 · The build workflow sized to the risk (you): tiny (the session alone, 10–20 min), normal (one quick reviewer), strict for scoring, privacy and the age gate only; existing screens aren't drawn; the planner, verifier and critic retired; the core flows run before each TestFlight build; the redesign stage parked · #420
 - 2026-11-10 · Workflow report in `reports/` (43% of agent calls on testing and checking, 18% on building; a lean workflow proposed for a separate session); the S/M/L sizes undone; the 4 child sessions paused · #419
-- 2026-11-10 · T34: You is the settings home (no gear, no Settings page; an old Settings link lands on its rows); verified ready in round 3 of 3; also fixed at the largest text size: Acknowledgements, What Kit knows, the pick numbers · #418, PR #85
