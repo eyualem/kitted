@@ -53,7 +53,10 @@ name: CB2 · To confirm, one card at a time
 - extendedWaitUntil:
     visible: "Undo"
     timeout: 5000
-- tapOn: "Undo"
+# Maestro's tap or long press on the "Undo" element never reaches the toast's button (the toast just times out); a tap
+# by screen point does, as in T73's flow (the toast sits 100 pt above the bottom; Undo is at about 71%, 79%).
+- tapOn:
+    point: "71%,79%"
 - extendedWaitUntil:
     visible: ${maestro.copiedText}
     timeout: 5000
@@ -101,10 +104,12 @@ name: CB2 · To confirm, one card at a time
 - extendedWaitUntil:
     visible: "Question 5 of 5\\. How do .*"
     timeout: 5000
+# The fit card is short: a swipe from its element's center scrolled Closet instead. Straight across the card's row
+# (about 29% down on the 17e and the 17 Pro), as a finger would.
 - swipe:
-    from:
-      id: "closet-confirm-card"
-    direction: LEFT
+    start: "85%,29%"
+    end: "15%,29%"
+    duration: 300
 - extendedWaitUntil:
     visible: "Question 1 of 5\\. .*"
     timeout: 5000
@@ -258,14 +263,23 @@ name: CB2 · To confirm, one card at a time
     file: ../common/open-demo.yaml
     env:
       SCREEN: "70"
+# The score card folds to its rating (#341); a tap on its body opens it, and the question is inside.
 - extendedWaitUntil:
-    visible: "Yes, same one"
+    visible: "No quick fixes.*"
     timeout: 90000
 - tapOn: "Closet"
 - extendedWaitUntil:
     visible: "Question 1 of 1\\. .*"
     timeout: 10000
 - tapOn: "Stylist"
+- extendedWaitUntil:
+    visible: "No quick fixes.*"
+    timeout: 10000
+- runFlow:
+    when:
+      notVisible: "Yes, same one"
+    commands:
+      - tapOn: "No quick fixes.*"
 - extendedWaitUntil:
     visible: "Yes, same one"
     timeout: 10000
