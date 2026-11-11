@@ -1,4 +1,4 @@
-// The grouped list You › Settings, Plan & usage and Notifications are built from (02 Y4–Y6; mockups/theme-round2.html
+// The grouped list You, Plan & usage and Notifications are built from (02 Y4–Y6; mockups/theme-round2.html
 // `.rowi`): one mono label per section (#246), a KCard of rows with hairlines between them, 44 pt+ rows, titles
 // 16 pt semibold, details 13 pt ink3. Links are ink (copper is only for a score that moves, #231). At accessibility
 // sizes a row's title and value stack instead of squeezing.
@@ -55,6 +55,9 @@ export function Section({ label, footer, header, children }: { label?: string; f
   );
 }
 
+/** How far a one-word row title may shrink to stay whole on its line (it only shrinks when it doesn't fit). */
+const TITLE_MIN_SCALE = 0.5;
+
 function useRowStyle(): StyleProp<ViewStyle> {
   const { isAccessibilitySize: ax } = useTheme();
   return ax
@@ -62,9 +65,17 @@ function useRowStyle(): StyleProp<ViewStyle> {
     : { minHeight: 44, paddingVertical: space.rowY, paddingHorizontal: space.rowX, gap: space.m, flexDirection: 'row', alignItems: 'center' };
 }
 
-function Title({ children, color = 'ink', hidden }: { children: string; color?: 'ink' | 'ink2'; hidden?: boolean }) {
+function Title({ children, color = 'ink', hidden, fit }: { children: string; color?: 'ink' | 'ink2'; hidden?: boolean; fit?: boolean }) {
   return (
-    <KText variant="callout" weight="600" color={color} style={{ flexShrink: 1 }} accessibilityElementsHidden={hidden} importantForAccessibility={hidden ? 'no-hide-descendants' : undefined}>
+    <KText
+      variant="callout"
+      weight="600"
+      color={color}
+      style={{ flexShrink: 1 }}
+      accessibilityElementsHidden={hidden}
+      importantForAccessibility={hidden ? 'no-hide-descendants' : undefined}
+      {...(fit ? { numberOfLines: 1, adjustsFontSizeToFit: true, minimumFontScale: TITLE_MIN_SCALE } : null)}
+    >
       {children}
     </KText>
   );
@@ -72,11 +83,12 @@ function Title({ children, color = 'ink', hidden }: { children: string; color?: 
 
 /** A tappable row: a push (chevron) or an action (none). `value` sits on the right in ink3 ("Free plan"); `detail` is
  *  one quiet line under the title ("Seen as slim and as wide. Which is it?"), read after the value. */
-export function LinkRow({ title, value, onPress, hint, chevron = true, detail }: { title: string; value?: string; onPress: () => void; hint?: string; chevron?: boolean; detail?: string }) {
+export function LinkRow({ title, value, onPress, hint, chevron = true, detail, testID }: { title: string; value?: string; onPress: () => void; hint?: string; chevron?: boolean; detail?: string; testID?: string }) {
   const { colors, isAccessibilitySize: ax } = useTheme();
   const row = useRowStyle();
   return (
     <Pressable
+      testID={testID}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={`${value ? t('settings.a11y.value', { label: title, value }) : title}${detail ? `. ${detail}` : ''}`}
@@ -84,7 +96,9 @@ export function LinkRow({ title, value, onPress, hint, chevron = true, detail }:
       style={({ pressed }) => [row, pressed && { backgroundColor: colors.surface2 }]}
     >
       <View style={ax ? { gap: 2 } : { flex: 1, gap: 2 }}>
-        <Title>{title}</Title>
+        {/* One word ("Acknowledgements") can't wrap between words: at the largest sizes it shrinks to its line
+            instead of breaking mid-word (SY1.6). Titles with spaces wrap as usual. */}
+        <Title fit={!/\s/.test(title.trim())}>{title}</Title>
         {detail && !ax ? <Detail>{detail}</Detail> : null}
       </View>
       {value || chevron ? (
@@ -112,8 +126,8 @@ function Detail({ children }: { children: string }) {
 }
 
 /** A row whose value is a choice: the inline pill grows into its menu (MorphPicker). VoiceOver: "Appearance, System". */
-export function PickerRow<T extends string>({ title, value, options, onPick, spoken }: {
-  title: string; value: T; options: readonly MorphOption<T>[]; onPick: (v: T) => void;
+export function PickerRow<T extends string>({ title, value, options, onPick, spoken, testID }: {
+  title: string; value: T; options: readonly MorphOption<T>[]; onPick: (v: T) => void; testID?: string;
   /** VoiceOver, when the title alone is too short out of context ("Daily outfit idea time, 8:00 am"). */
   spoken?: (valueLabel: string) => string;
 }) {
@@ -121,7 +135,7 @@ export function PickerRow<T extends string>({ title, value, options, onPick, spo
   const { isAccessibilitySize: ax } = useTheme();
   const label = options.find((o) => o.value === value)?.label ?? value;
   return (
-    <View style={row}>
+    <View testID={testID} style={row}>
       <View style={ax ? undefined : { flex: 1 }}>
         <Title hidden>{title}</Title>
       </View>
