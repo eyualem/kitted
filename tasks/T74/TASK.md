@@ -81,3 +81,29 @@ Looked at the three screenshots from the fix round; no app code changed in it.
 - Still can't tell, as in Round 1: CB2.3's toast Undo on a device, CB2.8 (what VoiceOver says), CB2.9 (Reduce Motion), the real-finger swipe.
 
 **Verdict: ready for the app.** No code defect is open. The one open item is test defect 2 (flow), which the founder decides in the PR.
+
+### Round 3 (reviewer, the fold, `f3bc8287`; CB2 "Folded", CB2.11)
+Read: the spec's Folded section and CB2.11, the diff `76128b53..HEAD` in `app/` (`toConfirm.ts`, `ConfirmDeck.tsx`, `closet/index.tsx`, `sync/schema.ts`, the demo files, `syncSchema.test.ts`, `closetDeck.test.tsx`), shots 11 and 12 in both themes; Built last. Did not run anything. The quick-swipe bug is known and out of scope.
+
+**Criteria (CB2.11 and the Folded list)**
+- Folded by default, one row with the count: done (shots 11: `TO CONFIRM`, `5`, a down chevron, both themes; `confirmOpen` is true only for the saved value `open`, so nothing saved or any other value means folded).
+- A tap opens the card in place at the current question and the choice is kept: done in code and test (`ConfirmFoldRow` onPress saves `open` through `store.setKv`; the deck stays mounted with `display: 'none'` while folded, so it comes back on the card he was on; shots 12 show it open, the chevron turned up by `1 OF 5`).
+- The open card's tag line folds it again: done (the tag row is a `Pressable`, `hitSlop` 10 top and bottom gives about 44 pt).
+- A new question while folded changes only the count: done (tested: 3 to 4, still folded, nothing saved).
+- Nothing left: no row (`total === 0` returns null; tested).
+- No new words on screen: yes. The VoiceOver label reuses the section headers' words ("To confirm, 4 pieces").
+- Memory per phone: `closet.confirm.open` is in `KV_LOCAL` (`sync/schema.ts`, one line in the Account lane's file) and the sync guard test names it. Fine.
+- No animation: yes, the fold simply swaps the row and the card.
+- VoiceOver wording and order: can't tell, see defect 1.
+
+**Tests:** the diff to `closetDeck.test.tsx` outside the new CB2.11 block is one change, `world()` saves `open` unless `folded: true` is passed; every old assertion is untouched, none deleted, no `.only`/`.skip`. That is the right fix for a spec change (the old tests are about the open card). Not weakened. The five new tests can fail (default, open and keep, fold again, new question, empty).
+
+**Defects**
+1. **VoiceOver order on the open card may put the fold button first** (`ConfirmDeck.tsx`, the `accessibilityState={{ expanded: true }}` overlay View in `face`). It is placed after the question in the code, which is all the test checks, but it is absolutely positioned at `top: 0`, height 44, over the tag line. VoiceOver reads siblings by their place on screen, not their order in the code, so I expect it to read "To confirm, 5 pieces, button, expanded" before "Question 1 of 5." That undoes CB2.8 ("VoiceOver hears `Question 2 of 5.` first") that this task built the hidden tag line to protect. I can't run VoiceOver here: it needs his phone to confirm. Who: **code** (the builder: either check it on his phone and show the order, or move the button's box under the answers, or give the card an explicit VoiceOver order).
+
+**Later look (never blocks)**
+- `confirmSaved` is read live and is empty on the first render, so a person who left the card open may see the folded row for a frame before it opens. Check it on a phone; if it flickers, hold the row until the saved value has loaded.
+- No test folds a deck after he has moved off card 1 and opens it again ("kept at the card he was on" is by design, not tested).
+- The tag line's chevron is 10 pt; the target is large enough, but it is a quiet affordance. Fine for a beta.
+
+**Verdict: not ready** on one open code defect (VoiceOver order of the fold button), which needs a phone check or a small change. Everything else in the fold is done and the existing tests were not weakened. Test defect 2 from Round 1 was settled by the later flow fixes (commit `f13150a7`, which I did not re-read).
