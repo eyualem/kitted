@@ -107,3 +107,13 @@ Read: the spec's Folded section and CB2.11, the diff `76128b53..HEAD` in `app/` 
 - The tag line's chevron is 10 pt; the target is large enough, but it is a quiet affordance. Fine for a beta.
 
 **Verdict: not ready** on one open code defect (VoiceOver order of the fold button), which needs a phone check or a small change. Everything else in the fold is done and the existing tests were not weakened. Test defect 2 from Round 1 was settled by the later flow fixes (commit `f13150a7`, which I did not re-read).
+
+### Round 4 (reviewer, after `37b73510`)
+Read the diff since `b8f87966` (`ConfirmDeck.tsx`, `closetDeck.test.tsx`; no other file changed).
+
+- Defect 1 (the fold button's VoiceOver order): **closed in code.** The button is no longer absolutely positioned over the tag line: it is a 1 pt strip, `marginTop: -12` against the section's 12 pt gap, laid out last in the card, below the answers and Skip, so VoiceOver (which reads by place) reaches the question first and the fold last. `testID="closet-confirm-fold"`, label and `expanded: true` unchanged; touch still folds from the tag line.
+- The test got stronger, not weaker: it now also checks the strip isn't absolutely positioned and is the last VoiceOver-reachable element in the card (the helper `hiddenFromVoiceOver` it uses is defined in the file). Nothing removed.
+- Small, never blocks: the strip adds 1 pt to the card's height (the coordinator's "size unchanged" is within a point); a sighted VoiceOver user will see a thin focus outline at the card's bottom edge.
+- Still can't tell: what VoiceOver actually says and the order on a device (needs his phone, Y24), and the one-frame folded flash on a fresh open from Round 3's small list.
+
+**Verdict: ready.** No code defect is open; the red-flow test defect from Round 1 was dealt with by the later flow fixes (not re-read).
