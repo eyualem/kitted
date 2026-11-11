@@ -21,7 +21,9 @@ name: T39 · Later on the offer
 - extendedWaitUntil:
     visible: "What's your style\\?"
     timeout: 10000
-- tapOn: "Not sure"
+- tapOn: "Streetwear: .*"
+- assertVisible: "Continue · 1 of 3"
+- tapOn: "Continue · 1 of 3"
 - extendedWaitUntil:
     visible: "About you"
     timeout: 10000

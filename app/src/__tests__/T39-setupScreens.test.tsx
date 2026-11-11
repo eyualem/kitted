@@ -169,15 +169,6 @@ describe('OS3.2 · three steps, no agreement', () => {
     expect(router.push).toHaveBeenCalledWith('/onboarding/basics');
     await r.unmount();
 
-    // Looks: Not sure.
-    await mockT39.store.wipe();
-    jest.clearAllMocks();
-    r = await mount(<PickLooksScreen />);
-    await press(screen.getByText('Not sure'));
-    expect(await mockT39.store.getKv('onboarding.step')).toBe('basics');
-    expect(router.push).toHaveBeenCalledWith('/onboarding/basics');
-    await r.unmount();
-
     // About you: 22–25, Continue → onboarded, to "/" (Stylist), never the agreement or the camera.
     jest.clearAllMocks();
     r = await mount(<BasicsScreen />);
@@ -249,12 +240,14 @@ describe('OS3.3 · Looks has a title and a line', () => {
     }
   });
 
-  it('OS3.3 · the tiles, Something else?, Not sure and Continue behave as before', async () => {
+  it('OS3.3 · the tiles, Something else? and Continue behave as before, and there is no Not sure (#448)', async () => {
     let r = await mount(<PickLooksScreen />);
     // Nothing picked, no words: Continue is off.
     const cont = () => screen.getByRole('button', { name: /^Continue/ }) as unknown as Node;
     expect(isDisabled(cont())).toBe(true);
     expect(screen.queryByText('Pick by name instead')).toBeNull();
+    // No way past Looks without a pick or his words (founder, Nov 11; setup is 7 taps to the camera).
+    expect(screen.queryByText('Not sure')).toBeNull();
     expect(bubbles()).toEqual([0, 0, 0, 0]);
 
     await press(tile(0));
@@ -279,16 +272,6 @@ describe('OS3.3 · Looks has a title and a line', () => {
     r = await mount(<PickLooksScreen />);
     await press(screen.getByLabelText('Something else. Describe your style in your own words.'));
     expect(screen.getByPlaceholderText('Like skater, or all black')).toBeTruthy();
-    await r.unmount();
-
-    // Not sure saves no looks and goes on.
-    await mockT39.store.wipe();
-    jest.clearAllMocks();
-    r = await mount(<PickLooksScreen />);
-    await press(screen.getByText('Not sure'));
-    expect(await kvJson('onboarding.looks')).toEqual([]);
-    expect(router.push).toHaveBeenCalledWith('/onboarding/basics');
-    expect(router.push).toHaveBeenCalledTimes(1);
     await r.unmount();
   });
 });
@@ -590,7 +573,8 @@ describe('F1.1 · no camera, account or paywall in setup', () => {
       await r.unmount();
 
       r = await mount(<PickLooksScreen />);
-      await press(screen.getByText('Not sure'));
+      await press(tile(0));
+      await press(screen.getByText('Continue · 1 of 3'));
       await advance(5000);
       await r.unmount();
 

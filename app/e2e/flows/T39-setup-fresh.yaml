@@ -1,14 +1,15 @@
 # T39 · OS3.1, OS3.2, OS5.1, OS5.2 (Agree), OS5.5, F1.1, SY4.1 (tasks/T39/TESTING.md): a fresh install reaches a live
-# camera in exactly six taps: Get started, Not sure, 22–25, Continue, the card's Check my fit, Agree. No bubble on Looks
+# camera in exactly seven taps: Get started, a look (Streetwear), Continue · 1 of 3, 22–25, Continue, the card's Check
+# my fit, Agree (no Not sure since Nov 11, DECISIONS-LOG #448). No bubble on Looks
 # or About you, no agreement screen in setup, no sign-in and no paywall on the way, and the camera never opens on its
 # own. The name is never typed (it's optional).
 # Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T39-setup-fresh.yaml (Metro running)
 # No demo arguments: a demo screen opens the camera without the agreement. The development launcher's server tap is
-# not one of the six (it isn't in the app).
+# not one of the seven (it isn't in the app).
 # Matching: Maestro matches an element's WHOLE text or label. A Kit line is one element "Kit: <text>"; the offer's title
 # and body are one VoiceOver element.
 appId: com.trykitted.kitted
-name: T39 · fresh install to a live camera in six taps
+name: T39 · fresh install to a live camera in seven taps
 ---
 - launchApp:
     clearState: true
@@ -26,7 +27,7 @@ name: T39 · fresh install to a live camera in six taps
 - assertNotVisible: "Take photo"
 - assertNotVisible: "Continue free"
 
-# Tap 1 of 6.
+# Tap 1 of 7.
 - tapOn: "Get started"
 - extendedWaitUntil:
     visible: "What's your style\\?"
@@ -41,8 +42,11 @@ name: T39 · fresh install to a live camera in six taps
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
 - assertVisible: "Step 2 of 3"
 
-# Tap 2 of 6.
-- tapOn: "Not sure"
+# Taps 2 and 3 of 7: a look, then Continue.
+- assertNotVisible: "Not sure"
+- tapOn: "Streetwear: .*"
+- assertVisible: "Continue · 1 of 3"
+- tapOn: "Continue · 1 of 3"
 - extendedWaitUntil:
     visible: "About you"
     timeout: 10000
@@ -58,13 +62,13 @@ name: T39 · fresh install to a live camera in six taps
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
 - assertNotVisible: "Skip"
 
-# Tap 3 of 6.
+# Tap 4 of 7.
 - tapOn: "22–25"
 - assertNotVisible: "Take photo"
 - assertNotVisible: "Continue free"
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
 
-# Tap 4 of 6.
+# Tap 5 of 7.
 - tapOn: "Continue"
 - extendedWaitUntil:
     visible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
@@ -85,7 +89,7 @@ name: T39 · fresh install to a live camera in six taps
 - assertNotVisible: "Take photo"
 - assertNotVisible: "Before I score a photo, here's what happens to it\\."
 
-# Tap 5 of 6: the card's Check my fit (the first of the two "Check my fit" buttons; the accessory's is below it).
+# Tap 6 of 7: the card's Check my fit (the first of the two "Check my fit" buttons; the accessory's is below it).
 - tapOn:
     text: "Check my fit\\. Opens the camera\\."
     below: "Want to check a fit now\\?.*"
@@ -101,7 +105,7 @@ name: T39 · fresh install to a live camera in six taps
 - assertNotVisible: "Continue free"
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
 
-# Tap 6 of 6.
+# Tap 7 of 7.
 - tapOn: "Agree"
 - extendedWaitUntil:
     visible: "Take photo"

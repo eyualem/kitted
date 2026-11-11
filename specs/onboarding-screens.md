@@ -50,7 +50,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 - Setup is plain screens: a large title question, its choices, one button at the bottom. No echo bubbles and no Kit bubbles anywhere in setup. Kit's first words are in the Stylist chat after setup (SY2's hello).
 - The steps: **Welcome → Looks → About you → Stylist.** Setup has no agreement step (SY5).
 - The progress bar has 3 segments (Welcome, Looks, About you) and fills on About you. Back works as today.
-- **Looks:** the large title `What's your style?`, then `Pick up to 3 looks you like. Today's outfit comes next.` under it (founder, Nov 11, after a tester read the old title as "what are you wearing now"; DECISIONS-LOG #447). The Kit bubble goes; the tiles, `Something else?`, `Pick by name instead`, `Not sure` and `Continue · {n} of 3` stay as they are.
+- **Looks:** the large title `What's your style?`, then `Pick up to 3 looks you like. Today's outfit comes next.` under it (founder, Nov 11, after a tester read the old title as "what are you wearing now"; DECISIONS-LOG #447). The Kit bubble goes; the tiles, `Something else?` and `Continue · {n} of 3` stay as they are. `Not sure` is gone (founder, Nov 11; DECISIONS-LOG #448): Continue stays off until he picks a look or types his words, so every profile starts with a look or his words.
 - **The agreement** (now first shown on the camera, SY5): its Kit bubble becomes plain text at the top. Its words and buttons don't change.
 - **Restore** (from "I already have an account", only once sign-in exists): the About you step with the title `Welcome back` and the line `Your age first, then I'll bring back your fits.` Age only, no name field.
 - **The Example check stays chat-shaped:** it's a preview of the chat itself.
@@ -88,7 +88,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 6. Once he has any scored check (from the card or the chat's camera button), the offer card's buttons are gone for good. The card's words stay as history, like the "Turn on fit checks" card.
 7. An install that finished setup before this change gets no offer card.
 
-**Taps to the camera:** Get started · Not sure · an age · Continue · Check my fit · Agree = 6 (F1.1).
+**Taps to the camera:** Get started · a look · Continue · an age · Continue · Check my fit · Agree = 7 (F1.1).
 
 ## Rules
 - The age band is kept on his profile with the day he picked it, on this phone only. It's never sent to the server or backed up, the same as the birth year today.
@@ -132,7 +132,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 - OS5.2 `Check my fit` opens the camera, with the agreement on top when he hasn't agreed; `Agree` makes it live; `Not now` returns to Stylist with "Turn on fit checks" posted once and the offer's buttons gone.
 - OS5.3 `Later` removes the buttons, posts Kit's line word for word and saves `firstCheckOffer.laterAt`.
 - OS5.4 After any scored check, the offer card shows no buttons, also after a relaunch.
-- OS5.5 A fresh install reaches a live camera in 6 taps by the path above (F1.1), checked by a tap-through flow.
+- OS5.5 A fresh install reaches a live camera in 7 taps by the path above (F1.1), checked by a tap-through flow.
 - OS5.6 An install that finished setup before this change shows no offer card.
 - OS5.7 Before `Agree`, nothing is sent (F1.3).
 
