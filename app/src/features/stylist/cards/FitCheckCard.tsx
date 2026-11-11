@@ -34,7 +34,7 @@ import { justAnswered, TapCard, tapChoice } from '@/features/tap/TapCard';
 import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
 import { DoubtLine } from '@/features/closet/DoubtLine';
 import { addedIds, closetSummaryText, openAsks } from '@/features/closet/summaryText';
-import { holdBadge, noSlide, release } from '@/features/closet/slide';
+import { holdBadge, noSlide } from '@/features/closet/slide';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { askQuestionText, askReasonText, isPluralPiece } from '@/features/closet/askText';
 import { PieceArt } from '@/features/closet/GarmentArt';
@@ -356,7 +356,8 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
   useEffect(() => {
     if (!fresh) return;
     holdBadge(row.id);
-    return () => release(row.id);
+    // Gone before its pieces flew (scrolled away, another screen): the badge alone; a remount never plays it later.
+    return () => noSlide(row.id);
   }, [fresh, row.id]);
   // No row to slide from (a partial check, or nothing added or matched): the badge alone.
   const noRow = fresh && revealDone && !showCloset && !!cs && cs.state !== 'pending';
@@ -543,7 +544,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
         <KCardSection gap={6}>
           {showCloset && closetLine ? <ClosetSummaryRow
               items={addedItems} text={closetLine.text} onReview={readOnly ? undefined : go.review}
-              slide={{ checkId: row.id, fresh, ready: revealDone, added: addedIds(cs), pending: closetLine.pending }}
+              slide={{ checkId: row.id, fresh, ready: revealDone, added: addedIds(cs), pending: closetLine.pending, visible: open }}
             /> : null}
           {firstAsk && askPhoto && askCandidate ? (
             <View style={{ paddingTop: 6, paddingBottom: 4, gap: 8 }}>

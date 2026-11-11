@@ -25,6 +25,8 @@ export interface RowSlide {
   /** The pieces this check added (not the ones it only matched); the closet call may still be out. */
   added: readonly string[];
   pending: boolean;
+  /** The card is open: folded, the row is laid out but clipped out of sight, so nothing may fly from it. */
+  visible: boolean;
 }
 
 export function ClosetSummaryRow({ items, text, onReview, slide }: { items: ClosetItemRow[]; text: string; onReview?: () => void; slide?: RowSlide }) {
@@ -34,7 +36,7 @@ export function ClosetSummaryRow({ items, text, onReview, slide }: { items: Clos
   const addedKey = slide?.added.join() ?? '';
   useEffect(() => {
     if (!slide?.fresh || !slide.ready || slide.pending) return;
-    const { checkId } = slide;
+    const { checkId, visible } = slide;
     const added = new Set(slide.added);
     const flying = shown.map((it, i) => ({ it, i })).filter(({ it }) => added.has(it.id));
     if (flying.length === 0) {
@@ -53,7 +55,7 @@ export function ClosetSummaryRow({ items, text, onReview, slide }: { items: Clos
           if (p) pieces.push(p);
           if (--left > 0 || !alive) return;
           const H = Dimensions.get('window').height;
-          const onScreen = pieces.length === flying.length && pieces.every((q) => q.y >= 40 && q.y + q.size <= H - BOTTOM_COVER) && AppState.currentState === 'active';
+          const onScreen = visible && pieces.length === flying.length && pieces.every((q) => q.y >= 40 && q.y + q.size <= H - BOTTOM_COVER) && AppState.currentState === 'active';
           if (shouldSlide({ fresh: true, readOnly: false, reduceMotion: a11y.reduceMotion, onScreen, pieces: pieces.length, checkId })) {
             launch({ checkId, pieces: [...pieces].sort((a, b) => a.x - b.x) });
           } else noSlide(checkId);
@@ -69,7 +71,7 @@ export function ClosetSummaryRow({ items, text, onReview, slide }: { items: Clos
     };
     // The row's pieces arrive by id; a re-render with the same ones changes nothing.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slide?.fresh, slide?.ready, slide?.pending, addedKey, shown.map((it) => it.id).join(), a11y.reduceMotion]);
+  }, [slide?.fresh, slide?.ready, slide?.pending, slide?.visible, addedKey, shown.map((it) => it.id).join(), a11y.reduceMotion]);
   return (
     <View style={isAccessibilitySize ? { gap: 6, alignItems: 'flex-start' } : { flexDirection: 'row', alignItems: 'center', gap: 10 }}>
       {items.length > 0 ? (

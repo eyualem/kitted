@@ -53,14 +53,15 @@ export function useClosetArrivals(tab: string | undefined): number {
       });
     } else if (prev === 'closet') {
       void seeCloset(store, now);
-      void endFirstVisit(store);
+      // Only a visit that showed it ends it (a first check that lands while he's on Closet waits for his next visit).
+      if (showing) void endFirstVisit(store);
       setShowing(null);
     }
   }, [tab]);
 
   useEffect(() => {
     const sub = AppState.addEventListener('change', (s) => {
-      if (s === 'background' && current.current === 'closet') void endFirstVisit(store);
+      if (s === 'background' && current.current === 'closet' && showing) void endFirstVisit(store);
     });
     return () => sub.remove();
   }, []);

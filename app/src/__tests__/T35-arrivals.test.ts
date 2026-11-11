@@ -11,7 +11,7 @@ import type { KittedStore } from '@/data/store';
 import { loadScenario } from '@/data/seedLoader';
 import type { ClosetItemRow, FitCheckRow } from '@/data/types';
 import {
-  badgeCount, endFirstVisit, FIRST_VISIT_KEY, firstAddingCheck, firstVisitPieces, initArrivals, LAST_OPENED_KEY, noteFirstAddingCheck, openCloset,
+  badgeColor, badgeCount, endFirstVisit, FIRST_VISIT_KEY, firstAddingCheck, firstVisitPieces, initArrivals, LAST_OPENED_KEY, noteFirstAddingCheck, openCloset,
   parseFirstVisit, parseLastOpened, piecesAddedBy, seeCloset,
 } from '@/features/closet/arrivals';
 import { createClosetService } from '@/features/closet/service';
@@ -28,6 +28,7 @@ import { createQuota } from '@/services/quota';
 import { createMockReadingSource } from '@/services/readingSource/mock';
 import { realScheduler } from '@/services/scheduler';
 import { isSyncedKv, kvPolicy } from '@/sync/schema';
+import { darkColors, lightColors } from '@/design-system/tokens';
 
 const at = (iso: string) => Date.parse(iso);
 const SETUP_END = at('2026-10-22T07:40:00-04:00');
@@ -271,6 +272,25 @@ describe('SY2.10 · Delete all my data, and the keys stay on the phone', () => {
     for (const k of [LAST_OPENED_KEY, FIRST_VISIT_KEY]) {
       expect(kvPolicy(k)).toBe('local');
       expect(isSyncedKv(k)).toBe(false);
+    }
+  });
+});
+
+describe('SY2.7 · the badge color', () => {
+  const lum = (hex: string) => {
+    const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((x) => (x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * c[0]! + 0.7152 * c[1]! + 0.0722 * c[2]!;
+  };
+  /** iOS draws a tab badge's number white, whatever the background. */
+  const onWhite = (bg: string) => 1.05 / (lum(bg) + 0.05);
+
+  it('SY2.7 · primary in light, me in dark, from the tokens; white digits at least 4.5:1 in both; never red', () => {
+    expect(badgeColor(lightColors, 'light')).toBe(lightColors.primary);
+    expect(badgeColor(darkColors, 'dark')).toBe(darkColors.me);
+    for (const bg of [badgeColor(lightColors, 'light'), badgeColor(darkColors, 'dark')]) {
+      expect(onWhite(bg)).toBeGreaterThanOrEqual(4.5);
+      const [r, g, b] = [1, 3, 5].map((i) => parseInt(bg.slice(i, i + 2), 16));
+      expect(r! > g! + 40 && r! > b! + 40).toBe(false); // not a red
     }
   });
 });

@@ -3047,3 +3047,5 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **A scored re-check's card has no `Added` row**, so its new pieces get the badge only (adding a row would be a layout change).
     - **VoiceOver** on a New tile reads `New, ` before the tile's own label (the piece's name, then what's drawn).
     - **Demo screens:** 285 Closet's first visit, 286 Closet after it; 283 with `-demoReveal 1` plays the reveal and the slide.
+
+439. **Closet's badge is his chat bubbles' navy in dark mode (founder, Nov 10, in chat; T35, SY2 and SY2.7 changed with his yes).** His words: "Your chat bubbles' navy". Light: `primary` (#1A2448); dark: `me` (#2B3860), both with iOS's white number (15:1 and about 10:1), read from the theme's tokens, never red. **Why:** iOS always draws a tab badge's number white, and expo-router 57 / react-native-screens 4.26 set only its background on iOS; dark `primary` is near white (#ECEEF3), so white digits on it would be unreadable. No native patch or new package.

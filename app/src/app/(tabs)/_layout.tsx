@@ -9,10 +9,11 @@ import { sym } from '@/design-system/symbols';
 import { t } from '@/i18n/en';
 import { StylistBar } from '@/features/stylist/StylistBar';
 import { useComposerOpen } from '@/features/stylist/composerState';
+import { badgeColor } from '@/features/closet/arrivals';
 import { useClosetArrivals } from '@/features/closet/useArrivals';
 
 export default function TabsLayout() {
-  const { colors } = useTheme();
+  const { colors, scheme } = useTheme();
   // The bar shrinks as he scrolls down, the iOS 26 way, on every tab but the thread. On Stylist the
   // "Ask your stylist…" bar is the tab bar's bottom accessory (founder, Oct 9; only on the thread
   // itself: not on Past chats, and never on the other tabs). The thread never shrinks it (founder,
@@ -24,13 +25,15 @@ export default function TabsLayout() {
   // its glass capsule (still there with its words faded) lensed the open composer resting under it: the
   // words, mic and send showed blurred, with bent copies above and below (07 §19, #319).
   const composerOpen = useComposerOpen() !== null;
-  // Closet's badge (SY2.3): the pieces checks added since he last opened it. Navy, the color of `Check my fit`, not
-  // Apple's red (SY2.7); only Closet ever gets one (SY2.6).
+  // Closet's badge (SY2.3): the pieces checks added since he last opened it. Navy, never Apple's red (SY2.7): `primary`
+  // in light; in dark his chat bubbles' navy (`me`), since iOS always draws the number white and dark `primary` is near
+  // white (founder, Nov 10, #439). Only Closet ever gets one (SY2.6).
   const tab = segments[0] === '(tabs)' ? segments[1] : undefined;
   const added = useClosetArrivals(tab);
+  const badge = badgeColor(colors, scheme);
   return (
     // The selected tab is ink, not copper (founder, #276): copper is for score movement only.
-    <NativeTabs tintColor={colors.ink} minimizeBehavior={onThread ? 'never' : 'onScrollDown'} badgeBackgroundColor={colors.primary}>
+    <NativeTabs tintColor={colors.ink} minimizeBehavior={onThread ? 'never' : 'onScrollDown'} badgeBackgroundColor={badge}>
       {onThread && !composerOpen ? (
         <NativeTabs.BottomAccessory>
           <StylistBar />
@@ -43,7 +46,8 @@ export default function TabsLayout() {
       <NativeTabs.Trigger name="closet">
         <NativeTabs.Trigger.Label>{t('tab.closet')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={sym.tabCloset} md="checkroom" />
-        <NativeTabs.Trigger.Badge hidden={added === 0} selectedBackgroundColor={colors.primary}>{String(added)}</NativeTabs.Trigger.Badge>
+        {/* None: no number AND hidden (a number always shows, even with hidden; no number alone draws a dot). */}
+        <NativeTabs.Trigger.Badge hidden={added === 0} selectedBackgroundColor={badge}>{added > 0 ? String(added) : undefined}</NativeTabs.Trigger.Badge>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="lookbook">
         <NativeTabs.Trigger.Label>{t('tab.lookbook')}</NativeTabs.Trigger.Label>

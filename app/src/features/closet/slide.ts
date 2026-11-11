@@ -92,6 +92,8 @@ export function landed(checkId: string): void {
 
 /** The card decided there's no slide: mark it, so a remount (a scroll, a relaunch of the list) never plays it later. */
 export function noSlide(checkId: string): void {
+  // A card unmounting mid-flight (its copies already in the air) leaves them to land.
+  if (flights.some((f) => f.checkId === checkId)) return;
   slid.add(checkId);
   release(checkId);
 }

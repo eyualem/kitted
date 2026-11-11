@@ -7,6 +7,7 @@
 // shows a 40 and never gets the label (SY2.9). Pure, apart from the store helpers at the end.
 import type { KittedStore } from '@/data/store';
 import type { ClosetItemRow, FitCheckRow } from '@/data/types';
+import type { ColorTokens } from '@/design-system/tokens';
 import { isOwned } from './profile';
 import { addedIds } from './summaryText';
 
@@ -75,6 +76,12 @@ export function firstVisitPieces<T extends Piece>(check: Check | undefined, grid
   if (!check) return [];
   const byId = new Map(grid.map((c) => [c.id, c]));
   return piecesAddedBy(check, grid).map((id) => byId.get(id)).filter((c): c is T => !!c);
+}
+
+/** The badge's color (SY2.7): navy, never Apple's red. iOS always draws its number white, and dark `primary` is near
+ *  white, so dark mode uses his chat bubbles' navy, `me` (founder, Nov 10, #439). */
+export function badgeColor(colors: Pick<ColorTokens, 'primary' | 'me'>, scheme: 'light' | 'dark'): string {
+  return scheme === 'dark' ? colors.me : colors.primary;
 }
 
 // ---- the store ----

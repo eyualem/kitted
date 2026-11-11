@@ -27,10 +27,19 @@
 - **Must not break:** the score reveal and its timing; the card's closet row and Review; Closet's sections, To confirm card, Outfits; the tab bar's shrink-on-scroll and Stylist's bottom accessory; the wipe's other behaviour (age block stays).
 
 ## Built
-- **Changed:** <…>
-- **Tests added:** <…> · `npm run check`: <…>
-- **Screenshots:** <…>
-- **Not done or not checked:** <…>
+- **Changed:**
+  - Kit's hello: the copy deck row `stylist.aiNote` (handoff/02-screens.md) is now `I'm Kit, your stylist.`, regenerated into en.generated.ts; the thread draws every aiNote message from that string, so old installs read it too. `ask/context.ts` already keeps aiNote messages out of what's sent. The two T39 Maestro flows that looked for the old words now look for the new.
+  - `features/closet/arrivals.ts` (new): the two local keys, the badge count, the first adding check, the first visit's pieces, init-if-missing; `onboarding/complete.ts` starts both at setup's end (before the profile says setup is done).
+  - `features/closet/useArrivals.ts` (new), used by `(tabs)/_layout.tsx`: the Closet tab's `NativeTabs.Trigger.Badge` (background `primary`), opening/leaving Closet, the first visit in memory, the app going to the background.
+  - The slide: `features/closet/slide.ts` + `SlideHost.tsx` (new; a root-level layer in `app/_layout.tsx`, above the tab bar); `ClosetSummaryRow.tsx` measures its thumbs once the card's reveal is over (`useReveal.ts` now says `done`); `FitCheckCard.tsx` holds the badge for a fresh check until its pieces land; `reveal.ts` `wasLive`.
+  - The first visit: `(tabs)/closet/index.tsx` (`From your first check` first, as a heading, with the section look; those pieces leave the sections below), `ClosetTile.tsx` (the `New` mark, VoiceOver `New, …`), `PieceMenu*`.
+  - `sync/schema.ts` (shared): `closet.lastOpened`, `closet.firstVisit` are local. `privacy/wipe.ts`: **not touched** (`store.wipe()` already empties all kv; proven by a test).
+  - Demo screens 285 (Closet's first visit) and 286 (after it); 283 replays its reveal and the slide with `-demoReveal 1`.
+- **Tests added:** `app/src/__tests__/T35-arrivals.test.ts` (20: SY2.2–SY2.5, SY2.8–SY2.10, three of them on a real check through the fit-check and closet services) and `T35-hello.test.tsx` (3: SY2.1, SY2.9, rendered). Two planted bugs (counting pieces he added himself; not marking an old install done) each turned a test red. `syncSchema.test.ts`'s kv scan knows the two new key constants. `npm run check` (run as its parts, with `jest --no-watchman`: watchman is down on this Mac): tsc, core typecheck, lint 0 errors (6 old warnings in files this task doesn't touch), core tests, jest 1918 passed; then the 3 suites that failed under load re-run alone: all pass (2 were mine, fixed; `T39-setupScreens` timed out at 5 s with the Mac loaded and passes alone in 5.8 s).
+- **Screenshots:** <pending a free Simulator>
+- **Not done or not checked:** <pending the Simulator>
+  - SY2.7 dark: iOS draws badge digits white and expo-router 57 / react-native-screens 4.26 can't change that on iOS; dark `primary` is #ECEEF3, so white digits on it fail. Asked the parent session (light navy in both modes is my pick); the code uses `primary` until answered.
+  - A scored re-check's card has no `Added` row: its new pieces get the badge only.
 
 ## Disputes
 - none yet
