@@ -44,6 +44,14 @@ The card stays where it is, on top of Closet under the scans-waiting row. It hol
 
 A fit question card keeps its own look (the drawing, `How do your mid-wash jeans fit?`, what was seen) at the same size as today, with the same tag line and `Skip ›`.
 
+**Folded (changed with the founder's yes, Nov 10:** *"I feel like these confirm piece-type texts should be expandable instead of the way they are right now."* **Relayed by the Apple Connect session, which set the details below.)**
+- **Folded by default:** one row, `To confirm` on the left, the number still waiting on the right (for example `4`), and a chevron. A tap opens the card in place, at the current question.
+- **Open:** the card as above; its tag line row gets the chevron, turned, and a tap on that row folds it again.
+- **Memory:** folded or open stays as he left it. A new question arriving changes only the count; it never opens the card by itself.
+- **Empty:** with nothing left, the row goes away, as the card does.
+- **VoiceOver:** the row is a button with its state: "To confirm, 4 pieces", collapsed or expanded. Reduce Motion: no animation.
+- No new words on screen; the VoiceOver label is new.
+
 **Moving through it**
 - **Answering** saves the answer (as today, through the closet service), gives a light haptic, and the next card slides in from the trailing side. The toast says the answer with Undo, as today (`Saved as your khaki chinos.` / `Kept as a new piece.`).
 - **Undo** puts the question back in the deck in its place and shows that card.
@@ -84,6 +92,7 @@ Nothing new is stored. Answers go through the closet service exactly as today (`
 - CB2.8 VoiceOver hears `Question 2 of 5.` first; every answer and Skip is a button of at least 44×44 pt; no answer needs a swipe.
 - CB2.9 With Reduce Motion on, changing cards uses no sliding.
 - CB2.10 A question answered on the score card leaves the deck and the count updates.
+- CB2.11 With questions open and nothing saved, To confirm is one folded row with the count waiting; a tap opens the card at the current question and the choice is kept; a new question while folded changes only the count. *(Nov 10, with the folded card.)*
 
 ## Touches
 - T73: `app/src/app/(tabs)/closet/index.tsx`, `features/closet/` (PiecePage), `features/ask/` (the buy card's line), `config/features.ts` (the switch, shared), `i18n/en.ts` (one line, shared), demo screens for Outfits.
