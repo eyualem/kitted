@@ -1,0 +1,24 @@
+# Core flow (/test-build): a question to Kit gets an answer. Stylist (demo 252), the composer, Send, and Kit's reply
+# lands in the thread. A demo screen answers from the seeded answers, so a question it doesn't know gets the demo's
+# fixed line: a sure sign the question went through the whole ask pipeline, with no AI call and nothing spent.
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/core-kit.yaml (Metro running)
+# Matching: a Kit line is ONE element "Kit: <text>". The composer's label is "Ask Kit" until it has had focus, then
+# "Ask Kit Ask Kit…" (label and placeholder), so it's matched as "Ask Kit.*".
+appId: com.trykitted.kitted
+name: core · Kit answers a question
+---
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "252"
+- extendedWaitUntil:
+    visible: "Stylist"
+    timeout: 90000
+- assertNotVisible: "Kit: This demo can't answer new questions yet\\. The real app will\\."
+- tapOn: "Ask Kit.*"
+- inputText: "Is a navy overshirt too much for a lecture?"
+- tapOn: "Send"
+- extendedWaitUntil:
+    visible: "Kit: This demo can't answer new questions yet\\. The real app will\\."
+    timeout: 15000
+- runFlow: ../common/beta-nothing-to-buy.yaml
