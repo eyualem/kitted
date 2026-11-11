@@ -396,12 +396,18 @@ describe('SY1.1 · no gear, no Settings page; old links open You', () => {
 
 // ── SY1.2 ───────────────────────────────────────────────────────────────────────────────────────────────────────
 describe('SY1.2 · You, in order: style, knows, Today, the rows, the version line', () => {
+  // SY1 step 5 and NT3: `Notifications` is the main card's first row "only once notifications are built". The build's
+  // switch (NOTIFICATIONS_BUILT, on since T53) decides; the explicit-prop renders below cover both values.
+  const NOTIFY_ROW: string[] = jest.requireActual<{ NOTIFICATIONS_BUILT: boolean }>('@/config/features').NOTIFICATIONS_BUILT
+    ? ['you-row-notifications']
+    : [];
+
   it('SY1.2 · free: style, knows, Today, then Appearance, Plan & usage, Privacy & data, Acknowledgements, then the version line', async () => {
     given('free');
     await renderYou();
     expect(ids()).toEqual([
       'you-scroll', 'you-style', 'you-knows', 'you-today', 'you-rows',
-      'you-section-main', 'you-row-appearance', 'you-row-plan',
+      'you-section-main', ...NOTIFY_ROW, 'you-row-appearance', 'you-row-plan',
       'you-section-privacy', 'you-row-privacy',
       'you-section-help', 'you-row-acknowledgements',
       'you-version',
@@ -429,7 +435,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     mockAccountsOn = true;
     await renderYou();
     const withAccount = ids();
-    expect(withAccount.slice(withAccount.indexOf('you-rows'), withAccount.indexOf('you-row-appearance'))).toEqual(['you-rows', 'you-section-account', 'you-section-main']);
+    expect(withAccount.slice(withAccount.indexOf('you-rows'), withAccount.indexOf('you-row-appearance'))).toEqual(['you-rows', 'you-section-account', 'you-section-main', ...NOTIFY_ROW]);
     await screen.unmount();
     mockAccountsOn = false;
 
@@ -524,7 +530,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     await renderYou();
     expect(ids()).toEqual([
       'you-scroll', 'you-style', 'you-pro', 'you-knows', 'you-today', 'you-rows',
-      'you-section-main', 'you-row-appearance', 'you-row-plan',
+      'you-section-main', ...NOTIFY_ROW, 'you-row-appearance', 'you-row-plan',
       'you-section-privacy', 'you-row-privacy',
       'you-section-subscription', 'you-row-manage', 'you-row-restore',
       'you-section-help', 'you-row-acknowledgements',
