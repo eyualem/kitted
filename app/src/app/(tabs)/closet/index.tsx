@@ -16,6 +16,7 @@ import { EmptyState, KButton, KCard, KCardSection, KText, RowDivider, TagLine, r
 import type { ClosetItemRow } from '@/data/types';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
+import { TabTipCard } from '@/features/onboarding/TipCard';
 import { PieceMenu } from '@/features/closet/PieceMenu';
 import { piecePreviewSource } from '@/features/closet/piecePreview';
 import { livePhotoDeps, loadPhotoChecks } from '@/features/closet/photoChecks';
@@ -90,6 +91,8 @@ export default function ClosetScreen() {
   const tile = width > 0 ? Math.floor((width - GAP * (cols - 1)) / cols) : 0;
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
+      {/* The Closet tip (specs/setup-and-you.md SY2.3): never on the empty Closet, which explains itself. */}
+      <TabTipCard id="closet" hasContent={items.length > 0} />
       {inbox ? (
         <Section>
           <LinkRow title={inbox.title} hint={t('scan.inbox.a11y.rowHint')} onPress={() => router.push(inbox.href as Href)} />

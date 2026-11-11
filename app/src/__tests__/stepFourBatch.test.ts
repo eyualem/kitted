@@ -381,11 +381,12 @@ describe('G22 · delete one look\'s photo', () => {
 describe('G23 · "Not now" on consent gets the S26 card', () => {
   const answers = { styles: [] as never, heightCm: null, build: '', fitPreference: '', birthYear: 2004 };
 
-  it('G23.1, G23.3 Not now posts the AI note, then Kit\'s line with the card; agreeing posts no card', async () => {
+  // Kit's hello replaced the AI note at setup's end (T35, specs/setup-and-you.md SY2.1); it ends with the same note.
+  it('G23.1, G23.3 Not now posts Kit\'s hello, then Kit\'s line with the card; agreeing posts no card', async () => {
     const store = createMemoryStore();
     await completeOnboarding(store, { ...answers, consent: false }, 1000, counterIds());
     const ms = (await store.chat.all()).sort((a, b) => a.createdAt - b.createdAt);
-    expect(ms.map((m) => [m.kind, m.cardType, m.text, m.payload.aiNote ?? null])).toEqual([
+    expect(ms.map((m) => [m.kind, m.cardType, m.text, m.payload.kitHello ?? null])).toEqual([
       ['text', null, null, true],
       ['card', 'turnOnChecks', t('noConsent.greeting'), null],
     ]);

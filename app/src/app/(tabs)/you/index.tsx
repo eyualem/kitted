@@ -13,6 +13,7 @@ import { Icon, KButton, KCard, KText, MonoLabel, TextLink, WovenLabel, opacity, 
 import { store } from '@/data/db';
 import type { ProfileRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
+import { TabTipCard } from '@/features/onboarding/TipCard';
 import { quota } from '@/features/fitcheck/session';
 import { styleLabel } from '@/features/morning/copy';
 import { FactCard } from '@/features/you/FactRows';
@@ -51,6 +52,8 @@ export default function YouScreen() {
       style={{ backgroundColor: colors.bg }}
       contentContainerStyle={{ padding: space.gutter, paddingBottom: space.xxxl, gap: space.stack }}
     >
+      {/* The You tip (specs/setup-and-you.md SY2.5). */}
+      <TabTipCard id="you" />
       {/* No profile (an install that skipped onboarding): the blank card still opens the editor. */}
       <View testID="you-style">
         <StyleCard p={profile ?? blankProfile(0)} />

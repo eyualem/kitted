@@ -22,6 +22,7 @@ import { FIT_SKIP_KEY } from '@/features/closet/fitDoubt';
 import { FIT_LINE_KEY } from '@/features/closet/fitLine';
 import { FIT_LOG_KEY } from '@/features/closet/fitLog';
 import { SERVER_TIER_KV } from '@/services/server/tier';
+import { FIRST_SCORE_AFTER_KEY, TIP_IDS, tipKey } from '@/features/onboarding/tips';
 
 const fs = jest.requireActual('fs') as {
   readFileSync(p: string, e: string): string;
@@ -141,6 +142,7 @@ describe('S5 and S6 everything is classified', () => {
       PERMISSION_KV: WEATHER_PERMISSION_KV, MODE_KEY: 'camera.mode', REVEAL_KV: KV.revealFullShown,
       ACCOUNT_KEY: 'account.user', OFFER_KEY: 'account.offer', ONBOARDING_STEP_KEY: KV.onboardingStep,
       FINISH_KEY, STARTER_MARKS_KEY, SEGMENT_KEY, FIT_SKIP_KEY, FIT_LINE_KEY, FIT_LOG_KEY, SERVER_TIER_KV, ABOUT_YOU_KEY,
+      FIRST_SCORE_AFTER_KEY,
     };
     const resolve = (expr: string): string[] | null => {
       const e = expr.trim();
@@ -157,6 +159,7 @@ describe('S5 and S6 everything is classified', () => {
       if (/^KV\.swapped\(/.test(e)) return ['idea.swapped.2026-10-22|day'];
       if (/^NOTIFY_KEY\[/.test(e)) return [KV.notifyIdea, KV.notifyReady, KV.notifyTrial];
       if (/^CURSOR_KV\(/.test(e)) return ['sync.cursor.x'];
+      if (/^tipKey\(/.test(e)) return TIP_IDS.map(tipKey);
       if (e === 'key' || e === 'k' || e === 'step.key') return []; // generic helpers (the store, the engine, demo steps, tests)
       return KNOWN[e] !== undefined ? [KNOWN[e]!] : null;
     };

@@ -51,6 +51,9 @@ export interface ScreenScenario {
   looks?: Styles;
   /** Kit's "About you" card (#373, 10-onboarding.md §10): posted under an answer or on a later visit, then folded. */
   aboutYou?: AboutYouDemo;
+  /** The feature guide (specs/setup-and-you.md SY2, SY3): every other screen is an established user who has dismissed
+   *  the tips. `true` leaves them showing; `'around'` is just after Show me around (tips back, Kit's hello newest). */
+  tips?: true | 'around';
 }
 
 const FIRST_RUN_NOW = '2026-10-22T07:38:00';
@@ -299,6 +302,12 @@ export const SCREENS: readonly ScreenScenario[] = [
   // You as the settings home (T34, specs/setup-and-you.md SY1): Pro bought with the paywall on, at the rows and at the top.
   { n: 270, name: 'You · Pro, settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', finish: { paywall: 'ok', pro: true } },
   { n: 271, name: 'You · Pro', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you', finish: { paywall: 'ok', pro: true } },
+  // The feature guide (T35, specs/setup-and-you.md SY2, SY3): each tip showing, and Stylist just after Show me around.
+  { n: 272, name: 'Result · the first-score tip', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist', tips: true },
+  { n: 273, name: 'Closet · the tip', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet', tips: true },
+  { n: 274, name: 'Lookbook · the tip', id: 'L1', scenario: 'full', onboarded: true, now: '2026-10-22T12:21:00', href: '/lookbook', tips: true },
+  { n: 275, name: 'You · the tip', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you', tips: true },
+  { n: 276, name: 'Stylist · after Show me around', id: 'S1', scenario: 'full', onboarded: true, now: '2026-10-22T12:23:00', href: '/stylist', tips: 'around' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

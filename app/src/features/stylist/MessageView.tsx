@@ -24,6 +24,8 @@ import { LimitCard } from '@/features/held/LimitCard';
 import { AccountOfferCard } from '@/features/account/AccountOfferCard';
 import { AboutYouCard } from '@/features/aboutYou/AboutYouCard';
 import { NoConsentCard } from '@/features/onboarding/NoConsentCard';
+import { FirstScoreTip } from '@/features/onboarding/TipCard';
+import { isKitHello } from '@/features/onboarding/tips';
 import { InviteCard } from '@/features/finish/InviteCard';
 import { NotifyAskCard } from '@/features/finish/NotifyAskCard';
 import { retryQuestion } from './ask';
@@ -35,7 +37,16 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
   const m = item.message;
   if (m.kind === 'photo') return <PhotoMessage m={m} />;
   if (m.kind === 'card') {
-    if (m.cardType === 'fitCheck' && m.fitCheckId) return <FitCheckCard checkId={m.fitCheckId} readOnly={readOnly} />;
+    if (m.cardType === 'fitCheck' && m.fitCheckId) {
+      // The first-score tip (specs/setup-and-you.md SY2.2) sits under his first scored check's card, today only.
+      if (readOnly) return <FitCheckCard checkId={m.fitCheckId} readOnly />;
+      return (
+        <View>
+          <FitCheckCard checkId={m.fitCheckId} />
+          <FirstScoreTip checkId={m.fitCheckId} />
+        </View>
+      );
+    }
     if (m.cardType === 'recheck' && m.fitCheckId) return <RecheckCard checkId={m.fitCheckId} readOnly={readOnly} />;
     if (m.cardType === 'outfitIdea' && m.outfitId) return <OutfitIdeaCard outfitId={m.outfitId} readOnly={readOnly} />;
     if (m.cardType === 'morning' && typeof m.payload.ideaId === 'string') return <MorningCard ideaId={m.payload.ideaId} readOnly={readOnly} />;
@@ -67,7 +78,8 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
     }
     return null;
   }
-  const text = m.payload.aiNote ? t('stylist.aiNote') : m.text ?? '';
+  // Kit's hello (SY2) and the older AI note are drawn from their keys, so the approved words never drift.
+  const text = m.payload.aiNote ? t('stylist.aiNote') : isKitHello(m) ? t('stylist.hello') : m.text ?? '';
   if (m.role === 'user') return <UserBubble>{text}</UserBubble>;
   // fail.ask (07 §6.4): Retry asks the same question again, in this line's place, while it's the newest row.
   if (typeof m.payload.askRetry === 'string') {

@@ -5,6 +5,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { EmptyState, Icon, KButton, KCard, KText, NeckDownPhoto, Numeral, RowDivider, displayScore, opacity, radius, scoreWordLabel, space, spokenScoreLine, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
+import { TabTipCard } from '@/features/onboarding/TipCard';
 import type { FitCheckRow } from '@/data/types';
 import { shownPhoto } from '@/demo/demoPhotos';
 import { removeLookMenu } from '@/features/lookbook/lookActions';
@@ -35,6 +36,8 @@ export default function LookbookScreen() {
   if (!looks) return null;
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>
+      {/* The Lookbook tip (SY2.4): never on the empty Lookbook. */}
+      <TabTipCard id="lookbook" hasContent={looks.length > 0} />
       {looks.length === 0 ? (
         <EmptyState art={<GhostLook />} body={t('lookbook.empty')}>
           <KButton title={t('closet.empty.check')} icon="camera" size="regular" style={{ alignSelf: 'center' }} onPress={() => goToStylist({ kind: 'checkMyFit' })} />

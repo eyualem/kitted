@@ -1216,6 +1216,16 @@ const addedInBuild = {
   'you.plan.betaLine': '{checks} fit checks and {questions} questions a day · resets at 4 am',
   'held.body.beta': "Saved. I'll score it when you open Kitted after 4 am.",
   'own.limit.beta': 'Your fit checks reset at 4 am.',
+  // The feature guide (specs/setup-and-you.md SY2, SY3; the founder's words, Nov 8). Kit's hello keeps the AI note
+  // word for word as its last line.
+  'stylist.hello':
+    "I'm Kit, your stylist. Here's how this works:\n· Send me a photo of your fit. I'll score it out of 10 and give you the fix that raises it.\n· Ask me anything about clothes, like what to wear to a career fair.\n· Every fit check adds your pieces to Closet, so my ideas get better.\nQuick note: I'm an AI. I read clothes, never faces, and I can get things wrong. Tap \"Not quite right?\" when I do.",
+  'tips.firstScore': "Do one of the fixes, then tap Re-check and I'll score it again.",
+  'tips.closet': 'Every fit check adds its pieces here. Tap a piece to fix its name or color.',
+  'tips.lookbook': 'Every fit you check lands here with its score and fixes. Tap one to see it again.',
+  'tips.you': "Your style and what I've learned about you, plus your settings. Change your looks any time.",
+  'tips.gotIt': 'Got it',
+  'settings.showMeAround': 'Show me around',
 } as const;
 
 /** Demo-build-only strings (not in the deck because they never ship to the App Store). */

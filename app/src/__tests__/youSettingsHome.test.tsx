@@ -403,7 +403,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
       'you-scroll', 'you-style', 'you-knows', 'you-today', 'you-rows',
       'you-section-main', 'you-row-appearance', 'you-row-plan',
       'you-section-privacy', 'you-row-privacy',
-      'you-section-help', 'you-row-acknowledgements',
+      'you-section-help', 'you-row-showMeAround', 'you-row-acknowledgements',
       'you-version',
     ]);
     // Section labels: Help & about only.
@@ -418,9 +418,8 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     const drawn = texts(screen.toJSON());
     expect(drawn[drawn.length - 1]).toBe(line);
     expect(drawn.filter((s) => s === line)).toHaveLength(1);
-    // No Show me around row in T34.
-    expect(screen.queryByText(/Show me around/)).toBeNull();
-    expect(screen.queryByLabelText(/Show me around/)).toBeNull();
+    // Show me around (T35, SY3) is the first row of Help & about, shown once.
+    expect(screen.getAllByText(/Show me around/)).toHaveLength(1);
   });
 
   it('SY1.2 · each conditional row shows only under its condition', async () => {
@@ -437,7 +436,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     await renderRows({ notificationsBuilt: true, links: { support: null, privacy: null, terms: null } });
     expect(ids()).toEqual([
       'you-rows', 'you-section-main', 'you-row-notifications', 'you-row-appearance', 'you-row-plan',
-      'you-section-privacy', 'you-row-privacy', 'you-section-help', 'you-row-acknowledgements', 'you-version',
+      'you-section-privacy', 'you-row-privacy', 'you-section-help', 'you-row-showMeAround', 'you-row-acknowledgements', 'you-version',
     ]);
     expect(screen.getByTestId('you-row-notifications')).toHaveTextContent('Notifications', { exact: false });
     expect(label(screen.getByTestId('you-row-notifications'))).toBe('Notifications');
@@ -456,7 +455,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     expect(ids()).toEqual([
       'you-rows', 'you-section-main', 'you-row-appearance', 'you-row-plan', 'you-section-privacy', 'you-row-privacy',
       'you-section-subscription', 'you-row-manage', 'you-row-restore',
-      'you-section-help', 'you-row-acknowledgements', 'you-version',
+      'you-section-help', 'you-row-showMeAround', 'you-row-acknowledgements', 'you-version',
     ]);
     expect(within(screen.getByTestId('you-section-subscription')).getByText('Subscription')).toBeTruthy();
     expect(label(screen.getByTestId('you-row-manage'))).toBe('Manage subscription');
@@ -487,7 +486,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     // Every address set: Help & about reads report, support, privacy policy, terms, then Acknowledgements.
     await renderRows({ notificationsBuilt: false, links: LINKS });
     const help = within(screen.getByTestId('you-section-help')).getAllByTestId(/^you-row-/).map((el) => el.props.testID);
-    expect(help).toEqual(['you-row-report', 'you-row-support', 'you-row-privacy-policy', 'you-row-terms', 'you-row-acknowledgements']);
+    expect(help).toEqual(['you-row-showMeAround', 'you-row-report', 'you-row-support', 'you-row-privacy-policy', 'you-row-terms', 'you-row-acknowledgements']);
     expect(['you-row-report', 'you-row-support', 'you-row-privacy-policy', 'you-row-terms'].map((id) => label(screen.getByTestId(id)))).toEqual([
       'Report a wrong score', 'Contact support', 'Privacy policy', 'Terms of use',
     ]);
@@ -496,13 +495,13 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     // Only the support address: the two mail rows, not the two web rows.
     await renderRows({ notificationsBuilt: false, links: { support: 's@x.co', privacy: null, terms: null } });
     const helpMail = within(screen.getByTestId('you-section-help')).getAllByTestId(/^you-row-/).map((el) => el.props.testID);
-    expect(helpMail).toEqual(['you-row-report', 'you-row-support', 'you-row-acknowledgements']);
+    expect(helpMail).toEqual(['you-row-showMeAround', 'you-row-report', 'you-row-support', 'you-row-acknowledgements']);
     await screen.unmount();
 
     // No address: no mail or web row.
     await renderRows({ notificationsBuilt: false, links: { support: null, privacy: null, terms: null } });
     const helpNone = within(screen.getByTestId('you-section-help')).getAllByTestId(/^you-row-/).map((el) => el.props.testID);
-    expect(helpNone).toEqual(['you-row-acknowledgements']);
+    expect(helpNone).toEqual(['you-row-showMeAround', 'you-row-acknowledgements']);
     expect(screen.queryByText(/Report a wrong score|Contact support|Privacy policy|Terms of use/)).toBeNull();
   });
 
@@ -527,7 +526,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
       'you-section-main', 'you-row-appearance', 'you-row-plan',
       'you-section-privacy', 'you-row-privacy',
       'you-section-subscription', 'you-row-manage', 'you-row-restore',
-      'you-section-help', 'you-row-acknowledgements',
+      'you-section-help', 'you-row-showMeAround', 'you-row-acknowledgements',
       'you-version',
     ]);
     const pro = within(screen.getByTestId('you-pro')).getByRole('button');
@@ -780,6 +779,7 @@ describe('SY1.6 · VoiceOver reads each row as one button with its value', () =>
       ['you-row-privacy', 'Privacy & data'],
       ['you-row-manage', 'Manage subscription'],
       ['you-row-restore', 'Restore purchases'],
+      ['you-row-showMeAround', 'Show me around'],
       ['you-row-report', 'Report a wrong score'],
       ['you-row-support', 'Contact support'],
       ['you-row-privacy-policy', 'Privacy policy'],

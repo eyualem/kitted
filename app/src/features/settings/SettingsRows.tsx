@@ -21,6 +21,9 @@ import { LinkRow, PickerRow, Section } from '@/features/settings/SettingsList';
 import { isProNow, usePlan } from '@/features/settings/usePlan';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
+import { showMeAround } from '@/features/onboarding/tips';
+import { newId } from '@/services/ids';
+import { sessionClock } from '@/state/session';
 
 const APPEARANCE_OPTIONS = APPEARANCES.map((a) => ({ value: a, label: appearanceLabel(a) }));
 
@@ -33,6 +36,11 @@ export interface SettingsRowsProps {
   links?: { support: string | null; privacy: string | null; terms: string | null };
   /** You's ScrollView reads where the block sits, to open at it (`/you?at=settings`). */
   onLayout?: (e: LayoutChangeEvent) => void;
+}
+
+async function showMeAroundNow(): Promise<void> {
+  await showMeAround(store, sessionClock.nowMs(), newId);
+  router.navigate('/stylist');
 }
 
 export function SettingsRows({ notificationsBuilt = NOTIFICATIONS_BUILT, links = BUILD_LINKS, onLayout }: SettingsRowsProps = {}): JSX.Element {
@@ -83,6 +91,8 @@ export function SettingsRows({ notificationsBuilt = NOTIFICATIONS_BUILT, links =
 
       <View testID="you-section-help">
         <Section label={t('settings.helpAbout')}>
+          {/* Show me around (specs/setup-and-you.md SY3): every tip back, then Stylist with Kit's hello. */}
+          <LinkRow testID="you-row-showMeAround" title={t('settings.showMeAround')} onPress={() => void showMeAroundNow()} />
           {support ? (
             <LinkRow
               testID="you-row-report"

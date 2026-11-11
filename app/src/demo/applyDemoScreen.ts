@@ -9,6 +9,7 @@ import { setDemoState } from './demoState';
 import { screenScenario, type ScreenScenario } from './scenarios';
 import { prepareAccountDemo } from '@/features/account/demo';
 import { prepareAboutYouDemo } from '@/features/aboutYou/demo';
+import { prepareTipsDemo } from '@/features/onboarding/tipsDemo';
 import { pauseFinishDemo, prepareFinishDemo } from '@/features/finish/demo';
 import { store } from '@/data/db';
 import { setDemoTier } from '@/services/server/tier';
@@ -65,6 +66,8 @@ async function applyDemoScreenNow(params: RawArgs): Promise<DemoTarget | null> {
   await prepareFinishDemo(store, scenario, sessionClock.nowMs());
   // Kit's "About you" card (#373): posted in its state on screens 240–244.
   await prepareAboutYouDemo(store, scenario, sessionClock.nowMs());
+  // The tips (T35): dismissed on every screen but the guide's own (272–276).
+  await prepareTipsDemo(store, scenario.tips, sessionClock.nowMs());
   setDemoState({
     screen: n,
     ...(overrides.theme !== undefined ? { theme: overrides.theme } : {}),
