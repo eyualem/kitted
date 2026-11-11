@@ -1,24 +1,33 @@
 // The end of onboarding's plumbing (10-onboarding.md §9.1): posts "Your first 3 moves", opens the paywall once, posts
-// the notification ask, and answers it. The rules are pure (sequence.ts); this holds the visit clock, the waits, the
+// Kit's notification ask (specs/notifications.md NT1), the one-time catch-up for testers whose setup finished before
+// notifications existed (NT1.6), and answers the ask. The rules are pure (sequence.ts); this holds the visit clock, the waits, the
 // guard against running twice, and the writes. Stylist calls ensure() on focus, on coming back to the front, and after
 // a check changes.
 import type { ChatMessage, FitCheckRow } from '@/data/types';
-import type { KittedStore } from '@/data/store';
+import { KV, type KittedStore } from '@/data/store';
 import { nextVisitStart } from '@/features/account/offer';
+import { landsToday, NOTIFY_KV, setNotifyKv } from '@/features/morning/nudges';
 import { parseIdeaTime, saveIdeaTime, setNotificationPref } from '@/features/settings/prefs';
 import { t } from '@/i18n/en';
 import { isRecheckOpen } from '@/services/quota';
 import type { Clock } from '@/services/clock';
 import type { NotificationPermissions } from '@/services/notifications';
 import {
-  holdsOffer, movesDue, notifyAskable, notifyDue, parseFinish, paywallDue, type FinishCheck, type FinishState,
+  askDue, catchUpDue, holdsOffer, movesDue, notifyDue, parseFinish, paywallDue, type FinishCheck, type FinishState,
 } from './sequence';
 
 export const FINISH_KEY = 'onboard.finish';
 /** Starter rows marked without a closet piece (the belt), 02 C5. */
 export const STARTER_MARKS_KEY = 'starter.marked';
 
-export type NotifyCardState = 'open' | 'picking' | 'allowed' | 'denied' | 'declined';
+/** Kit's ask. A stored 'picking' (the two-step card of older builds) reads as 'open'. */
+export type NotifyCardState = 'open' | 'allowed' | 'denied' | 'declined';
+
+/** The ask's state as the card shows it. */
+export function notifyCardState(m: Pick<ChatMessage, 'payload'>): NotifyCardState {
+  const st = m.payload.state;
+  return st === 'allowed' || st === 'denied' || st === 'declined' ? st : 'open';
+}
 
 export interface FinishDeps {
   store: KittedStore;
@@ -38,9 +47,11 @@ export interface FinishDeps {
   openPaywall: () => void;
   /** Runs `fn` after `ms` (a real timer in the app, a fake in tests). */
   later: (fn: () => void, ms: number) => void;
-  // T53 (test writer's stub: declared, not used yet).
+  /** The under-18 lock (default: not locked). */
   ageBlocked?: () => Promise<boolean>;
+  /** nudges.reschedule('change'), after an Allow. */
   rescheduleNudges?: () => Promise<void>;
+  /** Resolves once today's card has settled (default: at once), so the catch-up sits under it. */
   afterTodaysCard?: () => Promise<void>;
 }
 
@@ -75,6 +86,9 @@ export function createFinishService(deps: FinishDeps) {
   let paywallOpenNow = false;
   let waitingUntil = 0;
   const now = () => deps.clock.nowMs();
+  const ageBlocked = () => (deps.ageBlocked ? deps.ageBlocked() : Promise.resolve(false));
+  /** Asks in flight (Apple's prompt is up), so a second tap can't race it. */
+  const asking = new Set<string>();
 
   const save = (s: FinishState) => deps.store.setKv(FINISH_KEY, JSON.stringify(s));
   const checks = async () => toFinishChecks(await deps.store.fitChecks.all(), now(), deps.clock);
@@ -90,20 +104,50 @@ export function createFinishService(deps: FinishDeps) {
     }, Math.max(0, at - now()) + 20);
   };
 
+  /** Posted by any route: the setup sequence's notifyMsgId, or notify.asked (the catch-up, T57's Later). */
+  async function asked(s?: FinishState): Promise<boolean> {
+    if (await deps.store.getKv(NOTIFY_KV.asked)) return true;
+    return !!(s ?? (await getFinish(deps.store))).notifyMsgId;
+  }
+
+  async function askMessage(createdAt: number): Promise<ChatMessage> {
+    const p = await deps.store.profile.get('me');
+    const m = message({ kind: 'card', cardType: 'question', text: null, payload: { question: 'notify', state: 'open', time: parseIdeaTime(p?.ideaTime) } });
+    m.createdAt = Math.max(m.createdAt, createdAt);
+    await deps.store.chat.put(m);
+    await setNotifyKv(deps.store, NOTIFY_KV.asked, m.id);
+    return m;
+  }
+
   async function postNotifyOrFinish(s: FinishState): Promise<FinishState> {
-    const permission = await deps.notifications.permission();
-    if (!notifyAskable(deps.notificationsOn(), permission)) {
+    const due = askDue({
+      built: deps.notificationsOn(), ageBlocked: await ageBlocked(), asked: await asked(s), ideaKv: await deps.store.getKv(KV.notifyIdea),
+    });
+    if (!due) {
       const done: FinishState = { ...s, step: 'done' };
       await save(done);
       return done;
     }
-    const p = await deps.store.profile.get('me');
-    const m = message({ kind: 'card', cardType: 'question', text: null, payload: { question: 'notify', state: 'open', time: parseIdeaTime(p?.ideaTime) } });
-    m.createdAt = Math.max(m.createdAt, (s.lastAt ?? 0) + 2); // always under the moves card, even in the same millisecond
-    await deps.store.chat.put(m);
+    const m = await askMessage((s.lastAt ?? 0) + 2); // always under the moves card, even in the same millisecond
     const done: FinishState = { ...s, step: 'done', notifyMsgId: m.id, lastAt: now() };
     await save(done);
     return done;
+  }
+
+  /** NT1.6: setup finished before notifications existed. Once, at the end of today's thread, under today's card. */
+  async function catchUp(s: FinishState): Promise<void> {
+    if (!deps.notificationsOn()) return;
+    const due = async () =>
+      catchUpDue({
+        built: true, ageBlocked: await ageBlocked(), asked: await asked(s), ideaKv: await deps.store.getKv(KV.notifyIdea),
+        permission: await deps.notifications.permission(), step: s.step,
+      });
+    if (!(await due())) return;
+    await (deps.afterTodaysCard ?? (async () => {}))();
+    // Another instance may have posted it while today's card settled.
+    if (await asked()) return;
+    const last = (await deps.store.chat.all()).reduce((a, m) => Math.max(a, m.createdAt), 0);
+    await askMessage(last + 1);
   }
 
   const enabled = deps.enabled ?? (() => true);
@@ -111,12 +155,16 @@ export function createFinishService(deps: FinishDeps) {
   async function run(): Promise<void> {
     if (!enabled()) return;
     let s = await getFinish(deps.store);
-    if (s.step === 'done' || s.step === 'skipped') return;
+    if (s.step === 'done' || s.step === 'skipped') {
+      await catchUp(s);
+      return;
+    }
     const visit = visitStart ?? now();
 
     if (s.step === 'waiting') {
       const d = movesDue({ state: s, checks: await checks(), busy: deps.busy(), visitStartMs: visit, nowMs: now(), checksChangedAt });
       if (d.kind === 'skip') {
+        // He already had several fits: no onboarding sequence. Kit's ask comes once on a later run (the catch-up, NT1.6).
         await save({ ...s, step: 'skipped' });
         return;
       }
@@ -225,34 +273,45 @@ export function createFinishService(deps: FinishDeps) {
       const d = s.step === 'waiting' ? movesDue({ state: s, checks: await checks(), busy: false, visitStartMs: visit, nowMs: now(), checksChangedAt }) : null;
       return holdsOffer(s, visit, d?.kind === 'post' || d?.kind === 'wait');
     },
-    /** T53 stub (test writer). */
-    async askPosted(): Promise<boolean> {
-      throw new Error('T53: not built');
-    },
-    // ── The notification ask (S15) ──────────────────────────────────────────────────────────────────────────────
-    async notifyYes(messageId: string): Promise<void> {
-      await patchNotify(messageId, { state: 'picking' });
-    },
+    /** Kit's ask was posted, by any route (for T57's Later version). */
+    askPosted: (): Promise<boolean> => asked(),
+    /** Apple's prompt is up for this card (the card shows the spinner). */
+    notifyAsking: (messageId: string): boolean => asking.has(messageId),
+    // ── Kit's ask (NT1): the time on the card, Send me ideas, No thanks ──────────────────────────────────────────
+    /** A time picked on the open card: the card keeps it; nothing is saved or scheduled until Send me ideas. */
     async notifyPickTime(messageId: string, hhmm: string): Promise<void> {
       await patchNotify(messageId, { time: parseIdeaTime(hhmm) });
     },
-    /** `Set {time}`: the only place the system prompt is asked. */
-    async notifySet(messageId: string): Promise<NotifyCardState> {
+    /** Send me ideas: the switch saved on first, then Apple's prompt (only if never asked). Allow saves the card's time
+     *  and schedules; Don't Allow shows the later line. */
+    async notifyYes(messageId: string): Promise<NotifyCardState> {
       const m = await deps.store.chat.get(messageId);
-      if (!m || m.payload.state !== 'picking') return (m?.payload.state as NotifyCardState) ?? 'open';
-      const time = parseIdeaTime(typeof m.payload.time === 'string' ? m.payload.time : null);
-      const answer = await deps.notifications.request();
-      if (answer === 'granted') {
-        await saveIdeaTime(deps.store, time);
+      if (!m || m.payload.question !== 'notify') return 'open';
+      const state = notifyCardState(m);
+      if (state !== 'open' || asking.has(messageId)) return state;
+      asking.add(messageId);
+      try {
+        const time = parseIdeaTime(typeof m.payload.time === 'string' ? m.payload.time : null);
         await setNotificationPref(deps.store, 'idea', true);
-        await patchNotify(messageId, { state: 'allowed', time });
+        let answer = await deps.notifications.permission();
+        if (answer === 'undetermined') answer = await deps.notifications.request();
+        if (answer !== 'granted') {
+          await patchNotify(messageId, { state: 'denied' });
+          return 'denied';
+        }
+        await saveIdeaTime(deps.store, time);
+        const when = landsToday(now(), time, deps.clock.offset) ? 'today' : 'tomorrow';
+        await patchNotify(messageId, { state: 'allowed', time, when });
+        await deps.rescheduleNudges?.();
         return 'allowed';
+      } finally {
+        asking.delete(messageId);
       }
-      await patchNotify(messageId, { state: 'denied' });
-      return 'denied';
     },
-    /** `No thanks`: the system prompt is never shown; the daily idea's switch is saved off. */
+    /** No thanks: Apple's prompt is never shown; the daily idea's switch is saved off. */
     async notifyNo(messageId: string): Promise<void> {
+      const m = await deps.store.chat.get(messageId);
+      if (!m || m.payload.question !== 'notify' || notifyCardState(m) !== 'open' || asking.has(messageId)) return;
       await setNotificationPref(deps.store, 'idea', false);
       await patchNotify(messageId, { state: 'declined' });
     },
@@ -261,9 +320,8 @@ export function createFinishService(deps: FinishDeps) {
   async function patchNotify(id: string, p: Record<string, unknown>): Promise<void> {
     const m = await deps.store.chat.get(id);
     if (!m || m.payload.question !== 'notify') return;
-    const st = m.payload.state;
-    if (st === 'allowed' || st === 'denied' || st === 'declined') return; // answered: never changes again (N3)
-    await deps.store.chat.put({ ...m, payload: { ...m.payload, ...p } });
+    if (notifyCardState(m) !== 'open') return; // answered: never changes again (NT1.7)
+    await deps.store.chat.put({ ...m, payload: { ...m.payload, state: 'open', ...p } });
   }
 
   return service;

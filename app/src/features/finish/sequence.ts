@@ -2,6 +2,8 @@
 // paywall → the notification ask. Pure: what's due next, from the stored state (kv `onboard.finish`) and his checks.
 // Once per phone, for his first fit only; each step happens once, and quitting mid-step counts as done.
 
+import type { NotifyPermission } from '@/services/notifications';
+
 export type FinishStep =
   /** Nothing yet: waiting for his first fit and one of the moves card's triggers. */
   | 'waiting'
@@ -149,7 +151,7 @@ export function paywallDue(i: PaywallInput): PaywallDecision {
   return { kind: 'open' };
 }
 
-export type NotifyPermission = 'undetermined' | 'granted' | 'denied';
+export type { NotifyPermission };
 
 /** Is the notification ask due (§9.1 step 3)? After the paywall closed (or quit: step 'paywall' on a later run), or
  *  after the moves card when the paywall step was skipped (the caller passes `paywallSkipped`). */
@@ -159,16 +161,18 @@ export function notifyDue(state: FinishState, o: { paywallClosed: boolean; paywa
   return false;
 }
 
-// T53 stubs (test writer): the implementer replaces them.
-export function askDue(_i: { built: boolean; ageBlocked: boolean; asked: boolean; ideaKv: string | null }): boolean {
-  throw new Error('T53: not built');
-}
-export function catchUpDue(_i: { built: boolean; ageBlocked: boolean; asked: boolean; ideaKv: string | null; permission: NotifyPermission; step: FinishStep }): boolean {
-  throw new Error('T53: not built');
+/** Kit's ask (specs/notifications.md NT1; T57's Later route uses it too): built, not under the age lock, never posted
+ *  (by any route), and he hasn't set the daily switch himself in You → Notifications. iOS's own answer doesn't matter:
+ *  after "Delete all my data" the ask comes again like a new user, and iOS keeps its answer through a wipe. */
+export function askDue(i: { built: boolean; ageBlocked: boolean; asked: boolean; ideaKv: string | null }): boolean {
+  return i.built && !i.ageBlocked && !i.asked && i.ideaKv === null;
 }
 
-/** Post the ask only when notifications are on and the system permission was never asked; otherwise skip it. */
-export const notifyAskable = (on: boolean, permission: NotifyPermission): boolean => on && permission === 'undetermined';
+/** NT1.6, the catch-up for testers whose setup finished before notifications existed: setup over ('done' or
+ *  'skipped'), the ask never posted, Apple's prompt never shown, the switch never set. */
+export function catchUpDue(i: { built: boolean; ageBlocked: boolean; asked: boolean; ideaKv: string | null; permission: NotifyPermission; step: FinishStep }): boolean {
+  return (i.step === 'done' || i.step === 'skipped') && i.permission === 'undetermined' && askDue(i);
+}
 
 /** The save offer ("Keep your fits") waits while the sequence is due or under way, and for the rest of the visit it
  *  posted in (§9.1). `sequenceDue`: the moves card is due or waiting for its settle. */

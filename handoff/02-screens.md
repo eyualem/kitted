@@ -1925,17 +1925,20 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `plan.skipped` | Skipped. It's in Closet whenever you want it. | N (#343) |
 | `plan.added` | Added {n} to your closet. | N (#343) |
 | `plan.addMore` | Add more | N (#343) |
-| `notif.ask` | Want a daily outfit idea at a time you choose? | R |
-| `notif.ask.yes` | Yes, pick a time | R |
+| `notif.ask` | What time do you usually get dressed to head out? I'll send you an outfit idea 15 minutes before. | N (specs/notifications.md NT1) |
+| `notif.ask.label` | I get dressed at | N (NT1) |
+| `notif.ask.yes` | Send me ideas | N (NT1) |
 | `notif.ask.no` | No thanks | R |
-| `notif.ask.label` | Daily idea at | N |
-| `notif.ask.set` | Set {time} | N |
 | `notif.ask.done` | Done. Your first idea lands tomorrow at {time}. | N |
-| `notif.ask.later` | No problem. You can turn it on later in You → Settings → Notifications. | N |
-| `unopened.q` | I've sent 3 ideas you didn't open. Want me to keep sending them? | N |
-| `unopened.keep` | Keep them coming | N |
-| `unopened.time` | Change the time | N |
-| `unopened.stop` | Stop for now | N |
+| `notif.ask.doneToday` | Done. Your first idea lands today at {time}. | N (NT1) |
+| `notif.ask.later` | No problem. You can turn it on later in You → Notifications. | N (NT1) |
+| `comeback.q` | I paused your daily ideas after a week without a visit. Want them back? | N (NT4) |
+| `comeback.on` | Turn them back on | N (NT4) |
+| `comeback.time` | Change the time | N (NT4) |
+| `comeback.no` | No thanks | N (NT4) |
+| `comeback.back` | Back on. Next one lands tomorrow at {time}. | N (NT4) |
+| `comeback.backToday` | Back on. Next one lands today at {time}. | N (NT4) |
+| `comeback.done` | Done. You can turn them on in You → Notifications. | N (NT4) |
 | `buy.tag` | Next best buy | M |
 | `buy.lookFor` | What to look for | N |
 | `buy.fullList` | See the full list | N |
@@ -2180,11 +2183,10 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `usage.renews` | Renews {date} | N |
 | `usage.trialEnds` | Trial ends {date}. I'll remind you 2 days before. | N |
 | `notifs.title` | Notifications | R |
-| `notifs.header` | That's all I send. No reminders to open the app. | N |
+| `notifs.header` | An outfit idea once a day, and a heads-up when a fit check finishes after you leave. That's all I send. | N (NT3) |
 | `notifs.idea` | Daily outfit idea | R |
-| `notifs.time` | Time | N |
+| `notifs.time` | I get dressed at | N (NT3) |
 | `notifs.ready` | Fit check ready | R |
-| `notifs.trial` | Trial ending | R |
 | `notifs.off` | Notifications are off for Kitted. | N |
 | `privacy.title` | Privacy & data | R |
 | `privacy.promise` | Your photos are saved on this iPhone and in its own backup. Kitted's servers never keep them. | R (CLAUDE.md L35 fix) |
@@ -2265,9 +2267,11 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 ### 5.13 Notifications and system strings
 | Key | String | Src |
 |---|---|---|
-| `push.idea` | Today: {item1}, {item2}, {item3}, {item4}. | M (mockup: "Today: navy overshirt, grey tee, khaki chinos, white sneakers.") |
-| `push.ready` | Your fit check is ready. {n} quick fixes inside. | M (plural "1 quick fix"; 0 → "Your fit check is ready.") |
-| `push.trial` | Your trial ends {weekday}. Cancel before then and you won't be charged. | M |
+| `push.nudge.check` | Check today's fit. Each one teaches me your closet. | N (NT2) |
+| `push.nudge.idea` | Today's outfit idea is ready. | N (NT2) |
+| `push.nudge.bigEnough` | Your closet's big enough now: here's today's idea. | N (NT2) |
+| `push.ready` | Your fit check is ready. {n} quick fixes inside. | M (plural "1 quick fix"; 0 → `push.ready.none`) |
+| `push.ready.none` | Your fit check is ready. | N (NT6) |
 | `plist.NSCameraUsageDescription` | Kitted uses the camera to check your outfit. Your face is cropped out before anything is sent. | N |
 | `plist.NSPhotoLibraryAddUsageDescription` | Save your Kitted card to Photos. | R |
 

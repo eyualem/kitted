@@ -912,7 +912,6 @@ const addedInBuild = {
   'usage.monthly': 'Monthly',
   'usage.recheckClosed': 'Closed',
   'usage.a11y.of': '{used} of {limit} used',
-  'notifs.a11y.time': 'Daily outfit idea time, {time}',
   'ack.archivo': 'Archivo by Omnibus-Type, SIL Open Font License 1.1',
   // You tab (Oct 14): Y1–Y3. The style card, facts in the second person (a guess is asked), today's check, the editor.
   'you.style.label': 'Your style',

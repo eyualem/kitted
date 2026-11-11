@@ -53,8 +53,8 @@ export async function saveUnits(store: KittedStore, units: Units): Promise<boole
 
 export const DEFAULT_IDEA_TIME = '08:00';
 
-/** Half-hour steps from 5:00 to 11:00 am: a morning card, not an alarm clock. */
-export const IDEA_TIMES: readonly string[] = Array.from({ length: 13 }, (_, i) => {
+/** When he gets dressed to head out (specs/notifications.md): half-hour steps from 5:00 am to 1:00 pm, 17 choices. */
+export const IDEA_TIMES: readonly string[] = Array.from({ length: 17 }, (_, i) => {
   const mins = 5 * 60 + i * 30;
   const h = Math.floor(mins / 60);
   const m = mins % 60;
@@ -82,29 +82,23 @@ export async function saveIdeaTime(store: KittedStore, hhmm: string): Promise<bo
   return (await store.profile.patch('me', { ideaTime: parseIdeaTime(hhmm) })) !== null;
 }
 
-// Notifications (02 Y6) ------------------------------------------------------------------------------------------
-// The only three kinds Kitted sends, all local (CLAUDE.md "Notifications"). expo-notifications isn't installed yet:
-// P6 reads these switches (loadNotificationPrefs) when it schedules the daily idea and posts "fit check ready" and
-// "trial ending". Until then they're stored and shown, nothing is sent. Unset means on.
+// Notifications (specs/notifications.md NT3) -------------------------------------------------------------------
+// The two kinds Kitted sends, both scheduled on the phone (features/morning/nudgeService.ts, readyWatch.ts). The daily
+// idea is on only after his yes ('1'; unset reads off, so a phone never asked never shows it on). Fit check ready is on
+// unless he turned it off ('0'). There is no Trial ending notification.
 
-export type NotificationKind = 'idea' | 'ready' | 'trial';
+export type NotificationKind = 'idea' | 'ready';
 export type NotificationPrefs = Record<NotificationKind, boolean>;
-export const NOTIFICATION_KINDS: readonly NotificationKind[] = ['idea', 'ready', 'trial'];
-const NOTIFY_KEY: Record<NotificationKind, string> = { idea: KV.notifyIdea, ready: KV.notifyReady, trial: KV.notifyTrial };
+const NOTIFY_KEY: Record<NotificationKind, string> = { idea: KV.notifyIdea, ready: KV.notifyReady };
 
-export const parseSwitch = (raw: string | null): boolean => raw !== '0';
-
-// T53 stubs (test writer): the implementer replaces them.
-export function parseIdeaSwitch(_raw: string | null): boolean {
-  throw new Error('T53: not built');
-}
-export function parseReadySwitch(_raw: string | null): boolean {
-  throw new Error('T53: not built');
-}
+/** The daily idea's switch: only '1' is on. */
+export const parseIdeaSwitch = (raw: string | null): boolean => raw === '1';
+/** Fit check ready's switch: on unless '0'. */
+export const parseReadySwitch = (raw: string | null): boolean => raw !== '0';
 
 export async function loadNotificationPrefs(store: KittedStore): Promise<NotificationPrefs> {
-  const [idea, ready, trial] = await Promise.all(NOTIFICATION_KINDS.map((k) => store.getKv(NOTIFY_KEY[k])));
-  return { idea: parseSwitch(idea ?? null), ready: parseSwitch(ready ?? null), trial: parseSwitch(trial ?? null) };
+  const [idea, ready] = await Promise.all([store.getKv(NOTIFY_KEY.idea), store.getKv(NOTIFY_KEY.ready)]);
+  return { idea: parseIdeaSwitch(idea ?? null), ready: parseReadySwitch(ready ?? null) };
 }
 
 export async function setNotificationPref(store: KittedStore, kind: NotificationKind, on: boolean): Promise<void> {

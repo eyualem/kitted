@@ -13,9 +13,10 @@ export const SHARE_CARD_BUILT = true;
  *  sign-in shows on his phone that does nothing; demo screens 130–143 turn them on (features/account/account.ts). */
 export const ACCOUNTS_BUILT = false;
 
-/** The notification ask (02 S15) and the scheduled daily idea. Off until expo-notifications is installed (a new
- *  package, the founder's OK): without it the ask can't ask, so it isn't shown (10-onboarding.md §9.5). */
-export const NOTIFICATIONS_BUILT = false;
+/** Notifications (specs/notifications.md; T53), all local: Kit's ask, the daily nudge, the comeback question and Fit
+ *  check ready. On wherever the build has expo-notifications' native module (services/notificationsNative.ts
+ *  `nativeAvailable`); a JS update reaching a build without it shows no ask and schedules nothing. */
+export const NOTIFICATIONS_BUILT = true;
 
 /** Sign-in methods wired to the real Firebase project (#295), shown in You → Settings → Account on dev builds while the
  *  rest of accounts stays off (ACCOUNTS_BUILT): Google only. Apple waits for the $99 program, email for the Worker's

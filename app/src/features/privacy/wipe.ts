@@ -3,7 +3,7 @@
 //   - Delete all photos: every photo file goes; scores, readings and the closet stay. Rows lose their photo paths, so
 //     the thread hides the bubble and the viewer has nothing to open (the missing-photo state).
 //   - Forget what your stylist knows: every fact is deleted for good ("Deleted facts are never used again").
-//   - Delete all my data: the database, every file folder and the Keychain device ID. The age block stays (02 Y7,
+//   - Delete all my data: every scheduled notification, the database, every file folder and the Keychain device ID. The age block stays (02 Y7,
 //     05 S11), so an under-18 answer can't be undone by deleting.
 //   - Consent off: the two consent fields are cleared, so every path that sends a photo refuses (mayUpload).
 import type { KittedStore } from '@/data/store';
@@ -21,7 +21,7 @@ export interface WipeDeps {
   clearDeviceId: () => Promise<void>;
   /** Demo builds load the bundled seed into an empty store at launch; this marker keeps a wiped store empty. */
   demo?: boolean;
-  /** T53 (test writer's stub: declared, not used yet). */
+  /** Cancels every scheduled notification (specs/notifications.md NT5.1); the wipe then clears their keys. */
   cancelNotifications?: () => Promise<void>;
 }
 
@@ -105,6 +105,8 @@ export async function forgetFacts(store: Pick<KittedStore, 'facts'>): Promise<nu
 export async function deleteAllData(d: WipeDeps): Promise<void> {
   d.files.deletePhotos();
   d.files.deleteLogs();
+  // Nothing scheduled may outlive his data: a nudge firing after the wipe would point at nothing.
+  if (d.cancelNotifications) await d.cancelNotifications().catch(() => {});
   await d.store.wipe();
   // An answer held in memory would otherwise draw in the fresh, empty thread (07 §17, U1).
   liveAnswer.clear();

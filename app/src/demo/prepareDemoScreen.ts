@@ -282,7 +282,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   257: { asOf: ASK_AS_OF, steps: [] },
   258: { asOf: ASK_AS_OF, steps: [] },
   259: { asOf: '2026-10-22T07:39:00', steps: [{ at: '2026-10-22T07:40:00', do: 'morning' }] },
-  ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166].map((n) => [n, { steps: [FIRST_CHECK] }])),
+  ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 280, 281, 282].map((n) => [n, { steps: [FIRST_CHECK] }])),
 };
 
 /** Ids a story made that its screen's link names (`{dup}`): applyDemoScreen fills them in (#280). */

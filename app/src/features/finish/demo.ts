@@ -1,4 +1,4 @@
-// Demo screens 150–165 and 180–181 (10-onboarding.md §9): turn the end of onboarding on for its own screens (every other demo screen
+// Demo screens 150–165, 180–181 and 280–283 (10-onboarding.md §9; Kit's ask, specs/notifications.md NT1): turn the end of onboarding on for its own screens (every other demo screen
 // leaves it off, so their stories don't change), script the store and the notification answer, and play its taps
 // through the same code the app runs.
 import type { KittedStore } from '@/data/store';
@@ -12,14 +12,15 @@ import { finish, setDemoFinish } from './session';
 import { STARTER } from './starter';
 import { pickStarter, toggleMarkOnly } from './starterActions';
 
-/** `mark` adds a list row (its first choice); `skipInvite` taps the optional card's Skip once it's posted (#343). */
-export type FinishDemoStep = 'later' | 'paywallShown' | 'notifyYes' | 'notifyAllow' | 'notifyNo' | 'skipInvite' | { mark: string };
+/** `mark` adds a list row (its first choice); `skipInvite` taps the optional card's Skip once it's posted (#343);
+ *  `notifyYes` taps Send me ideas (Apple's scripted prompt answers as `notify` says). */
+export type FinishDemoStep = 'later' | 'paywallShown' | 'notifyYes' | 'notifyNo' | 'skipInvite' | { mark: string };
 
 export interface FinishDemo {
   /** The mock store's outcome (turns the paywall on); omitted = the paywall step is skipped, as on his phone. */
   paywall?: StoreScript;
-  /** The scripted permission answer (turns the ask on); omitted = no ask, as on his phone. */
-  notify?: 'allow' | 'deny';
+  /** Apple's scripted prompt (turns the ask on): allow, deny, or stays up (pending); omitted = no ask. */
+  notify?: 'allow' | 'deny' | 'pending';
   /** Start as Pro (the paywall's "You're Pro." state). */
   pro?: boolean;
   steps?: FinishDemoStep[];
@@ -54,10 +55,9 @@ export async function prepareFinishDemo(store: KittedStore, sc: ScreenScenario, 
       const ask = (await store.chat.all()).find((m) => m.payload.question === 'notify');
       if (!ask) continue;
       if (step === 'notifyNo') await finish.notifyNo(ask.id);
-      else {
-        await finish.notifyYes(ask.id);
-        if (step === 'notifyAllow') await finish.notifySet(ask.id);
-      }
+      // Apple's prompt left up (159): the card waits on it, so the answer is never awaited.
+      else if (f.notify === 'pending') void finish.notifyYes(ask.id);
+      else await finish.notifyYes(ask.id);
     }
   }
   await finish.ensure();

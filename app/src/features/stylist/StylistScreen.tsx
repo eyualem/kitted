@@ -40,6 +40,7 @@ import { threadGrow } from './threadGrow';
 import { useAccountOffer } from '@/features/account/offerSession';
 import { useAboutYou } from '@/features/aboutYou/session';
 import { useFinishSequence } from '@/features/finish/session';
+import { useNotifications } from '@/features/morning/nudgeSession';
 
 /** No tab-bar accessory off iOS (the web preview): the composer stays docked. */
 const DOCK_ALWAYS = Platform.OS !== 'ios';
@@ -215,6 +216,8 @@ export function StylistScreen() {
   // The end of onboarding (ruling 23, #291): the first 3 moves, the paywall, the notification ask. It goes first; the
   // save offer waits for it (10-onboarding.md §9.1).
   useFinishSequence();
+  // Notifications (specs/notifications.md): the nudges rescheduled on open, return and leave; Fit check ready; taps.
+  useNotifications();
   // "Keep your fits" (A3, #289): the save offer, posted when offer.ts says it's due.
   useAccountOffer();
   useAboutYou();

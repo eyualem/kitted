@@ -161,7 +161,9 @@ const config: ExpoConfig = {
     ['expo-media-library', { photosPermission: false, savePhotosPermission: 'Save your Kitted card to Photos.', isAccessMediaLocationEnabled: false, granularPermissions: [] }],
     // The Pro subscription's local StoreKit file on the Debug scheme's Run (09 §27 K2); Release and Archive never use it.
     './plugins/withStoreKitConfig.js',
-    // P6: 'expo-notifications',
+    // Notifications are local only (T53): prebuild applies expo-notifications' plugin on its own, and it adds the
+    // aps-environment (push) entitlement the free Personal Team can't sign. This removes it again.
+    './plugins/withoutPushEntitlement.js',
   ],
   experiments: { typedRoutes: true, reactCompiler: true },
   // The EAS project @matemind/kitted (made Nov 8 with `eas init`); EAS builds and submits read it.

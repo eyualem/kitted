@@ -26,6 +26,7 @@ import { AboutYouCard } from '@/features/aboutYou/AboutYouCard';
 import { NoConsentCard } from '@/features/onboarding/NoConsentCard';
 import { InviteCard } from '@/features/finish/InviteCard';
 import { NotifyAskCard } from '@/features/finish/NotifyAskCard';
+import { ComebackCard } from '@/features/morning/ComebackCard';
 import { retryQuestion } from './ask';
 import { occasionLabel, type ThreadItem } from './thread';
 
@@ -43,6 +44,8 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
     // The end of onboarding (ruling 23, 10-onboarding.md §9): "Your first 3 moves", then the notification ask.
     if (m.cardType === 'plan' && m.fitCheckId) return <InviteCard m={m} readOnly={readOnly} />;
     if (m.cardType === 'question' && m.payload.question === 'notify') return <NotifyAskCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
+    // The comeback question after a week with no visit (specs/notifications.md NT4).
+    if (m.cardType === 'question' && m.payload.question === 'comeback') return <ComebackCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
     if (m.cardType === 'support') return <SupportCard />;
     // "Keep your fits" (A3, #289): after his first score, at most twice.
     if (m.cardType === 'account') return <AccountOfferCard m={m} showHeader={item.showWho} readOnly={readOnly} />;

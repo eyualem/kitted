@@ -40,6 +40,8 @@ export interface MorphPickerProps<T extends string> {
   /** A quiet lead-in before the label, both in one 44 pt row ("Headed: **Everyday** ⌄", the Going-for inset, #215).
    *  Implies the inline look, with the label in ink and semibold. */
   prefix?: string;
+  /** Greyed and not tappable (a setting that can't change now); VoiceOver says "dimmed". The caller dims it. */
+  disabled?: boolean;
 }
 
 const ROW = 44;
@@ -58,7 +60,7 @@ interface Rect {
   h: number;
 }
 
-export function MorphPicker<T extends string>({ label, value, sections, onPick, accessibilityLabel, plain: mono, inline: inlineProp, prefix }: MorphPickerProps<T>) {
+export function MorphPicker<T extends string>({ label, value, sections, onPick, accessibilityLabel, plain: mono, inline: inlineProp, prefix, disabled = false }: MorphPickerProps<T>) {
   const inline = inlineProp || prefix !== undefined;
   const plain = mono || inline;
   const { colors, scheme, a11y, isAccessibilitySize: ax } = useTheme();
@@ -148,9 +150,10 @@ export function MorphPicker<T extends string>({ label, value, sections, onPick, 
       <Pressable
         ref={anchor}
         onPress={open}
+        disabled={disabled}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
-        accessibilityState={{ expanded: !!from }}
+        accessibilityState={disabled ? { expanded: !!from, disabled: true } : { expanded: !!from }}
         hitSlop={plain ? { top: 10, bottom: 10, left: 6, right: 6 } : { top: 6, bottom: 6 }}
         style={({ pressed }) => ({ opacity: from ? 0 : pressed ? opacity.pressed : 1, flexShrink: 1 })}
       >

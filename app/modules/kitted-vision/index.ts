@@ -191,6 +191,9 @@ interface KittedVisionNative {
   stopDictationText?(): Promise<string>;
   prepareDictation?(): Promise<string>;
   addListener(event: 'onDictation', cb: (e: DictationEvent) => void): { remove(): void };
+  /** T53; absent on builds before it. */
+  beginBackgroundWork?(): Promise<string | null>;
+  endBackgroundWork?(id: string): void;
 }
 
 // Optional: the module exists only in iOS dev/Release builds, not on web or Android yet.
@@ -271,6 +274,19 @@ export async function reloadZoom(sha256: string): Promise<string[]> {
 }
 
 export const isAvailable: boolean = native !== null;
+
+// ---- iOS's extra background time (specs/notifications.md NT6) ------------------------------
+
+/** Asks iOS for extra time to finish a fit check after he leaves the app (about 30 s). null on builds without it. */
+export async function beginBackgroundWork(): Promise<string | null> {
+  if (!native || typeof native.beginBackgroundWork !== 'function') return null;
+  return native.beginBackgroundWork();
+}
+
+/** Done with that time (the check finished, or he came back). */
+export function endBackgroundWork(id: string): void {
+  if (native && typeof native.endBackgroundWork === 'function') native.endBackgroundWork(id);
+}
 
 // ---- Voice input (DECISIONS-LOG #70): on-device dictation ----------------------------------
 

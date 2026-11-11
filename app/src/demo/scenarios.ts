@@ -5,6 +5,7 @@
 import type { AboutYouDemo } from '@/features/aboutYou/demo';
 import type { AuthProvider, MockScript } from '@/features/account/auth';
 import type { FinishDemo } from '@/features/finish/demo';
+import type { NotifyDemo } from '@/features/morning/nudgeDemo';
 import type { Styles } from '@kitted/core';
 import type { ServerTier } from '@/services/server/tier';
 
@@ -40,6 +41,9 @@ export interface ScreenScenario {
   /** The end of onboarding (10-onboarding.md §9, #291): turns the sequence on, scripts the store and the notification
    *  answer, and plays its taps (features/finish/demo.ts). */
   finish?: FinishDemo;
+  /** Notifications (T53): iOS's scripted permission, the switches, a lapse and the comeback's taps
+   *  (features/morning/nudgeDemo.ts). */
+  notify?: NotifyDemo;
   /** The phone is offline on this screen (09-ui-review §20.8 G18): the banner, send disabled. Others are pinned online. */
   offline?: boolean;
   /** Onboarding ended with "Not now" on consent (S26, G23). */
@@ -219,8 +223,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 156, name: 'Paywall · offline', id: 'P1s', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall/plans', under: '/paywall', finish: { paywall: 'offline' } },
   { n: 157, name: 'Paywall · already Pro', id: 'P1s', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/paywall', under: '/stylist', finish: { paywall: 'ok', pro: true } },
   { n: 158, name: 'Notification ask', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later'] } },
-  { n: 159, name: 'Notification ask · pick a time', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyYes'] } },
-  { n: 160, name: 'Notification ask · done', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyAllow'] } },
+  { n: 159, name: 'Notification ask · waiting on Apple\'s prompt', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'pending', steps: ['later', 'notifyYes'] } },
+  { n: 160, name: 'Notification ask · allowed, today', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyYes'] } },
   { n: 161, name: 'What you already own', id: 'C5', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/closet/starter', under: '/closet', finish: { steps: ['later'] } },
   { n: 162, name: 'Optional step · added', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later', { mark: 's12' }] } },
   // The optional step skipped, and the tabs with no pinned row (#343 replaced #292's Your moves rows and page).
@@ -299,6 +303,22 @@ export const SCREENS: readonly ScreenScenario[] = [
   // You as the settings home (T34, specs/setup-and-you.md SY1): Pro bought with the paywall on, at the rows and at the top.
   { n: 270, name: 'You · Pro, settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', finish: { paywall: 'ok', pro: true } },
   { n: 271, name: 'You · Pro', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you', finish: { paywall: 'ok', pro: true } },
+  // Notifications (T53, specs/notifications.md; DESIGN phones 1–14). Kit's ask after his first check (as 158–160).
+  { n: 280, name: 'Notification ask · allowed, tomorrow', id: 'S15', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:50:00', href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyYes'] } },
+  { n: 281, name: 'Notification ask · No thanks', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'allow', steps: ['later', 'notifyNo'] } },
+  { n: 282, name: 'Notification ask · Don\'t Allow', id: 'S15', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { notify: 'deny', steps: ['later', 'notifyYes'] } },
+  // A first-build tester (several fits, setup over, never asked): the catch-up ask on his next Stylist open (NT1.6).
+  { n: 283, name: 'Notification ask · the catch-up', id: 'S15', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/stylist', finish: { notify: 'allow' } },
+  // You → Notifications in each state (NT3).
+  { n: 284, name: 'Notifications · on', id: 'Y6', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/notifications', under: '/you', notify: { permission: 'granted', idea: '1' } },
+  { n: 285, name: 'Notifications · never asked', id: 'Y6', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/notifications', under: '/you', notify: { permission: 'undetermined', answer: 'allow' } },
+  { n: 286, name: 'Notifications · paused', id: 'Y6', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/notifications', under: '/you', notify: { permission: 'granted', idea: '1', paused: true } },
+  { n: 287, name: 'Notifications · off in iOS', id: 'Y6', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/notifications', under: '/you', notify: { permission: 'denied', idea: '1' } },
+  // The comeback question after a week with no visit (NT4), and its answers.
+  { n: 288, name: 'Comeback question', id: 'S29', scenario: 'full', onboarded: true, now: '2026-10-29T09:00:00', href: '/stylist', notify: { permission: 'granted', idea: '1', lapse: true } },
+  { n: 289, name: 'Comeback · Change the time', id: 'S29', scenario: 'full', onboarded: true, now: '2026-10-29T09:00:00', href: '/stylist', notify: { permission: 'granted', idea: '1', lapse: true, steps: ['comebackTime'] } },
+  { n: 290, name: 'Comeback · back on', id: 'S29', scenario: 'full', onboarded: true, now: '2026-10-29T09:00:00', href: '/stylist', notify: { permission: 'granted', idea: '1', lapse: true, steps: ['comebackOn'] } },
+  { n: 291, name: 'Comeback · No thanks', id: 'S29', scenario: 'full', onboarded: true, now: '2026-10-29T09:00:00', href: '/stylist', notify: { permission: 'granted', idea: '1', lapse: true, steps: ['comebackNo'] } },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

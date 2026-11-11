@@ -126,21 +126,33 @@ function Detail({ children }: { children: string }) {
 }
 
 /** A row whose value is a choice: the inline pill grows into its menu (MorphPicker). VoiceOver: "Appearance, System". */
-export function PickerRow<T extends string>({ title, value, options, onPick, spoken, testID }: {
+export function PickerRow<T extends string>({ title, value, options, onPick, spoken, testID, disabled = false }: {
   title: string; value: T; options: readonly MorphOption<T>[]; onPick: (v: T) => void; testID?: string;
-  /** VoiceOver, when the title alone is too short out of context ("Daily outfit idea time, 8:00 am"). */
+  /** VoiceOver, when the title alone is too short out of context. */
   spoken?: (valueLabel: string) => string;
+  /** Greyed (You → Notifications with iOS off): the row's contents at 0.4, not tappable, VoiceOver "dimmed". */
+  disabled?: boolean;
 }) {
   const row = useRowStyle();
   const { isAccessibilitySize: ax } = useTheme();
   const label = options.find((o) => o.value === value)?.label ?? value;
   return (
     <View testID={testID} style={row}>
-      <View style={ax ? undefined : { flex: 1 }}>
+      <View style={[ax ? undefined : { flex: 1 }, disabled && { opacity: opacity.disabled }]}>
         <Title hidden>{title}</Title>
       </View>
-      <View style={{ minHeight: 24, justifyContent: 'center', alignSelf: ax ? 'flex-start' : 'auto' }}>
-        <MorphPicker inline label={label} value={value} sections={[{ options }]} onPick={onPick} accessibilityLabel={spoken ? spoken(label) : t('settings.a11y.value', { label: title, value: label })} />
+      <View style={{ minHeight: 24, justifyContent: 'center', alignSelf: ax ? 'flex-start' : 'auto', opacity: disabled ? opacity.disabled : 1 }}>
+        <MorphPicker
+          inline
+          label={label}
+          value={value}
+          sections={[{ options }]}
+          onPick={(v) => {
+            if (!disabled) onPick(v);
+          }}
+          disabled={disabled}
+          accessibilityLabel={spoken ? spoken(label) : t('settings.a11y.value', { label: title, value: label })}
+        />
       </View>
     </View>
   );
@@ -148,7 +160,7 @@ export function PickerRow<T extends string>({ title, value, options, onPick, spo
 
 /** A switch row (02 Y6). The switch carries the title for VoiceOver and announces on / off itself; `hint` says what
  *  flipping it does. */
-export function ToggleRow({ title, detail, value, onChange, disabled, hint }: { title: string; detail?: string; value: boolean; onChange: (v: boolean) => void; disabled?: boolean; hint?: string }) {
+export function ToggleRow({ title, detail, value, onChange, disabled, hint, testID }: { title: string; detail?: string; value: boolean; onChange: (v: boolean) => void; disabled?: boolean; hint?: string; testID?: string }) {
   const { colors } = useTheme();
   return (
     <View style={{ minHeight: 44, paddingVertical: space.rowY, paddingHorizontal: space.rowX, gap: space.m, flexDirection: 'row', alignItems: 'center', opacity: disabled ? opacity.disabled : 1 }}>
@@ -161,6 +173,7 @@ export function ToggleRow({ title, detail, value, onChange, disabled, hint }: { 
         ) : null}
       </View>
       <Switch
+        testID={testID}
         value={value}
         onValueChange={onChange}
         disabled={disabled}

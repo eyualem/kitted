@@ -7,6 +7,7 @@ import { clearDeviceId } from '@/data/secure';
 import { DEMO_ENABLED } from '@/demo/config';
 import { setAppAppearance } from '@/design-system';
 import { fitCheck } from '@/features/fitcheck/session';
+import { nudges } from '@/features/morning/nudgeSession';
 import { setOnboarded } from '@/state/appGate';
 import { realPrivacyFiles } from './files';
 import { deleteAllData, deleteAllPhotos, forgetFacts, withdrawConsent } from './wipe';
@@ -39,7 +40,7 @@ export async function runForgetFacts() {
 /** Everything but the age block, then back to Welcome (O1): the gate swaps the tabs for onboarding. */
 export async function runDeleteAllData(): Promise<void> {
   await quiet();
-  await deleteAllData({ store, files: realPrivacyFiles, clearDeviceId, demo: DEMO_ENABLED });
+  await deleteAllData({ store, files: realPrivacyFiles, clearDeviceId, demo: DEMO_ENABLED, cancelNotifications: nudges.cancelAll });
   // The saved appearance was in kv (applied at launch); the running app drops it now too.
   if (Platform.OS !== 'web') setAppAppearance('system');
   await setOnboarded(false);

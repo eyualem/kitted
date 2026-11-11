@@ -4,9 +4,12 @@ import { useCallback } from 'react';
 import { AppState } from 'react-native';
 import { store } from '@/data/db';
 import { onChange } from '@/data/changes';
+import { getAgeBlocked } from '@/data/secure';
 import { fitCheck } from '@/features/fitcheck/session';
+import { morning } from '@/features/morning';
+import { nudges } from '@/features/morning/nudgeSession';
 import { isProNow } from '@/features/settings/usePlan';
-import { notifications, notificationsOn, paywallOn } from '@/features/paywall/switch';
+import { notifications, notificationsOn, notifyScripted, paywallOn } from '@/features/paywall/switch';
 import { newId } from '@/services/ids';
 import { getDemoArgs, sessionClock } from '@/state/session';
 import { createFinishService } from './service';
@@ -30,13 +33,24 @@ export const finish = createFinishService({
   enabled: () => sequenceOn(),
   paywallOn,
   isPro: isProNow,
-  notificationsOn,
+  // A demo screen asks only with its own script, so screens without one keep their stories (and never read the
+  // Simulator's real permission).
+  notificationsOn: () => (getDemoArgs().demoScreen !== null ? notifyScripted() : notificationsOn()),
   notifications,
   stylistInFront: () => inFront,
   openPaywall: () => router.push({ pathname: '/paywall', params: { from: 'onboarding' } }),
   later: (fn, ms) => {
     setTimeout(fn, ms);
   },
+  ageBlocked: () => getAgeBlocked().catch(() => false),
+  rescheduleNudges: async () => {
+    await nudges.reschedule('change');
+  },
+  // The catch-up ask sits under today's card (DESIGN Q4).
+  afterTodaysCard: () => morning.ensureCard().then(
+    () => {},
+    () => {},
+  ),
 });
 
 export function useFinishSequence(): void {

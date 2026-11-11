@@ -51,7 +51,7 @@ export function isStylistLine(m: ChatMessage | null): boolean {
     m.cardType === 'aboutYou' ||
     // S26 (G23): Kit's line with the card under it.
     m.cardType === 'turnOnChecks' ||
-    (m.cardType === 'question' && m.payload.question === 'notify') ||
+    (m.cardType === 'question' && (m.payload.question === 'notify' || m.payload.question === 'comeback')) ||
     (m.cardType === 'held' && m.payload.ready === true)
   );
 }

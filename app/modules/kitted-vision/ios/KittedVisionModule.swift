@@ -3,6 +3,12 @@
 // (KittedCameraView.swift) and on-device dictation (KittedDictation.swift).
 import AVFoundation
 import ExpoModulesCore
+import UIKit
+
+/// The identifier of one stretch of iOS's extra background time, shared with its expiration handler.
+private final class BackgroundTaskBox {
+  var id: UIBackgroundTaskIdentifier = .invalid
+}
 
 public class KittedVisionModule: Module {
   private var dictation: KittedDictation?
@@ -125,6 +131,24 @@ public class KittedVisionModule: Module {
     /// "Try again": the close-ups from the first prep (#104), in order; empty when they're gone.
     AsyncFunction("reloadZoom") { (sha256: String) -> [String] in
       return Prep.reloadZoom(sha: sha256)
+    }
+
+    /// Fit check ready (T53, NT6): iOS's extra time to finish a check after he leaves the app. The id is the task's
+    /// identifier as a string; when iOS's time runs out first, the expiration handler ends it.
+    AsyncFunction("beginBackgroundWork") { () -> String? in
+      let box = BackgroundTaskBox()
+      box.id = UIApplication.shared.beginBackgroundTask(withName: "KittedFitCheck") {
+        UIApplication.shared.endBackgroundTask(box.id)
+        box.id = .invalid
+      }
+      return box.id == .invalid ? nil : String(box.id.rawValue)
+    }.runOnQueue(.main)
+
+    Function("endBackgroundWork") { (id: String) in
+      guard let raw = Int(id) else { return }
+      DispatchQueue.main.async {
+        UIApplication.shared.endBackgroundTask(UIBackgroundTaskIdentifier(rawValue: raw))
+      }
     }
   }
 }
