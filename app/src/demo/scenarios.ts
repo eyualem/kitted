@@ -120,6 +120,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   // Closet accuracy (#91): p01b against T1, B1, S1 from the seed: tee and sneakers matched, tan vs khaki chinos asked.
   { n: 37, name: 'Same as your khaki chinos?', id: 'S11', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: `/sheets/added/${STORY_FIRST_CHECK}`, under: '/stylist' },
   { n: 38, name: 'Closet · detailed graphics + one question', id: 'C1', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
+  // The card waits for two outfits (F6.2, T55): three pieces that make one outfit, then a checked card that suggested nothing.
+  { n: 39, name: 'Morning card · three pieces', id: 'S1d', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:40:00', href: '/stylist', weather: 'mild', weatherAllowed: true },
+  { n: 40, name: 'Morning card · checked, nothing suggested', id: 'S1d', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist', weather: 'mild', weatherAllowed: true },
   // Camera guidance (#100; numbered from 41 so parallel sessions' screens don't collide): one tip held, or the after-shot panel.
   { n: 41, name: 'Camera · too dark (flash offer)', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?guide=dark', under: '/stylist' },
   { n: 42, name: 'Camera · bright light behind you', id: 'S2', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/camera?guide=backlit', under: '/stylist' },
@@ -134,6 +137,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 51, name: 'Scan · no clothes found', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?guide=noClothes', under: '/closet' },
   { n: 52, name: 'Scan · after the shot: cut off', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?review=cutOff', under: '/closet' },
   { n: 53, name: 'Scan · saved', id: 'C4', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/scan?saved=1', under: '/closet' },
+  { n: 54, name: 'Evening card · checked, nothing suggested', id: 'S1d', scenario: 'firstRun', onboarded: true, now: '2026-10-22T18:33:00', href: '/stylist', weather: 'mild', weatherAllowed: true },
   { n: 60, name: 'Shoe question', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
   { n: 61, name: 'Shoe question · Boots', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
   { n: 62, name: 'Shoe question · skipped', id: 'S5q', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
@@ -156,8 +160,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 80, name: 'Style profile', id: 'Y2', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/profile', under: '/you' },
   { n: 81, name: 'What your stylist knows', id: 'Y3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/knows', under: '/you' },
   { n: 82, name: 'Fact sheet · a guess', id: 'Y3f', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/sheets/fact/F9', under: '/you/knows' },
-  // You tab (Oct 14): Settings, Plan & usage (one check used) and Notifications during a Pro trial (the demo plan link).
-  { n: 84, name: 'Settings', id: 'Y4', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you' },
+  // You tab (Oct 14; T34): You at its settings rows, Plan & usage (one check used) and Notifications during a Pro trial.
+  { n: 84, name: 'You · settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings' },
   { n: 85, name: 'Plan & usage', id: 'Y5', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', freeChecksUsed: 1, href: '/you/plan', under: '/you' },
   { n: 86, name: 'Notifications · Pro trial', id: 'Y6', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/notifications?demoPlan=trial', under: '/you' },
   // Y7 · Privacy & data (#246). The demo's photos are bundled (nothing is ever sent), so 89 shows "Nothing sent yet."
@@ -204,8 +208,8 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 138, name: 'Keep your fits', id: 'A3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/stylist', accounts: { script: 'ok', offer: 'open' } },
   { n: 139, name: 'Keep your fits · Not now', id: 'A3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/stylist', accounts: { script: 'ok', offer: 'declined' } },
   { n: 140, name: 'Sign in · from the offer, fits on both', id: 'A5', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/sheets/sign-in?from=offer', under: '/stylist', accounts: { script: 'existing', offer: 'open' } },
-  { n: 141, name: 'Settings · Account, signed out', id: 'Y4a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you', accounts: { script: 'ok' } },
-  { n: 142, name: 'Settings · Account, signed in', id: 'Y4a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you', accounts: { script: 'ok', signedIn: 'apple' } },
+  { n: 141, name: 'You · Account, signed out', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', accounts: { script: 'ok' } },
+  { n: 142, name: 'You · Account, signed in', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', accounts: { script: 'ok', signedIn: 'apple' } },
   { n: 143, name: 'Privacy · delete account', id: 'Y7a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy', under: '/you', accounts: { script: 'ok', signedIn: 'apple' } },
   // The end of onboarding (#291, 10-onboarding.md §9; numbered from 150). The story: his first check, the Welcome photo
   // (s14, 7.5 with a fix), at 7:42; the store is the mock one (it sells nothing) and the notification answer is scripted.
@@ -293,12 +297,15 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 255, name: 'Beta · Questions used up', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:21:00', href: '/stylist', tier: 'beta' },
   { n: 256, name: 'Beta · Plan & usage', id: 'Y5', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', freeChecksUsed: 1, href: '/you/plan', under: '/you', tier: 'beta' },
   { n: 257, name: 'Beta · You', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', freeChecksUsed: 0, href: '/you', tier: 'beta' },
-  { n: 258, name: 'Beta · Settings', id: 'Y4', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/settings', under: '/you', tier: 'beta' },
+  { n: 258, name: 'Beta · You, settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', tier: 'beta' },
   { n: 259, name: 'Beta · Morning card, checks used', id: 'S1d', scenario: 'full', onboarded: true, now: '2026-10-22T07:40:00', freeChecksUsed: 3, href: '/stylist', weather: 'coldRain', weatherAllowed: true, tier: 'beta' },
   // Closet for the beta (specs/closet-beta.md CB1): Outfits off, as on his phone. 260 has Outfits saved as his last tap
   // on a closet that makes 3+ outfits (it opens on the pieces anyway); 261 is screen 184's piece without Goes with.
   { n: 260, name: 'Closet · beta, Outfits remembered', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   { n: 261, name: 'Closet · a piece, beta', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B1', under: '/closet' },
+  // You as the settings home (T34, specs/setup-and-you.md SY1): Pro bought with the paywall on, at the rows and at the top.
+  { n: 270, name: 'You · Pro, settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', finish: { paywall: 'ok', pro: true } },
+  { n: 271, name: 'You · Pro', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you', finish: { paywall: 'ok', pro: true } },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

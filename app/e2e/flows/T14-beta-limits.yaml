@@ -1,5 +1,5 @@
 # T14 · FP7.5 (with FP7.1, FP7.3, FP7.7): the beta, on demo screen 252 (beta, nothing used yet, latency 0). Four photos
-# and 21 questions, then You, Settings and Plan & usage; then the morning card with the day's checks used (259).
+# and 21 questions, then You and Plan & usage; then the morning card with the day's checks used (259).
 # After every step nothing is for sale and no paywall is open (../common/beta-nothing-to-buy.yaml).
 # Sample photos 4–7 (s15, s12, s25, s05) are not in the demo's story, so each one is a new check.
 # Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T14-beta-limits.yaml (Metro running)
@@ -118,7 +118,7 @@ name: FP7.5 · four photos and 21 questions on beta
 - assertNotVisible: ".*Try Pro.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
 
-# You → Settings → Plan & usage.
+# You → Plan & usage (T34: Settings' rows are on You; there is no Settings page).
 # The You tab by its link: on the development build the dev menu's floating "Tools" button sits over the You tab, and
 # a tap on "You" opens the dev menu instead (seen Nov 8). The tab bar isn't what this flow tests.
 - openLink: "kitted://you"
@@ -129,11 +129,12 @@ name: FP7.5 · four photos and 21 questions on beta
     timeout: 15000
 - assertNotVisible: ".*Today's check: done.*"
 - runFlow: ../common/beta-nothing-to-buy.yaml
-- tapOn: "Settings"
-# Settings' row is one element: "Plan & usage, Kitted beta".
-- extendedWaitUntil:
-    visible: "Plan & usage, Kitted beta"
-    timeout: 10000
+# You's Plan & usage row is one element: "Plan & usage, Kitted beta".
+- scrollUntilVisible:
+    element:
+      text: "Plan & usage, Kitted beta"
+    direction: DOWN
+    timeout: 15000
 - runFlow: ../common/beta-nothing-to-buy.yaml
 - tapOn: "Plan & usage, Kitted beta"
 # The status card is one element ("Kitted beta. 3 fit checks and 20 questions a day · resets at 4 am"), and so is

@@ -15,8 +15,8 @@
 import {
   addDays, dayKey, daysBetween, defaultRubric, isScored, itemAllowed, localParts, outfitReading, outfitValid, pickHistory, pickOutfit, seasonNeeds,
   swapOptions as coreSwapOptions, weatherNeeds,
-  type ClosetItem, type DayWeather, type IdeaResult, type PastUse, type PickHistory, type PickInput, type Styles, type SwapOption, type WeatherWindow,
-  type ZoneOffset,
+  type ClosetItem, type DayWeather, type IdeaResult, type MissingSlot, type PastUse, type PickHistory, type PickInput, type Styles, type SwapOption,
+  type WeatherWindow, type ZoneOffset,
 } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type {
@@ -24,6 +24,7 @@ import type {
 } from '@/data/types';
 import { normStyleKey, STYLES } from '@/data/types';
 import { wornChecks } from '@/features/fitcheck/tryOn';
+import { canSuggestOutfits } from './readiness';
 import { wearOverridden } from './woreOwn';
 import type { Clock } from '@/services/clock';
 import type { WeatherSource } from '@/services/weather';
@@ -129,6 +130,19 @@ export function historyFor(
   return pickHistory(uses, rows.closet as unknown as ClosetItem[]);
 }
 
+/** The card's plan while it waits for a second outfit (F6.2): no outfit, and the pieces he has, as the picker's own thin
+ *  result names them (one per slot, and the slots still missing). */
+function waiting(closet: readonly ClosetItem[]): IdeaResult {
+  const known: string[] = [];
+  const missingSlots: MissingSlot[] = [];
+  for (const slot of ['outer', 'top', 'bottom', 'shoes'] as const) {
+    const first = closet.find((c) => c.slot === slot);
+    if (first) known.push(first.id);
+    else if (slot !== 'outer') missingSlots.push(slot);
+  }
+  return { state: closet.length === 0 ? 'empty' : 'thin', outfit: null, known, missingSlots };
+}
+
 export function createMorningService(deps: MorningDeps) {
   const { store, clock } = deps;
   const zone = clock.offset;
@@ -179,8 +193,14 @@ export function createMorningService(deps: MorningDeps) {
     };
   }
 
+  /**
+   * Every card plan comes here. Until the whole closet (before Swap's leave-outs) makes two different outfits that work,
+   * the card suggests none and says why (F6.2, T55); the thin result is built as the picker's own.
+   */
   async function pick(row: PickRow, extra: { exclude?: Set<string> } = {}): Promise<IdeaResult> {
-    return pickOutfit(await pickInput(row, extra));
+    const input = await pickInput(row, extra);
+    if (!canSuggestOutfits(input.closet, input.styles, input.boldness)) return waiting(input.closet);
+    return pickOutfit(input);
   }
 
   /**
@@ -227,14 +247,39 @@ export function createMorningService(deps: MorningDeps) {
     return messages.find((m) => m.kind === 'card' && m.cardType === 'outfitIdea' && m.outfitId && dayKey(m.createdAt, zone) === day) ?? null;
   }
 
+  /** The cards being planned right now, by idea id (in memory only, empty each launch; the stored row covers a relaunch). */
+  const posting = new Map<string, Promise<string | null>>();
+
   /**
    * Posts the card for this moment if there isn't one yet. Returns the idea id, or null when
    * nothing was posted (already there, evening cards turned off, or posting disabled).
+   *
+   * One card per idea id, however often it's asked (T54): Stylist asks on every focus and every return to the front,
+   * and the plan waits on the weather (up to 7 s live), so a second ask could pass the "already there?" look before the
+   * first had written anything. A call for an id already being planned waits for that one and posts nothing.
    */
   async function ensureCard(nowMs: number = clock.nowMs()): Promise<string | null> {
     if (deps.enabled && !deps.enabled()) return null;
     const { day, slot } = slotAt(nowMs, zone);
     const id = ideaId(day, slot);
+    // No await before this look and the set below: two calls in one tick can't both get past it.
+    const running = posting.get(id);
+    if (running) {
+      // Resolves once the first has stored its card (or failed): never with its error.
+      await running.catch(() => null);
+      return null;
+    }
+    const post = postCard(nowMs, day, slot, id);
+    posting.set(id, post);
+    try {
+      return await post;
+    } finally {
+      // A failed plan lets the next ask try again.
+      if (posting.get(id) === post) posting.delete(id);
+    }
+  }
+
+  async function postCard(nowMs: number, day: string, slot: IdeaSlot, id: string): Promise<string | null> {
     if (await store.dailyIdeas.get(id)) return null;
     const p = await store.profile.get('me');
     // He declined fit checks in onboarding: S26 ("Turn on fit checks") owns the thread, not this card.
@@ -249,14 +294,21 @@ export function createMorningService(deps: MorningDeps) {
     const style = await startingStyle(slot);
     const permission = await deps.weather.permission();
     const weather = permission === 'granted' ? await forecast(slot) : null;
+    // Look again: another instance over the same store may have posted it while the weather loaded.
+    if (await store.dailyIdeas.get(id)) return null;
     const base = { id, slot, occasion, style, weather: weather as unknown as Record<string, unknown> | null };
     const messages = await store.chat.all();
-    const legacy = await adoptLegacy(day, slot, messages);
+    // The card's message is already there without its row (the app was killed between the two writes): that one is the card.
+    const posted = messages.find((m) => m.kind === 'card' && m.cardType === 'morning' && m.payload?.ideaId === id) ?? null;
+    const legacy = posted ? null : await adoptLegacy(day, slot, messages);
     const result = await pick(base);
     const outfitId = await saveOutfit(result, occasion, null);
 
     let cardMessageId: string;
-    if (legacy) {
+    if (posted) {
+      cardMessageId = posted.id;
+      await store.chat.patch(posted.id, { outfitId });
+    } else if (legacy) {
       cardMessageId = legacy.id;
       await store.chat.patch(legacy.id, { cardType: 'morning', outfitId, payload: { ...legacy.payload, ideaId: id } });
       // The seeded greeting before it is the card's own hello now (#340): marked, so the thread hides it.
@@ -402,6 +454,10 @@ export function createMorningService(deps: MorningDeps) {
     const { day, slot } = slotAt(nowMs, zone);
     const first = await store.dailyIdeas.get(ideaId(day, slot));
     if (!first || first.state === 'stayingIn' || first.fitCheckId) return false;
+    // Checked (derived): a scored first check in its window. A card that suggested nothing would otherwise gain an
+    // outfit here, and its "Today's fit" would turn into "You went with your own" for a pick he never saw (T55).
+    const checks = await store.fitChecks.all();
+    if (checks.some((c) => !c.parentId && c.status === 'scored' && checkInSlot(c, first, zone))) return false;
     // A piece on it he corrected, removed or merged away first (§26), then the weather, on the card as it is now.
     const followed = await followPieces(first);
     const row = followed ? (await store.dailyIdeas.get(first.id)) ?? first : first;
@@ -509,7 +565,19 @@ export function createMorningService(deps: MorningDeps) {
     return true;
   }
 
-  return { ensureCard, change, swap, swapOptions, swapTo, wear, refreshWeather, freshen };
+  /**
+   * F13.1's read side (T55), for the notifications: whether the card posted at `nowMs` would suggest an outfit (the same
+   * answer `ensureCard(nowMs)` would act on): the closet he has, the style that window's card would start with, his
+   * boldness.
+   */
+  async function canSuggest(nowMs: number = clock.nowMs()): Promise<boolean> {
+    // Read-only: no write, no weather, and posting's own gates (off, declined, the evening auto-stop) don't apply.
+    const style = await startingStyle(slotAt(nowMs, zone).slot);
+    const p = await store.profile.get('me');
+    return canSuggestOutfits((await closet()) as ClosetItem[], styleInput(style), p?.boldness ?? 'a_little');
+  }
+
+  return { ensureCard, change, swap, swapOptions, swapTo, wear, refreshWeather, freshen, canSuggest };
 }
 
 export type MorningService = ReturnType<typeof createMorningService>;

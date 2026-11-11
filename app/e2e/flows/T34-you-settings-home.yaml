@@ -1,0 +1,342 @@
+# T34 · SY1 (specs/setup-and-you.md): You is the settings home. No gear and no Settings page; Settings' rows sit on You
+# under the style card, What Kit knows and Today; each opens what it opened before, and Back from each page reads "You".
+# Replayed on every later task. Steps are named for their criterion (tasks/T34/TESTING.md).
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T34-you-settings-home.yaml (Metro running)
+# Matching: Maestro matches a pattern against an element's WHOLE text or VoiceOver label (a full regex match). A row is
+# ONE VoiceOver element ("Plan & usage, Free plan"), and the views inside it aren't in the hierarchy, so the steps
+# match those exact labels, and a must-not uses ".*words.*" where a longer label could hide the words.
+# The You tab by its link: on the development build the dev menu's floating "Tools" button sits over the You tab.
+appId: com.trykitted.kitted
+name: SY1 · You is the settings home
+---
+# ── SY1.1 header ─ demo 17, top of You: the large title and nothing else in the nav bar.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "17"
+- extendedWaitUntil:
+    visible: "Your style: .*"
+    timeout: 90000
+- assertVisible: "You"
+- assertNotVisible: "Settings"
+- assertNotVisible: ".*Settings.*"
+
+# ── SY1.1 old link ─ from Stylist (demo 12, You not opened yet), the old Settings link opens You at its rows.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "12"
+- extendedWaitUntil:
+    visible: "Stylist"
+    timeout: 90000
+- openLink: "kitted://you/settings"
+- extendedWaitUntil:
+    visible: "Plan & usage, Free plan"
+    timeout: 15000
+- assertNotVisible: "This isn't here anymore\\."
+- assertNotVisible: "Settings"
+- assertNotVisible: ".*Settings.*"
+# It is You: the style card is above the rows.
+- scrollUntilVisible:
+    element:
+      text: "Your style: .*"
+    direction: UP
+    timeout: 15000
+- assertNotVisible: "Settings"
+# Verify round 2: the old link a second time, after he scrolled away, lands on the rows again.
+- tapOn:
+    text: "Stylist"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: "Ask Kit.*"
+    timeout: 15000
+- openLink: "kitted://you/settings"
+- extendedWaitUntil:
+    visible: "Plan & usage, Free plan"
+    timeout: 15000
+- assertVisible:
+    text: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
+    above:
+      text: "Stylist"
+
+# ── SY1.2 rows ─ demo 84 (free, opened at the rows): Appearance, Plan & usage, Privacy & data, Help & about's
+# Acknowledgements, then the version line, each below the one before; nothing conditional shows.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "84"
+- extendedWaitUntil:
+    visible: "Appearance, System"
+    timeout: 90000
+# Where at=settings lands (round 1, REPORT.md Disputes): this page is too short for the rows' top to reach the top of
+# the visible area, so it opens at the end: every row down to the version line is on screen without a scroll, and
+# above the tab bar, not under it (verify round 2: Maestro counts an element under the translucent bar as visible).
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Acknowledgements"
+- assertVisible: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
+- assertVisible:
+    text: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
+    above:
+      text: "Stylist"
+- assertVisible:
+    text: "Plan & usage, Free plan"
+    below:
+      text: "Appearance, System"
+- assertVisible:
+    text: "Privacy & data"
+    below:
+      text: "Plan & usage, Free plan"
+- scrollUntilVisible:
+    element:
+      text: "Acknowledgements"
+    direction: DOWN
+    timeout: 15000
+- assertVisible:
+    text: "Acknowledgements"
+    below:
+      text: "Privacy & data"
+- scrollUntilVisible:
+    element:
+      text: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
+    direction: DOWN
+    timeout: 15000
+- assertVisible:
+    text: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
+    below:
+      text: "Acknowledgements"
+- assertNotVisible: ".*Show me around.*"
+- assertNotVisible: "Subscription"
+- assertNotVisible: "Manage subscription"
+- assertNotVisible: "Restore purchases"
+- assertNotVisible: "Notifications"
+- assertNotVisible: "Back up and sync.*"
+- assertNotVisible: "Report a wrong score"
+- assertNotVisible: "Contact support"
+- assertNotVisible: "Privacy policy"
+- assertNotVisible: "Terms of use"
+# Demo 141 (accounts on, signed out): the Account row sits above Appearance.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "141"
+- extendedWaitUntil:
+    visible: "Back up and sync, Off · on this iPhone only"
+    timeout: 90000
+- assertVisible:
+    text: "Back up and sync, Off · on this iPhone only"
+    above:
+      text: "Appearance, System"
+- assertVisible:
+    text: "Plan & usage, Free plan"
+    below:
+      text: "Appearance, System"
+# Demo 270 (Pro bought, the paywall on): the Pro plan and the Subscription rows.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "270"
+- extendedWaitUntil:
+    visible: "Plan & usage, Kitted Pro"
+    timeout: 90000
+# A short page opens at its end (round 1): Subscription's rows and the version line on screen without a scroll, above
+# the tab bar (verify round 2).
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Restore purchases"
+- assertVisible: "Acknowledgements"
+- assertVisible: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
+- assertVisible:
+    text: "Restore purchases"
+    above:
+      text: "Stylist"
+- assertVisible:
+    text: "Kitted \\S+ \\(\\S+\\) · Scoring v\\S+"
+    above:
+      text: "Stylist"
+- scrollUntilVisible:
+    element:
+      text: "Restore purchases"
+    direction: DOWN
+    timeout: 15000
+- assertVisible:
+    text: "Manage subscription"
+    below:
+      text: "Privacy & data"
+- assertVisible:
+    text: "Restore purchases"
+    below:
+      text: "Manage subscription"
+- assertVisible:
+    text: "Acknowledgements"
+    below:
+      text: "Restore purchases"
+# Demo 258 (beta): Kitted beta and nothing to buy.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "258"
+- extendedWaitUntil:
+    visible: "Plan & usage, Kitted beta"
+    timeout: 90000
+- assertNotVisible: "Subscription"
+- runFlow: ../common/beta-nothing-to-buy.yaml
+
+# ── SY1.3 back reads You ─ from demo 17: each page opened from You has the back button "You", and Back returns to You.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "17"
+- extendedWaitUntil:
+    visible: "Your style: .*"
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      text: "Plan & usage, Free plan"
+    direction: DOWN
+    timeout: 15000
+- tapOn: "Plan & usage, Free plan"
+- extendedWaitUntil:
+    visible: "Plan & usage"
+    timeout: 10000
+- assertVisible:
+    text: "You"
+    leftOf:
+      text: "Plan & usage"
+- assertNotVisible: "Settings"
+- tapOn:
+    text: "You"
+    leftOf:
+      text: "Plan & usage"
+    retryTapIfNoChange: true
+- scrollUntilVisible:
+    element:
+      text: "Privacy & data"
+    direction: DOWN
+    timeout: 15000
+- tapOn: "Privacy & data"
+- extendedWaitUntil:
+    visible:
+      text: "You"
+      leftOf:
+        text: "Privacy & data"
+    timeout: 10000
+- assertNotVisible: "Settings"
+- tapOn:
+    text: "You"
+    leftOf:
+      text: "Privacy & data"
+    retryTapIfNoChange: true
+- scrollUntilVisible:
+    element:
+      text: "Acknowledgements"
+    direction: DOWN
+    timeout: 15000
+- tapOn: "Acknowledgements"
+- extendedWaitUntil:
+    visible:
+      text: "You"
+      leftOf:
+        text: "Acknowledgements"
+    timeout: 10000
+- assertNotVisible: "Settings"
+- tapOn:
+    text: "You"
+    leftOf:
+      text: "Acknowledgements"
+    retryTapIfNoChange: true
+- scrollUntilVisible:
+    element:
+      text: "Appearance, System"
+    direction: DOWN
+    timeout: 15000
+# Appearance: pick Dark, the row reads it; then back to System so later flows start as they expect.
+- tapOn: "Appearance, System"
+- tapOn: "Dark"
+- extendedWaitUntil:
+    visible: "Appearance, Dark"
+    timeout: 10000
+- tapOn: "Appearance, Dark"
+- tapOn: "System"
+- extendedWaitUntil:
+    visible: "Appearance, System"
+    timeout: 10000
+# Demo 86 (Notifications, under You): its back button reads You.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "86"
+- extendedWaitUntil:
+    visible:
+      text: "You"
+      leftOf:
+        text: "Notifications"
+    timeout: 90000
+- assertNotVisible: "Settings"
+
+# ── SY1.4 ─ demo 17: one Privacy & data, in the rows below Plan & usage; none above the rows (the old card).
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "17"
+- extendedWaitUntil:
+    visible: "Your style: .*"
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      text: "Appearance, System"
+    direction: DOWN
+    timeout: 15000
+- assertNotVisible:
+    text: "Privacy & data"
+    above:
+      text: "Appearance, System"
+- scrollUntilVisible:
+    element:
+      text: "Privacy & data"
+    direction: DOWN
+    timeout: 15000
+- assertVisible:
+    text: "Privacy & data"
+    below:
+      text: "Plan & usage, Free plan"
+
+# ── SY1.6 labels ─ each row is one element read with its value (whole-label matches), never title and value apart.
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "84"
+- extendedWaitUntil:
+    visible: "Appearance, System"
+    timeout: 90000
+- assertVisible: "Plan & usage, Free plan"
+- assertVisible: "Privacy & data"
+- assertVisible: "Help & about"
+- assertVisible: "Acknowledgements"
+- assertNotVisible: "Free plan"
+- assertNotVisible: "Plan & usage"
+- assertNotVisible: "Appearance"
+- assertNotVisible: "System"
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "270"
+- extendedWaitUntil:
+    visible: "Plan & usage, Kitted Pro"
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      text: "Restore purchases"
+    direction: DOWN
+    timeout: 15000
+- assertVisible: "Subscription"
+- assertVisible: "Manage subscription"
+- assertVisible: "Restore purchases"
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "258"
+- extendedWaitUntil:
+    visible: "Plan & usage, Kitted beta"
+    timeout: 90000
+- assertNotVisible: "Kitted beta"
