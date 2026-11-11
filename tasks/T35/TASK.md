@@ -38,3 +38,27 @@
 ## Disputes
 
 ## Review
+
+### Round 1 (reviewer, 2026-11-10)
+- SY2.1 done: `completeOnboarding` posts one text-less Kit's hello in place of the AI note, on Agree and Not now (tips.test, stepFourBatch G23.1); `ask/context.ts` skips text-less rows, so the hello never reaches a question's history. Above Kit's offer card can't be told until T39 adds that card.
+- SY2.2 done: under the earliest scored first check that has a fix, today's chat only; Got it is a kv mark (persists); a re-check (`recheckUsed` or a child row) ends it. Shot 02.
+- SY2.3 / SY2.4 done: `hasContent` = a piece / a look; shots 03, 04.
+- SY2.5 done: shot 01 (light, dark), 07 (largest text, nothing clipped).
+- SY2.6 done: no marks on an existing install, so tips show; the hello is only posted by setup's end and Show me around.
+- SY2.7 done: `tip.*` lives in `kv`, which the real `wipe()` empties (`TABLES` includes `kv`); tested on the memory store.
+- SY2.8 **not done** (size): the words match the spec exactly and VoiceOver order is text then a button (not checked by ear); `Got it` is 44 pt tall but not 44 pt wide (defect 2).
+- SY2.9 done: every tip waits for a scored check; the first-score tip sits below the card, never over it; nothing on the camera.
+- SY3.1 **not done in one case** (defect 1); otherwise done: marks cleared, Stylist opened, hello newest (shot 05).
+- SY3.2 done: no second copy while the hello is newest (tested).
+- SY3.3 done: `tip.firstScore.after` moves the first-score tip to the next check (tested); tab tips return with their marks cleared.
+
+**Defects**
+1. **code** · `app/src/features/onboarding/tips.ts` `showMeAround` (the `newest` line): "already the newest message" is checked across every day, but Stylist shows only today's chat (`splitToday`). A new user who finished setup yesterday and sent nothing since (his newest message is setup's hello), or one who tapped Show me around yesterday, taps it today and lands on an empty Stylist with no hello. SY3.1 says "the newest message in today's chat". Compare only against today's messages (`dayKey(m.createdAt, sessionClock.offset)` against today's key), and add a test for the yesterday case.
+2. **code** · `app/src/features/onboarding/TipCard.tsx` `TipCard`: `Got it` is a `TextLink` inside an `alignItems: 'flex-end'` row, so its touch area is the width of the words: about 38 pt in shots 01–04 (87 px at 920 wide, ×1.31 ÷3), less at smaller text sizes. SY2.8 asks for at least 44 × 44. A `minWidth: 44` (or a horizontal `hitSlop`) on it fixes it.
+
+**Worth a later look (never blocks)**
+- A very quick double tap on Show me around could post two hellos (both taps read the chat before either writes); the row navigates away on the first tap, so it's unlikely.
+- Every fit-check card in today's chat runs its own live query over all checks for `FirstScoreTip`; fine at today's sizes.
+- The dev build's Tools button covers `Got it` in shot 02 (not in the shipped app, as Built says).
+
+**Not ready** (defects 1 and 2 open, both code).
