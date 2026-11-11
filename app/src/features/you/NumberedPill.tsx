@@ -7,7 +7,10 @@ import { Animated, Pressable, View } from 'react-native';
 import { CONTROL_TEXT_MAX_SCALE, KText, opacity, size, useTheme } from '@/design-system';
 
 export function NumberedPill({ n, title, filled, onPress, accessibilityLabel, shake = 0 }: { n?: number; title: string; filled?: boolean; onPress?: () => void; accessibilityLabel?: string; shake?: number }) {
-  const { colors, isAccessibilitySize, a11y } = useTheme();
+  const { colors, isAccessibilitySize, fontScale, a11y } = useTheme();
+  // At the accessibility sizes the number grows (up to CONTROL_TEXT_MAX_SCALE), so its disc grows with it: no fixed
+  // height that would clip it, about as wide as the number is tall.
+  const disc = isAccessibilitySize ? Math.round(18 * Math.min(fontScale, CONTROL_TEXT_MAX_SCALE)) : 18;
   const [x] = useState(() => new Animated.Value(0));
   const [fade] = useState(() => new Animated.Value(1));
   const reduceMotion = a11y.reduceMotion;
@@ -28,7 +31,12 @@ export function NumberedPill({ n, title, filled, onPress, accessibilityLabel, sh
       }}
     >
       {n !== undefined ? (
-        <View style={{ minWidth: 18, height: 18, borderRadius: 9, alignItems: 'center', justifyContent: 'center', backgroundColor: filled ? colors.bg : colors.surface2 }}>
+        <View
+          style={[
+            { alignItems: 'center', justifyContent: 'center', backgroundColor: filled ? colors.bg : colors.surface2 },
+            isAccessibilitySize ? { minWidth: disc, minHeight: disc, paddingHorizontal: 4, borderRadius: disc / 2 } : { minWidth: 18, height: 18, borderRadius: 9 },
+          ]}
+        >
           <KText variant="caption" weight="700" color="ink" maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE} tabular>
             {String(n)}
           </KText>

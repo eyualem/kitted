@@ -1,16 +1,16 @@
 ---
 name: redesign
-description: Run a whole-app visual redesign (shape, type, color, density) before any screen is redrawn - an art director draws 2-3 direction boards on the same three screens, an interaction designer argues against clutter, an independent critic scores them and rules on the debate, the founder picks one, then the pick becomes a token-and-component change list and a lane of build tasks. Use when the founder says "/redesign", "redesign the app", "new look", "make it look more professional/serious", or wants to change the design system itself. Not for one feature's screens (that's /build-task's design stage).
+description: Run a whole-app visual redesign (shape, type, color, density) before any screen is redrawn - an art director draws 2-3 direction boards on the same three screens, an interaction designer argues against clutter, an independent critic scores them and rules on the debate, the founder picks one, then the pick becomes a token-and-component change list and a lane of build tasks. Use when the founder says "/redesign", "redesign the app", "new look", "make it look more professional/serious", or wants to change the design system itself. A one-off stage, run only when the founder asks; never part of /build-task, and not for one feature's screens.
 argument-hint: <task ID of the redesign line in plan.md>
 ---
 
 # Redesign the look
 
-You are the coordinator. You don't draw directions, judge them or write the change list yourself: the **art-director**, the **interaction-designer** and the **ui-critic** do, each with a fresh mind, and they argue in writing. Your job is to get the founder's brief, run them in order, show him the boards honestly with your recommendation, record his pick, and hand him one plain report.
+You are the coordinator. You don't draw directions, judge them or write the change list yourself: the **art-director**, the **interaction-designer** and the **redesign-critic** do, each with a fresh mind, and they argue in writing. Your job is to get the founder's brief, run them in order, show him the boards honestly with your recommendation, record his pick, and hand him one plain report.
 
 **Task:** $ARGUMENTS (if empty, ask; the redesign needs its own line in `plan.md`, e.g. "Pick the app's new look with you").
 
-**Why a stage of its own:** `/build-task`'s design stage draws one feature inside today's design system. A redesign changes the system itself, so it has to be decided once, on a few representative screens, before any feature is redrawn; otherwise every screen drifts its own way (`.claude/skills/redesign/references/design-research.md` §1). The three screens are the ones he sees most and that carry the brand: **Stylist home** (demo 12), **the result card** (demo 7) and **Closet** (demo 15).
+**A one-off stage:** it runs only when the founder types `/redesign`, and nothing in it runs during `/build-task`. **Why a stage of its own:** `/build-task` draws a brand-new screen inside today's design system. A redesign changes the system itself, so it has to be decided once, on a few representative screens, before any feature is redrawn; otherwise every screen drifts its own way (`.claude/skills/redesign/references/design-research.md` §1). The three screens are the ones he sees most and that carry the brand: **Stylist home** (demo 12), **the result card** (demo 7) and **Closet** (demo 15).
 
 ## 0. Preflight (stop and tell the founder if any fails)
 - The task has its line in `plan.md`, nobody has claimed it, and the tree is clean. Branch `claude/<id>-redesign` from main. Claim it: `[~] <ID> · directions`, commit, push.
@@ -24,10 +24,10 @@ Run the **art-director** agent (`subagent_type: "art-director"`) with the task I
 - Anyone's recommendation (yours, the parent session's) goes to the founder in step 3, never to the art director or the critic.
 
 ## 2. The debate
-The same three-sided debate as `/build-task` step D, written in DIRECTION.md → Debate, one agent at a time. Each agent sees the boards and the others' written points, never their return messages or reasoning:
-- **The interaction designer argues against clutter:** run **interaction-designer** with the task ID and mode `direction` (and the candidates file, for the founder's Content). It counts what's on each screen of each board against today's, says what each element is for, flags empty space with no job, and writes numbered points (I1…).
+A three-sided debate, written in DIRECTION.md → Debate, one agent at a time. Each agent sees the boards and the others' written points, never their return messages or reasoning:
+- **The interaction designer argues against clutter:** run **interaction-designer** with the task ID, the brief and the candidates file (for the founder's Content). It counts what's on each screen of each board against today's, says what each element is for, flags empty space with no job, and writes numbered points (I1…).
 - **The art director answers:** run the art-director again to answer the debate. Each point is **accepted** (the boards change) or **kept**, with a checkable reason in one line.
-- **The critic scores and rules:** run the **ui-critic** with the task ID, mode `direction` and the brief. It scores each board on its rubric, checks each board follows its own rules, and rules on every open point: **settled** by a rule it cites, or **founder's call**.
+- **The critic scores and rules:** run the **redesign-critic** with the task ID, mode `direction` and the brief. It scores each board on its rubric, checks each board follows its own rules, and rules on every open point: **settled** by a rule it cites, or **founder's call**.
 - Blockers go back to the art director with the critic's findings, then the critic again. At most 2 rounds for the whole loop; anything still open goes to the founder with the rest.
 
 ## 3. Show the founder
@@ -41,7 +41,7 @@ The same three-sided debate as `/build-task` step D, written in DIRECTION.md →
 - **His pick:** add `**Approved by the founder:** <today> in chat · direction <name>` under DIRECTION.md's title, log it in DECISIONS-LOG (the pick, his words, what was ruled out and why), commit `<ID>: direction`. Plan line → `[~] <ID> · changes`.
 
 ## 4. The change list
-Run the **art-director** with the task ID, mode `changes`, and his pick in his words. Wait. Then the **ui-critic** with mode `changes` (at most 2 rounds). The interaction designer isn't needed here: the list changes looks, not what's on screen.
+Run the **art-director** with the task ID, mode `changes`, and his pick in his words. Wait. Then the **redesign-critic** with mode `changes` (at most 2 rounds). The interaction designer isn't needed here: the list changes looks, not what's on screen.
 
 ## 5. The founder's yes on the change list
 - In plain words: which tokens change (the radius and type tables), which components change and which stay, which 03 sections get rewritten, what stays native, the proposed tasks in order, and the open questions with your pick.
@@ -55,13 +55,14 @@ Run the **art-director** with the task ID, mode `changes`, and his pick in his w
 - Tell him in plain words with the PNGs, and end with the 1–3 to-dos that unblock the most.
 
 ## After the pick: how the rest of the app follows
-- **The first task in the Redesign lane changes the tokens** (`tokens.ts`, `typography.ts`) and rewrites 03 to the approved direction, through `/build-task` like any code task. Its tests check the token values in CHANGES.md.
-- **Until that task is merged,** only tasks in the Redesign lane draw in the new direction; every other task keeps today's system, so two looks never mix in one build.
-- **After it's merged,** 03 and the tokens are the new direction, and every `/build-task` design stage follows them. Screens are redrawn lane by lane through `/build-task`, each with its own designer, critic and his look at the frames.
+- **The lane's tasks are ordinary `/build-task` tasks,** sized like any other. This stage adds no agent or round to them: the art director, interaction designer and redesign critic run only here.
+- **The first task changes the tokens** (`tokens.ts`, `typography.ts`) and rewrites 03 to the approved direction. Its tests check the token values in CHANGES.md.
+- **Until that task is merged,** only tasks in the Redesign lane use the new direction; every other task keeps today's system, so two looks never mix in one build.
+- **After it's merged,** 03 and the tokens are the new direction, and every later task (and `/build-task`'s designer, for a brand-new screen) follows them.
 
 ## Rules for you
 - Run agents one at a time and wait for each; they share this worktree. Never `isolation: worktree`.
-- An agent type is loaded when the session starts. If `art-director`, `interaction-designer` or `ui-critic` isn't found, run `general-purpose` with "Your instructions are `.claude/agents/<name>.md`; read it first and follow it exactly", plus the same task ID, mode and brief.
+- An agent type is loaded when the session starts. If `art-director`, `interaction-designer` or `redesign-critic` isn't found, run `general-purpose` with "Your instructions are `.claude/agents/<name>.md`; read it first and follow it exactly", plus the same task ID, mode and brief.
 - Pass agents file paths, IDs and his quoted words, never your opinion of the work. The critic never gets the art director's reasoning.
 - Don't edit `specs.md`, `specs/`, 03, the mockups, tokens or app code in this stage. The change list is a plan; the lane's tasks change the files.
 - Spending money, installing anything (fonts included), a new package: ask the founder first.

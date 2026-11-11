@@ -55,7 +55,7 @@ One agent at a time; each sees the frames and the others' written points, never 
 - **The founder** · I1: <his answer, or "the recommendation stands"> · …
 
 ## Design check (critic)
-Written by the critic, round by round.
+Written by the redesign critic, round by round: first impressions (before reading this file), what works, a rubric table per direction (`.claude/agents/redesign-critic.md` → Rubric), blockers (severity 3–4), polish (1–2), suggestions (high | low), and "answers the brief" per direction.
 
 ## Changes
 - **Round <n>** · from <critic / the founder: "his words"> · <what changed>

@@ -1,6 +1,6 @@
 # Visual tone: the rules a direction is built and judged by
 
-For the art director (building directions), the critic (judging them, and later screens against the approved one) and the designer. The research and its sources are in `.claude/skills/redesign/references/design-research.md`; each rule below names how strong its evidence is. **Strong** = Apple's rules or replicated research. **Practice** = what serious product teams and the reference brands do, which is convention, not proof.
+For `/redesign`'s art director (building directions), interaction designer and redesign critic (judging them). The research and its sources are in `.claude/skills/redesign/references/design-research.md`; each rule below names how strong its evidence is. **Strong** = Apple's rules or replicated research. **Practice** = what serious product teams and the reference brands do, which is convention, not proof.
 
 ## 1. What is fixed in every direction
 - **The hard lines** (CLAUDE.md): no face, body, weight or skin; no emoji, ranks or anime styling; no streaks. These aren't up for a direction to change.

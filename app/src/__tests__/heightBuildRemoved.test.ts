@@ -88,7 +88,8 @@ describe('You (HB3–HB5)', () => {
   });
 
   test('HB5: Settings has no Units row', () => {
-    expect(src('app', '(tabs)', 'you', 'settings.tsx')).not.toMatch(/settings\.units|UNIT_OPTIONS/);
+    // T34: Settings' rows moved to You (features/settings/SettingsRows.tsx); the page itself is gone.
+    expect(src('features', 'settings', 'SettingsRows.tsx')).not.toMatch(/settings\.units|UNIT_OPTIONS/);
   });
 });
 

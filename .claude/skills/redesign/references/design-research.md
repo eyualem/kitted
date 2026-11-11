@@ -1,6 +1,6 @@
 # Design research: running a redesign, critiquing it, and what reads as "serious"
 
-Researched Nov 9, 2026 for the redesign tooling (`.claude/skills/redesign/`, `.claude/agents/art-director.md`, the upgraded `ui-designer.md` and `ui-critic.md`). Read only: nothing downloaded or installed. It lives here rather than in `inputs/` because the commit hook refuses anything under `inputs/` (private photos). The rules the agents actually use are distilled in `visual-tone.md`, next to this file.
+Researched Nov 9, 2026 for the redesign tooling (`.claude/skills/redesign/`, `.claude/agents/art-director.md`, `interaction-designer.md`, `redesign-critic.md`, and a short self-check in `ui-designer.md`). Read only: nothing downloaded or installed. It lives here rather than in `inputs/` because the commit hook refuses anything under `inputs/` (private photos). The rules the agents actually use are distilled in `visual-tone.md`, next to this file.
 
 **How strong each claim is:** **[strong]** replicated research or Apple's own rules · **[medium]** one solid study, or a consistent practitioner consensus · **[weak]** a convention, a blog, or a third party's reverse-engineering of a brand.
 

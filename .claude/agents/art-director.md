@@ -45,7 +45,7 @@ For each direction, write the plan first (DIRECTION.md, from the template): a na
 - The same content on every board: the same photo crops (neck-down, 03 §8), the same outfit, score, fixes and closet pieces, so he compares looks, not content.
 - **Every photo slot shows a photo:** the test photos in `mockups/img/` or a visibly drawn placeholder (a flat garment drawing like Closet's), never an empty box. Check each PNG: a blank where a photo belongs reads as a design choice (the founder took an old mockup's unloaded photos for the new design).
 - PNGs: `sh tools/mockshots/design-shot.sh <ID> <n> light`, then `dark`, for every phone. Open every PNG (Read) and fix what's off: overlap, clipping, a stand-in face drawn instead of the one named, a rule in the plan that the frame doesn't follow.
-- **Self-check with the critic's rubric** (`.claude/agents/ui-critic.md` → Rubric) before you return, and fix what you find. You still don't judge your own work for the founder; the critic does.
+- **Self-check with the critic's rubric** (`.claude/agents/redesign-critic.md` → Rubric) before you return, and fix what you find. You still don't judge your own work for the founder; the critic does.
 
 ### 4. For each direction, say honestly
 - what it fixes in the brief, measured against the Today table;
