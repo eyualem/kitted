@@ -130,7 +130,7 @@ The settings home, named You, with no gear and no separate Settings page (`specs
 - F9.2 Picked looks change the order of fixes and advice, never a score.
 
 ### F10. Free checks, Pro and the paywall
-- **Free:** 7 free fit checks (each with its re-check), at most 1 a day, used whenever he likes. Then new checks need Pro. 3 questions a day, forever. Everything that runs on code (scores, fixes, Closet, Lookbook, outfit ideas, share cards) stays free forever.
+- **Free:** 7 free fit checks (each with its re-check), at most 1 a day, used whenever he likes. Then new checks need Pro. 3 questions a day, forever. Everything that runs on code (scores, fixes, Closet, Lookbook, outfit ideas) stays free forever.
 - **Pro:** $9.99 a month or $39.99 a year. **No free trial.** "Up to 5 fit checks and 30 questions a day."
 - **When he sees it:** the soft page after his first result; the upgrade button on the limit card when he tries a second check in a day; the full paywall when he tries an 8th check.
 - F10.1 Free checks are counted on our server against the phone's Keychain ID and his account; deleting and reinstalling doesn't reset them.
@@ -148,7 +148,8 @@ Optional. Continue with Apple or Google. Signed in, his scores, closet, style pr
 - F11.4 Backed-up photos are readable only by his account (security rules tested).
 - F11.5 Sign out keeps his fits on the phone **(assumed)**.
 
-### F12. Share cards
+### F12. Share cards (cut until after launch)
+**Cut from the beta and the launch (founder, Nov 9, #423):** "let's not release half-assed things." The share actions and the route are switched off; F12.1 isn't checked at launch. They come back after launch only if they're rebuilt to be worth sharing. What was planned:
 Neck-down by default ("Neck down | Full photo"), never gated, a small "scored by Kitted" mark. Save to Photos needs the add-only photo permission.
 - F12.1 The default share image shows nothing above the neck.
 
