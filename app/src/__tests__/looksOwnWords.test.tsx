@@ -7,6 +7,7 @@
 import { mockT39, mount, press, setUpT39Tests, typeIn } from '@/testing/t39ScreenMocks';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { act } from 'react';
+import { TextInput } from 'react-native';
 import { PickLooksScreen } from '@/features/onboarding/PickLooksScreen';
 import { OTHER_STYLE_KEY } from '@/features/onboarding/basics';
 
@@ -23,6 +24,19 @@ describe('Looks · in your own words', () => {
     const field = screen.getByPlaceholderText(PLACEHOLDER);
     await act(async () => { fireEvent(field, 'blur'); });
     expect(screen.queryByPlaceholderText(PLACEHOLDER)).not.toBeNull();
+  });
+
+  it('the field takes focus once it opens from the tile', async () => {
+    await mount(<PickLooksScreen />);
+    await press(screen.getByRole('button', { name: TILE }));
+    const field = screen.getByPlaceholderText(PLACEHOLDER);
+    // autoFocus alone didn't hold on iOS; the screen focuses the field itself once it's on screen.
+    expect(field.props.autoFocus).toBeFalsy();
+    // The preset's TextInput mock shares one jest.fn `focus` on its prototype.
+    const focus = (TextInput as unknown as { prototype: { focus: jest.Mock } }).prototype.focus;
+    focus.mockClear();
+    await act(async () => { jest.advanceTimersByTime(100); });
+    expect(focus).toHaveBeenCalled();
   });
 
   it('typed words show on the tile and are saved with Continue', async () => {

@@ -61,6 +61,13 @@ export function PickLooksScreen() {
   }, []);
   // His own words sit under the grid, at the end of the scroll. When the keyboard shrinks the scroll to the space
   // above it, bring the field into view so he sees what he types (founder, Nov 11).
+  // Focus the field once it's on screen. `autoFocus` alone didn't hold on iOS when the field mounted from the tile's
+  // press: the field showed with no cursor and no keyboard, so typing went nowhere until a second tap (Nov 11).
+  useEffect(() => {
+    if (!editing) return;
+    const id = setTimeout(() => input.current?.focus(), 50);
+    return () => clearTimeout(id);
+  }, [editing]);
   const keepFieldInView = () => {
     if (input.current?.isFocused()) scroll.current?.scrollToEnd({ animated: true });
   };
@@ -132,7 +139,6 @@ export function PickLooksScreen() {
         {editing ? (
           <TextInput
             ref={input}
-            autoFocus
             value={words}
             onChangeText={setWords}
             placeholder={t('onb.looks.else.placeholder')}
