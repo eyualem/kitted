@@ -118,3 +118,22 @@ Read the diff since `b8f87966` (`ConfirmDeck.tsx`, `closetDeck.test.tsx`; no oth
 - Still can't tell: what VoiceOver actually says and the order on a device (needs his phone, Y24), and the one-frame folded flash on a fresh open from Round 3's small list.
 
 **Verdict: ready.** No code defect is open; the red-flow test defect from Round 1 was dealt with by the later flow fixes (not re-read).
+
+### Round 5 (reviewer, the folded row's picture, `00a77a15`)
+Read the diff since `a43ace27` (`ConfirmDeck.tsx`, `closet/index.tsx`, the CB2.11 tests), shots 11 (light, dark) and 13; Built last. Ran nothing.
+
+- The folded row shows the first waiting question's piece drawing (52 pt), `TO CONFIRM` with the count, that question in bold, and the chevron (shots 11, both themes): reads cleanly, easy to see, the card's own words ("Are these your khaki chinos?"), no new words. For a fit card first it uses `doubtQuestion`; for a dup, the same `askQuestionText(lowercased candidate name, slot)` the card itself uses, so the two never disagree.
+- VoiceOver: "To confirm, 5 pieces. Are these your khaki chinos?", button, collapsed; the visible texts are hidden from VoiceOver so nothing is read twice.
+- Largest text (shot 13): the drawing is left out, the words wrap and nothing is cut off; the 44 pt minimum height holds.
+- No picture when `preview` is null (nothing waiting returns no row at all).
+- Tests: the CB2.11 tests now also check the label with the question, the three texts in order, and that the drawing comes before the text; assertions were changed to match the new label, none removed or loosened (the count, the "stays folded", and "no row" checks remain).
+- Hard lines: nothing about faces or bodies; the drawing is the piece's own closet drawing, not a photo; nothing leaves the phone.
+
+**Defects:** none in the code.
+
+**Follow-ups (never block)**
+- `specs/closet-beta.md` CB2 "Folded" still says the folded row is `To confirm`, the count and a chevron. The founder chose "Picture + question" in chat, so the spec should get a line saying so (his yes is in chat; only he or the coordinator edits it, with a log entry). Until then the spec and the build disagree.
+- The row shows the *first* waiting question, but a tap opens the card at the one he was on last (spec: "at the current question"), so after he skipped to card 3 the row names card 1 and opens on card 3. Harmless; the row could name the card it opens on if that feels odd on the phone.
+- Still unchecked on a device: VoiceOver's actual words and order (Y24), and the one-frame folded flash on a fresh open.
+
+**Verdict: ready.**
