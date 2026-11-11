@@ -45,11 +45,11 @@ The card stays where it is, on top of Closet under the scans-waiting row. It hol
 A fit question card keeps its own look (the drawing, `How do your mid-wash jeans fit?`, what was seen) at the same size as today, with the same tag line and `Skip ›`.
 
 **Folded (changed with the founder's yes, Nov 10:** *"I feel like these confirm piece-type texts should be expandable instead of the way they are right now."* **Relayed by the Apple Connect session, which set the details below.)**
-- **Folded by default:** one row, `To confirm` on the left, the number still waiting on the right (for example `4`), and a chevron. A tap opens the card in place, at the current question.
+- **Folded by default:** one row: the first waiting question's piece (its closet drawing, left out at the largest text sizes), `To confirm` with the number still waiting on the right (for example `4`), that question in bold (`Are these your khaki chinos?`), and a chevron. A tap opens the card in place, at the current question. *(The picture and question added with the founder's yes, Nov 10: "it's easy to miss … add a little picture … of the first one that's getting confirmed"; he picked "Picture + question".)*
 - **Open:** the card as above; its tag line row gets the chevron, turned, and a tap on that row folds it again.
 - **Memory:** folded or open stays as he left it. A new question arriving changes only the count; it never opens the card by itself.
 - **Empty:** with nothing left, the row goes away, as the card does.
-- **VoiceOver:** the row is a button with its state: "To confirm, 4 pieces", collapsed or expanded. Reduce Motion: no animation.
+- **VoiceOver:** the row is a button with its state: "To confirm, 4 pieces. Are these your khaki chinos?", collapsed; open, "To confirm, 4 pieces", expanded. Reduce Motion: no animation.
 - No new words on screen; the VoiceOver label is new.
 
 **Moving through it**
