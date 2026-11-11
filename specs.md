@@ -113,7 +113,7 @@ Once a day Kit posts an outfit from his closet with the weather, greeting him by
 - F6.3 Under 50°F the outfit includes a warm layer, or says nothing warmer is in his closet.
 
 ### F7. Closet
-Pieces (head-to-toe sections), Outfits, Starter essentials, Next best buy, the piece page, and **scan clothes** (Closet + → photograph clothes laid flat; they become pieces).
+Pieces (head-to-toe sections), Starter essentials, the piece page, and **scan clothes** (Closet + → photograph clothes laid flat; they become pieces). Outfits and Next best buy are off for the beta (`specs/closet-beta.md`).
 - F7.1 Every piece from a fit check lands in Closet, with Undo.
 - F7.2 A scan reads each piece into Closet; a scan with no clothes, a person, or too dark says so and saves nothing.
 - F7.3 Scans never use a fit check or a question; up to 30 scan photos a day, free and Pro alike **(assumed)**.
