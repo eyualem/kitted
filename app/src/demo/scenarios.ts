@@ -313,6 +313,12 @@ export const SCREENS: readonly ScreenScenario[] = [
   // on a closet that makes 3+ outfits (it opens on the pieces anyway); 261 is screen 184's piece without Goes with.
   { n: 260, name: 'Closet · beta, Outfits remembered', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   { n: 261, name: 'Closet · a piece, beta', id: 'C2', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet/item/B1', under: '/closet' },
+  // To confirm, one card at a time (specs/closet-beta.md CB2): four real "Is this your …?" questions and the fit
+  // question (262, "1 of 5"), the fit question alone (263), and one question with no Skip (264, screen 38's story).
+  { n: 262, name: 'Closet · To confirm, 5 questions', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
+  { n: 263, name: 'Closet · To confirm, the fit question only', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
+  { n: 264, name: 'Closet · To confirm, one question', id: 'C1', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/closet' },
+  { n: 265, name: 'Closet · To confirm, folded', id: 'C1', scenario: 'full', onboarded: true, now: FULL_NOW, href: '/closet' },
   // You as the settings home (T34, specs/setup-and-you.md SY1): Pro bought with the paywall on, at the rows and at the top.
   { n: 270, name: 'You · Pro, settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', finish: { paywall: 'ok', pro: true } },
   { n: 271, name: 'You · Pro', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you', finish: { paywall: 'ok', pro: true } },

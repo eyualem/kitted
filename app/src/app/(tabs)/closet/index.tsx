@@ -1,6 +1,7 @@
 // C1 · Closet (02 D15). Until P5 builds the full screen (Rotation, Starter essentials, filters),
 // it shows what the closet really holds: the C1e empty state, or a grid of his pieces drawn with their
-// details (#91), with the "Same as your …?" questions the stylist still has on top, 3 at a time (#111). A tap on a piece
+// details (#91), with the "Is this your …?" questions the stylist still has on top, one card at a time (specs/
+// closet-beta.md CB2: "2 of 5", Skip or a sideways swipe to move on, the fit question last). A tap on a piece
 // opens its page (#276); a long-press is the shortcut menu. While clothes scans wait to be read, one row on top
 // ("Waiting to be read · 2 photos", #280) opens the scan inbox.
 // Pieces | Outfits (09-ui-review §13, #307; #84, #87): opens on Outfits once he can make 3+, else Pieces, then
@@ -11,10 +12,10 @@
 // with its count, on the same scroll; a thin closet (under 4 pieces, or one section) is one plain grid.
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
 // minimize behavior).
-import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { useRef, useState, type RefObject } from 'react';
+import { AccessibilityInfo, findNodeHandle, ScrollView, View } from 'react-native';
 import { router, type Href } from 'expo-router';
-import { EmptyState, KButton, KCard, KCardSection, KText, RowDivider, TagLine, radius, space, useTheme } from '@/design-system';
+import { EmptyState, KButton, KCard, KCardSection, KText, TagLine, radius, space, useTheme } from '@/design-system';
 import type { ClosetItemRow } from '@/data/types';
 import { store } from '@/data/db';
 import { useLive } from '@/data/useLive';
@@ -23,11 +24,13 @@ import { piecePreviewSource } from '@/features/closet/piecePreview';
 import { livePhotoDeps, loadPhotoChecks } from '@/features/closet/photoChecks';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { FitQuestion } from '@/features/closet/FitQuestion';
-import { FIT_SKIP_KEY, fitCard, parseSkips } from '@/features/closet/fitDoubt';
+import { doubtQuestion, FIT_SKIP_KEY, fitCard, parseSkips } from '@/features/closet/fitDoubt';
+import { askQuestionText } from '@/features/closet/askText';
 import { closetGridItems, closetSections, pieceSectionLabel, type PieceSection } from '@/features/closet/merge';
 import type { PiecePreview } from '@/features/closet/piecePreview';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
-import { toConfirm } from '@/features/closet/toConfirm';
+import { ConfirmDeck, ConfirmFoldRow, type ConfirmPreview } from '@/features/closet/ConfirmDeck';
+import { CONFIRM_OPEN_KEY, confirmOpen, confirmOpenValue, toConfirm } from '@/features/closet/toConfirm';
 import { answerWithUndo, type AnswerToastDeps } from '@/features/closet/answerToast';
 import { showToast } from '@/features/toast/toast';
 import { INBOX_KEY, parseInbox, waitingRow } from '@/features/scan/inbox';
@@ -78,9 +81,17 @@ export default function ClosetScreen() {
     return { items, byId, previews, asks: await fitCheck.closet.openAsks(), all, fitChecks, styles, count, fit };
   }, [fitSkips, on]);
   const remembered = useLive(['kv'], () => store.getKv(SEGMENT_KEY), [], SEGMENT_KEY);
+  // To confirm folded or open, as he left it (CB2 "Folded"); nothing saved yet means folded.
+  const confirmSaved = useLive(['kv'], () => store.getKv(CONFIRM_OPEN_KEY), [], CONFIRM_OPEN_KEY);
   // Clothes scans waiting to be read (#280): one row on top while any wait.
   const inbox = useLive(['kv'], async () => waitingRow(parseInbox(await store.getKv(INBOX_KEY))), [], INBOX_KEY);
   const [width, setWidth] = useState(0);
+  // After the last question leaves, VoiceOver goes to the first section title, where the card was (CB2.6).
+  const firstTitle = useRef<View | null>(null);
+  const focusFirstSection = () => {
+    const tag = firstTitle.current ? findNodeHandle(firstTitle.current) : null;
+    if (tag != null) AccessibilityInfo.setAccessibilityFocus(tag);
+  };
   if (!data) return null;
   const { items, byId, previews, asks, all, fitChecks, styles, count, fit } = data;
   const view = closetView(on, count, remembered ?? null);
@@ -91,8 +102,15 @@ export default function ClosetScreen() {
     if (!photo || !candidate) return [];
     return [{ checkId, ask, photo, candidate, runnerUp: ask.runnerUpId ? byId.get(ask.runnerUpId) ?? null : null }];
   });
-  // At most 3 questions at a time (#111); answering one brings the next in.
-  const queue = toConfirm(open);
+  // One card at a time (CB2): every open question, newest first, then the fit question; no cap.
+  const deck = toConfirm(open, fit);
+  const unfolded = confirmOpen(confirmSaved);
+  // The folded row shows the first waiting question: its piece's drawing and its words, as the card would ask them.
+  const first = deck[0];
+  const preview: ConfirmPreview | null = !first ? null : first.kind === 'fit'
+    ? { item: first.fit.item, question: doubtQuestion(first.fit.doubt, first.fit.item.name) }
+    : { item: first.q.candidate, question: askQuestionText(first.q.candidate.name.charAt(0).toLowerCase() + first.q.candidate.name.slice(1), first.q.candidate.slot) };
+  const setConfirmOpen = (v: boolean) => void store.setKv(CONFIRM_OPEN_KEY, confirmOpenValue(v));
   const cols = isAccessibilitySize ? 2 : 3;
   const tile = width > 0 ? Math.floor((width - GAP * (cols - 1)) / cols) : 0;
   return (
@@ -131,29 +149,24 @@ export default function ClosetScreen() {
           {segment === 'outfits' ? <OutfitsView closet={all} checks={fitChecks} count={count} styles={styles} /> : null}
           {segment === 'pieces' ? (
           <>
-          {/* "To confirm · 2" (#117): the open questions in one quiet card on top, 3 at a time (#111), then at most one
-              "How do your … fit?" (§18); no badge, no push. */}
-          {queue.total > 0 || fit ? (
-            <KCard>
-              <KCardSection gap={12}>
-                <TagLine left={t('closet.confirm.tag')} right={String(queue.total + (fit ? 1 : 0))} />
-                {queue.shown.map(({ checkId, ask, photo, candidate, runnerUp }, i) => (
-                  <View key={ask.obsId} style={{ gap: 12 }}>
-                    {i > 0 ? <RowDivider /> : null}
-                    <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} onAnswer={(a) => void answerWithUndo(answerDeps, checkId, ask, a, candidate, runnerUp)} />
-                  </View>
-                ))}
-                {fit ? (
-                  <View style={{ gap: 12 }}>
-                    {queue.shown.length > 0 ? <RowDivider /> : null}
-                    <FitQuestion item={fit.item} doubt={fit.doubt} />
-                  </View>
-                ) : null}
-              </KCardSection>
-            </KCard>
-          ) : null}
+          {/* "To confirm · 2 of 5" (#117, CB2): one question per card, the fit question last; no badge, no push. It
+              stays mounted with no cards (it draws nothing), so Undo after the last answer brings the card back. */}
+          {!unfolded ? <ConfirmFoldRow tag={t('closet.confirm.tag')} total={deck.length} preview={preview} onOpen={() => setConfirmOpen(true)} /> : null}
+          {/* Folded, the deck stays mounted but out of sight, so it opens again on the card he was on. */}
+          <ConfirmDeck
+            folded={!unfolded}
+            cards={deck}
+            tag={t('closet.confirm.tag')}
+            onFold={() => setConfirmOpen(false)}
+            onEmptied={focusFirstSection}
+            renderCard={(card, slot) => {
+              if (card.kind === 'fit') return <FitQuestion item={card.fit.item} doubt={card.fit.doubt} deck={slot} />;
+              const { checkId, ask, photo, candidate, runnerUp } = card.q;
+              return <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} deck={slot} onAnswer={(a) => void answerWithUndo(answerDeps, checkId, ask, a, candidate, runnerUp)} />;
+            }}
+          />
           <View style={{ gap: space.xxl }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
-            {tile > 0 ? <PieceSections items={items} tile={tile} previews={previews} /> : null}
+            {tile > 0 ? <PieceSections items={items} tile={tile} previews={previews} firstTitle={firstTitle} /> : null}
           </View>
           </>
           ) : null}
@@ -164,7 +177,9 @@ export default function ClosetScreen() {
 }
 
 /** The Pieces grid, head to toe (#384): a title per section once the closet has more than one, else one plain grid. */
-function PieceSections({ items, tile, previews }: { items: readonly ClosetItemRow[]; tile: number; previews: Map<string, PiecePreview> }) {
+function PieceSections({ items, tile, previews, firstTitle }: {
+  items: readonly ClosetItemRow[]; tile: number; previews: Map<string, PiecePreview>; firstTitle: RefObject<View | null>;
+}) {
   const { titled, sections } = closetSections(items);
   const grid = (list: readonly ClosetItemRow[]) => (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: GAP }}>
@@ -174,18 +189,18 @@ function PieceSections({ items, tile, previews }: { items: readonly ClosetItemRo
     </View>
   );
   if (!titled) return grid(sections.flatMap((s) => s.items));
-  return sections.map((s) => (
+  return sections.map((s, i) => (
     <View key={s.slot} style={{ gap: PIECE_HEADER === 'tag' ? space.s : space.m }}>
-      <PieceSectionTitle section={s} />
+      <PieceSectionTitle section={s} titleRef={i === 0 ? firstTitle : undefined} />
       {grid(s.items)}
     </View>
   ));
 }
 
-function PieceSectionTitle({ section }: { section: PieceSection }) {
+function PieceSectionTitle({ section, titleRef }: { section: PieceSection; titleRef?: RefObject<View | null> }) {
   const n = String(section.items.length);
   return (
-    <View accessible accessibilityRole="header" accessibilityLabel={pieceSectionLabel(section)}>
+    <View ref={titleRef} accessible accessibilityRole="header" accessibilityLabel={pieceSectionLabel(section)}>
       {PIECE_HEADER === 'tag' ? (
         <TagLine left={section.title} right={n} />
       ) : (

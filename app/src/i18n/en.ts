@@ -22,6 +22,9 @@ const plurals: Partial<Record<keyof typeof enGenerated, { one: string }>> = {
  * VoiceOver labels. All are "N" (new); listed in handoff/DECISIONS-LOG.md for the founder.
  */
 const addedInBuild = {
+  // Closet's To confirm, one card at a time (specs/closet-beta.md CB2): the tag line's place, and VoiceOver's first words.
+  'closet.confirm.count': '{n} of {total}',
+  'closet.confirm.a11y.question': 'Question {n} of {total}.',
   // "Which one is you?" (02 S23, Oct 14): the hint under the question, and VoiceOver on the photo's tap targets.
   'whichOne.hint': "Tap yourself. Everyone else is hidden before it's sent.",
   'whichOne.a11y.person': 'Person {n} of {count}, from the left',

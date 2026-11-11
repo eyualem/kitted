@@ -55,6 +55,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y24** · **P2** · OK the plain names Kit says for the style rules ("the waist break, the rule of thirds"), about 74 short names drafted in T65 (10 min) → Explain rating (T58)
 - [ ] **Y25** · **P2** · OK deploying the server change that doesn't count Explain rating as a question (1 min; Claude runs it) → Explain rating on testers' phones (T26, T58)
 - [ ] **Y26** · **P2** · Merge the new setup (#90, then #93), then go through it fresh on your phone (delete Kitted, reinstall): Welcome's drawing, About you, Kit's offer, Later, then Check my fit and the agreement once (10 min) → setup confirmed on a real iPhone, VoiceOver aside
+- [ ] **Y27** · **P2** · Phone pass on Closet's one-card questions (after the next TestFlight build, or demo screen 262 on your phone): swipe a card sideways, answer one and feel the buzz, tap Undo, then turn on VoiceOver and Reduce Motion and step through once, and on the score card check VoiceOver reaches "Yes, same one"; try one diagonal swipe (10 min) → the one-card review checked by hand (T74)
 
 ---
 
@@ -167,8 +168,8 @@ Lane files: `app/src/features/{closet,scan,lookbook}`, `app/src/services/closetS
 - [ ] **T71** · Scanned photos become Closet pieces ("Waiting to be read" empties) · *after T70, T24 · checks: F7.2, F7.3 · files: scan/, closetSource/*
 - [ ] **T75** · tiny · *(beta)* Lookbook's look page: "How I scored" (today's math sheet) and "Fix what I read" (the correction) · *after T66 · spec: `specs/explain-rating.md` · checks: ER3.2 · files: lookbook/LookPageScreen.tsx, en.ts* · *(first numbered T74, which T72–T74 had already claimed; renumbered at their merge, Nov 10)*
 - [x] 2026-11-10, #74 · **T72** · Your Nov 8 beta notes on Closet: write `specs/closet-beta.md` with you (Outfits off for now; the piece questions one card at a time), and `specs.md` F7 if you say yes · *done: your yes · files: `specs/closet-beta.md`, `specs.md` F7* · **approved Nov 8**, F7 changed
-- [~] closet-beta-fixes · PR #84 · **T73** · Closet without Outfits: no Pieces | Outfits switch, nothing elsewhere leads to it · *after T72 · checks: CB1.1–CB1.5 · files: closet/, `(tabs)/closet/index.tsx`, ask/ (buy card line), features.ts, en.ts*
-- [~] closet-beta-fixes · **T74** · The piece questions one card at a time: swipe or answer to move on, "2 of 5", Undo, Skip · *after T73 · checks: CB2.1–CB2.10 · files: closet/, `(tabs)/closet/index.tsx`, en.ts*
+- [x] 2026-11-10, #84 · **T73** · Closet without Outfits: no Pieces | Outfits switch, nothing elsewhere leads to it · *after T72 · checks: CB1.1–CB1.5 · files: closet/, `(tabs)/closet/index.tsx`, ask/ (buy card line), features.ts, en.ts*
+- [~] closet-beta-fixes · PR #94 · **T74** · The piece questions one card at a time: swipe or answer to move on, "2 of 5", Undo, Skip · *after T73 · checks: CB2.1–CB2.10 · files: closet/, `(tabs)/closet/index.tsx`, en.ts*
 
 ### Launch
 *Getting into the App Store. Done means Apple's weather and app lock are on, both launch tests pass (the fix works, the score is fair), every requirement is checked, and the app is submitted.*
@@ -213,11 +214,11 @@ The last 15 sessions, newest first.
 - 2026-11-10 · app-design-professionalism: the redesign's direction (tailored, boxier cards; the redesign tools with an interaction designer in PR #83, parked until after the beta); the card shows one number and Kit explains the rating in chat (spec in the kit-explains session); share cards cut until after launch (T67 added); height later and quiet · #432
 - 2026-11-10 · The redesign stage, kept as a one-off `/redesign` (parked until after the beta, #420): art director, interaction designer and redesign critic with a written debate; the first run leads with B Tailored; `ui-designer` gains a 3-line check for him; nothing added to `/build-task` · PR #83
 - 2026-11-09 · T73 ready in round 2: Closet without Outfits (switch, Goes with, Next best buy and the +N counts hidden); PR #84 stacked on #74 · #431
+- 2026-11-10 · T74: the quick-swipe bug fixed (a change ends on its animation, Closet's scrolling stays on, the deck holds the swipe); the locked flow green, 128 steps; the folded row shows the first piece and its question · #436, PR #94
+- 2026-11-10 · T74: To confirm folds to one row ("To confirm · 5") by default and opens in place (your ask, relayed); reviewed ready; the quick-swipe bug still open · #435, PR #94
+- 2026-11-10 · T74 ready (normal, one fix round): Closet's To confirm one card at a time; design approved; the locked flow red at 3 tool-limited steps, for your call; PR #94 stacked on #84 · #432–425
 - 2026-11-10 · The build workflow sized to the risk (you): tiny (the session alone, 10–20 min), normal (one quick reviewer), strict for scoring, privacy and the age gate only; existing screens aren't drawn; the planner, verifier and critic retired; the core flows run before each TestFlight build; the redesign stage parked · #420
 - 2026-11-10 · Workflow report in `reports/` (43% of agent calls on testing and checking, 18% on building; a lean workflow proposed for a separate session); the S/M/L sizes undone; the 4 child sessions paused · #419
 - 2026-11-10 · T34: You is the settings home (no gear, no Settings page; an old Settings link lands on its rows); verified ready in round 3 of 3; also fixed at the largest text size: Acknowledgements, What Kit knows, the pick numbers · #418, PR #85
 - 2026-11-10 · Workflow sized to the risk (S, M, L) after a usage audit of the 6 beta-fix sessions; at most 3 sessions building at once; log entries numbered at merge · #417
 - 2026-11-09 · T80 parked (founder): the beta stays on the US weather service; Apple's weather later, to Apple's rules (no stored forecasts, its mark wherever its weather shows), found in its terms · #434
-- 2026-11-09 · T55: the card waits until Kit knows two outfits that work (founder, F6.2 rewritten, F13.1); a checked card that suggested nothing reads "Today's fit" under your check's occasion; `canSuggest` for the notifications; verified ready in round 2, not on the Simulator · #432–413, PR #82
-- 2026-11-09 · T54: the double evening card's cause found (two asks while the weather loads) and fixed in the morning service; 20 tests, 20 planted bugs caught; verified ready, not yet on the Simulator or your phone · #430, PR #75
-- 2026-11-08 · beta-notifications: notifications join the beta (founder): T56 (the spec, approved Nov 9; first numbered T54, which the evening-card fix took) and T53 (the build) claimed; T57 added for the ask at Later · #409; T50 keeps the decline line and greeting

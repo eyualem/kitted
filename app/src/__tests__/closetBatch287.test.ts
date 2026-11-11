@@ -203,14 +203,16 @@ describe('C1', () => {
   });
 });
 
-// ================================================================== C2 · "To confirm" shows at most 3
+// ================================================================== C2 · "To confirm" holds every open question (CB2.1)
+// Was "shows at most 3" (#111); specs/closet-beta.md CB2 (founder, Nov 8) replaced the 3-at-a-time card with one card
+// at a time over every open question (T74). Same real five-question set-up.
 describe('C2', () => {
-  test('C2: "To confirm" shows at most 3 questions; with 5 open it shows 3, and answering one brings the 4th in', async () => {
-    const { toConfirm, TO_CONFIRM_MAX } = jest.requireActual<{
-      toConfirm: <T>(open: readonly T[]) => { shown: T[]; total: number };
-      TO_CONFIRM_MAX: number;
-    }>('../features/closet/toConfirm');
-    expect(TO_CONFIRM_MAX).toBe(3);
+  test('CB2.1 · C2: To confirm holds all 5 open questions in openAsks order, and answering one leaves the other 4 in order', async () => {
+    const mod = jest.requireActual<Record<string, unknown>>('../features/closet/toConfirm');
+    const toConfirm = mod.toConfirm as <Q extends { ask: { obsId: string } }, F extends { item: { id: string } }>(
+      open: readonly Q[], fit: F | null,
+    ) => ({ kind: 'dup'; key: string; q: Q } | { kind: 'fit'; key: string; fit: F })[];
+    expect(Object.keys(mod)).not.toContain('TO_CONFIRM_MAX');
 
     // One real question from the story (p01b's chinos), then four more like it on the same check.
     const env = await setup();
@@ -231,26 +233,22 @@ describe('C2', () => {
 
     const open = await env.closet.openAsks();
     expect(open).toHaveLength(5);
-    const q = toConfirm(open);
-    expect(q.total).toBe(5);
-    expect(q.shown).toHaveLength(3);
-    expect(q.shown).toEqual(open.slice(0, 3));
-    expect(toConfirm(open.slice(0, 2)).shown).toHaveLength(2);
+    const deck = toConfirm(open, null);
+    expect(Array.isArray(deck)).toBe(true);
+    expect(deck.map((c) => c.kind)).toEqual(['dup', 'dup', 'dup', 'dup', 'dup']);
+    expect(deck.map((c) => c.key)).toEqual(open.map((o) => `dup:${o.ask.obsId}`));
+    expect(deck.map((c) => (c.kind === 'dup' ? c.q : null))).toEqual(open);
 
-    // He answers one of the three; the 4th comes in.
-    const fourth = open[3]!;
-    await env.closet.answer(q.shown[1]!.checkId, q.shown[1]!.ask.obsId, 'new');
+    // He answers the second; the other four stay, in the same order.
+    await env.closet.answer(open[1]!.checkId, open[1]!.ask.obsId, 'new');
     const open2 = await env.closet.openAsks();
     expect(open2).toHaveLength(4);
-    const q2 = toConfirm(open2);
-    expect(q2.shown).toHaveLength(3);
-    expect(q2.shown.map((x) => x.ask.obsId)).toContain(fourth.ask.obsId);
-    expect(q2.shown.map((x) => x.ask.obsId)).not.toContain(q.shown[1]!.ask.obsId);
+    expect(toConfirm(open2, null).map((c) => c.key)).toEqual(open.filter((_, i) => i !== 1).map((o) => `dup:${o.ask.obsId}`));
 
-    // The Closet tab draws the queue's shown questions only (no new words).
+    // The Closet tab builds its deck from every open question and the fit question (no 3-at-a-time queue).
     const screen = src('app', '(tabs)', 'closet', 'index.tsx');
-    expect(screen).toMatch(/toConfirm\(/);
-    expect(screen).toMatch(/\.shown\.map\(/);
+    expect(screen).toMatch(/toConfirm\(open, fit\)/);
+    expect(screen).not.toMatch(/\.shown\.map\(/);
     expect(screen).not.toMatch(/\{open\.map\(/);
   });
 });

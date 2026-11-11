@@ -40,14 +40,22 @@ The card stays where it is, on top of Closet under the scans-waiting row. It hol
 2. The question (`Are these your khaki chinos?`) and its one-line reason, as today; `Your score stays the same either way.` on his first few questions, as today.
 3. The two pictures side by side, `This photo` and `In your closet`, about 110 pt tall (today ~170). At the largest text sizes they stack, as today.
 4. The answers, as today: `Yes, same one` · `No, a new one` · `It's my {item}` when there's a runner-up.
-5. `Skip ›`, trailing, under the answers.
+5. `Skip ›`, trailing, at the end of the answers' row; on its own row under them only when it can't fit (a third answer, large text). Not shown when the deck is a single "Is this your …?" question (it would do nothing); a lone fit card keeps it. *(Changed with the founder's yes, Nov 10.)*
 
 A fit question card keeps its own look (the drawing, `How do your mid-wash jeans fit?`, what was seen) at the same size as today, with the same tag line and `Skip ›`.
+
+**Folded (changed with the founder's yes, Nov 10:** *"I feel like these confirm piece-type texts should be expandable instead of the way they are right now."* **Relayed by the Apple Connect session, which set the details below.)**
+- **Folded by default:** one row: the first waiting question's piece (its closet drawing, left out at the largest text sizes), `To confirm` with the number still waiting on the right (for example `4`), that question in bold (`Are these your khaki chinos?`), and a chevron. A tap opens the card in place, at the current question. *(The picture and question added with the founder's yes, Nov 10: "it's easy to miss … add a little picture … of the first one that's getting confirmed"; he picked "Picture + question".)*
+- **Open:** the card as above; its tag line row gets the chevron, turned, and a tap on that row folds it again.
+- **Memory:** folded or open stays as he left it. A new question arriving changes only the count; it never opens the card by itself.
+- **Empty:** with nothing left, the row goes away, as the card does.
+- **VoiceOver:** the row is a button with its state: "To confirm, 4 pieces. Are these your khaki chinos?", collapsed; open, "To confirm, 4 pieces", expanded. Reduce Motion: no animation.
+- No new words on screen; the VoiceOver label is new.
 
 **Moving through it**
 - **Answering** saves the answer (as today, through the closet service), gives a light haptic, and the next card slides in from the trailing side. The toast says the answer with Undo, as today (`Saved as your khaki chinos.` / `Kept as a new piece.`).
 - **Undo** puts the question back in the deck in its place and shows that card.
-- **Swiping sideways** moves to the next or previous card without answering. It never answers.
+- **Swiping sideways** moves to the next or previous card without answering, wrapping at both ends like Skip. It never answers. With a single card it springs back.
 - **`Skip ›`** moves to the next card without answering. After the last card it wraps to the first. Skipped questions stay open and come back next time Closet opens. On the fit card, Skip keeps today's meaning (§18): that card leaves the deck until a newer photo disagrees again.
 - **Tapping the fit card** opens its Leg or Fit sheet, as today; a pick settles it and it leaves the deck.
 - **The last answer:** the card goes away (no "All set" screen). The toast with Undo still shows; Undo brings the card back.
@@ -77,13 +85,14 @@ Nothing new is stored. Answers go through the closet service exactly as today (`
 - CB2.1 With 4 open questions and a fit question, To confirm shows exactly one card, with `1 of 5`.
 - CB2.2 `Yes, same one` saves through the closet service, the toast says `Saved as your {item}.` with Undo, and the card shows `1 of 4` with the next question.
 - CB2.3 Undo after an answer brings that question back as the card on screen, with the count it had.
-- CB2.4 A sideways swipe and `Skip ›` each show the next card and save nothing; on the last card they show the first.
+- CB2.4 A sideways swipe and `Skip ›` each show the next card and save nothing; on the last card they show the first (a swipe back on the first shows the last). With a single "Is this your …?" question there is no Skip.
 - CB2.5 On the fit card, Skip hides it until a newer photo disagrees (as §18); tapping it opens its sheet.
 - CB2.6 Answering the last question removes the card; the pieces grid moves up.
 - CB2.7 Each picture is at most 120 pt tall at the default text size; one card is shorter than today's.
 - CB2.8 VoiceOver hears `Question 2 of 5.` first; every answer and Skip is a button of at least 44×44 pt; no answer needs a swipe.
 - CB2.9 With Reduce Motion on, changing cards uses no sliding.
 - CB2.10 A question answered on the score card leaves the deck and the count updates.
+- CB2.11 With questions open and nothing saved, To confirm is one folded row with the count waiting; a tap opens the card at the current question and the choice is kept; a new question while folded changes only the count. *(Nov 10, with the folded card.)*
 
 ## Touches
 - T73: `app/src/app/(tabs)/closet/index.tsx`, `features/closet/` (PiecePage), `features/ask/` (the buy card's line), `config/features.ts` (the switch, shared), `i18n/en.ts` (one line, shared), demo screens for Outfits.
