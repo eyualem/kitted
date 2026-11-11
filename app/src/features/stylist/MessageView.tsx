@@ -24,6 +24,7 @@ import { LimitCard } from '@/features/held/LimitCard';
 import { AccountOfferCard } from '@/features/account/AccountOfferCard';
 import { AboutYouCard } from '@/features/aboutYou/AboutYouCard';
 import { NoConsentCard } from '@/features/onboarding/NoConsentCard';
+import { FirstCheckOfferCard } from '@/features/onboarding/FirstCheckOfferCard';
 import { InviteCard } from '@/features/finish/InviteCard';
 import { NotifyAskCard } from '@/features/finish/NotifyAskCard';
 import { retryQuestion } from './ask';
@@ -50,6 +51,7 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
     if (m.cardType === 'aboutYou') return <AboutYouCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
     // "Turn on fit checks" (S26, 09-ui-review §20.8 G23): after "Not now" on consent.
     if (m.cardType === 'turnOnChecks') return <NoConsentCard m={m} showHeader={item.showWho} readOnly={readOnly} />;
+    if (m.cardType === 'firstCheckOffer') return <FirstCheckOfferCard m={m} readOnly={readOnly} />;
     // The check limit (02 D19 S17 → S17h, #280): under the photo he took after the free check was used.
     // …and after 4 am, "Ready to score last night's photo?" (S17h, #281).
     if (m.cardType === 'held' && m.fitCheckId && m.payload.ready === true) return <HeldReadyCard checkId={m.fitCheckId} showHeader={item.showWho} readOnly={readOnly} />;
