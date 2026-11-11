@@ -37,3 +37,32 @@
 
 ## Review
 Written by the reviewer.
+
+### Round 1 (normal; code and tests against SY2, no screenshots yet)
+Read at HEAD `fcb3c71b` (`git diff origin/main...HEAD`), plus the uncommitted SY2.7 change found in the tree (`arrivals.ts` `badgeColor`, `(tabs)/_layout.tsx`, a new SY2.7 test, `specs/setup-and-you.md`, DECISIONS-LOG #439). The two T35 test files run alone with that tree: 24 passed. tsc and lint not re-run on the uncommitted change.
+
+- SY2.1 done: one `aiNote` message, first, above the offer, drawn from the string, so it reads exactly `I'm Kit, your stylist.` (rendered test). The AI disclosure still comes first: the agreement says `Kit, your stylist, is an AI.`, and questions are gated on it too (`ask/session.ts` `mayAsk`).
+- SY2.2 done in code for a first or ordinary scored check: the row's thumbs, 520 ms plus 40 ms a piece, light haptic on landing, no line drawn, and the badge held until they land. Not done for a **re-check** (see D2). Can't tell how it looks (the landing point, the layer above the iOS tab bar, the timing). What would tell: a Simulator recording of 283 with `-demoReveal 1`.
+- SY2.3 done: the count comes only from the kv key and the rows, so it's the same after a relaunch. Tested 4 then 2 = 6, opening clears it, and a real check through the services.
+- SY2.4 done: only `scored` checks count, only `source: 'fitCheck'` pieces in `added` and not undone; a check that only matched gives 0 (tested on a real repeat check). Only scored cards hold the badge or slide.
+- SY2.5 done in code: Reduce Motion, a row outside the visible band, or the app not active means `noSlide`, which lets go of the hold so the badge shows at once (tested). Can't tell on a device whether the on-screen band (40 pt from the top, 110 pt from the bottom) matches the real dock.
+- SY2.6 done: only the Closet trigger has a `Badge`.
+- SY2.7 **not done at HEAD** (D1). In the tree, uncommitted: `primary` in light and `me` (#2B3860) in dark, white digits about 15:1 and 10:1, with a test. I checked expo-router 57's types: `badgeTextColor` really is Android and web only, so iOS digits are white.
+- SY2.8 done in code and tests: waiting, then the first adding check, then done once he leaves the tab or the app goes to the background; those pieces come out of the sections below and get `isNew`. The label and mark match phone 02 in the code's structure (the section-title look, `New` top left on the surface color). Can't tell how they look: needs screenshots of 285 and 286, light and dark.
+- SY2.9 done: missing keys on a finished setup become now and `done` (tested on the `full` seed); the old aiNote message renders the new words (tested).
+- SY2.10 done: the real `deleteAllData` empties both keys, the badge reads 0, and setup again starts `waiting` (tested). Both keys are `local`.
+- SY2.11 done in code: the row's text is unchanged; the tile reads `New, ` plus the tile's own label (the name, then what's drawn, as logged in #438); the label is `accessibilityRole="header"`. VoiceOver not heard on a device.
+
+**Defects**
+- **D1 · code** · `app/src/app/(tabs)/_layout.tsx` at HEAD: `badgeBackgroundColor={colors.primary}` is #ECEEF3 in dark under iOS's white digits (about 1.2:1, unreadable). The uncommitted `badgeColor` change fixes it. To close it: commit the change, then run tsc and lint on it (`scheme` from `useTheme`). The spec line it rewrites (SY2 and SY2.7) cites the founder's yes as #439, which I can't see from here. The session should make sure those are his words in chat before the spec edit lands (CLAUDE.md: specs change only with his yes).
+- **D2 · code, or the founder's call** · SY2's own text says the slide plays when "a scored check or re-check adds pieces"; the build gives a re-check the badge only, because its card has no `Added` row (TASK.md → Not done, #438). Here the build and the approved spec disagree. Either the founder OKs badge-only for re-checks (and the spec line changes with his yes), or the re-check card gets the row and the slide. Not something to settle quietly.
+
+**Small things for later (not blocking)**
+- `RestoreScreen` (still a stand-in) calls `completeOnboarding`, so a returning user restoring on a new phone would see `From your first check` on his next check, which isn't his first.
+- If a fresh card unmounts before its row lands (scrolled away), it lets go of the hold without `noSlide`; a remount later can still play the slide while the card is no longer "landing".
+- If a first adding check could ever land while the Closet tab is current (a camera over Closet), leaving Closet would mark the visit `done` before it was ever shown.
+- Only the row's first 4 thumbs fly; the badge counts all n (logged in #438). Fine, but the spec says "the n pictures".
+- `closetTabPoint` is fixed iPhone-portrait geometry (22 pt insets, 4 tabs, 61 pt up); worth one look at the smallest and largest iPhones.
+- The SY2.1 "no bullets" test scans only `stylist.`, `offer.` and `noConsent.` keys.
+
+**Verdict: not ready.** D1 closes once the tree's dark-mode change is committed and checked. D2 needs the founder's answer, or the row. Screenshots (283 slide, 285, 286, the badge light and dark) are still owed for the visible parts of SY2.2, SY2.5, SY2.7, SY2.8 and SY2.11.
