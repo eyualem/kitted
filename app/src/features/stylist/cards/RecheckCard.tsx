@@ -6,6 +6,7 @@
 // change" / "Tell me" offer only fixes the photo didn't clearly read otherwise; else "Not quite right?" (#383).
 // A scored re-check has "Why X?" and "Not quite right?" like the first check's card (09 §20.8 G15).
 import { router } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import {
   DeltaRow, ExpandHandle, Expandable, FixRow, KButton, KCard, KCardSection, KText, RevealStepView, ScoreBlock, Seam, TagLine, TextLink, TextLinkRow, displayScore, spokenScore,
@@ -22,6 +23,12 @@ import { FitCheckCard, useCardOpen } from './FitCheckCard';
 import { shareOffered } from '@/features/share/offer';
 import { useWinReveal } from './useReveal';
 import type { FitCheckRow } from '@/data/types';
+import { isOwned } from '@/features/closet/profile';
+import { holdBadge, noSlide } from '@/features/closet/slide';
+import { addedIds, isPending } from '@/features/closet/summaryText';
+import { useSlideIntoCloset } from '@/features/closet/useSlide';
+import { wasLive } from '@/features/fitcheck/reveal';
+import { sessionClock } from '@/state/session';
 
 /** `readOnly`: Past chats (#276): the result as it was, with no buttons (a new photo, "I did make the change", Tell me,
  *  Not quite right?); Why stays, as on the first check's card. */
@@ -41,8 +48,25 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
   const rc = row.details.recheck!;
   // The re-check win (#242, #246 (16)): once, only when the score went up and the card shows the change (not the
   // "same photo" or "change not seen" cards, which land as they are).
-  const { t: winT, plan, values: winValues, pill, attachScore, onScoreLayout, touch } = useWinReveal(
+  const { t: winT, plan, values: winValues, pill, attachScore, onScoreLayout, touch, done: revealDone } = useWinReveal(
     row, rc.parentScore, { announce: true, enabled: !rc.samePhoto && !(rc.notSeen && !row.details.confirmed) },
+  );
+  // The slide into Closet (SY2.2): this card has no `Added` row, so a fresh re-check's new pieces start from its bottom
+  // edge; the badge leaves them out until they land, as on the first check's card.
+  const [fresh] = useState(() => !readOnly && wasLive(row.id));
+  const edge = useRef<View | null>(null);
+  useEffect(() => {
+    if (!fresh) return;
+    holdBadge(row.id);
+    return () => noSlide(row.id);
+  }, [fresh, row.id]);
+  const cs = row.details.closetSummary;
+  const added = addedIds(cs);
+  const closet = useLive(['closet'], () => store.closet.all(), []);
+  const flying = added.map((id) => closet?.find((c) => c.id === id)).filter((c) => !!c && isOwned(c)).slice(0, 4) as NonNullable<typeof closet>;
+  useSlideIntoCloset(
+    fresh ? { checkId: row.id, fresh, ready: revealDone && !!closet, added, pending: !cs || isPending(cs, sessionClock.nowMs()), visible: false, edge } : undefined,
+    flying,
   );
   // The first card's fixes he may still confirm (#383): none when the photo clearly read those pieces otherwise; then
   // "Not quite right?" stands in for "I did make the change" and "Tell me". undefined while it loads.
@@ -223,7 +247,10 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
         </KCardSection>
       ) : null}
       </Expandable>
-      {notSeen ? null : <ExpandHandle open={open} onPress={() => setOpened(!opened)} />}
+      {/* The card's bottom edge: a fresh re-check's new pieces start their slide into Closet here (no `Added` row). */}
+      <View ref={edge} collapsable={false}>
+        {notSeen ? null : <ExpandHandle open={open} onPress={() => setOpened(!opened)} />}
+      </View>
     </KCard>
     </View>
   );

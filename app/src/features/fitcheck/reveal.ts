@@ -191,6 +191,11 @@ export function noteLive(checkId: string): void {
 
 const DEMO_STORY_PREFIX = 'story-';
 
+/** The card showed this check still reading in this run, so its result is new to him (the slide into Closet, SY2.2). */
+export function wasLive(checkId: string): boolean {
+  return live.has(checkId);
+}
+
 export function isRevealEligible(checkId: string, revealedAt?: number | null): boolean {
   return live.has(checkId) && !revealedThisRun.has(checkId) && !revealedAt;
 }
@@ -226,7 +231,8 @@ export function persistRevealed(store: KittedStore, checkId: string, nowMs: numb
 /** The demo screens -demoReveal resets, and the check each one reveals. */
 // 12: the seeded 8.0 → 9.0 re-check (FC3R in the full scenario), the only demo re-check that rises under today's
 // scoring (screen 10's story re-check reads "change not seen").
-export const DEMO_REVEAL_SCREENS: Readonly<Record<number, string>> = { 7: STORY_FIRST_CHECK, 10: STORY_RECHECK, 11: STORY_PARTIAL, 12: 'FC3R' };
+// 283: the first-run intro's first check (T35), so its pieces slide into Closet as the card lands (SY2.2).
+export const DEMO_REVEAL_SCREENS: Readonly<Record<number, string>> = { 7: STORY_FIRST_CHECK, 10: STORY_RECHECK, 11: STORY_PARTIAL, 12: 'FC3R', 283: STORY_FIRST_CHECK };
 
 export function setDemoPreparing(on: boolean): void {
   preparingDemo = on;

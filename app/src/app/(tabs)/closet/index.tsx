@@ -10,6 +10,8 @@
 // it on.
 // Pieces runs head to toe (founder, Oct 28; #384): Jackets and layers · Tops · Bottoms · Shoes, each under a quiet title
 // with its count, on the same scroll; a thin closet (under 4 pieces, or one section) is one plain grid.
+// His first visit after his first adding check (SY2.8): that check's pieces come first, under "From your first check",
+// each marked New; the visit is kept by the tab bar (features/closet/useArrivals.ts).
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
 // minimize behavior).
 import { useRef, useState, type RefObject } from 'react';
@@ -27,6 +29,8 @@ import { FitQuestion } from '@/features/closet/FitQuestion';
 import { doubtQuestion, FIT_SKIP_KEY, fitCard, parseSkips } from '@/features/closet/fitDoubt';
 import { askQuestionText } from '@/features/closet/askText';
 import { closetGridItems, closetSections, pieceSectionLabel, type PieceSection } from '@/features/closet/merge';
+import { firstVisitPieces } from '@/features/closet/arrivals';
+import { useFirstVisitCheck } from '@/features/closet/useArrivals';
 import type { PiecePreview } from '@/features/closet/piecePreview';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { ConfirmDeck, ConfirmFoldRow, type ConfirmPreview } from '@/features/closet/ConfirmDeck';
@@ -92,8 +96,13 @@ export default function ClosetScreen() {
     const tag = firstTitle.current ? findNodeHandle(firstTitle.current) : null;
     if (tag != null) AccessibilityInfo.setAccessibilityFocus(tag);
   };
+  const firstVisit = useFirstVisitCheck();
   if (!data) return null;
   const { items, byId, previews, asks, all, fitChecks, styles, count, fit } = data;
+  // His first visit (SY2.8): that check's pieces first, out of the sections below.
+  const fresh = firstVisitPieces(firstVisit ? fitChecks.find((c) => c.id === firstVisit) : undefined, items);
+  const freshIds = new Set(fresh.map((c) => c.id));
+  const rest = fresh.length > 0 ? items.filter((c) => !freshIds.has(c.id)) : items;
   const view = closetView(on, count, remembered ?? null);
   const segment = view.segment;
   const pick = (v: 'pieces' | 'outfits') => void store.setKv(SEGMENT_KEY, v);
@@ -166,7 +175,8 @@ export default function ClosetScreen() {
             }}
           />
           <View style={{ gap: space.xxl }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
-            {tile > 0 ? <PieceSections items={items} tile={tile} previews={previews} firstTitle={firstTitle} /> : null}
+            {tile > 0 && fresh.length > 0 ? <FirstCheckSection items={fresh} tile={tile} previews={previews} firstTitle={firstTitle} /> : null}
+            {tile > 0 && rest.length > 0 ? <PieceSections items={rest} tile={tile} previews={previews} firstTitle={fresh.length > 0 ? undefined : firstTitle} /> : null}
           </View>
           </>
           ) : null}
@@ -178,7 +188,7 @@ export default function ClosetScreen() {
 
 /** The Pieces grid, head to toe (#384): a title per section once the closet has more than one, else one plain grid. */
 function PieceSections({ items, tile, previews, firstTitle }: {
-  items: readonly ClosetItemRow[]; tile: number; previews: Map<string, PiecePreview>; firstTitle: RefObject<View | null>;
+  items: readonly ClosetItemRow[]; tile: number; previews: Map<string, PiecePreview>; firstTitle?: RefObject<View | null>;
 }) {
   const { titled, sections } = closetSections(items);
   const grid = (list: readonly ClosetItemRow[]) => (
@@ -197,7 +207,24 @@ function PieceSections({ items, tile, previews, firstTitle }: {
   ));
 }
 
-function PieceSectionTitle({ section, titleRef }: { section: PieceSection; titleRef?: RefObject<View | null> }) {
+/** "From your first check" (SY2.8): the section title's look, each piece marked New (tasks/T36 phone 2). */
+function FirstCheckSection({ items, tile, previews, firstTitle }: {
+  items: ClosetItemRow[]; tile: number; previews: Map<string, PiecePreview>; firstTitle: RefObject<View | null>;
+}) {
+  const section = { title: t('closet.firstCheck'), items };
+  return (
+    <View style={{ gap: PIECE_HEADER === 'tag' ? space.s : space.m }}>
+      <PieceSectionTitle section={section} titleRef={firstTitle} />
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: GAP }}>
+        {items.map((it) => (
+          <PieceMenu key={it.id} item={it} size={tile} aspect={0.92} radius={radius.tile} preview={previews.get(it.id) ?? { kind: 'drawn' }} isNew />
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function PieceSectionTitle({ section, titleRef }: { section: Pick<PieceSection, 'title' | 'items'>; titleRef?: RefObject<View | null> }) {
   const n = String(section.items.length);
   return (
     <View ref={titleRef} accessible accessibilityRole="header" accessibilityLabel={pieceSectionLabel(section)}>

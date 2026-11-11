@@ -55,7 +55,7 @@ function Preview({ preview, item }: { preview: PiecePreview; item: PieceMenuProp
   );
 }
 
-export function PieceMenu({ item, size, aspect, radius, preview }: PieceMenuProps) {
+export function PieceMenu({ item, size, aspect, radius, preview, isNew }: PieceMenuProps) {
   const { scheme } = useTheme();
   return (
     <Host matchContents colorScheme={scheme} ignoreSafeArea="all">
@@ -63,7 +63,7 @@ export function PieceMenu({ item, size, aspect, radius, preview }: PieceMenuProp
         <ContextMenu.Trigger>
           <RNHostView matchContents>
             <ClosetTile
-              item={item} size={size} aspect={aspect} radius={radius} label={item.name} onPress={() => openPiece(item)}
+              item={item} size={size} aspect={aspect} radius={radius} label={item.name} isNew={isNew} onPress={() => openPiece(item)}
               // A hold is the menu's, never a tap on the page under it (menuHold.ts).
               onLongPress={holdForMenu} delayLongPress={MENU_HOLD_MS} accessibilityHint={t('closet.piece.a11y.tileHint')}
               actions={[

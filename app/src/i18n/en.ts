@@ -575,6 +575,10 @@ const addedInBuild = {
   'closet.section.shoes': 'Shoes',
   'closet.section.a11y': '{section}, {n} pieces',
   'closet.section.a11y.one': '{section}, 1 piece',
+  // His first Closet visit after his first adding check (SY2.8, SY2.11; words approved by the founder Nov 10, #429).
+  'closet.firstCheck': 'From your first check',
+  'closet.new': 'New',
+  'closet.new.a11y': 'New, {name}',
   // Removing a piece or a look (#118, founder Oct 9): long-press → an action sheet → a toast with Undo.
   'closet.remove.action': 'Remove from Closet',
   'closet.removed': 'Removed your {item}.',

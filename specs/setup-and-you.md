@@ -1,6 +1,6 @@
 # Setup and You
 
-**Approved by the founder:** 2026-11-09 (SY2.1, SY4–SY6 changed with his yes the same day, to match `specs/onboarding-screens.md`). SY2–SY3 rewritten 2026-11-10 with his yes (direction A, `tasks/T36/`)
+**Approved by the founder:** 2026-11-09 (SY2.1, SY4–SY6 changed with his yes the same day, to match `specs/onboarding-screens.md`). SY2–SY3 rewritten 2026-11-10 with his yes (direction A, `tasks/T36/`); SY2's badge color and the slide's start changed the same day with his yes (#439)
 
 After this, a new user learns Stylist and Closet by doing his first fit check and seeing his pieces land in Closet, finds every setting on You without digging, and setup asks his name (optional), checks his age the Apple way and asks for the privacy agreement when he first opens the camera.
 
@@ -39,11 +39,11 @@ No tour, no tips, no `Got it` cards. He learns Stylist by doing his first check,
 **Kit's hello.** At setup's end (About you's `Continue`), Kit's first message is `I'm Kit, your stylist.`, above Kit's offer card (`specs/onboarding-screens.md` OS5). Today's AI note goes: the agreement says `Kit, your stylist, is an AI.` and shows before his first check or question, and Kit says so plainly when asked (F5.1).
 
 **The slide into Closet.** When a scored check or re-check adds pieces to Closet:
-1. As the card lands, the small pictures in its `Added {n} to Closet` row lift off and slide into the Closet tab, a few hundredths of a second apart, shrinking and fading as they reach it, in about 0.6 s, with a light haptic. Nothing is drawn: no line, no trail.
+1. As the card lands, small pictures of the pieces lift off and slide into the Closet tab: from the `Added {n} to Closet` row when it shows, otherwise from the card's bottom edge (a folded card, a re-check card). They go a few hundredths of a second apart, shrinking and fading as they reach it, in about 0.6 s, with a light haptic. Nothing is drawn: no line, no trail.
 2. Then the Closet tab shows a badge: how many pieces checks have added since he last opened Closet.
 3. Opening Closet clears the badge.
 - Only Closet gets a badge, never Lookbook.
-- The badge is navy, the color of `Check my fit` (the `primary` token, with `onPrimary` text), not Apple's red.
+- The badge is navy: the `primary` token in light and the `me` token in dark (his chat bubbles' navy), with iOS's white number; never Apple's red.
 - Nothing slides and the badge doesn't change when a check adds no new piece (all of them already in Closet), fails, is refused or isn't scored.
 - The slide plays only while the card is on screen as it lands; otherwise the badge alone. With Reduce Motion on: the badge alone.
 - Pieces he adds himself (the starter list, Closet's +, a scan) don't slide and aren't counted.
@@ -95,12 +95,12 @@ Removed with the tips: there's nothing left to replay. Help & about has no `Show
 
 **SY2. Kit's hello, and where the pieces go**
 - SY2.1 A new setup's end (About you's `Continue`) posts Kit's hello as exactly `I'm Kit, your stylist.`, once, above Kit's offer card, with no AI note; no Kit message anywhere lists features or uses bullets.
-- SY2.2 A scored check that adds n new pieces, with its card on screen as it lands: the n pictures slide from the card's `Added {n} to Closet` row into the Closet tab in about 0.6 s with a light haptic and nothing drawn, then Closet shows the badge.
+- SY2.2 A scored check or re-check that adds n new pieces, with its card on screen as it lands: the pictures slide from the card's `Added {n} to Closet` row when it shows, otherwise from the card's bottom edge (a folded card, a re-check card), into the Closet tab in about 0.6 s with a light haptic and nothing drawn, then Closet shows the badge.
 - SY2.3 The badge is the number of pieces checks added since Closet was last opened (checks adding 4, then 2 → 6); opening Closet clears it; it's the same after closing and reopening the app.
 - SY2.4 No slide and no badge change for a check that adds no new piece, a failed, refused or unscored check, or pieces he added himself.
 - SY2.5 Reduce Motion on, or the card off screen as it lands: no slide; the badge still shows.
 - SY2.6 Lookbook never shows a badge.
-- SY2.7 The badge uses the `primary` token with `onPrimary` text in light and dark (at least 4.5:1), never the system red.
+- SY2.7 The badge uses `primary` in light and `me` in dark, with white digits at least 4.5:1 in both, never the system red.
 - SY2.8 His first visit to Closet after his first adding check: those pieces first, under `From your first check`, each marked `New`; after he leaves Closet and comes back, neither shows again; a later check's pieces never get them.
 - SY2.9 An install that finished setup before this update: no label or marks ever; the slide and the badge work; the old AI-note message reads `I'm Kit, your stylist.`
 - SY2.10 "Delete all my data" clears the badge, the last-opened time and the first-visit mark.

@@ -33,11 +33,12 @@ import { tipLeadText } from '@/features/fitcheck/scoring';
 import { justAnswered, TapCard, tapChoice } from '@/features/tap/TapCard';
 import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
 import { DoubtLine } from '@/features/closet/DoubtLine';
-import { closetSummaryText, openAsks } from '@/features/closet/summaryText';
+import { addedIds, closetSummaryText, openAsks } from '@/features/closet/summaryText';
+import { endedUnscored, holdBadge, noRowToSlide, noSlide } from '@/features/closet/slide';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { askQuestionText, askReasonText, isPluralPiece } from '@/features/closet/askText';
 import { PieceArt } from '@/features/closet/GarmentArt';
-import { noteLive } from '@/features/fitcheck/reveal';
+import { noteLive, wasLive } from '@/features/fitcheck/reveal';
 import { useCheckReveal } from './useReveal';
 import { useLaterShows } from '@/features/finish/hooks';
 import { finish as finishSequence } from '@/features/finish/session';
@@ -106,9 +107,17 @@ export function FitCheckCard({ checkId, readOnly = false }: { checkId: string; r
   const [open, setOpen] = useState(false);
   // Seen still reading (or asking the quick tap): its result will be new to him, so the score reveal may play once.
   const status = row?.status;
+  // The badge holds its pieces from here (SY2.2): a cached closet reading writes them right after the score, before the
+  // score card is up to hold them, and the badge would show them first. A check that ends without a score lets go.
   useEffect(() => {
-    if (status === 'scoring' || status === 'asking') noteLive(checkId);
-  }, [status, checkId]);
+    if (status === 'scoring' || status === 'asking') {
+      noteLive(checkId);
+      if (!readOnly) holdBadge(checkId);
+    } else if (status === 'failed' || status === 'notClothed' || status === 'unreadable' || status === 'held') {
+      // Let go only: "Try again" reads this same check again, and its score must still slide.
+      if (wasLive(checkId)) endedUnscored(checkId);
+    }
+  }, [status, checkId, readOnly]);
   if (!row) return null;
   if (row.status === 'scoring') {
     if (session.kind === 'reading' && session.checkId === checkId) {
@@ -348,7 +357,23 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
   const moveIsFix = moveFix >= 0 ? moveFix + 1 : null;
   // The score reveal (#242, #246 (16)): once per new check; the quick tap's own announcement already says the score.
   const [viaTap] = useState(() => justAnswered.has(row.id));
-  const { t: revealT, plan, values: tapeVals, attachScore, onScoreLayout, touch } = useCheckReveal(row, dialed ? 0 : fixes.length, { announce: !viaTap });
+  const { t: revealT, plan, values: tapeVals, attachScore, onScoreLayout, touch, done: revealDone } = useCheckReveal(row, dialed ? 0 : fixes.length, { announce: !viaTap });
+  // The slide into Closet (SY2.2): only for a check new to him, on its own card; until its pieces land (or the row says
+  // they won't fly), the Closet badge leaves them out, so it counts them as they arrive.
+  const [fresh] = useState(() => !readOnly && wasLive(row.id));
+  const foldAnchor = useRef<View | null>(null);
+  useEffect(() => {
+    if (!fresh) return;
+    holdBadge(row.id);
+    // Gone before its pieces flew (scrolled away, another screen): the badge alone; a remount never plays it later.
+    return () => noSlide(row.id);
+  }, [fresh, row.id]);
+  // No row to slide from (a partial check, or nothing added): the badge alone. From the check, not the card's closet list,
+  // which may still be loading as the reveal ends (the slide was lost that way once, Nov 11).
+  const noRow = fresh && revealDone && noRowToSlide(cs, partial);
+  useEffect(() => {
+    if (noRow) noSlide(row.id);
+  }, [noRow, row.id]);
   const rt = plan ? revealT : undefined;
   const afterFixes = plan ? plan.fixes[plan.fixes.length - 1] ?? plan.summary : null;
   const blockReveal = plan
@@ -527,7 +552,10 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
         <Seam />
         <RevealStepView t={rt} step={afterFixes}>
         <KCardSection gap={6}>
-          {showCloset && closetLine ? <ClosetSummaryRow items={addedItems} text={closetLine.text} onReview={readOnly ? undefined : go.review} /> : null}
+          {showCloset && closetLine ? <ClosetSummaryRow
+              items={addedItems} text={closetLine.text} onReview={readOnly ? undefined : go.review}
+              slide={{ checkId: row.id, fresh, ready: revealDone, added: addedIds(cs), pending: closetLine.pending, visible: open, edge: foldAnchor }}
+            /> : null}
           {firstAsk && askPhoto && askCandidate ? (
             <View style={{ paddingTop: 6, paddingBottom: 4, gap: 8 }}>
               <DuplicateQuestion ask={firstAsk} photo={askPhoto} candidate={askCandidate} runnerUp={askRunnerUp} compact onAnswer={answerAsk} />
@@ -570,7 +598,10 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
         </KCardSection>
         </RevealStepView>
         </Expandable>
-        <ExpandHandle open={open} onPress={() => setOpen(!open)} />
+        {/* Folded, the slide into Closet starts here, just above the ⌄ (the row is out of sight inside the fold). */}
+        <View ref={foldAnchor} collapsable={false}>
+          <ExpandHandle open={open} onPress={() => setOpen(!open)} />
+        </View>
       </KCard>
     </View>
   );

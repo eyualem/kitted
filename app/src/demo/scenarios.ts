@@ -330,6 +330,10 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 282, name: 'Stylist · after Not now', id: 'S1o', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/stylist', offer: 'notNow' },
   { n: 283, name: 'Stylist · after a scored check', id: 'S1o', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', offer: 'checked' },
   { n: 284, name: 'Style profile · Name and Age', id: 'Y2', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/profile', under: '/you', profilePatch: { name: 'Alex', ageBand: '22-25', ageBandAt: Date.parse('2026-09-24T19:05:00-04:00') } },
+  // The first-run intro (T35, specs/setup-and-you.md SY2.8): Closet after 283's first check, on its first visit
+  // ("From your first check", each piece New), and Closet once that visit is over.
+  { n: 285, name: 'Closet · first visit', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:44:00', href: '/closet', offer: 'checked' },
+  { n: 286, name: 'Closet · after the first visit', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:46:00', href: '/closet', offer: 'checked' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {
