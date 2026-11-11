@@ -385,7 +385,6 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
   const actions = readOnly ? [fold, { name: 'why', label: t('card.why', { score: scoreText }) }] : [
     fold,
     { name: 'why', label: t('card.why', { score: scoreText }) },
-    { name: 'nqr', label: t('card.nqr') },
     ...(recheckOpen && !dialed ? [{ name: 'recheck', label: t('card.recheck') }] : []),
     ...(later ? [{ name: 'later', label: t('card.later') }] : []),
     ...(shareable ? [{ name: 'share', label: t('card.share.a11y') }] : []),
@@ -408,7 +407,6 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
   const go = {
     fold: () => setOpen(!open),
     why: () => router.push(`/sheets/why/${row.id}`),
-    nqr: () => router.push(`/sheets/correct/${row.id}`),
     // The re-check's "only the pants are read again" lives in the camera now, not as a chat line (founder, Oct 14).
     recheck: () => router.push(`/camera?mode=recheck&parent=${row.id}`),
     share: () => router.push(`/share/${row.id}`),
@@ -578,12 +576,16 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
           ) : null}
           {/* "Not sure about your mid-wash jeans' leg? Tap." (§19, #322): a statement, never a question before the score. */}
           <DoubtLine row={row} readOnly={readOnly} />
-          <TextLinkRow>
-            <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
-            {readOnly ? null : <TextLink title={t('card.nqr')} onPress={go.nqr} compact />}
-            {/* `Later` (ruling 23, #291): his first-ever check only; the first 3 moves follow at once. */}
-            {later ? <TextLink title={t('card.later')} onPress={() => void finishSequence.later(row.id)} compact accessibilityHint={t('card.a11y.laterHint')} /> : null}
-          </TextLinkRow>
+          {/* One secondary button, the same family as "Re-check after fixing" (44 pt hit area). "Not quite right?" left the card
+              (specs/explain-rating.md ER2.3). A misread is still fixed from the Why sheet's piece pills and the doubt line above; Kit (T59) and
+              the Lookbook look page ("Fix what I read") take it over when built. */}
+          <KButton title={t('card.why', { score: scoreText })} icon="info" kind="secondary" size="regular" fullWidth onPress={go.why} />
+          {/* `Later` (ruling 23, #291): his first-ever check only; the first 3 moves follow at once. */}
+          {later ? (
+            <TextLinkRow>
+              <TextLink title={t('card.later')} onPress={() => void finishSequence.later(row.id)} compact accessibilityHint={t('card.a11y.laterHint')} />
+            </TextLinkRow>
+          ) : null}
           {row.details.rescoredFrom ? (
             <KText variant="footnote" color="ink3">
               {t('rescore.footnote', {
