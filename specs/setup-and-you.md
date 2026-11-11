@@ -1,6 +1,6 @@
 # Setup and You
 
-**Approved by the founder:** 2026-11-09 (SY2.1, SY4–SY6 changed with his yes the same day, to match `specs/onboarding-screens.md`). SY2–SY3: PENDING his yes on the Nov 10 rewrite
+**Approved by the founder:** 2026-11-09 (SY2.1, SY4–SY6 changed with his yes the same day, to match `specs/onboarding-screens.md`). SY2–SY3 rewritten 2026-11-10 with his yes (direction A, `tasks/T36/`)
 
 After this, a new user learns Stylist and Closet by doing his first fit check and seeing his pieces land in Closet, finds every setting on You without digging, and setup asks his name (optional), checks his age the Apple way and asks for the privacy agreement when he first opens the camera.
 
