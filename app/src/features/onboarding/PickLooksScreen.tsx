@@ -4,7 +4,7 @@
 // bubble.
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Keyboard, Pressable, ScrollView, StyleSheet, TextInput, useWindowDimensions, View } from 'react-native';
+import { AccessibilityInfo, Keyboard, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, TextInput, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { KButton, KText, TextLink, space, useTheme } from '@/design-system';
@@ -36,6 +36,8 @@ export function PickLooksScreen() {
   const [editing, setEditing] = useState(false);
   const [words, setWords] = useState('');
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scroll = useRef<ScrollView>(null);
+  const input = useRef<TextInput>(null);
 
   // Back from O3 keeps what he picked.
   useEffect(() => {
@@ -49,6 +51,19 @@ export function PickLooksScreen() {
     })();
     return () => { if (timer.current) clearTimeout(timer.current); };
   }, []);
+
+  // While the keyboard is up the dock sits right on it (no home-bar gap under the button).
+  const [keyboardUp, setKeyboardUp] = useState(false);
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardWillShow', () => setKeyboardUp(true));
+    const hide = Keyboard.addListener('keyboardWillHide', () => setKeyboardUp(false));
+    return () => { show.remove(); hide.remove(); };
+  }, []);
+  // His own words sit under the grid, at the end of the scroll. When the keyboard shrinks the scroll to the space
+  // above it, bring the field into view so he sees what he types (founder, Nov 11).
+  const keepFieldInView = () => {
+    if (input.current?.isFocused()) scroll.current?.scrollToEnd({ animated: true });
+  };
 
   const columns = isAccessibilitySize ? 1 : 2;
   const tileW = Math.floor((width - GAP * (columns - 1)) / columns);
@@ -82,9 +97,10 @@ export function PickLooksScreen() {
   const canContinue = picks.length > 0 || other !== null;
 
   return (
-    <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: insets.top }]}>
+    // The dock and the field ride the keyboard, as on About you (BasicsScreen).
+    <KeyboardAvoidingView behavior="padding" style={[styles.root, { backgroundColor: colors.bg, paddingTop: insets.top }]}>
       <OnboardingNav step={2} onBack={back} />
-      <ScrollView contentContainerStyle={[styles.thread, { paddingBottom: space.xl }]} keyboardShouldPersistTaps="handled">
+      <ScrollView ref={scroll} onLayout={keepFieldInView} contentContainerStyle={[styles.thread, { paddingBottom: space.xl }]} keyboardShouldPersistTaps="handled">
         {/* A plain title and line (T39, OS3): no Kit bubble on a setup screen. The grid sits 24 below (12 + the gap). */}
         <View style={styles.title}>
           <KText testID="looks-title" variant="largeTitle" accessibilityRole="header">
@@ -99,7 +115,7 @@ export function PickLooksScreen() {
             <LookTile key={look.style} look={look} width={tileW} selected={picks.includes(look.style)} order={picks.indexOf(look.style) + 1 || undefined} shake={shake[look.style] ?? 0} onPress={() => tap(look.style)} />
           ))}
           <Pressable
-            onPress={() => setEditing(true)}
+            onPress={() => (editing ? input.current?.focus() : setEditing(true))}
             accessibilityRole="button"
             accessibilityLabel={t('onb.looks.else.a11y')}
             style={[styles.other, { width: tileW, minHeight: columns === 2 ? 120 : undefined, backgroundColor: colors.surface, borderColor: other ? colors.ink : colors.line, borderWidth: other ? 2.5 : 1 }]}
@@ -115,6 +131,7 @@ export function PickLooksScreen() {
         </View>
         {editing ? (
           <TextInput
+            ref={input}
             autoFocus
             value={words}
             onChangeText={setWords}
@@ -122,8 +139,9 @@ export function PickLooksScreen() {
             placeholderTextColor={colors.ink3}
             maxLength={80}
             returnKeyType="done"
+            // Done closes it. A blur doesn't: a blur right after it opened took it away, so the first tap on the
+            // tile seemed to do nothing (founder, Nov 11).
             onSubmitEditing={() => { setEditing(false); Keyboard.dismiss(); }}
-            onBlur={() => setEditing(false)}
             accessibilityLabel={t('onb.looks.else.a11y')}
             allowFontScaling
             maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
@@ -134,7 +152,7 @@ export function PickLooksScreen() {
           <TextLink title={t('onb.looks.notSure')} onPress={() => void save([], other)} />
         </View>
       </ScrollView>
-      <View style={[styles.dock, { paddingBottom: Math.max(insets.bottom, space.l) }]}>
+      <View style={[styles.dock, { paddingBottom: keyboardUp ? space.s : Math.max(insets.bottom, space.l) }]}>
         {/* The grid runs past the screen, so the 4th-tap note sits by the button where he can see it. */}
         {maxNote ? (
           <KText variant="footnote" color="ink2" style={styles.center}>
@@ -147,7 +165,7 @@ export function PickLooksScreen() {
           onPress={() => void save(picks, other)}
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
