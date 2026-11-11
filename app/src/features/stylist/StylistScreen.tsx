@@ -24,6 +24,7 @@ import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAct
 import { sessionClock } from '@/state/session';
 import { setToastFloor, useToast } from '@/features/toast/toast';
 import { morning } from '@/features/morning';
+import { firstCheckPending } from '@/features/onboarding/firstCheckOffer';
 import { liveAnswer, useAskInFlight, useLiveAnswer } from '@/features/ask/live';
 import { LiveAnswerRow, liveRowShows } from '@/features/ask/LiveAnswerRow';
 import { Composer } from './Composer';
@@ -34,7 +35,7 @@ import { OfflineBanner } from './OfflineBanner';
 import { LatestPill } from './LatestPill';
 import { AT_BOTTOM_PT, latestPillShows } from './latestShows';
 import { useNet } from '@/services/connectivity';
-import { buildThreadItems, liveGap, splitToday } from './thread';
+import { buildThreadItems, liveGap, splitToday, withoutMorningWhileFirstCheckPending } from './thread';
 import { composerState, useComposerOpen } from './composerState';
 import { threadGrow } from './threadGrow';
 import { useAccountOffer } from '@/features/account/offerSession';
@@ -70,7 +71,12 @@ export function StylistScreen() {
   }), [today]) ?? [];
   // While Retry streams, the failed line it replaces steps aside for the live row.
   const replaced = live?.replaces ?? null;
-  const shown = useMemo(() => (replaced ? messages.filter((m) => m.id !== replaced) : messages), [messages, replaced]);
+  // Kit's first-check card is the only card until his first check is scored; a morning card that's already there waits.
+  const firstCheckHeld = useLive(['chat', 'fitChecks'], () => firstCheckPending(store), []) ?? false;
+  const shown = useMemo(() => {
+    const kept = withoutMorningWhileFirstCheckPending(messages, firstCheckHeld);
+    return replaced ? kept.filter((m) => m.id !== replaced) : kept;
+  }, [messages, replaced, firstCheckHeld]);
   const items = useMemo(() => buildThreadItems(shown, now, sessionClock.offset), [shown, now]);
   const shownIds = useMemo(() => new Set(shown.map((m) => m.id)), [shown]);
   const showLive = liveRowShows(live, shownIds, (at) => dayKey(at, sessionClock.offset) === today);

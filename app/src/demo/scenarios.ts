@@ -334,6 +334,10 @@ export const SCREENS: readonly ScreenScenario[] = [
   // ("From your first check", each piece New), and Closet once that visit is over.
   { n: 285, name: 'Closet · first visit', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:44:00', href: '/closet', offer: 'checked' },
   { n: 286, name: 'Closet · after the first visit', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:46:00', href: '/closet', offer: 'checked' },
+  // The morning card waits for his first check (founder, Nov 11): Stylist after Agree on the camera, check not done yet, with the morning
+  // card allowed (index.ts): Kit's offer is the only card.
+  { n: 290, name: 'Stylist · agreed, no check yet', id: 'S1o', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:30', href: '/stylist', offer: 'checked' },
+  { n: 291, name: 'Stylist · first check done, morning card allowed', id: 'S1o', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', offer: 'checked' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {
