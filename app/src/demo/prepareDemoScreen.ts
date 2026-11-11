@@ -20,7 +20,8 @@ import { newId } from '@/services/ids';
 import { parseZonedIso } from '@/services/clock';
 import { getDemoArgs, setDemoArgs, startClock } from '@/state/session';
 import type { WhichOnePayload } from '@/features/fitcheck/whichOne';
-import { armDemoReveal, setDemoPreparing } from '@/features/fitcheck/reveal';
+import { armDemoReveal, DEMO_REVEAL_SCREENS, setDemoPreparing } from '@/features/fitcheck/reveal';
+import { holdBadge } from '@/features/closet/slide';
 import { askService } from '@/features/ask/session';
 import { saveDemoScan } from '@/features/scan/inbox';
 import { liveAnswer } from '@/features/ask/live';
@@ -339,6 +340,10 @@ export async function prepareDemoScreen(sc: ScreenScenario): Promise<void> {
   // The story's checks open on their final card (stable screenshots); -demoReveal re-arms screens 7, 10 and 11's
   // reveal afterwards (features/fitcheck/reveal.ts).
   setDemoPreparing(true);
+  // A re-armed check (-demoReveal) plays as if new: the Closet badge holds its pieces from before the story writes them,
+  // as a real check's card holds them while it reads (else the badge shows them for a frame before the card is up).
+  const armed = getDemoArgs().reveal ? DEMO_REVEAL_SCREENS[sc.n] : undefined;
+  if (armed) holdBadge(armed);
   try {
     await playStory(sc);
   } finally {

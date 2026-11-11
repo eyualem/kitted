@@ -34,7 +34,7 @@ import { justAnswered, TapCard, tapChoice } from '@/features/tap/TapCard';
 import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
 import { DoubtLine } from '@/features/closet/DoubtLine';
 import { addedIds, closetSummaryText, openAsks } from '@/features/closet/summaryText';
-import { holdBadge, noSlide } from '@/features/closet/slide';
+import { holdBadge, noRowToSlide, noSlide } from '@/features/closet/slide';
 import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
 import { askQuestionText, askReasonText, isPluralPiece } from '@/features/closet/askText';
 import { PieceArt } from '@/features/closet/GarmentArt';
@@ -107,9 +107,16 @@ export function FitCheckCard({ checkId, readOnly = false }: { checkId: string; r
   const [open, setOpen] = useState(false);
   // Seen still reading (or asking the quick tap): its result will be new to him, so the score reveal may play once.
   const status = row?.status;
+  // The badge holds its pieces from here (SY2.2): a cached closet reading writes them right after the score, before the
+  // score card is up to hold them, and the badge would show them first. A check that ends without a score lets go.
   useEffect(() => {
-    if (status === 'scoring' || status === 'asking') noteLive(checkId);
-  }, [status, checkId]);
+    if (status === 'scoring' || status === 'asking') {
+      noteLive(checkId);
+      if (!readOnly) holdBadge(checkId);
+    } else if (status === 'failed' || status === 'notClothed' || status === 'unreadable' || status === 'held') {
+      if (wasLive(checkId)) noSlide(checkId);
+    }
+  }, [status, checkId, readOnly]);
   if (!row) return null;
   if (row.status === 'scoring') {
     if (session.kind === 'reading' && session.checkId === checkId) {
@@ -360,8 +367,9 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     // Gone before its pieces flew (scrolled away, another screen): the badge alone; a remount never plays it later.
     return () => noSlide(row.id);
   }, [fresh, row.id]);
-  // No row to slide from (a partial check, or nothing added or matched): the badge alone.
-  const noRow = fresh && revealDone && !showCloset && !!cs && cs.state !== 'pending';
+  // No row to slide from (a partial check, or nothing added): the badge alone. From the check, not the card's closet list,
+  // which may still be loading as the reveal ends (the slide was lost that way once, Nov 11).
+  const noRow = fresh && revealDone && noRowToSlide(cs, partial);
   useEffect(() => {
     if (noRow) noSlide(row.id);
   }, [noRow, row.id]);

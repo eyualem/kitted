@@ -15,7 +15,7 @@ import {
   parseFirstVisit, parseLastOpened, piecesAddedBy, seeCloset,
 } from '@/features/closet/arrivals';
 import { createClosetService } from '@/features/closet/service';
-import { heldChecks, holdBadge, landed, launch, noSlide, release, resetSlide, shouldSlide } from '@/features/closet/slide';
+import { heldChecks, holdBadge, HOLD_MAX_MS, landed, launch, noRowToSlide, noSlide, release, resetSlide, shouldSlide } from '@/features/closet/slide';
 import { createFitCheckService, DEFAULT_TIMERS } from '@/features/fitcheck/service';
 import { completeOnboarding } from '@/features/onboarding/complete';
 import type { PrivacyFiles } from '@/features/privacy/files';
@@ -291,6 +291,36 @@ describe('SY2.7 · the badge color', () => {
       expect(onWhite(bg)).toBeGreaterThanOrEqual(4.5);
       const [r, g, b] = [1, 3, 5].map((i) => parseInt(bg.slice(i, i + 2), 16));
       expect(r! > g! + 40 && r! > b! + 40).toBe(false); // not a red
+    }
+  });
+});
+
+describe('SY2.2 · the slide is never given up too early (the light recording without a slide, Nov 11)', () => {
+  const summary = (added: string[], state: 'pending' | 'done' | 'fallback' = 'done') => ({ matched: [], added, undone: [], state });
+
+  it("SY2.2 · a check that added pieces never gives up its slide for want of a row; only a partial or nothing-added check does", () => {
+    // The card's closet list may still be loading as the reveal ends: the decision reads the check alone.
+    expect(noRowToSlide(summary(['a', 'b']), false)).toBe(false);
+    expect(noRowToSlide(summary(['a'], 'fallback'), false)).toBe(false);
+    expect(noRowToSlide(summary([]), false)).toBe(true);
+    expect(noRowToSlide(summary(['a']), true)).toBe(true);
+    // Still out: wait.
+    expect(noRowToSlide(summary([], 'pending'), false)).toBe(false);
+    expect(noRowToSlide(undefined, false)).toBe(false);
+  });
+
+  it('SY2.2 · holding again (the score card mounting after a long read) starts the hold over, so the badge never shows before the slide', () => {
+    jest.useFakeTimers();
+    try {
+      holdBadge('C9'); // the card shows it reading
+      jest.advanceTimersByTime(HOLD_MAX_MS - 1000);
+      holdBadge('C9'); // the score lands: the score card holds it too
+      jest.advanceTimersByTime(5000);
+      expect(heldChecks().has('C9')).toBe(true);
+      jest.advanceTimersByTime(HOLD_MAX_MS);
+      expect(heldChecks().has('C9')).toBe(false);
+    } finally {
+      jest.useRealTimers();
     }
   });
 });

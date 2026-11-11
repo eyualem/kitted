@@ -10,6 +10,9 @@ import { launch, noSlide, shouldSlide, type FlightPiece } from './slide';
 
 /** The list scrolls the new card into view first: measure this long after the card landed. */
 const SETTLE_MS = 150;
+/** Off screen at first: measure again every RETRY_MS for up to RETRY_FOR_MS before the badge alone. */
+const RETRY_MS = 120;
+const RETRY_FOR_MS = 1000;
 /** The dock (composer + tab bar) covers about this much of the screen's bottom (useReveal's BOTTOM_COVER). */
 const BOTTOM_COVER = 110;
 /** The row's thumbs: 28 pt, overlapping by 8. */
@@ -49,15 +52,22 @@ export function useSlideIntoCloset(slide: SlideSource | undefined, shown: readon
       return;
     }
     let alive = true;
+    let timer: ReturnType<typeof setTimeout>;
+    const started = Date.now();
     const decide = (pieces: FlightPiece[]) => {
       if (!alive) return;
       const H = Dimensions.get('window').height;
       const onScreen = pieces.length === flying.length && pieces.every((q) => q.y >= 40 && q.y + q.size <= H - BOTTOM_COVER) && AppState.currentState === 'active';
+      // The list may still be settling (it scrolls the new card into view): measure again for a moment before giving up.
+      if (!onScreen && !a11y.reduceMotion && Date.now() - started < RETRY_FOR_MS) {
+        timer = setTimeout(measure, RETRY_MS);
+        return;
+      }
       if (shouldSlide({ fresh: true, readOnly: false, reduceMotion: a11y.reduceMotion, onScreen, pieces: pieces.length, checkId })) {
         launch({ checkId, pieces: [...pieces].sort((p, q) => p.x - q.x) });
       } else noSlide(checkId);
     };
-    const timer = setTimeout(() => {
+    const measure = () => {
       if (!visible || !thumbs) {
         // No row in sight: the copies start on the card's bottom edge, side by side, centred on it.
         const anchor = slide.edge?.current;
@@ -82,7 +92,8 @@ export function useSlideIntoCloset(slide: SlideSource | undefined, shown: readon
         if (!v) done(null);
         else v.measureInWindow((x, y, w) => done(w > 0 ? { item: it, x: x + 1.5, y: y + 1.5, size: THUMB } : null));
       }
-    }, SETTLE_MS);
+    };
+    timer = setTimeout(measure, SETTLE_MS);
     return () => {
       alive = false;
       clearTimeout(timer);

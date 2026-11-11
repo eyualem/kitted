@@ -5,7 +5,8 @@
 // While a fresh card's pieces may still slide, its check is "held": the badge leaves them out until they land, or the
 // card says there'll be no slide (off screen, Reduce Motion, nothing new), or it goes away.
 import { useSyncExternalStore } from 'react';
-import type { ClosetItemRow } from '@/data/types';
+import type { ClosetItemRow, ClosetSummary } from '@/data/types';
+import { addedIds } from './summaryText';
 
 /** About 0.6 s in all (SY2.2): each copy's flight, and the gap between copies. */
 export const FLIGHT_MS = 520;
@@ -53,12 +54,23 @@ export function closetTabPoint(width: number, height: number): { x: number; y: n
   return { x: inset + ((width - inset * 2) * 1.5) / 4, y: height - 61 };
 }
 
-/** A fresh card's check: the badge leaves its pieces out until they land (or `release`). */
+/** A fresh check (the card shows it reading, then its score card): the badge leaves its pieces out until they land
+ *  (or `release`). Holding it again starts the time limit over, so a long read never lets the badge show first. */
 export function holdBadge(checkId: string): void {
-  if (slid.has(checkId) || held.has(checkId)) return;
-  held = new Set([...held, checkId]);
+  if (slid.has(checkId)) return;
+  const t = timers.get(checkId);
+  if (t) clearTimeout(t);
   timers.set(checkId, setTimeout(() => release(checkId), HOLD_MAX_MS));
+  if (held.has(checkId)) return;
+  held = new Set([...held, checkId]);
   emit();
+}
+
+/** The card has no row to slide from and never will (SY2.4): a partial check, or a check that added nothing. Read from
+ *  the check alone: the card's own list of closet pieces may still be loading as the reveal ends. */
+export function noRowToSlide(summary: ClosetSummary | undefined, partial: boolean): boolean {
+  if (!summary || summary.state === 'pending') return false;
+  return partial || addedIds(summary).length === 0;
 }
 
 export function release(checkId: string): void {
