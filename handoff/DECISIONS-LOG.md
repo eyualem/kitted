@@ -3001,3 +3001,14 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **An offer card left untapped at 4 am** stays in yesterday's chat, read-only, and isn't posted again. The Later reminder in `specs/notifications.md` is the nudge. If the founder wants a fresh card each day until the first check, that's a spec change.
     - **The rest:** the other 16 technical defaults are in `tasks/T39/IMPLEMENTATION.md`. Among them: a V9 migration for the three profile columns, optional profile fields, and `/onboarding/consent` redirecting to About you.
 
+
+## Nov 10 · Models: Sonnet by default, Opus where a miss is costly
+
+428. **The founder (Nov 10): "Yes, let's go with this."** After two blind reviewer trials, the workflow's models are split by the cost of a mistake:
+    - **Sonnet:** every new session in the project (`.claude/settings.json` → `"model": "sonnet"`), which covers tiny and normal builds; the `reviewer`, `implementer` and `ui-designer` agents (their `model:` lines).
+    - **Opus:** the strict `test-writer` (its tests decide whether a score is right or a photo stays on the phone), and spec interviews (`/grill-me`). A skill's `model:` lasts only one turn, so an interview asks him to switch the model menu instead.
+    - **Move to Opus:** a task still failing after its fix rounds, or a tangled problem; the session asks him to switch, since a session can't change its own model.
+    - **Not used:** Haiku. Every step left needs judgment, and a miss costs a fix round.
+    - **The trials:** a throwaway change with planted mistakes, reviewed blind by Sonnet and Opus with `.claude/agents/reviewer.md`, never pushed. Trial 1 (an off-by-one, "Unlimited" and an emoji in copy, his name sent to the server, tests that couldn't fail): both caught 5 of 5. Trial 2, harder, across three real files (the unblurred kept photo sent when the blurred upload is gone, midnight instead of the 4 am day, a double-tap race behind an `await`, a direct write that wiped the closet's links, a test compared against itself, plus a harmless decoy log): both caught 5 of 5 and passed the decoy; Sonnet in 32 s and 7 steps, Opus in 60 s and 13. Opus also found an invalid status (which `tsc` would catch) and an existing retry the change duplicated.
+    - **Why:** Sonnet 5.5's tokens cost half of Opus 5.5's ($2 / $10 against $4 / $20 per million), except cache reads ($0.20 on both), so a step costs roughly 30–40% less of the 5-hour window at about the same token count. The first real tasks on Sonnet will measure it.
+    - **Lesson:** decide a model switch with an eval (known answers, run blind, count what's caught) rather than a guess.

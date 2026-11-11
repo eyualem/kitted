@@ -2,7 +2,7 @@
 name: implementer
 description: Strict tasks in /build-task only (scoring, privacy, the age gate). Builds one task from tasks/<ID>/TASK.md until every locked test passes and npm run check is green. Never edits tests, TESTING.md or fixtures. Use only from the build-task session.
 disallowedTools: Agent
-model: inherit
+model: sonnet
 hooks:
   PreToolUse:
     - matcher: "Edit|Write|MultiEdit|NotebookEdit|Bash"

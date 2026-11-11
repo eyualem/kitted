@@ -32,6 +32,8 @@ Say it to the founder in one plain line before any work ("Tiny: I'll fix it, tes
 | **Record** | The PR description | `tasks/<ID>/TASK.md` | `TASK.md` + `TESTING.md` |
 | **Fix rounds** | — | 1 | 2 |
 
+- **Models** (the founder, Nov 10): sessions start on Sonnet (`.claude/settings.json`); the reviewer, implementer and designer run on Sonnet and the test writer on Opus, each set in its own file. Nothing to pick by hand.
+- **Move to Opus** when a normal or strict task is still failing after its fix rounds, or the problem turns out to be tangled (it spans many files, or the cause isn't clear after a real look): stop and ask the founder in one line to switch this session to Opus in the model menu, then carry on. A session can't switch its own model.
 - **Strict is decided by what the code touches, not by size.** A one-line change to face blur is strict.
 - **Move up** when a task outgrows its size (more files than it said, a strict area turns up, or it's well past its call budget): one line to the founder, then carry on at the new size. Never move down to get out of a check.
 - A **brand-new screen** (or a new flow of screens) adds step D to a normal or strict task. A change to a screen he already has is never drawn: he sees the screenshots in the PR (the founder, Nov 10).

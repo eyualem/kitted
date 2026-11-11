@@ -11,6 +11,7 @@ Why this matters: a misunderstanding found now costs one question. The same misu
 
 ## Ground rules
 
+- **The strongest model.** The spec is what everything after it is built on, so an interview is worth the strongest model. If the project names one for interviews (Kitted: Opus) and this session isn't on it, say so in one line before the first question and ask the user to switch the model menu to it. A skill can't keep a model past one turn, so the switch is the user's.
 - **No building.** Do not write application code, scaffold folders, or install anything during the interview. The only file you may write is the spec (and only when told to; see "Writing the spec").
 - **Read before asking.** If a project folder exists, skim `CLAUDE.md`, `README`, any existing `SPEC.md` / `specs/` / `PLAN.md`, and the file layout first. Never ask the user something the repo already answers. Say what you learned in one or two lines so they can correct you.
 - **The project's conventions win.** `SPEC.md`, `specs/<feature-name>.md` and `PLAN.md` are defaults. If the project's `CLAUDE.md` (or similar) already names its own spec and plan files, says what a spec must contain, or sets rules about who may change a spec, follow those instead, and never start a parallel file it says not to create. If the project names a spec file that doesn't exist yet, create it under that name rather than inventing a different one.
