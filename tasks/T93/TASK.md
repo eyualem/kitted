@@ -22,5 +22,6 @@
 - **Not done or not checked:**
 
 ## Disputes
+- Nov 12 (test writer, at the coordinator's request): the protect-tests hook keeps the implementer out of `kitted-core/test/`, so the test writer moved the existing pins of the bundled engine from v15 to v16 (`casualFitsSwitch.test.ts`, `hoodieLayerSwitch.test.ts`, the parity suite's names) and added that the parity tunes include v15 (the slides switch's rollback). No value loosened; every rollback check kept. Lock moved to `ccd48f32`.
 
 ## Review
