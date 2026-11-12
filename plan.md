@@ -124,7 +124,7 @@ Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `
 Spec: `specs/sign-in-and-backup.md` (interview: T40)  
 Lane files: `app/src/features/account`, `app/src/sync`, `app/src/features/privacy/wipe.ts`
 
-- [~] auth-onboarding-placement · **T40** · Write the sign-in-and-backup spec with you: Apple and Google only, the photo-backup switch and its words · *done: your yes · files: `specs/sign-in-and-backup.md`*
+- [~] auth-onboarding-placement · PR #114 · **T40** · Write the sign-in-and-backup spec with you: Apple and Google only, the photo-backup switch and its words · *done: your yes · files: `specs/sign-in-and-backup.md`*
 - [ ] **T41** · Finish the sign-in (#58) then backup (#57) pull requests to `specs/sign-in-and-backup.md`: the four places only (SB1); ask Apple for his first name (SB10); remove email sign-in, which is on main; chat messages stay on the phone (`sync/schema.ts` backs them up today, against the no-questions-kept rule; SB5); photo backup off by default, offered once on the sheet's last step (SB4); delete in one order (revoke, server once, phone; SB9); turn on only the Sign in with Apple entitlement, split out of T80's paid-team switch (`APPLE` in app.config.ts) so sign-in ships before Apple's weather; then merge, then a second TestFlight build so your testers try it (your call, Nov 12) · *after T40, Y21 · checks: SB1–SB10 · files: account/, sync/, app.config.ts, `firebase/functions`*
 - [ ] **T42** · "Delete account and all data" also wipes our server · *after T41 · checks: F9.1 · files: account/, privacy/wipe.ts*
 - [ ] **T43** · Restoring on a new phone tested end to end; photos upload only with backup on, and only he can see them · *after T41 · checks: F11.2, F11.4 · files: sync/, `firebase/tests`*
