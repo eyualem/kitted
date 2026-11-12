@@ -1706,7 +1706,22 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     penalty = piled_penalty(ps, engine, tune)                        # v8 (0 in v1-v7): problems in several parts add up
     overall = round_half(x)
 
-    # the lowest part leads the card, with its one-line reason (ties: the heavier part)
+    lowest = _lowest(live, t)
+    return {
+        "overall": overall, "raw_score": round(x, 3), "average": round(avg, 3), "earned_bonus": bonus, "piled_penalty": penalty,
+        "version": VERSIONS[engine], "engine": engine,
+        "parts": res, "na_parts": [k for k in PART_ORDER if res[k]["score"] is None],
+        "weights_used": {k: round((t["weights"] or WEIGHTS)[k] / wsum, 3) for k in live},
+        "condition": cond, "occasion": occ, "floored": floored, "care_or_strain": care_or_strain,
+        "lowest": lowest,
+        "second_look": sl, "detected_styles": o["det"], "style_label": o["label"], "not_rated": not_rated,
+        "partial": bool(not_rated),
+    }
+
+
+def _lowest(live, t):
+    """The lowest part leads the card, with its one-line reason (ties: the heavier part). live: {part: result} of the
+    parts that scored."""
     low_k = min(live, key=lambda k: (live[k]["score"], -(t["weights"] or WEIGHTS)[k]))
     lr = live[low_k]
     neg = [r for r in lr["reasons"] if r["points"] < 0]
@@ -1718,16 +1733,7 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     if t["solid_line"] and all(r["display"] == BASE for r in live.values()):
         # the founder's call (Oct 10): when every part is 7, don't name a "weakest" part
         lowest = {"part": None, "score": BASE, "line": "Every part is solid: nothing off, nothing standing out yet."}
-    return {
-        "overall": overall, "raw_score": round(x, 3), "average": round(avg, 3), "earned_bonus": bonus, "piled_penalty": penalty,
-        "version": VERSIONS[engine], "engine": engine,
-        "parts": res, "na_parts": [k for k in PART_ORDER if res[k]["score"] is None],
-        "weights_used": {k: round((t["weights"] or WEIGHTS)[k] / wsum, 3) for k in live},
-        "condition": cond, "occasion": occ, "floored": floored, "care_or_strain": care_or_strain,
-        "lowest": lowest,
-        "second_look": sl, "detected_styles": o["det"], "style_label": o["label"], "not_rated": not_rated,
-        "partial": bool(not_rated),
-    }
+    return lowest
 
 
 def _slides_once(reading, occasion, styles, second_look, boldness, engine, tune):
@@ -1773,9 +1779,12 @@ def _slides_once(reading, occasion, styles, second_look, boldness, engine, tune)
     if full["occasion"]["ceiling"] is not None and occasion in ("interview", "interview_corporate", "interview_tech", "event"):
         occ["ceiling"] = min(c for c in (occ["ceiling"], full["occasion"]["ceiling"]) if c is not None)
     avg, x, floored, wsum = combine(ps, bare["condition"], occ, occasion, bare["care_or_strain"], engine, sub)
+    live = {k: v for k, v in parts.items() if v["score"] is not None}
+    # the card's lead and the weights come from the parts as recombined, Shoes included, as score_parts picks them
     out = dict(bare, parts=parts, occasion=occ, average=round(avg, 3), raw_score=round(x, 3), overall=round_half(x),
                floored=floored, earned_bonus=earned_bonus(ps, engine, sub), piled_penalty=piled_penalty(ps, engine, sub),
-               na_parts=[k for k in PART_ORDER if parts[k]["score"] is None])
+               na_parts=[k for k in PART_ORDER if parts[k]["score"] is None], lowest=_lowest(live, t),
+               weights_used={k: round((t["weights"] or WEIGHTS)[k] / wsum, 3) for k in live})
     return out
 
 
