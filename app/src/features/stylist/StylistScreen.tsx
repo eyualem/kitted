@@ -31,6 +31,8 @@ import { Composer } from './Composer';
 import { sendQuestion } from './ask';
 import { ACCESSORY_H, COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
+import { arrivals, parseSeenUntil, SEEN_UNTIL_KEY } from './arrival';
+import { arrivalEntering } from './arrivalMotion';
 import { OfflineBanner } from './OfflineBanner';
 import { LatestPill } from './LatestPill';
 import { AT_BOTTOM_PT, latestPillShows } from './latestShows';
@@ -49,6 +51,8 @@ const EXCHANGE_MS = 10 * 60_000;
 const SHEET_DISMISS_MS = 400;
 /** Room a toast takes above the dock (44 tall + 8 gap + a little air), DECISIONS-LOG #56. */
 const TOAST_ROOM = 56;
+/** When this launch began (wall clock): with no "seen until" saved yet, what's made after it is new to him. */
+const PROCESS_START = Date.now();
 
 export function StylistScreen() {
   const { colors, a11y } = useTheme();
@@ -82,6 +86,40 @@ export function StylistScreen() {
   const showLive = liveRowShows(live, shownIds, (at) => dayKey(at, sessionClock.offset) === today);
   // The thread shows the finished answer's own row now: the live copy goes for good (U1, no ghost tomorrow).
   useEffect(() => liveAnswer.settle(shownIds), [shownIds, live]);
+  // What Kit's arrival moves (arrival.ts): rows newer than when he last had the thread in front of him. Read once; the
+  // thread waits for it (a few ms), since a row that mounts first never gets its entrance.
+  const [seenUntil, setSeenUntil] = useState<number | undefined>(undefined);
+  useEffect(() => {
+    let alive = true;
+    void store.getKv(SEEN_UNTIL_KEY).then(
+      (raw) => {
+        // Never written (an install from before this, or the first launch): what's made during this launch is new.
+        if (alive) setSeenUntil(parseSeenUntil(raw) ?? sessionClock.nowMs() - (Date.now() - PROCESS_START));
+      },
+      () => alive && setSeenUntil(Number.POSITIVE_INFINITY),
+    );
+    return () => {
+      alive = false;
+    };
+  }, []);
+  // The answer that just finished streaming has already moved in as the live row; its stored row takes its place still.
+  const liveRowId = live?.phase === 'done' ? live.messageId : null;
+  if (seenUntil !== undefined) arrivals.plan(shown, seenUntil, liveRowId ? [liveRowId] : []);
+  // Written when the thread loses focus or the app leaves the front: the next launch draws what he saw as it was.
+  const markSeen = useCallback(() => {
+    if (seenUntil !== undefined) void store.setKv(SEEN_UNTIL_KEY, String(sessionClock.nowMs())).catch(() => {});
+  }, [seenUntil]);
+  useFocusEffect(
+    useCallback(() => {
+      const sub = AppState.addEventListener('change', (st) => {
+        if (st !== 'active') markSeen();
+      });
+      return () => {
+        sub.remove();
+        markSeen();
+      };
+    }, [markSeen]),
+  );
   const open = useComposerOpen();
   const docked = DOCK_ALWAYS || open !== null;
   // Leaving the tab closes an empty composer; the accessory comes back with the thread.
@@ -321,19 +359,30 @@ export function StylistScreen() {
         keyboardShouldPersistTaps="handled"
         contentInsetAdjustmentBehavior="never"
       >
-        {items.map((item, i) => (
-          <View
-            key={item.key}
-            style={i > 0 ? { marginTop: item.gap } : undefined}
-            onLayout={item.type === 'msg' ? (e) => rowY.current.set(item.message.id, e.nativeEvent.layout.y) : undefined}
-          >
-            <ThreadRow item={item} />
-          </View>
-        ))}
+        {/* Kit's unseen rows fade in and rise (arrival.ts). No state changes on scroll: a render there broke toasts (#118, #353). */}
+        {(seenUntil === undefined ? [] : items).map((item, i, rows) => {
+          // A day stamp moves with the row after it, so it doesn't sit alone above a message still fading in.
+          const next = item.type === 'stamp' ? rows[i + 1] : item;
+          const delay = next?.type === 'msg' ? arrivals.delayOf(next.message.id) : null;
+          return (
+            <Animated.View
+              key={item.key}
+              entering={delay === null ? undefined : arrivalEntering(delay, a11y.reduceMotion)}
+              style={i > 0 ? { marginTop: item.gap } : undefined}
+              onLayout={item.type === 'msg' ? (e) => rowY.current.set(item.message.id, e.nativeEvent.layout.y) : undefined}
+            >
+              <ThreadRow item={item} />
+            </Animated.View>
+          );
+        })}
         {live && showLive ? (
-          <View style={items.length > 0 ? { marginTop: liveGap(shown.length ? shown.reduce((a, m) => (m.createdAt >= a.createdAt ? m : a)) : null) } : undefined}>
+          // Once, when the answer's first row (the dots) appears; not per sentence, and the finished row doesn't repeat it.
+          <Animated.View
+            entering={arrivalEntering(0, a11y.reduceMotion)}
+            style={items.length > 0 ? { marginTop: liveGap(shown.length ? shown.reduce((a, m) => (m.createdAt >= a.createdAt ? m : a)) : null) } : undefined}
+          >
             <LiveAnswerRow live={live} />
-          </View>
+          </Animated.View>
         ) : null}
         {/* A footer, not paddingBottom: it animates with the dock and the keyboard. */}
         <Animated.View style={footerStyle} />
