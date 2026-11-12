@@ -55,8 +55,9 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y24** · **P2** · OK the plain names Kit says for the style rules ("the waist break, the rule of thirds"), about 74 short names drafted in T65 (10 min) → Explain rating (T58)
 - [ ] **Y25** · **P2** · OK deploying the server change that doesn't count Explain rating as a question (1 min; Claude runs it) → Explain rating on testers' phones (T26, T58)
 - [ ] **Y26** · **P2** · Merge the new setup (#90, then #93), then go through it fresh on your phone (delete Kitted, reinstall): Welcome's drawing, About you, Kit's offer, Later, then Check my fit and the agreement once (10 min) → setup confirmed on a real iPhone, VoiceOver aside
-- [ ] **Y27** · **P2** · Phone pass on Closet's one-card questions (after the next TestFlight build, or demo screen 262 on your phone): swipe a card sideways, answer one and feel the buzz, tap Undo, then turn on VoiceOver and Reduce Motion and step through once, and on the score card check VoiceOver reaches "Yes, same one"; try one diagonal swipe (10 min) → the one-card review checked by hand (T74)
-- [ ] **Y28** · **P2** · Phone pass on the first-run intro, now in TestFlight build 0.1.0 (2) (delete Kitted, reinstall it from TestFlight, about 5 min): do your first check, watch the pieces slide into Closet and feel the light buzz as they land, see the navy number on Closet (and in dark mode), open Closet for `From your first check` with `New`, leave and come back (gone). With VoiceOver on, a new piece reads "New, …" → the beta's first-run intro (T35)
+- [x] **Y27** · covered by Y29
+- [x] **Y28** · covered by Y29
+- [ ] **Y29** · **P2** · Phone pass on TestFlight build 0.1.0 (3) (delete Kitted, reinstall it from TestFlight, about 15 min) → the beta build checked by hand before friends get it: (1) setup from fresh: the K on navy at launch, What's your style? (tiles, Tell me in your words rides the keyboard, no Not sure), 7 taps to the camera; (2) one fit check: the result card has one Why 7.5? button, no all-caps labels; the pieces slide into Closet with a light buzz, Closet's navy number, `From your first check` with `New`; (3) one question to Kit; the morning card shows only after that first check; (4) Closet: swipe a one-card question sideways, answer one (buzz), Undo; (5) You: Your style as squared tiles; (6) once in dark mode, once with VoiceOver on the new setup screen and Closet's cards. Covers Y27 and Y28
 
 ---
 
@@ -214,6 +215,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-11 · rating-evaluation-taste: TestFlight build 0.1.0 (3) from main `50c219f9` (EAS `d3572a42`, auto-submit scheduled; your "I want the build started now"), tagged `testflight/0.1.0-3`; started before the checks at your ask: then typecheck, lint, 853 core and 1,944 app tests passed, guard:release passed; the 5 tap-through flows not run (the Mac's memory); the slides fix (T93) not in it; your phone pass is Y29
 - 2026-11-11 · hoodie-layer-credit: setup's style screen merged (#109, your "Merge it"): "What's your style?", the own-words box rides the keyboard and gets the cursor, no Not sure (7 taps to the camera); log #447–#449; needs a new TestFlight build to reach phones
 - 2026-11-11 · hoodie-layer-credit: the style screen's new wording (you picked B from the mockup, `tasks/looks-wording/design.html`) added to PR #109 with the spec line, test and flows; log #449
 - 2026-11-11 · hoodie-layer-credit: tested setup's style screen on the Simulator: the keyboard covered the "Tell me in your words" field and Continue; fixed (PR #109, log #448); a first-tap miss seen on the Simulator only, not proven an app bug
@@ -228,4 +230,3 @@ The last 15 sessions, newest first.
 - 2026-11-11 · morning-after-first-check: stylist-first-card built (PR #103, waits for your OK to merge): until his first check is scored Stylist shows only Kit's first-check card, and the morning card comes after; the offer card's leftover words after a check are your call · log #441
 - 2026-11-11 · first-run-intro: TestFlight build 0.1.0 (2) with the intro (EAS `13dc510d`, auto-submitted with the stored App Store Connect key, the founder: "Go ahead with the build"); check and guard:release passed, Maestro flows interrupted (not verified); log #440
 - 2026-11-11 · first-run-intro: T35 merged (#100, the founder: "Merge #100"): Kit's one-line hello, the slide into Closet with a navy badge, `New` on the first visit; a lost light-mode slide caught by frame-checking the recording, fixed with a test; Y28 is the phone pass
-- 2026-11-11 · first-run-intro: T35 built (Kit's hello `I'm Kit, your stylist.`; the slide into Closet from the card's row, or its bottom edge while folded or on a re-check; the navy badge, `me` in dark; `From your first check` with `New` on the first visit); check green, screenshots and recordings in `tasks/T35/shots/`; log #438–439
