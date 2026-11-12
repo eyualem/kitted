@@ -216,13 +216,10 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
-<<<<<<< HEAD
-- 2026-11-11 · T93 (slides charged once): your yes to build it, then paused on your call: the beta build ships without it, it goes in the next build; plan and test contract written, tests half-done on `claude/T93-slides-once` (log #452, #453)
-- 2026-11-11 · rating-evaluation-taste: slides on paper: today they're charged up to five times (a streetwear fit 8.0 with chunky sneakers, 6.5 with slides); "charge slides once, on Shoes" lifts it to 7.5 with every bar passing, nothing else moving; waiting on your yes to build it (log #450, `extraction-test/results/slides-shape/report.txt`)
-=======
 - 2026-11-11 · rating-evaluation-taste: the beta's privacy page live (kitted-a5b45.web.app/privacy, your OK, `legal/`); TestFlight Test Information filled; "Friends beta" with your 7 testers; build 0.1.0 (3) waiting for Apple's beta review, invites go out on approval; the app's own privacy link (`links.ts`) still empty; log #454
 - 2026-11-11 · rating-evaluation-taste: TestFlight build 0.1.0 (3) from main `50c219f9` (EAS `d3572a42`, auto-submit scheduled; your "I want the build started now"), tagged `testflight/0.1.0-3`; started before the checks at your ask: then typecheck, lint, 853 core and 1,944 app tests passed, guard:release passed; the 5 tap-through flows not run (the Mac's memory); the slides fix (T93) not in it; your phone pass is Y29
->>>>>>> origin/main
+- 2026-11-11 · T93 (slides charged once): your yes to build it, then paused on your call: the beta build ships without it, it goes in the next build; plan and test contract written, tests half-done on `claude/T93-slides-once` (log #452, #453)
+- 2026-11-11 · rating-evaluation-taste: slides on paper: today they're charged up to five times (a streetwear fit 8.0 with chunky sneakers, 6.5 with slides); "charge slides once, on Shoes" lifts it to 7.5 with every bar passing, nothing else moving; waiting on your yes to build it (log #450, `extraction-test/results/slides-shape/report.txt`)
 - 2026-11-11 · hoodie-layer-credit: setup's style screen merged (#109, your "Merge it"): "What's your style?", the own-words box rides the keyboard and gets the cursor, no Not sure (7 taps to the camera); log #447–#449; needs a new TestFlight build to reach phones
 - 2026-11-11 · hoodie-layer-credit: the style screen's new wording (you picked B from the mockup, `tasks/looks-wording/design.html`) added to PR #109 with the spec line, test and flows; log #449
 - 2026-11-11 · hoodie-layer-credit: tested setup's style screen on the Simulator: the keyboard covered the "Tell me in your words" field and Continue; fixed (PR #109, log #448); a first-tap miss seen on the Simulator only, not proven an app bug
@@ -234,5 +231,3 @@ The last 15 sessions, newest first.
 - 2026-11-11 · hoodie-layer-credit: your Nov 11 phone pass split into four sessions; merged #103 (morning card waits for the first check), #104 (launch screen K on navy) and #105 (Your style tiles), log entries renumbered 441–443; the Closet's sections already show from 4 pieces, no change; none tried on your phone yet (the launch screen needs a new TestFlight build)
 - 2026-11-11 · your-style-tiles: T44 built (squared look tiles with setup's drawings on You's Your style and Style profile; light and dark screenshots, 1 and 3 looks; reviewer's notes fixed); PR open, awaiting your yes to merge; log #443
 - 2026-11-11 · launch-splash: T92 built: the launch screen is the icon's navy with a big white K (light and dark), fades out, holds at most 0.4 s; seen on a Release build on the Simulator, not yet on your phone; options for the look sent for your pick · #442
-- 2026-11-11 · morning-after-first-check: stylist-first-card built (PR #103, waits for your OK to merge): until his first check is scored Stylist shows only Kit's first-check card, and the morning card comes after; the offer card's leftover words after a check are your call · log #441
-- 2026-11-11 · first-run-intro: TestFlight build 0.1.0 (2) with the intro (EAS `13dc510d`, auto-submitted with the stored App Store Connect key, the founder: "Go ahead with the build"); check and guard:release passed, Maestro flows interrupted (not verified); log #440
