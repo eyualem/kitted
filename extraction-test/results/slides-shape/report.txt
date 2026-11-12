@@ -1,0 +1,69 @@
+== The test outfits (bars checked on V6, [V1..V6 p/F]; scores today / V1 / V2 / V3 / V4 / V5 / V6) ==
+  O1   PASS [FFFFFp]  6.5 / 7 / 7 / 7 / 7 / 7 / 7.5   oversized graphic tee + wide jeans + slides (everyday); bar: 6.5 today -> 7.5 or more
+  O1c  PASS [pppppp]  8 / 8 / 8 / 8 / 8 / 8 / 8   the same with chunky sneakers (everyday); bar: unchanged 8.0 (slides stay below the right sneaker)
+  O1g  PASS [pppppp]  6.5 / 6.5 / 6.5 / 6.5 / 6.5 / 6.5 / 7   O1 going out (going_out); bar: not lower, at most 7.5
+  O1i  PASS [pppppp]  4 / 4 / 4 / 4 / 4 / 4 / 4   O1 at an interview (interview); bar: unchanged, held to 4.0 or less
+  O1d  PASS [pppppp]  6.5 / 7 / 7 / 7 / 6.5 / 6.5 / 7   O1 with the jeans pooling on the slides (everyday); bar: the drag still costs: at most O1's
+  O2   PASS [pppppp]  6.5 / 6.5 / 6.5 / 6.5 / 6.5 / 6.5 / 6.5   plain white tee + dark straight jeans + slides (no shape) (everyday); bar: unchanged
+  O3   PASS [pppppp]  6.5 / 6.5 / 6.5 / 6.5 / 6.5 / 6.5 / 6.5   plain tee + relaxed shorts + slides (no shape) (everyday); bar: unchanged
+  O4   PASS [pppppp]  6.5 / 6.5 / 6.5 / 6.5 / 6.5 / 6.5 / 6.5   grey hoodie + grey relaxed sweatpants + slides at Class (class); bar: unchanged (loungewear keeps its hold)
+  O5   PASS [pppppp]  7 / 7 / 7.5 / 7.5 / 7.5 / 7.5 / 7.5   hoodie over a tee + wide jeans + slides (everyday); bar: not lower, at most 8.0
+  O6   PASS [FFFppp]  5.5 / 5.5 / 5.5 / 5.5 / 7 / 7 / 7   oversized tee + wide cargos + slides (everyday); bar: rises
+  O7   PASS [pppppp]  6.5 / 6.5 / 6.5 / 6.5 / 6.5 / 6.5 / 6.5   blazer + tee + trousers + slides (everyday); bar: unchanged (never under tailoring)
+
+C1 V1 conformance cases (501): 0 move, 0 without slides: PASS
+C1 V2 conformance cases (501): 0 move, 0 without slides: PASS
+C1 V3 conformance cases (501): 2 move, 0 without slides: PASS  moved: PRO-15-slides, PRO-17-slides
+C1 V4 conformance cases (501): 4 move, 0 without slides: PASS  moved: PRO-15-slides, PRO-17-slides, FIT-4-slides, SHO-2-drag
+C1 V5 conformance cases (501): 4 move, 0 without slides: PASS  moved: PRO-15-slides, PRO-17-slides, FIT-4-slides, SHO-2-drag
+C1 V6 conformance cases (501): 4 move, 0 without slides: PASS  moved: PRO-15-slides, PRO-17-slides, FIT-4-slides, SHO-2-drag
+
+== The gold set (225 photos, 5-judge AI panel; profile unknown, one stated test profile, Everyday) ==
+  the 11 photos with slides in view (run 1): today / V1..V6   panel   founder   pieces
+     ig-016   5.5 / 5.5 / 5.5 / 5.5 / 5.5 / 5.5 / 5.5   7.5   -   puffer (off_white_cream) + hoodie (light_grey) + sweatpants (khaki_beige, wide) + slides_sandals (tan_camel)
+     ig-102   6 / 6 / 6 / 6 / 6 / 6 / 6   8.0   -   dress_shirt (light_blue) + trousers (off_white_cream, wide) + slides_sandals (black)
+     ig-103   5.5 / 5.5 / 5.5 / 5.5 / 5.5 / 5.5 / 5.5   7.0   -   camp_collar_shirt (off_white_cream) + jeans (denim_light, wide) + slides_sandals (black)
+     ig-055   6.5 / 6.5 / 6.5 / 6.5 / 7 / 7 / 7   7.5   -   jersey (white) + shorts (black, relaxed) + slides_sandals (black)
+     ig-100   6.5 / 6.5 / 7 / 7 / 6.5 / 7 / 7   7.0   -   oxford_shirt (white) + trousers (black, wide) + slides_sandals (brown)
+     pin-012  5.5 / 5.5 / 5.5 / 5.5 / 5.5 / 5.5 / 5.5   5.0   -   graphic_tee (black) + jeans (grey, slim) + slides_sandals (blue)
+     pin-030  6 / 6 / 6 / 6 / 6 / 6 / 6   5.5   -   sweater (orange) + rain_jacket (pink) + chinos (purple, straight) + slides_sandals (olive)
+     ig-065   6.5 / 6.5 / 6.5 / 6.5 / 6.5 / 6.5 / 6.5   5.5   7.0   graphic_tee (purple) + shorts (brown, wide) + slides_sandals (black)
+     pin-022  6.5 / 6.5 / 6.5 / 6.5 / 7 / 7 / 7   5.5   -   tee (green) + shorts (khaki_beige, relaxed) + slides_sandals (brown)
+     ig-097   7 / 7 / 7.5 / 7.5 / 7 / 7.5 / 7.5   5.5   7.0   tee (charcoal) + chinos (black, wide) + slides_sandals (black)
+     pin-023  7 / 7 / 7 / 7 / 6.5 / 6.5 / 6.5   3.5   -   other (brown) + tee (white) + shorts (blue, straight) + slides_sandals (brown)
+  today slides photos: mean app 6.23 (panel 6.14); mean distance from the panel 1.36; within 0.5 3/11
+  V1    slides photos: mean app 6.23 (panel 6.14); mean distance from the panel 1.36; within 0.5 3/11
+  V2    slides photos: mean app 6.32 (panel 6.14); mean distance from the panel 1.36; within 0.5 3/11
+  V3    slides photos: mean app 6.32 (panel 6.14); mean distance from the panel 1.36; within 0.5 3/11
+  V4    slides photos: mean app 6.27 (panel 6.14); mean distance from the panel 1.32; within 0.5 4/11
+  V5    slides photos: mean app 6.36 (panel 6.14); mean distance from the panel 1.32; within 0.5 4/11
+  V6    slides photos: mean app 6.36 (panel 6.14); mean distance from the panel 1.32; within 0.5 4/11
+C2 V6 on the slides photos is no further from the panel than today: 1.36 -> 1.32: PASS
+C3 V1: gold photos that move on any run: 0, without slides: 0: PASS
+C3 V2: gold photos that move on any run: 3, without slides: 0: PASS
+C3 V3: gold photos that move on any run: 3, without slides: 0: PASS
+C3 V4: gold photos that move on any run: 6, without slides: 0: PASS
+C3 V5: gold photos that move on any run: 8, without slides: 0: PASS
+C3 V6: gold photos that move on any run: 8, without slides: 0: PASS
+  all photos           today r 0.562 w0.5 154   V1 r 0.562 w0.5 154   V2 r 0.558 w0.5 154   V3 r 0.558 w0.5 154   V4 r 0.571 w0.5 155   V5 r 0.567 w0.5 155   V6 r 0.567 w0.5 155
+  held-out test half   today r 0.473 w0.5 58   V1 r 0.473 w0.5 58   V2 r 0.461 w0.5 58   V3 r 0.461 w0.5 58   V4 r 0.489 w0.5 58   V5 r 0.477 w0.5 58   V6 r 0.477 w0.5 58
+C4 V6 held-out r doesn't drop by more than 0.03: 0.473 -> 0.477: PASS
+C5 the founder's 20 blind ratings, within 0.5: today 12, V1 12, V2 12, V3 12, V4 12, V5 12, V6 12; r today 0.457 -> V6 0.465: PASS
+C6 V6 the two runs within 0.5: 218/223 -> 218/223: PASS
+    athletic   n   8  8+ 0 -> 0
+    casual     n  96  8+ 12 -> 12
+    in-between n  45  8+ 4 -> 4
+    dressy     n  74  8+ 26 -> 26
+C7 V6 no dressiness band's 8+ share rises by more than 3 points: PASS
+
+== His saved phone checks (62, every pull; his profile, their own occasion and second look) ==
+  phone-e16ac6 class     7.5 / 7.5 / 7.5 / 7.5 / 7.5 / 7.5 / 7.5   graphic_tee (red) + jeans (black, wide) + slides_sandals (black)
+  phone-6f1aee class     7.5 / 7.5 / 7.5 / 7.5 / 7.5 / 7.5 / 7.5   graphic_tee (red) + jeans (black, wide) + slides_sandals (black)
+  phone-fd52eb going_out 6.5 / 6.5 / 6.5 / 6.5 / 7 / 7 / 7   overshirt (brown) + sweatshirt (green) + jeans (denim_mid, wide) + slides_sandals (black)
+  phone-b89ce4 everyday  6.5 / 7 / 7 / 7 / 7 / 7 / 7.5   sweatshirt (green) + jeans (denim_mid, relaxed) + slides_sandals (black)
+  phone-aa20f9 everyday  5.5 / 5.5 / 5.5 / 5.5 / 5.5 / 5.5 / 5.5   tee (charcoal) + jeans (denim_light, straight) + slides_sandals (black)
+  phone-cc5817 everyday  7.5 / 7.5 / 7.5 / 7.5 / 7.5 / 7.5 / 7.5   sweatshirt (green) + jeans (black, wide) + slides_sandals (black)
+  phone-0d39d6 everyday  7 / 7 / 7.5 / 7.5 / 7 / 7.5 / 7.5   hoodie (grey) + jeans (black, wide) + slides_sandals (navy)
+  saved checks that move under any version: 7
+
+V6: ALL CHECKS PASS

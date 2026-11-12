@@ -214,6 +214,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-11 · rating-evaluation-taste: slides on paper: today they're charged up to five times (a streetwear fit 8.0 with chunky sneakers, 6.5 with slides); "charge slides once, on Shoes" lifts it to 7.5 with every bar passing, nothing else moving; waiting on your yes to build it (log #450, `extraction-test/results/slides-shape/report.txt`)
 - 2026-11-11 · hoodie-layer-credit: setup's style screen merged (#109, your "Merge it"): "What's your style?", the own-words box rides the keyboard and gets the cursor, no Not sure (7 taps to the camera); log #447–#449; needs a new TestFlight build to reach phones
 - 2026-11-11 · hoodie-layer-credit: the style screen's new wording (you picked B from the mockup, `tasks/looks-wording/design.html`) added to PR #109 with the spec line, test and flows; log #449
 - 2026-11-11 · hoodie-layer-credit: tested setup's style screen on the Simulator: the keyboard covered the "Tell me in your words" field and Continue; fixed (PR #109, log #448); a first-tap miss seen on the Simulator only, not proven an app bug
@@ -228,4 +229,3 @@ The last 15 sessions, newest first.
 - 2026-11-11 · morning-after-first-check: stylist-first-card built (PR #103, waits for your OK to merge): until his first check is scored Stylist shows only Kit's first-check card, and the morning card comes after; the offer card's leftover words after a check are your call · log #441
 - 2026-11-11 · first-run-intro: TestFlight build 0.1.0 (2) with the intro (EAS `13dc510d`, auto-submitted with the stored App Store Connect key, the founder: "Go ahead with the build"); check and guard:release passed, Maestro flows interrupted (not verified); log #440
 - 2026-11-11 · first-run-intro: T35 merged (#100, the founder: "Merge #100"): Kit's one-line hello, the slide into Closet with a navy badge, `New` on the first visit; a lost light-mode slide caught by frame-checking the recording, fixed with a test; Y28 is the phone pass
-- 2026-11-11 · first-run-intro: T35 built (Kit's hello `I'm Kit, your stylist.`; the slide into Closet from the card's row, or its bottom edge while folded or on a re-check; the navy badge, `me` in dark; `From your first check` with `New` on the first visit); check green, screenshots and recordings in `tasks/T35/shots/`; log #438–439

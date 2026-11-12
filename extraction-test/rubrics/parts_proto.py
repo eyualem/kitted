@@ -700,7 +700,7 @@ def _shorts_proportions(o, t):
     loose = B.get("leg_shape") in R.LOOSE or vol >= 4
     fitted = B.get("leg_shape") in NARROW or vol <= 2
     s_sub = S.get("subcategory") if S is not None else None
-    real = S is not None and s_sub not in SLIDES and (s_sub not in RUNNER or o.get("occasion") in LOUNGE_OK)
+    real = S is not None and (s_sub not in SLIDES or bool(t.get("sk1_shape_more"))) and (s_sub not in RUNNER or o.get("occasion") in LOUNGE_OK)
     if T is not None and O is None and (T.get("volume") or 3) >= 4 and fitted and not loose:
         p.add(-t["sh_roomy_fitted"], "a roomy top over short, fitted shorts: it wants a fuller pair", "PS2_roomy_over_fitted")
         return p
@@ -838,7 +838,7 @@ def _proportions(o, sl, t):
     if (t["pr4"] and not blocked and O is None and T is not None and _earns(T) and boxy
             and T.get("tucked") in (None, "none", "na") and T.get("length") in ("cropped", "at_belt", "mid_fly")
             and leg in t["pr4_legs"] and B.get("subcategory") in ("jeans", "cargos") and "streetwear" in o["det"]
-            and S_sub in t["pr4_shoes"]):
+            and (S_sub in t["pr4_shoes"] or (t.get("sk1_shape_ok") and (S_sub in SLIDES or (S is None and t.get("_bare")))))):   # what-if (off): slides keep the shape
         pr1 = next((x for x in rewards if x[2] in ("PR1_waist_break", "PR1b_half_tuck")), None)
         if pr1 is None or pr1[0] < t["pr4"]:
             if pr1 is not None:
@@ -861,7 +861,7 @@ def _proportions(o, sl, t):
         rewards.append((t["pr2"], f"a short {o_sub.replace('_', ' ')} over full legs: a clean, strong shape", "PR2_short_layer"))
     if (t["hl"] and not blocked and full and O is not None and len(o["outers"]) == 1 and o_sub in HL_LAYERS and _earns(O)
             and not sl["peek"] and O.get("length") != "below_crotch" and o["tops"]
-            and all(g.get("subcategory") in HL_TOPS for g in o["tops"]) and S_sub not in SLIDES):
+            and all(g.get("subcategory") in HL_TOPS for g in o["tops"]) and (S_sub not in SLIDES or t.get("sk1_shape_more"))):
         rewards.append((t["hl"], f"the {o_sub} layered over the {T.get('subcategory').replace('_', ' ')} gives it a clean shape",
                         "PR2h_hoodie_layer"))                # v15 (PRO-17): a ribbed-band layer, like the track jacket
     if (t["pr2b"] and not blocked and leg in R.LOOSE and O is not None and not tucked_layer and not o_tailored
@@ -1621,6 +1621,10 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)
+    if t.get("sk1_once"):                                            # what-if (off; slides-shape paper test, Nov 11)
+        once = _slides_once(reading, occasion, styles, second_look, boldness, engine, tune)
+        if once is not None:
+            return once
     styles = styles or {}
     sl = _second_look(second_look, t)
     scene, garments, not_rated = R._prepare(reading)
@@ -1644,6 +1648,11 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
             r["points"] <= -1.0 for k, v in parts.items() if k != "shoes" for r in v.reasons):
         parts["shoes"].add(t["sk1_soft"], "the rest of the outfit is clean, so the slides cost less",
                            "SK1s_slides_soft")              # v8 candidate: slides under an otherwise clean outfit
+    if (t.get("sk1_shape_soft") and any(r["check"] == "SK1_slides_out" for r in parts["shoes"].reasons)
+            and not any(g.get("subcategory") in TAILORED for g in o["outers"])
+            and any(r["points"] > 0 and r["check"][:2] in ("PR", "PS") for r in parts["proportions"].reasons)):
+        parts["shoes"].add(t["sk1_shape_soft"], "the outfit has a deliberate shape, so the slides read as a choice",
+                           "SK1c_slides_shape")             # what-if (off; slides-shape paper test, Nov 11)
     res = {k: (v.result(lo=1.0) if k == "cohesion" else v.result()) for k, v in parts.items()}
     live = {k: r for k, r in res.items() if r["score"] is not None}
     if not live:
@@ -1694,6 +1703,55 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
         "second_look": sl, "detected_styles": o["det"], "style_label": o["label"], "not_rated": not_rated,
         "partial": bool(not_rated),
     }
+
+
+def _slides_once(reading, occasion, styles, second_look, boldness, engine, tune):
+    """What-if (off; slides-shape paper test, Nov 11): slides out of the house are charged once, on Shoes. The clothes are
+    judged as if the shoes were out of the photo (so slides can't switch off a look, a shape credit or move the outfit's
+    dressiness), then Shoes is scored on the full reading and put back. Loungewear keeps its own rules (slides aren't a
+    real shoe for its hold), and slides at a dressy occasion keep their 4.0 hold. Returns None when it doesn't apply."""
+    sc = reading.get("scene", {})
+    gs = reading.get("garments", [])
+    if occasion in LOUNGE_OK or not sc.get("shoes_visible", True):
+        return None
+    if not any(g.get("subcategory") in SLIDES and g.get("category") == "footwear" for g in gs):
+        return None
+    if any(g.get("category") == "bottom" and g.get("subcategory") in R.LOUNGE_BOTTOMS for g in gs):
+        return None
+    sub = dict(tune or {})
+    sub["sk1_once"] = False
+    full = score_parts(reading, occasion, styles, second_look, boldness, engine, sub)
+    bare = score_parts({"scene": dict(sc, shoes_visible=False),
+                        "garments": [g for g in gs if g.get("category") != "footwear"]},
+                       occasion, styles, second_look, boldness, engine, dict(sub, _bare=True))
+    if full.get("overall") is None or bare.get("overall") is None or full["parts"]["shoes"]["score"] is None:
+        return None
+    if set(bare.get("detected_styles") or ()) & {"workwear", "classic_prep", "smart_casual"}:
+        return None                     # looks that never take slides ([WRK-3], [PRP-2], [SMC-2]): judged as today
+    t = _tune(engine, sub)
+    shoes = dict(full["parts"]["shoes"])
+    keep = [r for r in shoes["reasons"] if r["check"] not in ("SK1s_slides_soft", "SK1c_slides_shape")]
+    others = {k: v for k, v in bare["parts"].items() if k != "shoes"}
+    if t["sk1_soft"] and not any(r["points"] <= -1.0 for v in others.values() for r in v["reasons"]):
+        keep.append({"check": "SK1s_slides_soft", "points": t["sk1_soft"],
+                     "line": "the rest of the outfit is clean, so the slides cost less"})
+    tailored = any(g.get("subcategory") in TAILORED for g in gs if g.get("category") == "outerwear")
+    if (t.get("sk1_shape_soft") and not tailored
+            and any(r["points"] > 0 and r["check"][:2] in ("PR", "PS") for r in others["proportions"]["reasons"])):
+        keep.append({"check": "SK1c_slides_shape", "points": t["sk1_shape_soft"],
+                     "line": "the outfit has a deliberate shape, so the slides read as a choice"})
+    sc_ = max(2.0, min(9.5, BASE + sum(r["points"] for r in keep)))
+    shoes.update(score=sc_, display=round_half(sc_), reasons=keep, na=None)
+    parts = dict(bare["parts"], shoes=shoes)
+    ps = {k: v["score"] for k, v in parts.items() if v["score"] is not None}
+    occ = dict(bare["occasion"])
+    if full["occasion"]["ceiling"] is not None and occasion in ("interview", "interview_corporate", "interview_tech", "event"):
+        occ["ceiling"] = min(c for c in (occ["ceiling"], full["occasion"]["ceiling"]) if c is not None)
+    avg, x, floored, wsum = combine(ps, bare["condition"], occ, occasion, bare["care_or_strain"], engine, sub)
+    out = dict(bare, parts=parts, occasion=occ, average=round(avg, 3), raw_score=round(x, 3), overall=round_half(x),
+               floored=floored, earned_bonus=earned_bonus(ps, engine, sub), piled_penalty=piled_penalty(ps, engine, sub),
+               na_parts=[k for k in PART_ORDER if parts[k]["score"] is None])
+    return out
 
 
 def card_row(result):
