@@ -105,6 +105,10 @@ export function StylistScreen() {
   // The answer that just finished streaming has already moved in as the live row; its stored row takes its place still.
   const liveRowId = live?.phase === 'done' ? live.messageId : null;
   if (seenUntil !== undefined) arrivals.plan(shown, seenUntil, liveRowId ? [liveRowId] : []);
+  // Once drawn, a row never moves again (a remount of the screen, a row filtered out and back).
+  useEffect(() => {
+    if (seenUntil !== undefined) arrivals.drawn(items.flatMap((i) => (i.type === 'msg' ? [i.message.id] : [])));
+  }, [items, seenUntil]);
   // Written when the thread loses focus or the app leaves the front: the next launch draws what he saw as it was.
   const markSeen = useCallback(() => {
     if (seenUntil !== undefined) void store.setKv(SEEN_UNTIL_KEY, String(sessionClock.nowMs())).catch(() => {});

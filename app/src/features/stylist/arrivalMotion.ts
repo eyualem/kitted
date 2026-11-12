@@ -1,8 +1,8 @@
 // The look of Kit's arrival (arrival.ts decides who moves): fade in while rising ARRIVE.risePt, ARRIVE.riseMs long,
 // after `delay` ms. Reduce Motion: the same fade, no rise (how GoingFor.tsx reads `a11y.reduceMotion`).
 // One function per delay, kept: the screen draws often, and a new function each time would make every row's
-// `entering` prop look changed.
-import { Easing, FadeIn, withDelay, withTiming } from 'react-native-reanimated';
+// `entering` prop look changed. The fade runs with Reduce Motion on (Reanimated would otherwise skip it).
+import { Easing, FadeIn, ReduceMotion, withDelay, withTiming } from 'react-native-reanimated';
 import type { ComponentProps } from 'react';
 import type Animated from 'react-native-reanimated';
 import { ARRIVE } from './arrival';
@@ -15,7 +15,7 @@ export function arrivalEntering(delay: number, reduceMotion: boolean): Entering 
   let enter = made.get(key);
   if (!enter) {
     if (reduceMotion) {
-      enter = FadeIn.duration(ARRIVE.riseMs).delay(delay);
+      enter = FadeIn.duration(ARRIVE.riseMs).delay(delay).reduceMotion(ReduceMotion.Never);
     } else {
       enter = () => {
         'worklet';

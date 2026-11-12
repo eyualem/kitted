@@ -80,6 +80,16 @@ describe('once per launch', () => {
     expect(a.delayOf('k0')).toBeNull();
   });
 
+  it('a row moves once: after the screen drew it, a remount does not replay it', () => {
+    const a = createArrivals();
+    a.plan([kit('k1', 200), kit('k2', 300)], 100);
+    expect(a.delayOf('k1')).toBe(0);
+    a.drawn(['k1', 'k2', 'him']);
+    a.plan([kit('k1', 200), kit('k2', 300)], 100);
+    expect(a.delayOf('k1')).toBeNull();
+    expect(a.delayOf('k2')).toBeNull();
+  });
+
   it('reset forgets everything (a wipe)', () => {
     const a = createArrivals();
     a.plan([kit('k1', 200)], 100);

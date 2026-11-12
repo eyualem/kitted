@@ -6,9 +6,10 @@
 //   - "seen until" (kv `stylist.seenUntil`, this phone's, written when the thread loses focus or the app goes to the
 //     background): a message made after that time is new to him. Older ones draw still, so reopening the app or
 //     coming back to the tab shows the thread as he left it.
-//   - the answer is decided once per message id for the life of the app: a re-render, or the screen mounting again,
-//     never replays it; and a message the live answer already moved in (`skip`) doesn't move a second time when the
-//     stored row replaces it.
+//   - the answer is decided once per message id for the life of the app, and a row moves once: the screen says which
+//     rows it has drawn (`drawn`), and from then on a re-render or the screen mounting again never replays it. A
+//     message the live answer already moved in (`skip`) doesn't move a second time when the stored row replaces it.
+//     A message that lands while he is on another tab moves where he can't see it; it is still when he comes back.
 // Several rows landing together are staggered from the oldest, capped so a long backlog doesn't wait.
 import type { ChatMessage } from '@/data/types';
 
@@ -28,6 +29,7 @@ type Row = Pick<ChatMessage, 'id' | 'role' | 'createdAt'>;
 export function createArrivals() {
   /** id → delay in ms (it moves), or null (it never will). */
   const decided = new Map<string, number | null>();
+  const played = new Set<string>();
   return {
     /**
      * Decides every row not decided before. `seenUntil` is when he last saw the thread; `skip` are ids that must not
@@ -48,11 +50,16 @@ export function createArrivals() {
     },
     /** The delay before this row moves in, or null when it stays put. */
     delayOf(id: string): number | null {
-      return decided.get(id) ?? null;
+      return played.has(id) ? null : decided.get(id) ?? null;
+    },
+    /** The screen has put these rows on screen (call after drawing, not while): they never move again. */
+    drawn(ids: Iterable<string>): void {
+      for (const id of ids) played.add(id);
     },
     /** A wipe or a test: forget everything. */
     reset(): void {
       decided.clear();
+      played.clear();
     },
   };
 }
