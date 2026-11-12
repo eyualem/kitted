@@ -130,8 +130,8 @@ def case(cid, rule, what, reading, expect, occasion="everyday", styles=None, bol
                   "expect": expect, "vs": vs, "future": sorted(future or []), "kd": kd})
 
 
-F = lambda check, part=None, points=None, line=None: {k: v for k, v in (("check", check), ("part", part), ("points", points),
-                                                                       ("line", line)) if v is not None}
+F = lambda check, part=None, points=None, line=None, line_is=None: {k: v for k, v in (
+    ("check", check), ("part", part), ("points", points), ("line", line), ("line_is", line_is)) if v is not None}   # line: a substring; line_is: the whole line (T93)
 
 # ===== How a score is made (SCO) =====================================================================================
 case("SCO-1-plain", "SCO-1", "plain white tee, dark straight jeans, white leather sneakers: every part starts at 7 (v14: the "
@@ -466,8 +466,17 @@ case("PRO-17-joggers", "PRO-17", "a zip hoodie over a tee with joggers at Class:
      {"not_fired": [F(PR2H)], "band": "Getting there"}, occasion="class")
 case("PRO-17-slim", "PRO-17", "a zip hoodie over a tee with slim jeans: it needs a full leg, nothing",
      Rd(top("tee", "navy"), outer("hoodie", "green", length="na"), SLJEANS, WLS), {"not_fired": [F(PR2H)], "band": "Put together"})
-case("PRO-17-slides", "PRO-17", "a zip hoodie over a tee with dark jeans and slides: nothing (it reads home)",
-     Rd(top("tee", "navy"), outer("hoodie", "green", length="na"), DJEANS, SLIDES), {"not_fired": [F(PR2H)], "band": "Put together"})
+SK1C = "SK1c_slides_shape"
+case("PRO-17-slides", "PRO-17", "v16 (#452, [SHO-14]): a zip hoodie over a tee with dark jeans and slides: the clothes are judged "
+     "without the shoes, so the layer earns +1.5; the slides cost once, on Shoes, with the point back for the shape (7.0 -> 7.5)",
+     Rd(top("tee", "navy"), outer("hoodie", "green", length="na"), DJEANS, SLIDES),
+     {"fired": [F(PR2H, "proportions", 1.5), F("SK1_slides_out", "shoes", -2.5), F(SK1C, "shoes", 1.0)],
+      "part": {"proportions": {"score": 8.5}, "shoes": {"score": 6.0}}, "overall": 7.5, "band": "Put together"})
+case("PRO-17-slides-wide", "PRO-17", "v16 (#452): a roomy grey hoodie at the belt over a white tee, wide jeans and slides: the hoodie "
+     "layer (+1.5), not the short-layer read (v15: 7.0 via [PRO-14])",
+     Rd(TEE, outer("hoodie", "grey", 4), WJEANS, SLIDES),
+     {"fired": [F(PR2H, "proportions", 1.5), F(SK1C, "shoes", 1.0)], "not_fired": [F(PR2B)],
+      "part": {"proportions": {"score": 8.5}, "shoes": {"score": 6.0}}, "overall": 7.5, "band": "Put together"})
 case("PRO-17-long", "PRO-17", "a zip hoodie read as ending past the fly over wide jeans: nothing",
      Rd(top("tee", "navy"), outer("hoodie", "green", length="below_crotch"), WJEANS, WLS), {"not_fired": [F(PR2H)], "band": "Put together"})
 case("PRO-17-two-layers", "PRO-17", "a zip hoodie under a bomber: the bomber's credit ([PRO-6]), not this one",
@@ -866,6 +875,55 @@ case("SHO-13-small", "SHO-13", "slides with a hoodie whose cuffs cover the hands
                                                                          "band": "Getting there"})
 case("SHO-13-fault", "SHO-13", "slides under skinny jeans (-2.0 on Proportions): no softening",
      Rd(TEE, SKJEANS, SLIDES), {"not_fired": [F("SK1s_slides_soft")], "part": {"shoes": {"score": 4.5}}, "band": "Needs a fix"})
+# v16 (#450, #452): slides out of the house are charged once, on Shoes. The clothes are judged as if the shoes were out
+# of the photo; a shape credit they earn still counts, and Shoes gets +1.0 back when one fires. Values: slides_shape_paper.py V6.
+GTEE4 = top("graphic_tee", "black", 4)
+STREET_SL = Rd(GTEE4, WJEANS, SLIDES)
+PR4_SLIDES = "a boxy top over wide legs: the shape carries it, even in slides"
+PR4_SNEAKERS = "a boxy top over wide legs, finished by street sneakers: the streetwear shape"
+case("SHO-14-street", "SHO-14", "an oversized black graphic tee, wide jeans and slides: the streetwear shape still counts (+1.0), "
+     "and the slides cost once, on Shoes, with a point back for the shape (6.5 -> 7.5)", STREET_SL,
+     {"fired": [F("PR4_street_shape", "proportions", 1.0, line_is=PR4_SLIDES), F("SK1_slides_out", "shoes", -2.5),
+                F("SK1s_slides_soft", "shoes", 0.5), F(SK1C, "shoes", 1.0)],
+      "part": {"proportions": {"score": 8.0}, "shoes": {"score": 6.0}}, "overall": 7.5, "band": "Put together"})
+case("SHO-14-cargos", "SHO-14", "an oversized black tee, wide olive cargos and slides: the tee no longer reads roomier than its look "
+     "because of the slides (5.5 -> 7.0)", Rd(top("tee", "black", 4), bottom("cargos", "olive", "wide"), SLIDES),
+     {"not_fired": [F(PB1), F(SK1C)], "part": {"proportions": {"score": 7.0}, "shoes": {"score": 5.0}}, "overall": 7.0,
+      "band": "Put together"})
+case("SHO-14-sneakers-win", "SHO-14", "the same graphic tee and wide jeans with chunky sneakers: still 8.0, above the slides",
+     Rd(GTEE4, WJEANS, CHUNKY),
+     {"fired": [F("PR4_street_shape", "proportions", 1.0, line_is=PR4_SNEAKERS)], "not_fired": [F(SK1C)],
+      "part": {"shoes": {"score": 8.5}}, "overall": 8.0, "band": "Sharp"})
+case("SHO-14-drag", "SHO-14", "the street outfit with the jeans pooling on the slides: the drag still costs, 0.5 on Shoes (7.0)",
+     Rd(GTEE4, mod(WJEANS, hem="pooling"), SLIDES),
+     {"fired": [F("SK1b_hem_drags", "shoes", -0.5), F(SK1C, "shoes", 1.0)], "part": {"shoes": {"score": 5.5}},
+      "overall": 7.0, "overall_max": 7.5, "band": "Put together"}, vs={"case": "SHO-14-street", "parts": {"shoes": -0.5}})
+case("SHO-14-going-out", "SHO-14", "the street outfit going out: 7.0, never above 7.5", STREET_SL,
+     {"overall": 7.0, "overall_max": 7.5, "band": "Put together"}, occasion="going_out")
+case("SHO-14-interview", "SHO-14", "the street outfit at an interview: slides keep their 4.0 hold ([OCC-3])", STREET_SL,
+     {"ceiling": 4.0, "overall": 4.0, "overall_max": 4.0, "band": "Needs a fix"}, occasion="interview")
+case("SHO-14-no-shape", "SHO-14", "a plain white tee, dark straight jeans and slides: no shape, no point back (6.5, as before)",
+     Rd(TEE, DJEANS, SLIDES), {"not_fired": [F(SK1C)], "part": {"shoes": {"score": 5.0}}, "overall": 6.5, "band": "Getting there"})
+case("SHO-14-no-shape-shorts", "SHO-14", "a plain white tee, relaxed navy shorts and slides: the shorts shape still needs real "
+     "shoes ([PRO-15]), no point back (6.5)", Rd(TEE, bottom("shorts", "navy", "relaxed", "na"), SLIDES),
+     {"not_fired": [F("PS1_shorts_shape"), F(SK1C)], "part": {"shoes": {"score": 5.0}}, "overall": 6.5, "band": "Getting there"})
+case("SHO-14-lounge", "SHO-14", "a grey hoodie, grey relaxed sweatpants and slides at Class: loungewear keeps its hold (6.5)",
+     Rd(top("hoodie", "grey"), bottom("sweatpants", "grey", "relaxed", "cuffed"), SLIDES),
+     {"not_fired": [F(SK1C)], "ceiling": 6.5, "overall": 6.5, "band": "Getting there"}, occasion="class")
+case("SHO-14-blazer", "SHO-14", "a navy blazer over a white tee, grey trousers and slides: never under tailoring (Shoes 3.0, 6.5)",
+     Rd(TEE, outer("blazer", "navy"), TROUSERS, SLIDES),
+     {"fired": [F("SK1_slides_out", "shoes", -4.5)], "not_fired": [F(SK1C)], "part": {"shoes": {"score": 3.0}}, "overall": 6.5,
+      "band": "Getting there"})
+case("SHO-14-blazer-tucked", "SHO-14", "a white tee tucked under a navy blazer, grey trousers and slides: the tailored line earns "
+     "(+1.0), but slides under tailoring never get the point back (Shoes 3.0, 6.5)",
+     Rd(top("tee", "white", tucked="full"), outer("blazer", "navy"), TROUSERS, SLIDES),
+     {"fired": [F("PR3_tailored_line", "proportions", 1.0), F("SK1_slides_out", "shoes", -4.5)], "not_fired": [F(SK1C)],
+      "part": {"shoes": {"score": 3.0}}, "overall": 6.5, "band": "Getting there"})
+case("SHO-14-shorts-shape", "SHO-14", "an oversized grey hoodie over wide black shorts with slides: the shorts shape still needs real "
+     "shoes ([PRO-15]), so no shape and no point back (6.5; 8.0 with chunky sneakers)",
+     Rd(top("hoodie", "grey", 4), bottom("shorts", "black", "wide", "na", volume=4), SLIDES),
+     {"not_fired": [F("PS1_shorts_shape"), F(SK1C)], "part": {"proportions": {"score": 7.0}, "shoes": {"score": 5.0}},
+      "overall": 6.5, "band": "Getting there"})
 
 # ===== Style part (STY) ==============================================================================================
 POLO = Rd(top("polo", "navy"), CHINOS, WLS)
@@ -1327,6 +1385,9 @@ case("STR-5-canvas", "STR-5", "the same with canvas sneakers: the shape counts",
 case("STR-5-tucked", "STR-5", "the same tee tucked in: no streetwear shape (the waist break takes over)",
      Rd(top("graphic_tee", "white", 4, tucked="full"), WJEANS, CHUNKY),
      {"not_fired": [F("PR4_street_shape")], "fired": [F("PR1_waist_break", "proportions", 1.5)], "band": "Sharp"})
+case("STR-5-slides-line", "STR-5", "v16 (#452): the oversized graphic tee over wide jeans with slides: the shape counts, and its "
+     "line doesn't claim street sneakers", STREET_SL,
+     {"fired": [F("PR4_street_shape", "proportions", 1.0, line_is=PR4_SLIDES)], "overall": 7.5, "band": "Put together"})
 case("STR-5-layer", "STR-5", "the same tee under a bomber: the short jacket earns instead, not both",
      Rd(top("graphic_tee", "white", 4), outer("bomber"), WJEANS, CHUNKY),
      {"not_fired": [F("PR4_street_shape")], "fired": [F("PR2_short_layer", "proportions", 1.5)], "band_in": ["Put together", "Sharp"]})
@@ -1702,6 +1763,8 @@ def check(c, r, results):
             bad.append(f"{f['check']} moved {[x['points'] for x in hits]}, want {f['points']}")
         elif "line" in f and not any(f["line"] in x["line"] for x in hits):
             bad.append(f"{f['check']} line {[x['line'] for x in hits]} lacks '{f['line']}'")
+        elif "line_is" in f and not any(x["line"] == f["line_is"] for x in hits):
+            bad.append(f"{f['check']} line {[x['line'] for x in hits]} isn't exactly '{f['line_is']}'")
     for f in e.get("not_fired", []):
         if any(x["check"] == f["check"] for _, x in reasons(r, f.get("part"))):
             bad.append(f"{f['check']} fired")

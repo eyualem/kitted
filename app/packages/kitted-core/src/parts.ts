@@ -1685,6 +1685,15 @@ export function setHoodieLayerV15(on: boolean): void {
   currentParts = createParts(partsDataFor(CASUAL_FITS_V14, on));
 }
 
+/** T93 stub (the test writer, tests first): THE SWITCH for slides charged once (parts v16, #450, #452; SHO-14). Not built:
+ *  the implementer sets it to true and wires it into partsDataFor and the setters. */
+export const SLIDES_ONCE_V16: boolean = false;
+/** T93 stub: tests only, flip the slides-once switch at run time. Not built. */
+export function setSlidesOnceV16(on: boolean): void {
+  void on;
+  throw new Error("T93: not built");
+}
+
 /** parts_proto.score_parts() (engine v11) with the bundled data. Never mutates `reading`. */
 export function scoreParts(reading: Reading, opts: PartsOptions = {}): PartsResult {
   return defaultParts.scoreParts(reading, opts);
