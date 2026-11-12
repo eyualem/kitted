@@ -64,7 +64,7 @@ Stylist → camera (propped with 3-2-1 auto-capture, mirror, or a library photo)
 Check 1 → the soft page ("6 free checks left") → any day, a second check → the limit card with "Save for tomorrow" and an upgrade button → check 8 → the full paywall, the photo saved and scored at once if he subscribes.
 
 ### Sign-in (optional)
-Offered on Welcome ("I already have an account"), in one chat card after he's seen his first fit, once more after 3 more checks, and in You **(assumed: as built)**. Never before the first score, never a pop-up.
+Offered on Welcome ("I already have an account"), in one chat card after he's seen his first fit, once more after 3 more checks, and in You. Never before the first score, never a pop-up. First ships in a TestFlight build before launch. Detail: `specs/sign-in-and-backup.md`.
 
 ## Features
 
@@ -144,9 +144,9 @@ The settings home, named You, with no gear and no separate Settings page (`specs
 Optional. Continue with Apple or Google. Signed in, his scores, closet, style profile and what Kit knows sync through Firebase. **Photo backup** is a separate switch, off by default: "Your photos are stored as you took them. Only you can see them." (draft)
 - F11.1 The app works fully without an account.
 - F11.2 On a new phone, signing in brings back his checks, scores, closet and profile; photos too if backup was on.
-- F11.3 An account with existing fits on a phone with its own fits asks: Keep both / Use the account's **(assumed: as built)**.
+- F11.3 An account with existing fits on a phone with its own fits asks: Keep both / Use the account's.
 - F11.4 Backed-up photos are readable only by his account (security rules tested).
-- F11.5 Sign out keeps his fits on the phone **(assumed)**.
+- F11.5 Sign out keeps his fits on the phone.
 
 ### F12. Share cards (cut until after launch)
 **Cut from the beta and the launch (founder, Nov 9, #423):** "let's not release half-assed things." The share actions and the route are switched off; F12.1 isn't checked at launch. They come back after launch only if they're rebuilt to be worth sharing. What was planned:
@@ -231,7 +231,6 @@ Tabs (iOS 26 glass tab bar, always labeled): **Stylist** (the chat, home) · **C
 Each feature gets `specs/<feature>.md` before more code. Shared code has one owner at a time: `@kitted/core` (scoring), the server, the i18n copy file. Sessions touching the same files go one after another.
 
 ## Assumptions
-- Sign-in placements, sync conflict handling and sign-out behaviour as built.
 - Scans: their own cap of 30 a day for everyone.
 - Free users get 3 questions a day from the start.
 - No founding offer at launch.
