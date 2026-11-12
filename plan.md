@@ -124,7 +124,7 @@ Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `
 Spec: `specs/sign-in-and-backup.md` (interview: T40)  
 Lane files: `app/src/features/account`, `app/src/sync`, `app/src/features/privacy/wipe.ts`
 
-- [ ] **T40** · Write the sign-in-and-backup spec with you: Apple and Google only, the photo-backup switch and its words · *done: your yes · files: `specs/sign-in-and-backup.md`*
+- [~] auth-onboarding-placement · **T40** · Write the sign-in-and-backup spec with you: Apple and Google only, the photo-backup switch and its words · *done: your yes · files: `specs/sign-in-and-backup.md`*
 - [!] **Y3** · **T41** · Finish the sign-in (#58) then backup (#57) pull requests to the spec: ask Apple for his first name (F1.4); take out #58's paid-team switch (that's T80); remove email sign-in, which is on main; build the photo-backup switch, off by default (today there is none and photos always upload); delete in one order (revoke, server once, phone); then merge · *after T1, T40 · checks: F11 Apple + Google, F11.3, F1.4 · files: account/, sync/, `firebase/functions`*
 - [ ] **T42** · "Delete account and all data" also wipes our server · *after T41 · checks: F9.1 · files: account/, privacy/wipe.ts*
 - [ ] **T43** · Restoring on a new phone tested end to end; photos upload only with backup on, and only he can see them · *after T41 · checks: F11.2, F11.4 · files: sync/, `firebase/tests`*
