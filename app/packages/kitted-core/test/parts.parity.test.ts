@@ -175,6 +175,24 @@ describe("parts engine parity (parts_proto.py v15)", () => {
     expect(bad).toEqual([]);
   });
 
+  it("Parity · the T93 slides readings are in the set at their occasion, from a v16 run", () => {
+    // every default case is v16's; and the slides-once readings (slides_shape_paper.py's OUTFITS, as rules_conformance.py
+    // builds them: add those cases' readings verbatim) are parity cases at their own occasion with no tune
+    const defaults = P.cases.filter((c) => !c.tune && !("error" in c.expected));
+    expect(defaults.filter((c) => c.expected["engine"] !== "v16").length).toBe(0);
+    const RC = loadJSON<{ cases: { id: string; reading: Reading; occasion: string }[] }>("rules_conformance.json");
+    const ids = ["SHO-14-street", "SHO-14-sneakers-win", "SHO-14-going-out", "SHO-14-interview", "SHO-14-drag", "SHO-14-no-shape",
+      "SHO-14-no-shape-shorts", "SHO-14-lounge", "PRO-17-slides-wide", "SHO-14-cargos", "SHO-14-blazer"];
+    const missing: string[] = [];
+    for (const id of ids) {
+      const rc = RC.cases.find((c) => c.id === id);
+      if (!rc) { missing.push(`${id} (not in rules_conformance.json)`); continue; }
+      const hit = defaults.find((c) => c.occasion === rc.occasion && deepEqual(readingOf(c.reading), rc.reading));
+      if (!hit) missing.push(`${id} @${rc.occasion}`);
+    }
+    expect(missing).toEqual([]);
+  });
+
   it("never mutates its input", () => {
     const c = P.cases.find((x) => x.src.startsWith("parts-edge:refile_vest"))!;
     const r = readingOf(c.reading);

@@ -8,7 +8,8 @@ import { describe, expect, it } from "vitest";
 import { scoreParts, suggestPartsFixes, type PartResult, type PartsResult, type Reading, type SecondLookInput, type Styles } from "../src/index";
 import { loadJSON } from "./helpers";
 
-interface CheckRef { check: string; part?: string; points?: number; line?: string }
+/** line: a substring of the reason line; line_is: the whole line, exactly (T93). */
+interface CheckRef { check: string; part?: string; points?: number; line?: string; line_is?: string }
 interface Expect {
   overall?: number; overall_max?: number; band?: string; band_in?: string[]; unscored?: string;
   fired?: CheckRef[]; not_fired?: CheckRef[]; tips?: CheckRef[]; tips_lacks?: CheckRef[];
@@ -71,6 +72,8 @@ function check(c: Case, r: PartsResult): string[] {
       bad.push(`${f.check} moved ${hits.map((x) => x.points)}, want ${f.points}`);
     else if (f.line !== undefined && !hits.some((x) => x.line.includes(f.line!)))
       bad.push(`${f.check} line ${JSON.stringify(hits.map((x) => x.line))} lacks '${f.line}'`);
+    else if (f.line_is !== undefined && !hits.some((x) => x.line === f.line_is))
+      bad.push(`${f.check} line ${JSON.stringify(hits.map((x) => x.line))} isn't exactly '${f.line_is}'`);
   }
   for (const f of e.not_fired ?? []) if (reasons(r, f.part).some((x) => x.check === f.check)) bad.push(`${f.check} fired`);
   for (const f of e.tips ?? []) if (!tips(r, f.part).some((x) => x.check === f.check)) bad.push(`tip ${f.check} missing`);
@@ -132,6 +135,20 @@ describe("rules conformance (rubric/v5-styles.md)", () => {
     expect(D.cases.length).toBe(D.counts.cases);
     expect(new Set(D.cases.map((c) => c.rule)).size).toBe(D.counts.rules);
     expect([...new Set(D.cases.map((c) => c.rule))].sort()).toEqual(D.rules);
+  });
+
+  it("SHO-14 · the slides-once cases reach the core: the JSON is a v16 run and holds every T93 case", () => {
+    expect(D.engine).toBe("v16");
+    const ids = D.cases.map((c) => c.id);
+    const want = ["SHO-14-street", "SHO-14-cargos", "SHO-14-sneakers-win", "SHO-14-drag", "SHO-14-going-out", "SHO-14-interview",
+      "SHO-14-no-shape", "SHO-14-no-shape-shorts", "SHO-14-lounge", "SHO-14-blazer", "SHO-14-blazer-tucked", "SHO-14-shorts-shape",
+      "PRO-17-slides", "PRO-17-slides-wide", "STR-5-slides-line"];
+    expect(want.filter((id) => !ids.includes(id))).toEqual([]);
+    expect(D.rules).toContain("SHO-14");
+    // the flipped PRO-17-slides carries the new expectation, not v15's
+    const pro17 = D.cases.find((c) => c.id === "PRO-17-slides")!;
+    expect(pro17.expect.overall).toBe(7.5);
+    expect(pro17.python.overall).toBe(7.5);
   });
 
   for (const c of D.cases) {
