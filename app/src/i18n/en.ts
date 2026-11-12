@@ -1116,8 +1116,8 @@ const addedInBuild = {
   // Looks' title and line (replacing Kit's bubble, onb.looks.prompt), About you (an optional first name and five age
   // choices, nothing picked), Restore's plain title and line (replacing acct.restore.basics), Kit's first-check offer and
   // its Later line, and Style profile's Name and Age rows. Outward-facing: on the founder's skim list.
-  'onb.looks.title': 'Which of these would you actually wear?',
-  'onb.looks.line': 'Tap up to 3.',
+  'onb.looks.title': "What's your style?",
+  'onb.looks.line': "Pick up to 3 looks you like. Today's outfit comes next.",
   'onb.about.title': 'About you',
   'onb.about.nameLabel': 'What should Kit call you?',
   'onb.about.namePlaceholder': 'First name (optional)',
