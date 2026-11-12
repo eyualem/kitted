@@ -238,7 +238,9 @@ export const radius = {
   /** His bubble; the tail corner (bottom-trailing) is 6. */
   bubble: 24,
   bubbleTail: 6,
+  /** His photo in the chat (no frame; the tail corner is `bubbleTail`), and the framed tile of the Example check's drawn bubble. */
   photoBubble: 21,
+  /** The Example check's drawn bubble only (the chat's photo has no frame now). */
   photoBubbleInner: 17,
   photoBubbleInnerTail: 4,
   avatar: 5,
@@ -265,6 +267,7 @@ export const size = {
   seamInset: 22,
   avatar: 18,
   detectionTag: 28,
+  /** The Example check's drawn bubble only. His photo in the chat is sized from the screen: `photoBubbleSize` in chatLayout.ts. */
   photoBubbleWidth: 135,
   photoBubbleHeight: 172,
 } as const;

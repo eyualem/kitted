@@ -3,12 +3,12 @@
 // Copy rule: the stylist is "Kit" (#318), never "AI stylist". All strings come from @/i18n/en.
 
 import type { ReactNode } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, View, useWindowDimensions } from 'react-native';
 import { Image, type ImageSource } from 'expo-image';
 import { t } from '@/i18n/en';
 import { useTheme } from '../theme';
-import { radius, size } from '../tokens';
-import { KIT_BUBBLE_PAD_H, kitBubbleMaxWidth, userBubbleMaxWidth } from './chatLayout';
+import { radius } from '../tokens';
+import { KIT_BUBBLE_PAD_H, kitBubbleMaxWidth, photoBubbleSize, userBubbleMaxWidth } from './chatLayout';
 import { Icon } from './Icon';
 import { KText } from './KText';
 
@@ -208,9 +208,10 @@ export function NeckDownPhoto({ source, aspect, crop, width, height, borderRadii
 }
 
 // ---------------------------------------------------------------------------------------
-// PhotoBubble: 135 pt wide me frame, 4 pt padding, outer radius 21 (tail 6). The photo is
-// 172 pt tall, radius 17 (tail 4), neck-down. Caption row: footnote onMe @ 90%, occasion left
-// and time right ("Date · 7:42"). While reading (ruling 13): lock + "Face hidden when sent".
+// PhotoBubble (founder, Nov 12, "Bigger, no frame"): his photo on its own, about 60% of the screen wide, no frame
+// behind it, rounded corners with the small tail corner bottom-right so it still reads as his message, neck-down, like
+// iMessage. Under it, right-aligned, small grey text (dayStamp: footnote, ink3): "Date · 7:42". While reading
+// (ruling 13): lock + "Face hidden when sent". The caption wraps under the photo at any text size, never cut.
 
 export interface PhotoBubbleProps {
   source: PhotoSource;
@@ -226,85 +227,36 @@ export interface PhotoBubbleProps {
 }
 
 export function PhotoBubble({ source, aspect, crop, occasion, time, reading, onPress }: PhotoBubbleProps) {
-  const { colors, isAccessibilitySize } = useTheme();
-  // At the accessibility sizes the 109 pt caption row inside the frame cut the occasion and "Face hidden when sent" to
-  // "…" (or broke "Every-day"): the caption goes under the bubble, full width, and wraps (07 §17, U13).
-  const below = isAccessibilitySize;
-  const innerW = size.photoBubbleWidth - 8;
+  const { width: screenWidth } = useWindowDimensions();
+  const { width, height } = photoBubbleSize(screenWidth, crop && aspect ? neckDownAspect(crop, aspect) : aspect);
   const spoken =
     (occasion ? t('a11y.photoOccasion', { time, occasion }) : t('a11y.photo', { time })) +
     (reading ? ` ${t('read.bubble.onlySent')}.` : '');
-  const bubble = (
-    <Pressable
-      onPress={onPress}
-      disabled={!onPress}
-      accessible
-      accessibilityRole={onPress ? 'imagebutton' : 'image'}
-      accessibilityLabel={spoken}
-      accessibilityHint={onPress ? t('a11y.photoHint') : undefined}
-      style={{
-        alignSelf: 'flex-end',
-        width: size.photoBubbleWidth,
-        padding: 4,
-        backgroundColor: colors.me,
-        borderTopLeftRadius: radius.photoBubble,
-        borderTopRightRadius: radius.photoBubble,
-        borderBottomLeftRadius: radius.photoBubble,
-        borderBottomRightRadius: radius.bubbleTail,
-        borderCurve: 'continuous',
-      }}
-    >
-      <NeckDownPhoto
-        source={source}
-        aspect={aspect}
-        crop={crop}
-        width={innerW}
-        height={size.photoBubbleHeight}
-        borderRadii={{ tl: radius.photoBubbleInner, tr: radius.photoBubbleInner, br: radius.photoBubbleInnerTail, bl: radius.photoBubbleInner }}
-      />
-      {below ? null : (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            paddingTop: 6,
-            paddingBottom: 5,
-            paddingHorizontal: 9,
-            opacity: 0.9,
-            gap: 4,
-          }}
-        >
-          {reading ? (
-            // 109 pt can't hold lock + "Face hidden when sent" + the time on one line: the label wraps.
-            <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 4, flexShrink: 1 }}>
-              <Icon name="lock" size="small" color={colors.onMe} />
-              <KText role="photoCaption" numberOfLines={2} style={{ flexShrink: 1 }}>
-                {t('read.bubble.onlySent')}
-              </KText>
-            </View>
-          ) : (
-            // "Pants and shoes" next to the time doesn't fit 109 pt on one line (it showed "Pants and…"): it wraps.
-            <KText role="photoCaption" numberOfLines={2} style={{ flexShrink: 1 }}>
-              {occasion ?? ''}
-            </KText>
-          )}
-          <KText role="photoCaption" tabular numberOfLines={1} style={{ flexShrink: 0 }}>
-            {time}
-          </KText>
-        </View>
-      )}
-    </Pressable>
-  );
-  if (!below) return bubble;
   const caption = reading ? t('read.bubble.onlySent') : occasion ? `${occasion} · ${time}` : time;
   return (
-    <View style={{ alignSelf: 'flex-end', alignItems: 'flex-end', gap: 4, maxWidth: '88%' }}>
-      {bubble}
-      {/* The bubble's label already says all of it. */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-        {reading ? <Icon name="lock" size="small" color="ink2" /> : null}
-        <KText role="dayStamp" color="ink2" style={{ textAlign: 'right', flexShrink: 1 }}>
+    <View style={{ alignSelf: 'flex-end', alignItems: 'flex-end', gap: 4, width, maxWidth: '100%' }}>
+      <Pressable
+        onPress={onPress}
+        disabled={!onPress}
+        accessible
+        accessibilityRole={onPress ? 'imagebutton' : 'image'}
+        accessibilityLabel={spoken}
+        accessibilityHint={onPress ? t('a11y.photoHint') : undefined}
+        style={{ alignSelf: 'flex-end' }}
+      >
+        <NeckDownPhoto
+          source={source}
+          aspect={aspect}
+          crop={crop}
+          width={width}
+          height={height}
+          borderRadii={{ tl: radius.photoBubble, tr: radius.photoBubble, br: radius.bubbleTail, bl: radius.photoBubble }}
+        />
+      </Pressable>
+      {/* The photo's label already says all of it. */}
+      <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 4, paddingHorizontal: 2 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        {reading ? <Icon name="lock" size="small" color="ink3" /> : null}
+        <KText role="dayStamp" tabular={!reading} style={{ textAlign: 'right', flexShrink: 1 }}>
           {caption}
         </KText>
       </View>
