@@ -3,6 +3,10 @@ import { DEMO_ENABLED } from '@/demo/config';
 import { defaultDemoArgs, type DemoArgs } from '@/demo/demoArgs';
 import { demoClock, parseZonedIso, systemClock, type Clock } from '@/services/clock';
 
+/** When this launch's JS began (wall clock). This module loads at boot, ahead of any screen: a screen's own module loads
+ *  lazily, after setup has posted its first messages (the Stylist thread's "new since launch", features/stylist/arrival.ts). */
+export const LAUNCHED_AT = Date.now();
+
 let args: DemoArgs = defaultDemoArgs;
 let clock: Clock = systemClock;
 

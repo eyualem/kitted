@@ -9,12 +9,18 @@
 //   - the answer is decided once per message id for the life of the app, and a row moves once: the screen says which
 //     rows it has drawn (`drawn`), and from then on a re-render or the screen mounting again never replays it. A
 //     message the live answer already moved in (`skip`) doesn't move a second time when the stored row replaces it.
-//     A message that lands while he is on another tab moves where he can't see it; it is still when he comes back.
+//     The screen holds a new row of Kit's back (`isNew`) while the thread is out of sight (he is on another tab, or
+//     setup is still on top: it is mounted behind it), so the row mounts, and moves, when he is looking at it.
 // Several rows landing together are staggered from the oldest, capped so a long backlog doesn't wait.
 import type { ChatMessage } from '@/data/types';
 
 /** The look: fade in while rising a little. Reduce Motion keeps the fade and drops the rise. */
-export const ARRIVE = { riseMs: 250, risePt: 8, staggerMs: 100, maxSteps: 4 } as const;
+export const ARRIVE = {
+  riseMs: 250, risePt: 8, staggerMs: 100, maxSteps: 4,
+  /** After the screen mounts, new rows wait this long: it mounts as the stack slides it in (setup's end), and a row that
+   *  moved during the slide was never seen (found on the Simulator). */
+  settleMs: 500,
+} as const;
 
 /** kv: when he last had the thread in front of him (String(epoch ms)); per device (sync/schema.ts KV_LOCAL). */
 export const SEEN_UNTIL_KEY = 'stylist.seenUntil';
@@ -47,6 +53,10 @@ export function createArrivals() {
           decided.set(m.id, null);
         }
       }
+    },
+    /** Kit's row he hasn't seen and nothing has decided yet: it will move once the thread is in front of him. */
+    isNew(m: Row, seenUntil: number): boolean {
+      return !decided.has(m.id) && m.role === 'stylist' && m.createdAt > seenUntil;
     },
     /** The delay before this row moves in, or null when it stays put. */
     delayOf(id: string): number | null {

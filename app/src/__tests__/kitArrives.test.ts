@@ -90,6 +90,15 @@ describe('once per launch', () => {
     expect(a.delayOf('k2')).toBeNull();
   });
 
+  it('isNew: Kit\'s unseen row nothing has decided yet (held back while the thread is out of sight)', () => {
+    const a = createArrivals();
+    expect(a.isNew(kit('k1', 200), 100)).toBe(true);
+    expect(a.isNew(kit('old', 50), 100)).toBe(false);
+    expect(a.isNew(him('u', 200), 100)).toBe(false);
+    a.plan([kit('k1', 200)], 100);
+    expect(a.isNew(kit('k1', 200), 100)).toBe(false);
+  });
+
   it('reset forgets everything (a wipe)', () => {
     const a = createArrivals();
     a.plan([kit('k1', 200)], 100);

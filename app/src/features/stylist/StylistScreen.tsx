@@ -13,7 +13,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AccessibilityInfo, AppState, Keyboard, Platform, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import Animated, { type SharedValue, scrollTo, useAnimatedKeyboard, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useScrollOffset, useSharedValue, withTiming } from 'react-native-reanimated';
-import { router, useFocusEffect } from 'expo-router';
+import { router, useFocusEffect, useIsFocused } from 'expo-router';
 import { dayKey } from '@kitted/core';
 import { space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
@@ -21,7 +21,7 @@ import type { ChatMessage } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { starterChips } from '@/features/ask/chips';
 import { clearStylistAction, usePendingStylistAction } from '@/router/stylistAction';
-import { sessionClock } from '@/state/session';
+import { LAUNCHED_AT, sessionClock } from '@/state/session';
 import { setToastFloor, useToast } from '@/features/toast/toast';
 import { morning } from '@/features/morning';
 import { firstCheckPending } from '@/features/onboarding/firstCheckOffer';
@@ -31,7 +31,7 @@ import { Composer } from './Composer';
 import { sendQuestion } from './ask';
 import { ACCESSORY_H, COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
 import { ThreadRow } from './MessageView';
-import { arrivals, parseSeenUntil, SEEN_UNTIL_KEY } from './arrival';
+import { ARRIVE, arrivals, parseSeenUntil, SEEN_UNTIL_KEY } from './arrival';
 import { arrivalEntering } from './arrivalMotion';
 import { OfflineBanner } from './OfflineBanner';
 import { LatestPill } from './LatestPill';
@@ -51,8 +51,6 @@ const EXCHANGE_MS = 10 * 60_000;
 const SHEET_DISMISS_MS = 400;
 /** Room a toast takes above the dock (44 tall + 8 gap + a little air), DECISIONS-LOG #56. */
 const TOAST_ROOM = 56;
-/** When this launch began (wall clock): with no "seen until" saved yet, what's made after it is new to him. */
-const PROCESS_START = Date.now();
 
 export function StylistScreen() {
   const { colors, a11y } = useTheme();
@@ -77,15 +75,6 @@ export function StylistScreen() {
   const replaced = live?.replaces ?? null;
   // Kit's first-check card is the only card until his first check is scored; a morning card that's already there waits.
   const firstCheckHeld = useLive(['chat', 'fitChecks'], () => firstCheckPending(store), []) ?? false;
-  const shown = useMemo(() => {
-    const kept = withoutMorningWhileFirstCheckPending(messages, firstCheckHeld);
-    return replaced ? kept.filter((m) => m.id !== replaced) : kept;
-  }, [messages, replaced, firstCheckHeld]);
-  const items = useMemo(() => buildThreadItems(shown, now, sessionClock.offset), [shown, now]);
-  const shownIds = useMemo(() => new Set(shown.map((m) => m.id)), [shown]);
-  const showLive = liveRowShows(live, shownIds, (at) => dayKey(at, sessionClock.offset) === today);
-  // The thread shows the finished answer's own row now: the live copy goes for good (U1, no ghost tomorrow).
-  useEffect(() => liveAnswer.settle(shownIds), [shownIds, live]);
   // What Kit's arrival moves (arrival.ts): rows newer than when he last had the thread in front of him. Read once; the
   // thread waits for it (a few ms), since a row that mounts first never gets its entrance.
   const [seenUntil, setSeenUntil] = useState<number | undefined>(undefined);
@@ -94,7 +83,7 @@ export function StylistScreen() {
     void store.getKv(SEEN_UNTIL_KEY).then(
       (raw) => {
         // Never written (an install from before this, or the first launch): what's made during this launch is new.
-        if (alive) setSeenUntil(parseSeenUntil(raw) ?? sessionClock.nowMs() - (Date.now() - PROCESS_START));
+        if (alive) setSeenUntil(parseSeenUntil(raw) ?? sessionClock.nowMs() - (Date.now() - LAUNCHED_AT));
       },
       () => alive && setSeenUntil(Number.POSITIVE_INFINITY),
     );
@@ -102,9 +91,28 @@ export function StylistScreen() {
       alive = false;
     };
   }, []);
+  // In front of him? A new row of Kit's waits for that (arrival.ts), or it would move where he can't see it: the tab
+  // mounts as setup's end slides it in, and on another tab it is out of sight.
+  const onTab = useIsFocused();
+  const [settled, setSettled] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setSettled(true), ARRIVE.settleMs);
+    return () => clearTimeout(timer);
+  }, []);
+  const focused = onTab && settled;
+  const shown = useMemo(() => {
+    const kept = withoutMorningWhileFirstCheckPending(messages, firstCheckHeld);
+    const rows = replaced ? kept.filter((m) => m.id !== replaced) : kept;
+    return focused || seenUntil === undefined ? rows : rows.filter((m) => !arrivals.isNew(m, seenUntil));
+  }, [messages, replaced, firstCheckHeld, focused, seenUntil]);
+  const items = useMemo(() => buildThreadItems(shown, now, sessionClock.offset), [shown, now]);
+  const shownIds = useMemo(() => new Set(shown.map((m) => m.id)), [shown]);
+  const showLive = liveRowShows(live, shownIds, (at) => dayKey(at, sessionClock.offset) === today);
+  // The thread shows the finished answer's own row now: the live copy goes for good (U1, no ghost tomorrow).
+  useEffect(() => liveAnswer.settle(shownIds), [shownIds, live]);
   // The answer that just finished streaming has already moved in as the live row; its stored row takes its place still.
   const liveRowId = live?.phase === 'done' ? live.messageId : null;
-  if (seenUntil !== undefined) arrivals.plan(shown, seenUntil, liveRowId ? [liveRowId] : []);
+  if (seenUntil !== undefined && focused) arrivals.plan(shown, seenUntil, liveRowId ? [liveRowId] : []);
   // Once drawn, a row never moves again (a remount of the screen, a row filtered out and back).
   useEffect(() => {
     if (seenUntil !== undefined) arrivals.drawn(items.flatMap((i) => (i.type === 'msg' ? [i.message.id] : [])));
