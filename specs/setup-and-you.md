@@ -21,15 +21,14 @@ One page under the tab name **You**, large title, no button in its header (the g
 
 **Top to bottom**
 1. **Your style** card, as today: looks in pick order and the basics line; the whole card opens Style profile.
-2. **What Kit knows**, as today: up to 4 facts and `See all {n}`; empty: `I'll add what I learn here.`
-3. **Today** card, as today (checks and questions left, Check my fit or Re-check). On Pro, the Pro row above it, as today.
-4. Rows (grouped list, the Settings page's own rows and behavior):
+2. **Today** card, as today (checks and questions left, Check my fit or Re-check). On Pro, the Pro row above it, as today.
+3. Rows (grouped list, the Settings page's own rows and behavior):
    - Sign-in's rows first, once sign-in exists (`ACCOUNTS_BUILT`; hidden until then, as today).
    - `Notifications` › (only once notifications are built) · `Appearance` (`System` / `Light` / `Dark`) · `Plan & usage` › with its value (`Kitted beta`, `Free plan`, `Kitted Pro`).
-   - `Privacy & data` ›.
+   - `Privacy & data` › (it holds `What Kit knows`: a row opening the list of saved facts, each with its source and removable, as the list was before).
    - `Subscription`: `Manage subscription` · `Restore purchases`, only while the paywall is on, as today.
    - `Help & about`: `Report a wrong score` · `Contact support` · `Privacy policy` · `Terms of use` (each of those four only once its address is set, as today) · `Acknowledgements` ›.
-5. The version line, as today: `Kitted {version} ({build}) · Scoring v{n}`.
+4. The version line, as today: `Kitted {version} ({build}) · Scoring v{n}`.
 
 The pages these rows open (Plan & usage, Notifications, Privacy & data, Acknowledgements) don't change; their Back reads `You`. The old Privacy & data card on You goes: Privacy & data shows once, in the rows.
 
@@ -87,10 +86,10 @@ Removed with the tips: there's nothing left to replay. Help & about has no `Show
 ## Acceptance criteria
 **SY1. You is the settings home**
 - SY1.1 You's header has no gear or other button; the Settings page no longer exists, and every place that linked to it opens You.
-- SY1.2 You shows, in order: style card, What Kit knows, Today, the rows of SY1 step 5 (each shown only under its stated condition), then the version line.
+- SY1.2 You shows, in order: style card, Today, the rows of SY1 step 3 (each shown only under its stated condition), then the version line. What Kit knows is not on You: it is a row in Privacy & data's first section, next to `See what I send`, opening the same list (Back reads `Privacy & data`).
 - SY1.3 Each row does exactly what the Settings page's row did: same page, same value, same Appearance choice saved; Back from each page reads `You`.
 - SY1.4 `Privacy & data` appears exactly once on You.
-- SY1.5 The ScrollView is You's first view, so the iOS tab bar shrinks on scroll.
+- SY1.5 The ScrollView is You's first view (the large title collapses with it). The tab bar never shrinks on scroll, here or on any tab (founder, Nov 12).
 - SY1.6 Light, dark and the largest text size: nothing clipped, no word broken mid-word; VoiceOver reads each row as a button with its value.
 
 **SY2. Kit's hello, and where the pieces go**

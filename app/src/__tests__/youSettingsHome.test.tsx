@@ -1,5 +1,5 @@
 // T34 · SY1 (specs/setup-and-you.md): You becomes the settings home. The gear and the Settings page go; Settings' rows
-// sit on You under the style card, What Kit knows and Today, and each does exactly what it did on Settings. Written
+// sit on You under the style card and Today, and each does exactly what it did on Settings. Written
 // before the code (tasks/T34/TESTING.md); the render tests drive the real YouScreen and SettingsRows on the memory
 // store with the full demo seed, and only stand in for the design system (Reanimated needs the native runtime), the
 // router, the quota snapshot, the account section, and the outward actions (mail, Safari, the App Store, toasts).
@@ -397,17 +397,20 @@ describe('SY1.1 · no gear, no Settings page; old links open You', () => {
 });
 
 // ── SY1.2 ───────────────────────────────────────────────────────────────────────────────────────────────────────
-describe('SY1.2 · You, in order: style, knows, Today, the rows, the version line', () => {
-  it('SY1.2 · free: style, knows, Today, then Appearance, Plan & usage, Privacy & data, Acknowledgements, then the version line', async () => {
+describe('SY1.2 · You, in order: style, Today, the rows, the version line', () => {
+  it('SY1.2 · free: style, Today, then Appearance, Plan & usage, Privacy & data, Acknowledgements, then the version line', async () => {
     given('free');
     await renderYou();
     expect(ids()).toEqual([
-      'you-scroll', 'you-style', 'you-knows', 'you-today', 'you-rows',
+      'you-scroll', 'you-style', 'you-today', 'you-rows',
       'you-section-main', 'you-row-appearance', 'you-row-plan',
       'you-section-privacy', 'you-row-privacy',
       'you-section-help', 'you-row-acknowledgements',
       'you-version',
     ]);
+    // What Kit knows left You (founder, Nov 12): it is a row in Privacy & data.
+    expect(screen.queryByTestId('you-knows')).toBeNull();
+    expect(screen.queryByText('What Kit knows')).toBeNull();
     // Section labels: Help & about only.
     expect(screen.getAllByText('Help & about')).toHaveLength(1);
     expect(screen.queryByText('Subscription')).toBeNull();
@@ -525,7 +528,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     given('proPaywall');
     await renderYou();
     expect(ids()).toEqual([
-      'you-scroll', 'you-style', 'you-pro', 'you-knows', 'you-today', 'you-rows',
+      'you-scroll', 'you-style', 'you-pro', 'you-today', 'you-rows',
       'you-section-main', 'you-row-appearance', 'you-row-plan',
       'you-section-privacy', 'you-row-privacy',
       'you-section-subscription', 'you-row-manage', 'you-row-restore',
@@ -542,28 +545,28 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     demoEntitlements.setPro(false);
     given('free');
     await renderYou();
-    expect(screen.getByTestId('you-knows')).toBeTruthy();
+    expect(screen.getByTestId('you-today')).toBeTruthy();
     expect(screen.queryByTestId('you-pro')).toBeNull();
   });
 
-  it('SY1.2 · What Kit knows: up to 4 facts and See all {n}; none: the empty line and no See all', async () => {
+  it('SY1.2 · What Kit knows is not on You: no block, no See all, no fact, no empty line', async () => {
     given('free');
     const live = liveFacts(await mockStore.facts.all());
     expect(live.length).toBeGreaterThan(4);
     await renderYou();
-    const knows = within(screen.getByTestId('you-knows'));
-    expect(knows.getByLabelText(`See all ${live.length}`)).toBeTruthy();
-    for (const f of live.slice(0, 4)) expect(knows.getAllByText(factTitle(f)).length).toBeGreaterThanOrEqual(1);
-    for (const f of live.slice(4)) expect(knows.queryByText(factTitle(f))).toBeNull();
-    expect(knows.queryByText("I'll add what I learn here.")).toBeNull();
+    expect(screen.queryByTestId('you-knows')).toBeNull();
+    expect(screen.queryByText('What Kit knows')).toBeNull();
+    expect(screen.queryByLabelText(/^See all/)).toBeNull();
+    expect(screen.queryByText(/^See all/)).toBeNull();
+    expect(screen.queryByText("I'll add what I learn here.")).toBeNull();
+    for (const f of live) expect(screen.queryByText(factTitle(f))).toBeNull();
     await screen.unmount();
 
+    // With no facts at all it is the same page: nothing about facts appears.
     for (const f of await mockStore.facts.all()) await mockStore.facts.patch(f.id, { isDeleted: true });
     await renderYou();
-    const empty = within(screen.getByTestId('you-knows'));
-    expect(empty.getByText("I'll add what I learn here.")).toBeTruthy();
-    expect(empty.queryByLabelText(/^See all/)).toBeNull();
-    expect(empty.queryByText(/^See all/)).toBeNull();
+    expect(screen.queryByTestId('you-knows')).toBeNull();
+    expect(screen.queryByText("I'll add what I learn here.")).toBeNull();
   });
 
   it('SY1.2 · before its data loads You draws nothing', async () => {
@@ -574,7 +577,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     expect(screen.queryByTestId('you-rows')).toBeNull();
   });
 
-  // Verify round 1, defect 3: each of You's three reads holds the page back on its own, not just the usage read.
+  // Verify round 1, defect 3: each of You's reads holds the page back on its own, not just the usage read.
   it('SY1.2 · before its data loads You draws nothing: the profile read still pending', async () => {
     given('free');
     const s = mockStore;
@@ -586,15 +589,14 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     expect(screen.queryByTestId('you-rows')).toBeNull();
   });
 
-  it('SY1.2 · before its data loads You draws nothing: the facts read still pending', async () => {
+  it("SY1.2 · You doesn't read the facts at all: a facts read that never answers doesn't hold the page back", async () => {
     given('free');
-    const s = mockStore;
-    mockStore = { ...s, facts: { ...s.facts, all: () => new Promise<never>(() => undefined) } };
-    await render(<YouScreen />);
-    await settle();
-    expect(screen.toJSON()).toBeNull();
-    expect(screen.queryByTestId('you-style')).toBeNull();
-    expect(screen.queryByTestId('you-rows')).toBeNull();
+    const all = jest.fn(() => new Promise<never>(() => undefined));
+    mockStore = { ...mockStore, facts: { ...mockStore.facts, all } };
+    await renderYou();
+    expect(screen.getByTestId('you-style')).toBeTruthy();
+    expect(screen.getByTestId('you-rows')).toBeTruthy();
+    expect(all).not.toHaveBeenCalled();
   });
 
   it('SY1.2 · with no profile (an install that skipped onboarding) the style card still comes first', async () => {
@@ -602,7 +604,7 @@ describe('SY1.2 · You, in order: style, knows, Today, the rows, the version lin
     mockStore = createMemoryStore();
     mockSnapshot = () => Promise.resolve(FREE);
     await renderYou();
-    expect(ids().slice(0, 3)).toEqual(['you-scroll', 'you-style', 'you-knows']);
+    expect(ids().slice(0, 3)).toEqual(['you-scroll', 'you-style', 'you-today']);
     expect(within(screen.getByTestId('you-style')).getByText('No looks picked yet')).toBeTruthy();
     expect(screen.getByTestId('you-row-plan')).toBeTruthy();
   });
@@ -766,7 +768,7 @@ describe('SY1.5 · the ScrollView is You’s first view', () => {
     const root = screen.toJSON();
     expect(root !== null && !Array.isArray(root) && typeof root === 'object' ? [root.type, root.props.testID] : root).toEqual(['RCTScrollView', 'you-scroll']);
     const scroll = within(screen.getByTestId('you-scroll'));
-    for (const id of ['you-style', 'you-knows', 'you-today', 'you-rows', 'you-row-plan', 'you-version']) expect(scroll.getByTestId(id)).toBeTruthy();
+    for (const id of ['you-style', 'you-today', 'you-rows', 'you-row-plan', 'you-version']) expect(scroll.getByTestId(id)).toBeTruthy();
     expect(screen.getByTestId('you-scroll').props.contentInsetAdjustmentBehavior).toBe('automatic');
   });
 });
@@ -833,16 +835,6 @@ const scrollArgs = () => scrollTo.mock.calls.map((c) => c[0] as { y?: number; an
 function hostAbove(el: ReactTestInstance): ReactTestInstance | null {
   for (let n: ReactTestInstance | null = el.parent as ReactTestInstance | null; n; n = n.parent as ReactTestInstance | null) {
     if (typeof n.type === 'string') return n;
-  }
-  return null;
-}
-
-/** The lowest host element that holds both `a` and `b`. */
-function commonHost(a: ReactTestInstance, b: ReactTestInstance): ReactTestInstance | null {
-  const chain = new Set<ReactTestInstance>();
-  for (let n: ReactTestInstance | null = a; n; n = n.parent as ReactTestInstance | null) chain.add(n);
-  for (let n: ReactTestInstance | null = b; n; n = n.parent as ReactTestInstance | null) {
-    if (chain.has(n) && typeof n.type === 'string' && n !== a && n !== b) return n;
   }
   return null;
 }
@@ -918,23 +910,6 @@ describe('verify round 2 · the landing, its bars, and the largest text', () => 
     expect([(scale as number) > 0, (scale as number) < 1]).toEqual([true, true]);
     const many = screen.getByText('Plan & usage');
     expect([many.props.numberOfLines ?? 0, !!many.props.adjustsFontSizeToFit]).toEqual([0, false]);
-  });
-
-  it("SY1.6 · at the accessibility sizes What Kit knows and See all {n} stack (not squeezed side by side)", async () => {
-    given('free');
-    const n = liveFacts(await mockStore.facts.all()).length;
-    const header = async () => {
-      await renderYou();
-      const knows = within(screen.getByTestId('you-knows'));
-      const box = commonHost(knows.getByText('What Kit knows'), knows.getByLabelText(`See all ${n}`));
-      const dir = (StyleSheet.flatten(box?.props.style) ?? {}).flexDirection ?? 'column';
-      await screen.unmount();
-      return dir;
-    };
-    // The control: at normal sizes the link sits to the right of the header.
-    expect(await header()).toBe('row');
-    mockAx = true;
-    expect(await header()).toBe('column');
   });
 
   it("SY1.6 · at the accessibility sizes the style card's pick numbers fit their badge", async () => {

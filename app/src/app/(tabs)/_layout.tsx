@@ -15,11 +15,10 @@ import { useClosetArrivals } from '@/features/closet/useArrivals';
 
 export default function TabsLayout() {
   const { colors, scheme } = useTheme();
-  // The bar shrinks as he scrolls down, the iOS 26 way, on every tab but the thread. On Stylist the
-  // "Ask your stylist…" bar is the tab bar's bottom accessory (founder, Oct 9; only on the thread
-  // itself: not on Past chats, and never on the other tabs). The thread never shrinks it (founder,
-  // Oct 24, #378): iOS 26 brings a shrunk bar back only on a tap, not when he scrolls back, and a chat
-  // opens at its newest message and scrolls itself down as cards load, so it sat shrunk where he reads.
+  // The bar never shrinks (founder, Nov 12): the whole tab bar shows on every screen, however far he scrolls (iOS 26's
+  // shrink-on-scroll left only the current tab's button, and a shrunk bar comes back only on a tap). On Stylist the
+  // "Ask your stylist…" bar is the tab bar's bottom accessory (founder, Oct 9; only on the thread itself: not on Past
+  // chats, and never on the other tabs).
   const segments = useSegments() as string[];
   const onThread = segments[segments.length - 1] === 'stylist' || (segments.includes('stylist') && segments[segments.length - 1] === 'index');
   // While the composer is open the accessory leaves the tab bar. The tab bar draws above the screen, so
@@ -34,7 +33,7 @@ export default function TabsLayout() {
   const badge = badgeColor(colors, scheme);
   return (
     // The selected tab is ink, not copper (founder, #276): copper is for score movement only.
-    <NativeTabs tintColor={colors.ink} minimizeBehavior={onThread ? 'never' : 'onScrollDown'} badgeBackgroundColor={badge}>
+    <NativeTabs tintColor={colors.ink} minimizeBehavior="never" badgeBackgroundColor={badge}>
       {onThread && !composerOpen ? (
         <NativeTabs.BottomAccessory>
           <StylistBar />
