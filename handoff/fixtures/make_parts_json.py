@@ -1,5 +1,5 @@
 """Writes fixtures/parts.json: every table and number of the parts engine (extraction-test/rubrics/parts_proto.py,
-engine v15 = parts-proto-15, the default since Oct 28: v14 plus a hoodie or sweatshirt layered over a tee earning the short jacket's +1.5 on Proportions (PRO-17, DECISIONS-LOG #385); v14 = parts-proto-14, the default from Oct 17: v13 plus the casual and athletic fits (shorts get Proportions, a clean sneaker can earn "the shoes match", the look's own shoe for streetwear, "the pieces go together", the loungewear ladder by fit and context; rubric/research/parts/casual-athletic.md, DECISIONS-LOG #331-#335); v13 was the default from Oct 14: v12 plus wrinkled knit tops costing 0.2 on a minimal, smart casual or prep look (the wrinkle amounts are TUNE knobs; rubric/research/parts/v12.md -> "v13"); v12 was v11 plus the founder's Oct 14 calls (small bright graphics aren't loud, fitted legs cost 1.0 and a "straight" leg at roominess 2 or less is slim, light on light, wrinkles by garment and look; rubric/research/parts/v12.md); v11 was v10 plus a covered base top judged by the layer over it and skinny joggers charged (rubric/research/parts/v11.md); v10 was v9 plus the creators' rules (rubric/research/parts/v10.md); v9 was v8 plus four consensus fixes (#232); v8 was v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
+engine v16 = parts-proto-16, the default since Nov 12: v15 plus slides charged once, on Shoes (SHO-14, DECISIONS-LOG #450, #452); engine v15 = parts-proto-15, the default from Oct 28: v14 plus a hoodie or sweatshirt layered over a tee earning the short jacket's +1.5 on Proportions (PRO-17, DECISIONS-LOG #385); v14 = parts-proto-14, the default from Oct 17: v13 plus the casual and athletic fits (shorts get Proportions, a clean sneaker can earn "the shoes match", the look's own shoe for streetwear, "the pieces go together", the loungewear ladder by fit and context; rubric/research/parts/casual-athletic.md, DECISIONS-LOG #331-#335); v13 was the default from Oct 14: v12 plus wrinkled knit tops costing 0.2 on a minimal, smart casual or prep look (the wrinkle amounts are TUNE knobs; rubric/research/parts/v12.md -> "v13"); v12 was v11 plus the founder's Oct 14 calls (small bright graphics aren't loud, fitted legs cost 1.0 and a "straight" leg at roominess 2 or less is slim, light on light, wrinkles by garment and look; rubric/research/parts/v12.md); v11 was v10 plus a covered base top judged by the layer over it and skinny joggers charged (rubric/research/parts/v11.md); v10 was v9 plus the creators' rules (rubric/research/parts/v10.md); v9 was v8 plus four consensus fixes (#232); v8 was v7 retuned against the gold-set panel, DECISIONS-LOG #227-228,
 rubric/research/parts/gold-retune.md; v7 was v6 plus "a condition read counts only on a garment read clear", #219) as data, for @kitted/core's scoreParts() (src/parts.ts, bundled as src/partsData.ts).
 
 Run:  /usr/bin/python3 /Users/eyu/Desktop/files/Kitted/handoff/fixtures/make_parts_json.py
@@ -21,10 +21,11 @@ sys.path.insert(0, os.path.join(KEMPT, "extraction-test/rubrics"))
 import parts_proto as P  # noqa: E402
 R = P.R
 
-VERSION = "1.14.0"   # 1.14.0 (#385): v15, a hoodie or sweatshirt layered over a tee earns the short jacket's credit (hl)
+VERSION = "1.15.0"   # 1.15.0 (#452, T93): v16, slides are charged once, on Shoes (sk1_once, sk1_shape_soft, sk1_shape_ok)
+# 1.14.0 (#385): v15, a hoodie or sweatshirt layered over a tee earns the short jacket's credit (hl)
 # 1.13.0 (#367): v14 counts only a top that clearly shows below the outer piece as a peek (peek_clearly_only)
 # 1.12.0 (#336): v14 also lets a tucked open button-up set the waist (pr1_tucked_layer)
-ENGINE = "v15"
+ENGINE = "v16"
 
 
 def sl(s):
@@ -58,6 +59,8 @@ def data(engine=ENGINE):
         "rollback": {"engine": "v13", "label": P.VERSIONS["v13"], "version": "1.10.0", "tune": tune_json(P.TUNE["v13"])},
         # v15: the second switch (core HOODIE_LAYER_V15) rolls back to v14's numbers (parts data 1.13.0)
         "rollback14": {"engine": "v14", "label": P.VERSIONS["v14"], "version": "1.13.0", "tune": tune_json(P.TUNE["v14"])},
+        # v16: the third switch (core SLIDES_ONCE_V16) rolls back to v15's numbers (parts data 1.14.0)
+        "rollback15": {"engine": "v15", "label": P.VERSIONS["v15"], "version": "1.14.0", "tune": tune_json(P.TUNE["v15"])},
         "sets": {
             "TAILORED": sl(P.TAILORED), "TAILORED_FIT": sl(P.TAILORED_FIT), "RIBBED": sl(P.RIBBED),
             "SHORT_SLEEVE_TYPES": sl(P.SHORT_SLEEVE_TYPES), "PRESSED": sl(P.PRESSED), "NARROW": sl(P.NARROW),
