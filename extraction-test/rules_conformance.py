@@ -471,7 +471,8 @@ case("PRO-17-slides", "PRO-17", "v16 (#452, [SHO-14]): a zip hoodie over a tee w
      "without the shoes, so the layer earns +1.5; the slides cost once, on Shoes, with the point back for the shape (7.0 -> 7.5)",
      Rd(top("tee", "navy"), outer("hoodie", "green", length="na"), DJEANS, SLIDES),
      {"fired": [F(PR2H, "proportions", 1.5), F("SK1_slides_out", "shoes", -2.5), F(SK1C, "shoes", 1.0)],
-      "part": {"proportions": {"score": 8.5}, "shoes": {"score": 6.0}}, "overall": 7.5, "band": "Put together"})
+      "part": {"proportions": {"score": 8.5}, "shoes": {"score": 6.0}}, "overall": 7.5, "band": "Put together",
+      "not_rated": [], "partial": False})   # T93 D4: the slides were in the photo, nothing reads as unseen
 case("PRO-17-slides-wide", "PRO-17", "v16 (#452): a roomy grey hoodie at the belt over a white tee, wide jeans and slides: the hoodie "
      "layer (+1.5), not the short-layer read (v15: 7.0 via [PRO-14])",
      Rd(TEE, outer("hoodie", "grey", 4), WJEANS, SLIDES),
@@ -885,7 +886,8 @@ case("SHO-14-street", "SHO-14", "an oversized black graphic tee, wide jeans and 
      "and the slides cost once, on Shoes, with a point back for the shape (6.5 -> 7.5)", STREET_SL,
      {"fired": [F("PR4_street_shape", "proportions", 1.0, line_is=PR4_SLIDES), F("SK1_slides_out", "shoes", -2.5),
                 F("SK1s_slides_soft", "shoes", 0.5), F(SK1C, "shoes", 1.0)],
-      "part": {"proportions": {"score": 8.0}, "shoes": {"score": 6.0}}, "overall": 7.5, "band": "Put together"})
+      "part": {"proportions": {"score": 8.0}, "shoes": {"score": 6.0}}, "overall": 7.5, "band": "Put together",
+      "not_rated": [], "partial": False})   # T93 D4: as the same outfit with sneakers ([] and False), not "shoes not seen"
 case("SHO-14-cargos", "SHO-14", "an oversized black tee, wide olive cargos and slides: the tee no longer reads roomier than its look "
      "because of the slides (5.5 -> 7.0)", Rd(top("tee", "black", 4), bottom("cargos", "olive", "wide"), SLIDES),
      {"not_fired": [F(PB1), F(SK1C)], "part": {"proportions": {"score": 7.0}, "shoes": {"score": 5.0}}, "overall": 7.0,
@@ -893,7 +895,7 @@ case("SHO-14-cargos", "SHO-14", "an oversized black tee, wide olive cargos and s
 case("SHO-14-sneakers-win", "SHO-14", "the same graphic tee and wide jeans with chunky sneakers: still 8.0, above the slides",
      Rd(GTEE4, WJEANS, CHUNKY),
      {"fired": [F("PR4_street_shape", "proportions", 1.0, line_is=PR4_SNEAKERS)], "not_fired": [F(SK1C)],
-      "part": {"shoes": {"score": 8.5}}, "overall": 8.0, "band": "Sharp"})
+      "part": {"shoes": {"score": 8.5}}, "overall": 8.0, "band": "Sharp", "not_rated": [], "partial": False})
 case("SHO-14-drag", "SHO-14", "the street outfit with the jeans pooling on the slides: the drag still costs, 0.5 on Shoes (7.0)",
      Rd(GTEE4, mod(WJEANS, hem="pooling"), SLIDES),
      {"fired": [F("SK1b_hem_drags", "shoes", -0.5), F(SK1C, "shoes", 1.0)], "part": {"shoes": {"score": 5.5}},
@@ -901,7 +903,9 @@ case("SHO-14-drag", "SHO-14", "the street outfit with the jeans pooling on the s
 case("SHO-14-going-out", "SHO-14", "the street outfit going out: 7.0, never above 7.5", STREET_SL,
      {"overall": 7.0, "overall_max": 7.5, "band": "Put together"}, occasion="going_out")
 case("SHO-14-interview", "SHO-14", "the street outfit at an interview: slides keep their 4.0 hold ([OCC-3])", STREET_SL,
-     {"ceiling": 4.0, "overall": 4.0, "overall_max": 4.0, "band": "Needs a fix"}, occasion="interview")
+     {"ceiling": 4.0, "overall": 4.0, "overall_max": 4.0, "band": "Needs a fix", "occ_deduction": 0.5,
+      "occ_lines_has": ["slides at a dressy occasion: held to 4.0"], "occ_lines_lacks": ["held to 5.0"]},
+     occasion="interview")   # T93 D5: the line names the hold that applied, as v15 says it
 case("SHO-14-no-shape", "SHO-14", "a plain white tee, dark straight jeans and slides: no shape, no point back (6.5, as before)",
      Rd(TEE, DJEANS, SLIDES), {"not_fired": [F(SK1C)], "part": {"shoes": {"score": 5.0}}, "overall": 6.5, "band": "Getting there"})
 case("SHO-14-no-shape-shorts", "SHO-14", "a plain white tee, relaxed navy shorts and slides: the shorts shape still needs real "
@@ -919,6 +923,13 @@ case("SHO-14-blazer-tucked", "SHO-14", "a white tee tucked under a navy blazer, 
      Rd(top("tee", "white", tucked="full"), outer("blazer", "navy"), TROUSERS, SLIDES),
      {"fired": [F("PR3_tailored_line", "proportions", 1.0), F("SK1_slides_out", "shoes", -4.5)], "not_fired": [F(SK1C)],
       "part": {"shoes": {"score": 3.0}}, "overall": 6.5, "band": "Getting there"})
+BIGTEE_SK = (top("graphic_tee", "red", 5), SKJEANS)
+case("SHO-14-stained-floor", "SHO-14", "T93 D5: a very oversized red graphic tee over skinny jeans with stained slides: the stain on the "
+     "slides still blocks the 5.0 floor, as on v15 (4.5, not floored)", Rd(*BIGTEE_SK, mod(SLIDES, condition="stained")),
+     {"overall": 4.5, "floored": False, "not_rated": [], "partial": False, "band": "Needs a fix"})
+case("SHO-14-worn-floor", "SHO-14", "T93 D5: the same with worn slides: wear on the slides blocks the floor too (4.5, not floored)",
+     Rd(*BIGTEE_SK, mod(SLIDES, condition="pilled_or_worn")),
+     {"overall": 4.5, "floored": False, "not_rated": [], "partial": False, "band": "Needs a fix"})
 case("SHO-14-shorts-shape", "SHO-14", "an oversized grey hoodie over wide black shorts with slides: the shorts shape still needs real "
      "shoes ([PRO-15]), so no shape and no point back (6.5; 8.0 with chunky sneakers)",
      Rd(top("hoodie", "grey", 4), bottom("shorts", "black", "wide", "na", volume=4), SLIDES),
@@ -1809,6 +1820,10 @@ def check(c, r, results):
         bad.append(f"condition {(r.get('condition') or {}).get('deduction')} != {e['cond_deduction']}")
     if "cond_tips" in e and [t["check"] for t in (r.get("condition") or {}).get("tips", [])] != e["cond_tips"]:
         bad.append(f"condition tips {[t['check'] for t in (r.get('condition') or {}).get('tips', [])]} != {e['cond_tips']}")
+    if "not_rated" in e and list(r.get("not_rated") or []) != e["not_rated"]:       # T93 D4: what the photo didn't show
+        bad.append(f"not_rated {r.get('not_rated')} != {e['not_rated']}")
+    if "partial" in e and bool(r.get("partial")) != e["partial"]:
+        bad.append(f"partial {r.get('partial')} != {e['partial']}")
     if "floored" in e and bool(r.get("floored")) != e["floored"]:
         bad.append(f"floored {r.get('floored')} != {e['floored']}")
     if "bonus" in e and abs((r.get("earned_bonus") or 0) - e["bonus"]) > EPS:

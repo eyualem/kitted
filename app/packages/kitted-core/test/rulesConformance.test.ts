@@ -16,7 +16,9 @@ interface Expect {
   part?: Record<string, { score?: number; na?: boolean }>;
   detected_has?: string[]; detected_lacks?: string[]; label?: string | null; label_in?: (string | null)[];
   ceiling?: number | null; occ_deduction?: number; occ_lines_has?: string[]; occ_lines_lacks?: string[];
-  cond_deduction?: number; cond_tips?: string[]; floored?: boolean; bonus?: number; penalty?: number;
+  cond_deduction?: number; cond_tips?: string[]; floored?: boolean;
+  /** T93 D4: what the photo didn't show, exactly, and whether the check is partial. */
+  not_rated?: string[]; partial?: boolean; bonus?: number; penalty?: number;
   /** v10: the fix engine's Next level / tip line (no points): its id, a substring of its line, or an id it must not be. */
   fix_tip?: string; fix_tip_line?: string; fix_tip_lacks?: string;
 }
@@ -102,6 +104,9 @@ function check(c: Case, r: PartsResult): string[] {
     bad.push(`condition ${r.condition.deduction} != ${e.cond_deduction}`);
   if (e.cond_tips !== undefined && JSON.stringify(r.condition.tips.map((x) => x.check)) !== JSON.stringify(e.cond_tips))
     bad.push(`condition tips ${JSON.stringify(r.condition.tips.map((x) => x.check))} != ${JSON.stringify(e.cond_tips)}`);
+  if (e.not_rated !== undefined && JSON.stringify(r.notRated) !== JSON.stringify(e.not_rated))
+    bad.push(`not_rated ${JSON.stringify(r.notRated)} != ${JSON.stringify(e.not_rated)}`);
+  if (e.partial !== undefined && r.partial !== e.partial) bad.push(`partial ${r.partial} != ${e.partial}`);
   if (e.floored !== undefined && r.floored !== e.floored) bad.push(`floored ${r.floored} != ${e.floored}`);
   if (e.bonus !== undefined && Math.abs(r.earnedBonus - e.bonus) > EPS) bad.push(`bonus ${r.earnedBonus} != ${e.bonus}`);
   if (e.penalty !== undefined && Math.abs(r.piledPenalty - e.penalty) > EPS) bad.push(`penalty ${r.piledPenalty} != ${e.penalty}`);
@@ -142,6 +147,7 @@ describe("rules conformance (rubric/v5-styles.md)", () => {
     const ids = D.cases.map((c) => c.id);
     const want = ["SHO-14-street", "SHO-14-cargos", "SHO-14-sneakers-win", "SHO-14-drag", "SHO-14-going-out", "SHO-14-interview",
       "SHO-14-no-shape", "SHO-14-no-shape-shorts", "SHO-14-lounge", "SHO-14-blazer", "SHO-14-blazer-tucked", "SHO-14-shorts-shape",
+      "SHO-14-stained-floor", "SHO-14-worn-floor",
       "PRO-17-slides", "PRO-17-slides-wide", "STR-5-slides-line"];
     expect(want.filter((id) => !ids.includes(id))).toEqual([]);
     expect(D.rules).toContain("SHO-14");

@@ -135,6 +135,47 @@ describe("the slides-once switch (parts v16, SHO-14)", () => {
     expect(checks(scoreParts(SNEAKERS), "shoes").map(([c]) => c)).not.toContain("SK1c_slides_shape");
   });
 
+  it("SHO-14 · D4 · a slides check is not partial: the slides were in the photo, so nothing reads as unseen", () => {
+    const pro17 = Rd(top("tee", "navy"), G("outerwear", "hoodie", "green"), bottom("jeans", "denim_dark", "straight"), SLIDES);
+    for (const r of [scored(scoreParts(STREET)), scored(scoreParts(pro17))]) {
+      expect(r.engine).toBe("v16");
+      expect(r.notRated).toEqual([]);
+      expect(r.partial).toBe(false);
+    }
+    // exactly as the same outfit with sneakers
+    const sn = scored(scoreParts(SNEAKERS));
+    expect(sn.notRated).toEqual([]);
+    expect(sn.partial).toBe(false);
+  });
+
+  it("OCC-3 · D5 · at an interview the street outfit is held to 4.0, and its line names the 4.0 (as v15 says it)", () => {
+    const opts = { occasion: "interview" };
+    const r = scored(scoreParts(STREET, opts));
+    expect(r.engine).toBe("v16");
+    expect(r.overall).toBe(4.0);
+    expect(r.occasion.ceiling).toBe(4.0);
+    expect(r.occasion.lines).toEqual(["slides at a dressy occasion: held to 4.0"]);
+    expect(r.occasion.status).toBe("slides at a dressy occasion: held to 4.0");
+    setSlidesOnceV16(false);
+    const v15 = scored(scoreParts(STREET, opts));
+    expect(r.occasion.lines).toEqual(v15.occasion.lines);
+    expect(r.occasion.status).toBe(v15.occasion.status);
+    expect(r.occasion.deduction).toBe(v15.occasion.deduction);
+  });
+
+  it("SHO-14 · D5 · stained or worn slides still block the 5.0 floor, as on v15", () => {
+    for (const condition of ["stained", "pilled_or_worn"]) {
+      const rd = Rd(top("graphic_tee", "red", 5), bottom("jeans", "black", "skinny"), { ...SLIDES, condition });
+      const r = scored(scoreParts(rd));
+      expect(r.engine).toBe("v16");
+      expect([condition, r.overall, r.rawScore, r.floored, r.careOrStrain]).toEqual([condition, 4.5, 4.425, false, true]);
+      setSlidesOnceV16(false);
+      const v15 = scored(scoreParts(rd));
+      setSlidesOnceV16(true);
+      expect([condition, v15.overall, v15.floored, v15.careOrStrain]).toEqual([condition, 4.5, false, true]);
+    }
+  });
+
   it("F2.1 · scoring a slides reading twice gives the same result and leaves the reading untouched", () => {
     const reading = Rd(GTEE4, WJEANS, SLIDES);
     const before = structuredClone(reading);

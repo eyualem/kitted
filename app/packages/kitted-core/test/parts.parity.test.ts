@@ -181,7 +181,8 @@ describe("parts engine parity (parts_proto.py v16)", () => {
     // every default case is v16's; and the slides-once readings (slides_shape_paper.py's OUTFITS, as rules_conformance.py
     // builds them: add those cases' readings verbatim) are parity cases at their own occasion with no tune
     const defaults = P.cases.filter((c) => !c.tune && !("error" in c.expected));
-    expect(defaults.filter((c) => c.expected["engine"] !== "v16").length).toBe(0);
+    // (unscored cases carry no engine in Python or the core: D2, settled by the test writer)
+    expect(defaults.filter((c) => c.expected["overall"] !== null && c.expected["engine"] !== "v16").length).toBe(0);
     const RC = loadJSON<{ cases: { id: string; reading: Reading; occasion: string }[] }>("rules_conformance.json");
     const ids = ["SHO-14-street", "SHO-14-sneakers-win", "SHO-14-going-out", "SHO-14-interview", "SHO-14-drag", "SHO-14-no-shape",
       "SHO-14-no-shape-shorts", "SHO-14-lounge", "PRO-17-slides-wide", "SHO-14-cargos", "SHO-14-blazer"];
