@@ -21,6 +21,7 @@ export type ScoringEngine = 'parts' | 'v4';
 // Inside 'parts', the casual-fits update (parts v14, #335) has its own switch: CASUAL_FITS_V14 in
 // packages/kitted-core/src/parts.ts (true = v14, false = back to v13's numbers for every scoring path).
 // The hoodie layer (parts v15, #385) has one too: HOODIE_LAYER_V15 there (true = v15, false = back to v14's numbers).
+// Slides charged once (parts v16, #450, #452) has the third: SLIDES_ONCE_V16 there (true = v16, false = back to v15's numbers).
 export const DEFAULT_SCORING_ENGINE: ScoringEngine = 'parts';
 let engineNow: ScoringEngine = DEFAULT_SCORING_ENGINE;
 export const scoringEngine = (): ScoringEngine => engineNow;

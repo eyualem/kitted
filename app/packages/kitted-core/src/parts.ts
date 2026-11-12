@@ -208,6 +208,15 @@ export interface PartsTune {
   /** COL-13: the one outer layer in the bottoms' color family (not NO_TIE_IN, not bright, not sweats or tailoring), with a top
    *  of another family between them, earns this on Color. */
   cp8: number;
+  // ---- v16 (#450, #452; off / 0 in v1-v15)
+  /** SHO-14: slides out of the house are charged once, on Shoes (slidesOnce): the clothes are judged without the shoes. */
+  sk1_once: boolean;
+  /** SHO-14: a shape credit on Proportions gives slides this back on Shoes (never under a tailored jacket). */
+  sk1_shape_soft: number;
+  /** STR-5: slides, or the shoes slidesOnce set aside, can finish the streetwear shape, with their own line. */
+  sk1_shape_ok: boolean;
+  /** What-if, off in every engine: slides also finish the hoodie layer and the shorts shape on the whole reading. */
+  sk1_shape_more: boolean;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -311,6 +320,8 @@ export interface PartsData {
   rollback?: { engine: string; label: string; version: string; tune: PartsTune };
   /** v15: what the second switch (HOODIE_LAYER_V15) rolls back to: v14's engine, label, version and tune. */
   rollback14?: { engine: string; label: string; version: string; tune: PartsTune };
+  /** v16: what the third switch (SLIDES_ONCE_V16) rolls back to: v15's engine, label, version and tune. */
+  rollback15?: { engine: string; label: string; version: string; tune: PartsTune };
 }
 
 /** A check that moved a part. `points` is Python's round(delta, 3). */
@@ -494,6 +505,8 @@ interface PartsOutfit {
   occasion: string;
   /** v14: the full kit's hold was set (scoreParts lowers it by what Fit or Proportions lost). */
   kitHold?: boolean;
+  /** v16: the clothes scored without their shoes by slidesOnce (Python's tune key `_bare`). */
+  bare?: boolean;
 }
 
 // ================================================================= the engine
@@ -533,6 +546,10 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
   const SWEAT_TOPS = PS("SWEAT_TOPS"), SWEAT_BOTTOMS = PS("SWEAT_BOTTOMS"); // v14 LNG-9: a matched sweatsuit
   const TUCKABLE_LAYERS = PS("TUCKABLE_LAYERS"); // v14 PRO-4 (#336): button-ups worn open
   const HL_LAYERS = PS("HL_LAYERS"), HL_TOPS = PS("HL_TOPS"); // v15 PRO-17: a hoodie layered over a tee
+  // v16 SHO-14: where slides keep their dressy hold through slidesOnce, the line SK1c gives, and what counts as a shape credit
+  const DRESSY_HOLD_OCCASIONS = new Set<unknown>(["interview", "interview_corporate", "interview_tech", "event"]);
+  const SLIDES_SHAPE_LINE = "the outfit has a deliberate shape, so the slides read as a choice";
+  const shapeCredit = (r: PartReason): boolean => r.points > 0 && (r.check.slice(0, 2) === "PR" || r.check.slice(0, 2) === "PS");
   /** v10 COL-11's guard (parts_proto._loud_print): a graphic print, or a large check, floral, camo or other print.
    *  v12 (cl1_scale): a graphic print only at a medium or large print size, or with a large logo. */
   const loudPrint = (g: Garment): boolean => {
@@ -693,7 +710,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const loose = LOOSE.has(nv(B.leg_shape)) || vol >= BOXY;
     const fitted = NARROW.has(nv(B.leg_shape)) || vol <= 2;
     const sSub = S !== null ? nv(S.subcategory) : null;
-    const real = S !== null && !SLIDES.has(sSub) && (!RUNNER.has(sSub) || LOUNGE_OK.has(o.occasion));
+    const real = S !== null && (!SLIDES.has(sSub) || truthy(t.sk1_shape_more)) && (!RUNNER.has(sSub) || LOUNGE_OK.has(o.occasion));
     if (T !== null && O === null && vol3(T) >= BOXY && fitted && !loose) {
       p.add(-t.sh_roomy_fitted, "a roomy top over short, fitted shorts: it wants a fuller pair", "PS2_roomy_over_fitted");
       return p;
@@ -830,13 +847,16 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     // v3: the streetwear shape (PR4). Same top as the waist break, so it replaces PR1 when larger, never adds to it.
     const sSub = S !== null ? nv(S.subcategory) : null;
     const boxy = T !== null && (vol3(T) >= BOXY || (truthy(t.pr4_signature_v3) && ST_TOP_A.has(nv(T.subcategory)) && BULKY.has(sSub)));
+    // v16 (STR-5, SHO-14): slides, or the shoes slidesOnce set aside (always slides), can finish it, with their own line
+    const slidesShape = truthy(t.sk1_shape_ok) && (SLIDES.has(sSub) || (S === null && o.bare === true));
     if (truthy(t.pr4) && !blocked && O === null && T !== null && earns(T) && boxy && tuckedNone(T)
         && STREET_SHAPE_LENGTHS.has(nv(T.length)) && PR4_LEGS.has(leg) && STREET_SHAPE_BOTTOMS.has(nv(B.subcategory))
-        && o.det.includes("streetwear") && PR4_SHOES.has(sSub)) {
+        && o.det.includes("streetwear") && (PR4_SHOES.has(sSub) || slidesShape)) {
       const i = rewards.findIndex((x) => x[2] === "PR1_waist_break" || x[2] === "PR1b_half_tuck");
       if (i < 0 || rewards[i]![0] < t.pr4) {
         if (i >= 0) rewards.splice(i, 1);
-        rewards.push([t.pr4, "a boxy top over wide legs, finished by street sneakers: the streetwear shape", "PR4_street_shape"]);
+        rewards.push([t.pr4, slidesShape ? "a boxy top over wide legs: the shape carries it, even in slides"
+          : "a boxy top over wide legs, finished by street sneakers: the streetwear shape", "PR4_street_shape"]);
       }
     }
     // v4 (off in v1-v3): the workwear and outdoor shapes (PR5, PR6). Their layers are never PR2's short layers, so
@@ -854,7 +874,8 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     // v15 (PRO-17, #385): a hoodie or sweatshirt layered over a tee, a ribbed-band layer like the track jacket
     if (truthy(t.hl) && !blocked && full && O !== null && o.outers.length === 1 && HL_LAYERS.has(oSub) && earns(O)
         && !truthy(sl.peek) && O.length !== "below_crotch" && o.tops.length > 0
-        && o.tops.every((g) => HL_TOPS.has(nv(g.subcategory))) && !SLIDES.has(sSub)) {
+        && o.tops.every((g) => HL_TOPS.has(nv(g.subcategory))) && (!SLIDES.has(sSub) || truthy(t.sk1_shape_more))) {
+      // slides in view block it; v16's slidesOnce judges the clothes without them
       rewards.push([t.hl, `the ${rep(oSub)} layered over the ${rep(T!.subcategory)} gives it a clean shape`, "PR2h_hoodie_layer"]);
     }
     // v8: PR2b, a layer read ending at the belt over a loose leg (91% the same on 2 runs); one layer, one shape credit
@@ -1553,6 +1574,15 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
 
   // ---------------------------------------------------------------- the entry point
   function scoreParts(reading: Reading, opts: PartsOptions = {}): PartsResult {
+    if (truthy(t.sk1_once)) { // v16 (SHO-14): slides charged once, on Shoes
+      const once = slidesOnce(reading, opts);
+      if (once !== null) return once;
+    }
+    return scoreWhole(reading, opts, false);
+  }
+
+  /** parts_proto.score_parts() past the slides-once dispatch. `bare`: Python's tune key `_bare` (slidesOnce's clothes). */
+  function scoreWhole(reading: Reading, opts: PartsOptions, bare: boolean): PartsResult {
     const occasion = opts.occasion ?? "everyday";
     const boldness = opts.boldness ?? "a_little";
     const picks = opts.styles ?? null;
@@ -1565,6 +1595,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const garments = refile(prep.garments);
     const careTips = unsureCare(garments); // v7: condition reads count only when "clear"
     const o = outfit(garments, picks);
+    if (bare) o.bare = true;
     o.mirror = truthy(scene.mirror_selfie);
     o.sx = styleClash(o); // v5's SX1, read by Style and (v6) Proportions
     o.occasion = occasion;
@@ -1578,6 +1609,11 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     if (truthy(t.sk1_soft) && parts.shoes.reasons.some((r) => r.check === "SK1_slides_out")
         && !ORDER.some((k) => k !== "shoes" && parts[k].reasons.some((r) => r.points <= -1.0))) {
       parts.shoes.add(t.sk1_soft, "the rest of the outfit is clean, so the slides cost less", "SK1s_slides_soft");
+    }
+    // v16 (SHO-14), on the whole reading; slidesOnce sets its own
+    if (truthy(t.sk1_shape_soft) && parts.shoes.reasons.some((r) => r.check === "SK1_slides_out")
+        && !o.outers.some((g) => TAILORED.has(nv(g.subcategory))) && parts.proportions.reasons.some(shapeCredit)) {
+      parts.shoes.add(t.sk1_shape_soft, SLIDES_SHAPE_LINE, "SK1c_slides_shape");
     }
     const res = {} as Record<PartName, PartResult>;
     for (const k of ORDER) {
@@ -1615,8 +1651,20 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const { avg, x, floored, wsum } = combine(ps, cond, occ, occasion, careOrStrain);
     const bonus = earnedBonus(ps);
     const penalty = piledPenalty(ps);
+    const weightsUsed: Partial<Record<PartName, number>> = {};
+    for (const k of live.keys()) weightsUsed[k] = pyRound(WT[k] / wsum, 3);
+    return {
+      overall: roundHalf(x), rawScore: pyRound(x, 3), rawUnrounded: x, average: pyRound(avg, 3), averageUnrounded: avg, earnedBonus: bonus, piledPenalty: penalty,
+      version: data.label, engine: data.engine,
+      parts: res, naParts: ORDER.filter((k) => res[k].score === null), weightsUsed,
+      condition: cond, occasion: occ, floored, careOrStrain, lowest: lowestOf(live), secondLook: sl,
+      detectedStyles: o.det, styleLabel: o.label, notRated: prep.notRated, partial: prep.notRated.length > 0,
+    };
+  }
 
-    // the lowest part leads the card, with its one-line reason (ties: the heavier part)
+  /** parts_proto._lowest: the lowest part leads the card, with its one-line reason (ties: the heavier part). `live`: the
+   *  parts that scored, in part order. */
+  function lowestOf(live: Map<PartName, PartResult>): PartsLowest {
     let lowK: PartName | null = null;
     for (const k of live.keys()) {
       if (lowK === null) {
@@ -1634,14 +1682,63 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       // the founder's call (Oct 10): when every part is 7, don't name a "weakest" part
       lowest = { part: null, score: BASE, line: data.copy.solidLine };
     }
+    return lowest;
+  }
+
+  /** parts_proto._slides_once (v16, [SHO-14], #450, #452; off in v1-v15): slides out of the house are charged once, on
+   *  Shoes. The clothes are judged as if the shoes were out of the photo (so slides can't switch off a look, a shape
+   *  credit or move the outfit's dressiness), then Shoes is scored on the full reading and put back. Loungewear keeps
+   *  its own rules (slides aren't a real shoe for its hold), and slides at a dressy occasion keep their 4.0 hold.
+   *  null when it doesn't apply. The shoe comes off a new reading object: `reading` is never written to. */
+  function slidesOnce(reading: Reading, opts: PartsOptions): PartsScored | null {
+    const occasion = opts.occasion ?? "everyday";
+    const sc = (reading.scene ?? {}) as Scene & Record<string, unknown>;
+    const gs = reading.garments ?? [];
+    if (LOUNGE_OK.has(occasion) || !truthy(sc.shoes_visible === undefined ? true : sc.shoes_visible)) return null;
+    if (!gs.some((g) => SLIDES.has(nv(g.subcategory)) && g.category === "footwear")) return null;
+    if (gs.some((g) => g.category === "bottom" && LOUNGE_BOTTOMS.has(nv(g.subcategory)))) return null;
+    const full = scoreWhole(reading, opts, false);
+    const bareReading = { scene: { ...sc, shoes_visible: false }, garments: gs.filter((g) => g.category !== "footwear") } as Reading;
+    const bare = scoreWhole(bareReading, opts, true);
+    if (full.overall === null || bare.overall === null || full.parts.shoes.score === null) return null;
+    if (bare.detectedStyles.some((d) => d === "workwear" || d === "classic_prep" || d === "smart_casual")) {
+      return null; // looks that never take slides ([WRK-3], [PRP-2], [SMC-2]): judged as today
+    }
+    const fullShoes = full.parts.shoes;
+    const keep = fullShoes.reasons.filter((r) => r.check !== "SK1s_slides_soft" && r.check !== "SK1c_slides_shape");
+    const others = ORDER.filter((k) => k !== "shoes").map((k) => bare.parts[k]);
+    if (truthy(t.sk1_soft) && !others.some((v) => v.reasons.some((r) => r.points <= -1.0))) {
+      keep.push({ check: "SK1s_slides_soft", points: t.sk1_soft, line: "the rest of the outfit is clean, so the slides cost less" });
+    }
+    const tailored = gs.some((g) => g.category === "outerwear" && TAILORED.has(nv(g.subcategory)));
+    if (truthy(t.sk1_shape_soft) && !tailored && bare.parts.proportions.reasons.some(shapeCredit)) {
+      keep.push({ check: "SK1c_slides_shape", points: t.sk1_shape_soft, line: SLIDES_SHAPE_LINE });
+    }
+    let pts = 0;
+    for (const r of keep) pts += r.points;
+    const sc_ = pyMax(2.0, pyMin(9.5, BASE + pts));
+    const shoesPart: PartResult = { ...fullShoes, score: sc_, display: roundHalf(sc_), reasons: keep, na: null };
+    const parts: Record<PartName, PartResult> = { ...bare.parts, shoes: shoesPart };
+    const ps = new Map<PartName, number>();
+    const live = new Map<PartName, PartResult>();
+    for (const k of ORDER) {
+      if (parts[k].score === null) continue;
+      ps.set(k, parts[k].score!);
+      live.set(k, parts[k]);
+    }
+    const occ: PartsOccasion = { ...bare.occasion };
+    const fullCeiling = full.occasion.ceiling;
+    if (fullCeiling !== null && DRESSY_HOLD_OCCASIONS.has(occasion)) {
+      occ.ceiling = occ.ceiling === null ? fullCeiling : pyMin(occ.ceiling, fullCeiling);
+    }
+    const { avg, x, floored, wsum } = combine(ps, bare.condition, occ, occasion, bare.careOrStrain);
+    // the card's lead and the weights come from the parts as recombined, Shoes included, as scoreParts picks them
     const weightsUsed: Partial<Record<PartName, number>> = {};
     for (const k of live.keys()) weightsUsed[k] = pyRound(WT[k] / wsum, 3);
     return {
-      overall: roundHalf(x), rawScore: pyRound(x, 3), rawUnrounded: x, average: pyRound(avg, 3), averageUnrounded: avg, earnedBonus: bonus, piledPenalty: penalty,
-      version: data.label, engine: data.engine,
-      parts: res, naParts: ORDER.filter((k) => res[k].score === null), weightsUsed,
-      condition: cond, occasion: occ, floored, careOrStrain, lowest, secondLook: sl,
-      detectedStyles: o.det, styleLabel: o.label, notRated: prep.notRated, partial: prep.notRated.length > 0,
+      ...bare, parts, occasion: occ, average: pyRound(avg, 3), averageUnrounded: avg, rawScore: pyRound(x, 3), rawUnrounded: x,
+      overall: roundHalf(x), floored, earnedBonus: earnedBonus(ps), piledPenalty: piledPenalty(ps),
+      naParts: ORDER.filter((k) => parts[k].score === null), lowest: lowestOf(live), weightsUsed,
     };
   }
 
@@ -1659,14 +1756,21 @@ export const CASUAL_FITS_V14 = true;
  *  With CASUAL_FITS_V14 false, v13 wins (it never had the credit). Stored checks keep their scores until changed. */
 export const HOODIE_LAYER_V15 = true;
 
-/** The bundled data as the switches want it: v15 as generated, v14's tune (HOODIE_LAYER_V15 off), or v13's (CASUAL_FITS_V14 off). */
-export function partsDataFor(v14: boolean, v15: boolean = HOODIE_LAYER_V15): PartsData {
-  const rb = !v14 ? PARTS_DATA.rollback : !v15 ? PARTS_DATA.rollback14 : undefined;
+/** THE SWITCH for slides charged once (parts v16, #450, #452; SHO-14 in rubric/v5-styles.md). true: slides out of the
+ *  house cost once, on Shoes, and the clothes are judged as if the shoes were out of the photo, on new checks. false:
+ *  the whole app goes back to v15's numbers. With HOODIE_LAYER_V15 or CASUAL_FITS_V14 false, the older rollback wins
+ *  (neither had it). Stored checks keep their scores until changed. */
+export const SLIDES_ONCE_V16 = true;
+
+/** The bundled data as the switches want it: v16 as generated, v15's tune (SLIDES_ONCE_V16 off), v14's
+ *  (HOODIE_LAYER_V15 off) or v13's (CASUAL_FITS_V14 off); the oldest rollback asked for wins. */
+export function partsDataFor(v14: boolean, v15: boolean = HOODIE_LAYER_V15, v16: boolean = SLIDES_ONCE_V16): PartsData {
+  const rb = !v14 ? PARTS_DATA.rollback : !v15 ? PARTS_DATA.rollback14 : !v16 ? PARTS_DATA.rollback15 : undefined;
   if (!rb) return PARTS_DATA;
   return { ...PARTS_DATA, engine: rb.engine, label: rb.label, version: rb.version, tune: rb.tune };
 }
 
-let currentParts: PartsEngine = createParts(partsDataFor(CASUAL_FITS_V14, HOODIE_LAYER_V15));
+let currentParts: PartsEngine = createParts(partsDataFor(CASUAL_FITS_V14, HOODIE_LAYER_V15, SLIDES_ONCE_V16));
 
 /** The parts engine every default path uses (partsData.ts = fixtures/parts.json on the bundled v4.1 rubric), as the
  *  switch picks it. A stable object, so `engines.parts ?? defaultParts` callers follow the switch. */
@@ -1677,21 +1781,16 @@ export const defaultParts: PartsEngine = {
   scoreParts: (reading: Reading, opts?: PartsOptions) => currentParts.scoreParts(reading, opts),
 };
 
-/** Tests only: flip the switches at run time (the app reads CASUAL_FITS_V14 and HOODIE_LAYER_V15). */
-export function setCasualFitsV14(on: boolean, v15: boolean = HOODIE_LAYER_V15): void {
-  currentParts = createParts(partsDataFor(on, v15));
+/** Tests only: flip the switches at run time (the app reads CASUAL_FITS_V14, HOODIE_LAYER_V15 and SLIDES_ONCE_V16).
+ *  Each setter leaves the other switches as shipped unless told otherwise. */
+export function setCasualFitsV14(on: boolean, v15: boolean = HOODIE_LAYER_V15, v16: boolean = SLIDES_ONCE_V16): void {
+  currentParts = createParts(partsDataFor(on, v15, v16));
 }
 export function setHoodieLayerV15(on: boolean): void {
-  currentParts = createParts(partsDataFor(CASUAL_FITS_V14, on));
+  currentParts = createParts(partsDataFor(CASUAL_FITS_V14, on, SLIDES_ONCE_V16));
 }
-
-/** T93 stub (the test writer, tests first): THE SWITCH for slides charged once (parts v16, #450, #452; SHO-14). Not built:
- *  the implementer sets it to true and wires it into partsDataFor and the setters. */
-export const SLIDES_ONCE_V16: boolean = false;
-/** T93 stub: tests only, flip the slides-once switch at run time. Not built. */
 export function setSlidesOnceV16(on: boolean): void {
-  void on;
-  throw new Error("T93: not built");
+  currentParts = createParts(partsDataFor(CASUAL_FITS_V14, HOODIE_LAYER_V15, on));
 }
 
 /** parts_proto.score_parts() (engine v11) with the bundled data. Never mutates `reading`. */
