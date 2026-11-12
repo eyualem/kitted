@@ -1727,11 +1727,17 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       live.set(k, parts[k]);
     }
     const occ: PartsOccasion = { ...bare.occasion };
-    const fullCeiling = full.occasion.ceiling;
-    if (fullCeiling !== null && DRESSY_HOLD_OCCASIONS.has(occasion)) {
-      occ.ceiling = occ.ceiling === null ? fullCeiling : pyMin(occ.ceiling, fullCeiling);
+    const fc = full.occasion.ceiling;
+    if (fc !== null && DRESSY_HOLD_OCCASIONS.has(occasion) && (occ.ceiling === null || fc < occ.ceiling)) {
+      // slides keep their 4.0 hold ([OCC-3]); the card names the hold that applies (D5): the clothes' own lines
+      // (their hold line, if any, is the last) and the full reading's hold line
+      const held = full.occasion.lines[full.occasion.lines.length - 1]!;
+      occ.lines = [...(occ.ceiling !== null ? occ.lines.slice(0, -1) : occ.lines), held];
+      occ.ceiling = fc;
+      occ.status = held;
     }
-    const { avg, x, floored, wsum } = combine(ps, bare.condition, occ, occasion, bare.careOrStrain);
+    // stained or worn slides keep blocking the 5.0 floor, as on v15 (D5)
+    const { avg, x, floored, wsum } = combine(ps, bare.condition, occ, occasion, full.careOrStrain);
     // the card's lead and the weights come from the parts as recombined, Shoes included, as scoreParts picks them
     const weightsUsed: Partial<Record<PartName, number>> = {};
     for (const k of live.keys()) weightsUsed[k] = pyRound(WT[k] / wsum, 3);
@@ -1739,6 +1745,8 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       ...bare, parts, occasion: occ, average: pyRound(avg, 3), averageUnrounded: avg, rawScore: pyRound(x, 3), rawUnrounded: x,
       overall: roundHalf(x), floored, earnedBonus: earnedBonus(ps), piledPenalty: piledPenalty(ps),
       naParts: ORDER.filter((k) => parts[k].score === null), lowest: lowestOf(live), weightsUsed,
+      // D4, D5: the slides were in the photo, and their own care fault still counts
+      careOrStrain: full.careOrStrain, notRated: full.notRated, partial: full.partial,
     };
   }
 
