@@ -1776,14 +1776,22 @@ def _slides_once(reading, occasion, styles, second_look, boldness, engine, tune)
     parts = dict(bare["parts"], shoes=shoes)
     ps = {k: v["score"] for k, v in parts.items() if v["score"] is not None}
     occ = dict(bare["occasion"])
-    if full["occasion"]["ceiling"] is not None and occasion in ("interview", "interview_corporate", "interview_tech", "event"):
-        occ["ceiling"] = min(c for c in (occ["ceiling"], full["occasion"]["ceiling"]) if c is not None)
-    avg, x, floored, wsum = combine(ps, bare["condition"], occ, occasion, bare["care_or_strain"], engine, sub)
+    fc = full["occasion"]["ceiling"]
+    if (fc is not None and occasion in ("interview", "interview_corporate", "interview_tech", "event")
+            and (occ["ceiling"] is None or fc < occ["ceiling"])):
+        # slides keep their 4.0 hold ([OCC-3]); the card names the hold that applies (D5): the clothes' own lines
+        # (their hold line, if any, is the last) and the full reading's hold line
+        held = full["occasion"]["lines"][-1]
+        occ.update(ceiling=fc, lines=(occ["lines"][:-1] if occ["ceiling"] is not None else list(occ["lines"])) + [held],
+                   status=held)
+    # stained or worn slides keep blocking the 5.0 floor, as on v15 (D5)
+    avg, x, floored, wsum = combine(ps, bare["condition"], occ, occasion, full["care_or_strain"], engine, sub)
     live = {k: v for k, v in parts.items() if v["score"] is not None}
     # the card's lead and the weights come from the parts as recombined, Shoes included, as score_parts picks them
     out = dict(bare, parts=parts, occasion=occ, average=round(avg, 3), raw_score=round(x, 3), overall=round_half(x),
                floored=floored, earned_bonus=earned_bonus(ps, engine, sub), piled_penalty=piled_penalty(ps, engine, sub),
                na_parts=[k for k in PART_ORDER if parts[k]["score"] is None], lowest=_lowest(live, t),
+               care_or_strain=full["care_or_strain"], not_rated=full["not_rated"], partial=full["partial"],   # D4, D5
                weights_used={k: round((t["weights"] or WEIGHTS)[k] / wsum, 3) for k in live})
     return out
 
