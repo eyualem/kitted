@@ -13,10 +13,10 @@ const opts = { occasion: "everyday", styles: [["streetwear", 0.5], ["minimalist"
 describe("the hoodie-layer switch (parts v15)", () => {
   afterEach(() => setHoodieLayerV15(HOODIE_LAYER_V15));
 
-  it("is on: v15 is bundled and v14 (parts data 1.13.0) is its rollback", () => {
+  it("is on: v16 (v15 plus slides charged once, #452) is bundled and v14 (parts data 1.13.0) is the hoodie switch's rollback", () => {
     expect(HOODIE_LAYER_V15).toBe(true);
     expect(CASUAL_FITS_V14).toBe(true);
-    expect(defaultParts.data.engine).toBe("v15");
+    expect(defaultParts.data.engine).toBe("v16");
     expect(partsDataFor(true, false).engine).toBe("v14");
     expect(partsDataFor(true, false).version).toBe("1.13.0");
     expect(partsDataFor(true, false).tune.hl).toBe(0);

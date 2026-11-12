@@ -100,7 +100,7 @@ function mismatch(c: PartsCase): string | null {
   return out.length ? `${label}: ${out.join(" | ")}` : null;
 }
 
-describe("parts engine parity (parts_proto.py v15)", () => {
+describe("parts engine parity (parts_proto.py v16)", () => {
   it("has every case, from the same prototype and data version", () => {
     expect(P.cases.length).toBe(P.counts.cases);
     expect(P.cases.length).toBeGreaterThan(10000);
@@ -109,7 +109,7 @@ describe("parts engine parity (parts_proto.py v15)", () => {
     expect(P.parts_proto_sha256).toBe(PARTS_DATA.sourceSha256);
   });
 
-  it("matches every v15 case exactly", () => {
+  it("matches every v16 case exactly", () => {
     const bad: string[] = [];
     for (const c of P.cases) {
       if (c.tune) continue;
@@ -120,8 +120,10 @@ describe("parts engine parity (parts_proto.py v15)", () => {
     expect(bad).toEqual([]);
   });
 
-  it("matches the tune variants (v1 to v14, the v4, v5, v6, v8, v9, v10, v11, v12, v13, v14 and v15 what-ifs): tuning is a data change", () => {
+  it("matches the tune variants (v1 to v15, the v4 to v15 what-ifs and any v16 what-if): tuning is a data change", () => {
     const tuned = P.cases.filter((c) => c.tune);
+    // v15 is what SLIDES_ONCE_V16 rolls back to (T93), so it is parity-tested as a tune, like v13 and v14
+    expect(Object.keys(P.tunes)).toEqual(expect.arrayContaining(["v13", "v14", "v15"]));
     expect(new Set(tuned.map((c) => c.tune))).toEqual(new Set(Object.keys(P.tunes)));
     const bad: string[] = [];
     for (const c of tuned) {
