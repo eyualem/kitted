@@ -2,7 +2,7 @@
 
 Written by the session; tests written and locked by the test writer. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** `<commit SHA>` · <date> · tests: `<path>`, `<path>`
+**Lock:** `9448a4117a8cd76101b58c7c4dd17df335bc2a5d` · Nov 12, 2026 · tests: `extraction-test/rules_conformance.py` (cases `SHO-14-*`, `PRO-17-slides`, `PRO-17-slides-wide`, `STR-5-slides-line`, and `line_is` in `F`/`check`), `app/packages/kitted-core/test/slidesOnceSwitch.test.ts`, `app/packages/kitted-core/test/rulesConformance.test.ts` (`line_is`, `SHO-14 · the slides-once cases reach the core …`), `app/packages/kitted-core/test/parts.parity.test.ts` (`Parity · the T93 slides readings …`); stubs: `app/packages/kitted-core/src/parts.ts`, `src/index.ts`
 
 All values below are from `extraction-test/slides_shape_paper.py` version V6 (= v16), engine run with the stated test profile (no styles given, boldness `a_little`, no second look) unless a case says otherwise. Readings: reuse `slides_shape_paper.py`'s OUTFITS readings (built from `rules_conformance.py`'s helpers `top/outer/bottom/shoe/Rd/mod` and its `SLIDES`, `CHUNKY`, `WJEANS`, `DJEANS`, `TEE`, `TROUSERS`). New Python cases go in `rules_conformance.py` (so they also reach `rulesConformance.test.ts` through `rules_conformance.json`); switch tests in a new `app/packages/kitted-core/test/slidesOnceSwitch.test.ts`.
 
