@@ -1,5 +1,5 @@
 // O2 · Pick looks (02 D2, update Oct 9, DECISIONS-LOG #173): 7 style tiles drawn in code, up to 3 picks, a
-// "Something else?" tile for his own words, Continue · N of 3 (no Not sure since Nov 11, DECISIONS-LOG #448: setup
+// "Something else?" tile for his own words, Continue · N of 3 (no Not sure since Nov 11, DECISIONS-LOG #449: setup
 // is 7 taps to the camera). The picks wait in kv until About you ends
 // setup (onboarding.looks, onboarding.otherStyle). Since T39 (OS3) the question is a plain title and line, not a Kit
 // bubble.

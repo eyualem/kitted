@@ -1,0 +1,23 @@
+# Core flow (/test-build): a fit check end to end on the beta. Stylist (demo 252: beta, nothing used yet), a sample
+# photo through the same route the camera uses, and a score card comes back. Nothing for sale on the way.
+# The reading is the demo's recorded one (no AI call, nothing spent).
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/core-fit-check.yaml (Metro running)
+# Matching: the score card is ONE VoiceOver element ("Fit check, … Score … out of 10 …"), so it's matched whole.
+appId: com.trykitted.kitted
+name: core · a fit check gets a score
+---
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "252"
+- extendedWaitUntil:
+    visible: "Stylist"
+    timeout: 90000
+- runFlow:
+    file: ../common/beta-sample-photo.yaml
+    env:
+      N: "4"
+- extendedWaitUntil:
+    visible: "Fit check, .*Score .* out of 10.*"
+    timeout: 30000
+- runFlow: ../common/beta-nothing-to-buy.yaml

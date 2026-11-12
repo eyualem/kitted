@@ -30,7 +30,7 @@ const life = setUpT39Tests();
 
 // ── The words (TESTING.md, exact) ─────────────────────────────────────────────────────────────────────────────────
 const OLD_LOOKS_PROMPT = 'Which of these would you actually wear? Tap up to 3.';
-const LOOKS_TITLE = "What's your style?"; // founder, Nov 11 (#447)
+const LOOKS_TITLE = "What's your style?"; // founder, Nov 11 (#448)
 const LOOKS_LINE = "Pick up to 3 looks you like. Today's outfit comes next.";
 const ABOUT_TITLE = 'About you';
 const NAME_Q = 'What should Kit call you?';
@@ -240,7 +240,7 @@ describe('OS3.3 · Looks has a title and a line', () => {
     }
   });
 
-  it('OS3.3 · the tiles, Something else? and Continue behave as before, and there is no Not sure (#448)', async () => {
+  it('OS3.3 · the tiles, Something else? and Continue behave as before, and there is no Not sure (#449)', async () => {
     let r = await mount(<PickLooksScreen />);
     // Nothing picked, no words: Continue is off.
     const cont = () => screen.getByRole('button', { name: /^Continue/ }) as unknown as Node;
