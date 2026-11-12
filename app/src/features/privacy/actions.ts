@@ -7,6 +7,7 @@ import { clearDeviceId } from '@/data/secure';
 import { DEMO_ENABLED } from '@/demo/config';
 import { setAppAppearance } from '@/design-system';
 import { fitCheck } from '@/features/fitcheck/session';
+import { DEFAULT_APPEARANCE } from '@/features/settings/prefs';
 import { setOnboarded } from '@/state/appGate';
 import { realPrivacyFiles } from './files';
 import { deleteAllData, deleteAllPhotos, forgetFacts, withdrawConsent } from './wipe';
@@ -40,8 +41,8 @@ export async function runForgetFacts() {
 export async function runDeleteAllData(): Promise<void> {
   await quiet();
   await deleteAllData({ store, files: realPrivacyFiles, clearDeviceId, demo: DEMO_ENABLED });
-  // The saved appearance was in kv (applied at launch); the running app drops it now too.
-  if (Platform.OS !== 'web') setAppAppearance('system');
+  // The saved appearance was in kv (applied at launch); the running app drops it now too, back to a fresh install's Light.
+  if (Platform.OS !== 'web') setAppAppearance(DEFAULT_APPEARANCE);
   await setOnboarded(false);
   // As onboarding's end does in reverse (ConsentScreen): "/" sends him through the gate, now to Welcome.
   router.replace('/');

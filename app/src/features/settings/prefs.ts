@@ -13,8 +13,14 @@ export const APPEARANCES: readonly AppAppearance[] = ['system', 'light', 'dark']
 const APPEARANCE_LABEL: Record<AppAppearance, StringKey> = { system: 'appearance.system', light: 'appearance.light', dark: 'appearance.dark' };
 export const appearanceLabel = (a: AppAppearance): string => t(APPEARANCE_LABEL[a]);
 
+/**
+ * What a fresh install gets (founder, Nov 11: "make the app have light mode by default"). Only a stored choice
+ * overrides it, and System is a choice like the others: someone who picked it keeps following the phone.
+ */
+export const DEFAULT_APPEARANCE: AppAppearance = 'light';
+
 export function parseAppearance(raw: string | null): AppAppearance {
-  return raw === 'light' || raw === 'dark' ? raw : 'system';
+  return raw === 'light' || raw === 'dark' || raw === 'system' ? raw : DEFAULT_APPEARANCE;
 }
 
 export async function loadAppearance(store: KittedStore): Promise<AppAppearance> {
@@ -31,10 +37,14 @@ export async function saveAppearance(store: KittedStore, choice: AppAppearance):
   apply(choice);
 }
 
-/** At launch (boot), unless a demo theme is forced. */
+/**
+ * At launch (boot), unless a demo theme is forced. Always applied, even the default and System: the phone may be dark,
+ * and the app reads the phone until it is told otherwise. Boot finishes before the launch screen lifts, so the first
+ * screen the user sees is already in his appearance. The default is applied, never written to the store.
+ */
 export async function applySavedAppearance(store: KittedStore): Promise<AppAppearance> {
   const choice = await loadAppearance(store);
-  if (choice !== 'system') apply(choice);
+  apply(choice);
   return choice;
 }
 

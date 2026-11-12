@@ -1,7 +1,8 @@
 // theme.tsx — ThemeProvider + useTheme() (03 §9 dark mode, §5 accessibility rules).
 //
-// - Follows the system appearance via useColorScheme(). The in-app Appearance setting
-//   (You › Settings › Appearance: System / Light / Dark) should call setAppAppearance() below,
+// - Follows the system appearance via useColorScheme(), and is told otherwise at boot: a fresh install starts in
+//   Light, not System (features/settings/prefs.ts DEFAULT_APPEARANCE). The in-app Appearance setting
+//   (You › Settings › Appearance: System / Light / Dark) calls setAppAppearance() below,
 //   which uses Appearance.setColorScheme so native chrome (tab bar, sheets, glass, alerts)
 //   switches too, and useColorScheme() then reports the override.
 // - Increase Contrast = AccessibilityInfo "darker system colors" → tokens' high-contrast set.
