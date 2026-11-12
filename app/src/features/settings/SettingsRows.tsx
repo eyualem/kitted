@@ -16,7 +16,7 @@ import { AccountSection } from '@/features/account/AccountRows';
 import { usePaywallOn } from '@/features/paywall/switch';
 import { mailtoUrl, openLink, openManageSubscription } from '@/features/settings/actions';
 import { appVersion, planShortName, restorePurchases, restoreToast, versionLine } from '@/features/settings/plan';
-import { APPEARANCES, appearanceLabel, loadAppearance, saveAppearance } from '@/features/settings/prefs';
+import { APPEARANCES, DEFAULT_APPEARANCE, appearanceLabel, loadAppearance, saveAppearance } from '@/features/settings/prefs';
 import { LinkRow, PickerRow, Section } from '@/features/settings/SettingsList';
 import { isProNow, usePlan } from '@/features/settings/usePlan';
 import { showToast } from '@/features/toast/toast';
@@ -38,7 +38,7 @@ export interface SettingsRowsProps {
 export function SettingsRows({ notificationsBuilt = NOTIFICATIONS_BUILT, links = BUILD_LINKS, onLayout }: SettingsRowsProps = {}): JSX.Element {
   const plan = usePlan();
   const paywall = usePaywallOn();
-  const [appearance, setAppearance] = useState<AppAppearance>('system');
+  const [appearance, setAppearance] = useState<AppAppearance>(DEFAULT_APPEARANCE);
   useEffect(() => {
     void loadAppearance(store).then(setAppearance);
   }, []);

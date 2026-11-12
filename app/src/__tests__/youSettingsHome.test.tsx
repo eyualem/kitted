@@ -659,20 +659,20 @@ describe('SY1.3 · each row does what the Settings row did', () => {
     given('free');
     // The pill by its label: once open, the menu's options are buttons inside the row too (round 1 dispute).
     const pill = () => within(screen.getByTestId('you-row-appearance')).getByLabelText(/^Appearance, /);
-    // Unset: System.
+    // Unset (a fresh install): Light.
     await renderRows();
-    await waitFor(() => expect(label(pill())).toBe('Appearance, System'));
+    await waitFor(() => expect(label(pill())).toBe('Appearance, Light'));
     expect(role(pill())).toBe('button');
-    // Open and close without a pick: nothing written, still System.
+    // Open and close without a pick: nothing written, still Light.
     await fireEvent.press(pill());
     await fireEvent.press(pill());
     expect(await mockStore.getKv(KV.appearance)).toBeNull();
-    expect(label(pill())).toBe('Appearance, System');
-    // Pick Light: shown at once, saved.
-    await fireEvent.press(pill());
-    await fireEvent.press(screen.getByLabelText('option:Light'));
     expect(label(pill())).toBe('Appearance, Light');
-    await waitFor(async () => expect(await mockStore.getKv(KV.appearance)).toBe('light'));
+    // Pick System: shown at once, saved (System stays available).
+    await fireEvent.press(pill());
+    await fireEvent.press(screen.getByLabelText('option:System'));
+    expect(label(pill())).toBe('Appearance, System');
+    await waitFor(async () => expect(await mockStore.getKv(KV.appearance)).toBe('system'));
     await screen.unmount();
 
     // Saved Dark before You opens: Dark.
@@ -681,12 +681,18 @@ describe('SY1.3 · each row does what the Settings row did', () => {
     await waitFor(() => expect(label(pill())).toBe('Appearance, Dark'));
     await screen.unmount();
 
-    // After "Delete all my data" (the store wiped): System again.
+    // A saved System is kept, not turned into Light.
+    await mockStore.setKv(KV.appearance, 'system');
+    await renderRows();
+    await waitFor(() => expect(label(pill())).toBe('Appearance, System'));
+    await screen.unmount();
+
+    // After "Delete all my data" (the store wiped): Light again, the fresh-install default.
     await mockStore.wipe();
     await renderRows();
     // Let the mount's load settle before reading.
     await waitFor(async () => expect(await mockStore.getKv(KV.appearance)).toBeNull());
-    await waitFor(() => expect(label(pill())).toBe('Appearance, System'));
+    await waitFor(() => expect(label(pill())).toBe('Appearance, Light'));
   });
 
   it('SY1.3 · Manage, Restore and the mail and web rows do what Settings did', async () => {
@@ -798,7 +804,7 @@ describe('SY1.6 · VoiceOver reads each row as one button with its value', () =>
     }
     // Appearance: the pill is the button, read with its value.
     const pill = within(screen.getByTestId('you-row-appearance')).getByRole('button');
-    expect(label(pill)).toBe('Appearance, System');
+    expect(label(pill)).toBe('Appearance, Light');
     // Section labels are headers.
     expect(roleAbove(screen.getByText('Help & about'))).toBe('header');
     expect(roleAbove(screen.getByText('Subscription'))).toBe('header');

@@ -1,4 +1,5 @@
 // You › Settings, Plan & usage and Notifications (02 Y4–Y6): the stored preferences and the plan and usage lines.
+import { Appearance } from 'react-native';
 import { US_EASTERN } from '@kitted/core';
 import { createMemoryStore } from '@/data/memoryStore';
 import { KV } from '@/data/store';
@@ -6,7 +7,7 @@ import type { ProfileRow } from '@/data/types';
 import { mailtoUrl } from '@/features/settings/actions';
 import { currentPlan, planShortName, planStatus, restorePurchases, restoreToast, scoringVersion, usageLines, versionLine } from '@/features/settings/plan';
 import {
-  DEFAULT_IDEA_TIME, IDEA_TIMES, ideaTimeLabel, ideaTimeOptions, loadAppearance, loadNotificationPrefs, parseAppearance, parseIdeaTime,
+  DEFAULT_APPEARANCE, DEFAULT_IDEA_TIME, applySavedAppearance, IDEA_TIMES, ideaTimeLabel, ideaTimeOptions, loadAppearance, loadNotificationPrefs, parseAppearance, parseIdeaTime,
   saveAppearance, saveIdeaTime, saveUnits, setNotificationPref,
 } from '@/features/settings/prefs';
 import { parseZonedIso } from '@/services/clock';
@@ -17,13 +18,42 @@ const profile = (): ProfileRow => ({
 });
 
 describe('appearance', () => {
-  it('defaults to System and keeps a choice', async () => {
+  afterEach(() => jest.restoreAllMocks());
+
+  it('starts on Light for a fresh install and keeps whatever he saved', async () => {
     const store = createMemoryStore();
-    expect(await loadAppearance(store)).toBe('system');
+    expect(DEFAULT_APPEARANCE).toBe('light');
+    expect(await loadAppearance(store)).toBe('light');
     await saveAppearance(store, 'dark');
     expect(await store.getKv(KV.appearance)).toBe('dark');
     expect(await loadAppearance(store)).toBe('dark');
-    expect(parseAppearance('sepia')).toBe('system');
+    // System is a choice too: once saved it stays System, it is not folded into the default.
+    await saveAppearance(store, 'system');
+    expect(await loadAppearance(store)).toBe('system');
+    expect(parseAppearance(null)).toBe('light');
+    expect(parseAppearance('sepia')).toBe('light');
+    expect(parseAppearance('system')).toBe('system');
+    expect(parseAppearance('dark')).toBe('dark');
+  });
+
+  it('at launch a fresh install is set to Light, and a saved Dark or System is respected', async () => {
+    const set = jest.spyOn(Appearance, 'setColorScheme').mockImplementation(() => {});
+    // Fresh: the phone may be dark, the app opens in Light (native chrome too).
+    const fresh = createMemoryStore();
+    expect(await applySavedAppearance(fresh)).toBe('light');
+    expect(set).toHaveBeenLastCalledWith('light');
+    // The default is applied, not written: nothing is stored until he picks.
+    expect(await fresh.getKv(KV.appearance)).toBeNull();
+
+    const dark = createMemoryStore();
+    await dark.setKv(KV.appearance, 'dark');
+    expect(await applySavedAppearance(dark)).toBe('dark');
+    expect(set).toHaveBeenLastCalledWith('dark');
+
+    const system = createMemoryStore();
+    await system.setKv(KV.appearance, 'system');
+    expect(await applySavedAppearance(system)).toBe('system');
+    expect(set).toHaveBeenLastCalledWith('unspecified');
   });
 });
 

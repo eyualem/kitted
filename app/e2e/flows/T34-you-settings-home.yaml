@@ -66,7 +66,7 @@ name: SY1 · You is the settings home
     env:
       SCREEN: "84"
 - extendedWaitUntil:
-    visible: "Appearance, System"
+    visible: "Appearance, Light"
     timeout: 90000
 # Where at=settings lands (round 1, REPORT.md Disputes): this page is too short for the rows' top to reach the top of
 # the visible area, so it opens at the end: every row down to the version line is on screen without a scroll, and
@@ -82,7 +82,7 @@ name: SY1 · You is the settings home
 - assertVisible:
     text: "Plan & usage, Free plan"
     below:
-      text: "Appearance, System"
+      text: "Appearance, Light"
 - assertVisible:
     text: "Privacy & data"
     below:
@@ -126,11 +126,11 @@ name: SY1 · You is the settings home
 - assertVisible:
     text: "Back up and sync, Off · on this iPhone only"
     above:
-      text: "Appearance, System"
+      text: "Appearance, Light"
 - assertVisible:
     text: "Plan & usage, Free plan"
     below:
-      text: "Appearance, System"
+      text: "Appearance, Light"
 # Demo 270 (Pro bought, the paywall on): the Pro plan and the Subscription rows.
 - runFlow:
     file: ../common/open-demo.yaml
@@ -247,19 +247,19 @@ name: SY1 · You is the settings home
     retryTapIfNoChange: true
 - scrollUntilVisible:
     element:
-      text: "Appearance, System"
+      text: "Appearance, Light"
     direction: DOWN
     timeout: 15000
-# Appearance: pick Dark, the row reads it; then back to System so later flows start as they expect.
-- tapOn: "Appearance, System"
+# Appearance: pick Dark, the row reads it; then back to Light (a fresh install's default) so later flows start as they expect.
+- tapOn: "Appearance, Light"
 - tapOn: "Dark"
 - extendedWaitUntil:
     visible: "Appearance, Dark"
     timeout: 10000
 - tapOn: "Appearance, Dark"
-- tapOn: "System"
+- tapOn: "Light"
 - extendedWaitUntil:
-    visible: "Appearance, System"
+    visible: "Appearance, Light"
     timeout: 10000
 # Demo 86 (Notifications, under You): its back button reads You.
 - runFlow:
@@ -284,13 +284,13 @@ name: SY1 · You is the settings home
     timeout: 90000
 - scrollUntilVisible:
     element:
-      text: "Appearance, System"
+      text: "Appearance, Light"
     direction: DOWN
     timeout: 15000
 - assertNotVisible:
     text: "Privacy & data"
     above:
-      text: "Appearance, System"
+      text: "Appearance, Light"
 - scrollUntilVisible:
     element:
       text: "Privacy & data"
@@ -307,7 +307,7 @@ name: SY1 · You is the settings home
     env:
       SCREEN: "84"
 - extendedWaitUntil:
-    visible: "Appearance, System"
+    visible: "Appearance, Light"
     timeout: 90000
 - assertVisible: "Plan & usage, Free plan"
 - assertVisible: "Privacy & data"
