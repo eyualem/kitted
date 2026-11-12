@@ -65,7 +65,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import rubric as R  # noqa: E402  (v4.1: the live helpers)
 
-VERSION = "parts-proto-15 (Oct 28, 2026)"
+VERSION = "parts-proto-16 (Nov 11, 2026)"
 VERSIONS = {"v1": "parts-proto-1 (Oct 10, 2026)", "v2": "parts-proto-2 (Oct 10, 2026)",
             "v3": "parts-proto-3 (Oct 10, 2026)", "v4": "parts-proto-4 (Oct 11, 2026)",
             "v5": "parts-proto-5 (Oct 11, 2026)", "v6": "parts-proto-6 (Oct 11, 2026)",
@@ -464,7 +464,7 @@ TUNE["v14"] = dict(TUNE["v13"], sh_prop=True, sh_shape=1.0, sh_layer=1.0, sh_cap
                    sweatsuit_sign=True, sweatsuit_shape=1.0, look_sign=True, kit_cap=6.0, kit_fit_rate=0.5,
                    sw1_blocks_credit=True, pr1_tucked_layer=True, peek_clearly_only=True)
 VERSIONS["v14"] = "parts-proto-14 (Oct 17, 2026)"
-# v15 (Oct 28, THE DEFAULT; DECISIONS-LOG #385; the founder's call on his Oct 28 re-check: a zip hoodie layered over a tee should earn
+# v15 (Oct 28, the default until Nov 12; DECISIONS-LOG #385; the founder's call on his Oct 28 re-check: a zip hoodie layered over a tee should earn
 # something; paper test ../hoodie_layer_paper.py). v14 plus one knob (0 in v1-v14):
 #   hl (PRO-17): a hoodie or sweatshirt worn as the one layer (HL_LAYERS, category outerwear: the reader files a zip hoodie
 #     open over a top there) over a tee or graphic tee (HL_TOPS, every top under it) and full legs earns this on
@@ -484,6 +484,26 @@ for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "
     TUNE[_e].update(_OFF15)
 TUNE["v15"] = dict(TUNE["v14"], hl=1.5, cp8=0.5)
 VERSIONS["v15"] = "parts-proto-15 (Oct 28, 2026)"
+# v16 (Nov 12, THE DEFAULT; DECISIONS-LOG #450 the paper test, #452 the founder's yes; [SHO-14]; paper test
+# ../slides_shape_paper.py, whose version V6 this engine reproduces exactly). Slides out of the house were charged up to
+# five times in a streetwear fit (Shoes, the streetwear shape, top to toe, the look, the dressiness): an oversized graphic
+# tee, wide jeans and slides scored 6.5, the same with chunky sneakers 8.0. v15 plus three knobs (off in v1-v15):
+#   sk1_once (SHO-14): slides out of the house are charged once, on Shoes (_slides_once). The clothes are judged as if the
+#     shoes were out of the photo (so slides can't switch off a look, a shape credit or move the outfit's dressiness), and
+#     Shoes is scored on the whole reading and put back. Never with loungewear bottoms (their hold reads slides as no real
+#     shoe), at home or the gym (slides are fine there), when the clothes alone read workwear, classic prep or smart
+#     casual (looks that never take slides), and slides at an interview or event keep their 4.0 hold.
+#   sk1_shape_soft (SHO-14): when a shape credit fired on Proportions ([PRO-*], [PRO-15]'s shorts shape too), slides get
+#     this back on Shoes: the shape makes them read as a choice. Never under a tailored jacket.
+#   sk1_shape_ok (STR-5): slides, or the shoes _slides_once set aside, can finish the streetwear shape, with its own line
+#     (it never claims street sneakers).
+#   sk1_shape_more stays off in every engine (the paper test's V3: slides also finishing the hoodie layer and the shorts
+#     shape on the whole reading; v16's hoodie layer comes from judging the clothes without the shoes instead).
+_OFF16 = dict(sk1_once=False, sk1_shape_soft=0.0, sk1_shape_ok=False, sk1_shape_more=False)
+for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15"):
+    TUNE[_e].update(_OFF16)
+TUNE["v16"] = dict(TUNE["v15"], sk1_once=True, sk1_shape_soft=1.0, sk1_shape_ok=True)
+VERSIONS["v16"] = "parts-proto-16 (Nov 11, 2026)"
 HL_LAYERS = {"hoodie", "sweatshirt"}                             # v15 PRO-17: worn as the layer (outerwear) ...
 HL_TOPS = {"tee", "graphic_tee"}                                 # ... over a tee
 SPORT_SNEAKERS = {"basketball_sneaker", "chunky_sneaker", "retro_runner", "canvas_sneaker", "low_profile_sneaker",
@@ -700,7 +720,7 @@ def _shorts_proportions(o, t):
     loose = B.get("leg_shape") in R.LOOSE or vol >= 4
     fitted = B.get("leg_shape") in NARROW or vol <= 2
     s_sub = S.get("subcategory") if S is not None else None
-    real = S is not None and (s_sub not in SLIDES or bool(t.get("sk1_shape_more"))) and (s_sub not in RUNNER or o.get("occasion") in LOUNGE_OK)
+    real = S is not None and (s_sub not in SLIDES or t["sk1_shape_more"]) and (s_sub not in RUNNER or o.get("occasion") in LOUNGE_OK)
     if T is not None and O is None and (T.get("volume") or 3) >= 4 and fitted and not loose:
         p.add(-t["sh_roomy_fitted"], "a roomy top over short, fitted shorts: it wants a fuller pair", "PS2_roomy_over_fitted")
         return p
@@ -835,15 +855,18 @@ def _proportions(o, sl, t):
     S_sub = S.get("subcategory") if S is not None else None
     boxy = T is not None and ((T.get("volume") or 3) >= 4 or (                     # what-if knob, off: a hoodie,
         t["pr4_signature_v3"] and T.get("subcategory") in R.ST_TOP_A and S_sub in BULKY))   # sweatshirt or graphic tee at 3
+    # v16 (STR-5, SHO-14): slides, or the shoes _slides_once set aside (always slides), can finish it, with their own line
+    slides_shape = t["sk1_shape_ok"] and (S_sub in SLIDES or (S is None and bool(t.get("_bare"))))
     if (t["pr4"] and not blocked and O is None and T is not None and _earns(T) and boxy
             and T.get("tucked") in (None, "none", "na") and T.get("length") in ("cropped", "at_belt", "mid_fly")
             and leg in t["pr4_legs"] and B.get("subcategory") in ("jeans", "cargos") and "streetwear" in o["det"]
-            and (S_sub in t["pr4_shoes"] or (t.get("sk1_shape_ok") and (S_sub in SLIDES or (S is None and t.get("_bare")))))):   # what-if (off): slides keep the shape
+            and (S_sub in t["pr4_shoes"] or slides_shape)):
         pr1 = next((x for x in rewards if x[2] in ("PR1_waist_break", "PR1b_half_tuck")), None)
         if pr1 is None or pr1[0] < t["pr4"]:
             if pr1 is not None:
                 rewards.remove(pr1)
-            rewards.append((t["pr4"], "a boxy top over wide legs, finished by street sneakers: the streetwear shape",
+            rewards.append((t["pr4"], "a boxy top over wide legs: the shape carries it, even in slides" if slides_shape
+                            else "a boxy top over wide legs, finished by street sneakers: the streetwear shape",
                             "PR4_street_shape"))
     # v4 (off in v1-v3): the workwear and outdoor silhouettes (PR5, PR6). Their layers are never PR2's short layers,
     # so one layer earns one shape credit. NOTE: trail_shoe (PR6) and track_jacket (below) aren't values of the live
@@ -861,9 +884,10 @@ def _proportions(o, sl, t):
         rewards.append((t["pr2"], f"a short {o_sub.replace('_', ' ')} over full legs: a clean, strong shape", "PR2_short_layer"))
     if (t["hl"] and not blocked and full and O is not None and len(o["outers"]) == 1 and o_sub in HL_LAYERS and _earns(O)
             and not sl["peek"] and O.get("length") != "below_crotch" and o["tops"]
-            and all(g.get("subcategory") in HL_TOPS for g in o["tops"]) and (S_sub not in SLIDES or t.get("sk1_shape_more"))):
+            and all(g.get("subcategory") in HL_TOPS for g in o["tops"]) and (S_sub not in SLIDES or t["sk1_shape_more"])):
         rewards.append((t["hl"], f"the {o_sub} layered over the {T.get('subcategory').replace('_', ' ')} gives it a clean shape",
-                        "PR2h_hoodie_layer"))                # v15 (PRO-17): a ribbed-band layer, like the track jacket
+                        "PR2h_hoodie_layer"))                # v15 (PRO-17): a ribbed-band layer, like the track jacket. Slides
+                                                             # in view block it; v16's _slides_once judges the clothes without them
     if (t["pr2b"] and not blocked and leg in R.LOOSE and O is not None and not tucked_layer and not o_tailored
             and o_sub not in (SHORT_LAYERS | t["short_layers_extra"]) and O.get("length") in ("cropped", "at_belt")
             and _earns(O) and not sl["peek"]
@@ -1541,13 +1565,13 @@ def _occasion(o, occasion, t):
     return out
 
 
-def _tune(engine="v15", tune=None):
+def _tune(engine="v16", tune=None):
     t = dict(TUNE[engine])
     t.update(tune or {})
     return t
 
 
-def earned_bonus(part_scores, engine="v15", tune=None):
+def earned_bonus(part_scores, engine="v16", tune=None):
     """v2's bonus after the average (0 in v1). Every part's excess over `over` (7.5) is summed, the largest single
     excess is dropped (one strong part is already in the average), `rate` of the rest is added, capped at `cap`,
     and the whole bonus fades in as the weakest part goes from gate[0] to gate[1] (6.5 -> 7.0): a weak part turns it
@@ -1561,7 +1585,7 @@ def earned_bonus(part_scores, engine="v15", tune=None):
     return round(min(e["cap"], raw) * gate, 4)
 
 
-def piled_penalty(part_scores, engine="v15", tune=None):
+def piled_penalty(part_scores, engine="v16", tune=None):
     """v8 candidate (None in v1-v7): the mirror of the earned bonus. Each part's shortfall under `under` is summed,
     the largest is dropped (one weak part is already in the average), `rate` of the rest is taken off, capped at `cap`:
     separate problems in different parts add up instead of averaging away."""
@@ -1572,7 +1596,7 @@ def piled_penalty(part_scores, engine="v15", tune=None):
     return round(min(e["cap"], e["rate"] * sum(sh[1:])), 4)
 
 
-def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v15", tune=None):
+def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v16", tune=None):
     """The steps after the parts: weighted average of the live parts (weights rescaled over the parts present),
     plus v2's earned bonus, minus condition, minus the occasion deduction, held under the occasion ceiling, the 5.0
     floor at everyday/class/home/gym (not when a stain, wear or strain fault fired), the 3.0 floor. Returns
@@ -1611,17 +1635,18 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v15", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v16", tune=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
-    _second_look). engine: "v15" (v14 + a hoodie or sweatshirt layered over a tee, PRO-17; default), "v14" (the casual and athletic
+    _second_look). engine: "v16" (v15 + slides charged once, on Shoes, SHO-14; default), "v15" (v14 + a hoodie or sweatshirt
+    layered over a tee, PRO-17, and the layer's color tie-in, COL-13), "v14" (the casual and athletic
     fits), "v13" (v12 + wrinkled knit tops cost 0.2 on a minimal, smart casual or prep look),
     "v12" (v11 + the founder's Oct 14 calls: small bright graphics aren't loud, fitted legs are
     slim and cost 1.0, light on light, wrinkles by garment and look), "v11" (v10 + the covered base top and skinny joggers), "v10" (v9 + the creators' rules), "v9" (v8 + four consensus fixes), "v8" (the gold-set retune), "v7" (condition reads count only on "clear" garments), "v6" (KD-3/5/16 fixed), "v5" (the style-crossing pass), "v4" (the style fairness pass), "v3" (the streetwear pass), "v2" (parts-proto-2,
     exactly) or "v1" (parts-proto-1, exactly); tune: optional overrides of TUNE[engine]
     (for the ablations). Returns every part with its reasons and tips, the NA parts, condition, occasion and the final score."""
     t = _tune(engine, tune)
-    if t.get("sk1_once"):                                            # what-if (off; slides-shape paper test, Nov 11)
+    if t["sk1_once"]:                                                # v16 (SHO-14): slides charged once, on Shoes
         once = _slides_once(reading, occasion, styles, second_look, boldness, engine, tune)
         if once is not None:
             return once
@@ -1648,11 +1673,11 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
             r["points"] <= -1.0 for k, v in parts.items() if k != "shoes" for r in v.reasons):
         parts["shoes"].add(t["sk1_soft"], "the rest of the outfit is clean, so the slides cost less",
                            "SK1s_slides_soft")              # v8 candidate: slides under an otherwise clean outfit
-    if (t.get("sk1_shape_soft") and any(r["check"] == "SK1_slides_out" for r in parts["shoes"].reasons)
+    if (t["sk1_shape_soft"] and any(r["check"] == "SK1_slides_out" for r in parts["shoes"].reasons)
             and not any(g.get("subcategory") in TAILORED for g in o["outers"])
             and any(r["points"] > 0 and r["check"][:2] in ("PR", "PS") for r in parts["proportions"].reasons)):
         parts["shoes"].add(t["sk1_shape_soft"], "the outfit has a deliberate shape, so the slides read as a choice",
-                           "SK1c_slides_shape")             # what-if (off; slides-shape paper test, Nov 11)
+                           "SK1c_slides_shape")             # v16 (SHO-14), on the whole reading; _slides_once sets its own
     res = {k: (v.result(lo=1.0) if k == "cohesion" else v.result()) for k, v in parts.items()}
     live = {k: r for k, r in res.items() if r["score"] is not None}
     if not live:
@@ -1706,7 +1731,7 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
 
 
 def _slides_once(reading, occasion, styles, second_look, boldness, engine, tune):
-    """What-if (off; slides-shape paper test, Nov 11): slides out of the house are charged once, on Shoes. The clothes are
+    """v16 ([SHO-14], DECISIONS-LOG #450, #452; off in v1-v15): slides out of the house are charged once, on Shoes. The clothes are
     judged as if the shoes were out of the photo (so slides can't switch off a look, a shape credit or move the outfit's
     dressiness), then Shoes is scored on the full reading and put back. Loungewear keeps its own rules (slides aren't a
     real shoe for its hold), and slides at a dressy occasion keep their 4.0 hold. Returns None when it doesn't apply."""
@@ -1736,7 +1761,7 @@ def _slides_once(reading, occasion, styles, second_look, boldness, engine, tune)
         keep.append({"check": "SK1s_slides_soft", "points": t["sk1_soft"],
                      "line": "the rest of the outfit is clean, so the slides cost less"})
     tailored = any(g.get("subcategory") in TAILORED for g in gs if g.get("category") == "outerwear")
-    if (t.get("sk1_shape_soft") and not tailored
+    if (t["sk1_shape_soft"] and not tailored
             and any(r["points"] > 0 and r["check"][:2] in ("PR", "PS") for r in others["proportions"]["reasons"])):
         keep.append({"check": "SK1c_slides_shape", "points": t["sk1_shape_soft"],
                      "line": "the outfit has a deliberate shape, so the slides read as a choice"})
