@@ -3114,3 +3114,32 @@ Contradictions settled and decisions changed during the build. Newest last.
 449. **Setup's style screen has no "Not sure"; a fresh install is 7 taps to the camera (founder, Nov 11, in chat: "remove the not sure here", then "dont make continue always work. let it stay the way it was", then "Yes, 7 taps").** Continue stays off until he picks a look or types his words, so every profile starts with a look or his words, and the only way past Looks is a pick plus Continue: one tap more than before. `specs.md` F1 and F1.1 (6 → 7 taps) and `specs/onboarding-screens.md` OS3, the taps path and OS5.5 changed with his yes. The T39 tests (OS3.2, OS3.3, F1.1) and the four Maestro setup flows (fresh, later, not-now, under-18) now pick Streetwear and tap `Continue · 1 of 3`; OS3.3 checks there's no `Not sure`. The copy deck keeps `onb.looks.notSure` (unused) until the deck is next regenerated. Profiles from before keep their empty picks (the general standard), and "Not sure" elsewhere (Going for, a piece's Fit or Leg, ask cards) is unchanged. **Trade-off, told to him before:** someone with no style in mind now has to pick a tile or type something to move on.
 
 454. **The beta's privacy page and the first outside testers (Nov 11; the founder: "invite these guys as beta testers", then "Publish as written").** Apple needs a public privacy link before external TestFlight testers. The landing page (with its own privacy page) isn't merged, so the app's part of its Oct 19 draft was checked against what ships today (Gemini reads the blurred photo, OpenAI gets typed questions, NWS weather, the server keeps only daily counts and spend; no analytics or sign-in in this build), the website section cut, and published on Firebase Hosting (prod project, default site) at kitted-a5b45.web.app/privacy; source in `legal/`. Contact and TestFlight feedback: the founder's own email (his pick). trykitted.com, which he owns, isn't connected yet; the TestFlight link can move to it later. App Store Connect: Test Information filled, review contact his, no sign-in needed, review notes say to use an 18+ birth year; external group "Friends beta" with 7 testers (their emails stay in App Store Connect, never in the repo); build 0.1.0 (3) submitted to Beta App Review. Still empty: the app's own `PRIVACY_URL` and `SUPPORT_EMAIL` (`app/src/config/links.ts`), so You's privacy row stays hidden in this build.
+
+## Nov 12 · What a fit check really costs, and the plan to cut it
+
+455. **A check costs about 1.73¢ live today, not 1.08¢, and about 3.49¢ from Jan 1. Two invisible-to-rare changes bring it to 1.70¢ in 2027.** Asked by the cost session (the founder thinks margins are too narrow; Gemini 3.8 Flash doubles on Jan 1). No paid AI calls: the live server's own log (184 finished calls, Oct 17 – Nov 12, read with `gcloud logging read`; uids never printed), an offline replay on today's engine and the saved test answers. `extraction-test/cost_paper.py` prints every number. The plan is `market/ai-costs.md` §7.
+    - **The read is paid twice:**
+      - 29 of 36 live checks (all 6 in November) sent the main read twice: the same photo, both run to the end, both billed.
+      - The phone's 5 s backup fires because no piece reaches it in time on the server path, and the first read is never stopped.
+      - Dev builds go straight to Google, where pieces stream early; that's why it went unseen. The emulator's relay test (P6/P7) passes, so the live path differs.
+    - **The second look thinks:**
+      - 55 of 77 live look calls carry hidden thinking tokens (median 201) despite `thinkingBudget: 0`; look1 shows the same (197 of 450).
+      - So it costs 0.84¢ a check in 2027, not 0.46¢.
+      - On today's engine (v15) it moved the shown score on 1 of 34 of his stored checks and 1 of 150 batch-1 photo-runs, −0.5 each.
+    - **Corrections to §2 and §5:**
+      - The shorter v4.1 format saves ~0.38¢ in 2027, not 0.5¢.
+      - Caching saves nothing: the read's fixed text is 863 tokens, under the implicit-cache minimum, and the live log has 0 cached tokens.
+      - Smaller close-up pixels save nothing: ~1,090 tokens per image at the default resolution.
+    - **The plan, ranked (2027 ¢ per new photo):**
+      1. T27, the server turns away a duplicate read on a busy check id: −0.95¢, nothing visible, a deploy only.
+      2. T68, drop the second look: −0.84¢, rarely visible, the founder's call (he approved shipping it, #236).
+      3. T69, a gold run in December (~$5) of two-letter field names without "na" fields: ~−0.25¢, an estimate from character counts.
+      4. T69 again, close-ups at medium media resolution: ~−0.16¢.
+      5. T76, the closet call on Flex: −0.25¢, but Flex aims at 1–15 minutes, so pieces would fill in late. Visible, his call.
+    - **Kept in reserve:** GPT-6 Luna for the read (0.31¢ a photo after 1–3). #284 stands; reopen only if subscribers don't cover the AI bill at 60 days.
+    - **Ruled out:** folding the closet call into the read (about no net saving, and it slows the card); the closet call on Flash-Lite (worse names); lower Pro caps (after T27 and T68 the monthly plan profits even at the cap).
+    - **Result (2027, AI only):**
+      - typical Pro (60 photos, 120 questions) $2.14 → $1.06 → $0.67 a month;
+      - the yearly plan keeps $0.70 → $1.77 → $2.17 of its $2.83;
+      - Pro at the cap every day $10.78 → $5.42 → $3.44.
+    - **Founder's to-do:** Y30 (the deploy and the second look), Y31 (the December gold run, and whether Closet may fill in late).

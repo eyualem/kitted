@@ -11,6 +11,8 @@
 | Batch or Flex (any model) | half price | half price | | Slower, best-effort; fine for calls nobody waits on |
 
 ## 2. Each call the app makes
+> **Nov 12 (§7):** live, a check costs about 1.73¢, not 1.08¢. Most checks pay for the read twice (the 5 s backup), and the second look's calls think. Use §7's numbers.
+
 | Call | When | Tokens in / out (median, measured) | Now | From Jan 1, 2027 |
 |---|---|---|---|---|
 | **Scoring read** (photo + 2 close-ups) | every new photo | 4,118 / 764 | 0.60¢ | 1.19¢ |
@@ -105,3 +107,92 @@ The cheap Lunas score outfits as well as Gemini. So the model lever is real mone
 - **A 1-week trial** costs ~$0.53 of AI per trial user who doesn't convert (half the 14-day trial). 5–9 day trials convert 37% vs 42% for longer ones (RevenueCat 2026).
 - **Open (CLAUDE.md to-do, P2):** a yearly plan, the Pro cap, the free tier, the founding offer.
 
+
+## 7. Cutting the cost of a fit check (Nov 12, 2026; DECISIONS-LOG #455)
+*Measured for free: the live server's own call log (184 finished calls, Oct 17 – Nov 12, all from the founder's own TestFlight and Release use), an offline replay of saved answers on today's engine, and the saved test answers (`extraction-test/cost_paper.py` prints every number below; no AI calls). Prices from §1; "2027" means from Jan 1, 2027. Margins count the AI bill only, not hosting or Apple's yearly fee.*
+
+### What a check really costs (corrects §2)
+- **The live server pays for the main read twice on most checks.**
+  - 29 of 36 real checks sent it twice, including all 6 in November. Both copies were the same photo and both ran to the end, so both were billed.
+  - The 5-second backup read fires when no piece has reached the phone yet. On the server path, the first read's pieces evidently don't reach the phone in time, and the phone hanging up doesn't stop the first read.
+  - On the founder's dev builds (straight to Google) pieces stream early, so the backup is rare there. That's why no one saw it.
+- **The second look costs about twice what §2 says.** 55 of its 77 live calls "thought" (a median of 201 hidden tokens) even though thinking is off in the request. The saved look1 test shows the same thing (197 of 450 calls). That makes it about 0.21¢ a call, 0.42¢ for the pair today, and **0.84¢ in 2027**.
+- **Real cost per new photo:** 1.73¢ today on average (median 1.69¢), against the 1.08¢ in §2. **In 2027 that's about 3.49¢:** read 1.19 + the duplicate read 0.95 + second look 0.84 + closet call 0.51.
+- **Three corrections to §2 and §5:**
+  - The shorter answer format saves about 0.38¢ in 2027, not 0.5¢ (the Oct 6 runs went from 762 to 259 output tokens).
+  - Prompt caching saves nothing here. The read's fixed text is 863 tokens, under Google's minimum for automatic caching (1,024–4,096), and the live log shows 0 cached tokens on every call.
+  - Making the close-ups smaller in pixels saves nothing. Gemini 3 bills about 1,090 tokens per image at its default resolution, whatever the size.
+
+### The plan, ranked (cents saved per new photo in 2027)
+1. **Pay for the read once (−0.95¢).**
+   - **What changes:** the server turns away a second read on a check that's already being read. The phone's backup copy then simply loses, and the first answer wins as it does today. The server log also notes each read's number on its check, so the backup rate stays measured. Then find out why pieces don't reach the phone before 5 s (the server holding the stream back, or the Release build's download), so the pills fill in as they used to.
+   - **What he'd notice:** nothing. Possibly the reading card's pieces appearing one by one again, if the second fix lands.
+   - **Risk:** low. A truly stuck read is no longer rescued by its copy; the 14 s give-up still ends it, and the slowest live read so far took 11.7 s.
+   - **Proof:** server tests in the emulator (free). After the deploy (his OK), the live log shows one read per check for his next 5 checks.
+   - **Ships:** as a server deploy, no new app build, so it protects the beta testers at once. Task T27.
+2. **Drop the second look (−0.84¢).**
+   - **What changes:** no more U and L calls for new photos. Old checks keep their stored answers, so their scores don't move.
+   - **What he'd notice:** almost never anything. On today's engine it changed the shown score on 1 of his 34 real checks and on 1 of 150 test reads, each by half a point. Those were a tee peeking under a hoodie (−0.5) and loose jeans dragging on slides; without the second look the engine falls back on the read's own hem answer.
+   - **Risk:** low. It's a rule he approved shipping (#236), so it's his call.
+   - **Proof:** done (`cost_paper.py`, part 1).
+   - **Ships:** in the next TestFlight build. Task T68, after his yes.
+3. **A shorter answer, same questions (about −0.25¢, an estimate).**
+   - **What changes:** the read answers the same v3 questions with two-letter field names and skips "na" fields; code maps it back to v3 before scoring. Field names are 58% of the answer's characters and "na" fields 23%, so the answer shrinks to about 44% of its characters.
+   - **What he'd notice:** nothing, if it passes.
+   - **Risk:** medium. A format change can shift readings, as v4.1 did.
+   - **Proof:** one gold-set run. About $2.50 for 450 reads before Dec 31, about $5 after, so it's worth running in December. It needs bars written before the run: same photo within 0.5 at least as often as today, panel agreement and his 20 ratings no worse, and each field agreeing with today's read at least as often as today's read agrees with itself (~90%). Task T69.
+4. **Close-ups at medium resolution (about −0.16¢).**
+   - **What changes:** the two close-ups are sent at Gemini's medium setting (560 tokens each instead of ~1,090); the main photo stays at full resolution.
+   - **What he'd notice:** nothing, if it passes.
+   - **Risk:** medium. The close-ups are what fixed boots read as slides (#104).
+   - **Proof:** a second arm of the same gold run (+~$2.50). Task T69.
+5. **The closet call on Google's half-price Flex tier (−0.25¢).**
+   - **What changes:** the closet call goes through Flex, which costs half but aims to answer within 1–15 minutes and can be turned away when Google is busy.
+   - **What he'd notice:** his pieces would land in Closet minutes after the card instead of seconds. That's a visible change and his taste call.
+   - **Proof:** about 10 timed Flex calls (≈$0.03, his OK). Task T76, only if he's fine with the delay.
+
+**Not worth doing:**
+- Caching: nothing to cache (see above).
+- Smaller close-up pixels: no saving.
+- Folding the closet call into the read: it saves the photo's tokens but adds as many output tokens, and it slows the card.
+- The closet call on Flash-Lite: it names clothes worse (#278), and naming is the closet call's whole job.
+- Lower Pro caps: after 1–2 the monthly plan makes money even at the cap, and the cap's words are already approved.
+
+**Kept in reserve: the read on GPT-6 Luna** (a further −1.14¢; 0.31¢ a photo after 1–3).
+- **Why not now:** it names clothes worse (75% vs 85%), it means a new consent screen and Data table (they name Google), and the founder closed it (#284).
+- **When to reopen:** only if subscribers don't cover the AI bill at 60 days, which is the bar in specs.md.
+
+### The result (2027 prices; Pro after Apple's 15%: $8.49 monthly, $2.83 a month on the yearly plan)
+- **Per new photo:**
+  - as it runs today: 3.49¢
+  - after 1–2: **1.70¢**
+  - after 1–3: about 1.45¢
+  - after all five: about 1.04¢
+- **A free user's whole allowance** (7 checks + 3 re-checks, 30 questions): $0.36 → $0.18 after 1–2 → $0.11 after all.
+- **Typical Pro** (60 photos, 120 questions a month):
+
+  | | AI a month | Monthly plan keeps | Yearly plan keeps |
+  |---|---|---|---|
+  | Today | $2.14 | $6.36 (75%) | $0.70 (25%) |
+  | After 1–2 | $1.06 | $7.43 (87%) | $1.77 (63%) |
+  | After all five | $0.67 | $7.83 (92%) | $2.17 (76%) |
+
+- **Pro at the cap every day** (5 checks + 5 re-checks, 30 questions):
+
+  | | AI a month | Monthly plan | Yearly plan |
+  |---|---|---|---|
+  | Today | $10.78 | −$2.29 | −$7.95 |
+  | After 1–2 | $5.42 | +$3.08 | −$2.58 |
+  | After all five | $3.44 | +$5.06 | −$0.60 |
+
+  Few will do that every day; the $25-a-day spend cap and analytics (T91) show if they do.
+- **How many free users one subscriber pays for** (his monthly margin over one free user's whole allowance):
+  - today: 2 per yearly subscriber, 18 per monthly one
+  - after 1–2: 10 yearly, 41 monthly
+  - after all five: 19 yearly, 68 monthly
+
+### Order and timing
+- **Now:** T27 is a server deploy and needs no new app build.
+- **Next TestFlight build:** T68, after the founder's yes.
+- **December:** the gold run (T69), to pay half price before Jan 1. A format that passes ships as its own build task.
+- **Last, if at all:** Flex (T76).
