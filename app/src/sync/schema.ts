@@ -131,6 +131,8 @@ export const KV_LOCAL: readonly string[] = [
   // When Closet was last opened (its badge) and the first-visit mark (SY2, features/closet/arrivals.ts): this phone's,
   // never backed up; "Delete all my data" empties them with the rest of the kv table.
   'closet.lastOpened', 'closet.firstVisit',
+  // When he last had the Stylist thread in front of him (features/stylist/arrival.ts): what moves in is what's newer; this phone's.
+  'stylist.seenUntil',
 ];
 // account.*: who is signed in on this phone (with the email) and the save offer's state (10-onboarding.md): per device.
 // idea.touched.<id>: he changed that day's card on this phone, so a fresher forecast keeps his outfit (#338); a day old
