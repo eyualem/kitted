@@ -168,7 +168,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 79, name: 'Which one is you?', id: 'S23', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:42:00', href: '/stylist' },
   // You tab (Oct 14): Y2 Style profile, Y3 What your stylist knows, and the fact sheet on a guess (screen 17 is Y1).
   { n: 80, name: 'Style profile', id: 'Y2', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/profile', under: '/you' },
-  { n: 81, name: 'What your stylist knows', id: 'Y3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/knows', under: '/you' },
+  { n: 81, name: 'What your stylist knows', id: 'Y3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/knows', under: '/you/privacy' },
   { n: 82, name: 'Fact sheet · a guess', id: 'Y3f', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/sheets/fact/F9', under: '/you/knows' },
   // You tab (Oct 14; T34): You at its settings rows, Plan & usage (one check used) and Notifications during a Pro trial.
   { n: 84, name: 'You · settings rows', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings' },

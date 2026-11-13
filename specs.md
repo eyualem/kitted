@@ -125,7 +125,7 @@ Every past check with its photo, score and fixes; a look's page with "Show in ch
 - F8.1 Past scores stay visible forever, free, never blurred.
 
 ### F9. You
-The settings home, named You, with no gear and no separate Settings page (`specs/setup-and-you.md`): Style profile (name, looks 1·2·3, fit), What Kit knows (each fact with its source, removable), today's checks, then the settings rows: Notifications, Appearance, Plan & usage, Privacy & data ("See what I send" shows the real blurred copy; "Delete all my data"), and Help & about.
+The settings home, named You, with no gear and no separate Settings page (`specs/setup-and-you.md`): Style profile (name, looks 1·2·3, fit), today's checks, then the settings rows: Notifications, Appearance, Plan & usage, Privacy & data ("See what I send" shows the real blurred copy; "What Kit knows" lists each fact with its source, removable; "Delete all my data"), and Help & about.
 - F9.1 "Delete all my data" (and "Delete account and all data" when signed in) removes everything on the phone and on our server, with no way back.
 - F9.2 Picked looks change the order of fixes and advice, never a score.
 
