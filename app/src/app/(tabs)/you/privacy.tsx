@@ -1,5 +1,6 @@
 // Y7 · Privacy & data (02-screens.md; revised copy DECISIONS-LOG #246, mockups/theme-round2.html → Settings, Privacy):
-// the honest promise, "See what I send" (the face-blurred copy his last check sent), the "Score my fits" switch (off
+// the honest promise, "See what I send" (the face-blurred copy his last check sent), "What Kit knows" (the saved facts,
+// moved here from You on Nov 12: he can still see and delete them), the "Score my fits" switch (off
 // withdraws consent at once; on goes through the consent sheet), his photos' count and size, then the three deletes,
 // each confirmed with the spec's dialog (Cancel is the default). All local, so it works offline.
 import { router, useLocalSearchParams } from 'expo-router';
@@ -115,6 +116,7 @@ export default function PrivacyDataScreen() {
 
       <Section footer={t('privacy.consentFooter')}>
         <LinkRow key="sent" title={t('privacy.seeSent')} onPress={() => router.push('/you/sent')} />
+        <LinkRow key="knows" testID="privacy-row-knows" title={t('knows.title')} onPress={() => router.push('/you/knows')} />
         <ToggleRow key="consent" title={t('privacy.consentToggle')} detail={t('privacy.consentSub', { provider })} value={consentOn} onChange={onToggle} disabled={busy || !profile} hint={t(consentOn ? 'privacy.a11y.consentOffHint' : 'privacy.a11y.consentOnHint')} />
         <ValueRow key="photos" label={t('privacy.storage')} value={storageText(usage)} spoken={t('privacy.a11y.storage', { label: t('privacy.storage'), value: storageText(usage) })} />
       </Section>
