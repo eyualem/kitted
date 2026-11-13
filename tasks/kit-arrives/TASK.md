@@ -1,6 +1,6 @@
 # kit-arrives: Kit's messages fade and rise in
 
-Normal task, from the founder's words in chat (Nov 12). No spec file; the log entry is #456.
+Normal task, from the founder's words in chat (Nov 12). No spec file; the log entry is #458.
 
 ## Plan
 Kit's new messages in the Stylist thread fade in while rising 8 pt (250 ms, 100 ms apart), a plain fade with Reduce Motion. Only messages he hasn't seen move; his own, and Past chats, never do.

@@ -1,21 +1,20 @@
 // Y1 · You (02 D17, revised Oct 14 in mockups/theme-round2.html, DECISIONS-LOG #246; SY1 in specs/setup-and-you.md,
 // #405): "how your stylist sees you", and the home of every setting. His style card (looks in pick order, basics in one
-// quiet line), the plan row on Pro, what the stylist knows, today's check (with Check my fit or Re-check, #370), then
-// the settings rows (features/settings/SettingsRows.tsx) and the version line. No gear, no separate Settings page: a
-// link that opened Settings opens You at its rows (`/you?at=settings`). No stats, no body, no copper here (copper is
-// for score movement, #231). The ScrollView is the screen's first view so the iOS 26 tab bar shrinks on scroll.
+// quiet line), the plan row on Pro, today's check (with Check my fit or Re-check, #370), then the settings rows
+// (features/settings/SettingsRows.tsx) and the version line. No gear, no separate Settings page: a link that opened
+// Settings opens You at its rows (`/you?at=settings`). What Kit knows isn't here: it's a row in Privacy & data (founder,
+// Nov 12). No stats, no body, no copper here (copper is for score movement, #231). The ScrollView stays the screen's
+// first view (the large title collapses with it); the tab bar itself never shrinks (founder, Nov 12).
 import { useCallback, useContext, useEffect, useRef, type RefObject } from 'react';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { HeaderHeightContext } from 'expo-router/build/react-navigation/elements';
 import { Pressable, ScrollView, View, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { Icon, KButton, KCard, KText, MonoLabel, TextLink, WovenLabel, opacity, radius, space, useTheme } from '@/design-system';
+import { Icon, KButton, KCard, KText, MonoLabel, WovenLabel, opacity, radius, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ProfileRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { quota } from '@/features/fitcheck/session';
-import { FactCard } from '@/features/you/FactRows';
-import { FACTS_ON_YOU, liveFacts } from '@/features/you/facts';
 import { StyleTile, StyleTileGrid } from '@/features/you/StyleTile';
 import { basicsLine, blankProfile, picksOf, styleCardSpoken } from '@/features/you/profile';
 import { todayAction } from '@/features/you/today';
@@ -27,15 +26,14 @@ import { SettingsRows } from '@/features/settings/SettingsRows';
 import { goToStylist } from '@/router/stylistAction';
 
 export default function YouScreen() {
-  const { colors, isAccessibilitySize } = useTheme();
+  const { colors } = useTheme();
   const isPro = useIsPro();
   const { at } = useLocalSearchParams<{ at?: string }>();
   const profile = useLive(['profile'], () => store.profile.get('me'), []);
-  const facts = useLive(['facts'], async () => liveFacts(await store.facts.all()), []);
   const usage = useLive(['usage', 'fitChecks'], () => quota.snapshot(), [isPro]);
   const scroll = useRef<ScrollView>(null);
   const land = useLandAtRows(at === 'settings', scroll);
-  if (profile === undefined || !facts || !usage) return null;
+  if (profile === undefined || !usage) return null;
   return (
     <ScrollView
       ref={scroll}
@@ -55,22 +53,6 @@ export default function YouScreen() {
         <StyleCard p={profile ?? blankProfile(0)} />
       </View>
       {usage.purchased ? <PlanRow /> : null}
-      <View testID="you-knows" style={{ gap: space.s, marginTop: space.xs }}>
-        {/* At the accessibility sizes the link goes under the header instead of squeezing beside it. */}
-        <View
-          style={
-            isAccessibilitySize
-              ? { alignItems: 'flex-start', gap: space.xs, paddingHorizontal: space.xs }
-              : { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: space.m, paddingHorizontal: space.xs }
-          }
-        >
-          <View style={{ flexShrink: 1 }} accessibilityRole="header">
-            <MonoLabel>{t('you.knows')}</MonoLabel>
-          </View>
-          {facts.length > 0 ? <TextLink title={t('you.seeAll', { n: facts.length })} onPress={() => router.push('/you/knows')} compact /> : null}
-        </View>
-        <FactCard facts={facts.slice(0, FACTS_ON_YOU)} />
-      </View>
       <TodayCard s={usage} />
       <SettingsRows onLayout={land.onRowsLayout} />
     </ScrollView>
