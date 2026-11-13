@@ -194,9 +194,9 @@
       <div class="phone-wrap"><div class="phone" data-dir="a"></div></div>
       <button type="button" class="restart" data-restart="a">Start again</button>
       <div class="notes">
-        <p><span class="k">What happens.</span> Two outfits, no names. Tap the one that's more you, 6 times. The first 4 rounds show all 8 looks, Tailored included; rounds 5 and 6 put his winners against each other, so the top three come out in order. Then the reveal names them.</p>
+        <p><span class="k">What happens.</span> Two outfits, no names. Tap the one that's more you, up to 8 times: 4 first-round pairs (all 8 looks, Tailored included), 2 semifinals, a final and a match for 3rd. Every first-round winner plays again. Then the reveal names his top 3.</p>
         <ul>
-          <li>Taps on this step: <b>7</b> (6 picks + Continue). To the camera: <b>12</b> (today 7).</li>
+          <li>Taps on this step: <b>9</b> (8 picks + Continue). To the camera: <b>14</b> (today 7).</li>
           <li>Best for "I don't know the names". Most fun. The reveal is the moment people screenshot.</li>
           <li>Costs the most time for people who already know their style.</li>
         </ul>
@@ -224,7 +224,7 @@
       <div class="notes">
         <p><span class="k">What happens.</span> The tiles stay. A new row above them, "Not sure? Try this or that", opens A's game. The reveal's Continue moves on; "Change picks" lands back on the grid with his three filled in.</p>
         <ul>
-          <li>Taps if he knows his style: <b>2</b>, still 7 to the camera. If he plays: <b>8</b> (13 to the camera).</li>
+          <li>Taps if he knows his style: <b>2</b>, still 7 to the camera. If he plays: <b>10</b> (15 to the camera).</li>
           <li>The game goes only to people who were stuck. "Tell me in your words" stays.</li>
           <li>Risk: people who'd enjoy the game may not open it. Testers will show us whether the row gets noticed.</li>
         </ul>
@@ -239,10 +239,10 @@
         <table>
           <thead><tr><th></th><th>A · This or that</th><th>B · One of three</th><th>C · Grid + door</th></tr></thead>
           <tbody>
-            <tr><td>Taps to the camera (today 7)</td><td class="n">12</td><td class="n">9</td><td class="n">7, or 13 if he plays</td></tr>
+            <tr><td>Taps to the camera (today 7)</td><td class="n">14</td><td class="n">9</td><td class="n">7, or 15 if he plays</td></tr>
             <tr><td>Who plays</td><td>Everyone</td><td>Everyone</td><td>Only people who tap the row</td></tr>
             <tr><td>Style names during the game</td><td>Hidden until the reveal</td><td>Hidden until the reveal</td><td>Hidden in the game, shown on tiles</td></tr>
-            <tr><td>How good the top three is</td><td>Good: winners meet again, so 1·2·3 come out in order</td><td>Rough: 1st is solid, 2nd and 3rd are guesses</td><td>Same as A when played, his own picks otherwise</td></tr>
+            <tr><td>How good the top three is</td><td>Good: a bracket, so every first-round winner plays again</td><td>Rough: 1st is solid, 2nd and 3rd are guesses</td><td>Same as A when played, his own picks otherwise</td></tr>
             <tr><td>Fixes "doesn't know the names"</td><td>Yes</td><td>Yes</td><td>If he opens it</td></tr>
             <tr><td>Fixes "makes up his own"</td><td>Partly: the reveal's "Change picks" keeps the words box</td><td>Partly, same way</td><td>Partly: the words box stays on the grid</td></tr>
             <tr><td>Size of the change</td><td>New game and reveal screens, grid kept for Change</td><td>Same, a three-across card</td><td>The same new screens plus one row on today's grid</td></tr>
@@ -265,7 +265,7 @@
       <div>
         <h2 class="sec">Calls for you after testing</h2>
         <ul class="plain">
-          <li>Settled: A for everyone (Nov 12), and an 8th look, Tailored (spec approved Nov 13). The taps to the camera (about 12) change in the style game's spec.</li>
+          <li>Settled: A for everyone (Nov 12), and an 8th look, Tailored (spec approved Nov 13). The taps to the camera (about 14) change in the style game's spec. Nov 13: the first version's ranking buried round 1's winner (that's how Streetwear lost to Vintage sport); A is now a proper bracket.</li>
           <li>Drawings or real outfit photos in the game. Drawings cost $0 and match the app; photos may judge taste better, but they need rights or friends' permission.</li>
           <li>The words: "This or that?", "Tap the one that's more you.", "Here's your style", "Not sure? Try this or that".</li>
           <li>Whether the game should also come back later on You's Style profile ("Retake").</li>
@@ -317,36 +317,24 @@
   const chevR = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
   const cardsIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="8" height="14" rx="2"/><rect x="13" y="5" width="8" height="14" rx="2"/><path d="M7 9.5v5M17 9.5v5" stroke-linecap="round"/></svg>';
 
-  // ---------- A's game: six this-or-that rounds ----------
-  // Rounds 1–4 pair up all eight looks (Tailored and Classic prep never meet in round 1, they look alike);
-  // rounds 5–6 match the strongest pair that hasn't met. A win is +1, "Neither" is −0.5 to both.
-  function duelNext(g) {
-    const r = g.rounds.length;
-    if (r < 4) return [['streetwear', 'minimalist'], ['workwear', 'smart_casual'], ['outdoor', 'classic_prep'], ['tailored', 'vintage_sport']][r];
-    const rank = ranking(g);
-    // The strongest pair that hasn't met: the pair whose weaker look scores highest, then by the better rank.
-    const met = (a, b) => g.rounds.some((x) => x.pair.includes(a) && x.pair.includes(b));
-    const sc = scores(g);
-    const pairs = [];
-    for (let i = 0; i < rank.length; i++) for (let j = i + 1; j < rank.length; j++) if (!met(rank[i], rank[j])) pairs.push([rank[i], rank[j], Math.min(sc[rank[i]], sc[rank[j]]), i + j]);
-    pairs.sort((p, q) => q[2] - p[2] || p[3] - q[3]);
-    return pairs.length ? [pairs[0][0], pairs[0][1]] : [rank[0], rank[1]];
-  }
-  function scores(g) {
-    const score = Object.fromEntries(ORDER.map((s) => [s, 0]));
-    g.rounds.forEach((x) => { if (x.win) score[x.win] += 1; else x.pair.forEach((s) => (score[s] -= 0.5)); });
-    return score;
-  }
-  function ranking(g) {
-    const score = Object.fromEntries(ORDER.map((s) => [s, 0]));
-    const last = Object.fromEntries(ORDER.map((s) => [s, -1]));
-    g.rounds.forEach((x, i) => { if (x.win) { score[x.win] += 1; last[x.win] = i; } else x.pair.forEach((s) => (score[s] -= 0.5)); });
-    const h2h = (a, b) => { for (let i = g.rounds.length - 1; i >= 0; i--) { const x = g.rounds[i]; if (x.pair.includes(a) && x.pair.includes(b) && x.win) return x.win === a ? -1 : 1; } return 0; };
-    return ORDER.slice().sort((a, b) => score[b] - score[a] || h2h(a, b) || last[b] - last[a] || ORDER.indexOf(a) - ORDER.indexOf(b));
-  }
-  function duelResult(g) {
-    const wins = {}; g.rounds.forEach((x) => { if (x.win) wins[x.win] = (wins[x.win] || 0) + 1; });
-    return ranking(g).filter((s) => wins[s]).slice(0, 3);
+  // ---------- A's game: an 8-look bracket ----------
+  // Four first-round pairs, two semifinals, a final and a match for 3rd: every first-round winner plays again, so no
+  // early pick gets lost (the first mockup ranked tied winners by how recently they won, which buried round 1).
+  // "Neither" knocks both out; a match with one side missing passes the other through without a round.
+  const HEATS = [['streetwear', 'minimalist'], ['workwear', 'smart_casual'], ['outdoor', 'classic_prep'], ['tailored', 'vintage_sport']];
+  function bracket(g) {
+    let i = 0;
+    const play = (a, b) => {
+      if (!a || !b) return { win: a || b || null, lose: null };
+      if (i < g.rounds.length) { const x = g.rounds[i++]; return { win: x.win, lose: x.win ? (x.win === a ? b : a) : null }; }
+      throw { ask: [a, b] };
+    };
+    try {
+      const w = HEATS.map(([a, b]) => play(a, b).win);
+      const s1 = play(w[0], w[1]), s2 = play(w[2], w[3]);
+      const f = play(s1.win, s2.win), t = play(s1.lose, s2.lose);
+      return { done: true, result: [f.win, f.lose, t.win].filter(Boolean) };
+    } catch (e) { if (e && e.ask) return { done: false, pair: e.ask }; throw e; }
   }
 
   // ---------- B's game: three rounds of three ----------
@@ -378,7 +366,6 @@
       if (!hist.length) { st.note = 'Back would go to Welcome'; draw(); setTimeout(() => { st.note = ''; draw(); }, 1400); return; }
       const taps = st.taps + 1; st = JSON.parse(hist.pop()); st.taps = taps; draw();
     };
-    const gameLen = dir === 'b' ? 3 : 6;
     const go = (fn) => { const stage = root.querySelector('.stage'); if (!stage || reduce) { fn(); draw(); return; } stage.classList.add('out'); setTimeout(() => { fn(); draw(); }, 160); };
 
     function choose(win, pair) {
@@ -388,7 +375,8 @@
       setTimeout(() => go(() => {
         st.chosen = null;
         st.rounds.push({ pair, win });
-        if (st.rounds.length >= gameLen) { st.picks = dir === 'b' ? trioResult(st) : duelResult(st); st.played = true; st.view = 'reveal'; }
+        const fin = dir === 'b' ? (st.rounds.length >= 3 ? trioResult(st) : null) : (bracket(st).done ? bracket(st).result : null);
+        if (fin) { st.picks = fin; st.played = true; st.view = 'reveal'; }
       }), win ? (reduce ? 120 : 260) : 0);
     }
 
@@ -427,7 +415,7 @@
         tiles.push(h('div', { class: 'tile other', title: 'Typing is left out of this mockup' }, h('div', { class: 't1' }, 'Something else?'), h('div', { class: 't2' }, 'Tell me in your words')));
         const door = dir === 'c' ? h('button', { class: 'door', onclick: () => { tap(); save(); go(() => { st.view = 'duel'; st.rounds = []; st.from = 'grid'; }); } },
           h('span', { class: 'ic', html: cardsIc }),
-          h('span', { class: 'tx' }, h('b', {}, st.played ? 'Play this or that again' : 'Not sure? Try this or that'), h('span', {}, '6 quick picks. We’ll suggest your top 3.')),
+          h('span', { class: 'tx' }, h('b', {}, st.played ? 'Play this or that again' : 'Not sure? Try this or that'), h('span', {}, '8 quick picks. We’ll suggest your top 3.')),
           h('span', { class: 'chev', html: chevR })) : null;
         const n = st.picks.length;
         return frame([title("What's your style?", "Pick up to 3 looks you like. Today's outfit comes next."), door, h('div', { class: 'grid' }, tiles)],
@@ -435,10 +423,10 @@
       },
       duel() {
         const r = st.rounds.length;
-        const pair = duelNext(st);
+        const pair = bracket(st).pair;
         const card = (s) => h('button', { class: 'pick' + (st.chosen === s ? ' chosen' : st.chosen ? ' faded' : ''), onclick: () => choose(s, pair), 'data-style': s, 'aria-label': `Outfit ${pair.indexOf(s) + 1}` },
           h('div', { class: 'art' }, outfit(s, seen(s), 136)));
-        return frame([title('This or that?', 'Tap the one that’s more you.'), h('div', { class: 'pair' }, pair.map(card)), dots(6, r)],
+        return frame([title('This or that?', 'Tap the one that’s more you.'), h('div', { class: 'pair' }, pair.map(card)), dots(8, r)],
           [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'txt', onclick: () => choose(null, pair) }, 'Neither')]);
       },
       trio() {
