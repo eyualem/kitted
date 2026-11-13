@@ -58,7 +58,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [x] **Y27** · covered by Y29
 - [x] **Y28** · covered by Y29
 - [ ] **Y29** · **P2** · Phone pass on TestFlight build 0.1.0 (3) (delete Kitted, reinstall it from TestFlight, about 15 min) → the beta build checked by hand before friends get it: (1) setup from fresh: the K on navy at launch, What's your style? (tiles, Tell me in your words rides the keyboard, no Not sure), 7 taps to the camera; (2) one fit check: the result card has one Why 7.5? button, no all-caps labels; the pieces slide into Closet with a light buzz, Closet's navy number, `From your first check` with `New`; (3) one question to Kit; the morning card shows only after that first check; (4) Closet: swipe a one-card question sideways, answer one (buzz), Undo; (5) You: Your style as squared tiles; (6) once in dark mode, once with VoiceOver on the new setup screen and Closet's cards. Covers Y27 and Y28
-- [ ] **Y30** · **P2** · Try the three style-step mockups on 3–5 people (https://claude.ai/artifact/2L9asQuz69pg45ohUatmZm, also `tasks/style-quiz/design.html`; open it on your phone, pick A, B or C from the bar, hand it over and say nothing; about 30 min). Note where they pause and whether the reveal "sounds like them" → which way setup picks a style, then the spec interview for it
+- [ ] **Y30** · **P2** · Try the style game (direction A, your pick) on 3–5 people (https://claude.ai/artifact/2L9asQuz69pg45ohUatmZm, also `tasks/style-quiz/design.html`; open it on your phone, tap "A · Two up", hand it over and say nothing; about 30 min). Note where they pause and whether "Here's your style" sounds like them → the spec interview for the style game
 
 ---
 
@@ -214,6 +214,7 @@ Claude builds with the default until you decide.
 - **Height (founder, Nov 9: "if we're genuinely going to integrate it, that would be pretty dope"):** not asked in setup. Default: later, Kit asks once only when it would change advice (jacket length, trouser break), uses it quietly to choose fixes, never says it back and never lets it change a score. Needs its own spec; it sits next to the never-about-his-body line (#432).
 - **The redesign stage (eyualem/kitted#83):** parked until after the beta (you, Nov 10); unmerged and unchanged.
 - **"Get your head in the shot" (the head-not-found line, spec F2.2):** the designer and critic found it misses the usual causes (turned away, far, dim); "Face the camera…" would fit more. Default: the spec's words until you say otherwise (#434).
+- **Formal wear as a look (founder, Nov 12: "we forgot to add formal wear, like suits"):** the 7 looks have no suit look; a matching suit already scores and reads as "a matching suit", and Interview and Event expect tailoring. Default until you decide: Claude's recommendation, an 8th look named Tailored (suits, blazers, trousers, loafers), built as its own strict scoring task (the Python engine first) and added to the style game when ready; not before the beta unless you say so.
 
 ---
 
