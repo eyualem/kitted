@@ -1,10 +1,10 @@
 # The rulebook, part 1: shape (silhouette, proportions, fit, suits and tailoring)
 
-Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-proportion.md`, `rules-fit.md`, `rules-tailoring.md`, `concepts.md` §1–5 and §13, and `suits.md` ("The four on suits and blazers", "Against specs/tailored.md"). Every quote was checked word for word against `inputs/youtube/clean/<id>.txt` (12 words or fewer; `[music]` tags dropped). Clothes only: wherever a creator talks about bodies ("long legs", "your frame"), the rule is restated in terms of where hems, waistbands and widths sit.
+Synthesized Nov 14, 2026 for T95 (plus one late outsider for the suit section, Damien Broderick `4jnsdw7aT5U`, 2025-10-23) from `by-part/rules-silhouette.md`, `rules-proportion.md`, `rules-fit.md`, `rules-tailoring.md`, `concepts.md` §1–5 and §13, and `suits.md` ("The four on suits and blazers", "Against specs/tailored.md"). Every quote was checked word for word against `inputs/youtube/clean/<id>.txt` (12 words or fewer; `[music]` tags dropped). Clothes only: wherever a creator talks about bodies ("long legs", "your frame"), the rule is restated in terms of where hems, waistbands and widths sit.
 
 **In plain words.** All four put shape ahead of color: what an outfit is "about" is how the pieces sit against each other, not which pieces they are. They agree on four things. (1) The hem against the shoe can sink an otherwise good outfit. (2) An unequal split beats a 50/50 one, and a waist break (a tuck, a short top or a jacket ending where the trousers start) is how you get it. (3) One half should answer the other: a fitted or short top over a fuller leg is the safe great shape; big on big works when both halves carry it on purpose; a big top over a narrow leg mostly fails. (4) Fit is the floor: nothing skin-tight, nothing sagging, and no jacket or loud shoe can cover a bad pair of trousers. The main disagreements are how much crop (Frugal and Jaye like cropped pieces; Wanhee and Tim want a hem at the belt or a tuck), stacking (Tim calls it sloppy except on wide casual legs; Frugal likes a soft stack), slim legs (two prefer straight, two are fine with slim; skinny is out for three), and whether a wide top over a slim leg is a fault (Frugal) or a style choice (Tim, Jaye). On suits, the four want them relaxed, worn casually (a tee or tank under, no tie, sometimes sneakers), fitted by the shoulder rather than a tight waist, with the hem touching the shoe.
 
-**How to read the ids.** `sil.`, `prop.`, `fit.`, `suit.` are this file's rules; `[PRO-4]`-style ids are today's engine (`rubric/v5-styles.md`). "Tim's guest" is the guest Harry in Tim's video OqoUgLxknJc; outsiders (The Armoury, GQ's tailor, Justin Kwan) are marked and only fill gaps in the suit section.
+**How to read the ids.** `sil.`, `prop.`, `fit.`, `suit.` are this file's rules; `[PRO-4]`-style ids are today's engine (`rubric/v5-styles.md`). "Tim's guest" is the guest Harry in Tim's video OqoUgLxknJc; outsiders (The Armoury, GQ's tailor, Justin Kwan, Damien Broderick) are marked and only fill gaps in the suit section.
 
 ---
 
@@ -17,7 +17,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** all agree.
 - **Engine today:** has it differently [SCO-1]: Proportions is the largest part (30%), but Color and Style together weigh 40% and nothing lets a good shape soften a color fault.
 - **AI can see it:** weakly (it is the sum of `volume`, `leg_shape`, `length`, `tucked`; the weak reads at volume 4–5 and slim vs straight blur exactly this).
-- **Frame:** `inputs/youtube/shots/0ilmLux6mPg/f-07-16.jpg`
+- **Frame:** pending (`inputs/youtube/shots/0ilmLux6mPg/f-07-16.jpg` checked: it shows Tim talking, not the three white tees)
 
 #### sil.2. One loose half, one fitted half: a fitted or short top over a fuller leg is the classic great shape.
 - **Strength:** lift. **Holds when:** the top is fitted, cropped, boxy-and-short or tucked, over straight, relaxed, wide, barrel or pleated "balloon" legs; Tim's version is a boxy jacket whose hem ends where the trousers start. **Doesn't:** when the top is long and loose (prop.6); Frugal's 2026 bulky-sneaker template wants a slightly oversized top of "neutral to longer length", nothing cropped (prop.4).
@@ -27,7 +27,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Frugal, Tim and Jaye agree; Wanhee agrees on the fuller leg but not on the short top (he wants a tee that ends at the belt, "not too cropped like those fashion influencers", `Mr-GzwGQ1qY` [06:04]; see prop.4).
 - **Engine today:** has it differently [PRO-4], [PRO-6], [PRO-14], [STR-5]: it pays for the waist break or a short jacket, not for the volume contrast itself, so a fitted untucked tee ending at mid-fly over wide jeans earns nothing.
 - **AI can see it:** weakly (`volume` top vs `leg_shape`, `length`, `tucked`; "fitted" vs regular is roominess 1–2 vs 3, which isn't steady).
-- **Frame:** `inputs/youtube/shots/Vn6KlXkU2xA/f-10-24.jpg`
+- **Frame:** `inputs/youtube/shots/Vn6KlXkU2xA/f-10-24.jpg` (checked: the "fitted top + relaxed bottom" card)
 
 #### sil.3. Don't let the top outweigh the legs: the top should be no wider than the widest part of the trousers, and a heavy top half over thin legs needs weight added below.
 - **Strength:** fault. **Holds when:** a roomy top, a bulky scarf or chunky knit, or a big jacket sits over slim or skinny legs, especially with light or flimsy bottoms. **Doesn't:** when the legs carry matching volume (sil.4), when a chunky shoe or darker, wider leg adds weight below, or in Tim's long-coat column (sil.5).
@@ -38,7 +38,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Frugal agrees as a rule; Tim fixes top-heavy outfits by moving weight down but says the direction is a preference ("There is no universally correct answer.", `0ilmLux6mPg` [08:51]); Jaye says skinny jeans with big runners and a boxy tee is "nothing wrong with that style" yet tells viewers to let it go (`sOfjDjtjBWM` [08:48]); Wanhee rejects the tight version.
 - **Engine today:** has it [PRO-2] (roomy top over skinny −1.5), [PRO-11] (roomy top over slim −1.5 unless outdoor), [PRO-3], [SHO-9]; lacks the weight side (a chunky scarf or heavy knit over slim legs, and a heavy shoe rescuing it).
 - **AI can see it:** weakly (`volume` top vs `leg_shape`; volume 4–5 and slim vs straight are both weak reads; darkness and texture aren't read; shoe bulk only via `subcategory`).
-- **Frame:** pending (no still 0–20 s after [05:36]; `inputs/youtube/shots/wIib9hzVUuw/o2-before-05-30.png` shows the same outfit 6 s before)
+- **Frame:** pending (no still 0–20 s after [05:36]; `inputs/youtube/shots/wIib9hzVUuw/o2-before-05-30.png`, 6 s earlier, checked: the scarf-and-cardigan outfit)
 
 #### sil.4. Big on big is a valid shape when both halves carry the volume on purpose and the hems are controlled.
 - **Strength:** nuance (no charge; lift when it's clearly deliberate). **Holds when:** an oversized tee or boxy top over wide trousers, often under a big coat; a relaxed jacket sized up to match wide trousers. **Doesn't:** when one half is big and the other merely regular, when the hems pool on a straight leg, or when it tips into "swollen" size-as-a-shortcut (fit.3).
@@ -47,7 +47,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim and Frugal agree; Wanhee allows it as "another territory" beyond his own normal-to-slightly-loose default; Jaye only asks for balance.
 - **Engine today:** has it [STR-5], [PRO-11] (roomy over full legs is held by streetwear, minimal and the others); dealbreakers N1 leaves it to normal scoring.
 - **AI can see it:** weakly (`volume` 4–5 is rarely read, KD-1).
-- **Frame:** `inputs/youtube/shots/vQd36IKIkOg/f-02-58.jpg`
+- **Frame:** `inputs/youtube/shots/vQd36IKIkOg/f-02-58.jpg` (checked: a long black coat over wide light trousers)
 
 #### sil.5. The outer layer sets the outline: its length decides the read, and it needs room for what's under it.
 - **Strength:** fault (a tight or slim outer layer over a bulky one) / nuance (length). **Holds when:** a short jacket shows the legs and makes two blocks; a long coat makes one continuous shape (both fine); the coat has room for a knit or hoodie underneath. **Doesn't:** a slim puffer or a close overshirt over an oversized hoodie or chunky knit (bunching); a bulky shirt under a bulky jacket.
@@ -56,16 +56,16 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim, Jaye and Frugal agree; Wanhee adds that an off-size piece works when placed (a too-small tee inside a looser jacket, fit.5).
 - **Engine today:** has it differently [PRO-6], [PRO-14] (a short jacket earns credit; a long coat neither earns nor costs, which matches Tim); lacks the outer-vs-inner room check ([PRO-11] never charges a roomy top under a jacket).
 - **AI can see it:** weakly (`volume` per garment and the jacket's `length`; an inner layer's volume is often hidden; `shows_below_outer` helps).
-- **Frame:** `inputs/youtube/shots/wIib9hzVUuw/f-09-15.jpg`
+- **Frame:** `inputs/youtube/shots/wIib9hzVUuw/f-09-15.jpg` (checked: a collage of outfits; which one is the tight overshirt is unclear)
 
 #### sil.6. A big coat, ideally with broad, structured shoulders, lifts a plain outfit.
 - **Strength:** lift. **Holds when:** cold weather, smart or casual; the coat has structure at the shoulder and room under it. **Doesn't:** a tight coat over a knit (sil.5).
-- **Interacts with:** sil.3 (structured shoulders move weight up, so the leg must carry it), suit.3 (the same shoulder logic in tailoring), season.
-- **Sources:** Tim · `XIYvycsZxDk` · [05:08] · "a nice coat just makes everything look better"; Tim · `-e9Is50-fn0` · [04:26] · "will improve any cold weather outfit, smart or casual alike"; Tim · `-e9Is50-fn0` · [08:46] · "royal power silhouette like you mean business"; Tim · `XSF9AOx7sdU` · [00:34] · "try jackets that have more structure around the shoulders"; Frugal · `JY_zrt43cbU` · [05:27] · bomber's "commanding shape" (paraphrase; quote not checked, so not used as a source line)
-- **The four:** only Tim (others silent).
+- **Interacts with:** sil.3 (structured shoulders move weight up, so the leg must carry it), suit.2 (the same shoulder logic in tailoring), season.
+- **Sources:** Tim · `XIYvycsZxDk` · [05:08] · "a nice coat just makes everything look better"; Tim · `-e9Is50-fn0` · [04:26] · "will improve any cold weather outfit, smart or casual alike"; Tim · `-e9Is50-fn0` · [08:46] · "royal power silhouette like you mean business"; Tim · `XSF9AOx7sdU` · [00:34] · "try jackets that have more structure around the shoulders"; Frugal · `JY_zrt43cbU` · [04:53] · "its commanding shape and yearround use case" (the bomber)
+- **The four:** Tim (most); Frugal agrees for the bomber's shape; others silent.
 - **Engine today:** lacks it (an overcoat earns no shape credit; [PRO-6] excludes it).
 - **AI can see it:** weakly (`subcategory` overcoat; shoulder structure isn't read).
-- **Frame:** `inputs/youtube/shots/XIYvycsZxDk/f-05-13.jpg`
+- **Frame:** `inputs/youtube/shots/XIYvycsZxDk/f-05-13.jpg` (checked: a long black coat over straight blue jeans)
 
 #### sil.7. In one color (or an all-neutral palette), the outline is the whole outfit: a bad shape shows more, a deliberate strong shape reads better.
 - **Strength:** nuance (it scales the shape rules up). **Holds when:** all black, all white, or a quiet neutral palette (city boy, quiet luxury); Frugal says you can push proportions further here "as long as you're deliberate". **Doesn't:** texture and tone contrast bring some piece edges back.
@@ -74,7 +74,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** all agree.
 - **Engine today:** lacks it (one-color outfits get only the [COL-7] tip; shape rules weigh the same).
 - **AI can see it:** yes for one color (`color_family` across pieces); weakly for the shape itself, and piece boundaries in all black may be hard for the reader too.
-- **Frame:** `inputs/youtube/shots/Vn6KlXkU2xA/f-09-51.jpg`
+- **Frame:** `inputs/youtube/shots/Vn6KlXkU2xA/f-09-51.jpg` (checked: two all-black silhouettes)
 
 #### sil.8. The 2026 leg is straight to relaxed (Tim) or barrel (Frugal); a straight leg is the one that works with every shoe.
 - **Strength:** nuance (trend; no charge between straight, relaxed, wide and barrel). **Holds when:** jeans and casual trousers in 2026; Tim's wide pleated trousers look better cut straight than tapered. **Doesn't:** the very wide, "stepping on the pant" extreme is passing for Tim; skinny is handled by fit.6.
@@ -83,7 +83,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim, Wanhee and Frugal agree on straight as the safe default; Tim (straighter) and Frugal (barrel, fuller through the knee) differ on direction, both in 2026; Jaye silent.
 - **Engine today:** has it [PRO-13] (only slim and skinny cost; straight, relaxed, wide and barrel are equal).
 - **AI can see it:** yes (`leg_shape` has straight, relaxed, wide and barrel), weakly at slim vs straight.
-- **Frame:** `inputs/youtube/shots/TUYSTimnDJg/f-00-05.jpg`
+- **Frame:** none (described only; `inputs/youtube/shots/TUYSTimnDJg/f-00-05.jpg` checked: a title collage, no barrel jean)
 
 #### sil.9. Flares or bootcuts over boots make the hourglass (X) shape, if the flare lands on the shoe.
 - **Strength:** lift. **Holds when:** a flare or bootcut long enough to sit over a boot or heavy shoe, often under a fitted or open top. **Doesn't:** a flare that stops short or doesn't sit on the shoe "loses the point"; Frugal calls flares hard to pull off.
@@ -92,7 +92,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Jaye and Frugal agree (others silent).
 - **Engine today:** lacks it (`flare_bootcut` earns nothing on its own).
 - **AI can see it:** yes (`leg_shape` flare_bootcut, shoe `subcategory`), weakly for whether it lands (`hem`).
-- **Frame:** `inputs/youtube/shots/Pxeeh-caTJg/perfect-all-black-19-38.png` (the same outfit; no still after [22:13])
+- **Frame:** `inputs/youtube/shots/Pxeeh-caTJg/perfect-all-black-19-38.png` (checked: the all-black outfit; no still after [22:13])
 
 #### sil.10. Relaxed or fitted is a choice; what fails is a shape that isn't deliberate.
 - **Strength:** nuance. **Holds when:** within one style world, a relaxed jean and a fitted tapered one are both right; a slim Italian suit is as valid a silhouette as a flowing or O-shaped one. **Doesn't:** skin-tight (fit.2) and swamping (fit.3) are outside the range; skinny is mostly out (fit.6).
@@ -110,7 +110,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** only Tim (others silent).
 - **Engine today:** has it [PRO-15] (a short jacket over loose shorts +1.0).
 - **AI can see it:** yes (`subcategory`, `length` of the jacket, shorts `leg_shape`).
-- **Frame:** `inputs/youtube/shots/YGm7JMniGVc/f-01-12.jpg`
+- **Frame:** pending (`inputs/youtube/shots/YGm7JMniGVc/f-01-12.jpg` checked: Tim in a jacket, not the shorts outfit)
 
 ---
 
@@ -124,7 +124,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim, Frugal and Wanhee agree; Jaye silent here (he wears flares long). Frugal's own 2026 note that the lower legs sit outside the eye line (`RlcdMBj5Z2E` [06:25]) is weaker than his repeated "silent killer" and is set aside.
 - **Engine today:** has it differently [FIT-4] (piling on a straight or narrow leg −1.5 to −2.0 on Fit, worth 0.15 a point), [PRO-8] (pooling blocks shape credits), [SHO-2]; no cap (dealbreakers H7 proposes one), no charge for too short, no credit for a clean break.
 - **AI can see it:** weakly (`hem` is a known weak read, 64–68% steady); the shoe close-up (look L, "covers the shoe mostly", 97%) reads piling well; deliberate stack vs pooling share one value.
-- **Frame:** `inputs/youtube/shots/XtcY-zmoS-E/f-06-43.jpg`
+- **Frame:** `inputs/youtube/shots/XtcY-zmoS-E/f-06-43.jpg` (checked: trousers piling on the shoe, "too long i think")
 
 #### prop.2. Split the outfit unequally (about one third and two thirds), not in half.
 - **Strength:** lift (a clear thirds split) / fault (the 50/50 "cut in half" look). **Holds when:** usually a short top block over long legs; the reverse (a long coat or long top over a short visible bottom) works too. **Doesn't:** Wanhee shows a low, long split that "doesn't look that bad" when committed to (prop.16); Frugal calls the thirds a guide, not the whole answer; in tonal or all-black outfits the line is hidden, so the outline takes over (sil.7). Jaye's "rule of thirds" is mostly about framing photos, not outfits.
@@ -134,7 +134,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** all agree on an unequal split; Wanhee (2026) and Tim say the short-top version isn't the only right one; nobody gives numbers.
 - **Engine today:** has it differently [PRO-4] pays for the short-top side; the 50/50 fault is only a tip ([PRO-10], KD-8).
 - **AI can see it:** weakly (`length` + `tucked` give where the top ends; rise isn't read; `below_crotch` almost never fires).
-- **Frame:** `inputs/youtube/shots/RtxJqd5Drps/f-01-09.jpg`
+- **Frame:** `inputs/youtube/shots/RtxJqd5Drps/f-01-09.jpg` (checked: an outfit with the thirds marked)
 
 #### prop.3. Make a waist break: a tuck, a top ending at the belt, a crop, or a jacket that stops where the trousers start; strongest over a fuller leg.
 - **Strength:** lift (a big one). **Holds when:** the trouser waistband (or a tuck line) is visible or the top's hem is within a hand's width of it; over relaxed, wide or pleated legs it is the look; with high-waisted trousers it rebalances the outfit. **Doesn't:** over skinny or slim legs it does little; a tuck into sweatpants or under a street cap can read odd (prop.7); a cinched hoodie over a long base layer can make the line instead.
@@ -144,7 +144,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** all agree; they split only on how much crop (prop.4).
 - **Engine today:** has it [PRO-4] (+1.5 over a loose leg, +0.5 over straight, nothing over slim), [PRO-5], [PRO-14], [PRO-17]; dealbreakers L1.
 - **AI can see it:** yes for the tuck (`tucked`), weakly for "ends at the belt" (`length` at_belt vs mid_fly is the reader's most common length mistake); half tuck and belt not read.
-- **Frame:** `inputs/youtube/shots/-V2bE8nDsdo/f-04-42.jpg`
+- **Frame:** `inputs/youtube/shots/-V2bE8nDsdo/f-04-12.jpg` (checked: a white tee tucked into black trousers)
 
 #### prop.4. How much crop: a little goes a long way; most people wear tops too long, but a super-cropped boxy tee is its own trend look.
 - **Strength:** nuance. **Holds when:** a top ending at or just above the belt is safe for all four; a fitted crop over wide legs is Frugal's favorite. **Doesn't:** Wanhee and Tim stop at the belt or tuck instead; Frugal's 2026 bulky-sneaker template wants "Neutral to longer length" and "Nothing too cropped. Nothing boxy." (the heavy shoe changes the right top length).
@@ -153,7 +153,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Frugal and Jaye like crop; Tim likes "slightly cropped" knits and jackets and the tuck; Wanhee rejects the super-cropped look but also faults a tee that runs long. Frugal's 2026 bulky-shoe exception contradicts his own 2023 crop video; newest wins only for bulky shoes.
 - **Engine today:** has it [PRO-4] (cropped and at_belt count the same; no extra for crop, no charge for super-cropped).
 - **AI can see it:** yes (`length` cropped / at_belt), weakly between them.
-- **Frame:** `inputs/youtube/shots/FlQ3WZ-H2Ik/f-07-04.jpg`
+- **Frame:** pending (`inputs/youtube/shots/FlQ3WZ-H2Ik/f-07-04.jpg` checked: a text card)
 
 #### prop.5. A short jacket over full legs adds interest and shows the legs, even on a plain monochrome outfit.
 - **Strength:** lift. **Holds when:** a bomber, trucker, leather or slightly cropped jacket (a jacket ends at the hip or above) over straight, relaxed or wide legs. **Doesn't:** over skinny legs; the outsiders' "a short jacket splits you in half" is dropped (the four read that line as a deliberate waist break).
@@ -162,7 +162,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim and Frugal agree; Jaye uses short outer layers as the easy option (`RIuzSb8OLMM` [10:11]); Wanhee silent.
 - **Engine today:** has it [PRO-6] (+1.5 by jacket type), [PRO-14] (+1.0 for any layer read at the belt over a loose leg); dealbreakers L2.
 - **AI can see it:** yes (`subcategory`, jacket `length`).
-- **Frame:** `inputs/youtube/shots/XIYvycsZxDk/f-03-30.jpg`
+- **Frame:** `inputs/youtube/shots/XIYvycsZxDk/f-03-30.jpg` (checked: a short tan jacket over full grey trousers)
 
 #### prop.6. An oversized top should be big in width and sleeve, not in length: a long body that covers the waist and hangs toward the thigh is the fault.
 - **Strength:** fault (Tim's "biggest pet peeve"). **Holds when:** an oversized tee long in the body with regular-length sleeves; a long untucked flannel down the thigh; a tee long enough to "look like a dress". **Doesn't:** a long coat or a deliberate long-and-low look (prop.16); Frugal's neutral-to-longer top with bulky sneakers (prop.4) is not this long.
@@ -171,25 +171,25 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** all agree.
 - **Engine today:** lacks it (only the [PRO-10] tip "a top that may run past the fly"; dealbreakers S3 and H2 propose caps).
 - **AI can see it:** weakly (`length` below_crotch almost never fires; long reads as mid_fly about a quarter of the time).
-- **Frame:** `inputs/youtube/shots/a7FgCE9NPmw/f-02-55.jpg`
+- **Frame:** `inputs/youtube/shots/a7FgCE9NPmw/f-02-55.jpg` (checked: an oversized tee with a shorter body, the right version; no still 0–20 s after [02:15])
 
 #### prop.7. Tucking is a tool, not a rule: it smartens a simple outfit, but untucked is often the more balanced choice.
-- **Strength:** nuance. **Holds when:** a tee tucked into trousers reads smarter (dinner, darker pieces); a high rise invites a tuck for "that classic look"; a shirt tucked under a hoodie keeps the layers from bunching. **Doesn't:** untucked is never a fault on a casual outfit; a dress shirt untucked under a blazer is (suit.10); a tuck into sweatpants or with a streetwear cap can look wrong.
+- **Strength:** nuance. **Holds when:** a tee tucked into trousers reads smarter (dinner, darker pieces); a high rise invites a tuck for "that classic look"; a shirt tucked under a hoodie keeps the layers from bunching. **Doesn't:** untucked is never a fault on a casual outfit; a dress shirt untucked under a blazer is ([CON-3], suit.8); a tuck into sweatpants or with a streetwear cap can look wrong.
 - **Interacts with:** prop.3, prop.8 (needs a defined, higher waist), formality.
 - **Sources:** Tim · `XSF9AOx7sdU` · [00:34] · "it could look better to not tuck in your top"; Tim's guest · `OqoUgLxknJc` · [08:07] · "just tucked in the t-shirts"; Frugal · `xL1NeaA9D-Y` · [08:07] · "you can tuck your shirt if you really like that classic look"; Frugal · `Jh8dz-KZcfY` · [05:56] · "just tucking the shirt to leave room for the hoodie"; Wanhee · `RtxJqd5Drps` · [01:04] · "So, I kind of cut my body in half." (untucked over low trousers)
 - **The four:** Tim, Frugal and Wanhee agree; Jaye adds that a high rise with a tuck or crop is "harder to pull off" (`RIuzSb8OLMM` [14:14]).
 - **Engine today:** has it [PRO-4] (tuck credit), [PRO-8] (sweats block it), [CON-3] (untucked dress shirt under a blazer −0.6); untucked is never charged.
 - **AI can see it:** yes (`tucked` none/half/full; half is untested).
-- **Frame:** `inputs/youtube/shots/OqoUgLxknJc/f-08-12.jpg`
+- **Frame:** pending (`inputs/youtube/shots/OqoUgLxknJc/f-08-12.jpg` checked: outfit 1, untucked tees)
 
 #### prop.8. Rise is a lever: a high rise with a tuck or a jacket lengthens the leg line, low rise under an untucked top cuts the outfit in half, mid rise is the safe everyday choice.
 - **Strength:** lift (high rise with a tuck or a jacket) / fault (low rise under a jacket or long top). **Holds when:** visible only when the top is tucked, cropped or the jacket is open. **Doesn't:** low-rise jeans worn casually are not a fault on their own; Jaye says high rise is hard to pull off.
-- **Interacts with:** prop.2, prop.3, suit.6.
+- **Interacts with:** prop.2, prop.3, suit.5.
 - **Sources:** Jaye · `RIuzSb8OLMM` · [13:43] · "Low rise cuts your" (proportions, [14:14]); Jaye · `RIuzSb8OLMM` · [14:14] · "Mid rise is easily the safest option"; Jaye · `RIuzSb8OLMM` · [14:14] · "High rise on the other end, it elongates your legs."; Wanhee · `RtxJqd5Drps` · [01:04] · "So, I kind of cut my body in half."; Frugal · `xL1NeaA9D-Y` · [06:33] · "how long are your pants, how do your pants stack"; Frugal · `XtcY-zmoS-E` · [03:06] · "they really open up what I can wear up top"; Tim · `0ilmLux6mPg` · [09:21] · "high-rise jeans with just a little more room in the leg"; Tim · `vziGl_FxQb0` · [05:56] · "a voluminous wide straight cut with a high-rise"
 - **The four:** all agree.
 - **Engine today:** lacks it.
 - **AI can see it:** no (rise isn't read; a tuck or open jacket shows it only to a person).
-- **Frame:** `inputs/youtube/shots/RtxJqd5Drps/f-01-09.jpg`
+- **Frame:** `inputs/youtube/shots/RtxJqd5Drps/f-01-09.jpg` (checked: the thirds diagram; the rise itself isn't shown)
 
 #### prop.9. A soft stack is part of the shape on a wide or relaxed leg over a substantial shoe; the many-fold stack on a skinny jean is dated.
 - **Strength:** nuance (no charge) / lift in a relaxed, deliberate look. **Holds when:** generous trousers stacking a little over chunky sneakers or slim sneakers with the toe showing; wide parachute trousers worn long. **Doesn't:** on smart trousers Tim calls more than one break "stacking territory" (sloppier); the 2016 skinny-jean "how many stacks" look; a straight or slim leg piling up (prop.1).
@@ -198,7 +198,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim and Frugal agree on the soft stack over wide legs and against the skinny stack; Jaye lists "stacking pants" as something beginners copy without understanding (`UcLBvcmnnus` [02:10], from `concepts.md`); Wanhee (2026) allows dragging in street looks (prop.16).
 - **Engine today:** has it [FIT-4] (no charge for jeans and cargos on a loose leg; −0.5 for trousers), [STR-12], [PRO-8].
 - **AI can see it:** weakly (`hem` pooling serves both the stack and the drag; look L says how much of the shoe is covered, not how deliberate it is).
-- **Frame:** `inputs/youtube/shots/XIYvycsZxDk/f-01-12.jpg`
+- **Frame:** pending (`inputs/youtube/shots/XIYvycsZxDk/f-01-12.jpg` checked: a title card)
 
 #### prop.10. A bulky shoe needs a generous leg; a slightly higher hem or a cinched hem is fine over it.
 - **Strength:** lift (generous leg over a chunky shoe) / fault (a chunky shoe under slim or skinny legs). **Holds when:** chunky runners, trail and dad shoes, boots; the leg "doesn't have to be baggy" but needs some shape; cinched joggers or cargos make a narrow point that sets off the shoe. **Doesn't:** Frugal's own note that a chunky designer sneaker under very wide jeans didn't help (frugal-3 R1).
@@ -207,7 +207,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Frugal (most), Tim (cargos stacking on Salomons, prop.9) and Jaye (heavy boots under flares and wide pants) agree; Wanhee's "a bit of ankle falls apart" (`tNVdA_arEa8` [03:36]) is against the higher hem, in the loose style.
 - **Engine today:** has it [SHO-9] (chunky under slim or skinny −1.5), [STR-6] (+0.5 chunky under wide in streetwear); lacks the higher-hem allowance.
 - **AI can see it:** yes (`subcategory` chunky/basketball/running, `leg_shape`), weakly at slim vs straight; dealbreakers H10.
-- **Frame:** `inputs/youtube/shots/8rmkOpCbFTM/f-11-07.jpg`
+- **Frame:** `inputs/youtube/shots/8rmkOpCbFTM/f-11-07.jpg` (checked: "for bulky sneakers: all big pants work")
 
 #### prop.11. A slim, low-profile shoe under a full leg is a great contrast, if the trousers are long enough to cover most of it.
 - **Strength:** lift / fault (a cropped or skinny leg over a slim sneaker). **Holds when:** a Samba-type sneaker, loafer or derby under straight, wide or generous trousers with a long or medium inseam, just the toe showing. **Doesn't:** a short hem over a slim sneaker exposes it and loses the contrast; the cropped-wide-leg-with-loafers exception (prop.12).
@@ -216,7 +216,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Frugal and Tim agree; Wanhee's trousers falling on the laces fit; Jaye silent.
 - **Engine today:** has it differently [SHO-12] (dress shoes under wide legs: nothing, not even a tip); lacks the contrast credit and the cropped-over-slim-sneaker fault.
 - **AI can see it:** yes (`subcategory`, `leg_shape`), weakly for `hem`.
-- **Frame:** `inputs/youtube/shots/8rmkOpCbFTM/f-05-03.jpg`
+- **Frame:** `inputs/youtube/shots/8rmkOpCbFTM/f-05-03.jpg` (checked: the slim sneakers alone, not under trousers)
 
 #### prop.12. A deliberate crop on a wide leg, with loafers and visible socks, is a current look, not a short hem.
 - **Strength:** nuance (an exception to prop.1). **Holds when:** a clearly cropped wide or baggy leg, a slim dress shoe, socks showing. **Doesn't:** a straight or slim leg that just stops short; Tim phased out his deeper crops and wants the hem "barely touching the shoe"; Wanhee says a bit of ankle makes the loose style fall apart.
@@ -225,7 +225,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** only Frugal for; Tim and Wanhee lean against; Jaye silent.
 - **Engine today:** lacks it (a cropped hem is neither credited nor charged).
 - **AI can see it:** weakly (`hem` cropped); no (socks aren't read).
-- **Frame:** `inputs/youtube/shots/xL1NeaA9D-Y/f-04-23.jpg`
+- **Frame:** pending (`inputs/youtube/shots/xL1NeaA9D-Y/f-04-23.jpg` checked: baggy jeans over chunky shoes, not the cropped loafer look)
 
 #### prop.13. A peek of the under-layer lifts; a long hang below the jacket costs. Layer lengths are part of the composition.
 - **Strength:** lift (a small peek, a cropped hoodie under a bomber) / fault (a long tee hanging well below a short jacket). **Holds when:** a shirt edge or a thin band showing below or at the opening of a jacket. **Doesn't:** in a casual outfit a tee showing below a cropped jumper is fine; tuck it for a neater finish.
@@ -234,11 +234,11 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Frugal and Jaye agree (the line between them is how much shows); Tim's guest allows it in casual; Wanhee silent.
 - **Engine today:** has it [PRO-9] ("clearly" −0.5 and no shape credit; "a little" free).
 - **AI can see it:** yes (`shows_below_outer` and look U; "a little" is the weaker answer, 71–82%).
-- **Frame:** `inputs/youtube/shots/Jh8dz-KZcfY/f-05-27.jpg`
+- **Frame:** `inputs/youtube/shots/Jh8dz-KZcfY/f-05-27.jpg` (checked: a layered coat, denim jacket and tee; the peek is small)
 
 #### prop.14. The break follows the formality: a slight break is the classic office finish; a full break needs a fashion-forward rest of the outfit.
 - **Strength:** nuance. **Holds when:** the same smart trouser can go either way. **Doesn't:** jeans and casual trousers follow prop.1 and prop.9.
-- **Interacts with:** suit.5, occasion.
+- **Interacts with:** suit.3, occasion.
 - **Sources:** Tim · `FUWET2HH-us` · [01:38] · "take more risk with a full brake" (caption: break)
 - **The four:** only Tim (others silent).
 - **Engine today:** has it differently [FIT-6] (a full break on slim pants is a tip); no difference by formality.
@@ -252,7 +252,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Frugal and Tim (with his guest) agree; others silent.
 - **Engine today:** has it [PRO-15], [PRO-16] for shorts; cuffed hems cost nothing; lacks the cuff-over-contrasting-sneaker read.
 - **AI can see it:** yes (`hem` cuffed, shorts `leg_shape`), weakly for cuffs.
-- **Frame:** `inputs/youtube/shots/OqoUgLxknJc/f-09-17.jpg`
+- **Frame:** `inputs/youtube/shots/OqoUgLxknJc/f-09-17.jpg` (checked: cuffed light jeans over black boots)
 
 #### prop.16. There is no single right proportion: the proportions you create are the look, and a committed long, low or dragging street proportion can work.
 - **Strength:** nuance (it limits how hard the other prop rules should bite). **Holds when:** the whole outfit commits to the shape (very baggy, low, long in a street look). **Doesn't:** Frugal (dragging hems ruin it) and Jaye ("flailing" baggiest jeans) disagree, and so did Wanhee in 2023.
@@ -261,14 +261,14 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Wanhee (2026) and Tim agree in principle; Frugal and Jaye differ on dragging hems (prop.1; Jaye `7K2qRZaXX3w` [06:53], "flailing everywhere in the wind").
 - **Engine today:** has it differently (fixed credits and charges; [FIT-4] already frees a stack on loose jeans).
 - **AI can see it:** no ("committed" isn't readable; only every piece agreeing).
-- **Frame:** `inputs/youtube/shots/RtxJqd5Drps/f-00-05.jpg` (the two-picture comparison at [00:00])
+- **Frame:** `inputs/youtube/shots/RtxJqd5Drps/f-00-05.jpg` (checked: the two-picture comparison at [00:00])
 
 ---
 
 ## Fit (fit.*)
 
 #### fit.1. Fit is the floor: without it nothing else works, and adding pieces (a jacket, a loud shoe) can't cover a fit fault. Trousers matter most because nothing hides them.
-- **Strength:** dealbreaker (a clear fit fault on a main piece, especially the trousers, caps the outfit whatever else is right). **Holds when:** the faults are visible: pulling (fit.2), swamping or sagging (fit.3), piling (prop.1), sleeves over the hands (fit.8, suit.9). **Doesn't:** a tee hidden under a jacket matters less ("you can't cheat pants" cuts one way only).
+- **Strength:** dealbreaker (a clear fit fault on a main piece, especially the trousers, caps the outfit whatever else is right). **Holds when:** the faults are visible: pulling (fit.2), swamping or sagging (fit.3), piling (prop.1), sleeves over the hands (fit.9, suit.7). **Doesn't:** a tee hidden under a jacket matters less ("you can't cheat pants" cuts one way only).
 - **Interacts with:** every part; layering and shoes must not be allowed to buy back a fit fault underneath.
 - **Sources:** Jaye · `7K2qRZaXX3w` · [06:53] · "the whole operation cannot work if you don't got that"; Frugal · `WDsQRHa8jBY` · [07:29] · "fit is the bottleneck of all things especially" (pants); Frugal · `WDsQRHa8jBY` · [06:23] · "a slight miscalculation in this could be catastrophic" (pant shape); Frugal · `4Jrq_F1Ayp8` · [12:55] · "but you can't cheat pants"; Frugal · `WMwH8xtSOWA` · [05:30] · "compensate a lack of chemistry between pieces by adding more material"; Frugal · `4DHGKfe-Vho` · [01:03] · "especially when it doesn't fit can be very revealing"; Tim · `XSF9AOx7sdU` · [01:37] · "build a wardrobe of good Basics that fit you perfectly"; Tim · `IUMqpLeCT-E` · [01:40] · "great Staples that fit you well"; GQ (outsider) · `4fb4GyOylK8` · [15:51] · "The most important thing of any suit is the fit"
 - **The four:** all agree.
@@ -283,16 +283,16 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** all agree.
 - **Engine today:** has it [FIT-3] (clearly pulls: top −2.0, slim pants −1.5, others −2.0), [PRO-16]; dealbreakers H8.
 - **AI can see it:** weakly (`strain` is a weak read; "some" strain never counts).
-- **Frame:** `inputs/youtube/shots/wIib9hzVUuw/f-09-15.jpg`
+- **Frame:** `inputs/youtube/shots/wIib9hzVUuw/f-09-15.jpg` (checked: a collage of outfits; which one is the tight one is unclear)
 
 #### fit.3. Too big fails when it sags, flaps or swamps; size as a shortcut (the biggest, boxiest tee) isn't a silhouette.
 - **Strength:** fault. **Holds when:** wide trousers that slump instead of holding their shape, thin trousers flapping, a close-fit jacket (a biker) a size too big, an oversized hoodie that looks "swollen". **Doesn't:** baggy jeans, where "too big" is the point (Frugal); a deliberately boxy or oversized piece with the right details (fit.5).
 - **Interacts with:** fit.4, fit.5, sil.4.
-- **Sources:** Tim · `vziGl_FxQb0` · [03:15] · "the word baggy has a sort of sagging connotation"; Jaye · `7K2qRZaXX3w` · [06:53] · "the thinnest goddamn pair of pants that are flailing everywhere" (trimmed: "flailing everywhere in the wind"); Jaye · `Jz9QVWgBbOg` · [13:11] · "You getting oversized everything"; Frugal · `4DHGKfe-Vho` · [14:23] · "No, it's too big. It's too big."; Frugal · `ove4zof6W2k` · [00:00] · "default to like something really big or cropped or flashy"; Frugal · `xL1NeaA9D-Y` · [04:51] · "too big is kind of the goal here anyway" (baggy jeans, the exception)
+- **Sources:** Tim · `vziGl_FxQb0` · [03:15] · "the word baggy has a sort of sagging connotation"; Jaye · `7K2qRZaXX3w` · [06:53] · "pants that are flailing everywhere in the wind"; Jaye · `Jz9QVWgBbOg` · [13:11] · "You getting oversized everything"; Frugal · `4DHGKfe-Vho` · [14:23] · "No, it's too big. It's too big."; Frugal · `ove4zof6W2k` · [00:00] · "default to like something really big or cropped or flashy"; Frugal · `xL1NeaA9D-Y` · [04:51] · "too big is kind of the goal here anyway" (baggy jeans, the exception)
 - **The four:** all agree against sagging and swamping; Frugal exempts baggy jeans, which Jaye's "flailing" partly contradicts.
 - **Engine today:** lacks it (a size big can't be told from cut roomy, KD-19; roominess 5 only blocks looks).
 - **AI can see it:** weakly (`volume` 5 is rarely read; nothing reads sagging or flapping).
-- **Frame:** `inputs/youtube/shots/4DHGKfe-Vho/f-14-28.jpg`
+- **Frame:** pending (`inputs/youtube/shots/4DHGKfe-Vho/f-14-28.jpg` checked: a different outfit, not the biker jacket)
 
 #### fit.4. Size is a tool: sizing up or down on purpose works when the piece is placed right, and small fit differences change the mood.
 - **Strength:** nuance. **Holds when:** a too-small tee inside a looser leather jacket, a too-big shirt over a hoodie, snug base layers under roomy outer ones, a looser denim shirt over jeans. **Doesn't:** the same tight tee worn alone (fit.2).
@@ -310,7 +310,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim, Frugal and Wanhee agree; Jaye silent. Frugal calls a structured, stiff drop shoulder a taste he doesn't share, not a fault (`ove4zof6W2k` [14:12]).
 - **Engine today:** lacks it (no credit for a good oversize; [FIT-2] charges roomy sleeves past the wrist −0.5; [PRO-11] charges roomy tops no look holds).
 - **AI can see it:** weakly (`volume` 4–5 weak, `sleeve_end`); no for drape and stiffness.
-- **Frame:** `inputs/youtube/shots/DwolmJNAw_k/f-03-30.jpg`
+- **Frame:** `inputs/youtube/shots/DwolmJNAw_k/f-03-30.jpg` (checked: the tee's fabric close up, not the fit worn)
 
 #### fit.6. Skinny is out; slim is contested. A narrow leg is unforgiving: it needs everything else to work.
 - **Strength:** fault (skinny) / nuance (slim). **Holds when:** skinny jeans, skinny joggers, tight tapered trousers. **Doesn't:** slim under tailoring; Jaye (2025) says for a skilled dresser skinny and baggy are about equal; Frugal says good styling can make any proportion work.
@@ -319,7 +319,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim, Wanhee and Frugal reject skinny; on slim, Tim and Wanhee prefer straight, Frugal and Jaye are fine with it (`creators-rules.md`, KD-20).
 - **Engine today:** has it [PRO-13] (slim −1.0, skinny −2.0; a straight read at roominess 2 or less counts as slim); dealbreakers S1, S2, N2.
 - **AI can see it:** yes for slim-or-skinny vs straight-or-fuller (94% steady); weakly for slim vs straight alone.
-- **Frame:** `inputs/youtube/shots/wIib9hzVUuw/o5-before-10-18.png`
+- **Frame:** `inputs/youtube/shots/wIib9hzVUuw/o5-before-10-18.png` (checked: a black sweater over narrow dark trousers)
 
 #### fit.7. The right trouser cut has room through the seat and thigh and a gentle taper from the knee: not slim all over, not flaring at the hem.
 - **Strength:** lift / fault (tight thighs with a normal hem, or a hem too wide for the leg). **Holds when:** relaxed jeans, wide jeans, smart trousers, wide sweatpants (open hem, high rise). **Doesn't:** Tim prefers straight on wide pleated trousers (sil.8); a barrel leg narrows at the hem by design.
@@ -328,7 +328,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim (most) and Wanhee agree; Frugal's "tight waist wide legs" fits; Jaye silent.
 - **Engine today:** has it differently [PRO-13] (only slim and skinny); taper and thigh room aren't scored.
 - **AI can see it:** weakly (`leg_shape` has no taper; tight thighs only through `strain`).
-- **Frame:** `inputs/youtube/shots/wIib9hzVUuw/f-10-45.jpg`
+- **Frame:** `inputs/youtube/shots/wIib9hzVUuw/f-10-45.jpg` (checked: straight leather trousers)
 
 #### fit.8. Basics that fit are "put together", not special: a well-fitting tee and jeans is the base every other rule builds on.
 - **Strength:** nuance (it sets the 7.0 base; fit alone doesn't lift above it). **Holds when:** a plain tee, straight jeans, clean shoes; "letting the fit do the talking". **Doesn't:** Frugal calls the perfect blank a false goal: it adds no interest, so a lift has to come from elsewhere.
@@ -337,33 +337,33 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** all agree (Tim's staples, Jaye's foundation, Wanhee's white tee and 501 "dressed well").
 - **Engine today:** has it [SCO-1] (the plain tee, dark jeans and white sneakers score 7.0), [FIT-1], [STY-12].
 - **AI can see it:** yes (`subcategory`, `leg_shape`, `volume`, `condition`).
-- **Frame:** `inputs/youtube/shots/xL1NeaA9D-Y/f-01-40.jpg`
+- **Frame:** `inputs/youtube/shots/xL1NeaA9D-Y/f-01-40.jpg` (checked: one straight-jean outfit)
 
 #### fit.9. Small edges count: sleeves end where they're meant to (a long-sleeve below the wrist, above the fingers), and a neckline or collar sits neat.
-- **Strength:** nuance (fault when a sleeve swallows the hand, suit.9). **Holds when:** long-sleeve tees, knits, turtlenecks that stand up without folding, shirt collars that hold. **Doesn't:** a roomy piece cut long in the sleeve on purpose (fit.4).
-- **Interacts with:** suit.9, fit.5.
+- **Strength:** nuance (fault when a sleeve swallows the hand, suit.7). **Holds when:** long-sleeve tees, knits, turtlenecks that stand up without folding, shirt collars that hold. **Doesn't:** a roomy piece cut long in the sleeve on purpose (fit.4).
+- **Interacts with:** suit.7, fit.5.
 - **Sources:** Tim · `a7FgCE9NPmw` · [06:09] · "longer sleeves meant to end below your wrist and above your fingers"; Tim · `a7FgCE9NPmw` · [02:51] · "The neckline is also extremely important"; Tim · `OqoUgLxknJc` · [10:17] · "it's not too high where you have to fold it over"
 - **The four:** only Tim (others silent).
 - **Engine today:** has it [FIT-2] for sleeves over the hands; lacks the neckline.
 - **AI can see it:** weakly (`sleeve_end` 70–76%, a bent arm fools it); no for collars.
-- **Frame:** `inputs/youtube/shots/OqoUgLxknJc/f-10-22.jpg`
+- **Frame:** pending (`inputs/youtube/shots/OqoUgLxknJc/f-10-22.jpg` checked: a check shirt, not the turtleneck)
 
 ---
 
 ## Suits and tailoring (suit.*)
 
-**How suits are worn casually now (the four, 2023–2026).** The outsiders say almost nothing past "a navy jacket with jeans". The current casual suit comes from the four: a wider-fitting two-piece over a plain tee or tank (Tim); crisp tailoring with no tie, even no dress shirt, a polo or tee under it (Tim); a tee tucked into tailored trousers under a blazer with loafers (Tim); a blazer with jeans by day (Tim); sneakers with formal wear and a design shirt under a black blazer, kept from "try hard" (Wanhee); an open blazer, an open white shirt instead of a buttoned one and a tie, a suit worn with flared denim (Jaye). Against that, black tie "sticks to the rules", and a suit everywhere (the gas-station run) overdresses (Jaye 2026, Tim).
+**How suits are worn casually now (the four, 2023–2026).** The outsiders say almost nothing past "a navy jacket with jeans". The current casual suit comes from the four: a wider-fitting two-piece over a plain tee or tank (Tim); crisp tailoring with no tie, even no dress shirt, a polo or tee under it (Tim); a tee tucked into tailored trousers under a blazer with loafers (Tim); a blazer with jeans by day (Tim); sneakers with formal wear and a design shirt under a black blazer, kept from "try hard" (Wanhee); an open blazer, an open white shirt instead of a buttoned one and a tie, a suit worn with flared denim (Jaye). Against that, black tie "sticks to the rules", and a suit everywhere (the gas-station run) overdresses (Jaye 2026, Tim). One outsider adds the most on this: Damien Broderick (2025) says most men don't need a suit at all and builds the same elegance from separates (smart trousers, loafers, a polo or oxford, a sports coat, a long coat), suit.11; his line that loafers rule out sweatpants clashes with Tim and is dropped there.
 
-**How this fits `specs/tailored.md`.** TL1's home pieces (a plain tee or knit under the jacket, clean white leather sneakers) are backed by the four (suit.10, suit.12), not by the outsiders. TL1's "never with jeans" is right as a name rule: a blazer with jeans is a good separate (suit.11), so it must never be charged as a clash either. TL5's fixes in order of creator support: the hem under the trousers (suit.5), sleeves over the hands, softer on a relaxed blazer (suit.9), pulling across a buttoned jacket (suit.4), a loud oversized graphic tee under tailoring (suit.13). The spec's "Later" credits: a clean hem touching the shoe under a suit is the strongest candidate (suit.5); a high rise under the jacket second (suit.6, unreadable today). A short or boxy tailored jacket must not be charged (suit.2, suit.8).
+**How this fits `specs/tailored.md`.** TL1's home pieces (a plain tee or knit under the jacket, clean white leather sneakers) are backed by the four (suit.8, suit.10), not by the outsiders. TL1's "never with jeans" is right as a name rule: a blazer with jeans is a good separate (suit.9), so it must never be charged as a clash either. TL5's fixes in order of creator support: the hem under the trousers (suit.3), sleeves over the hands, softer on a relaxed blazer (suit.7), pulling across a buttoned jacket (suit.4), a loud oversized graphic tee under tailoring (suit.13). The spec's "Later" credits: a clean hem touching the shoe under a suit is the strongest candidate (suit.3); a high rise under the jacket second (suit.5, unreadable today). A short or boxy tailored jacket must not be charged (suit.1, suit.6).
 
 #### suit.1. Relaxed is current: a suit no longer needs to be slim; a slightly relaxed or boxy jacket is fine; skin-tight ruins it, and so does oversized everything.
 - **Strength:** lift (a relaxed suit that still fits) / fault (skin-tight, or swamping). **Holds when:** smart casual and everyday tailoring, a two-piece or a blazer; boxy on purpose. **Doesn't:** black tie stays slim and by the rules; Wanhee's "really slim Italian guy in a suit" is still a valid choice (slim is never charged unless it pulls).
-- **Interacts with:** suit.4 (relaxed is not pulling), suit.9 (a relaxed blazer's sleeve can run a bit long), occasion.
+- **Interacts with:** suit.4 (relaxed is not pulling), suit.7 (a relaxed blazer's sleeve can run a bit long), occasion.
 - **Sources:** Tim · `vQ6_okzfNSs` · [04:16] · "the two-piece suits no longer needs to be a slim fit"; Tim · `vQ6_okzfNSs` · [04:16] · "explore some wider fitting suits"; Tim · `-V2bE8nDsdo` · [01:31] · "a slightly relaxed fit, which I prefer in a blazer"; Tim · `OqoUgLxknJc` · [08:40] · "not like incredibly baggy or anything"; Tim · `vziGl_FxQb0` · [07:02] · "a more modern take on tailoring" (a slightly boxy double-breasted suit); Jaye · `Jz9QVWgBbOg` · [13:11] · "Nothing wrong with a boxy suit if that's what you're going for"; Jaye · `Jz9QVWgBbOg` · [13:11] · "you getting these skin tight jackets"; Wanhee · `ew3gCk1zkso` · [11:15] · "really Slim like put together Italian guy in a suit"; Tim's guest · `OqoUgLxknJc` · [12:55] · "stick to the rules of tailoring" (black tie); Justin Kwan (outsider) · `pQctf3wAlpI` · [01:41] · "slim fit equals slimmer looking, but it's a lie"
 - **The four:** Tim and Jaye agree; Wanhee allows slim as a choice; Frugal silent on suits. GQ's "a too-big waist looks boxy" is dropped (the four win).
 - **Engine today:** has it differently [FIT-3] (pulling costs) but [FIT-2] charges a blazer's sleeves over the hands −2.0, which hits relaxed blazers Tim likes; nothing rewards the relaxed cut.
 - **AI can see it:** weakly (`volume` on a blazer, `strain`).
-- **Frame:** `inputs/youtube/shots/vQ6_okzfNSs/f-04-21.jpg`
+- **Frame:** pending (`inputs/youtube/shots/vQ6_okzfNSs/f-04-21.jpg` checked: a shirt-and-shorts set, not the suit)
 
 #### suit.2. A suit wins on fit: the shape comes from the shoulder and chest (a shoulder slightly past the natural one, a little drape), not from a waist taken in tight.
 - **Strength:** lift. **Holds when:** jackets and coats; Tim's "slightly wider with enough structure" and broad, straight-hemmed boxy jackets. **Doesn't:** a jacket "hanging off" the shoulder a size too big (fit.3).
@@ -372,7 +372,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim and Jaye agree; Wanhee and Frugal silent.
 - **Engine today:** has it differently [FIT-1] (Fit stops at 7 even on a sharp tailored outfit; no shoulder read, KD-13).
 - **AI can see it:** no (shoulder position and structure aren't read; the shoulder-seam read failed at 78%).
-- **Frame:** `inputs/youtube/shots/0ilmLux6mPg/f-07-47.jpg`
+- **Frame:** `inputs/youtube/shots/0ilmLux6mPg/f-08-20.jpg` (checked: the boxy beige jacket over pleated trousers described at [07:42]–[08:15]; `f-07-47.jpg` shows Tim talking)
 
 #### suit.3. The suit trouser touches the shoe with no break or one clean break; too long bunches, deliberately short is out.
 - **Strength:** lift (a clean hem) / fault (bunching on the shoe). **Holds when:** suit and dress trousers over loafers, derbies or clean sneakers. **Doesn't:** the outsiders split on no break (The Armoury) vs one break (GQ); the four only need the hem to touch the shoe, so neither is scored. GQ's "cut them shorter for a cleaner look" is dropped (Tim: too short ruins the silhouette).
@@ -381,7 +381,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim agrees (strongly); Frugal and Wanhee agree through prop.1; Jaye silent on suit hems.
 - **Engine today:** has it differently [FIT-4] (trousers piling on a straight leg −2.0); no credit for a clean break (the Tailored spec's "Later" list).
 - **AI can see it:** weakly (`hem`); look L reads covering the shoe well.
-- **Frame:** `inputs/youtube/shots/0ilmLux6mPg/f-08-20.jpg`
+- **Frame:** `inputs/youtube/shots/0ilmLux6mPg/f-08-20.jpg` (checked: pleated trousers barely breaking on the shoe)
 
 #### suit.4. Nothing pulls: no X-creases at the button, no lapels bowing off the chest, no gaping trouser pockets, no straining shirt.
 - **Strength:** fault. **Holds when:** visible from the front, mostly with the jacket buttoned. **Doesn't:** a relaxed or boxy jacket with room isn't this (suit.1).
@@ -390,7 +390,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim and Jaye agree (others silent on suits).
 - **Engine today:** has it [FIT-3].
 - **AI can see it:** weakly (`strain`).
-- **Frame:** `inputs/youtube/shots/bLcGL6rKBBg/f-07-37.jpg`
+- **Frame:** `inputs/youtube/shots/bLcGL6rKBBg/f-07-37.jpg` (checked: a buttoned jacket with the waist marked)
 
 #### suit.5. Suit trousers sit higher and fuller: a high rise under the jacket makes one silhouette and a long leg line; a fuller leg falls straight; pleats and a pressed crease are welcome.
 - **Strength:** lift (high rise, pleats, crease, a straight-falling fuller leg) / fault (low rise under a jacket). **Holds when:** a jacket over trousers, worn open or with a tuck so the waistband shows. **Doesn't:** jeans are allowed lower; GQ's flat-front preference is dropped (Tim likes pleats).
@@ -399,16 +399,16 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Wanhee, Jaye and Tim agree; Frugal's "wide high-waisted trousers" fit.
 - **Engine today:** has it differently [PRO-13] (exempts suit trousers and trousers under a blazer from the slim charge); [PRO-7] (the tailored line, +1.0, needs a tucked top); rise, pleats and crease: lacks.
 - **AI can see it:** no (rise, pleats and crease aren't read).
-- **Frame:** `inputs/youtube/shots/RtxJqd5Drps/f-01-45.jpg`
+- **Frame:** `inputs/youtube/shots/RtxJqd5Drps/f-01-45.jpg` (checked: a jacket over dark trousers; the rise isn't visible)
 
 #### suit.6. Jacket length: no fixed rule; a short or boxy jacket over full trousers is fine, but a jacket cut so long it swallows the legs is a fault.
 - **Strength:** fault (too long) / nuance. **Holds when:** a suit or sport jacket over trousers. **Doesn't:** GQ and Kwan's "too short shows the seat / splits you in half" is dropped: the four read a jacket ending where the trousers start as a deliberate break (prop.3).
-- **Interacts with:** prop.2, prop.3, suit.9 (too-long sleeves make the jacket look longer).
+- **Interacts with:** prop.2, prop.3, suit.7 (too-long sleeves make the jacket look longer).
 - **Sources:** Tim · `0ilmLux6mPg` · [08:15] · "the jacket cuts abruptly where the trouser starts"; GQ (outsider) · `bLcGL6rKBBg` · [08:11] · "it's gonna swallow the legs up"
 - **The four:** Tim for the short jacket; the "too long" half comes from GQ, consistent with the four's prop.6; others silent.
 - **Engine today:** lacks it.
 - **AI can see it:** weakly (`length` on the jacket).
-- **Frame:** `inputs/youtube/shots/bLcGL6rKBBg/f-08-16.jpg`
+- **Frame:** `inputs/youtube/shots/0ilmLux6mPg/f-08-20.jpg` (checked: the jacket ending where the trousers start; `bLcGL6rKBBg/f-08-16.jpg` shows the tailor talking)
 
 #### suit.7. The sleeve ends at the wrist and must not swallow the hand; the exact shirt cuff isn't scored, and a relaxed blazer may run a little long.
 - **Strength:** fault (sleeve over the hand), softer on a deliberately relaxed blazer. **Holds when:** blazers, suit jackets, overcoats. **Doesn't:** the outsiders' 1–2 cm of shirt cuff is what Tim calls the surface-level checklist.
@@ -417,16 +417,16 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim softens it; others silent. Kept from the outsiders only as "don't swallow the hand".
 - **Engine today:** has it [FIT-2] (−2.0 on a blazer, suit jacket or overcoat); dealbreakers H9 proposes a hold with a relaxed-blazer exception.
 - **AI can see it:** weakly (`sleeve_end` 70–76%; a bent arm fools it).
-- **Frame:** `inputs/youtube/shots/bLcGL6rKBBg/f-05-20.jpg`
+- **Frame:** `inputs/youtube/shots/bLcGL6rKBBg/f-05-20.jpg` (checked: a sleeve showing the shirt cuff)
 
 #### suit.8. Tailoring worn casually is the current way: a tee, tank or polo under the jacket, no tie, a tucked tee with loafers, an open blazer.
 - **Strength:** lift. **Holds when:** the tailoring is crisp and the casual layer under it is plain; smart casual, dates, a creative office. **Doesn't:** at a strict corporate office or black tie; a loud oversized graphic under it (suit.13); an untucked dress shirt under a blazer ([CON-3]).
-- **Interacts with:** occasion, style (the high-low mix is the point), suit.12.
+- **Interacts with:** occasion, style (the high-low mix is the point), suit.10.
 - **Sources:** Tim · `vQ6_okzfNSs` · [04:16] · "a simple t-shirt or tank top underneath for an elegant smart casual"; Tim · `jaOSdGqtgYY` · [06:59] · "crisp tailoring especially when worn casually without a tie"; Tim · `-V2bE8nDsdo` · [04:37] · "oversized t-shirt tucked into the tailored trousers"; Tim · `-V2bE8nDsdo` · [02:34] · "by swapping the sneakers for loafers and adding a blazer"; Jaye · `23ZCHsp9AZU` · [01:32] · "most people will tie and button it up" (he wears the shirt open); Jaye · `Pxeeh-caTJg` · [21:42] · "this fit has a open blazer"; Jaye · `VUEaMYx10mM` · [12:28] · "But what if my suit and tie has flared denim?"; Wanhee · `tNVdA_arEa8` · [02:36] · "going against the expectation"
 - **The four:** Tim, Jaye and Wanhee agree; Frugal silent.
 - **Engine today:** has it differently [STY-4] (since v11 a tee or tank under a suit isn't charged), [STY-1]/[STY-2] (a matching suit's credits), TL1's home pieces; no credit for the casual mix itself.
 - **AI can see it:** yes (`subcategory` of the inner top and jacket, `tucked`).
-- **Frame:** `inputs/youtube/shots/-V2bE8nDsdo/f-04-42.jpg`
+- **Frame:** `inputs/youtube/shots/-V2bE8nDsdo/f-04-12.jpg` (checked: the tee tucked into tailored trousers; the blazer is out of frame)
 
 #### suit.9. A blazer with jeans is a good separate ("cool professor"), best with a softer jacket.
 - **Strength:** lift. **Holds when:** a blazer or unstructured jacket with jeans by day, tee or flannel under it, loafers or sneakers. **Doesn't:** it isn't Tailored by name (TL1); the engine's charge on light, mid or relaxed jeans is not what the four say.
@@ -435,25 +435,25 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** Tim and Jaye agree; others silent.
 - **Engine today:** has it differently [STY-3] (a tailored jacket with relaxed, wide, light, mid-wash or distressed jeans −1.5; dark straight jeans free). The four would charge none of it; a founder call.
 - **AI can see it:** yes (`subcategory`, `color_family` denim washes, `leg_shape`).
-- **Frame:** `inputs/youtube/shots/-V2bE8nDsdo/f-04-12.jpg`
+- **Frame:** `inputs/youtube/shots/-V2bE8nDsdo/f-04-42.jpg` (checked: a brown blazer over a flannel with light jeans)
 
 #### suit.10. Clean, low sneakers work under tailoring; chunky or running sneakers don't.
 - **Strength:** nuance (clean sneakers) / fault (chunky under a blazer). **Holds when:** white leather or plain low sneakers under a suit or blazer, kept from "try hard". **Doesn't:** at an interview the engine holds sneakers under a blazer to 7.0 ([OCC-4]); no creator line here names chunky sneakers under suit trousers directly.
 - **Interacts with:** shoes, prop.10 (a chunky shoe wants a generous leg, which suit trousers rarely are), suit.8.
-- **Sources:** Wanhee · `tNVdA_arEa8` · [02:36] · "wearing sneakers with Formal Wear"; Wanhee · `tNVdA_arEa8` · [02:36] · "then it just looks try hard" (when overdone); Tim · `-V2bE8nDsdo` · [04:37] · flannel under a blazer with jeans and sneakers (no checked quote, described)
+- **Sources:** Wanhee · `tNVdA_arEa8` · [02:36] · "wearing sneakers with Formal Wear"; Wanhee · `tNVdA_arEa8` · [02:36] · "then it just looks try hard" (when overdone); Tim · `-V2bE8nDsdo` · [04:37] · "the sneakers and cap for that touch of street wear" (flannel under a blazer, jeans)
 - **The four:** Wanhee and Tim agree; others silent.
 - **Engine today:** has it [SHO-8] (chunky under a blazer −2.0), [SHO-3] (running shoes 4.5 under a blazer), [OCC-4]; TL1 makes clean sneakers a home piece.
 - **AI can see it:** yes (shoe `subcategory`).
-- **Frame:** `inputs/youtube/shots/-V2bE8nDsdo/f-04-42.jpg`
+- **Frame:** `inputs/youtube/shots/-V2bE8nDsdo/f-04-42.jpg` (checked: the blazer and jeans; the sneakers are out of frame)
 
-#### suit.11. Smart trousers carry tailoring without a jacket: pleated, creased trousers dress up or down, and even pleated track pants read slightly tailored.
-- **Strength:** nuance (lift for the piece). **Holds when:** a pleated, center-creased wide trouser with a shirt over a tank for smart, a tee and cap for casual. **Doesn't:** relaxed tailoring with no jacket stays minimal or smart casual by name (`specs/tailored.md` Out).
+#### suit.11. Tailored separates replace the suit for most days: smart trousers (pleated, creased) and loafers with a polo, then an oxford, then a sports coat, then a long coat over it; the same trousers dress up or down.
+- **Strength:** nuance (lift for the piece). **Holds when:** a pleated, center-creased wide trouser with a shirt over a tank for smart, a tee and cap for casual; pleated track pants read slightly tailored; a camel overcoat goes over jeans and a polo as easily as over a suit. **Doesn't:** relaxed tailoring with no jacket stays minimal or smart casual by name (`specs/tailored.md` Out). Dropped: Broderick's "you can no longer wear sweats" once the shoe is a loafer (`4jnsdw7aT5U` [06:52]) clashes with Tim, who wears sweatpants with minimal loafers ("Sweatpants with loafers can be a risky move", then "I feel like it actually works surprisingly well", `-V2bE8nDsdo` [03:04]–[03:34]); the four win.
 - **Interacts with:** suit.5, style worlds (minimal, smart casual).
-- **Sources:** Tim · `vQ6_okzfNSs` · [03:12] · "you can wear this just as easily in a sophisticated"; Tim · `o5RnTT2oafg` · [04:27] · "paired with a shirt long sleeve or short sleeve over a vest"; Tim · `vziGl_FxQb0` · [02:45] · "the comfort of a jogger, but with a sharper silhouette"; Tim · `2KblatXQTGs` · [03:14] · "they still feel like a smart trouser thanks to the center crease"
-- **The four:** only Tim (others silent).
+- **Sources:** Tim · `vQ6_okzfNSs` · [03:12] · "you can wear this just as easily in a sophisticated"; Damien Broderick (outsider) · `4jnsdw7aT5U` · [13:25] · "A smart pair of trousers, a pair of loafers, and a polo"; Damien Broderick (outsider) · `4jnsdw7aT5U` · [13:56] · "Throw a sports coat over it."; Damien Broderick (outsider) · `4jnsdw7aT5U` · [12:22] · "capable of going over a classic pair of jeans and a polo" (the camel overcoat); Tim · `o5RnTT2oafg` · [04:27] · "paired with a shirt long sleeve or short sleeve over a vest"; Tim · `vziGl_FxQb0` · [02:45] · "the comfort of a jogger, but with a sharper silhouette"; Tim · `2KblatXQTGs` · [03:14] · "they still feel like a smart trouser thanks to the center crease"
+- **The four:** only Tim (others silent); Broderick (outsider) agrees on the ladder.
 - **Engine today:** has it differently (trousers sit at dressiness 4, pull-on trousers lower; pleats and crease aren't scored; pleated track pants read as sweats or pull-on).
 - **AI can see it:** weakly (`subcategory` trousers vs pull-on trousers); no for pleats and crease.
-- **Frame:** `inputs/youtube/shots/vQ6_okzfNSs/f-03-17.jpg`
+- **Frame:** `inputs/youtube/shots/vQ6_okzfNSs/f-03-17.jpg` (checked: the white trouser-and-shirt set)
 
 #### suit.12. Statement tailoring details: a double-breasted jacket carries more style (and should be worn buttoned); collarless or lapel-less jackets and a three-button cut are subtle twists.
 - **Strength:** lift (small). **Holds when:** double-breasted, ideally with wide lapels; a blazer with no lapels; a three-button jacket that reads more like outerwear. **Doesn't:** an open double-breasted jacket hangs wide (GQ; the four silent).
@@ -462,7 +462,7 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** only Tim (others silent).
 - **Engine today:** lacks it.
 - **AI can see it:** no (no double-breasted, lapel or button read; `subcategory` only names the jacket).
-- **Frame:** `inputs/youtube/shots/-e9Is50-fn0/f-00-36.jpg`
+- **Frame:** `inputs/youtube/shots/-e9Is50-fn0/f-00-36.jpg` (checked: a double-breasted jacket)
 
 #### suit.13. A loud or oversized graphic tee fights tailoring; a muted design shirt under a dark blazer is wit.
 - **Strength:** fault (oversized or loud graphic under a jacket) / lift (a quiet twist). **Holds when:** a blazer or suit jacket over a graphic tee. **Doesn't:** a plain or fitted tee (suit.8); a design shirt toned down by a black blazer and black trousers.
@@ -471,13 +471,13 @@ Synthesized Nov 14, 2026 for T95 from `by-part/rules-silhouette.md`, `rules-prop
 - **The four:** only Wanhee (others silent); the engine's charge comes from FashionBeans, not the four.
 - **Engine today:** has it [STY-10] (an oversized graphic tee under tailoring −1.5; a regular one free).
 - **AI can see it:** yes (`subcategory` graphic_tee, `volume`, `pattern`, `pattern_scale`).
-- **Frame:** `inputs/youtube/shots/tNVdA_arEa8/f-02-11.jpg`
+- **Frame:** `inputs/youtube/shots/tNVdA_arEa8/f-02-11.jpg` (checked: a black blazer over a white tee)
 
 #### suit.14. Dress for the room: a full suit for an errand overdresses, and wearing one everywhere kills its effect.
 - **Strength:** nuance (occasion). **Holds when:** a full suit and dress shoes at an everyday or casual setting. **Doesn't:** where a blazer or suit is expected, lean smarter (Tim); Jaye's 2025 "always overdress" is his older view.
 - **Interacts with:** occasion (that part owns the numbers), suit.8 (casual tailoring is the middle path).
-- **Sources:** Jaye · `Jz9QVWgBbOg` · [11:10] · "If you wear a suit jacket everywhere to every occasion"; Tim · `IUMqpLeCT-E` · [00:33] · "three-piece suit to a casual family Barbecue"
-- **The four:** Jaye (2026) and Tim agree; Jaye (2025, `7K2qRZaXX3w`) differs; newest wins.
+- **Sources:** Jaye · `Jz9QVWgBbOg` · [11:10] · "If you wear a suit jacket everywhere to every occasion"; Tim · `IUMqpLeCT-E` · [00:33] · "three-piece suit to a casual family Barbecue"; Damien Broderick (outsider) · `4jnsdw7aT5U` · [03:21] · "that is dramatically overdressed for the situation you are now in" (a full navy suit and tie for date night); Damien Broderick (outsider) · `4jnsdw7aT5U` · [04:30] · "It looks like you're trying too hard." (the same at the pub); Damien Broderick (outsider) · `4jnsdw7aT5U` · [00:36] · "Most men don't need a suit at all."
+- **The four:** Jaye (2026) and Tim agree; Jaye (2025, `7K2qRZaXX3w`) differs; newest wins. Broderick (outsider) agrees.
 - **Engine today:** has it [OCC-2] (a full suit at Everyday −0.25); the Tailored spec keeps it.
 - **AI can see it:** yes (`subcategory`, occasion from the user).
 - **Frame:** none (described only)
