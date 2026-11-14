@@ -3,6 +3,77 @@
 One line per judged outfit, from the readers' notes (`notes/2026/*.md`, "Outfits judged"). **Band** is the creator's verdict mapped to bad / okay (their 7) / good (their 8) / great (their 9+); "?" means mixed or unstated. **Frame** is the still taken a few seconds after the transcript stamp. **Every frame is unverified:** transcript stamps come in 30-second blocks, and in a spot check of 6 stills (Nov 14) only 2 showed the outfit described, 3 showed a neighbouring outfit from the same segment and 1 was close but not exact. Before an example anchors the ladder or the paper test (T68), someone looks at its still and the seconds around it. The pieces column is what the creator says out loud; colors are often unnamed.
 
 
+## Anchor set: 60 worked examples with verified stills (Nov 14)
+
+The founder's ladder and the paper test (T68) are tuned on these. Each was recaptured as a burst of 11 stills across its 30-second block (every 3 s, contact sheet `inputs/youtube/shots/<id>/aNN-sheet.jpg`), and the still that shows the judged outfit was picked by eye. **50 verified, 10 partly** (a flat lay, a drawn figure, a collage, or an outfit not fully on yet; usable with care). Two Wanhee anchors (a25, a26) were swapped for the toning-down examples actually on screen in that segment. **Step** is a suggested place on the 3–9.5 ladder from the creator's verdict, for the founder to confirm; it is not a score.
+
+| # | Kind | Video | At | Outfit | Verdict | Step | Still | Status |
+|---|---|---|---|---|---|---|---|---|
+| a01 | layered | `wIib9hzVUuw` | 04:04 | Tim BEFORE 1: oversized tee, baggy denim jacket, very skinny jeans, black boots | bad: top-heavy, "too extreme a shift" | 4.5 | `inputs/youtube/shots/wIib9hzVUuw/a01-04-10.jpg` | **verified** |
+| a02 | layered | `wIib9hzVUuw` | 05:06 | Tim BEFORE 2: tan cap, tan knit, knit cardigan, multicolor chunky scarf, dark slim jeans, white sneakers | bad: knit on knit, top-heavy scarf | 5 | `inputs/youtube/shots/wIib9hzVUuw/a02-05-21.jpg` | **verified** |
+| a03 | layered | `wIib9hzVUuw` | 09:10 | Tim BEFORE 4: tight beige pants, tight beige overshirt over a layer, sneakers | bad on fit: "pulling at the thighs" | 5 | `inputs/youtube/shots/wIib9hzVUuw/a03-09-16.jpg` | **verified** |
+| a04 | plain | `wIib9hzVUuw` | 10:10 | Tim BEFORE 5: skinny leather joggers, white sneakers, top with yellow details | bad: "an abomination" | 4 | `inputs/youtube/shots/wIib9hzVUuw/a04-10-22.jpg` | **verified** |
+| a05 | summer | `XtcY-zmoS-E` | 06:38 | Frugal: wide trousers too long, piling and dragging | bad: "the whole thing is trash" | 4.5 | `inputs/youtube/shots/XtcY-zmoS-E/a05-06-44.jpg` | **verified** |
+| a06 | plain | `zJ5LCenTcf8` | 00:05 | Tim (satire): skin-tight tapered trousers showing ankle, second-skin tee | bad | 3.5 | `inputs/youtube/shots/zJ5LCenTcf8/a06-00-18.jpg` | **verified** |
+| a07 | plain | `zJ5LCenTcf8` | 00:42 | Tim (satire): bold colors and striking patterns clashed | bad | 3.5 | `inputs/youtube/shots/zJ5LCenTcf8/a07-00-45.jpg` | **verified** |
+| a08 | plain | `zJ5LCenTcf8` | 02:18 | Tim (satire): logo top, logo bottom, logo hat | bad | 4 | `inputs/youtube/shots/zJ5LCenTcf8/a08-02-36.jpg` | **verified** |
+| a09 | plain | `Vn6KlXkU2xA` | 00:05 | Frugal: flat jet-black outfit, restaurant staff | bad: flat tones | 6 | `inputs/youtube/shots/Vn6KlXkU2xA/a09-00-30.jpg` | **partly**: drawn figure, flat all-black |
+| a10 | layered | `FFDYIGhiIk8` | 09:10 | Frugal: Rick Owens sneakers, Amiri jeans, Balenciaga jacket | bad: three designer worlds | 5 | `inputs/youtube/shots/FFDYIGhiIk8/a10-08-55.jpg` | **partly**: a collage of the pieces, not worn |
+| a11 | plain | `FFDYIGhiIk8` | 10:40 | Frugal: Triple S, cargos, vintage tee (label stacking) | bad: "you don't need that" | 5 | `inputs/youtube/shots/FFDYIGhiIk8/a11-10-40.jpg` | **partly**: a drawn figure wearing the stack |
+| a12 | layered | `TUYSTimnDJg` | 05:30 | Frugal: the e-boy pile (graphics, striped long sleeve under a tee, chains, Old Skools) | bad: "doesn't make any sense" | 4.5 | `inputs/youtube/shots/TUYSTimnDJg/a12-05-57.jpg` | **verified** |
+| a13 | plain | `eAvgvOHKPPw` | 06:30 | Frugal: tan suede Chelsea boots with skinny jeans | bad: dated | 5.5 | `inputs/youtube/shots/eAvgvOHKPPw/a13-06-35.jpg` | **verified** |
+| a14 | plain | `b1S3XoaRa3k` | 02:12 | Frugal: chunky Balenciaga sneakers with very wide jeans | bad: "doesn't actually work in your outfit" | 5.5 | `inputs/youtube/shots/b1S3XoaRa3k/a14-02-15.jpg` | **partly**: a flat lay of the outfit, not worn |
+| a15 | plain | `XtcY-zmoS-E` | 04:07 | Frugal: slim pants with a wide or oversized top | worse: "does not achieve the same results" | 5.5 | `inputs/youtube/shots/XtcY-zmoS-E/a15-04-28.jpg` | **verified** |
+| a16 | layered | `WMwH8xtSOWA` | 05:35 | Frugal: ill-fitting shirt under a bomber, pants that don't sit well | bad: "does work… in a bad way" | 5 | `inputs/youtube/shots/WMwH8xtSOWA/a16-05-48.jpg` | **partly**: a drawn figure |
+| a17 | layered | `wIib9hzVUuw` | 07:07 | Tim BEFORE 3: navy cuffed jeans, navy tee, navy check flannel, contrasting sneakers | okay: "basic and predictable" | 6.5 | `inputs/youtube/shots/wIib9hzVUuw/a17-07-25.jpg` | **verified** |
+| a18 | plain | `ASQGKf8ve5g` | 01:11 | Frugal's skit: black tee, blue jeans, white sneakers | okay: the plain floor | 7 | `inputs/youtube/shots/ASQGKf8ve5g/a18-01-33.jpg` | **verified** |
+| a19 | summer | `-V2bE8nDsdo` | 02:34 | Tim: straight blue jeans, oversized white tee, white sneakers | okay: "men's basics 101" | 7 | `inputs/youtube/shots/-V2bE8nDsdo/a19-02-37.jpg` | **verified** |
+| a20 | plain | `tNVdA_arEa8` | 08:40 | Wanhee: the boyfriend look, plain white tee, black shoes | okay: safe, boring | 6.5 | `inputs/youtube/shots/tNVdA_arEa8/a20-09-07.jpg` | **partly**: a plain basic outfit (black tee, light trousers, white sneakers) shown for the boyfriend look |
+| a21 | summer | `OqoUgLxknJc` | 07:41 | Tim's guest 1: off-white tee, light 501s, black Chuck 70s | okay-good: "classic simple" | 7 | `inputs/youtube/shots/OqoUgLxknJc/a21-07-44.jpg` | **verified** |
+| a22 | summer | `OqoUgLxknJc` | 07:41 | Tim 1: light straight relaxed jeans, white oversized tee, white sneakers | okay: "a very solid base" | 7 | `inputs/youtube/shots/OqoUgLxknJc/a21-07-56.jpg` | **verified** |
+| a23 | layered | `uBsIrt-zU0I` | 02:57 | Wanhee: fundamentals (khaki, brown, grey, navy) | okay: "It looks fine" | 7 | `inputs/youtube/shots/uBsIrt-zU0I/a23-03-02.jpg` | **verified** |
+| a24 | layered | `2QZhiKgPceA` | 01:50 | Frugal: the TikTok fit (oversized hoodie, boxy tee, baggy pants) | okay: "nothing wrong with this style" | 7 | `inputs/youtube/shots/2QZhiKgPceA/a24-01-47.jpg` | **verified** |
+| a25 | plain | `tNVdA_arEa8` | 00:31 | Wanhee: a bright purple shirt under a dark coat (toning down) | good: the dark coat tones the bright down | 8 | `inputs/youtube/shots/tNVdA_arEa8/a25-00-34.jpg` | **verified** |
+| a26 | layered | `tNVdA_arEa8` | 01:02 | Wanhee: a bright red jacket over dark pants (toning down) | good: dark pants balance the bright jacket | 7.5 | `inputs/youtube/shots/tNVdA_arEa8/a26-01-23.jpg` | **verified** |
+| a27 | layered | `wIib9hzVUuw` | 04:35 | Tim AFTER 1: oversized white tee, cropped grey denim jacket, relaxed jeans, black boots | good: "small changes" | 7.5 | `inputs/youtube/shots/wIib9hzVUuw/a27-04-59.jpg` | **verified** |
+| a28 | layered | `wIib9hzVUuw` | 05:36 | Tim AFTER 2: off-white knit, cream cap, plain scarf, light relaxed jeans, white sneakers | good: "cleaner and a more balanced outfit" | 7.5 | `inputs/youtube/shots/wIib9hzVUuw/a28-06-00.jpg` | **verified** |
+| a29 | summer | `wIib9hzVUuw` | 09:40 | Tim AFTER 4: beige wide smart trousers, tucked ribbed tee, relaxed short-sleeve shirt, loafers | good: "night and day difference" | 8.5 | `inputs/youtube/shots/wIib9hzVUuw/a29-10-04.jpg` | **verified** |
+| a30 | layered | `wIib9hzVUuw` | 10:40 | Tim AFTER 5: straight leather trousers, oversized black tee, black sweater, black sneakers | good | 8 | `inputs/youtube/shots/wIib9hzVUuw/a30-11-01.jpg` | **verified** |
+| a31 | summer | `XtcY-zmoS-E` | 03:37 | Frugal: tight tee or tank over wide high-waisted trousers | good: "my bread and butter for the whole summer" | 8 | `inputs/youtube/shots/XtcY-zmoS-E/a31-03-52.jpg` | **verified** |
+| a32 | summer | `XtcY-zmoS-E` | 07:11 | Frugal: the same trousers hemmed | good: wears them "with like everything" | 7.5 | `inputs/youtube/shots/XtcY-zmoS-E/a32-07-14.jpg` | **verified** |
+| a33 | summer | `Vn6KlXkU2xA` | 02:44 | Frugal: faded vintage black tee with new black pants | good: "one-two punch" | 7.5 | `inputs/youtube/shots/Vn6KlXkU2xA/a33-03-11.jpg` | **partly**: flat lay, not worn |
+| a34 | layered | `Vn6KlXkU2xA` | 07:07 | Frugal: shiny black nylon bomber with black jeans | good: "like fries in a burger" | 7.5 | `inputs/youtube/shots/Vn6KlXkU2xA/a34-07-20.jpg` | **verified** |
+| a35 | plain | `Vn6KlXkU2xA` | 06:33 | Frugal: fairly baggy black pants, black leather boots peeking out | good: his daily outfit | 8 | `inputs/youtube/shots/Vn6KlXkU2xA/a35-06-55.jpg` | **verified** |
+| a36 | suit | `-V2bE8nDsdo` | 02:34 | Tim: jeans and tee plus a relaxed blazer and black loafers | good: "effortless smart casual" | 8 | `inputs/youtube/shots/-V2bE8nDsdo/a36-02-50.jpg` | **verified** |
+| a37 | suit | `-V2bE8nDsdo` | 04:07 | Tim: blazer with jeans and a tee | good: "cool professor" | 8 | `inputs/youtube/shots/-V2bE8nDsdo/a37-04-34.jpg` | **verified** |
+| a38 | layered | `-V2bE8nDsdo` | 03:04 | Tim: grey sweatpants, flannel, minimal black loafers | good: "sweet spot between laid-back and refined" | 7.5 | `inputs/youtube/shots/-V2bE8nDsdo/a38-03-28.jpg` | **verified** |
+| a39 | layered | `OqoUgLxknJc` | 13:00 | Tim's guest 7: cropped grey sweatshirt, white tee hanging out, light Levi's, Converse | good: "good proportions" | 7.5 | `inputs/youtube/shots/OqoUgLxknJc/a39-13-27.jpg` | **verified** |
+| a40 | suit | `OqoUgLxknJc` | 10:52 | Tim 5: grey blazer, light jeans, white tank, black Chelsea boots | good: the casual blazer | 8 | `inputs/youtube/shots/OqoUgLxknJc/a40-11-19.jpg` | **verified** |
+| a41 | suit | `OqoUgLxknJc` | 11:58 | Tim 6: full grey suit, turtleneck, white sneakers | good: casual, every day | 8 | `inputs/youtube/shots/OqoUgLxknJc/a41-12-19.jpg` | **verified** |
+| a42 | layered | `XIYvycsZxDk` | 00:38 | Tim: grey wool trousers, grey scarf, grey knit, white sneakers | good: "classy muted cozy" | 8.5 | `inputs/youtube/shots/XIYvycsZxDk/a42-00-45.jpg` | **verified** |
+| a43 | suit | `XIYvycsZxDk` | 02:55 | Tim: black textured suit, thermal under, houndstooth long coat | good: winter suit | 8.5 | `inputs/youtube/shots/XIYvycsZxDk/a43-03-05.jpg` | **verified** |
+| a44 | layered | `XIYvycsZxDk` | 01:50 | Tim: blue straight jeans, cream hoodie, black low-tops, brown wool jacket | good: many colors, all neutral | 7.5 | `inputs/youtube/shots/XIYvycsZxDk/a44-02-09.jpg` | **verified** |
+| a45 | layered | `vQ6_okzfNSs` | 01:43 | Tim: grey baggy jeans, grey hoodie, white tee peeking, white sneakers | good: tonal | 8 | `inputs/youtube/shots/vQ6_okzfNSs/a45-01-53.jpg` | **verified** |
+| a46 | summer | `2KblatXQTGs` | 01:40 | Tim: off-white cotton-linen wide work pants, oversized white tee | good: "effortless Chic" | 8 | `inputs/youtube/shots/2KblatXQTGs/a46-01-38.jpg` | **verified** |
+| a47 | summer | `o5RnTT2oafg` | 04:30 | Tim: pleated wide trousers, shirt over a tank | good: "perfect for the smarter summer looks" | 8 | `inputs/youtube/shots/o5RnTT2oafg/a47-04-25.jpg` | **verified** |
+| a48 | layered | `YGm7JMniGVc` | 00:40 | Tim (lookbook): mock-neck knit, white pleated trousers, derbies | good: "some clean styling" | 8 | `inputs/youtube/shots/YGm7JMniGVc/a48-00-47.jpg` | **verified** |
+| a49 | summer | `uBsIrt-zU0I` | 02:21 | Wanhee: white tee, military-green pants, beige cap | good: works | 7.5 | `inputs/youtube/shots/uBsIrt-zU0I/a49-02-37.jpg` | **partly**: white tee and green pants, cap not on yet |
+| a50 | suit | `7K2qRZaXX3w` | 03:14 | Jaye: interview suit and tie with a trench coat | good | 8 | `inputs/youtube/shots/7K2qRZaXX3w/a50-03-17.jpg` | **partly**: two suited figures side by side, the right one with a long coat |
+| a51 | suit | `-V2bE8nDsdo` | 04:37 | Tim: oversized white tee tucked into tailored trousers | great: "my favorite kind of outfit" | 9 | `inputs/youtube/shots/-V2bE8nDsdo/a51-04-57.jpg` | **verified** |
+| a52 | layered | `wIib9hzVUuw` | 07:37 | Tim AFTER 3: black flannel statement, white tank, double-pleated black trousers, minimal loafers | great: "a lot better" | 9 | `inputs/youtube/shots/wIib9hzVUuw/a52-08-35.jpg` | **partly**: base outfit without the flannel |
+| a53 | layered | `0ilmLux6mPg` | 07:47 | Tim: beige broad-shouldered jacket, pleated balloon trousers barely breaking | great: the relationship between pieces | 9.5 | `inputs/youtube/shots/0ilmLux6mPg/a53-08-06.jpg` | **verified** |
+| a54 | layered | `YGm7JMniGVc` | 03:50 | Tim (lookbook): turquoise fleece, black overcoat, cuffed mid-wash denim, Docs | great: "the best one yet" | 9 | `inputs/youtube/shots/YGm7JMniGVc/a54-03-45.jpg` | **verified** |
+| a55 | summer | `YGm7JMniGVc` | 01:38 | Tim (lookbook): boxy utility jacket with shorts, black and brown | great: "silhouette of the outfit is on point" | 8.5 | `inputs/youtube/shots/YGm7JMniGVc/a55-01-39.jpg` | **verified** |
+| a56 | plain | `XtcY-zmoS-E` | 04:38 | Frugal: his own jeans, waist taper, wide thigh, drape | great: "hourglass" | 8.5 | `inputs/youtube/shots/XtcY-zmoS-E/a56-04-53.jpg` | **verified** |
+| a57 | plain | `8rmkOpCbFTM` | 05:03 | Frugal: slim sneakers under generous pants stacking, toe showing | great: "great contrast" | 8.5 | `inputs/youtube/shots/8rmkOpCbFTM/a57-05-16.jpg` | **verified** |
+| a58 | plain | `WDsQRHa8jBY` | 09:17 | Frugal: flared pants over boots | great: his favorite pairing | 8.5 | `inputs/youtube/shots/WDsQRHa8jBY/a58-09-30.jpg` | **verified** |
+| a59 | suit | `Pxeeh-caTJg` | 19:39 | Jaye: his "perfect" all-black (open blazer, flares, heavy boots) | great | 9 | `inputs/youtube/shots/Pxeeh-caTJg/a59-19-39.jpg` | **verified** |
+| a60 | suit | `OqoUgLxknJc` | 17:18 | Tim 9: black shirt, white tank peeking, grey suit pieces, Chelsea boots | great: "the classiest" | 8.5 | `inputs/youtube/shots/OqoUgLxknJc/a60-17-33.jpg` | **verified** |
+
+**Coverage by step:** 3.5: 2, 4: 2, 4.5: 3, 5: 5, 5.5: 3, 6: 1, 6.5: 2, 7: 6, 7.5: 10, 8: 13, 8.5: 8, 9: 4, 9.5: 1. **Thin:** 3.0 has none (no real outfit the four call that bad); 3.5–4.5 rests on Tim's satire video plus three real faults; 6–6.5 has only 3 (the creators rarely say "okay but flawed"); 9–9.5 has 5. 7–8.5 is well covered (37 of 60). The founder's blind ratings (Y32) and his own worst and best outfits are the way to fill both ends.
+
+## All judged outfits
+
 | # | Creator | Video | At | Pieces | Verdict (their words) | Band | Frame |
 |---|---|---|---|---|---|---|---|
 | ex.1 | Frugal Aesthetic | `TQi2YaZ5yNY` | 02:41 | the textbook complementary pair ("our perfect love story actualized") | fine but implicitly too jarring next to the next one. | okay | `inputs/youtube/shots/TQi2YaZ5yNY/f-02-41.jpg` (unverified) |

@@ -64,3 +64,6 @@ By creator, the misses cluster in Frugal (7 of 12: his videos cut to memes, grap
 Quotes by script: 227 of 227.
 
 **Tally after three sections:** 26 rules read (1 in 4.8), 22 hold as written, 4 needed a change: two out-of-scope sources removed (prop.4, fit.8), one rule reworded to match its sources (layer.15), one anchor noted (prop.9). No rule's core claim was wrong.
+
+## The 60 anchors, recaptured (Nov 14)
+Each anchor got a burst of 11 stills over its 30-second block and a contact sheet; the right still was picked by eye. **50 verified, 10 partly** (flat lays, drawn figures, a collage, or the outfit not fully on yet), 0 missing. Two Wanhee anchors were swapped for the outfits actually on screen in that segment. One pick (a52) was first taken from the wrong burst and was recaptured. The table is at the top of `6-examples.md`; every other catalogue row stays "unverified".
