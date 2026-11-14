@@ -87,6 +87,6 @@ Each anchor got a burst of 11 stills over its 30-second block and a contact shee
 Quotes by script: 444 of 444 (both files).
 
 ## Totals
-- **Rules read against the transcript: 38 of 195** (1 in 5.1): 31 hold as written, 3 hold with a note on which source anchors them (prop.9, world.1, ix.8), 4 were changed (prop.4 and fit.8: an out-of-scope source removed; layer.15: reworded to match its sources; plus the 2 removals above count once each). No rule's core claim was wrong.
+- **Rules read against the transcript: 38 of 195** (1 in 5.1): 32 hold as written; 3 hold, with a note on which source anchors them (prop.9, world.1, ix.8); 3 were changed (prop.4 and fit.8: a source that crossed the body or attractiveness line was removed; layer.15: reworded to match its own sources). No rule's core claim was wrong.
 - **Quotes checked by script: 1,371 of 1,371** found within 40 s of their stamp.
 - **Frames:** 40 random stills checked (35% exact); 60 anchors recaptured and picked by eye (50 verified, 10 partly).
