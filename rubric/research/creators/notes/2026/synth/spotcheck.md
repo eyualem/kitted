@@ -31,3 +31,18 @@ Quotes by script: 173 of 173 found within 40 s of their stamp.
 Quotes by script: 285 of 285 found within 40 s once caption tags like "[music]" are ignored.
 
 **Running tally:** 16 rules read, 13 hold as written, 3 needed a fix or a note (2 sources removed for crossing the body/attractiveness line, 1 anchor noted). No rule's claim was wrong; two cited passages were out of scope.
+
+## Worked-example frames (40 stills looked at, Nov 14)
+A stratified random sample (seed 40): 12 Frugal, 12 Tim, 6 Wanhee, 5 Jaye, 5 outsiders. Each still compared with its row in `6-examples.md`; the 40 rows now say **verified**, **partly** or **wrong still**.
+
+| Result | Count | Share |
+|---|---|---|
+| Shows the outfit or piece the verdict is about | 14 | 35% |
+| Partly (the right segment, wrong angle, colorway or person) | 7 | 18% |
+| Wrong still (a neighbouring outfit, a title card, a graphic, a talking head) | 19 | 48% |
+
+By creator, the misses cluster in Frugal (7 of 12: his videos cut to memes, graphics and title cards every few seconds) and in Tim's two-person lookbooks (the 30-second stamp lands on the guest's outfit). Outsider suit videos match best (close-ups held for several seconds).
+
+**Why:** the transcript panel gives one stamp per caption block, merged here into 30-second blocks; the still is taken a few seconds after the block starts, not at the second the creator points at the outfit.
+
+**Recommendation (recapture, $0):** for each example that will anchor the ladder or the T68 paper test, take a burst of stills across its block (every 3 s for 30 s, 10 stills, ~0.4 MB) into one contact sheet, then pick the right still by looking (Claude in a later session, or the founder for the anchors). Start with the ~60 examples that have a clear verdict and an on-screen outfit; skip rows whose "pieces" are a single item, a graphic or "not named". Until then, treat every frame not marked **verified** as unusable for tuning.
