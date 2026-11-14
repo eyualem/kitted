@@ -140,7 +140,7 @@ Nov 14, 2026 (T95). Built from `by-part/rules-layering-texture.md`, `rules-shoes
 - **AI can see it:** weakly (color family yes; fabric and shade no).
 - **Frame:** pending (`2KblatXQTGs` likely on screen; no stills folder)
 
-#### layer.15. Accessories (a bag, jewelry, a big scarf, gloves) finish a fit but are never the focal point.
+#### layer.15. Accessories (a bag, jewelry, a big scarf, gloves) finish a fit and rarely lead it; a single bright bag on all black can be the one point (Frugal `Jh8dz-KZcfY` [03:47]).
 - **Strength:** nuance (never scored). **Holds when:** one or two details supporting the focal point: a tasteful bag, jewelry on all black, a big plain scarf. **Doesn't:** heavy accessorizing (layer.7); a chunky scarf on an already big top is top-heavy (Tim, `wIib9hzVUuw` [05:36]); showing a piece off reads insecure (Wanhee).
 - **Interacts with:** cohesion (focal point); layer.8 (an accessory can be the missing piece).
 - **Sources:** Frugal · `Jh8dz-KZcfY` · [02:43] · "genuinely I feel like a bag does so much to an outfit"; Frugal · `Jh8dz-KZcfY` · [07:01] · "is never the focal point but a lot of those add up"; Tim · `-e9Is50-fn0` · [02:11] · "The bigger the better."; Tim · `wIib9hzVUuw` · [05:36] · "it's quite a topheavy outfit with the chunky oversized scarf"; Frugal · `4hwelpjhDTM` · [04:50] · "a nice set of stones can complement the hardware perfectly"; Wanhee · `RtxJqd5Drps` · [11:22] · "you want to wear it like slippers"

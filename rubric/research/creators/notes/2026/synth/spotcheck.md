@@ -46,3 +46,21 @@ By creator, the misses cluster in Frugal (7 of 12: his videos cut to memes, grap
 **Why:** the transcript panel gives one stamp per caption block, merged here into 30-second blocks; the still is taken a few seconds after the block starts, not at the second the creator points at the outfit.
 
 **Recommendation (recapture, $0):** for each example that will anchor the ladder or the T68 paper test, take a burst of stills across its block (every 3 s for 30 s, 10 stills, ~0.4 MB) into one contact sheet, then pick the right still by looking (Claude in a later session, or the founder for the anchors). Start with the ~60 examples that have a clear verdict and an on-screen outfit; skip rows whose "pieces" are a single item, a graphic or "not named". Until then, treat every frame not marked **verified** as unusable for tuning.
+
+## Layering, shoes, condition, season (49 rules; 10 read)
+| Rule | First source | Verdict |
+|---|---|---|
+| layer.5 contrast textures, not knit on knit | Tim `wIib9hzVUuw` [05:06] | holds ("it would have been better to contrast the textures"); the same block's skin-tone remark is out of scope and not used |
+| layer.10 a tank under an open shirt, if the shirt is casual | Tim `2KblatXQTGs` [00:34] | holds |
+| layer.15 accessories finish, never lead | Frugal `Jh8dz-KZcfY` [02:43] | **fixed:** "never the focal point" contradicted Frugal's own red bag as the one point on all black ([03:47]); now "rarely lead it", with that exception |
+| shoe.5 the shoe belongs to the outfit's world | Frugal `8rmkOpCbFTM` [01:09] | holds ("theme and silhouette are the two biggest factors"); the "ugly shoe on a plain base" half is `N8RAKkiqe1w` [11:15] |
+| shoe.10 a shoe repeating a color ties it together | Tim's guest `OqoUgLxknJc` [16:03] | holds: the guest's reason, Tim agrees ("it works perfectly with that shirt") |
+| cond.1 a visible stain ruins the best outfit | Tim `IUMqpLeCT-E` [00:33] | holds ("creases or stains"; creases are a lesser fault elsewhere) |
+| cond.6 deliberate distressing is casual-only | Tim `_6-4CHHXg3c` [08:40] | holds: the distressed pocket-fade hoodie ([08:08]) "only… with a very casual outfit" |
+| season.3 in heat the trousers and waist carry it | Frugal `XtcY-zmoS-E` [03:37] | holds: tight top or tank over wide trousers, "my bread and butter for the whole summer" |
+| season.8 a missing layer isn't a fault in heat | Frugal `XtcY-zmoS-E` [03:37] | holds ("it's so hot… I don't want to put anything more") |
+| season.13 smart casual leans smarter | Tim `vQd36IKIkOg` [08:18] | holds |
+
+Quotes by script: 227 of 227.
+
+**Tally after three sections:** 26 rules read (1 in 4.8), 22 hold as written, 4 needed a change: two out-of-scope sources removed (prop.4, fit.8), one rule reworded to match its sources (layer.15), one anchor noted (prop.9). No rule's core claim was wrong.
