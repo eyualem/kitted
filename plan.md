@@ -61,6 +61,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [ ] **Y30** · **P2** · Try the style game (direction A, your pick) on 3–5 people (https://claude.ai/artifact/2L9asQuz69pg45ohUatmZm, also `tasks/style-quiz/design.html`; open it on your phone, tap "A · Two up", hand it over and say nothing; about 30 min). Note where they pause and whether "Here's your style" sounds like them → the spec interview for the style game
 - [ ] **Y32** · **P1** · Rate 60 more gold-set photos blind, the same way as your 20 (score each 1–10 in half steps before seeing the app's; Claude prepares the sheet) (30 min) → the human answer key the rescoring is tuned to (T68); the score stops feeling squeezed
 - [ ] **Y33** · **P1** · Mark the dealbreakers-and-lifts sheet: Yes, No or Change on each of 33 rows (what sinks an outfit to 5.5, what holds it at 6.5, what lifts it above 7), in the review copy linked from `rubric/research/dealbreakers.md` (20 min) → the rules the rescoring tests (T68)
+- [ ] **Y35** · **P1** · Rate 80 new outfit photos blind (sheet 2: double-click `inputs/gold-judge/founder3/index.html` on the Mac, score each 3–9.5, then press Export ratings2.csv; about 40 min). These are everyday phone mirror photos and street shots from truly bad to standout, so the scale's ends get tested and a photo's source no longer hints at its score. Do Y32 first if you haven't → the second half of the answer key the rescoring is tuned to (T68)
 
 ---
 
@@ -228,6 +229,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-14 · outfit-photos-2: your second blind rating sheet is ready (Y35): 80 new face-hidden outfit photos (my rough guess: 23 bad, 26 plain, 23 strong, 8 standout; 32 from Reddit, 28 Pinterest, 20 other sites; 35 phone mirror photos), collected for free in the app's browser; nothing in the app changed
 - 2026-11-14 · radar-scoring-research: the long-top reading test (your OK, 40¢ of a $1 cap) failed: the AI caught 4 of 9 obvious long tees, so the long-tee rule stays a tip until the free on-device ruler is checked; the creators' rulebook is in PR #123; your blind rating sheet is ready (Y32); log #465
 - 2026-11-14 · radar-scoring-research: your plan for an honest score approved and logged (#464): scores from 3 to 9.5 with no 5.0 floor and 10 never, a redo instead of one fix at 3–4.5, the season counting (layers in fall and winter, not summer), your four creators from 2023 on as the yardstick; `specs.md`'s score line updated with your yes; the creators' rulebook (T95) started in its own session; nothing in the scoring changed yet
 - 2026-11-13 · radar-scoring-research: your bad-combo method drafted as a review sheet (`rubric/research/dealbreakers.md`, review copy linked there): 9 that sink an outfit to 5.5, 11 that hold it at 6.5, 4 not to cap, 8 lifts; on today's scoring a blazer with gym shorts gets 7.0 like a plain tee and jeans; the long tee can't be seen yet; skinny jeans under a hoodie capped at 5.5 (your call); log #462–461
@@ -242,4 +244,3 @@ The last 15 sessions, newest first.
 - 2026-11-11 · hoodie-layer-credit: the style screen's new wording (you picked B from the mockup, `tasks/looks-wording/design.html`) added to PR #109 with the spec line, test and flows; log #449
 - 2026-11-11 · hoodie-layer-credit: tested setup's style screen on the Simulator: the keyboard covered the "Tell me in your words" field and Continue; fixed (PR #109, log #448); a first-tap miss seen on the Simulator only, not proven an app bug
 - 2026-11-11 · `/test-build` (you): one script checks the whole app before each TestFlight build (every check, the 5 core flows, one summary), then your OK, the build, one phone checklist, and `/test-build feedback` to sort testers' words; build 2 tagged `testflight/0.1.0-2`; the new flows not yet run on the Simulator
-- 2026-11-11 · hoodie-layer-credit: the result card's one "Why 7.5?" button checked on a Release Simulator build (light and dark, the button opens the Why sheet), then merged (#108, your "Check, then merge")
