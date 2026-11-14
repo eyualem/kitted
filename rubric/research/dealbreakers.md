@@ -1,8 +1,8 @@
 # Dealbreakers and lifts: the draft list for the founder's review
 
-Nov 13, 2026. The founder's method (in chat): take every part of an outfit, find what always makes it bad on its own and in combination, take points off for those, and raise a score above 7 when the proportions, colors "and everything" are good. Editable review copy with a "Your call" column: [Dealbreakers and lifts](https://claude.ai/artifact/NYcvvbzSZhBumS2y3LNt7v). Background: `reports/2026-11-13-scoring-research.md`, DECISIONS-LOG #459–461.
+Nov 13, 2026. The founder's method (in chat): take every part of an outfit, find what always makes it bad on its own and in combination, take points off for those, and raise a score above 7 when the proportions, colors "and everything" are good. Editable review copy with a "Your call" column: [Dealbreakers and lifts](https://claude.ai/artifact/NYcvvbzSZhBumS2y3LNt7v). Background: `reports/2026-11-13-scoring-research.md`, DECISIONS-LOG #461–461.
 
-**Status: a draft.** Nothing here is in the engine. Only S1 is approved (#460). Each entry needs the founder's yes, no or change, then gets tested in the rescoring on paper (T68) against his blind ratings (Y30), then is built as a strict task (T69).
+**Status: a draft.** Nothing here is in the engine. Only S1 is approved (#462). Each entry needs the founder's yes, no or change, then gets tested in the rescoring on paper (T68) against his blind ratings (Y32), then is built as a strict task (T69).
 
 **How to read it**
 - **Sinks it:** caps the whole outfit at 5.5 "Needs a fix", whatever the rest is.
