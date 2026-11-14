@@ -405,7 +405,7 @@ One line per judged outfit, from the readers' notes (`notes/2026/*.md`, "Outfits
 | ex.398 | Jaye Alexander | `cwLasFLe-DY` | 11:40 | a green Goyard-pattern backpack (fake), plus accessories ("accessory fit"); nothing else named | "He's a very swaggy guy. I love your style." [16:18] (guest) → great; other guests: "The green is fire" [14:32], "statement" [16:18]; flaws: broken stitching [13:25], tag out of place [14:32] (the green and the statement | great | `inputs/youtube/shots/cwLasFLe-DY/f-11-40.jpg` **verified: shows it** |
 | ex.399 | Jaye Alexander | `cwLasFLe-DY` | 20:45 | the green backpack | "This looks solid." [20:43] → good (material and feel ("the quality is really good"), the QR code; he couldn't authenticate it and judged by touch.) | good | `inputs/youtube/shots/cwLasFLe-DY/f-20-45.jpg` **verified: shows it** |
 | ex.400 | Wanhee | `mpv9WWHDZio` | 00:05 | three outfits, pieces not named | average / good / great. Best frames for the ladder; check what's shown. | great | `inputs/youtube/shots/mpv9WWHDZio/f-00-05.jpg` (unverified) |
-| ex.401 | Wanhee | `mpv9WWHDZio` | 02:24 | copying a mannequin's or a movie character's clothes | "never looks as good". | good | none (described only) |
+| ex.401 | Wanhee | `mpv9WWHDZio` | 02:24 | copying a mannequin's or a movie character's clothes | "never looks as good". | bad | none (described only) |
 | ex.402 | Wanhee | `mpv9WWHDZio` | 03:26 | newly rich footballers in Gucci, Louis Vuitton, big flashy items | bad, "incompetent". | bad | none (described only) |
 | ex.403 | Wanhee | `mpv9WWHDZio` | 07:48 | a man in his late 40s or 50s at a gallery, high-quality clothes, put together without effort | level 4, looks good. | good | none (described only) |
 | ex.404 | Wanhee | `mpv9WWHDZio` | 09:57 | Steve Jobs: New Balance, jeans, turtleneck | iconic (level 5). | ? | none (described only) |
@@ -441,7 +441,7 @@ One line per judged outfit, from the readers' notes (`notes/2026/*.md`, "Outfits
 | ex.434 | Wanhee | `B9PIhkSQKuw` | 06:33 | logos and "bling bling watches" | against ma. | ? | none (described only) |
 | ex.435 | Wanhee | `ew3gCk1zkso` | 02:11 | white tee, straight relaxed indigo jeans | dressed well. | ? | none (described only) |
 | ex.436 | Wanhee | `ew3gCk1zkso` | 02:11 | huge graphic, ripped patched jeans, trend sneakers (Adidas, Jordans) | patchwork. | ? | none (described only) |
-| ex.437 | Wanhee | `ew3gCk1zkso` | 03:20 | a fluorescent yellow polo with a rainbow stripe | sticks out, never looks good. | good | none (described only) |
+| ex.437 | Wanhee | `ew3gCk1zkso` | 03:20 | a fluorescent yellow polo with a rainbow stripe | sticks out, never looks good. | bad | none (described only) |
 | ex.438 | Wanhee | `ew3gCk1zkso` | 04:54 | black and white plus a cap of another color | two colors, good. | good | `inputs/youtube/shots/ew3gCk1zkso/f-04-54.jpg` **checked: partly** (four outfits, one black-and-white) |
 | ex.439 | Wanhee | `ew3gCk1zkso` | 05:26 | Léon (Léon: The Professional): white and black, a gun strap | one or two colors, "looks so damn good". | good | `inputs/youtube/shots/ew3gCk1zkso/f-05-26.jpg` (unverified) |
 | ex.440 | Wanhee | `ew3gCk1zkso` | 05:26 | Matilda: black shoes, gray socks, red | 2.5 colors. | ? | `inputs/youtube/shots/ew3gCk1zkso/f-05-26.jpg` (unverified) |
