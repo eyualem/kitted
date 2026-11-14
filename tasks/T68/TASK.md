@@ -28,6 +28,45 @@ Engine `v16` in `extraction-test/rubrics/parts_proto.py`, beside v15 (v15 and ev
 
 The curve (point 7) is fitted on the gold set, so B5 on gold is partly by construction; his saved checks are the honest test of it.
 
-## Results
+## Results (Nov 14; `extraction-test/results/v16/report.txt`, $0, no API calls)
 
-*(filled in after the run)*
+Run: `KITTED_DATA=/Users/eyu/Desktop/files/Kitted /usr/bin/python3 extraction-test/v16_paper.py` (exits 1: bars fail).
+
+| # | Bar | Result |
+|---|---|---|
+| B1 | His blind ratings | **FAIL.** His 20: within 1 point 15/20 (v15 17/20), r 0.33 (v15 0.46; the panel 0.69). Y32's 60 aren't in yet, so this is 20 of 80. |
+| B2 | Creators' pairs | **PASS**, 6/6 (v15: 5/6 and a tie). |
+| B3 | Anchors | **FAIL**, 13/18 (v15 passes 10/18 on the same bar). |
+| B4 | Dealbreaker examples | **PASS**, every capped row at its cap, every spared case uncapped, the three "depends" rows 5.5–7.0 and lower with a loud print. |
+| B5 | Band shares | **FAIL** on both. Gold: worst band 17.7 points off (v15 29.6). His 62 checks: 26.5 off (v15 32.9). |
+| B6 | Steadiness | **PASS**, 218/223 (cool), 219/223 (warm); v15 218/223. |
+| B7 | v15 untouched | **PASS**: `rules_conformance.py` 501/501, `hoodie_layer_paper.py` all pass, and v15, v14, v8, v1 give identical full results to the pre-T68 engine on all 2,048 gold and saved-check scorings. |
+
+**Band shares** (first reading, cool day):
+
+| | 3–4.5 | 5–5.5 | 6–6.5 | 7–7.5 | 8–8.5 | 9–9.5 |
+|---|---|---|---|---|---|---|
+| Target | 5% | 15% | 30% | 30% | 15% | 5% |
+| Gold, v15 | 0.4 | 4.9 | 16.1 | 59.6 | 18.8 | 0 |
+| Gold, v16 | 0 | 6.7 | 15.2 | 45.3 | 32.7 | 0 |
+| Gold, v16 warm | 0 | 7.6 | 13.9 | 57.0 | 21.5 | 0 |
+| His checks, v15 | 0 | 6.5 | 21.0 | 62.9 | 9.7 | 0 |
+| His checks, v16 | 0 | 8.1 | 24.2 | 56.5 | 11.3 | 0 |
+| The AI panel on gold | 1.8 | 10.2 | 21.8 | 38.2 | 27.6 | 0.4 |
+
+### Why the bars that fail fail
+
+- **B5, the shares.** 46% of the gold set (a curated set) has nothing the reader can fault or strongly credit, so it lands at 7–7.5 under any curve that keeps "nothing off, nothing chosen" at 7. The panel itself puts only 34% of gold at 6.5 or under. Reaching 30% at 6–6.5 needs either faults the reader can't see yet (fabric, light vs dark, top length, the hem) or plain basics shown at 6.5. The curve that hits the gold shares (anchor at 7.78) puts a plain tee and jeans at 6.5, which contradicts his own #462 example (a hoodie with straight jeans "7.0"), breaks 3 dealbreaker examples and 6 anchors, and still misses his checks by 14 points. Fitted only to the shares with the anchor at 7, the curve (1.5, 0.7) closes gold to 16.2 points but drops steadiness to 211/223. So the curve in the engine, (1.0, 0.8), is the closest to the shares that keeps B6. His saved checks are mostly plain basics at home in slides, so they stay bunched at 7.
+- **B1, his ratings.** The rules see the clothes, not what he sees: a pink graphic tee with jorts (he gave 5), a blue camp shirt with dark jeans and loafers (5.5) read as fine with an accent. He rated both slides outfits 7, while v16 charges slides out of the house at full strength. And a blue sweatshirt over a tee with wide cargos and derbies (he gave 8) earns no lift, because the reader files the sweatshirt as a second top, not a layer. With 20 photos r is very noisy (roughly ±0.4); his 60 more will say more.
+- **B3, the anchors that fail:** a04 skinny joggers (Tim's "abomination", step 4) stays at 6.5 because his H4 mark holds it at 6.5; a02 knit on knit (step 5) lands 6.5; a03 tight beige (step 5) 6.5, since "pulling at the thighs" isn't read; a26 Wanhee's red bomber (step 7.5) 8.5, two lifts; a59 Jaye's all-black (step 9) 7.0, since the reader sees a plain black suit with dress shoes, not flares and boots.
+
+### What else the run showed
+- **Lifts line up with the AI panel:** no lift 6.5 on average, one 7.1, two 7.6, three 7.9. One accent on a calm base (L5) is the exception: the panel rates those photos at the average (7.04).
+- **Faults are rare but strong:** a loud print averages 5.5 with the panel, too many statements 5.8, running shoes 5.9.
+- **Unsteady reads:** sleeves past the hands flip between readings on 67–71% of the photos where they fire, and the main read's pooling hem on 50%. In v16 they move no points (and H9 isn't a cap).
+- **The season** (cool to warm): gold 12 up, 47 down; his checks 1 up, 8 down. Warm days lose the layer lifts (33 photos) and charge a heavy layer (16); they gain the light tonal lift (6) and summer's shape (4), and drop the light-on-light and tank-alone charges (7).
+- **Nothing real reaches 9.** 9 needs three lifts in one look, and with the lifts compressed by the curve the best stored reading is 8.5; the panel puts 1 of 225 at 9+.
+- **Can't fire for lack of a read:** S3 and H2 (top length, #465), H7 without the shoe close-up (all of gold), L4 tonal range, L8 texture, bare ankles in winter, summer fabric.
+
+### Proposed rubric change
+`tasks/T68/v5-styles-v16.diff` (not applied): [SCO-2], [SCO-3] and [SCO-7] rewritten, [SCO-8]–[SCO-10] new, the dealbreakers and lifts sections, [COL-2]'s nuance, [STY-3] removed, [STY-9] and [COL-12] off on warm days, [STY-13] knit on knit.
