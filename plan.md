@@ -59,6 +59,7 @@ P1 this week · P2 before the beta · P3 before launch. Each says how long it ta
 - [x] **Y28** · covered by Y29
 - [ ] **Y29** · **P2** · Phone pass on TestFlight build 0.1.0 (3) (delete Kitted, reinstall it from TestFlight, about 15 min) → the beta build checked by hand before friends get it: (1) setup from fresh: the K on navy at launch, What's your style? (tiles, Tell me in your words rides the keyboard, no Not sure), 7 taps to the camera; (2) one fit check: the result card has one Why 7.5? button, no all-caps labels; the pieces slide into Closet with a light buzz, Closet's navy number, `From your first check` with `New`; (3) one question to Kit; the morning card shows only after that first check; (4) Closet: swipe a one-card question sideways, answer one (buzz), Undo; (5) You: Your style as squared tiles; (6) once in dark mode, once with VoiceOver on the new setup screen and Closet's cards. Covers Y27 and Y28
 - [ ] **Y30** · **P2** · Try the style game (direction A, your pick) on 3–5 people (https://claude.ai/artifact/2L9asQuz69pg45ohUatmZm, also `tasks/style-quiz/design.html`; open it on your phone, tap "A · Two up", hand it over and say nothing; about 30 min). Note where they pause and whether "Here's your style" sounds like them → the spec interview for the style game
+- [ ] **Y37** · **P2** · 5–10 real photos with a second mirror panel or a fitting room with people behind (your own or friends', with their OK) (20 min) → the only real check that a face in a side mirror is hidden (T96); until then it rests on built test photos
 
 ---
 

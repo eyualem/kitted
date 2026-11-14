@@ -143,6 +143,8 @@ No stored data changes. One new marker file, `Caches/upload/.sweep-v1`. The one-
 - No new package, model or download. No JS, words or screens.
 
 ## Open questions
+**Answered Nov 14 (the parent session, settled per the working rules; log #470):** Q1 the default (at most 6 of 336 newly refused, none of his 54 sent phone checks or the 12 mirror-set photos; above that the build stops and reports the numbers). Q2 the default (today's toast unchanged, no new words). Q3 is his to-do Y37. #468's originals are not re-downloaded unless he says yes.
+
 **For the founder**
 1. **How many normal mirror checks may be refused to keep strangers' faces out?** Default: at most 2% of the normal set newly refused (6 of 336), and none of his own 54 sent phone checks or the 12 mirror-set photos; above that, the build stops and he decides. Ruling 10 says send nothing when in doubt, so a few refusals are the price.
 2. **What he reads when a stranger's face is the reason.** Today any `couldNotFrame` shows the toast "Couldn't frame this one. Try again." (unchanged by this task). T62 will put the spec's head-not-found line there: "I couldn't find your face to blur it, so I didn't send it…", which would be wrong when the face is someone else's. Default: this task keeps today's toast and adds only the log `reason`; T62 (or a spec change he approves) decides whether `faceRemains` gets its own words. No new words are written here.
