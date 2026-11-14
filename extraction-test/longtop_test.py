@@ -23,7 +23,7 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from b1_test import call, cents, MODEL
+from b1_test import call, cents as cents_no_thoughts, MODEL, PRICE_OUT
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "results" / "longtop1"
@@ -33,6 +33,13 @@ FIELD = "top_below_crotch"
 # Prepared copies live in the main checkout (git-ignored); a worktree has none of its own.
 ROOTS = [HERE / "results", Path("/Users/eyu/Desktop/files/Kitted/extraction-test/results")]
 SETS = ("gold1", "b1", "creators1")
+
+
+def cents(r):
+    """b1_test.cents plus the thought tokens: thinkingBudget 0 still returns billed thoughtsTokenCount on this model
+    (look1 averaged 148 a call that its spend left out), and Google bills them as output."""
+    u = r.get("usage") or {}
+    return cents_no_thoughts(r) + 100 * u.get("thoughtsTokenCount", 0) * PRICE_OUT
 
 
 def image_for(pid):
@@ -164,7 +171,7 @@ def main():
     if rs:
         u = [x["usage"] for x in rs]
         print(f"{len(rs)} calls · in {sum(x.get('promptTokenCount', 0) for x in u) / len(u):.0f} · "
-              f"out {sum(x.get('candidatesTokenCount', 0) for x in u) / len(u):.0f} · "
+              f"out {sum(x.get('candidatesTokenCount', 0) for x in u) / len(u):.0f} · thoughts {sum(x.get('thoughtsTokenCount', 0) for x in u) / len(u):.0f} · "
               f"{sum(cents(x) for x in rs) / len(rs):.4f}¢/call · median {sorted(x['seconds'] for x in rs)[len(rs) // 2]} s")
     print(f"total spent ${spent:.4f}")
     (OUT / "manifest.json").write_text(json.dumps({"model": MODEL, "runs": a.runs, "image": "body close-up (face-hidden)",
