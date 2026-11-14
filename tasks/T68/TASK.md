@@ -70,3 +70,9 @@ Run: `KITTED_DATA=/Users/eyu/Desktop/files/Kitted /usr/bin/python3 extraction-te
 
 ### Proposed rubric change
 `tasks/T68/v5-styles-v16.diff` (not applied): [SCO-2], [SCO-3] and [SCO-7] rewritten, [SCO-8]–[SCO-10] new, the dealbreakers and lifts sections, [COL-2]'s nuance, [STY-3] removed, [STY-9] and [COL-12] off on warm days, [STY-13] knit on knit.
+
+## Round 2: fresh second looks on the gold set (founder's OK for a small spend, cap $2.00, Nov 14)
+
+The gold set's stored readings (Oct 12) carry no second looks, so v16's pooling cap (look L, "covers the shoe mostly") and the peek rule (look U) can't fire on gold. This round runs the app's two second looks on the gold set, nothing else: the same prompts and schemas the app ships (`app/assets/gemini/prompt-look-u.json`, `prompt-look-l.json`, identical to `extraction-test/prompt_look_*.txt`), gemini-3.8-flash, thinking off, temperature 0, on the face-hidden close-ups the gold set's reading used (upper for U, lower for L; the body crop where there's no split). The main readings stay the stored ones, so the before/after compares like with like.
+
+**Estimate, written before any paid call.** From the 450 stored look1 calls' token counts, billing thinking tokens at the output price ($0.75 in, $3.75 out per million; #465): look U about 1,427 in + 50 out + 171 thinking = **0.19¢**, look L about 1,374 in + 17 out + 241 thinking = **0.20¢**; **0.39¢ a photo**. Gold set: 225 photos × 2 runs (one per stored reading, so steadiness compares two independent looks) = 900 calls ≈ **$1.76**, plus a 2-photo pilot ≈ 1¢. The script counts thinking tokens and stops before $1.85 in total, under the $2.00 cap. No other calls this round.
