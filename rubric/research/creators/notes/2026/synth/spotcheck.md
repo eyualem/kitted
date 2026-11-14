@@ -67,3 +67,26 @@ Quotes by script: 227 of 227.
 
 ## The 60 anchors, recaptured (Nov 14)
 Each anchor got a burst of 11 stills over its 30-second block and a contact sheet; the right still was picked by eye. **50 verified, 10 partly** (flat lays, drawn figures, a collage, or the outfit not fully on yet), 0 missing. Two Wanhee anchors were swapped for the outfits actually on screen in that segment. One pick (a52) was first taken from the wrong burst and was recaptured. The table is at the top of `6-examples.md`; every other catalogue row stays "unverified".
+
+## Cohesion, worlds, ladder (31 rules; 6 read) and interactions (38 entries; 6 read)
+| Rule | First source | Verdict |
+|---|---|---|
+| world.1 one focal point on a quiet base | Wanhee `Uw-vpUq8Ewg` [04:58] | holds, with a note: this first quote is about fewer colors ("make it simpler"); the focal-point half rests on its other sources (Wanhee's "point", Tim's "3%", Frugal's red bag) |
+| world.6 the partners decide the world | Tim `0JtnbgtbQfE` [00:00] | holds (casual, daily and smart trouser tiers) |
+| world.11 one small chosen move makes simple deliberate | Frugal `5gKnDwVm_Eg` [01:01] | holds ("getting small things to go a long way if done properly") |
+| world.16 minimal = making the most with less | Frugal `JY_zrt43cbU` [08:51] | holds |
+| world.21 smart casual = one smart piece with one casual | Tim `vQd36IKIkOg` [07:14] | holds |
+| ladder.3 great = good plus a little edge, no visible effort | Tim `XSF9AOx7sdU` [02:39] | holds |
+| ix.1 shape outranks the palette | Tim `wIib9hzVUuw` [09:10] | holds ("same color palette, but the proportions just look a lot better") |
+| ix.8 a change in lightness makes layers read | Tim `wIib9hzVUuw` [07:07] | holds, indirectly: all-navy "basic and predictable" is the no-change case |
+| ix.15 the break follows the formality | Tim `FUWET2HH-us` [01:38] | holds |
+| ix.22 the season changes what a hem is worth | Tim `IUMqpLeCT-E` [03:47] | holds (bare ankles in winter, "the one true cardinal sin") |
+| ix.29 wear is character on denim and leather | Tim `-e9Is50-fn0` [09:54] | holds |
+| ix.36 the wrong place makes a bad outfit | Tim `IUMqpLeCT-E` [00:00] | holds |
+
+Quotes by script: 444 of 444 (both files).
+
+## Totals
+- **Rules read against the transcript: 38 of 195** (1 in 5.1): 31 hold as written, 3 hold with a note on which source anchors them (prop.9, world.1, ix.8), 4 were changed (prop.4 and fit.8: an out-of-scope source removed; layer.15: reworded to match its sources; plus the 2 removals above count once each). No rule's core claim was wrong.
+- **Quotes checked by script: 1,371 of 1,371** found within 40 s of their stamp.
+- **Frames:** 40 random stills checked (35% exact); 60 anchors recaptured and picked by eye (50 verified, 10 partly).
