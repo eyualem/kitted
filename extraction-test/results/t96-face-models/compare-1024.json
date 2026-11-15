@@ -1,0 +1,46 @@
+{
+ "tiles": 420,
+ "raw_max_abs_diff": {
+  "fp16": 0.01152,
+  "fp32": 0.0
+ },
+ "boxes": {
+  "fp16": {
+   "matched (IoU >= 0.5)": 217,
+   "opencv-only, score >= 0.5": 0,
+   "coreml-only, score >= 0.5": 0,
+   "IoU median / min": [
+    0.9986,
+    0.6598
+   ],
+   "score diff max": 0.0051
+  },
+  "fp32": {
+   "matched (IoU >= 0.5)": 217,
+   "opencv-only, score >= 0.5": 0,
+   "coreml-only, score >= 0.5": 0,
+   "IoU median / min": [
+    1.0,
+    1.0
+   ],
+   "score diff max": 0.0
+  }
+ },
+ "ms": {
+  "fp16": {
+   "median_per_tile": 14.68,
+   "per_photo_14_tiles": 206
+  },
+  "fp32": {
+   "median_per_tile": 26.16,
+   "per_photo_14_tiles": 366
+  },
+  "opencv": {
+   "median_per_tile": 13.56,
+   "per_photo_14_tiles": 190
+  }
+ },
+ "decoder_vs_FaceDetectorYN": "217 of 217 boxes identical (IoU > 0.95, score within 0.01)",
+ "photos": 30,
+ "size": 1024
+}

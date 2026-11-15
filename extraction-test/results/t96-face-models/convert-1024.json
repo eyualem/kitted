@@ -1,0 +1,10 @@
+{
+ "fp16": {
+  "path": "/Users/eyu/Desktop/files/Kitted/inputs/face-models/coreml/YuNet1024-fp16.mlpackage",
+  "bytes": 199944
+ },
+ "fp32": {
+  "path": "/Users/eyu/Desktop/files/Kitted/inputs/face-models/coreml/YuNet1024-fp32.mlpackage",
+  "bytes": 297647
+ }
+}

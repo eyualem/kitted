@@ -1,0 +1,1313 @@
+{
+ "built": {
+  "photos": 60,
+  "faces": 120,
+  "missed_by_round3": 34
+ },
+ "normal_photos": 336,
+ "leak_photos": 53,
+ "heldout_photos": 368,
+ "configs": {
+  "yunet-1x1-1024": {
+   "model": "yunet",
+   "grids": [
+    1
+   ],
+   "tile_edge": null,
+   "calls_per_photo": 1,
+   "ms_median_normal": 8,
+   "ms_p95_normal": 12,
+   "by_threshold": {
+    "0.3": {
+     "missed: frontal 12-19": [
+      3,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      9,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      3,
+      6
+     ],
+     "missed: cut by the edge": [
+      7,
+      15
+     ],
+     "missed: all": [
+      18,
+      34
+     ],
+     "normal: photos with a new box": 35,
+     "normal: new boxes on him": 16,
+     "normal: photos with a box on him": 11,
+     "normal: new boxes elsewhere": 33,
+     "his own photos (phone + mirror set): with a new box": [
+      9,
+      66
+     ],
+     "built: new boxes on him": 1,
+     "built: new boxes elsewhere (not a pasted face)": 7,
+     "leak set: photos with a new box": 16,
+     "leak set: new boxes": 48,
+     "held out: photos with a new box": 89,
+     "held out: new boxes": 233
+    },
+    "0.5": {
+     "missed: frontal 12-19": [
+      2,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      5,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      2,
+      6
+     ],
+     "missed: cut by the edge": [
+      4,
+      15
+     ],
+     "missed: all": [
+      12,
+      34
+     ],
+     "normal: photos with a new box": 9,
+     "normal: new boxes on him": 5,
+     "normal: photos with a box on him": 4,
+     "normal: new boxes elsewhere": 8,
+     "his own photos (phone + mirror set): with a new box": [
+      2,
+      66
+     ],
+     "built: new boxes on him": 1,
+     "built: new boxes elsewhere (not a pasted face)": 1,
+     "leak set: photos with a new box": 9,
+     "leak set: new boxes": 16,
+     "held out: photos with a new box": 51,
+     "held out: new boxes": 98
+    },
+    "0.6": {
+     "missed: frontal 12-19": [
+      2,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      3,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      2,
+      6
+     ],
+     "missed: cut by the edge": [
+      3,
+      15
+     ],
+     "missed: all": [
+      10,
+      34
+     ],
+     "normal: photos with a new box": 4,
+     "normal: new boxes on him": 3,
+     "normal: photos with a box on him": 2,
+     "normal: new boxes elsewhere": 3,
+     "his own photos (phone + mirror set): with a new box": [
+      2,
+      66
+     ],
+     "built: new boxes on him": 1,
+     "built: new boxes elsewhere (not a pasted face)": 1,
+     "leak set: photos with a new box": 9,
+     "leak set: new boxes": 14,
+     "held out: photos with a new box": 40,
+     "held out: new boxes": 61
+    },
+    "0.7": {
+     "missed: frontal 12-19": [
+      1,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      3,
+      18
+     ],
+     "missed: profile 20-31": [
+      1,
+      3
+     ],
+     "missed: profile 32-64": [
+      0,
+      6
+     ],
+     "missed: cut by the edge": [
+      1,
+      15
+     ],
+     "missed: all": [
+      6,
+      34
+     ],
+     "normal: photos with a new box": 1,
+     "normal: new boxes on him": 1,
+     "normal: photos with a box on him": 1,
+     "normal: new boxes elsewhere": 0,
+     "his own photos (phone + mirror set): with a new box": [
+      1,
+      66
+     ],
+     "built: new boxes on him": 1,
+     "built: new boxes elsewhere (not a pasted face)": 0,
+     "leak set: photos with a new box": 5,
+     "leak set: new boxes": 7,
+     "held out: photos with a new box": 22,
+     "held out: new boxes": 34
+    },
+    "0.8": {
+     "missed: frontal 12-19": [
+      0,
+      6
+     ],
+     "missed: frontal 20-64": [
+      0,
+      1
+     ],
+     "missed: profile 12-19": [
+      2,
+      18
+     ],
+     "missed: profile 20-31": [
+      1,
+      3
+     ],
+     "missed: profile 32-64": [
+      0,
+      6
+     ],
+     "missed: cut by the edge": [
+      0,
+      15
+     ],
+     "missed: all": [
+      3,
+      34
+     ],
+     "normal: photos with a new box": 0,
+     "normal: new boxes on him": 0,
+     "normal: photos with a box on him": 0,
+     "normal: new boxes elsewhere": 0,
+     "his own photos (phone + mirror set): with a new box": [
+      0,
+      66
+     ],
+     "built: new boxes on him": 1,
+     "built: new boxes elsewhere (not a pasted face)": 0,
+     "leak set: photos with a new box": 1,
+     "leak set: new boxes": 1,
+     "held out: photos with a new box": 8,
+     "held out: new boxes": 8
+    },
+    "0.9": {
+     "missed: frontal 12-19": [
+      0,
+      6
+     ],
+     "missed: frontal 20-64": [
+      0,
+      1
+     ],
+     "missed: profile 12-19": [
+      0,
+      18
+     ],
+     "missed: profile 20-31": [
+      0,
+      3
+     ],
+     "missed: profile 32-64": [
+      0,
+      6
+     ],
+     "missed: cut by the edge": [
+      0,
+      15
+     ],
+     "missed: all": [
+      0,
+      34
+     ],
+     "normal: photos with a new box": 0,
+     "normal: new boxes on him": 0,
+     "normal: photos with a box on him": 0,
+     "normal: new boxes elsewhere": 0,
+     "his own photos (phone + mirror set): with a new box": [
+      0,
+      66
+     ],
+     "built: new boxes on him": 0,
+     "built: new boxes elsewhere (not a pasted face)": 0,
+     "leak set: photos with a new box": 0,
+     "leak set: new boxes": 0,
+     "held out: photos with a new box": 0,
+     "held out: new boxes": 0
+    }
+   }
+  },
+  "yunet-123-640": {
+   "model": "yunet",
+   "grids": [
+    1,
+    2,
+    3
+   ],
+   "tile_edge": 640,
+   "calls_per_photo": 14,
+   "ms_median_normal": 79,
+   "ms_p95_normal": 112,
+   "by_threshold": {
+    "0.3": {
+     "missed: frontal 12-19": [
+      4,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      14,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      4,
+      6
+     ],
+     "missed: cut by the edge": [
+      11,
+      15
+     ],
+     "missed: all": [
+      25,
+      34
+     ],
+     "normal: photos with a new box": 84,
+     "normal: new boxes on him": 66,
+     "normal: photos with a box on him": 38,
+     "normal: new boxes elsewhere": 100,
+     "his own photos (phone + mirror set): with a new box": [
+      16,
+      66
+     ],
+     "built: new boxes on him": 1,
+     "built: new boxes elsewhere (not a pasted face)": 9,
+     "leak set: photos with a new box": 32,
+     "leak set: new boxes": 130,
+     "held out: photos with a new box": 161,
+     "held out: new boxes": 585
+    },
+    "0.5": {
+     "missed: frontal 12-19": [
+      3,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      13,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      4,
+      6
+     ],
+     "missed: cut by the edge": [
+      9,
+      15
+     ],
+     "missed: all": [
+      23,
+      34
+     ],
+     "normal: photos with a new box": 35,
+     "normal: new boxes on him": 17,
+     "normal: photos with a box on him": 11,
+     "normal: new boxes elsewhere": 34,
+     "his own photos (phone + mirror set): with a new box": [
+      10,
+      66
+     ],
+     "built: new boxes on him": 1,
+     "built: new boxes elsewhere (not a pasted face)": 4,
+     "leak set: photos with a new box": 21,
+     "leak set: new boxes": 52,
+     "held out: photos with a new box": 88,
+     "held out: new boxes": 209
+    },
+    "0.6": {
+     "missed: frontal 12-19": [
+      3,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      10,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      3,
+      6
+     ],
+     "missed: cut by the edge": [
+      5,
+      15
+     ],
+     "missed: all": [
+      19,
+      34
+     ],
+     "normal: photos with a new box": 17,
+     "normal: new boxes on him": 14,
+     "normal: photos with a box on him": 9,
+     "normal: new boxes elsewhere": 11,
+     "his own photos (phone + mirror set): with a new box": [
+      3,
+      66
+     ],
+     "built: new boxes on him": 1,
+     "built: new boxes elsewhere (not a pasted face)": 2,
+     "leak set: photos with a new box": 16,
+     "leak set: new boxes": 36,
+     "held out: photos with a new box": 66,
+     "held out: new boxes": 139
+    },
+    "0.7": {
+     "missed: frontal 12-19": [
+      2,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      9,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      2,
+      6
+     ],
+     "missed: cut by the edge": [
+      3,
+      15
+     ],
+     "missed: all": [
+      16,
+      34
+     ],
+     "normal: photos with a new box": 7,
+     "normal: new boxes on him": 7,
+     "normal: photos with a box on him": 6,
+     "normal: new boxes elsewhere": 3,
+     "his own photos (phone + mirror set): with a new box": [
+      1,
+      66
+     ],
+     "built: new boxes on him": 1,
+     "built: new boxes elsewhere (not a pasted face)": 0,
+     "leak set: photos with a new box": 10,
+     "leak set: new boxes": 21,
+     "held out: photos with a new box": 41,
+     "held out: new boxes": 69
+    },
+    "0.8": {
+     "missed: frontal 12-19": [
+      2,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      8,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      0,
+      6
+     ],
+     "missed: cut by the edge": [
+      2,
+      15
+     ],
+     "missed: all": [
+      13,
+      34
+     ],
+     "normal: photos with a new box": 3,
+     "normal: new boxes on him": 2,
+     "normal: photos with a box on him": 2,
+     "normal: new boxes elsewhere": 2,
+     "his own photos (phone + mirror set): with a new box": [
+      0,
+      66
+     ],
+     "built: new boxes on him": 0,
+     "built: new boxes elsewhere (not a pasted face)": 0,
+     "leak set: photos with a new box": 5,
+     "leak set: new boxes": 8,
+     "held out: photos with a new box": 25,
+     "held out: new boxes": 30
+    },
+    "0.9": {
+     "missed: frontal 12-19": [
+      0,
+      6
+     ],
+     "missed: frontal 20-64": [
+      0,
+      1
+     ],
+     "missed: profile 12-19": [
+      0,
+      18
+     ],
+     "missed: profile 20-31": [
+      0,
+      3
+     ],
+     "missed: profile 32-64": [
+      0,
+      6
+     ],
+     "missed: cut by the edge": [
+      0,
+      15
+     ],
+     "missed: all": [
+      0,
+      34
+     ],
+     "normal: photos with a new box": 0,
+     "normal: new boxes on him": 0,
+     "normal: photos with a box on him": 0,
+     "normal: new boxes elsewhere": 0,
+     "his own photos (phone + mirror set): with a new box": [
+      0,
+      66
+     ],
+     "built: new boxes on him": 0,
+     "built: new boxes elsewhere (not a pasted face)": 0,
+     "leak set: photos with a new box": 0,
+     "leak set: new boxes": 0,
+     "held out: photos with a new box": 0,
+     "held out: new boxes": 0
+    }
+   }
+  },
+  "yunet-123-1024": {
+   "model": "yunet",
+   "grids": [
+    1,
+    2,
+    3
+   ],
+   "tile_edge": 1024,
+   "calls_per_photo": 14,
+   "ms_median_normal": 156,
+   "ms_p95_normal": 225,
+   "by_threshold": {
+    "0.3": {
+     "missed: frontal 12-19": [
+      5,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      16,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      4,
+      6
+     ],
+     "missed: cut by the edge": [
+      13,
+      15
+     ],
+     "missed: all": [
+      28,
+      34
+     ],
+     "normal: photos with a new box": 161,
+     "normal: new boxes on him": 132,
+     "normal: photos with a box on him": 79,
+     "normal: new boxes elsewhere": 240,
+     "his own photos (phone + mirror set): with a new box": [
+      29,
+      66
+     ],
+     "built: new boxes on him": 6,
+     "built: new boxes elsewhere (not a pasted face)": 30,
+     "leak set: photos with a new box": 36,
+     "leak set: new boxes": 229,
+     "held out: photos with a new box": 243,
+     "held out: new boxes": 1135
+    },
+    "0.5": {
+     "missed: frontal 12-19": [
+      4,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      15,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      4,
+      6
+     ],
+     "missed: cut by the edge": [
+      12,
+      15
+     ],
+     "missed: all": [
+      26,
+      34
+     ],
+     "normal: photos with a new box": 58,
+     "normal: new boxes on him": 38,
+     "normal: photos with a box on him": 29,
+     "normal: new boxes elsewhere": 48,
+     "his own photos (phone + mirror set): with a new box": [
+      7,
+      66
+     ],
+     "built: new boxes on him": 1,
+     "built: new boxes elsewhere (not a pasted face)": 4,
+     "leak set: photos with a new box": 26,
+     "leak set: new boxes": 86,
+     "held out: photos with a new box": 126,
+     "held out: new boxes": 327
+    },
+    "0.6": {
+     "missed: frontal 12-19": [
+      3,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      14,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      3,
+      6
+     ],
+     "missed: cut by the edge": [
+      9,
+      15
+     ],
+     "missed: all": [
+      23,
+      34
+     ],
+     "normal: photos with a new box": 30,
+     "normal: new boxes on him": 22,
+     "normal: photos with a box on him": 15,
+     "normal: new boxes elsewhere": 18,
+     "his own photos (phone + mirror set): with a new box": [
+      5,
+      66
+     ],
+     "built: new boxes on him": 1,
+     "built: new boxes elsewhere (not a pasted face)": 1,
+     "leak set: photos with a new box": 20,
+     "leak set: new boxes": 51,
+     "held out: photos with a new box": 85,
+     "held out: new boxes": 193
+    },
+    "0.7": {
+     "missed: frontal 12-19": [
+      3,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      13,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      3,
+      6
+     ],
+     "missed: cut by the edge": [
+      8,
+      15
+     ],
+     "missed: all": [
+      22,
+      34
+     ],
+     "normal: photos with a new box": 15,
+     "normal: new boxes on him": 11,
+     "normal: photos with a box on him": 9,
+     "normal: new boxes elsewhere": 8,
+     "his own photos (phone + mirror set): with a new box": [
+      1,
+      66
+     ],
+     "built: new boxes on him": 1,
+     "built: new boxes elsewhere (not a pasted face)": 0,
+     "leak set: photos with a new box": 15,
+     "leak set: new boxes": 33,
+     "held out: photos with a new box": 58,
+     "held out: new boxes": 105
+    },
+    "0.8": {
+     "missed: frontal 12-19": [
+      2,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      11,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      2,
+      6
+     ],
+     "missed: cut by the edge": [
+      5,
+      15
+     ],
+     "missed: all": [
+      18,
+      34
+     ],
+     "normal: photos with a new box": 4,
+     "normal: new boxes on him": 5,
+     "normal: photos with a box on him": 4,
+     "normal: new boxes elsewhere": 2,
+     "his own photos (phone + mirror set): with a new box": [
+      0,
+      66
+     ],
+     "built: new boxes on him": 0,
+     "built: new boxes elsewhere (not a pasted face)": 0,
+     "leak set: photos with a new box": 7,
+     "leak set: new boxes": 13,
+     "held out: photos with a new box": 27,
+     "held out: new boxes": 33
+    },
+    "0.9": {
+     "missed: frontal 12-19": [
+      0,
+      6
+     ],
+     "missed: frontal 20-64": [
+      0,
+      1
+     ],
+     "missed: profile 12-19": [
+      0,
+      18
+     ],
+     "missed: profile 20-31": [
+      0,
+      3
+     ],
+     "missed: profile 32-64": [
+      0,
+      6
+     ],
+     "missed: cut by the edge": [
+      0,
+      15
+     ],
+     "missed: all": [
+      0,
+      34
+     ],
+     "normal: photos with a new box": 0,
+     "normal: new boxes on him": 0,
+     "normal: photos with a box on him": 0,
+     "normal: new boxes elsewhere": 0,
+     "his own photos (phone + mirror set): with a new box": [
+      0,
+      66
+     ],
+     "built: new boxes on him": 0,
+     "built: new boxes elsewhere (not a pasted face)": 0,
+     "leak set: photos with a new box": 1,
+     "leak set: new boxes": 1,
+     "held out: photos with a new box": 0,
+     "held out: new boxes": 0
+    }
+   }
+  },
+  "blaze-full-123": {
+   "model": "full",
+   "grids": [
+    1,
+    2,
+    3
+   ],
+   "tile_edge": null,
+   "calls_per_photo": 14,
+   "ms_median_normal": 53,
+   "ms_p95_normal": 58,
+   "by_threshold": {
+    "0.3": {
+     "missed: frontal 12-19": [
+      3,
+      6
+     ],
+     "missed: frontal 20-64": [
+      0,
+      1
+     ],
+     "missed: profile 12-19": [
+      12,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      3,
+      6
+     ],
+     "missed: cut by the edge": [
+      5,
+      15
+     ],
+     "missed: all": [
+      20,
+      34
+     ],
+     "normal: photos with a new box": 196,
+     "normal: new boxes on him": 297,
+     "normal: photos with a box on him": 139,
+     "normal: new boxes elsewhere": 267,
+     "his own photos (phone + mirror set): with a new box": [
+      53,
+      66
+     ],
+     "built: new boxes on him": 30,
+     "built: new boxes elsewhere (not a pasted face)": 77,
+     "leak set: photos with a new box": 41,
+     "leak set: new boxes": 145,
+     "held out: photos with a new box": 206,
+     "held out: new boxes": 611
+    },
+    "0.5": {
+     "missed: frontal 12-19": [
+      2,
+      6
+     ],
+     "missed: frontal 20-64": [
+      0,
+      1
+     ],
+     "missed: profile 12-19": [
+      8,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      1,
+      6
+     ],
+     "missed: cut by the edge": [
+      2,
+      15
+     ],
+     "missed: all": [
+      13,
+      34
+     ],
+     "normal: photos with a new box": 76,
+     "normal: new boxes on him": 51,
+     "normal: photos with a box on him": 40,
+     "normal: new boxes elsewhere": 50,
+     "his own photos (phone + mirror set): with a new box": [
+      22,
+      66
+     ],
+     "built: new boxes on him": 6,
+     "built: new boxes elsewhere (not a pasted face)": 17,
+     "leak set: photos with a new box": 23,
+     "leak set: new boxes": 30,
+     "held out: photos with a new box": 75,
+     "held out: new boxes": 102
+    },
+    "0.7": {
+     "missed: frontal 12-19": [
+      0,
+      6
+     ],
+     "missed: frontal 20-64": [
+      0,
+      1
+     ],
+     "missed: profile 12-19": [
+      2,
+      18
+     ],
+     "missed: profile 20-31": [
+      0,
+      3
+     ],
+     "missed: profile 32-64": [
+      0,
+      6
+     ],
+     "missed: cut by the edge": [
+      0,
+      15
+     ],
+     "missed: all": [
+      2,
+      34
+     ],
+     "normal: photos with a new box": 3,
+     "normal: new boxes on him": 1,
+     "normal: photos with a box on him": 1,
+     "normal: new boxes elsewhere": 2,
+     "his own photos (phone + mirror set): with a new box": [
+      1,
+      66
+     ],
+     "built: new boxes on him": 0,
+     "built: new boxes elsewhere (not a pasted face)": 2,
+     "leak set: photos with a new box": 1,
+     "leak set: new boxes": 1,
+     "held out: photos with a new box": 4,
+     "held out: new boxes": 4
+    }
+   }
+  },
+  "blaze-full-12345": {
+   "model": "full",
+   "grids": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "tile_edge": null,
+   "calls_per_photo": 55,
+   "ms_median_normal": 207,
+   "ms_p95_normal": 210,
+   "by_threshold": {
+    "0.3": {
+     "missed: frontal 12-19": [
+      4,
+      6
+     ],
+     "missed: frontal 20-64": [
+      0,
+      1
+     ],
+     "missed: profile 12-19": [
+      13,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      4,
+      6
+     ],
+     "missed: cut by the edge": [
+      9,
+      15
+     ],
+     "missed: all": [
+      23,
+      34
+     ],
+     "normal: photos with a new box": 280,
+     "normal: new boxes on him": 865,
+     "normal: photos with a box on him": 209,
+     "normal: new boxes elsewhere": 872,
+     "his own photos (phone + mirror set): with a new box": [
+      65,
+      66
+     ],
+     "built: new boxes on him": 64,
+     "built: new boxes elsewhere (not a pasted face)": 194,
+     "leak set: photos with a new box": 52,
+     "leak set: new boxes": 394,
+     "held out: photos with a new box": 295,
+     "held out: new boxes": 1814
+    },
+    "0.5": {
+     "missed: frontal 12-19": [
+      2,
+      6
+     ],
+     "missed: frontal 20-64": [
+      0,
+      1
+     ],
+     "missed: profile 12-19": [
+      9,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      1,
+      6
+     ],
+     "missed: cut by the edge": [
+      3,
+      15
+     ],
+     "missed: all": [
+      14,
+      34
+     ],
+     "normal: photos with a new box": 147,
+     "normal: new boxes on him": 126,
+     "normal: photos with a box on him": 74,
+     "normal: new boxes elsewhere": 146,
+     "his own photos (phone + mirror set): with a new box": [
+      43,
+      66
+     ],
+     "built: new boxes on him": 9,
+     "built: new boxes elsewhere (not a pasted face)": 39,
+     "leak set: photos with a new box": 35,
+     "leak set: new boxes": 67,
+     "held out: photos with a new box": 134,
+     "held out: new boxes": 236
+    },
+    "0.7": {
+     "missed: frontal 12-19": [
+      1,
+      6
+     ],
+     "missed: frontal 20-64": [
+      0,
+      1
+     ],
+     "missed: profile 12-19": [
+      5,
+      18
+     ],
+     "missed: profile 20-31": [
+      0,
+      3
+     ],
+     "missed: profile 32-64": [
+      0,
+      6
+     ],
+     "missed: cut by the edge": [
+      0,
+      15
+     ],
+     "missed: all": [
+      6,
+      34
+     ],
+     "normal: photos with a new box": 7,
+     "normal: new boxes on him": 3,
+     "normal: photos with a box on him": 3,
+     "normal: new boxes elsewhere": 4,
+     "his own photos (phone + mirror set): with a new box": [
+      3,
+      66
+     ],
+     "built: new boxes on him": 0,
+     "built: new boxes elsewhere (not a pasted face)": 3,
+     "leak set: photos with a new box": 4,
+     "leak set: new boxes": 4,
+     "held out: photos with a new box": 12,
+     "held out: new boxes": 12
+    }
+   }
+  },
+  "blaze-short-12345": {
+   "model": "short",
+   "grids": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "tile_edge": null,
+   "calls_per_photo": 55,
+   "ms_median_normal": 69,
+   "ms_p95_normal": 70,
+   "by_threshold": {
+    "0.3": {
+     "missed: frontal 12-19": [
+      1,
+      6
+     ],
+     "missed: frontal 20-64": [
+      1,
+      1
+     ],
+     "missed: profile 12-19": [
+      6,
+      18
+     ],
+     "missed: profile 20-31": [
+      2,
+      3
+     ],
+     "missed: profile 32-64": [
+      4,
+      6
+     ],
+     "missed: cut by the edge": [
+      4,
+      15
+     ],
+     "missed: all": [
+      14,
+      34
+     ],
+     "normal: photos with a new box": 221,
+     "normal: new boxes on him": 288,
+     "normal: photos with a box on him": 149,
+     "normal: new boxes elsewhere": 386,
+     "his own photos (phone + mirror set): with a new box": [
+      57,
+      66
+     ],
+     "built: new boxes on him": 49,
+     "built: new boxes elsewhere (not a pasted face)": 78,
+     "leak set: photos with a new box": 52,
+     "leak set: new boxes": 302,
+     "held out: photos with a new box": 310,
+     "held out: new boxes": 2167
+    },
+    "0.5": {
+     "missed: frontal 12-19": [
+      0,
+      6
+     ],
+     "missed: frontal 20-64": [
+      0,
+      1
+     ],
+     "missed: profile 12-19": [
+      0,
+      18
+     ],
+     "missed: profile 20-31": [
+      1,
+      3
+     ],
+     "missed: profile 32-64": [
+      2,
+      6
+     ],
+     "missed: cut by the edge": [
+      1,
+      15
+     ],
+     "missed: all": [
+      3,
+      34
+     ],
+     "normal: photos with a new box": 70,
+     "normal: new boxes on him": 45,
+     "normal: photos with a box on him": 41,
+     "normal: new boxes elsewhere": 52,
+     "his own photos (phone + mirror set): with a new box": [
+      15,
+      66
+     ],
+     "built: new boxes on him": 6,
+     "built: new boxes elsewhere (not a pasted face)": 5,
+     "leak set: photos with a new box": 33,
+     "leak set: new boxes": 57,
+     "held out: photos with a new box": 197,
+     "held out: new boxes": 449
+    },
+    "0.7": {
+     "missed: frontal 12-19": [
+      0,
+      6
+     ],
+     "missed: frontal 20-64": [
+      0,
+      1
+     ],
+     "missed: profile 12-19": [
+      0,
+      18
+     ],
+     "missed: profile 20-31": [
+      0,
+      3
+     ],
+     "missed: profile 32-64": [
+      0,
+      6
+     ],
+     "missed: cut by the edge": [
+      0,
+      15
+     ],
+     "missed: all": [
+      0,
+      34
+     ],
+     "normal: photos with a new box": 3,
+     "normal: new boxes on him": 0,
+     "normal: photos with a box on him": 0,
+     "normal: new boxes elsewhere": 3,
+     "his own photos (phone + mirror set): with a new box": [
+      1,
+      66
+     ],
+     "built: new boxes on him": 0,
+     "built: new boxes elsewhere (not a pasted face)": 0,
+     "leak set: photos with a new box": 5,
+     "leak set: new boxes": 5,
+     "held out: photos with a new box": 20,
+     "held out: new boxes": 21
+    }
+   }
+  }
+ },
+ "sheets": {
+  "yunet-123-640@0.6+outline/normal": 25,
+  "yunet-123-640@0.6+outline/leak": 36,
+  "yunet-123-640@0.6+outline/heldout": 139,
+  "yunet-123-640@0.6+outline/built-misses": 34,
+  "yunet-123-640@0.6+outline/built": 3,
+  "yunet-123-640@0.6+outline/extra": 12,
+  "yunet-123-640@0.7+outline/normal": 10,
+  "yunet-123-640@0.7+outline/leak": 21,
+  "yunet-123-640@0.7+outline/heldout": 69,
+  "yunet-123-640@0.7+outline/built-misses": 34,
+  "yunet-123-640@0.7+outline/built": 1,
+  "yunet-123-640@0.7+outline/extra": 4,
+  "yunet-123-1024@0.7+outline/normal": 19,
+  "yunet-123-1024@0.7+outline/leak": 33,
+  "yunet-123-1024@0.7+outline/heldout": 105,
+  "yunet-123-1024@0.7+outline/built-misses": 34,
+  "yunet-123-1024@0.7+outline/built": 1,
+  "yunet-123-1024@0.7+outline/extra": 7,
+  "blaze-full-123@0.5+outline/normal": 101,
+  "blaze-full-123@0.5+outline/leak": 30,
+  "blaze-full-123@0.5+outline/heldout": 102,
+  "blaze-full-123@0.5+outline/built-misses": 34,
+  "blaze-full-123@0.5+outline/built": 23,
+  "blaze-full-123@0.5+outline/extra": 3
+ },
+ "outline_rule": true
+}
