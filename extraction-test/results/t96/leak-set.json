@@ -1,12 +1,14 @@
 {
  "mode": "full",
- "fails": [],
- "seconds": 66,
+ "fails": [
+  "7 face cores not hidden in 1 photos (first: inputs/fashionpedia/images/test/5252d050b77d50fd4aa90efd21b9513f.jpg fit upload, unchanged 1.0, inside hidden 0.0)"
+ ],
+ "seconds": 238,
  "per_kind": {
   "fit": {
-   "sent": 54,
+   "sent": 53,
    "refused": {
-    "couldNotFrame/faceRemains": 5
+    "couldNotFrame/faceRemains": 6
    }
   },
   "snap": {
@@ -22,10 +24,104 @@
    }
   }
  },
- "leaks": 0,
- "photos_leaking": [],
- "sheet": "0 crops in extraction-test/results/t96/leak-set",
+ "leaks": 7,
+ "photos_leaking": [
+  "inputs/fashionpedia/images/test/5252d050b77d50fd4aa90efd21b9513f.jpg"
+ ],
+ "sheet": "7 crops in extraction-test/results/t96/leak-set",
  "gate_185_not_hidden (the held-out line's automatic gate)": 0,
  "cores_ruled_not_faces_by_eye (#471 D1)": 15,
- "leak_list": []
+ "leak_list": [
+  [
+   "inputs/fashionpedia/images/test/5252d050b77d50fd4aa90efd21b9513f.jpg",
+   "fit",
+   "upload",
+   [
+    674.3,
+    299.2,
+    10.8,
+    11.4
+   ],
+   1.0,
+   0.0
+  ],
+  [
+   "inputs/fashionpedia/images/test/5252d050b77d50fd4aa90efd21b9513f.jpg",
+   "fit",
+   "upload",
+   [
+    694.0,
+    454.0,
+    4.8,
+    9.6
+   ],
+   1.0,
+   0.0
+  ],
+  [
+   "inputs/fashionpedia/images/test/5252d050b77d50fd4aa90efd21b9513f.jpg",
+   "fit",
+   "detail",
+   [
+    674.3,
+    299.2,
+    10.8,
+    11.4
+   ],
+   1.0,
+   0.0
+  ],
+  [
+   "inputs/fashionpedia/images/test/5252d050b77d50fd4aa90efd21b9513f.jpg",
+   "fit",
+   "detail",
+   [
+    694.0,
+    454.0,
+    4.8,
+    9.6
+   ],
+   1.0,
+   0.0
+  ],
+  [
+   "inputs/fashionpedia/images/test/5252d050b77d50fd4aa90efd21b9513f.jpg",
+   "fit",
+   "upper",
+   [
+    129.3,
+    208.2,
+    10.8,
+    11.4
+   ],
+   1.0,
+   0.0
+  ],
+  [
+   "inputs/fashionpedia/images/test/5252d050b77d50fd4aa90efd21b9513f.jpg",
+   "fit",
+   "lower",
+   [
+    129.3,
+    -5.8,
+    10.8,
+    11.4
+   ],
+   1.0,
+   0.0
+  ],
+  [
+   "inputs/fashionpedia/images/test/5252d050b77d50fd4aa90efd21b9513f.jpg",
+   "fit",
+   "lower",
+   [
+    149.0,
+    149.0,
+    4.8,
+    9.6
+   ],
+   1.0,
+   0.0
+  ]
+ ]
 }

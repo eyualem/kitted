@@ -7,18 +7,19 @@
  "totals": {
   "sweptFaces": 22,
   "otherHeads": 13,
-  "coveredExtra": 12
+  "coveredExtra": 20
  },
  "photos_with": {
   "sweptFaces": 19,
   "otherHeads": 10,
-  "coveredExtra": 10
+  "coveredExtra": 14
  },
- "body_newly_hidden_over_5pct": 6,
+ "cover_on_him_max": 0.113402670580594,
+ "body_newly_hidden_over_5pct": 3,
  "body_newly_hidden_median": 0.0,
  "sheets": [
   "0 crops in extraction-test/results/t96/false-refusals",
-  "6 crops in extraction-test/results/t96/body-newly-hidden",
+  "3 crops in extraction-test/results/t96/body-newly-hidden",
   "0 crops in extraction-test/results/t96/picked"
  ],
  "picks": {

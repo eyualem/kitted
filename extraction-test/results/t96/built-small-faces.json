@@ -1,80 +1,79 @@
 {
  "mode": "full",
  "fails": [
-  "(setup) built 53 of 60 photos",
-  "frontal 12-19 px: 5 of 18 pasted faces sent unhidden",
-  "frontal 32-64 px: 2 of 17 pasted faces sent unhidden",
-  "profile 32-64 px: 5 of 17 pasted faces sent unhidden",
-  "16 of 28 pasted faces cut by the frame edge sent unhidden (hidden, covered or refused, any kind or size, eyes in the frame or not: #471 D3), first profile 12.0 px side"
+  "frontal 12-19 px: 6 of 19 pasted faces sent unhidden",
+  "frontal 32-64 px: 1 of 20 pasted faces sent unhidden",
+  "profile 32-64 px: 6 of 21 pasted faces sent unhidden",
+  "15 of 29 pasted faces cut by the frame edge sent unhidden (hidden, covered or refused, any kind or size, eyes in the frame or not: #471 D3), first profile 12.0 px side"
  ],
- "seconds": 127,
- "photos": 53,
- "faces": 106,
+ "seconds": 137,
+ "photos": 60,
+ "faces": 120,
  "by_kind_and_size": {
   "frontal 12-19": {
-   "faces": 18,
+   "faces": 19,
    "caught": 13,
    "refused": 0
   },
   "frontal 20-31": {
-   "faces": 19,
-   "caught": 19,
+   "faces": 21,
+   "caught": 21,
    "refused": 0
   },
   "frontal 32-64": {
-   "faces": 17,
-   "caught": 15,
+   "faces": 20,
+   "caught": 19,
    "refused": 0
   },
   "profile 12-19": {
-   "faces": 17,
-   "caught": 5,
+   "faces": 22,
+   "caught": 4,
    "refused": 0
   },
   "profile 20-31": {
-   "faces": 18,
-   "caught": 9,
+   "faces": 17,
+   "caught": 14,
    "refused": 0
   },
   "profile 32-64": {
-   "faces": 17,
-   "caught": 12,
+   "faces": 21,
+   "caught": 15,
    "refused": 0
   }
  },
- "profile_12_31_share": 0.4,
+ "profile_12_31_share": 0.462,
  "edges": {
-  "clipped": 28,
-  "two_in_one_tile": 8,
+  "clipped": 29,
+  "two_in_one_tile": 10,
   "by_variant": {
    "side": [
-    5,
-    3
+    6,
+    6
    ],
    "eyesIn": [
-    5,
+    6,
     2
    ],
    "topEyesOut": [
-    5,
+    6,
     3
    ]
   },
-  "eyes_out_of_frame": 17,
-  "busy": 27
+  "eyes_out_of_frame": 18,
+  "busy": 35
  },
  "refused_photos": 0,
- "sheet": "33 crops in extraction-test/results/t96/built-small-faces",
+ "sheet": "34 crops in extraction-test/results/t96/built-small-faces",
  "eye": "a profile 12\u201331 px miss the eye calls readable fails this line (TASK.md \u2192 Review)",
  "photos_detail": [
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/04731ae0/built-0.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/f1c0eaae/built-0.jpg",
    "host": "screenshots/phone/20261008-162946/photos/a765e8e35386cd6a6bcb7e3a842e470bd4093ca8ecb24c508f88e6f7a3f727cf-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 0,
+    "sweptFaces": 1,
     "otherHeads": 0,
     "coveredExtra": 0
    },
@@ -107,7 +106,7 @@
       {
        "copy": "detail",
        "v": "hidden",
-       "unchanged": 0.285,
+       "unchanged": 0.283,
        "inside": 1.0,
        "grey": 0.0
       }
@@ -121,12 +120,12 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      951.4354754013789,
+      945.3149590400392,
       491.1236105396126,
-      68.07043313164361,
+      80.31146585432325,
       43.125
      ],
-     "src": "d198f4fa9e015ec9f7b675a576973ab8.jpg",
+     "src": "d2241e8d3558ef4b9a9dd86153bb6e49.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -152,7 +151,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/c66063da/built-1.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/049019ee/built-1.jpg",
    "host": "screenshots/phone/20261008-162946/photos/6b14dbaf24f1df9ebed0f939332a93877dc18130bea8fa974241dca76222044c-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -171,12 +170,12 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      608.5210731041684,
+      609.6937771630962,
       96.30057337662919,
-      91.60163988179771,
+      89.25623176394197,
       56.25
      ],
-     "src": "35f4543a394e9fdd13e3bd4df27bfa89.jpg",
+     "src": "368ff65f97b6488254686dcb4ed7196e.jpg",
      "edge": false,
      "busy": true,
      "caught": "hidden",
@@ -236,13 +235,13 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/6049eda1/built-2.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/054c08f6/built-2.jpg",
    "host": "screenshots/phone/20261017-212744/photos/23999fefa3d440ed4ba2124da1d8a810263110d3984d9721605afd9ecb014ed9-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 0,
+    "sweptFaces": 1,
     "otherHeads": 0,
     "coveredExtra": 0
    },
@@ -255,29 +254,29 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1179.0387731786407,
+      1183.486500905913,
       131.35659527314033,
-      95.58377518004143,
-      58.0
+      86.68831972549617,
+      58.00000000000001
      ],
-     "src": "90ebe656dc1d4b49daee0525afdefcc3.jpg",
+     "src": "91d2989ccce4a5b3e4789f48b4e05a68.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
      "detail": [
       {
        "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.142,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       },
       {
        "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.145,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       }
      ]
     },
@@ -320,7 +319,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/d6449811/built-3.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/53f77a16/built-3.jpg",
    "host": "screenshots/phone/20261021-012550/photos/68f3daf1bf6bb1b673f4df9b23b5d196e94c8944d09d30273501620380c482e5-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -404,7 +403,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/6198c8da/built-4.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/49d729b5/built-4.jpg",
    "host": "screenshots/phone/20261021-012550/photos/b89ce41476fd4c39686342a015b22f8bdf94a1f78674f40d0faa221321c88ab3-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -457,12 +456,12 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1152.9205692858127,
-      676.9842272316264,
-      89.94344944387635,
+      1150.657474710273,
+      676.9842272316263,
+      94.46963859495578,
       60.0
      ],
-     "src": "837e4c6644bf288b4849aab1cf7c1367.jpg",
+     "src": "83f2d49788280ff1b22c40269770df4a.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -470,14 +469,14 @@
       {
        "copy": "upload",
        "v": "hidden",
-       "unchanged": 0.143,
+       "unchanged": 0.208,
        "inside": 1.0,
        "grey": 0.0
       },
       {
        "copy": "detail",
        "v": "hidden",
-       "unchanged": 0.144,
+       "unchanged": 0.211,
        "inside": 1.0,
        "grey": 0.0
       }
@@ -488,7 +487,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/8afaf5da/built-5.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/c76f3227/built-5.jpg",
    "host": "screenshots/phone/20261024-153001/photos/4c4beff6d694de51a5111d3521f494d776d2646f343dc07d112b7dd24030652e-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -507,12 +506,12 @@
      "variant": "eyesIn",
      "eyesInFrame": true,
      "core": [
-      1491.5839171899224,
-      251.20298363878493,
-      47.153575500684205,
+      1483.5661264869948,
+      259.1237791457182,
+      53.89035441766935,
       28.0
      ],
-     "src": "9ad95d2490271aec9728b86fee44ccfc.jpg",
+     "src": "9be4a53f4bedf99ed5fe4a0cae9f68a3.jpg",
      "edge": true,
      "busy": false,
      "caught": "hidden",
@@ -535,18 +534,18 @@
     },
     {
      "kind": "frontal",
-     "px": 28.0,
+     "px": 27.0,
      "band": "20-31",
      "where": "bg2",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1210.9487076930113,
-      251.96214643903227,
-      87.50057496493369,
-      56.0
+      1227.987720207862,
+      256.53759180998793,
+      81.317349641038,
+      54.0
      ],
-     "src": "ff6ecec6b934307cec3fb492c9e6a990.jpg",
+     "src": "d56bf67bd74cb0f2128007818675a465.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -572,15 +571,15 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/e303f5a2/built-6.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/96a2c3e2/built-6.jpg",
    "host": "screenshots/phone/20261021-012550/photos/aa20f9b6842cd767f1a8688e1aeebd5f22e61cfabd65dd6f25bb6356cc85d2a5-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 1,
-    "otherHeads": 1,
-    "coveredExtra": 1
+    "sweptFaces": 0,
+    "otherHeads": 0,
+    "coveredExtra": 0
    },
    "faces": [
     {
@@ -599,21 +598,21 @@
      "src": "037bb8903e05afa1af566af09e2122ea.jpg",
      "edge": false,
      "busy": false,
-     "caught": "hidden",
+     "caught": "missed",
      "detail": [
       {
        "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
+       "v": "leak",
+       "unchanged": 0.85,
+       "inside": 0.0,
+       "grey": 0.0
       },
       {
        "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.0
       }
      ]
     },
@@ -625,29 +624,29 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      391.40150941253603,
-      668.0207262706177,
-      151.01624677083416,
-      110.00000000000001
+      1165.3146908743358,
+      718.5236299285722,
+      202.11315496376537,
+      110.0
      ],
-     "src": "27b6a77e28237490b23020b788514f9c.jpg",
+     "src": "289236c117e289c12d6c57e2cb4ce427.jpg",
      "edge": false,
      "busy": true,
      "caught": "hidden",
      "detail": [
       {
        "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
+       "v": "hidden",
+       "unchanged": 0.155,
+       "inside": 1.0,
+       "grey": 0.0
       },
       {
        "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
+       "v": "hidden",
+       "unchanged": 0.152,
+       "inside": 1.0,
+       "grey": 0.0
       }
      ]
     }
@@ -656,48 +655,48 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/8705a8c4/built-7.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/c5d1fecf/built-7.jpg",
    "host": "screenshots/phone/20261014-180424/photos/ebe23fb3a57a072e4882c0b94e888321c7fc999895bbf10e96e05caf7a945d75-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 1,
+    "sweptFaces": 0,
     "otherHeads": 0,
     "coveredExtra": 0
    },
    "faces": [
     {
      "kind": "frontal",
-     "px": 17.0,
+     "px": 13.0,
      "band": "12-19",
      "where": "bg",
      "variant": "topEyesOut",
      "eyesInFrame": false,
      "core": [
-      239.65974133607958,
-      -7.497284528150573,
-      55.27431057457212,
-      34.0
+      269.81355904747375,
+      -14.352972913571278,
+      43.08907687403103,
+      26.0
      ],
-     "src": "34200ca626775c549932ff37b1fd1875.jpg",
+     "src": "216d717f1360e765cdc3e6d4321b2270.jpg",
      "edge": true,
      "busy": false,
-     "caught": "hidden",
+     "caught": "missed",
      "detail": [
       {
        "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
+       "v": "leak",
+       "unchanged": 0.942,
+       "inside": 0.0,
+       "grey": 0.0
       },
       {
        "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.0
       }
      ]
     },
@@ -709,29 +708,29 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1218.8896272162608,
+      1228.3495027918268,
       588.4335413699237,
-      137.60619128119407,
-      82.0
+      118.68644013006205,
+      81.99999999999999
      ],
-     "src": "991f69fa4b82fcbaffef48c86e595065.jpg",
+     "src": "9998cd8c040a202d3ff1019be96ab38c.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
      "detail": [
       {
        "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.131,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       },
       {
        "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.134,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       }
      ]
     }
@@ -740,7 +739,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/b81e08b8/built-8.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/978f7dd3/built-8.jpg",
    "host": "screenshots/phone/20261014-180424/photos/7f14a43e30f31d5e9d6f6d9a40582c8b4ee160ffcdb984d48d1a7684e1ed7108-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -748,7 +747,7 @@
    "counts": {
     "sweptFaces": 1,
     "otherHeads": 0,
-    "coveredExtra": 0
+    "coveredExtra": 1
    },
    "faces": [
     {
@@ -759,29 +758,29 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      905.95546703663,
+      910.0005997550461,
       88.36584239867415,
-      74.16801247680118,
+      66.07774703996883,
       39.28125
      ],
-     "src": "be4ff85191ef36126b44ba385868247b.jpg",
+     "src": "beeec465496b433c55f37c5f5ba80498.jpg",
      "edge": false,
      "busy": true,
      "caught": "hidden",
      "detail": [
       {
        "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.245,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       },
       {
        "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.251,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       }
      ]
     },
@@ -824,7 +823,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/a4f4d60d/built-9.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/f1a7166b/built-9.jpg",
    "host": "screenshots/phone/20261014-180424/photos/d58b1491b9df9c52baa3ac23e7e6afd36b050cd1018f6f7f72e87eeda6b69036-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -908,14 +907,14 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/351f58f8/built-10.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/259c4146/built-10.jpg",
    "host": "screenshots/phone/20261014-180424/photos/3239a68d1618a0b69aaec9cc9555ed0a0fafd78227da58f93cef49ee707e27c6-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": true,
    "counts": {
     "sweptFaces": 1,
-    "otherHeads": 1,
+    "otherHeads": 0,
     "coveredExtra": 0
    },
    "faces": [
@@ -961,12 +960,12 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      89.32412061203651,
-      374.0786135858294,
-      49.49668045856069,
+      90.60489294791788,
+      374.07861358582943,
+      46.93513578679795,
       32.0
      ],
-     "src": "cea72ae8b367d14e2d84fa23f5a8563b.jpg",
+     "src": "cf3429023d3527db890c5787e03bc852.jpg",
      "edge": false,
      "busy": true,
      "caught": "hidden",
@@ -992,7 +991,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/e487ea12/built-11.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/ed50f727/built-11.jpg",
    "host": "screenshots/phone/20261014-180424/photos/e16ac69ca252adc40fe0569a2569b745468ff1ce9e5129a45d9fcc4f9a25483c-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1076,13 +1075,13 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/b99a2a06/built-12.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/042f5fa3/built-12.jpg",
    "host": "screenshots/phone/20261021-012550/photos/cc581725df4b5c08b0864d072ac07ee84abca7b74087fabe14a823741f530daf-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 2,
+    "sweptFaces": 1,
     "otherHeads": 0,
     "coveredExtra": 0
    },
@@ -1095,29 +1094,29 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      118.43760800638961,
+      123.8574943017334,
       454.0115254053883,
-      106.91741425849476,
-      58.00000000000001
+      96.0776416678072,
+      58.0
      ],
-     "src": "5285f0cc22e6b24ebf7597921f1e792f.jpg",
+     "src": "5379682d2e66438ad3b1b963a0834470.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
      "detail": [
       {
        "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
+       "v": "hidden",
+       "unchanged": 0.224,
+       "inside": 1.0,
+       "grey": 0.0
       },
       {
        "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
+       "v": "hidden",
+       "unchanged": 0.221,
+       "inside": 1.0,
+       "grey": 0.0
       }
      ]
     },
@@ -1160,7 +1159,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/f838a8b9/built-13.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/83fc0232/built-13.jpg",
    "host": "screenshots/phone/20261014-180424/photos/e026de2ad49038ee95dae8f102cc8d7c14b5fbbaae08028d3e232f7c81524de2-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1179,12 +1178,12 @@
      "variant": "side",
      "eyesInFrame": false,
      "core": [
-      -28.383757011628617,
+      -25.830372918778163,
       1379.2859849487277,
-      56.767514023257235,
+      51.660745837556334,
       32.0
      ],
-     "src": "a70857f8f76a18d097becc82eb33a9f1.jpg",
+     "src": "a7a66278f5ce1e3157214fc869cbf92f.jpg",
      "edge": true,
      "busy": true,
      "caught": "missed",
@@ -1192,7 +1191,7 @@
       {
        "copy": "upload",
        "v": "leak",
-       "unchanged": 0.867,
+       "unchanged": 0.986,
        "inside": 0.0,
        "grey": 0.0
       },
@@ -1201,7 +1200,7 @@
        "v": "leak",
        "unchanged": 1.0,
        "inside": 0.0,
-       "grey": 0.003
+       "grey": 0.001
       }
      ]
     },
@@ -1213,12 +1212,12 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1156.8258065013697,
+      1155.369228398236,
       486.6981358174571,
-      57.04913010892549,
+      59.96228631519319,
       34.0
      ],
-     "src": "9cf0931fc2279659c1193ab5135c73f6.jpg",
+     "src": "9d9ce0c4352ea695799828c06cbf32b4.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -1244,7 +1243,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/3dfceaca/built-14.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/62c3d48a/built-14.jpg",
    "host": "screenshots/phone/20261014-180424/photos/7f3c605309c7c6a0c8e84012e4522ace2f7bdfab1783157ffa6b153e713e04d5-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1328,7 +1327,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/7c7b24f4/built-15.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/e0ea77f9/built-15.jpg",
    "host": "screenshots/phone/20261023-221517/photos/d911e9ac28141e68a40b8b38bc2f271d4661185ce21d272c87605fe8afe942cc-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1381,12 +1380,12 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      273.8867305228541,
+      279.75673271895107,
       743.3978101594076,
-      83.72591614210982,
+      71.98591174991589,
       49.99999999999999
      ],
-     "src": "1ca98d1e4a2bb4aa8f2ab4b3598c78b7.jpg",
+     "src": "1d795cf03fcc97e9da94a207b5aca34d.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -1412,7 +1411,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/ea5d5dc6/built-16.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/2ccc244a/built-16.jpg",
    "host": "screenshots/phone/20261008-162946/photos/0d39d642c5a03b6cd903be1edb18895e73ab1b174c36eda81b637efcaf99208c-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1465,12 +1464,12 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1351.2839171049538,
+      1351.7206558301723,
       714.7649187821414,
-      59.52881405644943,
+      58.65533660601224,
       36.0
      ],
-     "src": "5cba4260eab80d368b662a6348ab47ad.jpg",
+     "src": "5e6ce726c8dfbc3beadfc5288a10f203.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -1496,13 +1495,13 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/dd63cae3/built-17.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/a68a661e/built-17.jpg",
    "host": "screenshots/phone/20261021-012550/photos/c994c2b8c10158b5060e98ed0698a8caa907124cb58488146f8823e1d72a929f-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 0,
+    "sweptFaces": 1,
     "otherHeads": 0,
     "coveredExtra": 0
    },
@@ -1515,12 +1514,12 @@
      "variant": "topEyesOut",
      "eyesInFrame": false,
      "core": [
-      836.3456128474448,
-      -5.906244610456625,
-      43.147719616051866,
+      839.9967689125442,
+      -8.122582955573108,
+      37.75075889146951,
       24.0
      ],
-     "src": "fa006e7143dc1473120a3f1b6ad44583.jpg",
+     "src": "fa84a54f44f1a86ef26aa77a8c570e56.jpg",
      "edge": true,
      "busy": false,
      "caught": "missed",
@@ -1528,7 +1527,7 @@
       {
        "copy": "upload",
        "v": "leak",
-       "unchanged": 0.982,
+       "unchanged": 0.875,
        "inside": 0.0,
        "grey": 0.0
       },
@@ -1549,29 +1548,29 @@
      "variant": null,
      "eyesInFrame": false,
      "core": [
-      730.6903934434351,
-      -3.4317131968091985,
+      735.9502572383453,
+      -4.56294405193978,
       39.57509776957065,
       42.0
      ],
      "src": "84e7ae1b1bd401b341a4cc8f9a032541.jpg",
      "edge": true,
      "busy": false,
-     "caught": "missed",
+     "caught": "hidden",
      "detail": [
       {
        "copy": "upload",
-       "v": "leak",
-       "unchanged": 0.967,
-       "inside": 0.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.992
       },
       {
        "copy": "detail",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       }
      ]
     }
@@ -1580,7 +1579,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/816d86b8/built-18.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/d9a91553/built-18.jpg",
    "host": "screenshots/phone/20261014-180424/photos/8ad378e73c5a16bcb38a1c58f7b490a5d7cbfa0d856a123b37c26f07a44f3f0c-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1588,7 +1587,7 @@
    "counts": {
     "sweptFaces": 1,
     "otherHeads": 0,
-    "coveredExtra": 0
+    "coveredExtra": 1
    },
    "faces": [
     {
@@ -1599,12 +1598,12 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1213.338286137289,
+      1212.188931853398,
       1184.3101952115605,
-      92.20559155856746,
+      94.5043001263498,
       62.0
      ],
-     "src": "856299572eafa93c80b15e6587779553.jpg",
+     "src": "86fd926462fed58b04742eb391999a99.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -1645,17 +1644,17 @@
      "detail": [
       {
        "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.142,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.999
       },
       {
        "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.142,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.998
       }
      ]
     }
@@ -1664,7 +1663,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/b767cd8e/built-19.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/7c902ee0/built-19.jpg",
    "host": "screenshots/phone/20261024-153001/photos/9509794292a0fdcc1670f6441e6d025507efc229009f2051976c4fadca5427c0-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1683,12 +1682,12 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      712.4229380913274,
+      705.4325900667699,
       41.73496720664866,
-      87.34085702185563,
+      101.32155307097057,
       58.0
      ],
-     "src": "d56bf67bd74cb0f2128007818675a465.jpg",
+     "src": "d62920b3099c85def0c26cb1fc1b6854.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -1696,14 +1695,14 @@
       {
        "copy": "upload",
        "v": "hidden",
-       "unchanged": 0.11,
+       "unchanged": 0.15,
        "inside": 1.0,
        "grey": 0.0
       },
       {
        "copy": "detail",
        "v": "hidden",
-       "unchanged": 0.102,
+       "unchanged": 0.157,
        "inside": 1.0,
        "grey": 0.0
       }
@@ -1717,12 +1716,12 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1256.4601812698627,
-      830.621053943276,
-      39.56692815192026,
-      24.000000000000004
+      1255.6631798068058,
+      830.6210539432761,
+      41.160931078034025,
+      24.0
      ],
-     "src": "c7c20b0d045b4b3620e53b7e478ebc8e.jpg",
+     "src": "c8e419891e3b5591f2acd756e6047411.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -1748,7 +1747,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/c940cb2e/built-20.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/27dcb35d/built-20.jpg",
    "host": "screenshots/phone/20261014-180424/photos/d918c0325d8593bd45ce8cae8b5977a5286bbc31c94647a5ac1515d4145fe762-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1832,7 +1831,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/53c585f2/built-21.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/6d23af45/built-21.jpg",
    "host": "screenshots/phone/20261014-180424/photos/0a864ea87372cfb3d6fe61a4e596531892fbb9646039ccb75fb3ba31760e55d9-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1840,7 +1839,7 @@
    "counts": {
     "sweptFaces": 0,
     "otherHeads": 0,
-    "coveredExtra": 1
+    "coveredExtra": 3
    },
    "faces": [
     {
@@ -1885,12 +1884,12 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1145.5147347221596,
+      1131.1265951405298,
       439.56582159672234,
-      102.76129509721268,
+      131.53757426047213,
       70.0
      ],
-     "src": "2d6fe71c3e165ca1d5f47143202f00e7.jpg",
+     "src": "2dfddd4c026c5dfbcf2556557e6290cc.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -1898,14 +1897,14 @@
       {
        "copy": "upload",
        "v": "hidden",
-       "unchanged": 0.167,
+       "unchanged": 0.24,
        "inside": 1.0,
-       "grey": 0.0
+       "grey": 0.006
       },
       {
        "copy": "detail",
        "v": "hidden",
-       "unchanged": 0.171,
+       "unchanged": 0.247,
        "inside": 1.0,
        "grey": 0.0
       }
@@ -1916,7 +1915,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/e9ccf9e4/built-22.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/49dd99c9/built-22.jpg",
    "host": "screenshots/phone/20261021-012550/photos/cf069a4a47d5b973f1dc399cf4e3e2216fae7077709ff6fed60efbb85348d40f-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1969,12 +1968,12 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      275.1170771863086,
+      274.8659497170531,
       703.6621560737645,
-      73.56199771269335,
+      74.06425265120434,
       46.0
      ],
-     "src": "95f97d8fed5f0620b6709560a86035d6.jpg",
+     "src": "96760bb2799b4461b7eabb1d94bbf7b4.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -2000,14 +1999,14 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/874f2c28/built-23.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/f508834c/built-23.jpg",
    "host": "screenshots/phone/20261014-180424/photos/af7e93eb16143f9c6ff6854764b8fbc07b17905686c9fd254079e631c178a8f6-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 2,
-    "otherHeads": 1,
+    "sweptFaces": 1,
+    "otherHeads": 0,
     "coveredExtra": 0
    },
    "faces": [
@@ -2019,29 +2018,29 @@
      "variant": "side",
      "eyesInFrame": false,
      "core": [
-      -25.255117219856185,
+      -29.79671776624167,
       1657.7731115766899,
-      50.51023443971237,
+      59.59343553248334,
       32.0
      ],
-     "src": "d198f4fa9e015ec9f7b675a576973ab8.jpg",
+     "src": "d2241e8d3558ef4b9a9dd86153bb6e49.jpg",
      "edge": true,
      "busy": true,
-     "caught": "hidden",
+     "caught": "missed",
      "detail": [
       {
        "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
+       "v": "leak",
+       "unchanged": 0.949,
+       "inside": 0.0,
+       "grey": 0.188
       },
       {
        "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.188
       }
      ]
     },
@@ -2053,8 +2052,8 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      149.64232157260142,
-      1622.8524315586312,
+      179.5847169577041,
+      1620.410402673297,
       34.46693680410469,
       28.0
      ],
@@ -2084,13 +2083,13 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/e41c06d1/built-24.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/997b32ea/built-24.jpg",
    "host": "screenshots/phone/20261021-012550/photos/2a1a768577c53a69dc5dbf0fafc51fe2d34c505c33f6d1a799eebde630fa4090-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 1,
+    "sweptFaces": 2,
     "otherHeads": 0,
     "coveredExtra": 0
    },
@@ -2103,29 +2102,29 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1142.3439332040975,
+      1144.966700464946,
       834.091256962028,
-      108.48157117076462,
+      103.236036649068,
       66.0
      ],
-     "src": "4435e1c935ba3b138c803c2403675761.jpg",
+     "src": "4527920c4cde9888cfdc5b945d1132f0.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
      "detail": [
       {
        "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.147,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       },
       {
        "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.153,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       }
      ]
     },
@@ -2168,7 +2167,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/2a101a35/built-25.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/cd8869d7/built-25.jpg",
    "host": "screenshots/phone/20261024-153001/photos/dcb1b251abb33ffa77f27b2500513246c053672c6aa7ca306db4f204a3961951-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -2176,7 +2175,7 @@
    "counts": {
     "sweptFaces": 0,
     "otherHeads": 1,
-    "coveredExtra": 0
+    "coveredExtra": 3
    },
    "faces": [
     {
@@ -2187,12 +2186,12 @@
      "variant": "eyesIn",
      "eyesInFrame": true,
      "core": [
-      -3.591744594067947,
-      1187.7367834893166,
-      95.67869918854436,
+      -7.324272218393929,
+      1187.6619090625434,
+      99.1363135480758,
       62.0
      ],
-     "src": "fe09d8b640810d94062d049160eca1e1.jpg",
+     "src": "feb3f9c2f59e6c0c3c92c5a74d01dd86.jpg",
      "edge": true,
      "busy": true,
      "caught": "hidden",
@@ -2221,29 +2220,29 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1020.0136788229504,
+      998.7843578663912,
       782.3422321955157,
-      127.13449794518372,
+      169.593139858302,
       92.0
      ],
-     "src": "51f3d59a03c79e14e72ea8da915a5346.jpg",
+     "src": "5285f0cc22e6b24ebf7597921f1e792f.jpg",
      "edge": false,
-     "busy": false,
+     "busy": true,
      "caught": "hidden",
      "detail": [
       {
        "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.188,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.946
       },
       {
        "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.188,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.94
       }
      ]
     }
@@ -2252,13 +2251,13 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/e7a432bf/built-26.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/cdd86878/built-26.jpg",
    "host": "screenshots/phone/20261017-212744/photos/fd52eb43e6c418d7e3939899ad190adc97afa276be9d4fbe3277654deecf54eb-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 1,
+    "sweptFaces": 2,
     "otherHeads": 0,
     "coveredExtra": 0
    },
@@ -2271,29 +2270,29 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1400.2304994242731,
+      1388.584136363128,
       1647.6703395023983,
-      24.160212003165196,
+      47.45293812545553,
       24.0
      ],
-     "src": "2294520d7ec0bda53fb0e77af9560e05.jpg",
+     "src": "234edbb6b3cb898efe2aa8ad2d9e9264.jpg",
      "edge": false,
      "busy": false,
-     "caught": "missed",
+     "caught": "hidden",
      "detail": [
       {
        "copy": "upload",
-       "v": "leak",
-       "unchanged": 0.793,
-       "inside": 0.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       },
       {
        "copy": "detail",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.002
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       }
      ]
     },
@@ -2336,13 +2335,13 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/367fd802/built-27.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/206eaf22/built-27.jpg",
    "host": "screenshots/phone/20261014-180424/photos/d1967fabb97ffbf8f54a14dd3f17e7ebe7111d04c661b98e6eae185ff68f0d00-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 0,
+    "sweptFaces": 1,
     "otherHeads": 0,
     "coveredExtra": 0
    },
@@ -2355,12 +2354,12 @@
      "variant": "topEyesOut",
      "eyesInFrame": false,
      "core": [
-      188.8076292333667,
-      -20.68120974759242,
-      50.34372851751003,
+      546.3304352932967,
+      -15.955323544420004,
+      43.421868340266606,
       30.0
      ],
-     "src": "991f69fa4b82fcbaffef48c86e595065.jpg",
+     "src": "9998cd8c040a202d3ff1019be96ab38c.jpg",
      "edge": true,
      "busy": false,
      "caught": "missed",
@@ -2368,7 +2367,7 @@
       {
        "copy": "upload",
        "v": "leak",
-       "unchanged": 0.846,
+       "unchanged": 0.96,
        "inside": 0.0,
        "grey": 0.0
       },
@@ -2383,70 +2382,20 @@
     },
     {
      "kind": "profile",
-     "px": 61.0,
+     "px": 43.0,
      "band": "32-64",
      "where": "beside",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      -5.594552557367521,
-      404.9674998215395,
-      187.366614356638,
-      122.0
+      1248.147645873478,
+      317.3149116521081,
+      81.03472400435894,
+      86.0
      ],
-     "src": "0dc88e905c843875a508ffd6581170e7.jpg",
-     "edge": true,
-     "busy": false,
-     "caught": "missed",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "leak",
-       "unchanged": 0.999,
-       "inside": 0.0,
-       "grey": 0.005
-      },
-      {
-       "copy": "detail",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.004
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/a7283df1/built-28.jpg",
-   "host": "screenshots/phone/20261021-012550/photos/94df92fd22ee05c85aef91609716c3b1452f9e6183d7cff97aa9ce063ec36de1-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 1,
-    "otherHeads": 0,
-    "coveredExtra": 0
-   },
-   "faces": [
-    {
-     "kind": "profile",
-     "px": 46.0,
-     "band": "32-64",
-     "where": "bg",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      975.8634945719181,
-      228.76661131504784,
-      95.5694196844491,
-      92.0
-     ],
-     "src": "7a3b0c0c37b1f3cf6e383b835a39454b.jpg",
+     "src": "84e7ae1b1bd401b341a4cc8f9a032541.jpg",
      "edge": false,
-     "busy": false,
+     "busy": true,
      "caught": "hidden",
      "detail": [
       {
@@ -2464,48 +2413,14 @@
        "grey": 1.0
       }
      ]
-    },
-    {
-     "kind": "frontal",
-     "px": 12.0,
-     "band": "12-19",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      339.7298075036588,
-      717.3421201239875,
-      34.30965764031786,
-      24.0
-     ],
-     "src": "eb5f37417614cf540712a28a8fbc4d5a.jpg",
-     "edge": false,
-     "busy": true,
-     "caught": "missed",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "leak",
-       "unchanged": 0.955,
-       "inside": 0.0,
-       "grey": 0.0
-      },
-      {
-       "copy": "detail",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.0
-      }
-     ]
     }
    ],
    "his": 0,
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/0eb98b25/built-29.jpg",
-   "host": "screenshots/phone/20261024-153001/photos/e992fd2d2938a2921ae02d76adcae3fdb32faba40cb339ec83be36f6439a73e0-photo.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/358b5b7e/built-28.jpg",
+   "host": "screenshots/phone/20261021-012550/photos/94df92fd22ee05c85aef91609716c3b1452f9e6183d7cff97aa9ce063ec36de1-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
@@ -2516,55 +2431,55 @@
    },
    "faces": [
     {
-     "kind": "frontal",
-     "px": 29.0,
-     "band": "20-31",
+     "kind": "profile",
+     "px": 36.0,
+     "band": "32-64",
      "where": "bg",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      427.60358746163826,
-      45.03646946177764,
-      84.02712608178399,
-      58.0
+      1324.4827721555891,
+      1541.051937721175,
+      103.71724523411689,
+      72.0
      ],
-     "src": "67f807cdadb96ebc9e59beb2222e1d57.jpg",
+     "src": "e1dfc67b430c393a50552a4226ef7364.jpg",
      "edge": false,
-     "busy": false,
+     "busy": true,
      "caught": "hidden",
      "detail": [
       {
        "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.167,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       },
       {
        "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.173,
-       "inside": 1.0,
-       "grey": 0.0
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
       }
      ]
     },
     {
-     "kind": "profile",
-     "px": 36.0,
-     "band": "32-64",
-     "where": "bg2",
+     "kind": "frontal",
+     "px": 14.0,
+     "band": "12-19",
+     "where": "beside",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      656.2405424540648,
-      83.05972080772392,
-      88.62926606769778,
-      72.0
+      1237.0256672081282,
+      750.0623859066592,
+      46.38230977066555,
+      28.000000000000004
      ],
-     "src": "f7f6ae15cf7b430b2bfb95eff751232b.jpg",
+     "src": "5379682d2e66438ad3b1b963a0834470.jpg",
      "edge": false,
-     "busy": true,
+     "busy": false,
      "caught": "hidden",
      "detail": [
       {
@@ -2588,8 +2503,92 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/87383e93/built-30.jpg",
-   "host": "inputs/mirror-fit-check-1/m12/before_mirror.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/15676196/built-29.jpg",
+   "host": "screenshots/phone/20261008-162946/photos/b0f0c8d84b93df08ba318706eda5ce27837a693f63d947f681930c153f813e97-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 2,
+    "otherHeads": 0,
+    "coveredExtra": 0
+   },
+   "faces": [
+    {
+     "kind": "profile",
+     "px": 59.0,
+     "band": "32-64",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      -18.000309075558476,
+      1700.898302856659,
+      122.57816872570645,
+      118.0
+     ],
+     "src": "7a3b0c0c37b1f3cf6e383b835a39454b.jpg",
+     "edge": true,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    },
+    {
+     "kind": "profile",
+     "px": 22.0,
+     "band": "20-31",
+     "where": "bg2",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      312.8461724526994,
+      1663.2168763992804,
+      54.435159916087954,
+      44.0
+     ],
+     "src": "a5d6c57a0163241d6a144b5268af7608.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/7512abe8/built-30.jpg",
+   "host": "inputs/mirror-fit-check-1/m05/before_studio.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
@@ -2601,20 +2600,188 @@
    "faces": [
     {
      "kind": "frontal",
-     "px": 33.0,
+     "px": 61.0,
      "band": "32-64",
      "where": "bg",
      "variant": null,
      "eyesInFrame": false,
      "core": [
-      346.33099400746283,
-      406.55353252636314,
-      58.63449750618848,
-      33.0
+      -52.47991384640969,
+      414.05740734501245,
+      106.55661731325982,
+      61.0
      ],
-     "src": "7592eae23a03dc8bc5afa2b309f13656.jpg",
+     "src": "21c52aa89dbf9b2be2089c20cf1d987d.jpg",
      "edge": true,
      "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.989
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.988
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 27.0,
+     "band": "20-31",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      394.51704927158056,
+      44.77555676821589,
+      45.38209965348155,
+      27.0
+     ],
+     "src": "2ad4ef98177e257b8d57cdfa8e421bde.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.951
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.95
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/e6b43041/built-31.jpg",
+   "host": "screenshots/phone/20261014-180424/photos/d6559a0a1884a223e8c6512531d1d8c69cd902556d3baf7fe811e70dfaf08833-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 1,
+    "otherHeads": 0,
+    "coveredExtra": 3
+   },
+   "faces": [
+    {
+     "kind": "profile",
+     "px": 46.0,
+     "band": "32-64",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      248.78509812293777,
+      1093.036133969852,
+      153.3790665080965,
+      92.0
+     ],
+     "src": "5913503e8e8d19b127028fb265b2a50b.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.945
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.948
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 44.0,
+     "band": "32-64",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      228.70171407796585,
+      526.5798780935728,
+      116.15646680470742,
+      88.0
+     ],
+     "src": "9466c1ebff0cc438549ceae3e46a14f5.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/9873aa63/built-32.jpg",
+   "host": "screenshots/phone/20261024-153001/photos/e992fd2d2938a2921ae02d76adcae3fdb32faba40cb339ec83be36f6439a73e0-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 1,
+    "otherHeads": 0,
+    "coveredExtra": 0
+   },
+   "faces": [
+    {
+     "kind": "profile",
+     "px": 42.0,
+     "band": "32-64",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      243.3025036170997,
+      1510.5010184352304,
+      121.2844489841585,
+      84.0
+     ],
+     "src": "6f9787e7abe76ebdc44882c11eda2058.jpg",
+     "edge": false,
+     "busy": true,
      "caught": "hidden",
      "detail": [
       {
@@ -2635,68 +2802,18 @@
     },
     {
      "kind": "profile",
-     "px": 59.0,
-     "band": "32-64",
+     "px": 19.0,
+     "band": "12-19",
      "where": "beside",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      -24.36278927276907,
-      98.32827316473536,
-      79.9769766591491,
-      59.0
-     ],
-     "src": "85bbb0b0b6cce893d6b76e0583cd8dbc.jpg",
-     "edge": true,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 0.807
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 0.807
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/1e9a5e37/built-31.jpg",
-   "host": "screenshots/phone/20261008-162946/photos/5a9049aab2d9510ed8c5b3c163688b0dd5290a3595da17e623280e8916eec3ac-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 0,
-    "otherHeads": 0,
-    "coveredExtra": 0
-   },
-   "faces": [
-    {
-     "kind": "profile",
-     "px": 19.0,
-     "band": "12-19",
-     "where": "bg",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      1500.6643142611488,
-      1876.7275015794912,
-      50.55195783727924,
+      1501.898189014033,
+      593.243891461866,
+      35.80604083913535,
       38.0
      ],
-     "src": "234edbb6b3cb898efe2aa8ad2d9e9264.jpg",
+     "src": "84e7ae1b1bd401b341a4cc8f9a032541.jpg",
      "edge": true,
      "busy": false,
      "caught": "missed",
@@ -2716,153 +2833,35 @@
        "grey": 0.0
       }
      ]
-    },
-    {
-     "kind": "profile",
-     "px": 54.0,
-     "band": "32-64",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      1218.728709913681,
-      534.0470942338567,
-      180.05368677037418,
-      108.0
-     ],
-     "src": "5913503e8e8d19b127028fb265b2a50b.jpg",
-     "edge": false,
-     "busy": true,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.22,
-       "inside": 1.0,
-       "grey": 0.0
-      },
-      {
-       "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.216,
-       "inside": 1.0,
-       "grey": 0.0
-      }
-     ]
     }
    ],
    "his": 0,
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/0fcdfe1e/built-32.jpg",
-   "host": "screenshots/phone/20261018-012049/photos/83ff375e2ed57d402eabe79cd88595d02a3955c0dcac488dc253d9e186ae5f41-photo.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/bafc8a16/built-33.jpg",
+   "host": "inputs/mirror-fit-check-1/m12/before_mirror.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 1,
+    "sweptFaces": 0,
     "otherHeads": 0,
     "coveredExtra": 0
    },
    "faces": [
     {
      "kind": "profile",
-     "px": 23.0,
-     "band": "20-31",
-     "where": "bg",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      1367.3966435300445,
-      1095.386043048857,
-      48.20382232608992,
-      46.0
-     ],
-     "src": "04e247377c80eb9f6e34c56595d68c95.jpg",
-     "edge": false,
-     "busy": true,
-     "caught": "missed",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "leak",
-       "unchanged": 0.44,
-       "inside": 0.68,
-       "grey": 0.655
-      },
-      {
-       "copy": "detail",
-       "v": "leak",
-       "unchanged": 0.439,
-       "inside": 0.673,
-       "grey": 0.673
-      }
-     ]
-    },
-    {
-     "kind": "profile",
-     "px": 43.0,
+     "px": 34.0,
      "band": "32-64",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      264.16279120942755,
-      612.0029877649487,
-      132.07810520222026,
-      86.0
-     ],
-     "src": "0dc88e905c843875a508ffd6581170e7.jpg",
-     "edge": false,
-     "busy": true,
-     "caught": "missed",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.003
-      },
-      {
-       "copy": "detail",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.004
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/a94b747c/built-33.jpg",
-   "host": "screenshots/phone/20261023-221517/photos/70f0aaa2fc3c4ba5dc355d9a58720cd13e5b3a72f675c7e5bf1fb0dbe30cd697-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 1,
-    "otherHeads": 0,
-    "coveredExtra": 0
-   },
-   "faces": [
-    {
-     "kind": "profile",
-     "px": 26.0,
-     "band": "20-31",
      "where": "bg",
      "variant": "side",
      "eyesInFrame": false,
      "core": [
-      -37.54042468557286,
-      1642.5526011433517,
-      75.08084937114573,
-      52.0
+      -24.54566229441303,
+      3.66198337201034,
+      49.09132458882606,
+      34.0
      ],
      "src": "6f9787e7abe76ebdc44882c11eda2058.jpg",
      "edge": true,
@@ -2874,6 +2873,40 @@
        "v": "leak",
        "unchanged": 1.0,
        "inside": 0.0,
+       "grey": 0.002
+      },
+      {
+       "copy": "detail",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.003
+      }
+     ]
+    },
+    {
+     "kind": "profile",
+     "px": 12.0,
+     "band": "12-19",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      306.0015824263839,
+      125.0857304407684,
+      12.465576480580317,
+      12.0
+     ],
+     "src": "7a3b0c0c37b1f3cf6e383b835a39454b.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "missed",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
        "grey": 0.0
       },
       {
@@ -2884,23 +2917,39 @@
        "grey": 0.0
       }
      ]
-    },
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/f4db8b44/built-34.jpg",
+   "host": "screenshots/phone/20261008-162946/photos/5a9049aab2d9510ed8c5b3c163688b0dd5290a3595da17e623280e8916eec3ac-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 2,
+    "otherHeads": 0,
+    "coveredExtra": 0
+   },
+   "faces": [
     {
-     "kind": "frontal",
-     "px": 18.0,
-     "band": "12-19",
-     "where": "beside",
+     "kind": "profile",
+     "px": 27.0,
+     "band": "20-31",
+     "where": "bg",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1095.6133149316297,
-      647.7032866779739,
-      63.43299391197137,
-      36.0
+      483.4959316042543,
+      244.57381754065045,
+      56.095094162611424,
+      54.0
      ],
-     "src": "128e563f37864265333bc9a3de7dccc6.jpg",
+     "src": "7a3b0c0c37b1f3cf6e383b835a39454b.jpg",
      "edge": false,
-     "busy": false,
+     "busy": true,
      "caught": "hidden",
      "detail": [
       {
@@ -2916,6 +2965,40 @@
        "unchanged": null,
        "inside": null,
        "grey": 1.0
+      }
+     ]
+    },
+    {
+     "kind": "profile",
+     "px": 36.0,
+     "band": "32-64",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      1322.57517292821,
+      427.20989286753684,
+      103.85465966735694,
+      72.0
+     ],
+     "src": "deab9c33ce187b69cff3e1b226ddd8ac.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.981
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.981
       }
      ]
     }
@@ -2924,32 +3007,32 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/9ec2c28f/built-34.jpg",
-   "host": "screenshots/phone/20261014-180424/photos/b17b226c247cee3d48ef7fca709045bdaeed14ad5c6e8792a0f3cd9862136771-photo.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/52e6a524/built-35.jpg",
+   "host": "screenshots/phone/20261018-012049/photos/83ff375e2ed57d402eabe79cd88595d02a3955c0dcac488dc253d9e186ae5f41-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 3,
+    "sweptFaces": 2,
     "otherHeads": 0,
     "coveredExtra": 0
    },
    "faces": [
     {
-     "kind": "profile",
-     "px": 23.0,
-     "band": "20-31",
+     "kind": "frontal",
+     "px": 16.0,
+     "band": "12-19",
      "where": "bg",
-     "variant": null,
+     "variant": "eyesIn",
      "eyesInFrame": true,
      "core": [
-      341.47379582235857,
-      358.2050427499869,
-      66.41767444370585,
-      46.0
+      -4.9063303570165,
+      179.98782019194658,
+      59.403047321112155,
+      32.0
      ],
-     "src": "6f9787e7abe76ebdc44882c11eda2058.jpg",
-     "edge": false,
+     "src": "6a9e3f47bfbe4713a258a69582175724.jpg",
+     "edge": true,
      "busy": false,
      "caught": "hidden",
      "detail": [
@@ -2958,29 +3041,29 @@
        "v": "covered",
        "unchanged": null,
        "inside": null,
-       "grey": 0.879
+       "grey": 1.0
       },
       {
        "copy": "detail",
        "v": "covered",
        "unchanged": null,
        "inside": null,
-       "grey": 0.868
+       "grey": 1.0
       }
      ]
     },
     {
      "kind": "profile",
-     "px": 41.0,
-     "band": "32-64",
-     "where": "beside",
+     "px": 29.0,
+     "band": "20-31",
+     "where": "bg2",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1209.2531521098965,
-      575.5942685166026,
-      100.93888635487802,
-      82.0
+      220.75510259598695,
+      106.72795772820797,
+      71.39579766564543,
+      58.0
      ],
      "src": "f7f6ae15cf7b430b2bfb95eff751232b.jpg",
      "edge": false,
@@ -3008,848 +3091,8 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/ac6b8dc1/built-35.jpg",
-   "host": "screenshots/phone/20261021-012550/photos/5c11a47bf59d7876dab3f4ddef65b3fc59c4e0c4bb99a6cc5398347e0af2b078-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 1,
-    "otherHeads": 0,
-    "coveredExtra": 0
-   },
-   "faces": [
-    {
-     "kind": "profile",
-     "px": 43.0,
-     "band": "32-64",
-     "where": "bg",
-     "variant": "eyesIn",
-     "eyesInFrame": true,
-     "core": [
-      -3.2861564564849033,
-      296.23822465958807,
-      97.74719018938382,
-      86.0
-     ],
-     "src": "923f3b3e01d45b726bc4da95adab9e08.jpg",
-     "edge": true,
-     "busy": false,
-     "caught": "missed",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "leak",
-       "unchanged": 0.983,
-       "inside": 0.0,
-       "grey": 0.0
-      },
-      {
-       "copy": "detail",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.0
-      }
-     ]
-    },
-    {
-     "kind": "profile",
-     "px": 25.0,
-     "band": "20-31",
-     "where": "bg2",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      270.91359507604443,
-      250.8465465415988,
-      67.7770988636857,
-      50.00000000000001
-     ],
-     "src": "85bbb0b0b6cce893d6b76e0583cd8dbc.jpg",
-     "edge": false,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/23a6efbe/built-36.jpg",
-   "host": "screenshots/phone/20261014-180424/photos/403ade260c5ce82ba406a271de5651ac853c6264ba3971f05a192da36fcce726-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 2,
-    "otherHeads": 0,
-    "coveredExtra": 0
-   },
-   "faces": [
-    {
-     "kind": "profile",
-     "px": 16.0,
-     "band": "12-19",
-     "where": "bg",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      10.984905463538585,
-      1959.7532856851285,
-      42.57006975770883,
-      32.0
-     ],
-     "src": "234edbb6b3cb898efe2aa8ad2d9e9264.jpg",
-     "edge": false,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    },
-    {
-     "kind": "profile",
-     "px": 14.0,
-     "band": "12-19",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      210.94879827539262,
-      534.0519920737657,
-      39.253006344994766,
-      28.0
-     ],
-     "src": "d42681a6b954af2d04e2aaaf9c1bba84.jpg",
-     "edge": false,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/1b8337e1/built-37.jpg",
-   "host": "inputs/mirror-fit-check-1/m03/before_mirror.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 0,
-    "otherHeads": 0,
-    "coveredExtra": 1
-   },
-   "faces": [
-    {
-     "kind": "frontal",
-     "px": 21.0,
-     "band": "20-31",
-     "where": "bg",
-     "variant": "topEyesOut",
-     "eyesInFrame": false,
-     "core": [
-      59.741733385141785,
-      -13.424991855998464,
-      36.28271397434096,
-      21.0
-     ],
-     "src": "e17b9ebb3b791ab0ecaa708a1b1de9c4.jpg",
-     "edge": true,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    },
-    {
-     "kind": "profile",
-     "px": 18.0,
-     "band": "12-19",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      148.38361311091177,
-      76.71063759149965,
-      25.929311308529222,
-      18.0
-     ],
-     "src": "e1dfc67b430c393a50552a4226ef7364.jpg",
-     "edge": true,
-     "busy": true,
-     "caught": "missed",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.0
-      },
-      {
-       "copy": "detail",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.0
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/90ae4c44/built-38.jpg",
-   "host": "inputs/mirror-fit-check-1/m09/before_mirror.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 0,
-    "otherHeads": 0,
-    "coveredExtra": 0
-   },
-   "faces": [
-    {
-     "kind": "profile",
-     "px": 31.0,
-     "band": "20-31",
-     "where": "bg",
-     "variant": null,
-     "eyesInFrame": false,
-     "core": [
-      -17.583396473944212,
-      337.20510297236683,
-      47.609549549637535,
-      31.000000000000004
-     ],
-     "src": "0dc88e905c843875a508ffd6581170e7.jpg",
-     "edge": true,
-     "busy": false,
-     "caught": "missed",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.003
-      },
-      {
-       "copy": "detail",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.004
-      }
-     ]
-    },
-    {
-     "kind": "frontal",
-     "px": 40.0,
-     "band": "32-64",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": false,
-     "core": [
-      -22.777000823421687,
-      83.47542945729285,
-      70.96831932699034,
-      40.00000000000001
-     ],
-     "src": "6216b46eeada317d0fbac617c2f09a2f.jpg",
-     "edge": true,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.086,
-       "inside": 1.0,
-       "grey": 0.0
-      },
-      {
-       "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.086,
-       "inside": 1.0,
-       "grey": 0.001
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/cc587835/built-39.jpg",
-   "host": "screenshots/phone/20261014-180424/photos/8bc29df510c347b567670a567760d10e41dfa164486c4adf2e002eef95caf790-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 1,
-    "otherHeads": 0,
-    "coveredExtra": 0
-   },
-   "faces": [
-    {
-     "kind": "profile",
-     "px": 30.0,
-     "band": "20-31",
-     "where": "bg",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      187.88648205571195,
-      1892.917350768738,
-      92.14751525736295,
-      60.0
-     ],
-     "src": "0dc88e905c843875a508ffd6581170e7.jpg",
-     "edge": false,
-     "busy": true,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    },
-    {
-     "kind": "frontal",
-     "px": 27.0,
-     "band": "20-31",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      104.0772935117763,
-      523.5338931817298,
-      81.69174556269115,
-      54.0
-     ],
-     "src": "3b9cc0d697af512490a7bf58883f9a20.jpg",
-     "edge": false,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.201,
-       "inside": 1.0,
-       "grey": 0.005
-      },
-      {
-       "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.207,
-       "inside": 1.0,
-       "grey": 0.001
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/b82234e0/built-40.jpg",
-   "host": "screenshots/phone/20261014-180424/photos/6f1aeed19d3164b75d2bc84e9a3729681a433c07566f52cbdf5d8b140f146d48-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 0,
-    "otherHeads": 1,
-    "coveredExtra": 0
-   },
-   "faces": [
-    {
-     "kind": "profile",
-     "px": 26.0,
-     "band": "20-31",
-     "where": "bg",
-     "variant": null,
-     "eyesInFrame": false,
-     "core": [
-      346.59269539603065,
-      -21.809455539055307,
-      75.08084937114573,
-      52.0
-     ],
-     "src": "6f9787e7abe76ebdc44882c11eda2058.jpg",
-     "edge": true,
-     "busy": false,
-     "caught": "missed",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "leak",
-       "unchanged": 0.895,
-       "inside": 0.0,
-       "grey": 0.0
-      },
-      {
-       "copy": "detail",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.0
-      }
-     ]
-    },
-    {
-     "kind": "frontal",
-     "px": 55.0,
-     "band": "32-64",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      242.03830265976944,
-      723.1807748566482,
-      151.01624677083416,
-      110.00000000000001
-     ],
-     "src": "27b6a77e28237490b23020b788514f9c.jpg",
-     "edge": false,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/5fde2c6f/built-41.jpg",
-   "host": "screenshots/phone/20261014-180424/photos/f4870b8532e83ca603183aca23389c5c7e528da3ba5ddb7c4491c3db6ab9f65f-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 1,
-    "otherHeads": 0,
-    "coveredExtra": 0
-   },
-   "faces": [
-    {
-     "kind": "frontal",
-     "px": 48.0,
-     "band": "32-64",
-     "where": "bg",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      1315.8278630976702,
-      137.40342756280074,
-      143.02426763213774,
-      96.0
-     ],
-     "src": "12da876e7f7a7e754f0ffe635dfb79f0.jpg",
-     "edge": false,
-     "busy": false,
-     "caught": "missed",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.0
-      },
-      {
-       "copy": "detail",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.0
-      }
-     ]
-    },
-    {
-     "kind": "frontal",
-     "px": 26.0,
-     "band": "20-31",
-     "where": "bg2",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      999.3274820143097,
-      185.27795624153808,
-      67.87424068704323,
-      52.0
-     ],
-     "src": "de3b47ed616028f8ca462583f6f30059.jpg",
-     "edge": false,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/57c835de/built-42.jpg",
-   "host": "screenshots/phone/20261014-180424/photos/4c21bb56d82b953d0d1ca9321d181697742f7fc56da6e979aff68f5cd1e87590-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": true,
-   "counts": {
-    "sweptFaces": 0,
-    "otherHeads": 1,
-    "coveredExtra": 1
-   },
-   "faces": [
-    {
-     "kind": "frontal",
-     "px": 47.0,
-     "band": "32-64",
-     "where": "bg",
-     "variant": null,
-     "eyesInFrame": false,
-     "core": [
-      1432.300375556188,
-      1193.6009460675305,
-      166.08252000255916,
-      94.0
-     ],
-     "src": "3ad847bd01f73476418f50f8419bf644.jpg",
-     "edge": true,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    },
-    {
-     "kind": "profile",
-     "px": 29.0,
-     "band": "20-31",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      166.7758936844868,
-      580.5187115233325,
-      89.07593141545085,
-      58.0
-     ],
-     "src": "0dc88e905c843875a508ffd6581170e7.jpg",
-     "edge": false,
-     "busy": true,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/fd16a7a8/built-43.jpg",
-   "host": "screenshots/phone/20261014-180424/photos/968016f009ad3f2fff6fc3d89685999f49385d82e86d42faf23b04dad5408313-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 2,
-    "otherHeads": 0,
-    "coveredExtra": 0
-   },
-   "faces": [
-    {
-     "kind": "frontal",
-     "px": 13.0,
-     "band": "12-19",
-     "where": "bg",
-     "variant": "side",
-     "eyesInFrame": false,
-     "core": [
-      1513.2557694377815,
-      1990.002883971265,
-      45.488461124437066,
-      26.0
-     ],
-     "src": "7e0bf3b4a95ed2e8a76d38321a6ad77c.jpg",
-     "edge": true,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    },
-    {
-     "kind": "frontal",
-     "px": 28.0,
-     "band": "20-31",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      1362.8924167275095,
-      554.595262462832,
-      87.59421291436074,
-      56.0
-     ],
-     "src": "4527920c4cde9888cfdc5b945d1132f0.jpg",
-     "edge": false,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/98cc3318/built-44.jpg",
-   "host": "screenshots/phone/20261021-012550/photos/5780bbb3c81193dd79d3517c8f73dad01211fa4344be7302a52a292bb68c57ea-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 1,
-    "otherHeads": 0,
-    "coveredExtra": 0
-   },
-   "faces": [
-    {
-     "kind": "frontal",
-     "px": 16.0,
-     "band": "12-19",
-     "where": "bg",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      564.789618560452,
-      394.52510861512496,
-      53.62824558988222,
-      32.0
-     ],
-     "src": "28f3172e9e96bb17c1f9ec3697b175bc.jpg",
-     "edge": false,
-     "busy": true,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    },
-    {
-     "kind": "frontal",
-     "px": 54.0,
-     "band": "32-64",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      379.0397260579841,
-      805.5712441376295,
-      108.72095401424338,
-      108.0
-     ],
-     "src": "2294520d7ec0bda53fb0e77af9560e05.jpg",
-     "edge": false,
-     "busy": true,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.175,
-       "inside": 1.0,
-       "grey": 0.0
-      },
-      {
-       "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.179,
-       "inside": 1.0,
-       "grey": 0.0
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/ebfd20d9/built-45.jpg",
-   "host": "inputs/mirror-fit-check-1/m07/before_mirror.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/a53e5813/built-36.jpg",
+   "host": "screenshots/phone/20261023-221517/photos/70f0aaa2fc3c4ba5dc355d9a58720cd13e5b3a72f675c7e5bf1fb0dbe30cd697-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
@@ -3864,15 +3107,99 @@
      "px": 33.0,
      "band": "32-64",
      "where": "bg",
-     "variant": "eyesIn",
+     "variant": null,
      "eyesInFrame": true,
      "core": [
-      -22.856303593478376,
-      509.6077294470365,
-      47.53707073230357,
-      33.0
+      1103.555577834991,
+      421.172191858273,
+      95.2001046950772,
+      66.0
      ],
-     "src": "e1dfc67b430c393a50552a4226ef7364.jpg",
+     "src": "deab9c33ce187b69cff3e1b226ddd8ac.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.959
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.969
+      }
+     ]
+    },
+    {
+     "kind": "profile",
+     "px": 21.0,
+     "band": "20-31",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      1089.2315428985073,
+      650.546619414473,
+      60.64222449207925,
+      42.0
+     ],
+     "src": "6f9787e7abe76ebdc44882c11eda2058.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.975
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.986
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/96be6a78/built-37.jpg",
+   "host": "screenshots/phone/20261014-180424/photos/b17b226c247cee3d48ef7fca709045bdaeed14ad5c6e8792a0f3cd9862136771-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 2,
+    "otherHeads": 0,
+    "coveredExtra": 1
+   },
+   "faces": [
+    {
+     "kind": "profile",
+     "px": 51.0,
+     "band": "32-64",
+     "where": "bg",
+     "variant": "topEyesOut",
+     "eyesInFrame": false,
+     "core": [
+      991.488846054855,
+      -26.09315074890162,
+      131.0655943667409,
+      102.00000000000001
+     ],
+     "src": "037bb8903e05afa1af566af09e2122ea.jpg",
      "edge": true,
      "busy": false,
      "caught": "hidden",
@@ -3895,18 +3222,354 @@
     },
     {
      "kind": "profile",
-     "px": 20.0,
+     "px": 26.0,
      "band": "20-31",
      "where": "beside",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      50.63050927403283,
-      95.7784132108824,
-      24.743254507312706,
-      20.0
+      1248.3485000233313,
+      574.0794354961888,
+      64.33246171901304,
+      52.00000000000001
      ],
      "src": "a5d6c57a0163241d6a144b5268af7608.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/31157e32/built-38.jpg",
+   "host": "inputs/mirror-fit-check-1/m01/before_mirror.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 1,
+    "otherHeads": 0,
+    "coveredExtra": 1
+   },
+   "faces": [
+    {
+     "kind": "profile",
+     "px": 12.0,
+     "band": "12-19",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      393.24955986049116,
+      214.18031705635124,
+      11.3071707913059,
+      12.0
+     ],
+     "src": "84e7ae1b1bd401b341a4cc8f9a032541.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "missed",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.0
+      },
+      {
+       "copy": "detail",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.0
+      }
+     ]
+    },
+    {
+     "kind": "profile",
+     "px": 13.0,
+     "band": "12-19",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      433.93268202379534,
+      129.83336028208905,
+      18.726724833937773,
+      13.0
+     ],
+     "src": "e1dfc67b430c393a50552a4226ef7364.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/aeb2f4a8/built-39.jpg",
+   "host": "screenshots/phone/20261021-012550/photos/5c11a47bf59d7876dab3f4ddef65b3fc59c4e0c4bb99a6cc5398347e0af2b078-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 2,
+    "otherHeads": 0,
+    "coveredExtra": 0
+   },
+   "faces": [
+    {
+     "kind": "frontal",
+     "px": 28.0,
+     "band": "20-31",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      346.724518926861,
+      313.3329954534604,
+      81.85174778751399,
+      56.0
+     ],
+     "src": "b4651a3a2803c8e725b564bb83260afa.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    },
+    {
+     "kind": "profile",
+     "px": 14.0,
+     "band": "12-19",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      626.6943694692463,
+      742.6310664766695,
+      29.34145706805473,
+      28.0
+     ],
+     "src": "04e247377c80eb9f6e34c56595d68c95.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "missed",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "leak",
+       "unchanged": 0.329,
+       "inside": 0.75,
+       "grey": 0.746
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.805
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/ba6488c9/built-40.jpg",
+   "host": "screenshots/phone/20261014-180424/photos/403ade260c5ce82ba406a271de5651ac853c6264ba3971f05a192da36fcce726-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 1,
+    "otherHeads": 0,
+    "coveredExtra": 0
+   },
+   "faces": [
+    {
+     "kind": "profile",
+     "px": 29.0,
+     "band": "20-31",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      376.2511959296627,
+      209.27983642231152,
+      83.55000310526083,
+      58.0
+     ],
+     "src": "e1dfc67b430c393a50552a4226ef7364.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 47.0,
+     "band": "32-64",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      1140.3075045998344,
+      480.4863918596312,
+      163.9898240143995,
+      94.0
+     ],
+     "src": "93689df6d05b8406fcf9083057344e3e.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "hidden",
+       "unchanged": 0.12,
+       "inside": 1.0,
+       "grey": 0.0
+      },
+      {
+       "copy": "detail",
+       "v": "hidden",
+       "unchanged": 0.125,
+       "inside": 1.0,
+       "grey": 0.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/63f8b352/built-41.jpg",
+   "host": "screenshots/phone/20261014-180424/photos/6f1aeed19d3164b75d2bc84e9a3729681a433c07566f52cbdf5d8b140f146d48-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 2,
+    "otherHeads": 0,
+    "coveredExtra": 0
+   },
+   "faces": [
+    {
+     "kind": "frontal",
+     "px": 43.0,
+     "band": "32-64",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      1344.5711102124321,
+      483.33686477676497,
+      134.51968411848256,
+      86.0
+     ],
+     "src": "4527920c4cde9888cfdc5b945d1132f0.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "hidden",
+       "unchanged": 0.215,
+       "inside": 1.0,
+       "grey": 0.0
+      },
+      {
+       "copy": "detail",
+       "v": "hidden",
+       "unchanged": 0.217,
+       "inside": 1.0,
+       "grey": 0.0
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 19.0,
+     "band": "12-19",
+     "where": "bg2",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      1054.7439186398615,
+      421.12852223461067,
+      63.11926955417551,
+      38.0
+     ],
+     "src": "300dcfff954898e161a61e37fca960b8.jpg",
      "edge": false,
      "busy": true,
      "caught": "hidden",
@@ -3932,8 +3595,92 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/53f9c4e5/built-46.jpg",
-   "host": "screenshots/phone/20261023-221517/photos/a5ff951fbe7c7707a2789714761a70aede8cf1e193acb4582990c2cb935a8d19-photo.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/8241d40d/built-42.jpg",
+   "host": "inputs/mirror-fit-check-1/m02/before_mirror.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 1,
+    "otherHeads": 1,
+    "coveredExtra": 2
+   },
+   "faces": [
+    {
+     "kind": "frontal",
+     "px": 60.0,
+     "band": "32-64",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": false,
+     "core": [
+      -30.29976523601868,
+      543.9751482745936,
+      94.37689722867377,
+      60.0
+     ],
+     "src": "fa84a54f44f1a86ef26aa77a8c570e56.jpg",
+     "edge": true,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.981
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.983
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 21.0,
+     "band": "20-31",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      88.57881970499398,
+      103.1040684988097,
+      29.01983105270498,
+      21.0
+     ],
+     "src": "51f3d59a03c79e14e72ea8da915a5346.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.955
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.958
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/ac83052a/built-43.jpg",
+   "host": "screenshots/phone/20261014-180424/photos/f4870b8532e83ca603183aca23389c5c7e528da3ba5ddb7c4491c3db6ab9f65f-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
@@ -3944,53 +3691,389 @@
    },
    "faces": [
     {
-     "kind": "profile",
-     "px": 20.0,
-     "band": "20-31",
+     "kind": "frontal",
+     "px": 62.0,
+     "band": "32-64",
      "where": "bg",
-     "variant": null,
-     "eyesInFrame": true,
+     "variant": "side",
+     "eyesInFrame": false,
      "core": [
-      226.6590465359489,
-      379.0140247149875,
-      61.43167683824198,
-      40.0
+      1444.6465278792039,
+      769.9225298054675,
+      182.7069442415922,
+      124.0
      ],
-     "src": "0dc88e905c843875a508ffd6581170e7.jpg",
-     "edge": false,
+     "src": "499db08e9427371746c9649cac1eb0fd.jpg",
+     "edge": true,
      "busy": false,
      "caught": "missed",
      "detail": [
       {
        "copy": "upload",
        "v": "leak",
-       "unchanged": 0.967,
+       "unchanged": 0.998,
        "inside": 0.0,
-       "grey": 0.007
+       "grey": 0.0
       },
       {
        "copy": "detail",
        "v": "leak",
        "unchanged": 1.0,
        "inside": 0.0,
-       "grey": 0.004
+       "grey": 0.0
       }
      ]
     },
     {
-     "kind": "frontal",
-     "px": 25.0,
+     "kind": "profile",
+     "px": 23.0,
      "band": "20-31",
      "where": "beside",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1272.8686061252697,
-      579.135272886517,
-      81.06958880212754,
-      50.0
+      919.6759547977274,
+      544.0817672248861,
+      43.34415470000595,
+      46.00000000000001
      ],
-     "src": "6e331bf8bf78861f5a0361fc4ed7c3b8.jpg",
+     "src": "84e7ae1b1bd401b341a4cc8f9a032541.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.998
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/571643f1/built-44.jpg",
+   "host": "screenshots/phone/20261014-180424/photos/4c21bb56d82b953d0d1ca9321d181697742f7fc56da6e979aff68f5cd1e87590-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": true,
+   "counts": {
+    "sweptFaces": 1,
+    "otherHeads": 0,
+    "coveredExtra": 0
+   },
+   "faces": [
+    {
+     "kind": "frontal",
+     "px": 13.0,
+     "band": "12-19",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      317.8974987430531,
+      1725.9122540124224,
+      43.32864557530345,
+      26.0
+     ],
+     "src": "aba090c2aa6751db3ef7d97b2bcc23c7.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 30.0,
+     "band": "20-31",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      1366.965188624555,
+      563.4910178146539,
+      99.43633124776392,
+      60.0
+     ],
+     "src": "216d717f1360e765cdc3e6d4321b2270.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "hidden",
+       "unchanged": 0.304,
+       "inside": 1.0,
+       "grey": 0.0
+      },
+      {
+       "copy": "detail",
+       "v": "hidden",
+       "unchanged": 0.309,
+       "inside": 1.0,
+       "grey": 0.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/c7e4b34f/built-45.jpg",
+   "host": "screenshots/phone/20261014-180424/photos/968016f009ad3f2fff6fc3d89685999f49385d82e86d42faf23b04dad5408313-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 1,
+    "otherHeads": 0,
+    "coveredExtra": 0
+   },
+   "faces": [
+    {
+     "kind": "frontal",
+     "px": 12.0,
+     "band": "12-19",
+     "where": "bg",
+     "variant": "eyesIn",
+     "eyesInFrame": true,
+     "core": [
+      -9.559768261086806,
+      860.1115465687294,
+      36.62326386616676,
+      24.0
+     ],
+     "src": "34c7359b1e12185ce9c942ef3ea3abaa.jpg",
+     "edge": true,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 53.0,
+     "band": "32-64",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      222.94439673769176,
+      607.1260132076072,
+      182.8364712946905,
+      106.00000000000001
+     ],
+     "src": "d2b54bddb408aa4b652b402aefb1dd7e.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "hidden",
+       "unchanged": 0.363,
+       "inside": 1.0,
+       "grey": 0.0
+      },
+      {
+       "copy": "detail",
+       "v": "hidden",
+       "unchanged": 0.363,
+       "inside": 1.0,
+       "grey": 0.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/23fa82b2/built-46.jpg",
+   "host": "screenshots/phone/20261021-012550/photos/5780bbb3c81193dd79d3517c8f73dad01211fa4344be7302a52a292bb68c57ea-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 2,
+    "otherHeads": 0,
+    "coveredExtra": 1
+   },
+   "faces": [
+    {
+     "kind": "profile",
+     "px": 48.0,
+     "band": "32-64",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      1376.6045252424394,
+      194.3338817223721,
+      136.66300156925385,
+      96.0
+     ],
+     "src": "fc3ee8e64072d2b42d6a8c2d1e52e2da.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    },
+    {
+     "kind": "profile",
+     "px": 20.0,
+     "band": "20-31",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      490.32839123187114,
+      734.2348279157407,
+      66.68655065569413,
+      39.99999999999999
+     ],
+     "src": "5913503e8e8d19b127028fb265b2a50b.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/30457f1c/built-47.jpg",
+   "host": "inputs/mirror-fit-check-1/m07/before_mirror.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 0,
+    "otherHeads": 0,
+    "coveredExtra": 2
+   },
+   "faces": [
+    {
+     "kind": "profile",
+     "px": 20.0,
+     "band": "20-31",
+     "where": "bg",
+     "variant": "topEyesOut",
+     "eyesInFrame": false,
+     "core": [
+      92.35336937667375,
+      -13.908024181994907,
+      28.848516574265815,
+      20.0
+     ],
+     "src": "deab9c33ce187b69cff3e1b226ddd8ac.jpg",
+     "edge": true,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 23.0,
+     "band": "20-31",
+     "where": "bg2",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      6.374066406255356,
+      0.5935270614706312,
+      34.63516743970137,
+      23.0
+     ],
+     "src": "d56bf67bd74cb0f2128007818675a465.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -4016,7 +4099,91 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/8ea0686f/built-47.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/000892af/built-48.jpg",
+   "host": "screenshots/phone/20261023-221517/photos/a5ff951fbe7c7707a2789714761a70aede8cf1e193acb4582990c2cb935a8d19-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": true,
+   "counts": {
+    "sweptFaces": 0,
+    "otherHeads": 0,
+    "coveredExtra": 1
+   },
+   "faces": [
+    {
+     "kind": "frontal",
+     "px": 60.0,
+     "band": "32-64",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      1249.8433027388814,
+      749.9678051984008,
+      212.9186605823957,
+      120.0
+     ],
+     "src": "70ed78734cd0aea2aeb9e1fbe6846ae7.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    },
+    {
+     "kind": "profile",
+     "px": 30.0,
+     "band": "20-31",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      485.9886891024265,
+      663.1712343089077,
+      100.0298259835412,
+      60.0
+     ],
+     "src": "5913503e8e8d19b127028fb265b2a50b.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/8bd470e9/built-49.jpg",
    "host": "screenshots/phone/20261014-180424/photos/1f199736f69bdaf3e8dfc9e1177dc9957eea40fd7cd6b8d10eb116f08cb4796c-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -4029,136 +4196,18 @@
    "faces": [
     {
      "kind": "frontal",
-     "px": 55.0,
-     "band": "32-64",
-     "where": "bg",
-     "variant": "topEyesOut",
-     "eyesInFrame": false,
-     "core": [
-      533.8236475737356,
-      -41.38106488984744,
-      175.9539746085176,
-      110.0
-     ],
-     "src": "4dfdd566c7812856c57366d6f7ddf19b.jpg",
-     "edge": true,
-     "busy": false,
-     "caught": "missed",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "leak",
-       "unchanged": 0.453,
-       "inside": 0.753,
-       "grey": 0.753
-      },
-      {
-       "copy": "detail",
-       "v": "leak",
-       "unchanged": 0.446,
-       "inside": 0.763,
-       "grey": 0.757
-      }
-     ]
-    },
-    {
-     "kind": "profile",
-     "px": 21.0,
-     "band": "20-31",
-     "where": "bg2",
-     "variant": null,
-     "eyesInFrame": false,
-     "core": [
-      30.724106349913672,
-      -9.193816771408763,
-      44.01218560208209,
-      42.0
-     ],
-     "src": "04e247377c80eb9f6e34c56595d68c95.jpg",
-     "edge": true,
-     "busy": false,
-     "caught": "missed",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "leak",
-       "unchanged": 0.957,
-       "inside": 0.0,
-       "grey": 0.0
-      },
-      {
-       "copy": "detail",
-       "v": "leak",
-       "unchanged": 1.0,
-       "inside": 0.0,
-       "grey": 0.0
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/e6bee8b2/built-48.jpg",
-   "host": "screenshots/phone/20261023-221517/photos/00c9ab4652ade133190cf885140d1b8bea819f6cd31ae18d98cee955b846bbbd-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 0,
-    "otherHeads": 0,
-    "coveredExtra": 0
-   },
-   "faces": [
-    {
-     "kind": "frontal",
-     "px": 46.0,
+     "px": 51.0,
      "band": "32-64",
      "where": "bg",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1330.4022495464533,
-      1570.7749977881215,
-      155.4160099018906,
-      91.99999999999999
+      1115.0684684644216,
+      1608.2972301643445,
+      170.61183045602596,
+      102.0
      ],
-     "src": "4a218fbe91f6d17267cdbb255d4d8900.jpg",
-     "edge": false,
-     "busy": false,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.197,
-       "inside": 1.0,
-       "grey": 0.0
-      },
-      {
-       "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.191,
-       "inside": 1.0,
-       "grey": 0.0
-      }
-     ]
-    },
-    {
-     "kind": "frontal",
-     "px": 39.0,
-     "band": "32-64",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      1007.2117270672776,
-      754.3250678484437,
-      115.38597508845659,
-      78.0
-     ],
-     "src": "563f37df673fa80cfc369fbcf4a9869a.jpg",
+     "src": "4fb2c73ae072c096e3166a2f1568d539.jpg",
      "edge": false,
      "busy": true,
      "caught": "hidden",
@@ -4166,14 +4215,48 @@
       {
        "copy": "upload",
        "v": "hidden",
-       "unchanged": 0.156,
+       "unchanged": 0.12,
        "inside": 1.0,
        "grey": 0.0
       },
       {
        "copy": "detail",
        "v": "hidden",
-       "unchanged": 0.156,
+       "unchanged": 0.123,
+       "inside": 1.0,
+       "grey": 0.0
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 32.0,
+     "band": "32-64",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      1175.3219127769653,
+      530.7782736315929,
+      103.74554502076235,
+      64.0
+     ],
+     "src": "fd5e95a00bcee9d241c1bca1bf4c16c0.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "hidden",
+       "unchanged": 0.253,
+       "inside": 1.0,
+       "grey": 0.0
+      },
+      {
+       "copy": "detail",
+       "v": "hidden",
+       "unchanged": 0.257,
        "inside": 1.0,
        "grey": 0.0
       }
@@ -4184,65 +4267,65 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/47f4681c/built-49.jpg",
-   "host": "screenshots/phone/20261014-180424/photos/9a2e711a1c303aaf57d599f9234e83220708a52b9bc6bda7dd14fcea1289be8f-photo.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/664a5569/built-50.jpg",
+   "host": "screenshots/phone/20261023-221517/photos/00c9ab4652ade133190cf885140d1b8bea819f6cd31ae18d98cee955b846bbbd-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
     "sweptFaces": 1,
     "otherHeads": 0,
-    "coveredExtra": 2
+    "coveredExtra": 1
    },
    "faces": [
     {
      "kind": "frontal",
-     "px": 39.0,
+     "px": 51.0,
      "band": "32-64",
      "where": "bg",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1085.5159636561498,
-      1813.007260373573,
-      156.0,
-      78.0
+      1020.8116409218491,
+      297.8630607270529,
+      190.622198409928,
+      102.0
      ],
-     "src": "983b3e97adb4f92762641af9c73669b6.jpg",
+     "src": "792e251c4998390888c964b3902bcfee.jpg",
      "edge": false,
-     "busy": true,
+     "busy": false,
      "caught": "hidden",
      "detail": [
       {
        "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
+       "v": "hidden",
+       "unchanged": 0.24,
+       "inside": 1.0,
+       "grey": 0.0
       },
       {
        "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
+       "v": "hidden",
+       "unchanged": 0.241,
+       "inside": 1.0,
+       "grey": 0.0
       }
      ]
     },
     {
      "kind": "frontal",
-     "px": 17.0,
+     "px": 15.0,
      "band": "12-19",
      "where": "beside",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      238.8698264233052,
-      539.6810074838264,
-      52.079843644617526,
-      34.0
+      1130.9360726682921,
+      779.3541872961886,
+      45.69707994146608,
+      30.0
      ],
-     "src": "af8be1edbef6e48a88325ebf63cb48f1.jpg",
+     "src": "a38445479f8dcc4074a291d8eb99e97a.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -4268,13 +4351,97 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/09107ec4/built-50.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/807c38f6/built-51.jpg",
+   "host": "screenshots/phone/20261014-180424/photos/9a2e711a1c303aaf57d599f9234e83220708a52b9bc6bda7dd14fcea1289be8f-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": true,
+   "counts": {
+    "sweptFaces": 1,
+    "otherHeads": 0,
+    "coveredExtra": 0
+   },
+   "faces": [
+    {
+     "kind": "frontal",
+     "px": 52.0,
+     "band": "32-64",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": false,
+     "core": [
+      -74.60037630667094,
+      1867.4069855694572,
+      191.71398418764576,
+      104.0
+     ],
+     "src": "5285f0cc22e6b24ebf7597921f1e792f.jpg",
+     "edge": true,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 60.0,
+     "band": "32-64",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      100.36408596233501,
+      562.8912188106825,
+      184.34008888727715,
+      120.0
+     ],
+     "src": "afe908fa847c66e2bd6d289ccb0f19fa.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/fb61b58b/built-52.jpg",
    "host": "screenshots/phone/20261014-180424/photos/f0719366cc759dd076a1b37af72d6f3ba0342c7855378680609c5cf17b86ee56-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
    "counts": {
-    "sweptFaces": 2,
+    "sweptFaces": 1,
     "otherHeads": 0,
     "coveredExtra": 0
    },
@@ -4287,98 +4454,14 @@
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      260.45088128651565,
-      1836.2837554449886,
-      47.38354441545666,
+      289.0744312695758,
+      845.797864168582,
+      52.42948363475952,
       32.0
      ],
-     "src": "03fc99c4deaf14724ef6277dec16b8e8.jpg",
+     "src": "f084bd0f4fe67b11b0e3a8a64db58e7f.jpg",
      "edge": false,
      "busy": true,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    },
-    {
-     "kind": "frontal",
-     "px": 42.0,
-     "band": "32-64",
-     "where": "beside",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      180.05957583667004,
-      658.5619602232574,
-      55.699935509087794,
-      84.0
-     ],
-     "src": "8c6c8abea5d5a128ca8834600b2aeddc.jpg",
-     "edge": false,
-     "busy": true,
-     "caught": "hidden",
-     "detail": [
-      {
-       "copy": "upload",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      },
-      {
-       "copy": "detail",
-       "v": "covered",
-       "unchanged": null,
-       "inside": null,
-       "grey": 1.0
-      }
-     ]
-    }
-   ],
-   "his": 0,
-   "errors": []
-  },
-  {
-   "file": "/private/tmp/t96-built-3ca85ff725/45a1ae88/built-51.jpg",
-   "host": "screenshots/phone/20261014-180424/photos/9d3ef4120a83efbc6144c257253eceaa1d3c31a7aa6fb47ad26bfecca4de14f6-photo.jpg",
-   "status": "ok",
-   "reason": null,
-   "pickedHim": false,
-   "counts": {
-    "sweptFaces": 1,
-    "otherHeads": 0,
-    "coveredExtra": 1
-   },
-   "faces": [
-    {
-     "kind": "frontal",
-     "px": 14.0,
-     "band": "12-19",
-     "where": "bg",
-     "variant": null,
-     "eyesInFrame": true,
-     "core": [
-      1066.8607847150572,
-      30.95661923550052,
-      46.78845623698192,
-      28.0
-     ],
-     "src": "05b35a8b70fc204bc6e9339bbc613d22.jpg",
-     "edge": false,
-     "busy": false,
      "caught": "hidden",
      "detail": [
       {
@@ -4399,26 +4482,26 @@
     },
     {
      "kind": "profile",
-     "px": 19.0,
+     "px": 13.0,
      "band": "12-19",
      "where": "beside",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      1370.595755313033,
-      505.29762784738284,
-      39.47432552183767,
-      38.0
+      1185.0433578058876,
+      577.4518837866852,
+      35.24409140911655,
+      25.999999999999996
      ],
-     "src": "7a3b0c0c37b1f3cf6e383b835a39454b.jpg",
+     "src": "85bbb0b0b6cce893d6b76e0583cd8dbc.jpg",
      "edge": false,
-     "busy": true,
+     "busy": false,
      "caught": "missed",
      "detail": [
       {
        "copy": "upload",
        "v": "leak",
-       "unchanged": 0.902,
+       "unchanged": 0.91,
        "inside": 0.0,
        "grey": 0.0
       },
@@ -4436,8 +4519,428 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-3ca85ff725/b2b8ed8a/built-52.jpg",
+   "file": "/private/tmp/t96-built-55eee9c239/e417c32a/built-53.jpg",
+   "host": "screenshots/phone/20261014-180424/photos/9d3ef4120a83efbc6144c257253eceaa1d3c31a7aa6fb47ad26bfecca4de14f6-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 0,
+    "otherHeads": 0,
+    "coveredExtra": 1
+   },
+   "faces": [
+    {
+     "kind": "profile",
+     "px": 35.0,
+     "band": "32-64",
+     "where": "bg",
+     "variant": "side",
+     "eyesInFrame": false,
+     "core": [
+      -49.82505265545713,
+      1281.381339046673,
+      99.65010531091426,
+      70.0
+     ],
+     "src": "fc3ee8e64072d2b42d6a8c2d1e52e2da.jpg",
+     "edge": true,
+     "busy": false,
+     "caught": "missed",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "leak",
+       "unchanged": 0.998,
+       "inside": 0.0,
+       "grey": 0.0
+      },
+      {
+       "copy": "detail",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.0
+      }
+     ]
+    },
+    {
+     "kind": "profile",
+     "px": 47.0,
+     "band": "32-64",
+     "where": "bg2",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      276.02501793859585,
+      1314.7379630542807,
+      97.64701576454583,
+      94.00000000000001
+     ],
+     "src": "7a3b0c0c37b1f3cf6e383b835a39454b.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.975
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.971
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/b3ae676e/built-54.jpg",
    "host": "screenshots/phone/20261014-180424/photos/e438d4fd96266868cb6d4276215bf4148cfcb5f5edb54880809a98b1cabae984-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 0,
+    "otherHeads": 1,
+    "coveredExtra": 2
+   },
+   "faces": [
+    {
+     "kind": "profile",
+     "px": 49.0,
+     "band": "32-64",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": false,
+     "core": [
+      -27.94165649117847,
+      680.8453033895919,
+      61.875476777520966,
+      55.02929687499999
+     ],
+     "src": "5d9b7b0dfc956f5aa831b426e886143f.jpg",
+     "edge": true,
+     "busy": false,
+     "caught": "missed",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "leak",
+       "unchanged": 0.999,
+       "inside": 0.0,
+       "grey": 0.0
+      },
+      {
+       "copy": "detail",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.0
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 61.0,
+     "band": "32-64",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      510.11663205758447,
+      180.46240657147524,
+      103.9894611076246,
+      68.505859375
+     ],
+     "src": "08680e1257c83a5a603ae3ef67ef3dde.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/4a42f3c2/built-55.jpg",
+   "host": "screenshots/phone/20261008-162946/photos/7de605c9fbadfdb5ae68478f1cbf76266d076044c6d5013dd6b2d34a587ae6ea-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 0,
+    "otherHeads": 0,
+    "coveredExtra": 0
+   },
+   "faces": [
+    {
+     "kind": "profile",
+     "px": 17.0,
+     "band": "12-19",
+     "where": "bg",
+     "variant": "eyesIn",
+     "eyesInFrame": true,
+     "core": [
+      -2.817629906629495,
+      181.11663575180515,
+      30.034672414406295,
+      31.875
+     ],
+     "src": "84e7ae1b1bd401b341a4cc8f9a032541.jpg",
+     "edge": true,
+     "busy": false,
+     "caught": "missed",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "leak",
+       "unchanged": 0.948,
+       "inside": 0.0,
+       "grey": 0.0
+      },
+      {
+       "copy": "detail",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.0
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 16.0,
+     "band": "12-19",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      953.2623569002137,
+      554.2630362072299,
+      47.643992870756506,
+      29.999999999999996
+     ],
+     "src": "7b4dfecd8fcd5ce98bba44308b319d66.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "missed",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "leak",
+       "unchanged": 0.948,
+       "inside": 0.0,
+       "grey": 0.0
+      },
+      {
+       "copy": "detail",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/a728fcf4/built-56.jpg",
+   "host": "screenshots/phone/20261008-162946/photos/a765e8e35386cd6a6bcb7e3a842e470bd4093ca8ecb24c508f88e6f7a3f727cf-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 0,
+    "otherHeads": 0,
+    "coveredExtra": 0
+   },
+   "faces": [
+    {
+     "kind": "frontal",
+     "px": 30.0,
+     "band": "20-31",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": false,
+     "core": [
+      -25.752154535082497,
+      1439.4775857875613,
+      111.21782373153641,
+      56.25
+     ],
+     "src": "234edbb6b3cb898efe2aa8ad2d9e9264.jpg",
+     "edge": true,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "hidden",
+       "unchanged": 0.212,
+       "inside": 1.0,
+       "grey": 0.0
+      },
+      {
+       "copy": "detail",
+       "v": "hidden",
+       "unchanged": 0.21,
+       "inside": 1.0,
+       "grey": 0.0
+      }
+     ]
+    },
+    {
+     "kind": "profile",
+     "px": 58.0,
+     "band": "32-64",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      -34.999887949470164,
+      448.8565222661774,
+      157.02004555984806,
+      108.74999999999999
+     ],
+     "src": "6f9787e7abe76ebdc44882c11eda2058.jpg",
+     "edge": true,
+     "busy": true,
+     "caught": "missed",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "leak",
+       "unchanged": 0.99,
+       "inside": 0.0,
+       "grey": 0.002
+      },
+      {
+       "copy": "detail",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.001
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/ca28c886/built-57.jpg",
+   "host": "screenshots/phone/20261008-162946/photos/6b14dbaf24f1df9ebed0f939332a93877dc18130bea8fa974241dca76222044c-photo.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 1,
+    "otherHeads": 0,
+    "coveredExtra": 1
+   },
+   "faces": [
+    {
+     "kind": "frontal",
+     "px": 22.0,
+     "band": "20-31",
+     "where": "bg",
+     "variant": "topEyesOut",
+     "eyesInFrame": false,
+     "core": [
+      909.115906074219,
+      -9.896864203243155,
+      64.18079138918495,
+      41.25
+     ],
+     "src": "5795936636443a4adb1ab90055eaa9e7.jpg",
+     "edge": true,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 1.0
+      }
+     ]
+    },
+    {
+     "kind": "frontal",
+     "px": 25.0,
+     "band": "20-31",
+     "where": "beside",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      954.5033219666194,
+      476.6897102776247,
+      92.19319646999706,
+      46.875
+     ],
+     "src": "898db4f59b0412f46a6be5d93426f142.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "hidden",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.888
+      },
+      {
+       "copy": "detail",
+       "v": "covered",
+       "unchanged": null,
+       "inside": null,
+       "grey": 0.878
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/35bfc2d7/built-58.jpg",
+   "host": "screenshots/phone/20261017-212744/photos/23999fefa3d440ed4ba2124da1d8a810263110d3984d9721605afd9ecb014ed9-photo.jpg",
    "status": "ok",
    "reason": null,
    "pickedHim": false,
@@ -4448,53 +4951,53 @@
    },
    "faces": [
     {
-     "kind": "frontal",
-     "px": 25.0,
-     "band": "20-31",
+     "kind": "profile",
+     "px": 15.0,
+     "band": "12-19",
      "where": "bg",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      619.4768398445236,
-      482.96693351036095,
-      51.86136970666768,
-      28.076171875
+      1357.3525428880598,
+      620.7014426074506,
+      28.267926978264747,
+      30.0
      ],
-     "src": "c581326401c8eadcf84b2d16e466f22b.jpg",
+     "src": "84e7ae1b1bd401b341a4cc8f9a032541.jpg",
      "edge": false,
-     "busy": false,
-     "caught": "hidden",
+     "busy": true,
+     "caught": "missed",
      "detail": [
       {
        "copy": "upload",
-       "v": "hidden",
-       "unchanged": 0.218,
-       "inside": 1.0,
+       "v": "leak",
+       "unchanged": 0.958,
+       "inside": 0.0,
        "grey": 0.0
       },
       {
        "copy": "detail",
-       "v": "hidden",
-       "unchanged": 0.222,
-       "inside": 1.0,
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
        "grey": 0.0
       }
      ]
     },
     {
-     "kind": "profile",
-     "px": 48.0,
-     "band": "32-64",
+     "kind": "frontal",
+     "px": 24.0,
+     "band": "20-31",
      "where": "beside",
      "variant": null,
      "eyesInFrame": true,
      "core": [
-      576.7015125499818,
-      142.9417258269952,
-      50.79393128906947,
-      53.90625
+      1128.7175178116418,
+      718.6454817355316,
+      79.51253103542665,
+      48.0
      ],
-     "src": "84e7ae1b1bd401b341a4cc8f9a032541.jpg",
+     "src": "5379682d2e66438ad3b1b963a0834470.jpg",
      "edge": false,
      "busy": false,
      "caught": "hidden",
@@ -4512,6 +5015,90 @@
        "unchanged": null,
        "inside": null,
        "grey": 1.0
+      }
+     ]
+    }
+   ],
+   "his": 0,
+   "errors": []
+  },
+  {
+   "file": "/private/tmp/t96-built-55eee9c239/71ab7d88/built-59.jpg",
+   "host": "inputs/mirror-fit-check-1/m06/before_mirror.jpg",
+   "status": "ok",
+   "reason": null,
+   "pickedHim": false,
+   "counts": {
+    "sweptFaces": 0,
+    "otherHeads": 0,
+    "coveredExtra": 0
+   },
+   "faces": [
+    {
+     "kind": "profile",
+     "px": 12.0,
+     "band": "12-19",
+     "where": "bg",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      51.53139647746489,
+      614.9263371355387,
+      13.49291674609011,
+      12.0
+     ],
+     "src": "5d9b7b0dfc956f5aa831b426e886143f.jpg",
+     "edge": false,
+     "busy": true,
+     "caught": "missed",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.015
+      },
+      {
+       "copy": "detail",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.015
+      }
+     ]
+    },
+    {
+     "kind": "profile",
+     "px": 12.0,
+     "band": "12-19",
+     "where": "bg2",
+     "variant": null,
+     "eyesInFrame": true,
+     "core": [
+      98.48353128316064,
+      621.5879905940861,
+      12.465576480580317,
+      12.0
+     ],
+     "src": "7a3b0c0c37b1f3cf6e383b835a39454b.jpg",
+     "edge": false,
+     "busy": false,
+     "caught": "missed",
+     "detail": [
+      {
+       "copy": "upload",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.0
+      },
+      {
+       "copy": "detail",
+       "v": "leak",
+       "unchanged": 1.0,
+       "inside": 0.0,
+       "grey": 0.0
       }
      ]
     }
