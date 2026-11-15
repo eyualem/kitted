@@ -3166,3 +3166,30 @@ Contradictions settled and decisions changed during the build. Newest last.
 471. **T96 build disputes settled by the coordinator (Nov 14).** The first build cut the leak set from 2,644 face-core leaks in 59 photos to 159 in 22, refused none of his photos, and passed the mirror-panel, same-photo, purge, timing and no-regression checks, but 13 real faces in 11 photos (runway audiences, YouTube frames) were still readable in the sent copy. **D1 (by eye):** the 4 pick-edge cores (a jeans cuff, a sneaker, a hand with white dots, jeans over a sneaker) and the implementer's 15 listed leak-set cores aren't faces; they leave the count. **D2:** "accept the rest as a known limit" is refused: the spec's Never list says no face is sent unblurred, so the line stays at 0 readable faces. Allowed instead: (a) the sweep may also use a 4×4 grid and run its first pass on the original photo, not only on today's copy; (b) a crowd refusal: when the sweep finds several strangers' faces it can't be sure it got all of them, so the photo is refused (`couldNotFrame`, a `reason` for the log, today's toast, no new words). Both stay inside #470's limit (at most 6 of 336 normal photos newly refused, none of his own); privacy wins ties. **D3 (corrected the same day, the parent session citing #224: ig-098 was sent with mouth and chin unhidden):** the built face cut off at the top edge (mouth and chin in, eyes out) stays a locked case: a partial face at the frame edge must be hidden, covered or the photo refused, never sent; an eyes-in-frame version may be added as an extra case, not a replacement. The test writer's profile reading (ear, eye and nose geometry, because MediaPipe scores both ears about 1.0 on every pose) is accepted.
 
 472. **T96 round 2 verified, round 3 decided by the coordinator (Nov 14).** Round 2 (`78b5d4e7`): the leak set's 59 photos sent no readable stranger (54 sent, 5 refused), 0 of 336 normal photos newly refused, +124 ms per check on the Mac; the verifier's own run matched. Still failing: built side-on and edge faces (D4, D5: no Apple detector on the phone finds them; a profile-capable model needs the founder's yes for a download, asked through the parent session with YuNet, about 230 KB, MIT, as the recommended trial), 2 readable audience faces in the held-out runway photos, 2 frontal 12 px built faces, half a frontal face in a built mirror panel. **Round 3:** (1) a retry ("Try again") of a check that failed before the update must not send the old copy: the purge also runs on the reload path, and `KittedVisionModule.swift` may be touched for that (the plan had kept it out); (2) the grey cover over people the person detector missed must never land on his own outline (it greyed 35% and 15% of him on two photos); (3) the crowd refusal #471 allows should be used where the sweep can't clear an audience; (4) the test writer adds tests for the missed-people cover, the retry before the first prep, fixes the built set's host choice (it could never build 60 hosts on any build) and adds the back of a head (`12da876e…`) to the not-faces list. Constants from round 2, for the record: `alreadyHiddenShare` 0.95, `hiddenMaxUnchanged` 0.4, `alreadyCoveredShare` 0.8, `poseHeadMaxShare` 0.12, faceGrids 1–4.
+
+473. **T96 round 3 verified: stuck after the third round, waiting on the founder's face-model decision (Nov 15).**
+- **Round 3 (`2b8b373f`, `fdef92ba`):**
+  - The grey cover over people the person detector misses now works from Vision's person segmentation and the body pose. A patch or pose body that touches his outline or his box counts as him, so the cover never lands on him.
+  - "Try again" purges old copies before it reloads (`Prep.reloadUpload`; the module routes to it).
+  - New constants: `himMargin` 0.02 and `crowdGrow` 0.02, both shares of the grid. `alreadyCoveredShare` is removed.
+- **D6 upheld by the test writer and the verifier, by eye:** the two MediaPipe-only marks on the runway model in `5252d050…` are her cardigan stripes and a leg edge, not faces. Both were added to `EYE_NOT_FACES` (re-lock `75ea11f8`).
+- **The verifier's `--full` (8 of 13 lines pass):**
+  - Leak set: 0 readable strangers sent (53 of 59 sent, 6 refused).
+  - False refusals: 0 of 336 normal photos newly refused.
+  - Second mirror panel: 40 of 40 faces caught.
+  - Old sends purged, sweep logic, same photo, kmeasure copies and no regression also pass.
+- **Still failing:**
+  - **Built small faces:** profiles 12–31 px, eyes-out edge faces, and three frontal 16 px faces. These are limits of Apple's detectors (D4, D5) and need a profile-capable model, the founder's call.
+  - **Missed people:** 3 of 12 strangers that no on-device detector sees.
+  - **Held out, by eye:** one runway audience row (`5afdd6632b3d`, 2–3 readable faces at 25–35 px) is still sent, and `eaac0d86af82` is borderline. The crowd refusal was not built: the implementer found no on-device signal that fires on these photos without refusing audience photos the cover already clears.
+- **The verifier's other defects, for the next round:**
+  - A grey head square lands on his own head and shoulders on one photo (`2.55.27 PM`, 8% of him). The pose likely finds him twice; the 0.9 × shoulder-span term isn't capped.
+  - Old scan send copies (`Documents/scans/*-send.jpg`) aren't purged. This is latent: nothing sends them today.
+  - Three tests to strengthen:
+    - the "cover never on him" gate can't see the build's own grey squares;
+    - no built photo puts a missed stranger over his box, so a planted bug went uncaught;
+    - the panel line barely depends on the new code.
+- **Not verified:**
+  - The time line and `npm run check`: the Mac had about 70–120 MB free all day. No JS or TS changed, and round 2's check was green. The same sweep measured 187 ms median and 217 ms p95 at normal load.
+  - A full iOS build, the phone, and real two-panel mirror photos (Y37).
+- **Next:** the founder's answer on the YuNet trial (about 230 KB, MIT). Then the test writer strengthens the three tests and a new round (round 4 needs his OK to reopen the loop) takes the code defects. Nothing ships without his yes on PR #125.
