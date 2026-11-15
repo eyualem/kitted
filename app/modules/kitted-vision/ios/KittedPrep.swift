@@ -1068,3 +1068,10 @@ extension Prep {
     try? Data().write(to: marker)
   }
 }
+
+// T96 round 3 (#472), stub written by the test writer so the tests compile; the implementer replaces it.
+// "Try again" reads the first prep's upload here (the module's reloadUpload calls it), from rootOverride's Caches when
+// set, and purges retry payloads made before the sweep first (purgeOldSends), as reloadZoom must too.
+extension Prep {
+  static func reloadUpload(sha: String) -> String? { fatalError("T96: not built") }
+}

@@ -95,6 +95,8 @@ def eye_drop(photo, cores, W, H):
 
 # Pool photos whose side-view "face" is no face to find (by eye, Nov 14): all hair; a face under a hat brim.
 NOT_FACES = {"638e742038f5a8be2c5d0d95e5aab053.jpg", "ec70fb7cfec6289c068c4e59574638e5.jpg"}
+# Pool poses ruled no face by eye, by box on the pool photo (#472): the back of a model's head, walking away.
+NOT_FACE_BOXES = {"12da876e7f7a7e754f0ffe635dfb79f0.jpg": [[498, 163, 47, 31]]}
 
 CHECKS = [
     ("sweep-logic", "sweep logic"),
@@ -106,6 +108,7 @@ CHECKS = [
     ("time", "time"),
     ("built-small-faces", "built small faces"),
     ("second-mirror-panel", "second mirror panel"),
+    ("missed-people", "missed people"),
     ("held-out-and-regression", "held out and regression"),
     ("no-regression", "no regression"),
 ]
@@ -307,6 +310,24 @@ case "truth":
     }
   }
 
+case "mask":
+  // [{photo, png, w}]: the person mask (Measure.personMask, accurate) w wide, as a grey PNG.
+  for j in jobs(args[2]) {
+    autoreleasepool {
+      let path = j["photo"] as! String
+      guard let img = load(path).image else { emit(["photo": path, "error": "unreadable"]); return }
+      let w = j["w"] as! Int, h = max(1, Int((CGFloat(w) * CGFloat(img.height) / CGFloat(img.width)).rounded()))
+      guard let m = Measure.personMask(img, w: w, h: h) else { emit(["photo": path, "error": "no mask"]); return }
+      let provider = CGDataProvider(data: Data(m.px) as CFData)!
+      let g = CGImage(width: m.w, height: m.h, bitsPerComponent: 8, bitsPerPixel: 8, bytesPerRow: m.w, space: CGColorSpaceCreateDeviceGray(),
+                      bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue), provider: provider, decode: nil, shouldInterpolate: false, intent: .defaultIntent)!
+      let dest = CGImageDestinationCreateWithURL(URL(fileURLWithPath: j["png"] as! String) as CFURL, UTType.png.identifier as CFString, 1, nil)!
+      CGImageDestinationAddImage(dest, g, nil)
+      CGImageDestinationFinalize(dest)
+      emit(["photo": path, "w": m.w, "h": m.h])
+    }
+  }
+
 case "locate":
   // [{photo, kind?, pick? (normalized)}]: Prep.locate's whole result.
   for j in jobs(args[2]) {
@@ -357,6 +378,20 @@ case "prep":
   }
 
 #if T96NEW
+case "reload":
+  // [{root, sha, which: "upload" | "zoom"}]: "Try again" (#472), with Documents/Caches under root. The payloads come
+  // back as the SHA-256 of their bytes.
+  for j in jobs(args[2]) {
+    Prep.rootOverride = URL(fileURLWithPath: j["root"] as! String, isDirectory: true)
+    let sha = j["sha"] as! String
+    func h(_ b64: String) -> String { Data(base64Encoded: b64).map(hex) ?? "undecodable" }
+    if (j["which"] as! String) == "upload" {
+      emit(["which": "upload", "value": Prep.reloadUpload(sha: sha).map(h) ?? NSNull()])
+    } else {
+      emit(["which": "zoom", "value": Prep.reloadZoom(sha: sha).map(h)])
+    }
+  }
+
 case "bcontrol":
   // [{photo}]: the box the "unhidden" stand-in detector uses, and the share of it today's hiding leaves unchanged.
   for j in jobs(args[2]) {
@@ -693,6 +728,35 @@ def judge(res, kind, orig, cores, names=None):
             v, info = verdict(m(c), cp, o, hr)
             out.append({"core": i, "copy": name, "v": v, "box": [round(x, 1) for x in m(c)], "path": path, **info})
     return out, errs
+
+
+def masks(ctx, photos, d, w=384):
+    """main's person mask (Measure.personMask) per photo, as a PNG path (None when there's none)."""
+    rows = ctx.main.call("mask", [{"photo": p, "png": str(d / f"m{i}.png"), "w": w} for i, p in enumerate(photos)])
+    return {p: (str(d / f"m{i}.png") if "error" not in r else None) for i, (p, r) in enumerate(zip(photos, rows))}
+
+
+def outline_grey(img, mask, region=None, hid=()):
+    """Share of a mask's pixels (resized to the image, 2 px in from its edge, inside `region` [x, y, w, h] in the image's
+    pixels and outside the normalized rects `hid`) that are the flat cover grey in `img`. None when no pixel is left."""
+    ih, iw = img.shape[:2]
+    m = mask if isinstance(mask, Image.Image) else Image.open(mask).convert("L")
+    m = np.asarray(m.convert("L").resize((iw, ih), Image.NEAREST).filter(ImageFilter.MinFilter(5))) > 127
+    if region is not None:
+        r = np.zeros_like(m)
+        x0, y0 = max(0, int(region[0])), max(0, int(region[1]))
+        r[y0:max(y0, int(math.ceil(region[1] + region[3]))), x0:max(x0, int(math.ceil(region[0] + region[2])))] = True
+        m &= r
+    for x, y, w, hh in hid:
+        m[max(0, int(y * ih)):int(math.ceil((y + hh) * ih)), max(0, int(x * iw)):int(math.ceil((x + w) * iw))] = False
+    if not m.any():
+        return None
+    g = np.all(np.abs(img.astype(np.int16) - 128) <= 10, axis=2)
+    return float(g[m].mean())
+
+
+def norm_rects(rects, W, H):
+    return [[r[0] / W, r[1] / H, r[2] / W, r[3] / H] for r in rects]
 
 
 class Sheet:
@@ -1046,6 +1110,42 @@ def check_purge(ctx):
             fails.append("(edge) Caches/detail/old.jpg was deleted")
     except Crash as e:
         fails.append(str(e))
+    # "Try again" before any new prep (#472): an old retry payload and no marker; a reload path is the first call.
+    sha = "ab" * 32
+    for which in ("upload", "zoom"):
+        try:
+            root = fresh_root(d)
+            up = Path(root) / "Caches" / "upload"
+            up.mkdir(parents=True)
+            for f in (f"{sha}.jpg", f"{sha}-upper.jpg", f"{sha}-lower.jpg"):
+                (up / f).write_bytes(old)
+            r = ctx.new.call("reload", [{"root": root, "sha": sha, "which": which}])[0]
+            if r["value"] not in (None, []):
+                fails.append(f"(retry first) reload{which.title()} returned an old copy made before the sweep")
+            left = [f.name for f in up.glob("*.jpg")]
+            if left:
+                fails.append(f"(retry first) reload{which.title()} left the old payloads {left}")
+            if not (up / ".sweep-v1").exists():
+                fails.append(f"(retry first) reload{which.title()} wrote no .sweep-v1 marker")
+        except Crash as e:
+            fails.append(f"(retry first, {which}) {e}")
+    # …and a copy made by the new prep still comes back on "Try again" (so returning nothing always can't pass)
+    try:
+        root = fresh_root(d)
+        r1 = ctx.new.call("prep", [{"photo": a, "root": root}])[0]
+        if r1.get("status") == "ok":
+            up = Path(uri_path(r1["uploadUri"])).parent
+            got = ctx.new.call("reload", [{"root": root, "sha": r1["sha256"], "which": "upload"},
+                                          {"root": root, "sha": r1["sha256"], "which": "zoom"}])
+            if got[0]["value"] != sha_file(up / f"{r1['sha256']}.jpg"):
+                fails.append("(retry) reloadUpload doesn't return the copy this prep made")
+            want = [sha_file(up / f"{r1['sha256']}-{k}.jpg") for k in r1.get("zoomKinds") or []]
+            if got[1]["value"] != want:
+                fails.append(f"(retry) reloadZoom returned {len(got[1]['value'])} close-ups, not this prep's {len(want)}")
+        else:
+            fails.append(f"(retry) the prep returned {r1.get('status')}")
+    except Crash as e:
+        fails.append(f"(retry) {e}")
     return fails, {}
 
 
@@ -1245,6 +1345,7 @@ def _normal(ctx):
             tr2 = ctx.truth(mpp, ctx.scratch())
             for p in mpp:
                 tr[p]["hunt"], tr[p]["heads"] = tr2[p]["hunt"], tr2[p]["heads"]
+        mk = masks(ctx, photos, d)
         lj = [{"photo": p, "kind": k} for p in photos for k in ("fit", "items")]
         lm, ln = ctx.main.call("locate", lj), ctx.new.call("locate", lj)
         for w in warm:
@@ -1312,6 +1413,11 @@ def _normal(ctx):
                     rec["shares"].append([round(float((np.abs(grey(mu[y0:y1, x0:x1]) - go) < 12).mean()), 3),
                                           round(float((np.abs(grey(nu[y0:y1, x0:x1]) - go) < 12).mean()), 3)])
                 main = lm[2 * i]["main"]
+                if main and mk.get(p):
+                    # the grey cover on his own outline (#472): never more than today's
+                    hide0 = norm_rects(lm[2 * i]["hide"], W, H)
+                    rec["coverOnHim"] = [outline_grey(mu, mk[p], [v * s for v in main], hide0),
+                                         outline_grey(nu, mk[p], [v * s for v in main], n.get("hidden") or hide0)]
                 if main:
                     top = [h for h in lm[2 * i]["hide"] if overlaps(h, main) and h[1] < main[1] + 0.35 * main[3]]
                     y0 = max([h[1] + h[3] for h in top] + [main[1]])
@@ -1406,10 +1512,15 @@ def check_false_refusals(ctx):
                 fails.append(f"{lab}: {len(pc['leaks'])} face cores not hidden (first {pc['leaks'][0]})")
             for e in pc["errors"]:
                 fails.append(f"{lab}: {e}")
+    for r in recs:
+        a, b = r.get("coverOnHim") or (None, None)
+        if b is not None and b > (a or 0) + 0.02:
+            fails.append(f"{r['photo'][-24:]}: the grey cover lands on his own outline: {b:.0%} of it grey, {a or 0:.0%} today (#472)")
     counts = {k: sum((r["counts"].get(k) or 0) for r in recs) for k in ("sweptFaces", "otherHeads", "coveredExtra")}
     body = [r.get("bodyNew") for r in recs if r.get("bodyNew") is not None]
     rep = {"photos": len(recs), "newly_refused": [{k: r[k] for k in ("photo", "source", "new", "reason", "swept") if k in r} for r in newly],
            "totals": counts, "photos_with": {k: sum(1 for r in recs if r["counts"].get(k)) for k in counts},
+           "cover_on_him_max": max([(r.get("coverOnHim") or [0, 0])[1] or 0 for r in recs] or [0]),
            "body_newly_hidden_over_5pct": sum(1 for b in body if b > 0.05), "body_newly_hidden_median": statistics.median(body) if body else None,
            "sheets": ctx.normal_sheets, "picks": {r["photo"]: r["picks"] for r in recs if r["picks"]}}
     return fails, rep
@@ -1652,7 +1763,7 @@ def ensure_pool(ctx):
                 if not kind:
                     continue
                 core = core_of([q[i] for i in range(11) if q[i][2] >= 0.5])
-                if core[3] < 28:
+                if core[3] < 28 or any(iou(core, b) >= 0.5 for b in NOT_FACE_BOXES.get(Path(p).name, [])):
                     continue
                 side = 2.2 * max(core[2], core[3])
                 sq = [core[0] + core[2] / 2 - side / 2, core[1] + core[3] / 2 - side * 0.62, side, side]
@@ -1786,12 +1897,24 @@ def check_built_small(ctx):
     results = []
     slot = 0
     hi = 0
+    # Hosts are reused (each time with a fresh seeded placement) until the set is built: the hosts that qualify and the
+    # placements that fit don't always reach `want` on one pass (#472).
+    hosts_rows = hosts_rows * 4
+    known = {}
+    hostdirs = []  # each batch of hosts' decodes in its own folder, kept for reuse until the check ends
     while len(results) < want and hi < len(hosts_rows):
         part = hosts_rows[hi:hi + 10]
         hi += 10
         d = ctx.scratch()
         try:
-            hosts = host_info(ctx, part, d)
+            todo = [r for r in part if r["path"] not in known]
+            sub = ctx.scratch()
+            hostdirs.append(sub)
+            for x in (host_info(ctx, todo, sub) if todo else []):
+                known[x["photo"]] = x
+            for r in todo:
+                known.setdefault(r["path"], None)
+            hosts = [known[r["path"]] for r in part if known[r["path"]]]
         except Crash as e:
             return [str(e)], {}
         builds = []
@@ -1899,6 +2022,8 @@ def check_built_small(ctx):
             b["his"] = len(b["his"])
         shutil.rmtree(d, ignore_errors=True)
         print(f"  built small faces: {len(results)}/{want} photos", flush=True)
+    for x in hostdirs:
+        shutil.rmtree(x, ignore_errors=True)
     faces = [f for b in results for f in b["faces"]]
     if len(results) < want:
         fails.append(f"(setup) built {len(results)} of {want} photos")
@@ -2107,6 +2232,157 @@ def check_mirror_panel(ctx):
                    "cut_top": sum(1 for b in results if b["faces"][0]["cutTop"]), "sheet": sheet.finish(), "photos_detail": results}
 
 
+# ---------------------------------------------------------------- F2.2 · missed people (layer 2, #472)
+def ensure_cutouts(ctx, need=24):
+    """Pool people (one pose, shoulders, hips and knees seen) cut out by main's person mask from the shoulders down."""
+    if getattr(ctx, "cutouts", None) is not None:
+        return
+    fs = sorted(os.listdir(FP))
+    photos = [str(FP / f) for i, f in enumerate(fs) if i % 8 == 2]
+    out = []
+    for part in chunks(photos, 10):
+        if len(out) >= need:
+            break
+        d = ctx.scratch()
+        tr = ctx.truth(part, d, grids=(), mp=False)
+        ok = [p for p in part if tr.get(p)]
+        mk = masks(ctx, ok, d, w=1024)
+        for p in ok:
+            arr = rgb(tr[p]["png"])
+            H, W = arr.shape[:2]
+            poses = ctx.pose.poses(arr)
+            if len(poses) != 1 or not mk.get(p):
+                continue
+            q = poses[0]
+            if not all(q[i][2] >= 0.5 for i in (11, 12, 23, 24, 25, 26)):
+                continue
+            span = abs(q[11][0] - q[12][0])
+            if span < 20:
+                continue
+            m = np.asarray(Image.open(mk[p]).convert("L").resize((W, H), Image.NEAREST)) > 127
+            top = int(max(0, min(q[11][1], q[12][1]) - 0.08 * span))
+            xs = [q[i][0] for i in range(11, 33) if q[i][2] >= 0.5]
+            x0, x1 = int(max(0, min(xs) - span)), int(min(W, max(xs) + span))
+            sub = m[top:, x0:x1]
+            rows, cols = np.where(sub)
+            if rows.size == 0:
+                continue
+            cy1, cx0, cx1 = top + rows.max() + 1, x0 + cols.min(), x0 + cols.max() + 1
+            if cy1 - top < 250 or sub.mean() < 0.15:
+                continue
+            out.append({"photo": Path(p).name, "img": arr[top:cy1, cx0:cx1].copy(),
+                        "mask": (m[top:cy1, cx0:cx1] * 255).astype(np.uint8)})
+        shutil.rmtree(d, ignore_errors=True)
+    ctx.cutouts = out
+    print(f"  missed people: {len(out)} pool people cut out", flush=True)
+
+
+def check_missed_people(ctx):
+    """A stranger the person detector misses (main's locate finds no one but him), head out of the frame, so no face for
+    the sweep to find: only the missed-people cover hides them. Every sent copy must have the stranger's outline grey
+    (≥ 80% of it), report coveredExtra ≥ 1, and never put more grey on his own outline than today."""
+    try:
+        ensure_cutouts(ctx)
+    except Crash as e:
+        return [str(e)], {}
+    fails = []
+    want = 12 if ctx.full else 6
+    if len(ctx.cutouts) < 4:
+        return [f"(setup) only {len(ctx.cutouts)} pool people to cut out"], {}
+    rng = random.Random(SEED + 5)
+    rows = [r for r in ctx.normal_rows if r["before"] == "ok" and r["source"] in HIS + ("phone-oct7",)]
+    rng.shuffle(rows)
+    sheet = Sheet("missed-people")
+    results, tried = [], 0
+    for part in chunks(rows * 3, 8):
+        if len(results) >= want:
+            break
+        d = ctx.scratch()
+        try:
+            hosts = host_info(ctx, part, d)
+            hm = masks(ctx, [x["photo"] for x in hosts], d)
+        except Crash as e:
+            return [str(e)], {}
+        builds = []
+        for h in hosts:
+            if not hm.get(h["photo"]):
+                continue
+            base = Image.open(h["png"]).convert("RGB")
+            W, H = base.size
+            mg = grow(h["main"], 0.1)
+            src = rng.choice(ctx.cutouts)
+            placed = None
+            for share in (rng.uniform(0.3, 0.45), 0.3, 0.25):
+                f = share * H / src["img"].shape[0]
+                fw, fh = max(4, int(src["img"].shape[1] * f)), max(4, int(src["img"].shape[0] * f))
+                spots = [(0, mg[0] - fw), (mg[0] + mg[2], W - fw)]
+                spots = [s for s in spots if s[1] > s[0]]
+                if spots:
+                    lo, hi_ = rng.choice(spots)
+                    placed = (int(rng.uniform(lo, hi_)), fw, fh)
+                    break
+            if not placed:
+                continue
+            x, fw, fh = placed
+            tried += 1
+            alpha = Image.fromarray(src["mask"]).resize((fw, fh), Image.NEAREST)
+            base.paste(Image.fromarray(resize(src["img"], fw, fh)), (x, 0), alpha.filter(ImageFilter.GaussianBlur(1)))
+            full = Image.new("L", (W, H), 0)
+            full.paste(alpha, (x, 0))
+            f_ = ctx.built_dir() / f"missed-{tried}.jpg"
+            base.save(f_, quality=95)
+            mpath = d / f"stranger-{tried}.png"
+            full.save(mpath)
+            builds.append({"file": str(f_), "host": no_kit(h["photo"]), "stranger": str(mpath), "his": hm[h["photo"]],
+                           "main": h["main"], "W": W, "H": H, "src": src["photo"]})
+        if not builds:
+            continue
+        try:
+            locs = ctx.main.call("locate", [{"photo": b["file"]} for b in builds])
+            today = ctx.main.call("prep", [{"photo": b["file"], "root": fresh_root(d)} for b in builds])
+            keep = [(b, t) for b, l, t in zip(builds, locs, today) if l["status"] == "ok" and not l["others"] and l["people"] == 1
+                    and t.get("status") == "ok"
+                    and (outline_grey(rgb(uri_path(t["uploadUri"])), b["stranger"]) or 0) < 0.2]
+            res = ctx.new.call("prep", [{"photo": b["file"], "root": fresh_root(d)} for b, _ in keep]) if keep else []
+        except Crash as e:
+            return [str(e)], {}
+        for (b, t), r in zip(keep, res):
+            if len(results) >= want:
+                break
+            W, H = b["W"], b["H"]
+            rec = {"host": b["host"], "src": b["src"], "status": r.get("status"), "reason": r.get("reason"),
+                   "coveredExtra": r.get("coveredExtra")}
+            if r.get("status") == "ok":
+                up, de = rgb(uri_path(r["uploadUri"])), rgb(uri_path(r["detailUri"]))
+                rec["strangerGrey"] = [outline_grey(up, b["stranger"]), outline_grey(de, b["stranger"])]
+                s = up.shape[1] / W
+                hide0 = r.get("hidden") or []
+                rec["coverOnHim"] = [outline_grey(rgb(uri_path(t["uploadUri"])), b["his"], [v * s for v in b["main"]], hide0),
+                                     outline_grey(up, b["his"], [v * s for v in b["main"]], hide0)]
+                if min(g or 0 for g in rec["strangerGrey"]) < 0.8:
+                    sheet.add(f"{Path(b['host']).stem[-10:]} {rec['strangerGrey'][0] or 0:.0%}", uri_path(r["uploadUri"]),
+                              [0, 0, up.shape[1], up.shape[0]])
+            results.append(rec)
+        shutil.rmtree(d, ignore_errors=True)
+        print(f"  missed people: {len(results)}/{want} photos", flush=True)
+    if len(results) < want:
+        fails.append(f"(setup) {len(results)} of {want} photos with a stranger main's person detector misses ({tried} built)")
+    sent = [r for r in results if r["status"] == "ok"]
+    if len(sent) < 0.8 * len(results):
+        fails.append(f"only {len(sent)} of {len(results)} sent: the missed person is to be covered, not the photo refused")
+    for r in sent:
+        lab = Path(r["host"]).stem[-14:]
+        if not isinstance(r.get("coveredExtra"), int) or r["coveredExtra"] < 1:
+            fails.append(f"{lab}: coveredExtra {r.get('coveredExtra')}, expected ≥ 1")
+        g = [x or 0 for x in r["strangerGrey"]]
+        if min(g) < 0.8:
+            fails.append(f"{lab}: the missed stranger's outline is {g[0]:.0%} / {g[1]:.0%} grey in the upload / detail copy (≥ 80%)")
+        a, b2 = r["coverOnHim"]
+        if b2 is not None and b2 > (a or 0) + 0.02:
+            fails.append(f"{lab}: the grey cover lands on his own outline: {b2:.0%} of it grey, {a or 0:.0%} today")
+    return fails, {"photos": len(results), "built": tried, "sent": len(sent), "sheet": sheet.finish(), "detail": results}
+
+
 # ---------------------------------------------------------------- calibration of T (how the constant above was set)
 def calibrate(ctx):
     rows = [r for r in ctx.normal_rows if r["before"] == "ok"]
@@ -2147,10 +2423,10 @@ def calibrate(ctx):
 # ---------------------------------------------------------------- main
 FUNCS = {"sweep-logic": check_sweep_logic, "old-sends-purged": check_purge, "same-photo": check_same_photo,
          "leak-set": check_leak_set, "kmeasure-copies": check_kmeasure, "false-refusals": check_false_refusals,
-         "time": check_time, "built-small-faces": check_built_small, "second-mirror-panel": check_mirror_panel,
+         "time": check_time, "built-small-faces": check_built_small, "second-mirror-panel": check_mirror_panel, "missed-people": check_missed_people,
          "held-out-and-regression": check_heldout, "no-regression": check_no_regression}
 QUICK = ("sweep-logic", "old-sends-purged", "same-photo", "leak-set", "kmeasure-copies", "false-refusals", "time",
-         "built-small-faces", "second-mirror-panel", "no-regression")
+         "built-small-faces", "second-mirror-panel", "missed-people", "no-regression")
 
 
 def main():

@@ -236,6 +236,15 @@ Built as the Interfaces say (`Located.otherHeads`, `Face`, `FaceDetect`, `detect
 
 **D5 · Built profiles and edge slices: no on-device detector finds them (round 2, `--full`).** With every layer the #471 interface allows (4×4 tiles on the original, pose heads, missed people covered), 33 of 106 built faces and 2 of 40 panel faces are sent unhidden, 26 of them profiles 12–61 px. Neither a crowd refusal nor tuning reaches them: they are single strangers on his own normal photos (a refusal rule that caught them would refuse his photos), and Apple's face detectors (Vision revision 2 or 3, CoreImage) miss most of them even on tight crops. Body pose doesn't apply (a pasted head has no body). What's needed is a profile-capable face or head model (TESTING.md → "Not testable yet": none is installed; a new download needs the founder's yes), or the line accepts profiles under a size and eyes-out edge slices as the known limit, judged by eye. Not built; for the coordinator and the founder.
 
+**Test writer, round 3 (#472): build to this.**
+- **New interface, a stub in `KittedPrep.swift`:** `static func reloadUpload(sha: String) -> String?` returns the first prep's `Caches/upload/<sha>.jpg` as base64, or nil. The module's `AsyncFunction("reloadUpload")` calls it (#472 allows the module change).
+- `reloadUpload` and `reloadZoom` both read from `rootOverride`'s `Caches` when it's set (the Mac), and call `purgeOldSends(caches:)` before reading.
+- Tests added:
+  - old sends purged: "Try again" before any new prep, plus a new copy still reloading;
+  - missed people (a new line);
+  - false refusals: the cover never on his outline.
+- Built small faces now reuses hosts until all 60 are built. `12da876e…` (the back of a head) left the pool by box. TESTING.md's face_gap wording now says H1–H4.
+
 ## Review
 
 **Round 2 · not ready** (verifier, Nov 14, build `78b5d4e7`). Three lines fail: built small faces, second mirror panel and the eye part of held out. One planted bug went uncaught, one gap has no test, and the built-small-faces line can't pass for any build as written. The "9 of 11" is right for the automatic gates; with the held-out eye part (which #471 keeps at 0 readable faces) it's **8 of 11**.
