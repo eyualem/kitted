@@ -238,4 +238,58 @@ Built as the Interfaces say (`Located.otherHeads`, `Face`, `FaceDetect`, `detect
 
 ## Review
 
-(the verifier fills this)
+**Round 2 · not ready** (verifier, Nov 14, build `78b5d4e7`). Three lines fail: built small faces, second mirror panel and the eye part of held out. One planted bug went uncaught, one gap has no test, and the built-small-faces line can't pass for any build as written. The "9 of 11" is right for the automatic gates; with the held-out eye part (which #471 keeps at 0 readable faces) it's **8 of 11**.
+
+**How it was checked.**
+- **The lock holds.** `git diff f25caed4..HEAD` is empty on `face_leak_test.py`, `app/e2e/` and `baseline/`. TESTING.md changed only on the Lock line, in the test writer's `8ef390c4`. Every changed file is in Files or is a task record. No test-detection code and no hard-coded expected values (I read the whole `KittedPrep.swift` and `main.swift` diff).
+- **The `--full` results match the code.** No Swift changed after `78b5d4e7`, and the JSONs are stamped after that commit. I re-ran `--full --only sweep-logic --only leak-set --only false-refusals` myself: PASS, PASS, PASS, with every JSON value identical except `seconds`. The other lines reuse the implementer's `--full`.
+- **The eye.** I read every sheet from a copy taken before my re-runs, opened doubtful crops at 3× and opened the held-out originals. Each planted bug was reverted with `git checkout --`, and the tree was clean after each one. The Mac had 70 MB to 1.4 GB free and 5 of 6 GB swap in use; runs went one at a time.
+
+**Per line.**
+- **Sweep logic: pass.** My `--full` run passes. Bug 1 (the re-check condition swapped, so it refuses when the re-check finds nothing) turned it red with 64 fails, for example `(3) … couldNotFrame … expected ok` and `(4) … ok … expected couldNotFrame/faceRemains`.
+- **Leak set: pass.** My run: 0 cores unhidden; fit 54 of 59 sent (5 `faceRemains`), snap 54, items 54; all 185 gate boxes hidden. Bug 2 (`alreadyHiddenShare` 0.95 → 0.5) turned it red: 3 cores unhidden in `d50d3a6538…`.
+- **Built small faces: fail.**
+  - 33 of 106 pasted faces were sent unhidden, none refused.
+  - By eye: 16 readable, 6 borderline, 11 not readable.
+  - Readable among them: 9 profiles of 12–31 px (#1, #2, #8, #11, #14, #26, #27, #30, #33 on `sheet00–01`), which fails the line's eye rule. Also **2 frontal 12 px faces fully in the frame** (#16, source `2294520d…`; #20, source `eb5f3741…`, sunglasses). Those two are neither edge faces (D4) nor profiles.
+  - Bug 3 (`faceGrids` back to `[1, 2, 3]`) raised the misses from 33 to 43, so the line measures it, but the line was already red.
+- **Second mirror panel: fail.** Caught: (a) 13 of 14, (b) 12 of 13, (c) 13 of 13. The (b) frontal 91.5 px slice is **readable** (half a face, one eye). The (a) profile 34.6 px miss shows only lips and chin. Bug 4 was **not caught** (test 1 below).
+- **Held out and regression: automatic part pass, eye part fail.**
+  - Automatic: all 185 gate boxes are hidden, also in my own leak-set run.
+  - **Readable real faces sent:** held-out `5afdd6632b3d` (sheet00, crop 28: a man in glasses in the audience) and `eaac0d86af82` (sheet03, crops 99–100: an audience man next to a photographer).
+  - Borderline: `e915a35a67ac` (a dark, out-of-focus audience face) and baseline `e58d6e9e4200` (a camera-blurred profile).
+  - Not readable: photographers whose faces are behind the camera (`474e72f6ba85`, `d7054d8a639b`), `2bb3700b00be`, backs of heads, ears.
+  - Baseline YouTube frame `FlQ3WZ-H2Ik/f-08-40` was sent with a stranger's **mouth and chin** at the top edge, eyes above the frame. That's a real photo of the D3/D4 case.
+  - Everything else on the 467 crops is hands, legs, shoes, prints (a cartoon keychain, a drawing on a bag) or faces already pixelated.
+- **False refusals: pass.** My run: 0 of 336 newly refused, none of his, the "Which one is you?" photos unchanged and the picks clean. Bug 1 turned it red: 19 newly refused (the limit is 6).
+  - Body newly hidden, by eye: on `Screenshot … 3.27.06 PM` (35%) the grey cover lands on **his right trouser leg and shoe**. On `… 2.55.27 PM` (15%) it cuts into his shoulders. The other 4 (6–9%) lose little.
+- **No regression: pass** (implementer's `--full`). Bug 5 (fit's other heads put into `locate`'s `hide`) turned it red: `locate differs from main: pick 0: ['hide']`. TESTING.md says `face_gap.py` H1–H6, but the script only has H1–H4 (a wording slip, not the build's fault).
+- **Same photo: pass.** Bug 6 (a random tint in the grey fill) turned it red: upload and close-up bytes differ.
+- **Old sends purged: pass as written.** Bug 7 (the purge skips close-up files) turned it red. But see code 2.
+- **Time: pass, on the Mac.** `sweepMs` median 127 ms, p95 153 ms; `visionMs` 26 ms, the same as main; `totalMs` median 110 → 234 ms. Bug 8 (a 450 ms stall) turned it red: median 724 ms. The slowest edge photo, a 640×360 frame, takes 447 ms in the sweep.
+- **kmeasure copies: pass.** Bug 9 (`kmeasure zoom` skips the cover and sweep) turned it red: 54 fails.
+- **`npm run check`: pass.** I ran it with `node_modules` borrowed by a symlink, removed after: 147 suites and 1,967 tests passed, 0 lint errors, 6 warnings. No JS or TS changed in this task.
+- **iOS build: not verified** (memory). I type-checked `KittedPrep/Guide/Measure.swift` with `swiftc -typecheck` against the iOS 26.0 SDK, for both the Simulator and the device. Both are clean, and the same command does catch a planted error. A full build would settle it: `npx expo run:ios --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D --no-bundler` when the Mac has memory, or the next phone install.
+
+**Defects.**
+- **code 1 · `sweep`: readable faces are still sent.** Two real audience faces in the held-out set, the two in-frame frontal 12 px built faces, 9 readable small profiles and the 91.5 px panel slice. Part of this is D4 and D5 (the founder's call). The audience faces and the in-frame frontal faces are outside what D4 and D5 describe.
+- **code 2 · an old retry payload can still be sent.** `purgeOldSends` runs only inside `Prep.run`. `reloadUpload` (`KittedVisionModule.swift:119`, also used by `closetSource/live.ts:23`) and `Prep.reloadZoom` never purge. So "Try again" on a check that failed before the update, tapped before any new prep, sends the old copy made before the sweep existed. Fix: purge in both reload paths, or once at module load. The plan says the module file isn't touched, so this needs the coordinator's OK.
+- **code 3 · `missedPeople` / `coverMasks`: the cover lands on him.** On 2 of 336 photos it greys part of his own body (35% and 15% of his body box), against its own "never onto him". This isn't gated, but it costs the reading of his clothes on those photos.
+- **test 1 · planted bug 4 went uncaught.** Switching off layer 2, the missed-people cover (`if kind == .fit` → `if kind != .fit` before `missedPeople`), leaves the panel result identical and the leak set passing (fit 53 of 59 sent, 0 leaks). Proposed test: a built photo with a stranger the person detector misses, face not visible. Expect `coveredExtra ≥ 1` and ≥ 80% of that person's outline grey.
+- **test 2 · built small faces can't pass for any build.** Host choice uses main's build only (`host_info` → `ctx.main`), and the seeded placement leaves 7 hosts with fewer than 2 faces. So `(setup) built 53 of 60 photos` fails on every build. It needs more hosts or a placement that always succeeds.
+- **test 3 · a pool "frontal" face isn't a face.** `12da876e7f7a7e754f0ffe635dfb79f0.jpg` is a model walking away (the back of her head), and it's counted as a missed frontal 48 px face. Add it to `NOT_FACES`.
+- **test 4 · no test for a retry before the first prep.** Proposed: a root with `Caches/upload/old.jpg` and no marker; call the reload path first. Expect nothing returned and the file gone.
+
+**Not verified.**
+- The full iOS build (above).
+- The phone's Neural Engine, its sweep time and its memory peak: TESTING.md → "Not testable yet".
+- A real second mirror panel or fitting room: the founder's to-do Y37.
+- The D5 probe with other Apple face detectors: not re-run.
+- No screenshots: the task adds no screen or words.
+
+**Tried to break it.**
+- **His own face refused:** the path exists but didn't happen. A stranger's head can trigger a re-check on a tile that also holds his blurred face; if Vision still sees it, the photo is refused. Yet 0 of 336 normal photos and 0 of 53 built photos with a face pasted beside his head were refused.
+- **Big crowds:** runway audiences are where the readable faces got through. 4 held-out and 10 baseline photos were refused instead. The crowd refusal #471 allows wasn't built.
+- **Slow photo:** 447 ms on the 640×360 frame.
+- **Cleared cache or reinstall:** the purge just re-runs on an empty folder (read in code).
+- **An old retry after the update:** code 2.
