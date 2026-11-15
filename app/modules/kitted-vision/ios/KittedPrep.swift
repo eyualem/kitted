@@ -79,6 +79,9 @@ enum Prep {
     /// on the path that returns "ok") or every body (a snap or a scan). Hidden only in what's sent (`sweep`), so the
     /// camera's quick look and closet measuring see `hide` as before.
     var otherHeads: [CGRect] = []
+    /// Fit, on the path that returns "ok": the box of every other body the pose sees (its joints, grown a little), pixels
+    /// (T96). A stranger whose head is out of the frame is still a body; only the sweep covers it.
+    var otherBodies: [CGRect] = []
   }
 
   /// A person mask with the cover's pixels taken out (another person's outline is never his), any two resolutions.
@@ -462,8 +465,23 @@ enum Prep {
     let feet = [joint(.leftAnkle), joint(.rightAnkle)].compactMap { $0?.y }.max()
     out.pose = feet != nil ? "full" : (joint(.leftHip) ?? joint(.rightHip)) != nil ? "upper" : "none"
     // Everyone else the body pose sees (T96): a profile, a person the person detector missed, a second reflection.
-    if kind == .fit { out.otherHeads = bodies.filter { $0 !== body }.compactMap { poseHead($0, W: W, H: H) } }
+    if kind == .fit {
+      let others = bodies.filter { $0 !== body }
+      out.otherHeads = others.compactMap { poseHead($0, W: W, H: H) }
+      out.otherBodies = others.compactMap { otherBodyBox($0, W: W, H: H) }
+    }
     return out
+  }
+
+  /// Another body's box for the missed-people cover: its joints (confidence > 0.3, at least 4), grown 25% across and 20%
+  /// up and down (the pose often stops short of hands and feet).
+  static func otherBodyBox(_ b: VNHumanBodyPoseObservation, W: CGFloat, H: CGFloat) -> CGRect? {
+    guard let pts = try? b.recognizedPoints(.all) else { return nil }
+    let ok = pts.values.filter { $0.confidence > 0.3 }.map { CGPoint(x: $0.location.x * W, y: (1 - $0.location.y) * H) }
+    guard ok.count >= 4, let minX = ok.map(\.x).min(), let maxX = ok.map(\.x).max(), let minY = ok.map(\.y).min(), let maxY = ok.map(\.y).max()
+    else { return nil }
+    return CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY).insetBy(dx: -(maxX - minX) * 0.25, dy: -(maxY - minY) * 0.2)
+      .intersection(CGRect(x: 0, y: 0, width: W, height: H))
   }
 
   /// The largest head the shoulder distance can make (share of the long edge).
@@ -658,7 +676,10 @@ enum Prep {
 
   /// The close-ups written by an earlier prep, in order (for "Try again"); empty when they're gone.
   static func reloadZoom(sha: String) -> [String] {
-    let dir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("upload", isDirectory: true)
+    let caches = cachesDir()
+    // A retry payload made before the sweep existed is never resent (T96), even when "Try again" comes first.
+    purgeOldSends(caches: caches)
+    let dir = caches.appendingPathComponent("upload", isDirectory: true)
     for kinds in zoomKindsTried {
       let datas = kinds.compactMap { try? Data(contentsOf: dir.appendingPathComponent("\(sha)-\($0).jpg")) }
       if datas.count == kinds.count { return datas.map { $0.base64EncodedString() } }
@@ -848,8 +869,6 @@ extension Prep {
   static let instanceMinShare: CGFloat = 0.002
   /// A face found on the original with at least this share of its box inside one region `locate` hid is already hidden.
   static let alreadyHiddenShare: CGFloat = 0.95
-  /// A label at least this much under the cover `locate` drew is someone `locate` already covered.
-  static let alreadyCoveredShare: CGFloat = 0.8
 
   /// What the sweep decided.
   struct Swept {
@@ -863,34 +882,122 @@ extension Prep {
     var ms: Int                 // the sweep's time
   }
 
-  /// People the outline sees and `locate` didn't cover (fit only): how many, and the cover drawn for them. Every
-  /// instance label that isn't his, at least `instanceMinShare` of the grid and not already under `found.cover`, is
-  /// covered like any other person (its box and outline, never onto him). Nothing is covered when his own outline
-  /// can't be told apart (no instance mask, or no label inside his box).
+  /// People `locate` didn't cover (fit only): how many, and the cover drawn for them. "Other people" are the person
+  /// pixels that aren't his: every instance label that isn't his, and the person segmentation's pixels no instance claims
+  /// (the instance mask names at most four people, and often misses a stranger the segmentation sees). Kept apart from
+  /// him by `himMargin` (his own outline, grown), each patch at least `instanceMinShare` of the grid and not mostly inside
+  /// his box is covered: its own pixels, grown by `crowdGrow`, never onto his outline or that margin. Nothing is covered
+  /// when his outline can't be told apart (no instance mask, or no label inside his box).
   static func missedPeople(_ image: CGImage, found: Located) -> (count: Int, cover: Guide.Gray?) {
     guard let main = found.main, let inst = personInstances(image) else { return (0, nil) }
     let W = CGFloat(image.width), H = CGFloat(image.height)
     guard let his = inst.counts(main.insetBy(dx: main.width * 0.1, dy: main.height * 0.05), W: W, H: H).labels.max(by: { $0.value < $1.value })?.key
     else { return (0, nil) }
-    let w = inst.w, h = inst.h
-    // Each label's pixels already under locate's cover.
-    var under: [UInt8: Int] = [:]
+    let w = inst.w, h = inst.h, n = w * h
+    let seg = Measure.personMask(image, w: w, h: h, quality: .accurate)
+    // Already covered by locate, on this grid.
+    var covered = [Bool](repeating: false, count: n)
     if let c = found.cover {
       for y in 0..<h {
         let cy = min(c.h - 1, (y * c.h) / h)
-        for x in 0..<w {
-          let l = inst.px[y * w + x]
-          guard l != 0, l != his, c.px[cy * c.w + min(c.w - 1, (x * c.w) / w)] > 127 else { continue }
-          under[l, default: 0] += 1
-        }
+        for x in 0..<w where c.px[cy * c.w + min(c.w - 1, (x * c.w) / w)] > 127 { covered[y * w + x] = true }
       }
     }
-    let boxes = inst.boxes(W: W, H: H).sorted { $0.key < $1.key }
-      .filter { l, b in l != his && CGFloat(b.n) >= instanceMinShare * CGFloat(w * h) && CGFloat(under[l] ?? 0) < alreadyCoveredShare * CGFloat(b.n) }
-      .map(\.value.box)
-    guard !boxes.isEmpty else { return (0, nil) }
-    return (boxes.count, coverMasks(main: main, others: boxes, inst: inst, his: his, W: W, H: H))
+    // His outline: his label's pieces that reach into his box (the instance mask sometimes gives a stranger's arm or leg
+    // his label too; a piece away from him is someone else).
+    let sx = W / CGFloat(w), sy = H / CGFloat(h)
+    let core = main.insetBy(dx: main.width * 0.1, dy: main.height * 0.05)
+    var mine = [Bool](repeating: false, count: n)
+    var visited = [Bool](repeating: false, count: n)
+    var stack: [Int] = []
+    for start in 0..<n where inst.px[start] == his && !visited[start] {
+      var piece: [Int] = []
+      var reaches = false
+      visited[start] = true
+      stack.append(start)
+      while let i = stack.popLast() {
+        piece.append(i)
+        let x = i % w, y = i / w
+        if !reaches, core.contains(CGPoint(x: (CGFloat(x) + 0.5) * sx, y: (CGFloat(y) + 0.5) * sy)) { reaches = true }
+        for (nx, ny) in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)] where nx >= 0 && ny >= 0 && nx < w && ny < h {
+          let j = ny * w + nx
+          if !visited[j], inst.px[j] == his { visited[j] = true; stack.append(j) }
+        }
+      }
+      if reaches { for i in piece { mine[i] = true } }
+    }
+    // His outline grown by the margin: never covered, and a patch reaching it is taken for him.
+    let r = max(1, Int((himMargin * CGFloat(w)).rounded()))
+    var near = [Bool](repeating: false, count: n)
+    for y in 0..<h { for x in 0..<w where mine[y * w + x] {
+      for yy in max(0, y - r)...min(h - 1, y + r) { for xx in max(0, x - r)...min(w - 1, x + r) { near[yy * w + xx] = true } }
+    } }
+    func other(_ i: Int) -> Bool {
+      guard !near[i], !covered[i] else { return false }
+      let l = inst.px[i]
+      return l != 0 ? true : (seg?.px[i] ?? 0) > 127
+    }
+    let box = main.insetBy(dx: -main.width * 0.1, dy: -main.height * 0.1)
+    var seen = [Bool](repeating: false, count: n)
+    var patches: [[Int]] = []
+    for start in 0..<n where !seen[start] && other(start) {
+      var patch: [Int] = []
+      seen[start] = true
+      stack.append(start)
+      while let i = stack.popLast() {
+        patch.append(i)
+        let x = i % w, y = i / w
+        for (nx, ny) in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)] where nx >= 0 && ny >= 0 && nx < w && ny < h {
+          let j = ny * w + nx
+          if !seen[j], other(j) { seen[j] = true; stack.append(j) }
+        }
+      }
+      let inside = patch.filter { box.contains(CGPoint(x: (CGFloat($0 % w) + 0.5) * sx, y: (CGFloat($0 / w) + 0.5) * sy)) }.count
+      if CGFloat(inside) < 0.5 * CGFloat(patch.count) { patches.append(patch) }
+    }
+    // A person: a patch at least instanceMinShare of the grid. Smaller patches next to one (a thin leg or arm the mask
+    // split off) are the same person.
+    var crowd = [UInt8](repeating: 0, count: n)
+    var count = 0
+    for patch in patches where CGFloat(patch.count) >= instanceMinShare * CGFloat(n) {
+      count += 1
+      for i in patch { crowd[i] = 255 }
+    }
+    // Another body the pose sees, not mostly inside his box: its box, wherever it isn't him (the masks can miss a
+    // stranger whose head is out of the frame; the pose still finds their shoulders, hips and feet).
+    for b in found.otherBodies where area(b.intersection(box)) < 0.5 * area(b) {
+      let x0 = max(0, Int(b.minX / sx)), x1 = min(w - 1, Int(b.maxX / sx)), y0 = max(0, Int(b.minY / sy)), y1 = min(h - 1, Int(b.maxY / sy))
+      guard x1 > x0, y1 > y0 else { continue }
+      var fresh = 0, cells = 0
+      for y in y0...y1 { for x in x0...x1 {
+        let i = y * w + x
+        guard !near[i], !covered[i] else { continue }
+        cells += 1
+        if crowd[i] == 0 { fresh += 1; crowd[i] = 255 }
+      } }
+      if cells > 0, fresh * 2 > cells { count += 1 }
+    }
+    guard crowd.contains(255) else { return (0, nil) }
+    let reach = max(1, Int((crowdGrow * 2 * CGFloat(w)).rounded()))
+    var close = [Bool](repeating: false, count: n)
+    for y in 0..<h { for x in 0..<w where crowd[y * w + x] != 0 {
+      for yy in max(0, y - reach)...min(h - 1, y + reach) { for xx in max(0, x - reach)...min(w - 1, x + reach) { close[yy * w + xx] = true } }
+    } }
+    for patch in patches where CGFloat(patch.count) < instanceMinShare * CGFloat(n) && patch.contains(where: { close[$0] }) {
+      for i in patch { crowd[i] = 255 }
+    }
+    let g = max(1, Int((crowdGrow * CGFloat(w)).rounded()))
+    var grown = crowd
+    for y in 0..<h { for x in 0..<w where crowd[y * w + x] != 0 {
+      for yy in max(0, y - g)...min(h - 1, y + g) { for xx in max(0, x - g)...min(w - 1, x + g) where !near[yy * w + xx] { grown[yy * w + xx] = 255 } }
+    } }
+    return (count, Guide.Gray(w: w, h: h, px: grown))
   }
+
+  /// Person pixels within this share of the grid width of his outline are taken for him (never covered).
+  static let himMargin: CGFloat = 0.02
+  /// The cover over another person reaches this share of the grid width past their outline.
+  static let crowdGrow: CGFloat = 0.02
 
   /// Two covers as one, on the finer of their grids (a pixel is covered when either covers it).
   static func union(_ a: Guide.Gray, _ b: Guide.Gray) -> Guide.Gray {
@@ -1069,9 +1176,19 @@ extension Prep {
   }
 }
 
-// T96 round 3 (#472), stub written by the test writer so the tests compile; the implementer replaces it.
-// "Try again" reads the first prep's upload here (the module's reloadUpload calls it), from rootOverride's Caches when
-// set, and purges retry payloads made before the sweep first (purgeOldSends), as reloadZoom must too.
+// T96 round 3 (#472): "Try again" reads the first prep's upload (the module's reloadUpload calls this).
 extension Prep {
-  static func reloadUpload(sha: String) -> String? { fatalError("T96: not built") }
+  /// The app's Caches folder, or rootOverride's on the Mac.
+  static func cachesDir() -> URL {
+    rootOverride?.appendingPathComponent("Caches", isDirectory: true) ?? FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+  }
+
+  /// The first prep's upload copy (Caches/upload/<sha>.jpg) as base64, or nil when it's gone. Retry payloads made
+  /// before the sweep existed are purged first, so they're never resent.
+  static func reloadUpload(sha: String) -> String? {
+    let caches = cachesDir()
+    purgeOldSends(caches: caches)
+    let url = caches.appendingPathComponent("upload", isDirectory: true).appendingPathComponent("\(sha).jpg")
+    return (try? Data(contentsOf: url))?.base64EncodedString()
+  }
 }
