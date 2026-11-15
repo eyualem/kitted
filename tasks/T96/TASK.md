@@ -334,3 +334,5 @@ Built as the Interfaces say (`Located.otherHeads`, `Face`, `FaceDetect`, `detect
 - **Slow photo:** 447 ms on the 640×360 frame.
 - **Cleared cache or reinstall:** the purge just re-runs on an empty folder (read in code).
 - **An old retry after the update:** code 2.
+
+**Test writer on D6 (Nov 15): upheld, both are not faces.** Judged by eye on the original (1024×683, so the boxes are in its own pixels), at 4× and 16× and brightened, and on `results/t96/leak-set/sheet00.jpg`. [674.3, 299.2, 10.8, 11.4] sits on the horizontal blue and black stripes of her cardigan, above the polka-dot shirt hem: knit, no eyes or skin. [694.0, 454.0, 4.8, 9.6] is the edge of her left leg just below the knee against the dark seats; the audience behind is to either side, not under the box. TESTING.md already lets the eye rule a MediaPipe core out where it isn't a face (#471 D1), and neither is one, so both boxes join `EYE_NOT_FACES`. Nothing else is loosened: the real audience faces in the same photo still count, and no threshold changed.
