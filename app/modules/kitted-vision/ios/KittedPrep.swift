@@ -75,6 +75,8 @@ enum Prep {
     var picked: Int?
     /// Where the others are covered (> 127 = cover), at its own resolution; nil when there's no one else.
     var cover: Guide.Gray?
+    /// T96 (stub until built): other bodies' head regions from the body pose, pixels, origin top-left.
+    var otherHeads: [CGRect] = []
   }
 
   /// A person mask with the cover's pixels taken out (another person's outline is never his), any two resolutions.
@@ -477,7 +479,7 @@ enum Prep {
   }
 
   /// `pick`: the person he tapped on "Which one is you?" (normalized 0–1, origin top-left, [x, y, w, h]).
-  static func run(uri: String, kind: Kind = .fit, pick: [Double]? = nil) throws -> [String: Any] {
+  static func run(uri: String, kind: Kind = .fit, pick: [Double]? = nil, detect: FaceDetect = Prep.detectFaces) throws -> [String: Any] {
     let t0 = CFAbsoluteTimeGetCurrent()
     func ms(since t: CFAbsoluteTime) -> Int { Int(((CFAbsoluteTimeGetCurrent() - t) * 1000).rounded()) }
     let url = uri.hasPrefix("file://") ? URL(string: uri)! : URL(fileURLWithPath: uri)
@@ -746,4 +748,32 @@ enum Prep {
     try (out as Data).write(to: url, options: .atomic)
     return (out as Data, w, h)
   }
+}
+
+// T96 interfaces (tasks/T96/TASK.md → Interfaces). Stubs written by the test writer so the tests compile; the
+// implementer replaces every "T96: not built" with the real thing.
+extension Prep {
+  struct Face { var box: CGRect; var confidence: Float }
+  typealias FaceDetect = (_ image: CGImage, _ rect: CGRect) throws -> [Face]
+  static func detectFaces(_ image: CGImage, in rect: CGRect) throws -> [Face] {
+    throw NSError(domain: "T96: not built", code: 0)
+  }
+  static let faceGrids: [Int] = [1, 2, 3]
+  static func tiles(W: CGFloat, H: CGFloat, grids: [Int]) -> [CGRect] { fatalError("T96: not built") }
+  static let instanceMinShare: CGFloat = 0.002
+  struct Swept {
+    var status: String
+    var reason: String?
+    var image: CGImage?
+    var hide: [CGRect]
+    var cover: Guide.Gray?
+    var swept: [Face]
+    var coveredExtra: Int
+    var ms: Int
+  }
+  static func sweep(_ image: CGImage, found: Located, kind: Kind, detect: FaceDetect = Prep.detectFaces) -> Swept {
+    fatalError("T96: not built")
+  }
+  static let sweepVersion = 1
+  static func purgeOldSends(caches: URL) { fatalError("T96: not built") }
 }
