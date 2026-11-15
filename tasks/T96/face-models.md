@@ -7,6 +7,7 @@ A test, not a build: nothing in the app changed. The founder's approval (chat, N
 - **It also finds real strangers round 3's own test never counted.** On the runway and street photos, round 3's leak test reported "0 faces left", but only because its own face hunt couldn't see them either. YuNet boxes about 26 more real faces on the 59 leak photos and about 52 on the 400 held-out photos. On 32 of 33 and 104 of 105 of those boxes, the pixels are unchanged from the original, so they really are sent. A few are readable: a smiling woman beside a grey cover in `6b74faf4…`, a woman in glasses in `8d598922…`, and the audience row in `5afdd663…` the eye check flagged (the man in glasses and the man in the cap).
 - **What it would wrongly hide.** It adds a grey patch on **15 of 336** normal photos, and on **1 of his own 66** (a chandelier beside his head in a mirror photo). About half of those 15 are real tiny faces in the background of low-res screenshots. The other half are background objects: a car wheel, wall stickers, grass, a brick wall. **It never lands on him, his clothes or his phone hand**, but only because of one rule (below). Without it, YuNet hides his hand holding the phone, ripped-jeans knees, a belt and shirt prints on 44 normal photos. With the rule, none of those are hidden.
 - **BlazeFace doesn't work here.** It is safe to ship (Apache 2.0), but its model card says faces must be at least 20% of the image side and within 2 m. At the threshold where it gets close to YuNet's catches (0.3), it puts boxes on 321 of 336 normal photos.
+- **The licence catch.** YuNet's files are MIT, but it was trained on WIDER FACE, whose images are licensed non-commercial (cc by-nc-nd). Whether that carries over to the model is legally unsettled; accepting that risk is the founder's call.
 - **It runs in Core ML.** Converted: 200 KB (fp16). It gives the same boxes as the Python model (217 of 217 matched), at about 15 ms per tile on the Mac, or about 205 ms per photo for 14 tiles. That is the one cost to watch: added to round 3's sweep (about 187 ms at normal load), it is right at the 400 ms budget on the Mac. The phone's time is not measured.
 
 ## What was tested
@@ -86,7 +87,10 @@ Every config at every threshold: `extraction-test/results/t96-face-models/summar
 
 ## Licences
 - **YuNet:** opencv_zoo's folder says "All files in this directory are licensed under MIT License" (`models/face_detection_yunet/README.md` and its `LICENSE`, copyright 2020 Shiqi Yu). Shipping the weights is allowed under MIT.
-- **YuNet's training data: a risk, not verified here.** The task brief says YuNet was trained on WIDER FACE, which is licensed for non-commercial research. The opencv_zoo README names WIDER Face only as its validation set and links `ShiqiYu/libfacedetection.train` for training details (not read). WIDER FACE's own terms page couldn't be fetched (a TLS certificate error). Whether a model trained on a research-only dataset may ship in a paid app is a legal question: MIT on the weights doesn't settle it. Before shipping, confirm the training data and WIDER FACE's terms; a lawyer's read is the safe step.
+- **YuNet's training data: non-commercial images (the founder's risk to accept or not).** Read at the source on Nov 15 by the coordinating session:
+  - opencv_zoo's README points to `ShiqiYu/libfacedetection.train` for training. That repo's README says it trains YuNet on WIDER Face, and the training code itself is BSD-3-Clause.
+  - The WIDER FACE site (shuoyang1213.me/WIDERFACE) lists its licence as "Creative Common License (cc by-nc-nd)": non-commercial, no derivatives.
+  - So the weights are MIT, but the images they were trained on are non-commercial. Whether a dataset's licence carries over to a model trained on it is legally unsettled. Kitted is a paid app, so this is a real risk, not a formality. **The founder decides whether to accept it.** A lawyer's read is the safe step if he wants certainty.
 - **BlazeFace:** its model card says "Licensed under Apache License, Version 2.0" and "trained and evaluated on consented images". It is safe to ship, but it fails this job (above).
 
 ## Recommendation
@@ -108,14 +112,14 @@ Every config at every threshold: `extraction-test/results/t96-face-models/summar
 5. **Cost:** 14 more Core ML calls per photo (about 205 ms on the Mac at fp16). Measure on his phone first. If it's too slow, use the 640 fallback, or run YuNet only on the 2×2 and 3×3 tiles.
 6. **No npm package.** It is a native change (a 200 KB model in the module), so it reaches his phone only with a rebuild.
 
-**Open before round 4:** the founder's yes; the WIDER FACE licence check; whether round 3's instance label drops fewer of the faces pressed against him than this test's coarse mask (measure in round 4).
+**Open before round 4:** the founder's yes, including whether he accepts the WIDER FACE risk (above); whether round 3's instance label drops fewer of the faces pressed against him than this test's coarse mask (measure in round 4).
 
 ## Not verified
 - iPhone Neural Engine time and boxes: Core ML on the phone can differ from the Mac at the margins.
 - The outline rule with round 3's real instance label (the test used Vision's all-people mask in his box).
 - The "readable" calls are one person's eye (this session), on 3× crops.
 - Real photos with a second mirror panel (the founder's Y37).
-- WIDER FACE's terms (page unreachable) and YuNet's training data (not read at the source).
+- Whether WIDER FACE's non-commercial licence binds a model trained on it: legally unsettled; only a lawyer can say more.
 
 ## Files
 - Scripts (committed): `extraction-test/vision/face_model_probe.py`, `onnx_lite.py`, `yunet_coreml.py`.
