@@ -932,8 +932,11 @@ extension Prep {
     for y in 0..<h { for x in 0..<w where mine[y * w + x] {
       for yy in max(0, y - r)...min(h - 1, y + r) { for xx in max(0, x - r)...min(w - 1, x + r) { near[yy * w + xx] = true } }
     } }
+    // Never inside his own box: what's there is him, or hidden with his head if it's someone's face.
+    var hisBox = [Bool](repeating: false, count: n)
+    for y in 0..<h { for x in 0..<w where main.contains(CGPoint(x: (CGFloat(x) + 0.5) * sx, y: (CGFloat(y) + 0.5) * sy)) { hisBox[y * w + x] = true } }
     func other(_ i: Int) -> Bool {
-      guard !near[i], !covered[i] else { return false }
+      guard !near[i], !covered[i], !hisBox[i] else { return false }
       let l = inst.px[i]
       return l != 0 ? true : (seg?.px[i] ?? 0) > 127
     }
@@ -942,6 +945,7 @@ extension Prep {
     var patches: [[Int]] = []
     for start in 0..<n where !seen[start] && other(start) {
       var patch: [Int] = []
+      var touchesHim = false
       seen[start] = true
       stack.append(start)
       while let i = stack.popLast() {
@@ -949,9 +953,12 @@ extension Prep {
         let x = i % w, y = i / w
         for (nx, ny) in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)] where nx >= 0 && ny >= 0 && nx < w && ny < h {
           let j = ny * w + nx
+          if near[j] || hisBox[j] { touchesHim = true }
           if !seen[j], other(j) { seen[j] = true; stack.append(j) }
         }
       }
+      // A patch that runs into his outline or his box is part of him (a leg or an arm the masks cut off).
+      if touchesHim { continue }
       let inside = patch.filter { box.contains(CGPoint(x: (CGFloat($0 % w) + 0.5) * sx, y: (CGFloat($0 / w) + 0.5) * sy)) }.count
       if CGFloat(inside) < 0.5 * CGFloat(patch.count) { patches.append(patch) }
     }
@@ -968,10 +975,15 @@ extension Prep {
     for b in found.otherBodies where area(b.intersection(box)) < 0.5 * area(b) {
       let x0 = max(0, Int(b.minX / sx)), x1 = min(w - 1, Int(b.maxX / sx)), y0 = max(0, Int(b.minY / sy)), y1 = min(h - 1, Int(b.maxY / sy))
       guard x1 > x0, y1 > y0 else { continue }
+      // A body whose box reaches into his outline is him again (the pose found him twice) or touching him: left to the face
+      // pass, so the cover never lands on him.
+      var mineCells = 0, all = 0
+      for y in y0...y1 { for x in x0...x1 { all += 1; if mine[y * w + x] { mineCells += 1 } } }
+      guard CGFloat(mineCells) <= 0.1 * CGFloat(max(1, all)) else { continue }
       var fresh = 0, cells = 0
       for y in y0...y1 { for x in x0...x1 {
         let i = y * w + x
-        guard !near[i], !covered[i] else { continue }
+        guard !near[i], !covered[i], !hisBox[i] else { continue }
         cells += 1
         if crowd[i] == 0 { fresh += 1; crowd[i] = 255 }
       } }
@@ -989,7 +1001,7 @@ extension Prep {
     let g = max(1, Int((crowdGrow * CGFloat(w)).rounded()))
     var grown = crowd
     for y in 0..<h { for x in 0..<w where crowd[y * w + x] != 0 {
-      for yy in max(0, y - g)...min(h - 1, y + g) { for xx in max(0, x - g)...min(w - 1, x + g) where !near[yy * w + xx] { grown[yy * w + xx] = 255 } }
+      for yy in max(0, y - g)...min(h - 1, y + g) { for xx in max(0, x - g)...min(w - 1, x + g) where !near[yy * w + xx] && !hisBox[yy * w + xx] { grown[yy * w + xx] = 255 } }
     } }
     return (count, Guide.Gray(w: w, h: h, px: grown))
   }
