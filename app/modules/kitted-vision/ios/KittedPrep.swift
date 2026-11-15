@@ -824,7 +824,7 @@ extension Prep {
   }
 
   /// The tile grids the sweep looks at: 1 = the whole image, n = n×n overlapping tiles.
-  static let faceGrids: [Int] = [1, 2, 3]
+  static let faceGrids: [Int] = [1, 2, 3, 4]
 
   /// The tiles for `grids`, grid by grid, then column, then row: each n×n tile is W/(0.75n+0.25) × H/(0.75n+0.25),
   /// stepped by 0.75 of a side (a quarter overlap), whole pixels, clipped to the image. Their union is the image.
@@ -846,6 +846,8 @@ extension Prep {
   /// Fit only: an outline label from the instance mask that isn't his is covered when its pixels are at least this
   /// share of the mask grid (0.2%: smaller ones are left to the face pass).
   static let instanceMinShare: CGFloat = 0.002
+  /// A face found on the original with at least this share of its box inside one region `locate` hid is already hidden.
+  static let alreadyHiddenShare: CGFloat = 0.95
   /// A label at least this much under the cover `locate` drew is someone `locate` already covered.
   static let alreadyCoveredShare: CGFloat = 0.8
 
@@ -995,11 +997,13 @@ extension Prep {
     let grid = tiles(W: W, H: H, grids: faceGrids)
     var faces: [Face] = []
     do {
-      for t in grid { try autoreleasepool { faces += try detect(today, t) } }
+      for t in grid { try autoreleasepool { faces += try detect(image, t) } }
     } catch {
       return finish("couldNotFrame", "sweepFailed", nil)
     }
-    out.swept = dedupe(faces)
+    // A face wholly inside one region locate hid (his own, a poster's) is hidden as today; one only partly inside
+    // (a stranger half under his head box) is hidden in full.
+    out.swept = dedupe(faces).filter { f in !found.hide.contains { area($0.intersection(f.box)) >= alreadyHiddenShare * area(f.box) } }
     let heads = out.swept.map { headBox(around: $0.box) }
     out.hide += heads
 
