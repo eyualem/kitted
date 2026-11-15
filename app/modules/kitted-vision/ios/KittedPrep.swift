@@ -75,7 +75,9 @@ enum Prep {
     var picked: Int?
     /// Where the others are covered (> 127 = cover), at its own resolution; nil when there's no one else.
     var cover: Guide.Gray?
-    /// T96 (stub until built): other bodies' head regions from the body pose, pixels, origin top-left.
+    /// Other bodies' heads from the body pose (T96), pixels, origin top-left: every body that isn't his (a fit photo,
+    /// on the path that returns "ok") or every body (a snap or a scan). Hidden only in what's sent (`sweep`), so the
+    /// camera's quick look and closet measuring see `hide` as before.
     var otherHeads: [CGRect] = []
   }
 
@@ -325,6 +327,9 @@ enum Prep {
     var out = Located(status: "ok", errors: errors)
     out.hide = faceBoxes.map { headBox(around: $0) }
     out.people = people.count
+    // A snap or a scan has no "him" to keep: every body's head is hidden in what's sent (T96), set before the early
+    // return below (a body with only head points has no person box).
+    if kind != .fit { out.otherHeads = bodies.compactMap { poseHead($0, W: W, H: H) } }
 
     guard var main = people.first ?? bodyBox(bodies.first, W, H) else {
       // A clothes scan or a snap needs no person; any face found (a mirror, a poster) is still hidden.
@@ -456,7 +461,35 @@ enum Prep {
     for (key, name) in named { if let p = joint(name) { out.joints[key] = p } }
     let feet = [joint(.leftAnkle), joint(.rightAnkle)].compactMap { $0?.y }.max()
     out.pose = feet != nil ? "full" : (joint(.leftHip) ?? joint(.rightHip)) != nil ? "upper" : "none"
+    // Everyone else the body pose sees (T96): a profile, a person the person detector missed, a second reflection.
+    if kind == .fit { out.otherHeads = bodies.filter { $0 !== body }.compactMap { poseHead($0, W: W, H: H) } }
     return out
+  }
+
+  /// The largest head the shoulder distance can make (share of the long edge).
+  static let poseHeadMaxShare: CGFloat = 0.12
+
+  /// A body's head region from its head points (nose, eyes, ears at confidence > 0.3), pixels, origin top-left; nil
+  /// without any (T96). A square on their mean, side max(2.2 × their spread, 0.9 × the shoulder span when both shoulders
+  /// are seen, the distance from their centre to the nearest shoulder seen, 2% of the long edge), grown to the whole head
+  /// like a face box.
+  static func poseHead(_ b: VNHumanBodyPoseObservation, W: CGFloat, H: CGFloat) -> CGRect? {
+    func pt(_ n: VNHumanBodyPoseObservation.JointName) -> CGPoint? {
+      guard let p = try? b.recognizedPoint(n), p.confidence > 0.3 else { return nil }
+      return CGPoint(x: p.location.x * W, y: (1 - p.location.y) * H)
+    }
+    let pts = [VNHumanBodyPoseObservation.JointName.nose, .leftEye, .rightEye, .leftEar, .rightEar].compactMap(pt)
+    guard !pts.isEmpty else { return nil }
+    let xs = pts.map(\.x), ys = pts.map(\.y)
+    let spread = max(xs.max()! - xs.min()!, ys.max()! - ys.min()!)
+    var side = max(2.2 * spread, 0.02 * max(W, H))
+    let cx = xs.reduce(0, +) / CGFloat(pts.count), cy = ys.reduce(0, +) / CGFloat(pts.count)
+    let shoulders = [pt(.leftShoulder), pt(.rightShoulder)].compactMap { $0 }
+    if shoulders.count == 2 { side = max(side, 0.9 * hypot(shoulders[0].x - shoulders[1].x, shoulders[0].y - shoulders[1].y)) }
+    // With few head points seen (a small or turned head), the head is about as tall as its centre is from the nearest
+    // shoulder; capped, so a body put together wrongly can't hide half the photo.
+    if let near = shoulders.map({ hypot($0.x - cx, $0.y - cy) }).min() { side = max(side, min(near, poseHeadMaxShare * max(W, H))) }
+    return headBox(around: CGRect(x: cx - side / 2, y: cy - side / 2, width: side, height: side))
   }
 
   /// Each region: a heavy blur, then coarse pixels on top (a light blur alone can be undone, 09).
@@ -483,6 +516,11 @@ enum Prep {
     let t0 = CFAbsoluteTimeGetCurrent()
     func ms(since t: CFAbsoluteTime) -> Int { Int(((CFAbsoluteTimeGetCurrent() - t) * 1000).rounded()) }
     let url = uri.hasPrefix("file://") ? URL(string: uri)! : URL(fileURLWithPath: uri)
+    let fm = FileManager.default
+    let caches = rootOverride?.appendingPathComponent("Caches", isDirectory: true) ?? fm.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+    let docs = rootOverride?.appendingPathComponent("Documents", isDirectory: true) ?? fm.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    // Retry payloads made before the sweep existed are never resent (T96), whatever this prep decides.
+    purgeOldSends(caches: caches)
     let data = try Data(contentsOf: url)
     let (originalSha, sourceW, sourceH, decoded) = decode(data, maxPx: workPx)
     var sha = originalSha
@@ -511,19 +549,22 @@ enum Prep {
     if let i = found.picked {
       sha = SHA256.hash(data: Data("\(sha)|person \(i)".utf8)).map { String(format: "%02x", $0) }.joined()
     }
-    // Everyone else covered first, then every face hidden (theirs too, under the cover).
-    // A cover that can't be drawn means nothing is sent.
-    let covered: CGImage? = found.cover == nil ? image : coverOthers(image, found.cover!)
-    guard let covered, let hidden = hideRegions(covered, found.hide)
-    else { return ["status": "couldNotFrame", "sha256": sha].merging(source) { a, _ in a } }
+    // Everyone else covered first, then every face hidden (theirs too, under the cover), then the copy about to be sent
+    // looked at again for any face still in it (T96). A cover or blur that can't be drawn, or a face that stays
+    // findable, means nothing is sent.
+    let swept = sweep(image, found: found, kind: kind, detect: detect)
+    guard swept.status == "ok", let hidden = swept.image else {
+      return ["status": "couldNotFrame", "reason": swept.reason ?? "sweepFailed", "sha256": sha].merging(source) { a, _ in a }
+    }
+    func norm(_ r: CGRect) -> [Double] { [Double(r.minX / W), Double(r.minY / H), Double(r.width / W), Double(r.height / H)] }
 
-    let fm = FileManager.default
-    let caches = rootOverride?.appendingPathComponent("Caches", isDirectory: true) ?? fm.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-    let docs = rootOverride?.appendingPathComponent("Documents", isDirectory: true) ?? fm.urls(for: .documentDirectory, in: .userDomainMask)[0]
     var result: [String: Any] = [
       "status": "ok", "sha256": sha, "width": image.width, "height": image.height,
       "sourceWidth": sourceW, "sourceHeight": sourceH, "visionMs": visionMs,
-      "people": kind == .fit ? max(1, found.people) : found.people, "faceBoxes": found.hide.count, "pose": found.pose,
+      "people": kind == .fit ? max(1, found.people) : found.people, "faceBoxes": swept.hide.count, "pose": found.pose,
+      // What the sweep added (T96): faces it found and hid, other bodies' heads, people covered the person detector missed.
+      "sweptFaces": swept.swept.count, "otherHeads": found.otherHeads.count, "coveredExtra": swept.coveredExtra,
+      "sweepMs": swept.ms, "hidden": swept.hide.map(norm),
       // Everyone else covered (Oct 14): how many, and whether he was picked automatically or chose himself.
       "masked": found.others.count, "autoPicked": found.picked == nil && !found.others.isEmpty,
     ]
@@ -586,6 +627,7 @@ enum Prep {
       "zoomBase64": zoom.map { $0.data.base64EncodedString() },
       "zoomKinds": zoom.map(\.kind),
       "zoomSizes": zoom.map { [$0.width, $0.height] },
+      "zoomRects": zoom.map { norm($0.rect) },
       "zoomMs": zoomMs,
       "totalMs": ms(since: t0),
     ]) { _, b in b }
@@ -597,17 +639,19 @@ enum Prep {
   /// Written as Caches/upload/<sha>-<kind>.jpg (long edge ≤ the upload's), so "Try again" can resend them.
   static let zoomKindsTried = [["upper", "lower"], ["body"]]
 
-  static func zoomCrops(image: CGImage, hidden: CGImage, found: Located, sha: String, in dir: URL) throws -> [(kind: String, data: Data, width: Int, height: Int)] {
+  static func zoomCrops(image: CGImage, hidden: CGImage, found: Located, sha: String, in dir: URL) throws -> [(kind: String, data: Data, width: Int, height: Int, rect: CGRect)] {
     let W = CGFloat(image.width), H = CGFloat(image.height)
     let s = min(1, CGFloat(Measure.statPx) / max(W, H))
     // With someone else in the photo, only his outline sizes the close-ups (theirs is covered).
     let person = Measure.personMask(image, w: max(1, Int((W * s).rounded())), h: max(1, Int((H * s).rounded()))).map { excluding($0, found.cover) }
     let rects = Measure.zoomRects(located: found, person: person, W: W, H: H)
     guard let kinds = zoomKindsTried.first(where: { $0.allSatisfy { rects[$0] != nil } }) else { return [] }
-    var out: [(kind: String, data: Data, width: Int, height: Int)] = []
+    var out: [(kind: String, data: Data, width: Int, height: Int, rect: CGRect)] = []
     for k in kinds {
       guard let w = try Measure.cropJPEG(hidden, rects[k]!, longEdge: uploadPx, to: dir.appendingPathComponent("\(sha)-\(k).jpg")) else { return [] }
-      out.append((k, w.data, w.width, w.height))
+      // The part of the image this close-up shows (what cropJPEG cut), for the copy checks (T96).
+      let shown = rects[k]!.integral.intersection(CGRect(x: 0, y: 0, width: hidden.width, height: hidden.height))
+      out.append((k, w.data, w.width, w.height, shown))
     }
     return out
   }
@@ -750,30 +794,273 @@ enum Prep {
   }
 }
 
-// T96 interfaces (tasks/T96/TASK.md → Interfaces). Stubs written by the test writer so the tests compile; the
-// implementer replaces every "T96: not built" with the real thing.
+// T96: every face that isn't hidden gets found before the copy leaves the phone (tasks/T96/TASK.md). Vision's face
+// detector, run once on the whole 2048 px photo, misses faces 12–50 px in the copy sent; the person detector misses
+// small, seated, cut-off or reflected people. So after `locate`, the copy about to be sent is covered further (people
+// the outline sees but the box detector missed), every other body's head is hidden, and the copy is looked at again in
+// tiles: any face found is hidden, and if one can still be found after that, nothing is sent (ruling 10).
 extension Prep {
+  /// One face the detector found: its box (pixels, origin top-left, in the whole image) and Vision's confidence.
   struct Face { var box: CGRect; var confidence: Float }
+
+  /// Finds faces inside `rect` of `image` and returns them in the whole image's pixels. Throws when the request fails.
   typealias FaceDetect = (_ image: CGImage, _ rect: CGRect) throws -> [Face]
+
+  /// The real detector: Vision's face rectangles on the tile (each tile is scaled by Vision, so a face too small for one
+  /// look at the whole photo is findable in a tile). Every result kept, no confidence floor.
   static func detectFaces(_ image: CGImage, in rect: CGRect) throws -> [Face] {
-    throw NSError(domain: "T96: not built", code: 0)
+    let r = rect.integral.intersection(CGRect(x: 0, y: 0, width: image.width, height: image.height))
+    guard !r.isNull, r.width >= 1, r.height >= 1, let tile = image.cropping(to: r) else {
+      throw NSError(domain: "KittedVision", code: 20, userInfo: [NSLocalizedDescriptionKey: "face tile \(r) can't be cut"])
+    }
+    let req = VNDetectFaceRectanglesRequest()
+    cpuOnSimulator([req])
+    try VNImageRequestHandler(cgImage: tile, orientation: .up).perform([req])
+    return (req.results ?? []).map { o in
+      let b = o.boundingBox // normalized to the tile, origin bottom-left
+      return Face(box: CGRect(x: r.minX + b.minX * r.width, y: r.minY + (1 - b.maxY) * r.height, width: b.width * r.width, height: b.height * r.height),
+                  confidence: o.confidence)
+    }
   }
+
+  /// The tile grids the sweep looks at: 1 = the whole image, n = n×n overlapping tiles.
   static let faceGrids: [Int] = [1, 2, 3]
-  static func tiles(W: CGFloat, H: CGFloat, grids: [Int]) -> [CGRect] { fatalError("T96: not built") }
+
+  /// The tiles for `grids`, grid by grid, then column, then row: each n×n tile is W/(0.75n+0.25) × H/(0.75n+0.25),
+  /// stepped by 0.75 of a side (a quarter overlap), whole pixels, clipped to the image. Their union is the image.
+  static func tiles(W: CGFloat, H: CGFloat, grids: [Int]) -> [CGRect] {
+    let whole = CGRect(x: 0, y: 0, width: W, height: H)
+    var out: [CGRect] = []
+    for n in grids where n > 0 {
+      let tw = W / (CGFloat(n) * 0.75 + 0.25), th = H / (CGFloat(n) * 0.75 + 0.25)
+      for i in 0..<n {
+        for k in 0..<n {
+          let t = CGRect(x: CGFloat(i) * tw * 0.75, y: CGFloat(k) * th * 0.75, width: tw, height: th).integral.intersection(whole)
+          if !t.isNull, t.width > 0, t.height > 0 { out.append(t) }
+        }
+      }
+    }
+    return out
+  }
+
+  /// Fit only: an outline label from the instance mask that isn't his is covered when its pixels are at least this
+  /// share of the mask grid (0.2%: smaller ones are left to the face pass).
   static let instanceMinShare: CGFloat = 0.002
+  /// A label at least this much under the cover `locate` drew is someone `locate` already covered.
+  static let alreadyCoveredShare: CGFloat = 0.8
+
+  /// What the sweep decided.
   struct Swept {
-    var status: String
-    var reason: String?
-    var image: CGImage?
-    var hide: [CGRect]
-    var cover: Guide.Gray?
-    var swept: [Face]
-    var coveredExtra: Int
-    var ms: Int
+    var status: String          // "ok" | "couldNotFrame"
+    var reason: String?         // nil when ok; "faceRemains" | "sweepFailed" when refused
+    var image: CGImage?         // the copy to send (covered, then every region hidden); nil when refused
+    var hide: [CGRect]          // every region hidden in `image`: found.hide + found.otherHeads + headBox of each swept face
+    var cover: Guide.Gray?      // the final cover (found.cover plus missed people), nil when none
+    var swept: [Face]           // faces the tile pass found in the covered, hidden copy (then hidden)
+    var coveredExtra: Int       // people covered that locate didn't cover (missed by the person detector)
+    var ms: Int                 // the sweep's time
   }
-  static func sweep(_ image: CGImage, found: Located, kind: Kind, detect: FaceDetect = Prep.detectFaces) -> Swept {
-    fatalError("T96: not built")
+
+  /// People the outline sees and `locate` didn't cover (fit only): how many, and the cover drawn for them. Every
+  /// instance label that isn't his, at least `instanceMinShare` of the grid and not already under `found.cover`, is
+  /// covered like any other person (its box and outline, never onto him). Nothing is covered when his own outline
+  /// can't be told apart (no instance mask, or no label inside his box).
+  static func missedPeople(_ image: CGImage, found: Located) -> (count: Int, cover: Guide.Gray?) {
+    guard let main = found.main, let inst = personInstances(image) else { return (0, nil) }
+    let W = CGFloat(image.width), H = CGFloat(image.height)
+    guard let his = inst.counts(main.insetBy(dx: main.width * 0.1, dy: main.height * 0.05), W: W, H: H).labels.max(by: { $0.value < $1.value })?.key
+    else { return (0, nil) }
+    let w = inst.w, h = inst.h
+    // Each label's pixels already under locate's cover.
+    var under: [UInt8: Int] = [:]
+    if let c = found.cover {
+      for y in 0..<h {
+        let cy = min(c.h - 1, (y * c.h) / h)
+        for x in 0..<w {
+          let l = inst.px[y * w + x]
+          guard l != 0, l != his, c.px[cy * c.w + min(c.w - 1, (x * c.w) / w)] > 127 else { continue }
+          under[l, default: 0] += 1
+        }
+      }
+    }
+    let boxes = inst.boxes(W: W, H: H).sorted { $0.key < $1.key }
+      .filter { l, b in l != his && CGFloat(b.n) >= instanceMinShare * CGFloat(w * h) && CGFloat(under[l] ?? 0) < alreadyCoveredShare * CGFloat(b.n) }
+      .map(\.value.box)
+    guard !boxes.isEmpty else { return (0, nil) }
+    return (boxes.count, coverMasks(main: main, others: boxes, inst: inst, his: his, W: W, H: H))
   }
+
+  /// Two covers as one, on the finer of their grids (a pixel is covered when either covers it).
+  static func union(_ a: Guide.Gray, _ b: Guide.Gray) -> Guide.Gray {
+    let w = max(a.w, b.w), h = max(a.h, b.h)
+    var px = [UInt8](repeating: 0, count: w * h)
+    for y in 0..<h {
+      let ay = min(a.h - 1, (y * a.h) / h), by = min(b.h - 1, (y * b.h) / h)
+      for x in 0..<w {
+        let ax = min(a.w - 1, (x * a.w) / w), bx = min(b.w - 1, (x * b.w) / w)
+        if a.px[ay * a.w + ax] > 127 || b.px[by * b.w + bx] > 127 { px[y * w + x] = 255 }
+      }
+    }
+    return Guide.Gray(w: w, h: h, px: px)
+  }
+
+  /// A hidden face whose pixels the blur left at least this unchanged (grey within 12 of the original) is covered flat
+  /// grey instead: a very dark or washed-out face keeps its look through any blur (T96).
+  static let hiddenMaxUnchanged: CGFloat = 0.4
+
+  /// The face inside a head region (the box `headBox(around:)` grew it from), pixels.
+  static func faceIn(_ head: CGRect) -> CGRect {
+    let w = head.width / 1.6, h = head.height / 1.9
+    return CGRect(x: head.midX - w / 2, y: head.minY + 0.55 * head.height - h / 2, width: w, height: h)
+  }
+
+  /// Share of the pixels of `r` (pixels, origin top-left) whose grey differs between `a` and `b` (same size) by under 12.
+  static func unchangedShare(_ a: CGImage, _ b: CGImage, in r: CGRect) -> CGFloat? {
+    let rr = r.integral.intersection(CGRect(x: 0, y: 0, width: min(a.width, b.width), height: min(a.height, b.height)))
+    guard !rr.isNull, rr.width >= 4, rr.height >= 4, let ca = a.cropping(to: rr), let cb = b.cropping(to: rr) else { return nil }
+    let w = Int(rr.width), h = Int(rr.height)
+    func grey(_ img: CGImage) -> [UInt8]? {
+      var buf = [UInt8](repeating: 0, count: w * h * 4)
+      let ok = buf.withUnsafeMutableBytes { p -> Bool in
+        guard let ctx = CGContext(data: p.baseAddress, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
+                                  space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue) else { return false }
+        ctx.draw(img, in: CGRect(x: 0, y: 0, width: w, height: h))
+        return true
+      }
+      return ok ? buf : nil
+    }
+    guard let pa = grey(ca), let pb = grey(cb) else { return nil }
+    var same = 0
+    for i in stride(from: 0, to: w * h * 4, by: 4) {
+      let ga = 0.299 * Double(pa[i]) + 0.587 * Double(pa[i + 1]) + 0.114 * Double(pa[i + 2])
+      let gb = 0.299 * Double(pb[i]) + 0.587 * Double(pb[i + 1]) + 0.114 * Double(pb[i + 2])
+      if abs(ga - gb) < 12 { same += 1 }
+    }
+    return CGFloat(same) / CGFloat(w * h)
+  }
+
+  /// The regions filled flat cover grey, at the image's size.
+  static func fillRegions(_ image: CGImage, _ rects: [CGRect]) -> CGImage? {
+    let W = CGFloat(image.width), H = CGFloat(image.height)
+    var ci = CIImage(cgImage: image)
+    let whole = ci.extent
+    let gray = CIImage(color: CIColor(red: coverGray, green: coverGray, blue: coverGray))
+    for f in rects {
+      let box = f.intersection(CGRect(x: 0, y: 0, width: W, height: H))
+      guard !box.isNull, box.width > 0, box.height > 0 else { continue }
+      ci = gray.cropped(to: CGRect(x: box.minX, y: H - box.maxY, width: box.width, height: box.height)).composited(over: ci).cropped(to: whole)
+    }
+    return ciContext.createCGImage(ci, from: whole)
+  }
+
+  /// Faces found on several tiles are one face: a box overlapping a kept one by IoU ≥ 0.5 keeps the larger of the two.
+  static func dedupe(_ faces: [Face]) -> [Face] {
+    var out: [Face] = []
+    for f in faces {
+      if let i = out.firstIndex(where: { iou($0.box, f.box) >= 0.5 }) {
+        if area(f.box) > area(out[i].box) { out[i] = f }
+      } else {
+        out.append(f)
+      }
+    }
+    return out
+  }
+
+  /// After `locate` (status "ok"), on the upright working image: the copy that may be sent, or a refusal. Never changes
+  /// found.status; it only covers and hides more, or refuses.
+  ///  1. F = the faces `detect` finds on every tile of `faceGrids` in today's copy (`locate`'s cover and hiding),
+  ///     de-duplicated. Looked at before the new layers below: a face half under a new cover or a pose head box is
+  ///     still found whole, and so hidden whole.
+  ///  2. cover = found.cover, plus (fit) every person the outline sees that isn't him and locate didn't cover
+  ///  3. hide = found.hide + found.otherHeads + each face's head; the copy = hideRegions(coverOthers(image, cover), hide),
+  ///     then any hidden face the blur barely changed is filled flat grey
+  ///  4. F non-empty: the tiles touching the faces' heads are looked at again in the copy: any face → "faceRemains".
+  ///  Any detector error, or a cover or blur that can't be drawn → "sweepFailed".
+  static func sweep(_ image: CGImage, found: Located, kind: Kind, detect: FaceDetect = detectFaces) -> Swept {
+    let t0 = CFAbsoluteTimeGetCurrent()
+    let W = CGFloat(image.width), H = CGFloat(image.height)
+    var out = Swept(status: "couldNotFrame", reason: "sweepFailed", image: nil, hide: found.hide + found.otherHeads, cover: found.cover,
+                    swept: [], coveredExtra: 0, ms: 0)
+    func finish(_ status: String, _ reason: String?, _ img: CGImage?) -> Swept {
+      out.status = status
+      out.reason = reason
+      out.image = status == "ok" ? img : nil
+      out.ms = Int(((CFAbsoluteTimeGetCurrent() - t0) * 1000).rounded())
+      return out
+    }
+
+    // 1. Today's copy, looked at in tiles.
+    let coveredToday: CGImage? = found.cover == nil ? image : coverOthers(image, found.cover!)
+    guard let coveredToday, let today = hideRegions(coveredToday, found.hide) else { return finish("couldNotFrame", "sweepFailed", nil) }
+    let grid = tiles(W: W, H: H, grids: faceGrids)
+    var faces: [Face] = []
+    do {
+      for t in grid { try autoreleasepool { faces += try detect(today, t) } }
+    } catch {
+      return finish("couldNotFrame", "sweepFailed", nil)
+    }
+    out.swept = dedupe(faces)
+    let heads = out.swept.map { headBox(around: $0.box) }
+    out.hide += heads
+
+    // 2. People the person detector missed.
+    if kind == .fit {
+      let missed = autoreleasepool { missedPeople(image, found: found) }
+      if let extra = missed.cover {
+        out.cover = found.cover.map { union($0, extra) } ?? extra
+        out.coveredExtra = missed.count
+      }
+    }
+
+    // 3. The copy to send: today's when nothing was added, else drawn again with everything covered and hidden. A hidden
+    // face the blur barely changed (very dark or washed out) is filled flat grey.
+    var sent = today
+    if out.coveredExtra > 0 || out.hide.count > found.hide.count {
+      let covered: CGImage? = out.cover == nil ? image : coverOthers(image, out.cover!)
+      guard let covered, let drawn = hideRegions(covered, out.hide) else { return finish("couldNotFrame", "sweepFailed", nil) }
+      sent = drawn
+    }
+    // Filled flat grey: every head the sweep added (another body's, or a face found in today's copy: never his face
+    // as locate hid it), like everyone else's body under the cover; and any of locate's regions the blur barely changed.
+    let added = Array(out.hide.dropFirst(found.hide.count))
+    let weak = found.hide.filter { r in (unchangedShare(image, sent, in: faceIn(r)) ?? 0) >= hiddenMaxUnchanged }
+    if !(added + weak).isEmpty {
+      guard let filled = autoreleasepool(invoking: { fillRegions(sent, weak + added) }) else { return finish("couldNotFrame", "sweepFailed", nil) }
+      sent = filled
+    }
+
+    // 4. The faces found are hidden now: the tiles touching them are looked at again (pixels elsewhere were only covered
+    // or blurred more, which can't make a face findable).
+    do {
+      for t in grid where heads.contains(where: { $0.intersects(t) }) {
+        let again = try autoreleasepool { try detect(sent, t) }
+        if !again.isEmpty { return finish("couldNotFrame", "faceRemains", nil) }
+      }
+    } catch {
+      return finish("couldNotFrame", "sweepFailed", nil)
+    }
+    return finish("ok", nil, sent)
+  }
+
+  /// Retry payloads made before this sweep existed are never resent (an upgrade with a failed check waiting).
   static let sweepVersion = 1
-  static func purgeOldSends(caches: URL) { fatalError("T96: not built") }
+
+  /// If `<caches>/upload/.sweep-v<sweepVersion>` is missing: every *.jpg in `<caches>/upload` is deleted, then the marker
+  /// is written. Caches/detail is left (never sent by itself).
+  static func purgeOldSends(caches: URL) {
+    let fm = FileManager.default
+    let dir = caches.appendingPathComponent("upload", isDirectory: true)
+    let marker = dir.appendingPathComponent(".sweep-v\(sweepVersion)")
+    guard !fm.fileExists(atPath: marker.path) else { return }
+    var purged = true
+    if let files = try? fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil) {
+      for f in files where f.pathExtension.lowercased() == "jpg" {
+        do { try fm.removeItem(at: f) } catch { purged = false }
+      }
+    }
+    // The marker only once every old payload is gone (a file that couldn't be deleted is tried again next time).
+    guard purged else { return }
+    try? fm.createDirectory(at: dir, withIntermediateDirectories: true)
+    try? Data().write(to: marker)
+  }
 }

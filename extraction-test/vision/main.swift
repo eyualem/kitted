@@ -6,8 +6,10 @@
 //       writes <prefix>-<index>.png (transparent cut-outs from the face-hidden copy) and <prefix>.json
 //       (quality numbers, color clusters, feature prints)
 //   kmeasure zoom <photo.jpg> <outdir> <stem>
-//       writes <stem>.full.jpg (faces hidden, 1024), <stem>.body/.upper/.lower.jpg (faces hidden, 1024)
-//       and <stem>.json (rects, joints)
+//       writes <stem>.full.jpg (the copy the app would send: covered and swept, 1024), <stem>.body/.upper/.lower.jpg
+//       (cut from it, 1024) and <stem>.json (rects, joints); no copies when the app would send nothing (T96)
+//   kmeasure prep <photo.jpg> <root> [--kind fit|snap|items]
+//       the app's whole photo prep (Prep.run) with Documents/Caches under <root>
 //   kmeasure ruler <photo.jpg> <out.json> [--boxes garments.json] [--shorts] [--overlay out.jpg] [--max px] [--crop share]
 //       the fit ruler (FitRuler.swift): sleeve end, top hem, pant hem, shorts length, layers, from his own joints
 //   kmeasure legs <photo.jpg> <out.json> [--boxes garments.json] [--overlay out.jpg] [--max px] [--crop share]
@@ -119,9 +121,12 @@ case "zoom":
   let out = URL(fileURLWithPath: args[3]), stem = args[4]
   let W = CGFloat(image.width), H = CGFloat(image.height)
   let located = Prep.locate(image)
-  guard located.status == "ok", let hidden = Prep.hideRegions(image, located.hide) else {
-    try writeJSON(["status": located.status], out.appendingPathComponent("\(stem).json").path)
-    print("\(stem): \(located.status)"); exit(0)
+  // The same copy the app sends (T96): everyone else covered, every face hidden, then swept; a refusal writes no copy.
+  let swept = located.status == "ok" ? Prep.sweep(image, found: located, kind: .fit) : nil
+  guard let swept, swept.status == "ok", let hidden = swept.image else {
+    let status = swept.map { "\($0.status)/\($0.reason ?? "")" } ?? located.status
+    try writeJSON(["status": status], out.appendingPathComponent("\(stem).json").path)
+    print("\(stem): \(status)"); exit(0)
   }
   let gray = Measure.rgb(image, maxSide: Measure.statPx)
   let person = gray.flatMap { Measure.personMask(image, w: $0.w, h: $0.h) }
@@ -135,6 +140,7 @@ case "zoom":
     "status": "ok", "width": Int(W), "height": Int(H), "pose": located.pose,
     "rects": rects.mapValues(rectDict), "sizes": sizes,
     "joints": located.joints.mapValues { [Int($0.x), Int($0.y)] },
+    "hidden": swept.hide.map(rectDict), "sweptFaces": swept.swept.count, "coveredExtra": swept.coveredExtra,
   ], out.appendingPathComponent("\(stem).json").path)
   print("\(stem): \(rects.keys.sorted().joined(separator: ","))")
 
@@ -164,10 +170,12 @@ case "locate":
   print(String(data: d, encoding: .utf8)!)
 
 case "prep":
-  // kmeasure prep <photo.jpg> <root>: the app's whole photo prep (Prep.run) with Documents/Caches under <root>.
-  guard args.count == 4 else { print("bad args"); exit(2) }
+  // kmeasure prep <photo.jpg> <root> [--kind fit|snap|items]: the app's whole photo prep (Prep.run) with Documents/Caches
+  // under <root>.
+  guard args.count == 4 || (args.count == 6 && args[4] == "--kind"), let kind = Prep.Kind(rawValue: args.count == 6 ? args[5] : "fit")
+  else { print("bad args"); exit(2) }
   Prep.rootOverride = URL(fileURLWithPath: args[3])
-  var r = try Prep.run(uri: args[2])
+  var r = try Prep.run(uri: args[2], kind: kind)
   r["uploadBase64"] = (r["uploadBase64"] as? String).map { "\($0.count) chars" }
   r["zoomBase64"] = (r["zoomBase64"] as? [String])?.map { "\($0.count) chars" }
   let d = try JSONSerialization.data(withJSONObject: r, options: [.sortedKeys, .prettyPrinted])
@@ -367,10 +375,11 @@ case "people":
     print(String(data: d, encoding: .utf8)!)
     if let outDir {
       let stem = URL(fileURLWithPath: path).deletingPathExtension().lastPathComponent
+      // The copy the app would send (T96: covered and swept); none when it would send nothing.
       func write(_ found: Prep.Located, _ name: String) throws {
         guard found.status == "ok" else { return }
-        let covered = found.cover.map { Prep.coverOthers(img, $0) } ?? img
-        guard let c = covered, let hidden = Prep.hideRegions(c, found.hide) else { return }
+        let swept = Prep.sweep(img, found: found, kind: .fit)
+        guard swept.status == "ok", let hidden = swept.image else { return }
         _ = try Prep.writeJPEG(hidden, longEdge: 1024, quality: 0.8, to: URL(fileURLWithPath: outDir).appendingPathComponent(name))
       }
       if f.status == "multiplePeople" {

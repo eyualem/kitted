@@ -170,11 +170,37 @@ No stored data changes. One new marker file, `Caches/upload/.sweep-v1`. The one-
 
 ## Built
 
-(the implementer fills this)
+**Nov 14, implementer.** Files: `app/modules/kitted-vision/ios/KittedPrep.swift`, `extraction-test/vision/main.swift`. No JS, words, screens or new packages.
+
+What changed, in plain words: before a fit check, a snap or a scan leaves the phone, the copy about to be sent is looked at again in tiles (the whole photo, 2×2 and 3×3) for any face still in it; every face found is covered, every other body's head the body pose sees is covered, and on a fit check people the outline sees but the person detector missed are covered grey. If a face can still be found after that, or any step fails, nothing is sent (today's "Couldn't frame this one" paths, with a `reason` for the log). Retry files made before this update are deleted once. `kmeasure zoom` / `people --out` make their copies through the same sweep; `kmeasure prep` takes `--kind`.
+
+Built as the Interfaces say (`Located.otherHeads`, `Face`, `FaceDetect`, `detectFaces`, `faceGrids`, `tiles`, `instanceMinShare`, `Swept`, `sweep`, `run(detect:)`, `sweepVersion`, `purgeOldSends`, the result keys, `zoomRects`), with these **deviations** (each measured on the tuning sets only):
+1. **The tile pass looks at today's copy** (`locate`'s cover and hiding), and the new layers (other heads, missed people) are drawn after it, not before. A pose head box or a new grey cover laid half over a face hid it from the detector (fb5bfe…: a 70 px audience face half under a 32 px pose box, never found). This is also what TESTING.md's sweep-logic line checks ("the first pass is given exactly today's copy").
+2. **Added regions are filled flat cover grey** (other bodies' heads and faces the tile pass found), after the blur. They are never his face as `locate` hid it, and a dark or washed-out face keeps its look through any blur (rule (b) of "hidden" called 17 such faces leaks).
+3. **A weak blur is filled grey:** any of `locate`'s regions whose face area the blur leaves ≥ 40% unchanged (`hiddenMaxUnchanged` = 0.4) is filled grey. His sweep-logic photos aren't affected (byte-identical to main).
+4. **Pose head size:** `poseHead` also takes the distance from the head points' centre to the nearest shoulder as the side, capped at 12% of the long edge (`poseHeadMaxShare`), for a small or turned head with one or two head points.
+5. New constant `alreadyCoveredShare` = 0.8 (a label 80% under `locate`'s cover is someone already covered). `instanceMinShare` unchanged (0.002). These constants need a DECISIONS-LOG entry (left to the coordinator for the number).
+6. Tried and dropped: covering everyone Vision's person segmentation sees (crowds beyond the instance mask's 4 people). It doesn't see a dark audience either (8d5989…: only the model) and added grey on 13 of 60 of his photos.
+
+**Results, `--quick` only (not a pass; `--full` not run yet):**
+- PASS: sweep logic, old sends purged, same photo, second mirror panel (20 of 20 panel faces covered or hidden), no regression, time (sweepMs median 75 ms, p95 103 ms on 54 sent normal photos; visionMs 26 ms as on main; totalMs median 109 → 181 ms).
+- FAIL leak set: 159 core×copy leaks in 22 of 59 photos (red: 2,644 in 59); fit 56 of 59 sent (3 refused `faceRemains`). By eye, of the 28 fit-upload cores left: 15 aren't faces (hands, shoes, a building, a curtain, a flower print, a belly, darkness) and 13 are real faces in 11 photos, almost all runway audiences or YouTube frames: never found by the 3×3 pass, or half under `locate`'s own cover or another face's head box. See Disputes.
+- FAIL kmeasure copies: the same cores as the leak set and the pick edge (copies are written exactly when `run` sends).
+- FAIL false refusals: 0 of 54 newly refused, 0 of his; fails only on the pick edge, one dense-hunt "face" per pick that isn't a face (a jeans cuff, a shoe, a hand with dots, jeans over a sneaker). See Disputes.
+- FAIL built small faces: frontal 12–19 px 6 of 7, 20–31 6 of 6, 32–64 7 of 8 (the miss is a face pasted half off the top edge: hat and mouth in, eyes out); profile 12–19 2 of 7, 20–31 3 of 6, 32–64 6 of 6. The profile misses are readable by eye.
+- Measured for the decision, then reverted (not in this build): a 4×4 grid plus the first pass on the original photo: leak set 88 leaks in 14 photos, built frontal all but the half-off-frame one, profiles 12–19 4 of 7, 20–31 6 of 6; sweepMs median 125 ms; 0 newly refused. The first-pass change alone: 149 leaks, built no better.
+
+`npm run check` in `app/`: green (147 suites, 1,967 tests; run with the main checkout's `node_modules` borrowed by a temporary symlink, removed after; no JS changed).
+
+**Not done:** the `--full` run (held-out sheets, the 1,513 statuses, `face_gap.py`, the full 342 normal photos); the iOS build compile (Simulator, `--no-bundler`): the Mac was at 150–800 MB free throughout; the Swift compiles with `swiftc` for the harness only. No demo screens (TESTING.md → UI inventory: none).
 
 ## Disputes
 
-(none yet)
+**D1 · Dense-hunt and MediaPipe "faces" that aren't faces (leak set, kmeasure copies, false refusals' pick edge).** TESTING.md: "A print the 4×4 hunt finds and the build's 3×3 pass misses fails the leak set and the pick edge… If the implementer disputes one, the coordinator judges it by eye." Disputed by eye (crops: `extraction-test/results/t96/leak-set/sheet*.jpg`, `results/t96/picked/sheet00.jpg`): pick edge: a1970bd838 pick 0 (a jeans cuff), ead9e477c7 pick 0 (a white sneaker), "…1.46.01 PM.png" pick 0 (a hand with white dots) and pick 1 (jeans over a sneaker); leak set (fit upload, at 1024): f-03-15 (640,125), 1b8c03a610 (143,450), 227a61b64b (382,385), 4a09beb74d (306,422: 5 px of hair), 4d7048cf94 (350,891: a belly), 6b74faf4f2 (152,277: a building), 742ca0ded5 (63,740: darkness; 250,839: a curtain), b9d34d7ecf (98,534: a hand; 412,502: an arm), c4b245e0fe (512,880: a shoe), d5da50f251 (451,563), e79958a762 (482,543: a flower print), fb5bfe5395 (394,915), fe92daf465 (160,415: a T-shirt). What it should say: these count as "not a face" and leave the line.
+
+**D2 · The leak-set and built-small-faces lines ask for more than the locked interface can find.** The test pins `faceGrids == [1, 2, 3]` and the first pass on exactly today's copy, while "a face core" includes every face a 4×4 hunt of the original finds (TESTING.md: "faces only a finer look finds count against the fix"). With the interface as locked, 13 real, readable faces in 11 leak-set photos are still sent (f-05-07, f-03-40, f-00-05 profile half under the cover, 053888747f half under a cover, 4a09beb74d, 8d598922fc ×3 audience, ca395e774b, d50d3a6538 half under the model's head box, d5da50f251 looking down, f79f1d0fc8, fb5bfe5395), and 5 of the built small profiles 12–31 px are readable. This is a privacy gap, not a test error: the decision is the coordinator's (or the founder's), not quietly the implementer's. Options, measured above: (a) allow a 4×4 grid and a first pass on the original (88 leaks in 14 photos; still not 0); (b) add a refusal for photos with a crowd the sweep can't clear (a new reason and a product call: Q1's budget is fit-only, ≤ 6 of 336); (c) accept these as the known limit TESTING.md → "Not testable yet" already names for small profiles, and lower the line to "0 real faces by eye" with the list above. Recommended: (a) plus (c) for what's left, as runway audiences and YouTube collages aren't fit checks.
+
+**D3 · Built frontal 63 px "bg", pasted half off the top edge** (`built-small-faces/sheet00.jpg`, second crop): only the hat, fringe and mouth corner are in the photo; the eyes are off frame, so no detector can find it and it isn't readable. What it should say: a pasted face whose eyes are off the frame isn't counted (or the edge case keeps the eyes inside).
 
 ## Review
 
