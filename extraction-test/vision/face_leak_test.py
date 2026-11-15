@@ -55,6 +55,44 @@ SEED = 9620
 MAX_NEW_REFUSALS = 6           # founder Q1 (log #470): of the 336 normal photos sent today
 SWEEP_MEDIAN_MS, SWEEP_P95_MS = 400, 800
 HIS = ("his phone", "mirror-fit-check-1")
+REFUSAL_KEYS = ["reason", "sha256", "sourceHeight", "sourceWidth", "status"]
+# Eye verdicts (DECISIONS-LOG #471, D1): cores the dense hunt or MediaPipe calls a face that the coordinator judged by
+# eye not to be one. Photo (relative to the main checkout) -> boxes at the fit upload's size (1024 long edge, never
+# upscaled), [x, y, w, h]. A core leaves the count only where it matches a listed box (IoU >= 0.5): no rule, no margin.
+EYE_NOT_FACES = {
+    "inputs/youtube/shots/2QZhiKgPceA/f-03-15.jpg": [[640.9, 125.0, 9.0, 5.8]],
+    "inputs/fashionpedia/images/test/1b8c03a610d653da2492f3c8235e36a5.jpg": [[143.4, 450.5, 39.4, 21.8]],
+    "inputs/fashionpedia/images/test/227a61b64bca65ba3a3247a253d05fb1.jpg": [[382.6, 385.8, 5.9, 8.5]],
+    "inputs/fashionpedia/images/test/4a09beb74d1d68b783666f5580b2f266.jpg": [[306.6, 422.5, 4.6, 8.0]],          # hair
+    "inputs/fashionpedia/images/test/4d7048cf94764599b60357d281c12a6d.jpg": [[350.1, 891.5, 12.3, 24.5]],        # a belly
+    "inputs/fashionpedia/images/test/6b74faf4f212f0c1dfb372e7afc872a9.jpg": [[152.8, 277.5, 18.9, 15.1]],        # a building
+    "inputs/fashionpedia/images/test/742ca0ded538281bfd2d1f3ea331773e.jpg": [[63.2, 740.3, 50.3, 50.3],          # darkness
+                                                                             [250.6, 839.8, 17.5, 12.1]],        # a curtain
+    "inputs/fashionpedia/images/test/b9d34d7ecfc267888ad6eb0f20af3792.jpg": [[98.6, 534.8, 15.4, 30.7],          # a hand
+                                                                             [412.2, 502.7, 6.3, 8.9]],          # an arm
+    "inputs/fashionpedia/images/test/c4b245e0fed3e198ef429175fbb0e3c2.jpg": [[512.5, 880.9, 33.2, 28.5]],        # a shoe
+    "inputs/fashionpedia/images/test/d5da50f251cc2ba7d90e5ab8251d2b94.jpg": [[451.1, 563.4, 15.5, 12.4]],
+    "inputs/fashionpedia/images/test/e79958a7625419a99dfc40935ad3ae6e.jpg": [[482.6, 543.4, 9.4, 11.1]],         # a flower print
+    "inputs/fashionpedia/images/test/fb5bfe5395c004156c9cf4048ae19077.jpg": [[394.4, 915.4, 16.5, 8.3]],
+    "inputs/fashionpedia/images/test/fe92daf4655735a20e1b23ffba6caafd.jpg": [[160.4, 415.7, 44.1, 35.0]],        # a T-shirt
+    # the "Which one is you?" pick edge
+    "screenshots/phone/20261014-180424/photos/1f1b29a09abde8891d6cda3ea2ea42e41c2e308ddce907e92c3c08a1970bd838-photo.jpg": [[451.1, 915.0, 7.6, 15.1]],    # a jeans cuff
+    "screenshots/phone/20261014-180424/photos/6bf3569758d4b7ff2fa3f6b806501c3162a8493ac096155f84396eead9e477c7-photo.jpg": [[348.2, 919.5, 39.8, 24.7]],   # a white sneaker
+    "inputs/ig/Screenshot 2026-10-12 at 1.46.01\u202fPM.png": [[277.8, 1001.6, 17.3, 18.6],                    # a hand with white dots
+                                                              [575.3, 757.7, 18.0, 15.3]],                    # jeans over a sneaker
+}
+
+
+def eye_drop(photo, cores, W, H):
+    """The cores of `photo` (working pixels) minus those the eye ruled not a face (#471); and how many left."""
+    boxes = EYE_NOT_FACES.get(no_kit(str(photo)), [])
+    if not boxes:
+        return cores, 0
+    s = min(1, 1024 / max(W, H))
+    keep = [c for c in cores if not any(iou([v * s for v in c], b) >= 0.5 for b in boxes)]
+    return keep, len(cores) - len(keep)
+
+
 # Pool photos whose side-view "face" is no face to find (by eye, Nov 14): all hair; a face under a hat brim.
 NOT_FACES = {"638e742038f5a8be2c5d0d95e5aab053.jpg", "ec70fb7cfec6289c068c4e59574638e5.jpg"}
 
@@ -386,6 +424,7 @@ case "sweep":
       row["calls"] = probe.calls
       row["tiles"] = tiles.map(r4)
       row["todayHash"] = today.map(hashImg) ?? NSNull()
+      row["origHash"] = hashImg(img)
       row["sweptHash"] = s.image.map(hashImg) ?? NSNull()
       if let out = j["out"] as? String {
         try? FileManager.default.createDirectory(atPath: out, withIntermediateDirectories: true)
@@ -784,8 +823,14 @@ def check_sweep_logic(ctx):
     try:
         t = ctx.new.call("tiles", extra=["2048", "1536", "1,2,3"])[0]
         tl, exp = t["tiles"], oracle_tiles(2048, 1536, [1, 2, 3])
-        if t["faceGrids"] != [1, 2, 3]:
-            fails.append(f"(1) faceGrids {t['faceGrids']}, expected [1, 2, 3]")
+        if t["faceGrids"] not in ([1, 2, 3], [1, 2, 3, 4]):
+            fails.append(f"(1) faceGrids {t['faceGrids']}, expected [1, 2, 3] or [1, 2, 3, 4] (#471)")
+        else:
+            g = t["faceGrids"]
+            tg = ctx.new.call("tiles", extra=["2048", "1536", ",".join(str(x) for x in g)])[0]["tiles"]
+            eg = oracle_tiles(2048, 1536, g)
+            if len(tg) != len(eg) or any(max(abs(x - y) for x, y in zip(a, e)) > 1 for a, e in zip(tg, eg)):
+                fails.append(f"(1) tiles(faceGrids {g}) gave {len(tg)} rects off the oracle geometry ({len(eg)} expected)")
         if len(tl) != 14:
             fails.append(f"(1) tiles([1,2,3]) gave {len(tl)} rects, expected 14")
         else:
@@ -836,11 +881,16 @@ def check_sweep_logic(ctx):
         fails.append(f"(2–5) {e}")
     rep["photos"] = [no_kit(r["photo"]) for r in chosen]
 
-    def calls_ok(calls, rects, img, label):
+    def calls_ok(calls, rects, img, label, orig=None):
+        """Every rect in order, all on one image: `img`, or (the first pass, #471) the original photo."""
         if [c["rect"] for c in calls] != rects:
             fails.append(f"{label}: detector called on {len(calls)} rects {[c['rect'] for c in calls][:3]}…, expected {len(rects)} tiles in order")
-        elif any(c["img"] != img for c in calls):
-            fails.append(f"{label}: the detector was given an image other than the copy {'about to be sent' if img else '?'}")
+            return
+        seen = {c["img"] for c in calls}
+        ok = {img} | ({orig} if orig else set())
+        if len(seen) > 1 or not seen <= ok:
+            fails.append(f"{label}: the detector was given {'several images' if len(seen) > 1 else 'an image'} other than "
+                         f"{'the original or ' if orig else ''}the copy {'about to be sent' if not orig else 'locate made'}")
 
     for k, row in enumerate(chosen):
         name = f"photo {k + 1}"
@@ -848,7 +898,7 @@ def check_sweep_logic(ctx):
         # (2) a detector that finds nothing
         if row["status"] != "ok" or row["reason"] is not None or row["swept"] or row["imageNil"]:
             fails.append(f"(2) {name}: status {row['status']}, reason {row['reason']}, swept {row['swept']}")
-        calls_ok(row["calls"], row["tiles"], row["todayHash"], f"(2) {name}")
+        calls_ok(row["calls"], row["tiles"], row["todayHash"], f"(2) {name}", row.get("origHash"))
         if row["sweptHash"] != row["todayHash"]:
             fails.append(f"(2) {name}: the swept image isn't today's copy (hash {row['sweptHash']} vs {row['todayHash']})")
         dd = d / f"none-{cands.index(row['photo'])}"
@@ -885,8 +935,9 @@ def check_sweep_logic(ctx):
                     if sh_ > T:
                         fails.append(f"(3) {name}: B is {sh_:.2f} unchanged in the swept image (> T {T})")
                 calls = u["calls"]
-                calls_ok(calls[:14], u["tiles"], u["todayHash"], f"(3 first pass) {name}")
-                calls_ok(calls[14:], u["recheckExpected"], u["sweptHash"], f"(3 re-check) {name}")
+                nt = len(u["tiles"])
+                calls_ok(calls[:nt], u["tiles"], u["todayHash"], f"(3 first pass) {name}", u.get("origHash"))
+                calls_ok(calls[nt:], u["recheckExpected"], u["sweptHash"], f"(3 re-check) {name}")
             # (4) always B; (5) throws on the 7th call
             bb = B or [100, 100, 40, 40]
             a = ctx.new.call("sweep", [{"photo": row["photo"], "detector": "always:" + ",".join(str(v) for v in bb)},
@@ -1090,10 +1141,11 @@ def _leak(ctx):
             H, W = orig.shape[:2]
             s = W / row["size"][0]
             sc = lambda b: [v * s for v in b[:4]]
-            cores = dedupe([sc(b) for b in row["faces"]] + t["hunt"] + t["heads"], 0.5)
-            rec = {"photo": no_kit(p), "source": row["source"], "size": [W, H], "cores": cores, "kinds": {}}
+            cores, dropped = eye_drop(p, dedupe([sc(b) for b in row["faces"]] + t["hunt"] + t["heads"], 0.5), W, H)
+            rec = {"photo": no_kit(p), "source": row["source"], "size": [W, H], "cores": cores, "eyeDropped": dropped, "kinds": {}}
             for k, r in zip(("fit", "snap", "items"), res[3 * i:3 * i + 3]):
-                kr = {"status": r.get("status"), "reason": r.get("reason"), "error": r.get("error")}
+                kr = {"status": r.get("status"), "reason": r.get("reason"), "error": r.get("error"),
+                      "keys": sorted(x for x in r if not x.startswith("_"))}
                 for key in ("hidden", "sweepMs", "sweptFaces", "otherHeads", "coveredExtra", "sha256"):
                     if key in r:
                         kr[key] = r[key]
@@ -1134,6 +1186,9 @@ def check_leak_set(ctx):
             else:
                 key = f"{kr['status']}/{kr.get('reason')}" if not kr.get("error") else f"error {kr['error'][:40]}"
                 per[k]["refused"][key] = per[k]["refused"].get(key, 0) + 1
+                if k == "fit" and (kr["status"] != "couldNotFrame" or kr.get("keys") != REFUSAL_KEYS or not isinstance(kr.get("reason"), str) or not kr.get("reason")):
+                    fails.append(f"{rec['photo']} fit: {kr['status']} with keys {kr.get('keys')}: a fit check sent today may only be "
+                                 "refused by the sweep (couldNotFrame, a reason, exactly the five keys)")
     photos_leaking = sorted({x[0] for x in leaks})
     if leaks:
         fails.append(f"{len(leaks)} face cores not hidden in {len(photos_leaking)} photos (first: {leaks[0][0]} {leaks[0][1]} "
@@ -1141,8 +1196,10 @@ def check_leak_set(ctx):
     if per["fit"]["sent"] < 40:
         fails.append(f"only {per['fit']['sent']} of 59 fit checks sent (≥ 40: hide, don't just refuse)")
     gate = sum(len(rec["kinds"]["fit"].get("gate", [])) for rec in ctx.leak.values())
+    dropped = sum(rec.get("eyeDropped", 0) for rec in ctx.leak.values())
     return fails, {"per_kind": per, "leaks": len(leaks), "photos_leaking": photos_leaking, "sheet": ctx.leak_sheet,
                    "gate_185_not_hidden (the held-out line's automatic gate)": gate,
+                   "cores_ruled_not_faces_by_eye (#471 D1)": dropped,
                    "leak_list": leaks[:300]}
 
 
@@ -1223,7 +1280,8 @@ def _normal(ctx):
                    "candMain": m.get("candidates"), "candNew": n.get("candidates"),
                    "tMain": {k: m.get(k) for k in ("visionMs", "totalMs")},
                    "tNew": {k: n.get(k) for k in ("visionMs", "sweepMs", "totalMs")},
-                   "counts": {k: n.get(k) for k in ("sweptFaces", "otherHeads", "coveredExtra")}, "locate": [], "shares": []}
+                   "counts": {k: n.get(k) for k in ("sweptFaces", "otherHeads", "coveredExtra")}, "locate": [], "shares": [],
+                   "keys": sorted(x for x in n if not x.startswith("_"))}
             for k, a, b in (("fit", lm[2 * i], ln[2 * i]), ("items", lm[2 * i + 1], ln[2 * i + 1])):
                 b = {x: y for x, y in b.items() if x != "otherHeads"}
                 if a != b:
@@ -1289,12 +1347,13 @@ def _normal(ctx):
                         out_ = ~mine
                         cov.append(round(float(g[out_].mean()) if out_.any() else 1.0, 3))
                     pc["cover"] = cov
-                    vs, errs = judge(r, "fit", orig, t["hunt"] + t["heads"])
+                    pcores, _ = eye_drop(p, t["hunt"] + t["heads"], W, H)
+                    vs, errs = judge(r, "fit", orig, pcores)
                     pc["leaks"] = [v for v in vs if v["v"] == "leak"]
                     pc["errors"] = errs
                     for v in pc["leaks"][:4]:
                         sheet_p.add(f"{rec['photo'][-14:]} pick{c} {v['copy']}", v["path"], v["box"])
-                    ctx.picks[(p, c)] = {"result": r, "cores": t["hunt"] + t["heads"], "png": None}
+                    ctx.picks[(p, c)] = {"result": r, "cores": pcores, "png": None}
                     pc["leaks"] = [{k: v[k] for k in ("copy", "box", "unchanged", "inside", "grey") if k in v} for v in pc["leaks"]]
                 picks.append(pc)
             rec["picks"] = picks
@@ -1321,6 +1380,9 @@ def check_false_refusals(ctx):
         fails.append(f"{len(newly)} of the photos sent today newly refused (≤ {MAX_NEW_REFUSALS})")
     if his:
         fails.append(f"{len(his)} of his own sent phone checks or mirror-set photos refused: {[r['photo'][-24:] for r in his][:4]}")
+    for r in newly:
+        if r["new"] == "couldNotFrame" and (r["keys"] != REFUSAL_KEYS or not isinstance(r.get("reason"), str) or not r.get("reason")):
+            fails.append(f"{r['photo'][-24:]}: refused with keys {r['keys']}, reason {r.get('reason')!r}: a sweep refusal is couldNotFrame, a reason, exactly the five keys")
     asked = [r for r in newly if r["new"] == "multiplePeople"]
     if asked:
         fails.append(f"'Which one is you?' newly asked on {len(asked)} photos")
@@ -1423,7 +1485,8 @@ def check_heldout(ctx):
                 t = tr.get(p)
                 if s == "ok" and t:
                     orig = rgb(t["png"])
-                    vs, errs = judge(r, "fit", orig, dedupe(t["hunt"] + t["heads"], 0.5), names={"upload"})
+                    hc, _ = eye_drop(p, dedupe(t["hunt"] + t["heads"], 0.5), orig.shape[1], orig.shape[0])
+                    vs, errs = judge(r, "fit", orig, hc, names={"upload"})
                     for v in vs:
                         if v["v"] == "leak":
                             sus += 1
@@ -1607,8 +1670,11 @@ def ensure_pool(ctx):
                     by0, by1 = max(0, int(core[1] - 1.0 * core[3])), min(H, int(max(q[11][1], q[12][1]) + 0.5 * span))
                     if bx1 - bx0 > core[2] * 2 and by1 - by0 > core[3] * 2:
                         hs = (arr[by0:by1, bx0:bx1].copy(), [core[0] - bx0, core[1] - by0, core[2], core[3]])
+                near = range(1, 7) if kind == "frontal" else ((1, 2, 3) if eye == 2 else (4, 5, 6))
                 pool.append({"photo": Path(p).name, "pose": k, "kind": kind, "head": head,
-                             "core": [core[0] - x0, core[1] - y0, core[2], core[3]], "hs": hs})
+                             "core": [core[0] - x0, core[1] - y0, core[2], core[3]], "hs": hs,
+                             "eyes": [(q[i][0] - x0, q[i][1] - y0) for i in near if q[i][2] >= 0.5],
+                             "mouth": [(q[i][0] - x0, q[i][1] - y0) for i in (9, 10) if q[i][2] >= 0.5]})
         shutil.rmtree(d, ignore_errors=True)
     ctx.pool = pool
     print(f"  face pool: {sum(1 for x in pool if x['kind'] == 'frontal')} frontal, {sum(1 for x in pool if x['kind'] == 'profile')} profile", flush=True)
@@ -1747,9 +1813,33 @@ def check_built_small(ctx):
                 side = max(4, int(round(src["head"].shape[0] * f)))
                 patch = resize(src["head"], side, side)
                 core0 = [c * f for c in src["core"]]
+                eyes0 = [(e[0] * f, e[1] * f) for e in src["eyes"]] or [(core0[0] + core0[2] / 2, core0[1])]
+                mouth0 = [(e[0] * f, e[1] * f) for e in src["mouth"]] or [(core0[0] + core0[2] / 2, core0[1] + core0[3])]
+                # Faces cut by the frame edge (#471 D3): "side" (centred on the left or right edge, locked from the first
+                # lock), "topEyesOut" (the #224 / ig-098 case: eyes above the frame, mouth and chin in it) and "eyesIn"
+                # (cut by a side edge with both eyes still in the frame). Each must be hidden, covered or refused.
+                variant = {3: "side", 5: "eyesIn", 7: "topEyesOut"}.get(n_host % 10) if which == "bg" else None
                 pos = None
                 for _ in range(300):
-                    if which == "beside":
+                    xy = None
+                    if variant == "eyesIn":
+                        exs = [e[0] for e in eyes0]
+                        if rng.random() < 0.5:
+                            a0, a1 = 1 - min(exs), -core0[0]
+                        else:
+                            a0, a1 = W - core0[0] - core0[2], W - 1 - max(exs)
+                        if a0 >= a1:
+                            break
+                        xy = (rng.uniform(a0, a1), rng.uniform(0, H - side))
+                    elif variant == "topEyesOut":
+                        a0, a1 = 2 - min(m[1] for m in mouth0), -max(e[1] for e in eyes0)
+                        if a0 >= a1:
+                            break
+                        xy = (rng.uniform(0, W - side), rng.uniform(a0, a1))
+                    if xy:
+                        x, y = xy
+                        cx, cy = x + core0[0] + core0[2] / 2, y + core0[1] + core0[3] / 2
+                    elif which == "beside":
                         hd = h["head"]
                         u = rng.uniform(1, 2)
                         right = rng.random() < 0.5
@@ -1760,14 +1850,14 @@ def check_built_small(ctx):
                         cx = p0[0] + p0[2] / 2 + rng.choice((-1, 1)) * rng.uniform(1.05, 1.6) * max(side, p0[2])
                         cy = p0[1] + p0[3] / 2 + rng.uniform(-0.5, 0.5) * side
                     else:
-                        edge = n_host % 10 == 3
-                        cx = rng.choice((0, W)) if edge else rng.uniform(0, W)
+                        cx = rng.choice((0, W)) if variant == "side" else rng.uniform(0, W)
                         cy = rng.uniform(0, H)
-                    x, y = cx - (core0[0] + core0[2] / 2), cy - (core0[1] + core0[3] / 2)
+                    if not xy:
+                        x, y = cx - (core0[0] + core0[2] / 2), cy - (core0[1] + core0[3] / 2)
                     box = [x, y, side, side]
                     core = [x + core0[0], y + core0[1], core0[2], core0[3]]
                     vis = inter(core, [0, 0, W, H])
-                    if not vis or vis[2] * up < 4 or vis[3] * up < 4 or not (0 <= cx <= W and 0 <= cy <= H):
+                    if not vis or vis[2] * up < 4 or vis[3] * up < 4 or (not xy and not (0 <= cx <= W and 0 <= cy <= H)):
                         continue
                     if overlaps(box, mgrow) and which != "beside":
                         continue
@@ -1784,7 +1874,9 @@ def check_built_small(ctx):
                 g = grey(np.asarray(base)[max(0, int(box[1])):int(box[1] + box[3]), max(0, int(box[0])):int(box[0] + box[2])])
                 paste(base, patch, soft_oval(side, side), x, y)
                 placed.append(box)
+                eyes_in = all(0 <= x + e[0] < W and 0 <= y + e[1] < H for e in eyes0)
                 faces.append({"kind": kind, "px": round(core[3] * up, 1), "band": f"{band[0]}-{band[1]}", "where": which,
+                              "variant": variant, "eyesInFrame": eyes_in,
                               "core": core, "src": src["photo"], "edge": core[0] < 0 or core[1] < 0 or core[0] + core[2] > W or core[1] + core[3] > H,
                               "busy": float(g.std()) > 50 if g.size else False})
             if len(faces) < 2:
@@ -1818,6 +1910,14 @@ def check_built_small(ctx):
             stats[f"{kind} {band}"] = {"faces": len(fs), "caught": len(caught), "refused": sum(1 for f in fs if f["caught"].startswith("refused"))}
             if (kind == "frontal" or band == "32-64") and len(caught) < len(fs):
                 fails.append(f"{kind} {band} px: {len(fs) - len(caught)} of {len(fs)} pasted faces sent unhidden")
+    cut = [f for f in faces if f["edge"]]
+    cut_miss = [f for f in cut if f["caught"] == "missed"]
+    if cut_miss:
+        fails.append(f"{len(cut_miss)} of {len(cut)} pasted faces cut by the frame edge sent unhidden (hidden, covered or "
+                     f"refused, any kind or size, eyes in the frame or not: #471 D3), first {cut_miss[0]['kind']} {cut_miss[0]['px']} px {cut_miss[0]['variant']}")
+    for v in ("side", "eyesIn", "topEyesOut"):
+        if not any(f["variant"] == v and f["edge"] for f in faces):
+            fails.append(f"(setup) no '{v}' edge face was built")
     his = sum(b["his"] for b in results)
     if his:
         fails.append(f"his own face unhidden in {his} copies after a paste")
@@ -1828,6 +1928,9 @@ def check_built_small(ctx):
     rep = {"photos": len(results), "faces": len(faces), "by_kind_and_size": stats,
            "profile_12_31_share": round(sum(p.get("caught", 0) for p in prof) / max(1, sum(p.get("faces", 0) for p in prof)), 3),
            "edges": {"clipped": sum(1 for f in faces if f["edge"]), "two_in_one_tile": sum(1 for f in faces if f["where"] == "bg2"),
+                     "by_variant": {v: [sum(1 for f in faces if f["variant"] == v), sum(1 for f in faces if f["variant"] == v and f["caught"] == "missed")]
+                                    for v in ("side", "eyesIn", "topEyesOut")},
+                     "eyes_out_of_frame": sum(1 for f in faces if not f["eyesInFrame"]),
                      "busy": sum(1 for f in faces if f["busy"])},
            "refused_photos": sum(1 for b in results if b["status"] != "ok"), "sheet": sheet.finish(),
            "eye": "a profile 12–31 px miss the eye calls readable fails this line (TASK.md → Review)",

@@ -202,6 +202,15 @@ Built as the Interfaces say (`Located.otherHeads`, `Face`, `FaceDetect`, `detect
 
 **D3 · Built frontal 63 px "bg", pasted half off the top edge** (`built-small-faces/sheet00.jpg`, second crop): only the hat, fringe and mouth corner are in the photo; the eyes are off frame, so no detector can find it and it isn't readable. What it should say: a pasted face whose eyes are off the frame isn't counted (or the edge case keeps the eyes inside).
 
+**Test writer's response (re-lock, Nov 14, per #471):**
+- **D1:** applied. The 19 cores are listed by photo and box in `face_leak_test.py` → `EYE_NOT_FACES` and leave the count; nothing else is excused.
+- **D2 resolution: the interface changes, build to this.**
+  - `Prep.faceGrids` may be `[1, 2, 3]` or `[1, 2, 3, 4]`. `tiles` is unchanged (n = 4 follows the same geometry: 16 tiles of side W/3.25 × H/3.25, stepped 0.75 of a side, so `[1, 2, 3, 4]` gives 30 rects).
+  - `sweep` step 3 becomes: `F = detect(X, t)` for every `t` in `tiles(faceGrids)`, in order, where `X` is either `img0` (today's copy) or the upright working image (the original), the same one for every tile of the pass. Step 4 is unchanged: hide `headBox` of each found face, re-check only on `img1` (the copy sent), on exactly the tiles that intersect a new `headBox`; a face found there refuses with `faceRemains`.
+  - A crowd refusal is allowed: when the sweep can't be sure it hid every stranger's face, `couldNotFrame` with a new `reason` value (one word for the log, e.g. `"crowd"`), exactly the five keys `status, reason, sha256, sourceWidth, sourceHeight`, no file written, today's toast, no new words.
+  - Limits unchanged: on the normal set at most 6 of 336 newly refused, none of his 54 sent checks or the 12 mirror-set photos; on the leak set at least 40 of 59 fit checks sent and 0 unhidden face cores; `sweepMs` median ≤ 400 ms, p95 ≤ 800 ms.
+- **D3:** the edge case stays (corrected #471): every pasted face the frame edge cuts must be hidden, covered or refused, eyes in the frame or not. The built set now always includes a top-edge face with its eyes above the frame and mouth in it (the #224 case), and an extra side-edge face with both eyes in the frame.
+
 ## Review
 
 (the verifier fills this)
