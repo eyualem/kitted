@@ -65,6 +65,9 @@ EYE_NOT_FACES = {
     "inputs/fashionpedia/images/test/227a61b64bca65ba3a3247a253d05fb1.jpg": [[382.6, 385.8, 5.9, 8.5]],
     "inputs/fashionpedia/images/test/4a09beb74d1d68b783666f5580b2f266.jpg": [[306.6, 422.5, 4.6, 8.0]],          # hair
     "inputs/fashionpedia/images/test/4d7048cf94764599b60357d281c12a6d.jpg": [[350.1, 891.5, 12.3, 24.5]],        # a belly
+    # D6 (round 3): MediaPipe-only cores on the runway model herself
+    "inputs/fashionpedia/images/test/5252d050b77d50fd4aa90efd21b9513f.jpg": [[674.3, 299.2, 10.8, 11.4],         # cardigan stripes
+                                                                             [694.0, 454.0, 4.8, 9.6]],          # her leg's edge below the knee
     "inputs/fashionpedia/images/test/6b74faf4f212f0c1dfb372e7afc872a9.jpg": [[152.8, 277.5, 18.9, 15.1]],        # a building
     "inputs/fashionpedia/images/test/742ca0ded538281bfd2d1f3ea331773e.jpg": [[63.2, 740.3, 50.3, 50.3],          # darkness
                                                                              [250.6, 839.8, 17.5, 12.1]],        # a curtain

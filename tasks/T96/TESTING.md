@@ -89,6 +89,10 @@ Additions only; no other line is looser.
 - **Built small faces:** hosts are reused until all 60 are built: on the round-2 build, `--full` built 60 of 60 photos and 120 faces with no setup failure. The line is still red there on the build's own misses: frontal 12–19 px 6 of 19, frontal 32–64 1 of 20, profile 32–64 7 of 21, and 17 of 29 faces cut by the frame edge. `12da876e…` left the pool by box.
 - **Wording:** face_gap.py H1–H4.
 
+## Changed at the re-lock (D6, Nov 15): two more eye verdicts
+Additions only; no threshold, limit or other line changed.
+- **D6:** the test writer judged by eye (the original at full size, 4× and 16× crops, a brightened crop, and `results/t96/leak-set/sheet00.jpg`) that the two MediaPipe-only cores on the runway model in `5252d050…` are not faces: [674.3, 299.2, 10.8, 11.4] is the blue and black stripes of her cardigan, and [694.0, 454.0, 4.8, 9.6] is the edge of her left leg just below the knee against the dark background (no audience face is behind it). Both are added to `EYE_NOT_FACES` (21 eye verdicts in all), by box at the 1024 upload's size (this photo is 1024 wide), with the same IoU ≥ 0.5 match. The audience faces in the same photo are not excused.
+
 ## UI inventory
 **No new UI.** No screen, state, words, VoiceOver label, testID or demo screen is added or changed, so no flow and no screenshots are required by this task. A sweep refusal returns today's `couldNotFrame`, which reaches him through today's paths, unchanged:
 - **Fit check** (prep after the camera closes): a toast on Stylist, "Couldn't frame this one. Try again." (`cam.retake.cantFrame`, existing; T62 will change these words, see founder question 2). Nothing posted in the thread.
