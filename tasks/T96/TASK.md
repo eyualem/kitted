@@ -336,3 +336,84 @@ Built as the Interfaces say (`Located.otherHeads`, `Face`, `FaceDetect`, `detect
 - **An old retry after the update:** code 2.
 
 **Test writer on D6 (Nov 15): upheld, both are not faces.** Judged by eye on the original (1024×683, so the boxes are in its own pixels), at 4× and 16× and brightened, and on `results/t96/leak-set/sheet00.jpg`. [674.3, 299.2, 10.8, 11.4] sits on the horizontal blue and black stripes of her cardigan, above the polka-dot shirt hem: knit, no eyes or skin. [694.0, 454.0, 4.8, 9.6] is the edge of her left leg just below the knee against the dark seats; the audience behind is to either side, not under the box. TESTING.md already lets the eye rule a MediaPipe core out where it isn't a face (#471 D1), and neither is one, so both boxes join `EYE_NOT_FACES`. Nothing else is loosened: the real audience faces in the same photo still count, and no threshold changed.
+
+**Round 3 · not ready** (verifier, Nov 15, build `fdef92ba`, tests locked at `75ea11f8`). 8 lines pass on `--full`; 3 fail (built small faces, missed people, the eye part of held out); time and `npm run check` are not verified (memory). One planted bug went uncaught (test 2), and the cover-on-him gate can't see grey that the sweep draws as a hidden region (test 1).
+
+**How it was checked.**
+- **The lock holds.** `git diff 75ea11f8..HEAD` on `face_leak_test.py`, `app/e2e/` and `baseline/` is empty. TESTING.md changed only on the Lock line, in the test writer's `10024e84`. Between the #472 lock and D6 the test file gained only the two `EYE_NOT_FACES` boxes, both in `75ea11f8`. The implementer's commits (`2b8b373f`, `fdef92ba`, `43cd23e6`, `d15b731e`) touch only `KittedPrep.swift`, `KittedVisionModule.swift` (#472 allows it), results and TASK.md. I read the whole round-3 diff: no code that checks for a test, and no hard-coded expected values. No JS or TS changed against the task's base `1c34082d` (`git diff --name-only 1c34082d..HEAD -- app/src packages app/e2e` is empty; the local `main` ref is stale at `2abd6b91`, so `main...HEAD` shows unrelated files).
+- **My own `--full` runs**, one at a time, with the Mac at 85 MB to 1.6 GB free: sweep logic, old sends purged, leak set, kmeasure copies, false refusals, second mirror panel, missed people. Every JSON matches the implementer's round-3 run except where D6 now excuses the two cores on `5252d050…`. The other lines (same photo, built small faces, held out, no regression) reuse the implementer's `--full`. No Swift changed after `fdef92ba`, and those JSONs are stamped after it. The committed JSONs for my seven lines are now my own runs.
+- **The eye.** Before any re-run I copied every sheet: held out (110 crops), baseline (363), built small faces (34), missed people, body newly hidden. I opened doubtful crops at 2–3×. I also ran the build (`kmeasure prep --kind fit`) on `5afdd663…`, `eaac0d86…` and `… 2.55.27 PM` and read the whole sent upload.
+- **Planted bugs**: each one reverted with `git checkout --`, the tree clean after each.
+- `swiftc -typecheck` of `KittedPrep/Guide/Measure.swift` passes against the iOS 26 Simulator and device SDKs.
+
+**Per line.**
+- **Sweep logic: pass.** In my run, bug 1 (a detector error in the first pass read as "no face": `catch` → `finish("ok", nil, today)`) turned it red: `(5) photo 1: ok/None … expected couldNotFrame/sweepFailed` (+51).
+- **Old sends purged: pass,** including "Try again" before any prep. Bug 2 (`reloadUpload` no longer calls `purgeOldSends`) turned it red: `(retry first) reloadUpload returned an old copy made before the sweep` (+2). Round 2's code 2 is fixed. The module's `reloadUpload` now calls `Prep.reloadUpload`, and `reloadZoom` purges first. The JS retry path (`imagePrep/real.ts`) calls `reloadUpload` before `reloadZoom`. The closet catch-up (`closetSource/live.ts`) also goes through `reloadUpload`, and nothing persisted holds an `uploadBase64`.
+- **Same photo: pass.** Bug 3 (the missed-people cover grown by a random 0–2 cells) turned it red: `results differ in ['uploadBase64', 'uploadBytes', 'zoomBase64']` (+3).
+- **Leak set: pass.** My run: 0 cores unhidden, all 185 gate boxes hidden. Fit 53 of 59 sent (6 `faceRemains`), snap 54, items 54. D6 checked by eye on the sheet: the cardigan stripes and the leg edge aren't faces. Bug 4 (`hiddenMaxUnchanged` 0.4 → 1.01, so a weak blur is never filled) turned it red: `24 face cores not hidden in 4 photos`. It also left 2 of the 185 gate boxes unhidden, the same computation as the held-out line's automatic gate. Bug 5 (other bodies' heads not hidden) also turned it red: 18 cores in 4 photos.
+- **kmeasure copies: pass** (my run). `main.swift` is unchanged since round 2, where planted bug 9 turned this line red. No new bug planted here.
+- **False refusals: pass** (my run). 0 of 336 newly refused, none of his, picks unchanged, cover-on-him gate held. Round 2's code 3 on `3.27.06 PM` is fixed (no longer on the body sheet).
+  - **`… 2.55.27 PM` still loses 8% of his body,** now from a different source. `kmeasure prep` gives `otherHeads` 2, `sweptFaces` 0. One `hidden` region is [0.137, −0.104, 0.767, 0.416]: a square about 525 px on the 576×1262 photo, centred on his own head. It's grey over his head, shoulders and the top of his shirt. By its place it's a pose "other body" that is him found a second time; the 0.9 × shoulder-span term isn't capped by `poseHeadMaxShare`. See code 2.
+  - **Bug 6 was not caught:** the other-bodies cover ignoring his box and outline (`guard !near[i], !covered[i], !hisBox[i]` → `guard !covered[i]`). False refusals (quick) and missed people (full) came out identical, value for value. See test 2.
+- **Time: not verified (memory).** The Mac had 85–120 MB free for most of this session, and 0.6–1.6 GB only briefly. The round-3 run measured 668 ms median while swapping, and round 3's own first run 187 ms at normal load. What would verify it: `face_leak_test.py --full --only time` with at least 1 GB free and nothing else heavy.
+- **Built small faces: fail** (implementer's `--full`, 60 photos, 120 faces, none refused).
+  - Caught: frontal 12–19 13 of 19, 20–31 21 of 21, 32–64 19 of 20. Profile 12–19 4 of 22, 20–31 14 of 17, 32–64 15 of 21. Edges: side 0 of 6, eyesIn 4 of 6, topEyesOut 3 of 6.
+  - By eye (`built-small-faces/sheet00–01`): **3 in-frame frontal 16 px faces are readable and sent** (two "fron 16.0px bg", a smiling woman in a car selfie; one "fron 16.0px beside", a smiling woman), plus the frontal 62 px half face at the side edge with an eye in frame. These are outside D4 and D5, as in round 2.
+  - About 12 of the profile 12–31 misses are readable (for example the 14, 16, 18, 19 (glasses), 20 and 28 px crops). That fails the line's eye rule, and it's D5.
+  - Bug 7 (`faceGrids` back to `[1, 2, 3]`, quick) moved profile 20–31 from 5 to 4 of 6 caught. The line measures it, but it was already red.
+- **Second mirror panel: pass** (my run, 40 of 40 caught).
+  - Layer 2 off: still 40 of 40 (16 caught by "none of the new layers"). Other heads off plus layer 2 off: still passes (quick). `faceGrids [1, 2]`: still 40 of 40.
+  - Only bug 8, all new hiding off (`finish("ok", nil, today)`), turned it red: `(b) 2 of 13 panel faces sent unhidden`. So the line catches the sweep as a whole, but 38 of its 40 faces are already handled by today's code. See test 3.
+- **Missed people: fail** (my run, the same as the implementer's).
+  - 12 of 12 sent, 9 of 12 strangers 100% grey. Misses: the headless ball gown pasted twice (`6fcce726` 30%, `760e55d9` 1%) and `eecf54eb` (0%, `coveredExtra` 0).
+  - On `760e55d9` the grey lands on a jacket hanging on the left instead of the gown (sheet `missed-people/sheet00.jpg`).
+  - His outline grey is at most 3% on every photo.
+  - Bug 9 (layer 2 off) turned it red: `coveredExtra 0, expected ≥ 1` (+11). Round 2's test 1 is fixed.
+- **Held out and regression: automatic part pass, eye part fail.** All 185 gate boxes are hidden (my leak-set run and the implementer's `--full`). Readable faces are still sent: see the eye list.
+- **No regression: pass** (implementer's `--full`: 0 of 1,513 statuses loosened; `face_gap.py` H1–H4 pass). Bug 10 (`locate` adds `otherHeads` to `hide`) turned it red: `locate differs from main: pick 0: ['hide']` (+5).
+- **`npm run check`: not verified (memory).** It wasn't run: the Mac had about 85–120 MB free, and the implementer's two runs at about 70 MB timed out. No JS or TS changed against `1c34082d`, and round 2's run (147 suites, 1,967 tests) was green. What would verify it: `npm run check` in `app/` with at least 1 GB free.
+- **iOS build: not verified** (memory). The type check above is clean. `KittedVisionModule.swift` can't be type-checked without Expo, and its change is one line, read in the diff. What would verify it: `npx expo run:ios --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D --no-bundler`, or the next phone install.
+
+**The eye: readable stranger faces still sent, by photo.**
+- **Held out (110 suspects):**
+  - **`5afdd6632b3d`: readable, several faces.** The sheet shows one (crop 27: a man in glasses). In the whole sent upload the bottom-left audience row is untouched: the man in glasses, a man in a cap in profile, and a woman in profile, each about 25–35 px. The grey cover is on the right-hand audience only. Built → Round 3 says this audience is "mostly covered grey"; that's wrong for this photo.
+  - **`eaac0d86af82`: borderline.** Half of a dark face (both eyes and the nose) is left of the grey cover, next to a photographer. The rest of the crowd is too dark and blurred to read.
+  - `e915a35a67ac`: borderline-not readable (dark, out of focus).
+  - Not readable: everything else, including photographers behind their cameras (`96b202445bdc`, `d7054d8a639b`), backs of heads (`1b392a757734`), and faces already pixelated or greyed. The rest are hands, legs, shoes and prints.
+- **Baseline (363 suspects):**
+  - No clearly readable face.
+  - Borderline: `e58d6e9e4200` (a camera-blurred woman's profile) and YouTube `FlQ3WZ-H2Ik/f-08-40` (a stranger's mouth and chin at the top edge, eyes above the frame: the real D4 case).
+  - Not readable: `fc9a327bebcf` (fully out of focus), `N8RAKkiq/f-07-01`, a reddit crop of hair beside his blurred head, and the rest (shoes, hands, prints such as a cartoon keychain and a fan, pixelated faces).
+
+**Defects.**
+- **code 1 · readable strangers' faces are still sent** (`sweep`):
+  - held-out `5afdd6632b3d` (2–3 audience faces) and `eaac0d86af82` (borderline);
+  - 3 in-frame frontal 16 px built faces (not D4 or D5).
+  
+  The crowd refusal #471 and #472 allow is still not built. Round 3 says no crowd signal fires on these photos. On `5afdd663` the build does find people (`otherHeads` 2, `coveredExtra` 1, `sweptFaces` 1), yet sends the left audience row.
+- **code 2 · a grey head square lands on his own body** (`otherHeads` / `poseHead`). On `… 2.55.27 PM` a pose "other body" centred on him gets a 525 px grey square over his head, shoulders and shirt top: 8% of his body box, a reading cost, not a privacy one. Round 3 guarded the missed-people cover against "the pose found him twice" but not `otherHeads`. Fix: skip an other body whose head box overlaps his own head band or outline, or cap the shoulder-span term with `poseHeadMaxShare`.
+- **code 3 (latent) · old scan send copies aren't purged.** `purgeOldSends` clears `Caches/upload` only. A clothes scan made before the update keeps its pre-sweep `Documents/scans/<sha>-send.jpg`, and `scan.inbox` lists it as `sendPath` ("the copy the item reading will send"). Nothing sends it today, but the item reading will. Fix: purge or re-prep pre-sweep `-send.jpg` files once, or mark inbox entries without the sweep.
+- **code 4 · missed people:**
+  - 3 of 12 strangers aren't covered (a headless gown twice, a stranger at the top-left);
+  - on `760e55d9` the cover lands on a hanging jacket instead.
+
+  Whether these count as a limit (no outline, segmentation or pose sees them, per Built) is the coordinator's call. The line as locked fails.
+- **test 1 · the "cover never on him" gate can't see grey the sweep draws as a hidden region.** `outline_grey` for the new copy excludes every rect in the new `hidden`, so the grey square on `… 2.55.27 PM` isn't measured. Proposed: measure his outline outside `locate`'s own `hide` (hide0) in both copies. Expect at most today's + 0.02 (this would flag `2.55.27 PM`).
+- **test 2 · planted bug 6 (the other-bodies cover ignoring his box) went uncaught.** No built photo places a missed stranger touching or overlapping his box, so the guards that keep the cover off him there are never exercised. Proposed: missed-people photos with the stranger pasted overlapping his box edge (behind a shoulder, beside a leg). Expect the stranger outside his box ≥ 80% grey, and his outline grey ≤ today's + 0.02.
+- **test 3 · the mirror-panel line barely depends on the sweep.** Single-layer bugs (layer 2 off; layer 2 and other heads off; `faceGrids [1, 2]`) leave it at 40 of 40, and only all new hiding off fails it (2 of 13 slices). Those layers are gated elsewhere, so this is a note: more panel slices and small profiles that today's cover doesn't reach would make it bite.
+- **test 4 (proposed, with code 3):** a root with `Documents/scans/old-send.jpg` and no marker, then one prep. Expect the old send copy gone, or the inbox entry flagged.
+
+**Limits (D4, D5; the founder's face-model decision).** Edge faces: side 0 of 6, eyesIn 4 of 6, topEyesOut 3 of 6 caught. Profiles: 12–19 px 4 of 22, 20–31 px 14 of 17, 32–64 px 15 of 21 caught, most misses readable by eye. A real case is in the baseline (`FlQ3WZ-H2Ik/f-08-40`).
+
+**Not verified.**
+- The time line and `npm run check`: memory (above).
+- The full iOS build: memory (above).
+- The phone's Neural Engine and its timing: TESTING.md → "Not testable yet".
+- A real second mirror panel or fitting room: Y37.
+- "Try again" through the module on a device: read in the diff only. Would verify it: a Simulator run with an old `Caches/upload/<sha>.jpg` and no marker, then "Try again".
+
+**Tried to break it.**
+- **The cover on him:** see code 2, test 1 and test 2. On the 12 missed-people photos his outline grey is at most 3%.
+- **"Try again" with an old copy:** blocked for uploads and close-ups; see code 3 for scans.
+- **A cleared cache or a reinstall:** the marker goes with the folder, so the purge re-runs on an empty folder (read in code).
+- **Two preps at once:** a second purge can delete a new copy written meanwhile. That fails safe: "Try again" then says "Couldn't frame this one."
