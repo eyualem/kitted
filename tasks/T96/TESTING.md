@@ -2,7 +2,7 @@
 
 Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** `f25caed4` · Nov 14, 2026 · tests: `extraction-test/vision/face_leak_test.py` · re-locked for #471 (disputes D1–D3, see "Changed at the re-lock" and TASK.md → Disputes); first lock `6ab2fd6c` with the stubs in `app/modules/kitted-vision/ios/KittedPrep.swift`
+**Lock:** `37af3bc8` · Nov 14, 2026 · tests: `extraction-test/vision/face_leak_test.py` · re-locked for #472 (round 3, see "Changed at the re-lock (#472)" and TASK.md → Disputes); before: `f25caed4` (#471), first lock `6ab2fd6c` with the stubs in `app/modules/kitted-vision/ios/KittedPrep.swift`
 
 **Scope.** The plan line's one check is **F2.2** (`specs.md`): "Only the face-blurred copy leaves the phone; with no head found, nothing is sent and the card says why", read with §"How a check works" step 1 ("A copy with every face blurred is made for sending; if the head can't be found, nothing is sent"), the "Head not found" row and the **Never** line ("a face sent unblurred"). Every line below is F2.2. "Every face" means his and anyone else's, in a mirror or not. Ruling 10: when in doubt, send nothing.
 
