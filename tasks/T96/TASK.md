@@ -242,6 +242,8 @@ Built as the Interfaces say (`Located.otherHeads`, `Face`, `FaceDetect`, `detect
   - edge faces 14 of 29 (side 0 of 6, eyesIn 4 of 6, topEyesOut 3 of 6).
   - That's D4, D5, and the small frontal faces the 4×4 pass can't reach.
 - FAIL time on this run: `sweepMs` median 668 ms, p95 1,068 ms. **The Mac was swapping** (68–90 MB free): main's own `visionMs` went 26 → 95 ms and its `totalMs` 112 → 387 ms in the same run, about 3.6× slower than round 2's run. The same sweep measured 187 ms median and 217 ms p95 at normal load (round 3's first `--full`, aborted for a later fix). Not verified at normal load: needs `--full --only time` when the Mac has memory. The part that costs most is the accurate person segmentation in layer 2.
+  - **Re-run not done (Nov 15, 09:50–11:00):** the Mac stayed at 65–74 MB free (browsers) for over an hour, so `--full --only time` wasn't run (it needs about 1 GB free to measure fairly). The time line stays unverified at normal load.
+- `npm run check` (Nov 15): **red on timeouts only.** The first run had 9 `@kitted/core` tests time out (one 22-test file took 1,023 s). The retry had 2: the cold-card W1 check (60 s limit) and the parts-parity "picks never move a number" check (5 s limit). Both runs had about 70 MB free. tsc and lint were clean (0 errors, 6 warnings in files this task didn't touch). Jest didn't run because the chain stops at the core tests. No JS or TS changed in this task (the round-2 check, with memory, was green: 147 suites, 1,967 tests). Needs a re-run with memory.
 
 ## Disputes
 
