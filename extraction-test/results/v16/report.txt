@@ -86,7 +86,7 @@ The curve: the engine has (a 1, b 0.8, k 7); a refit on the gold set's first rea
   v16 cool         3-4.5  0.0%  5-5.5  6.7%  6-6.5 15.2%  7-7.5 45.3%  8-8.5 32.7%  9-9.5  0.0%   worst gap 17.7
   v16 warm         3-4.5  0.0%  5-5.5  7.6%  6-6.5 13.9%  7-7.5 57.0%  8-8.5 21.5%  9-9.5  0.0%   worst gap 27.0
 B5a gold band shares within 5 points (cool): FAIL
-  v15       mean 7.16 sd 0.69  exactly 7.0 26%  range 4.5-8  r with the panel 0.563
+  v15       mean 7.16 sd 0.70  exactly 7.0 26%  range 4.5-8  r with the panel 0.562
   v16 cool  mean 7.28 sd 0.82  exactly 7.0 21%  range 5-8.5  r with the panel 0.569
   v16 warm  mean 7.15 sd 0.78  exactly 7.0 30%  range 5-8.5  r with the panel 0.493
   v15: the panel's worst (26, panel 5.5 or under) average 6.37, 10 at 7+; the panel's best (63, 8+) average 7.49
@@ -316,10 +316,82 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
 
   8+ share by how dressy the clothes are (gold, first reading, cool):
     athletic   n   8  v15 8+   0%  v16 8+   0%  mean 6.38 -> 6.44
-    casual     n  96  v15 8+  12%  v16 8+  27%  mean 7.05 -> 7.11
+    casual     n  96  v15 8+  12%  v16 8+  27%  mean 7.04 -> 7.11
     in-between n  45  v15 8+   9%  v16 8+  27%  mean 7.16 -> 7.30
     dressy     n  74  v15 8+  35%  v16 8+  47%  mean 7.39 -> 7.57
 
   How often each v16 rule fires on the gold set (cool, first reading): cap H10 2, cap H8 2, held by 1 lift 3, held by 2 lifts 3, held by H10 1, held by occasion 3, lift L1 81, lift L2 33, lift L3 8, lift L5 48, lift L6 24, lift L7 20, lift L7b 25
 
-8 BAR CHECK(S) FAIL
+== Round 2: with the fresh second looks (223 of 223 gold photos have them; 223 have both runs) ==
+  steadiness of the looks across the two runs (223 photos): a peek (clearly) 6 flip; covers the shoe 29 differ (19 on 'mostly', the H7 cap's trigger)
+  answers (run 1): peek 19, covers the shoe partly 93, mostly 72, no 46, no_shoes_visible 12
+  target           3-4.5  5.0%  5-5.5 15.0%  6-6.5 30.0%  7-7.5 30.0%  8-8.5 15.0%  9-9.5  5.0%
+  v15       stored 3-4.5  0.4%  5-5.5  4.9%  6-6.5 16.1%  7-7.5 59.6%  8-8.5 18.8%  9-9.5  0.0%   worst gap 29.6
+  v15       looks  3-4.5  0.4%  5-5.5  4.9%  6-6.5 17.0%  7-7.5 59.6%  8-8.5 17.9%  9-9.5  0.0%   worst gap 29.6
+  v16 cool  stored 3-4.5  0.0%  5-5.5  6.7%  6-6.5 15.2%  7-7.5 45.3%  8-8.5 32.7%  9-9.5  0.0%   worst gap 17.7
+  v16 cool  looks  3-4.5  0.0%  5-5.5 10.3%  6-6.5 14.8%  7-7.5 45.7%  8-8.5 29.1%  9-9.5  0.0%   worst gap 15.7
+  v16 stored mean 7.28  r with the panel 0.569
+  v16 looks  mean 7.19  r with the panel 0.538
+  B1 again (his 20): within 1 point 16/20, r 0.448 (stored: 15/20, r 0.326)
+  B6 again: two readings, each with its own looks, within 0.5: 212/223 (stored, no looks: 218/223; bar: at most 5 off)
+     ig-011: 8.5 / 7.5   lifts L1 +0.5, L5 +0.5, L7 +0.5  ||  held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L5 +0.5, L7 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)
+     ig-015: 8 / 7   lifts L2 +1  ||  nothing off, nothing chosen
+     ig-018: 7 / 8   faults -0.25 (PF10_peek: the top underneath shows below the outer piece)  ||  lifts L2 +1
+     ig-027: 5.5 / 7   held by H7 (the jeans pile up over the shoes: a shorter hem fixes it)  ||  nothing off, nothing chosen
+     ig-051: 8.5 / 7.5   lifts L1 +1, L7 +0.5  ||  nothing off, nothing chosen
+     ig-061: 6.5 / 7.5   faults -0.25 (PF10_peek: the top underneath shows below the outer piece)  ||  held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L5 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)
+     ig-102: 5 / 6.5   faults -1.25 (SK1_slides_out: slides read as staying in)  ||  lifts L1 +0.5; faults -1.25 (SK1_slides_out: slides read as staying in)
+     ig-129: 8 / 7   lifts L2 +0.75  ||  nothing off, nothing chosen
+     rd-006: 5.5 / 7   held by H7 (the suit_trousers pile up over the shoes: a shorter hem fixes it); lifts L1 +0.5  ||  lifts L1 +0.5
+     rd-018: 5.5 / 7   held by H7 (the jeans pile up over the shoes: a shorter hem fixes it)  ||  nothing off, nothing chosen
+     rd-020: 8.5 / 5.5   lifts L2 +1, L5 +0.5  ||  held by H7 (the jeans pile up over the shoes: a shorter hem fixes it); lifts L2 +1, L5 +0.5
+  moved by the looks (v16, first reading): 19 (0 up, 19 down)
+     ig-033    7.5 -> 5.5  panel 7.5  tee (black) + jeans (denim_light, flare_bootcut) + loafer (brown)
+               now: held by H7 (the jeans pile up over the shoes: a shorter hem fixes it); lifts L1 +0.5   was: lifts L1 +0.5
+     pin-033   7.5 -> 5.5  panel 5  camp_collar_shirt (blue) + jeans (denim_dark, straight) + loafer (black)
+               now: held by H7 (the jeans pile up over the shoes: a shorter hem fixes it); lifts L5 +0.5   was: lifts L5 +0.5
+     ig-027    7 -> 5.5  panel 8  oxford_shirt (white) + jeans (denim_light, straight) + suede_chukka (brown)
+               now: held by H7 (the jeans pile up over the shoes: a shorter hem fixes it)   was: nothing off, nothing chosen
+     pin-037   7 -> 5.5  panel 7  cardigan (charcoal) + tee (light_grey) + trousers (brown, flare_bootcut)
+               now: held by H7 (the trousers pile up over the shoes: a shorter hem fixes it); lifts L7b +0.5; faults -0.875 (CC6_same_pattern_scale: two of the same pattern at the same size)   was: lifts L7b +0.5; faults -0.75 (CC6_same_pattern_scale: two of the same pattern at the same size)
+     rd-006    7 -> 5.5  panel 6.5  dress_shirt (light_grey) + suit_trousers (black, straight) + dress_shoe (black)
+               now: held by H7 (the suit_trousers pile up over the shoes: a shorter hem fixes it); lifts L1 +0.5   was: lifts L1 +0.5
+     rd-018    7 -> 5.5  panel 6.5  oxford_shirt (olive) + jeans (denim_dark, straight) + low_profile_sneaker (white)
+               now: held by H7 (the jeans pile up over the shoes: a shorter hem fixes it)   was: nothing off, nothing chosen
+     ig-008    8.5 -> 7.5  panel 7.5  bomber (navy) + tee (white) + jeans (denim_dark, wide) + basketball_sneaker (white)
+               now: lifts L7 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)   was: lifts L2 +1, L7 +0.5
+     ig-009    8 -> 7  panel 7.5  tee (white) + sweatshirt (navy) + cargos (denim_dark, wide) + work_boot (tan_camel)
+               now: faults -0.25 (PF10_peek: the top underneath shows below the outer piece)   was: lifts L2 +0.75
+     ig-018    8 -> 7  panel 8  denim_jacket (black) + tee (white) + jeans (black, wide) + other (tan_camel)
+               now: faults -0.25 (PF10_peek: the top underneath shows below the outer piece)   was: lifts L2 +1
+     ig-079    8 -> 7  panel 8  leather_jacket (black) + tee (white) + jeans (grey, wide) + chunky_sneaker (black)
+               now: lifts L6 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)   was: held by 1 lift; lifts L2 +1, L6 +0.25
+     ig-132    6.5 -> 5.5  panel 7  dress_shirt (black) + trousers (black, flare_bootcut) + loafer (black)
+               now: held by H7 (the trousers pile up over the shoes: a shorter hem fixes it)   was: nothing off, nothing chosen
+     ig-007    7.5 -> 7  panel 8  cardigan (navy) + tee (white) + sweatpants (navy, wide) + basketball_sneaker (multicolor)
+               now: faults -0.25 (PF10_peek: the top underneath shows below the outer piece)   was: held by occasion; lifts L3 +0.5
+     ig-043    8 -> 7.5  panel 8  sweater (purple) + tee (white) + jeans (denim_mid, wide) + dress_shoe (brown)
+               now: held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L5 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)   was: lifts L1 +0.5, L5 +0.5
+     ig-074    8 -> 7.5  panel 8  fleece (brown) + tee (white) + cargos (green, wide) + work_boot (tan_camel)
+               now: lifts L5 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)   was: lifts L2 +0.75, L5 +0.5
+     ig-082    8 -> 7.5  panel 7  overshirt (red) + graphic_tee (white) + jeans (black, wide) + canvas_sneaker (black)
+               now: lifts L5 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)   was: lifts L3 +0.5, L5 +0.5
+     ig-085    8 -> 7.5  panel 7.5  hoodie (charcoal) + jeans (charcoal, wide) + basketball_sneaker (black)
+               now: held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L7 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)   was: lifts L1 +0.5, L7 +0.5
+     ig-091    7.5 -> 7  panel 8  sweater (charcoal) + dress_shirt (off_white_cream) + trousers (charcoal, wide) + loafer (black)
+               now: lifts L1 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)   was: lifts L1 +0.5
+     pin-001   6 -> 5.5  panel 7  leather_jacket (black) + sweater (red) + jeans (charcoal, skinny) + dress_shoe (black)
+               now: lifts L5 +0.5, L6 +0.25; faults -2.125 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)   was: lifts L5 +0.5, L6 +0.25; faults -1.875 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)
+     pin-067   7 -> 6.5  panel 5  sweater (black) + cargos (khaki_beige, straight)
+               now: faults -0.375 (PF10_peek: the top underneath shows below the outer piece)   was: faults -0.25 (H5_too_many_statements: too many things compete for attention)
+  caps with the looks (cool, first reading): cap H10 2, cap H7 8, cap H8 2, held by 1 lift 2, held by 2 lifts 3, held by H10 1, held by H7 7, held by a fit or shape fault: lifts can't cover it 3, held by occasion 2
+  the panel where they fire: a clear peek (19) 7.32, the H7 pooling cap (8) 6.69 (1 at 5.5 or under); every gold photo 7.06
+  two narrower versions, for his call (paper only):
+    as built                             steady 212/223  worst band gap 15.7  r with the panel 0.538  his 20: within 1 16/20, r 0.448
+    H7 only when the hem reads pooling   steady 216/223  worst band gap 18.0  r with the panel 0.548  his 20: within 1 15/20, r 0.326
+    no peek under a jacket or coat       steady 213/223  worst band gap 16.4  r with the panel 0.549  his 20: within 1 16/20, r 0.448
+    both                                 steady 217/223  worst band gap 16.4  r with the panel 0.559  his 20: within 1 15/20, r 0.326
+    H7 a 6.5 hold, not a 5.5 sink        steady 215/223  worst band gap 15.7  r with the panel 0.557  his 20: within 1 16/20, r 0.403
+    H7 a 6.5 hold + no peek under a jacket steady 216/223  worst band gap 16.4  r with the panel 0.568  his 20: within 1 16/20, r 0.403
+
+8 BAR CHECK(S) FAIL (the bars are judged on the stored readings; round 2 above is reported beside them)

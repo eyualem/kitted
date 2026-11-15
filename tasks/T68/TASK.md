@@ -77,4 +77,32 @@ The gold set's stored readings (Oct 12) carry no second looks, so v16's pooling 
 
 **Estimate, written before any paid call.** From the 450 stored look1 calls' token counts, billing thinking tokens at the output price ($0.75 in, $3.75 out per million; #465): look U about 1,427 in + 50 out + 171 thinking = **0.19¢**, look L about 1,374 in + 17 out + 241 thinking = **0.20¢**; **0.39¢ a photo**. Gold set: 225 photos × 2 runs (one per stored reading, so steadiness compares two independent looks) = 900 calls ≈ **$1.76**, plus a 2-photo pilot ≈ 1¢. The script counts thinking tokens and stops before $1.85 in total, under the $2.00 cap. No other calls this round.
 
-**Status:** not run. The paid call was blocked by this session's permission check (the OK reached this session through the coordinating session, not from the founder here). Spent: **$0.00**. The script is ready: `extraction-test/gold_looks.py` (pilot, then the full run, with the commands in its header).
+**Status:** run Nov 15, after the founder's own OK in this session. **Spent: $1.8424 in all** (thinking tokens counted), under the $1.85 stop and the $2.00 cap: a 4-call pilot $0.0185, the full run $1.6245 (100 calls lost to network errors, no answer and no charge), the 100 retried $0.1994. All 900 looks answered (225 photos × 2 runs × U and L); 223 photos have stored readings to pair with. Thinking ran 207 tokens a call on average (the estimate's 206), with one call at 2,666. Answers: `extraction-test/results/gold-looks1/raw.json`.
+
+### Round 2 results (`results/v16/report.txt`, section "Round 2"; the bars above stay on the stored readings)
+
+| | Stored readings | With the fresh looks |
+|---|---|---|
+| Gold shares, worst band gap | 17.7 | **15.7** (5–5.5 rises 6.7 → 10.3%) |
+| r with the AI panel | 0.569 | 0.538 |
+| B1, his 20: within 1 point, r | 15/20, 0.33 | **16/20, 0.45** |
+| B6, steadiness (each reading with its own looks) | 218/223 PASS | **212/223, would FAIL** |
+
+- **19 photos move, all down.** Two rules start firing: the pooling cap H7 (8 photos to 5.5) and the peek (a top clearly showing below the outer piece, 19 photos), which in v16 also cancels the layer lift L2.
+- **The panel disagrees with both at their current size.** On the 8 H7 photos the panel averages 6.69, and only 1 is 5.5 or under. On the 19 peek photos it averages 7.32, above the gold average of 7.06. Most peeks are a white tee under an open bomber, denim or leather jacket.
+- **H7 still helps with him.** It catches outfits he marked down: the blue camp shirt with loafers he gave 5.5 now lands 5.5. That is where B1's gain comes from.
+- **Why steadiness drops.** Look L's "mostly covers the shoe" (H7's trigger) differs between the two runs on 19 of the 82 photos where either run says it, about 23%. A 5.5 sink on an answer that flips swings the score 1.5 to 2 points. The peek flips on 6 photos, and losing L2 swings the score 1.25.
+- **Narrower versions, for his call** (paper only, $0):
+
+| Version | Steady | Gold gap | r panel | His 20 |
+|---|---|---|---|---|
+| As built (his #466 marks) | 212 | 15.7 | 0.538 | 16/20, r 0.45 |
+| H7 only when the hem reads "pooling" | 216 | 18.0 | 0.548 | 15/20, r 0.33 |
+| No peek under a jacket or coat | 213 | 16.4 | 0.549 | 16/20, r 0.45 |
+| Both | 217 | 16.4 | 0.559 | 15/20, r 0.33 |
+| H7 a 6.5 hold, not a 5.5 sink | 215 | 15.7 | 0.557 | 16/20, r 0.40 |
+| **H7 a 6.5 hold + no peek under a jacket** | **216** | 16.4 | **0.568** | 16/20, r 0.40 |
+
+  - Recommendation: the last row, the best balance. It keeps most of the gain with him, matches the panel best, and comes 2 photos short of the steadiness bar (the bar is not loosened).
+  - It reverses two of his marks, so it is his call (Y34): H7 as a 5.5 sink (#466), and the "clearly hangs below costs 0.5" peek (#367, which was about a zipped fleece, not an open jacket).
+  - The engine keeps his marks (`v16_h7_cap=5.5`, a knob for the test only).

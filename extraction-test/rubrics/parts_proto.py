@@ -494,7 +494,7 @@ VERSIONS["v15"] = "parts-proto-15 (Oct 28, 2026)"
 # What changes is the step after the parts (see v16_finish): faults count at full strength instead of being averaged
 # away, lifts stack to a ceiling, dealbreakers cap, the season counts, a fixed curve maps raw to shown, 3.0-9.5.
 _OFF16 = dict(v16=False, v16_color=False, sty3_off=False, v16_alpha=0.5, v16_beta=0.25, curve=(1.0, 1.0, 7.0),
-              v16_knit=0.0, v16_h9_cap=False)
+              v16_knit=0.0, v16_h9_cap=False, v16_h7_cap=5.5)
 for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15"):
     TUNE[_e].update(_OFF16)
 TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
@@ -506,7 +506,7 @@ TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
                    # layer.5 / ix.33: knit over knit (a cardigan over a sweater) on Style
                    v16_knit=1.5,
                    # H9 as a cap: off, the sleeve read flips between readings (it stays v15's Fit charge)
-                   v16_h9_cap=False)
+                   v16_h9_cap=False, v16_h7_cap=5.5)
 VERSIONS["v16"] = "parts-proto-16 (Nov 14, 2026, on paper)"
 HL_LAYERS = {"hoodie", "sweatshirt"}                             # v15 PRO-17: worn as the layer (outerwear) ...
 HL_TOPS = {"tee", "graphic_tee"}                                 # ... over a tee
@@ -1807,7 +1807,8 @@ def _v16_caps(o, parts, sl_raw, occasion, t):
         out.append((5.5, "S9", "sink", f"a stain on the {st.get('subcategory').replace('_', ' ')}"))
     # H7: pooling over the shoe, from the shoe close-up (look L "mostly"); a soft stack on a loose leg is free
     if sl_raw and sl_raw.get("covers_shoe") == "mostly" and B is not None and leg not in R.LOOSE and bsub not in SHORTS:
-        out.append((5.5, "H7", "sink", f"the {bsub} pile up over the shoes: a shorter hem fixes it"))
+        h7 = t.get("v16_h7_cap", 5.5)
+        out.append((h7, "H7", "sink" if h7 <= 5.5 else "hold", f"the {bsub} pile up over the shoes: a shorter hem fixes it"))
     # H1: an oversized top over slim legs (outdoor's fleece over slim cargos is spared)
     big = next((g for g in uppers if (g.get("volume") or 3) >= 4), None)
     if (big is not None and leg == "slim" and not lounge and bsub not in SHORTS

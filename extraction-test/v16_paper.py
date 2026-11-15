@@ -322,6 +322,132 @@ def run_named(say, runs, ph, cr):
 
 
 # ============================================================================================ main
+LOOKS = HERE / "results" / "gold-looks1" / "raw.json"
+
+
+def load_looks():
+    """Round 2 (Nov 15): the app's two second looks on the gold set, run i paired with stored reading i.
+    Returns {photo: [{under_present, under_shows, ..., covers_shoe, pant_end} per run]}; a run needs both looks."""
+    if not LOOKS.exists():
+        return {}
+    got = defaultdict(lambda: defaultdict(dict))
+    for r in json.loads(LOOKS.read_text()):
+        if r.get("json"):
+            got[r["photo"]][r["run"]].update(r["json"])
+    out = {}
+    for p, rs in got.items():
+        seq = []
+        for i in sorted(rs):
+            if i != len(seq) or "under_shows" not in rs[i] or "covers_shoe" not in rs[i]:
+                break
+            seq.append(rs[i])
+        if seq:
+            out[p] = seq
+    return out
+
+
+def run_looks(say, runs, panel, founder, gold15, gold16, ps):
+    """Round 2: the same stored readings plus the fresh second looks (U: a top peeking below the outer piece;
+    L: the hem on the shoe). Only the second look changes, so every move here is the looks' doing."""
+    looks = load_looks()
+    if not looks:
+        say("== Round 2: no second looks found (results/gold-looks1/raw.json); not run ==")
+        return {}
+    lp = [p for p in ps if p in looks]
+    say(f"== Round 2: with the fresh second looks ({len(lp)} of {len(ps)} gold photos have them; "
+        f"{sum(len(looks[p]) >= 2 for p in lp)} have both runs) ==")
+    # how steady the looks are between their two runs
+    both = [p for p in lp if len(looks[p]) >= 2]
+    if both:
+        pk = [P._second_look(looks[p][i], P.TUNE["v16"])["peek"] for p in both for i in (0, 1)]
+        flips_u = sum(pk[2 * j] != pk[2 * j + 1] for j in range(len(both)))
+        cs = [(looks[p][0]["covers_shoe"], looks[p][1]["covers_shoe"]) for p in both]
+        flips_l = sum(a != b for a, b in cs)
+        mostly = [(a == "mostly", b == "mostly") for a, b in cs]
+        flips_m = sum(a != b for a, b in mostly)
+        say(f"  steadiness of the looks across the two runs ({len(both)} photos): a peek (clearly) {flips_u} flip; "
+            f"covers the shoe {flips_l} differ ({flips_m} on 'mostly', the H7 cap's trigger)")
+    say("  answers (run 1): peek " + str(sum(bool(P._second_look(looks[p][0], P.TUNE['v16'])['peek']) for p in lp))
+        + ", covers the shoe " + ", ".join(f"{k} {n}" for k, n in Counter(looks[p][0]['covers_shoe'] for p in lp).most_common()))
+    res = {}
+    for p in lp:
+        n = min(len(looks[p]), len(runs[p]))
+        res[p] = ([sc(runs[p][i], "everyday", PROFILE, looks[p][i], engine="v15") for i in range(n)],
+                  [sc(runs[p][i], "everyday", PROFILE, looks[p][i]) for i in range(n)])
+    say(f"  target           {fmt_shares({n: t for n, _, _, t in BANDS})}")
+    for name, before, after in (("v15", gold15, 0), ("v16 cool", gold16, 1)):
+        sb = shares([before[p][0]["overall"] for p in lp])
+        sa = shares([res[p][after][0]["overall"] for p in lp])
+        say(f"  {name:9s} stored {fmt_shares(sb)}   worst gap {100 * worst_gap(sb):.1f}")
+        say(f"  {name:9s} looks  {fmt_shares(sa)}   worst gap {100 * worst_gap(sa):.1f}")
+    pv = [p for p in lp if p in panel]
+    for name, S in (("v16 stored", {p: gold16[p][0]["overall"] for p in lp}),
+                    ("v16 looks", {p: res[p][1][0]["overall"] for p in lp})):
+        say(f"  {name:10s} mean {st.mean(S.values()):.2f}  r with the panel {pearson([S[p] for p in pv], [panel[p] for p in pv]):.3f}")
+    # B1, B6 again
+    fp = [p for p in founder if p in res]
+    if fp:
+        xs, hv = [res[p][1][0]["overall"] for p in fp], [founder[p] for p in fp]
+        say(f"  B1 again (his {len(fp)}): within 1 point {sum(abs(x - y) <= 1 for x, y in zip(xs, hv))}/{len(fp)}, "
+            f"r {pearson(xs, hv):.3f} (stored: {sum(abs(gold16[p][0]['overall'] - founder[p]) <= 1 for p in fp)}/{len(fp)}, "
+            f"r {pearson([gold16[p][0]['overall'] for p in fp], hv):.3f})")
+    two = [p for p in lp if len(res[p][1]) >= 2 and all(x["overall"] is not None for x in res[p][1][:2])]
+    if two:
+        st_l = sum(abs(res[p][1][0]["overall"] - res[p][1][1]["overall"]) <= 0.5 for p in two)
+        st_s = sum(abs(gold16[p][0]["overall"] - gold16[p][1]["overall"]) <= 0.5 for p in two)
+        say(f"  B6 again: two readings, each with its own looks, within 0.5: {st_l}/{len(two)} (stored, no looks: {st_s}/{len(two)}; "
+            f"bar: at most {round(5 * len(two) / 223)} off)")
+        for p in two:
+            a, b = res[p][1][0], res[p][1][1]
+            if abs(a["overall"] - b["overall"]) > 0.5:
+                say(f"     {p}: {a['overall']:g} / {b['overall']:g}   {why(a)}  ||  {why(b)}")
+    # what moved, and why
+    moved = [p for p in lp if res[p][1][0]["overall"] != gold16[p][0]["overall"]]
+    up = sum(res[p][1][0]["overall"] > gold16[p][0]["overall"] for p in moved)
+    say(f"  moved by the looks (v16, first reading): {len(moved)} ({up} up, {len(moved) - up} down)")
+    for p in sorted(moved, key=lambda p: res[p][1][0]["overall"] - gold16[p][0]["overall"]):
+        say(f"     {p:9s} {gold16[p][0]['overall']:g} -> {res[p][1][0]['overall']:g}  panel {panel.get(p, float('nan')):g}"
+            f"  {H.desc(runs[p][0])}\n               now: {why(res[p][1][0])}   was: {why(gold16[p][0])}")
+    cnt = Counter()
+    for p in lp:
+        v = res[p][1][0]["v16"]
+        for c in v["caps"]:
+            cnt["cap " + c["id"]] += 1
+        if v["held_by"]:
+            cnt["held by " + str(v["held_by"])] += 1
+    say("  caps with the looks (cool, first reading): " + ", ".join(f"{k} {n}" for k, n in sorted(cnt.items())))
+    # the panel on the photos where each look rule fires
+    pk = [p for p in lp if p in panel and P._second_look(looks[p][0], P.TUNE["v16"])["peek"]]
+    h7 = [p for p in lp if p in panel and any(c["id"] == "H7" for c in res[p][1][0]["v16"]["caps"])]
+    say(f"  the panel where they fire: a clear peek ({len(pk)}) {st.mean(panel[p] for p in pk):.2f}, the H7 pooling cap ({len(h7)}) "
+        f"{st.mean(panel[p] for p in h7):.2f} ({sum(panel[p] <= 5.5 for p in h7)} at 5.5 or under); every gold photo "
+        f"{st.mean(panel[p] for p in lp if p in panel):.2f}")
+
+    # two narrower readings of the looks, for his call (not in the engine)
+    def narrow(lk, pool_only, open_jacket):
+        lk = dict(lk)
+        if pool_only and lk.get("covers_shoe") == "mostly" and lk.get("pant_end") != "pooling":
+            lk["covers_shoe"] = "partly"                                  # still rests on the shoe; no 5.5 cap
+        if open_jacket and lk.get("outer_kind") == "jacket_or_coat" and lk.get("under_shows") == "clearly":
+            lk["under_shows"] = "a_little"                                # a tee below an open jacket is the look
+        return lk
+    say("  two narrower versions, for his call (paper only):")
+    for label, po, oj, tn in (("as built", False, False, None), ("H7 only when the hem reads pooling", True, False, None),
+                              ("no peek under a jacket or coat", False, True, None), ("both", True, True, None),
+                              ("H7 a 6.5 hold, not a 5.5 sink", False, False, {"v16_h7_cap": 6.5}),
+                              ("H7 a 6.5 hold + no peek under a jacket", False, True, {"v16_h7_cap": 6.5})):
+        S = {p: [sc(runs[p][i], "everyday", PROFILE, narrow(looks[p][i], po, oj), tune=tn)
+                 for i in range(min(2, len(looks[p])))] for p in lp}
+        s0 = shares([S[p][0]["overall"] for p in lp])
+        tw = [p for p in lp if len(S[p]) >= 2 and all(x["overall"] is not None for x in S[p][:2])]
+        stv = sum(abs(S[p][0]["overall"] - S[p][1]["overall"]) <= 0.5 for p in tw)
+        xs = [S[p][0]["overall"] for p in fp]
+        say(f"    {label:36s} steady {stv}/{len(tw)}  worst band gap {100 * worst_gap(s0):.1f}  r with the panel "
+            f"{pearson([S[p][0]['overall'] for p in pv], [panel[p] for p in pv]):.3f}  his 20: within 1 "
+            f"{sum(abs(x - founder[p]) <= 1 for x, p in zip(xs, fp))}/{len(fp)}, r {pearson(xs, [founder[p] for p in fp]):.3f}")
+    return res
+
+
 def main():
     lines = []
 
@@ -502,7 +628,10 @@ def main():
             cnt["held by " + str(v["held_by"])] += 1
     say("  How often each v16 rule fires on the gold set (cool, first reading): " + ", ".join(f"{k} {n}" for k, n in sorted(cnt.items())))
     say()
-    say(f"{'ALL BARS PASS' if not fails else f'{fails} BAR CHECK(S) FAIL'}")
+    looked = run_looks(say, runs, panel, founder, gold15, gold16, ps)
+    say()
+    say(f"{'ALL BARS PASS' if not fails else f'{fails} BAR CHECK(S) FAIL'} (the bars are judged on the stored readings; "
+        f"round 2 above is reported beside them)")
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "report.txt").write_text("\n".join(lines) + "\n")
     dump = {"gold": {p: {"v15": [x["overall"] for x in gold15[p]], "v16_cool": [x["overall"] for x in gold16[p]],
@@ -510,6 +639,10 @@ def main():
                          "why": why(gold16[p][0]), "pieces": H.desc(runs[p][0])} for p in ps},
             "phone": {k: {"occ": v["occ"], "v15": b["overall"], "v16_cool": a["overall"], "v16_warm": w["overall"],
                           "why": why(a), "pieces": H.desc(v["reading"])} for k, v, b, a, w in rows}}
+    for p, (l15, l16) in looked.items():
+        if p in dump["gold"]:
+            dump["gold"][p].update({"v15_looks": [x["overall"] for x in l15], "v16_looks": [x["overall"] for x in l16],
+                                    "why_looks": why(l16[0])})
     (OUT / "scores.json").write_text(json.dumps(dump, indent=1) + "\n")
     return 1 if fails else 0
 
