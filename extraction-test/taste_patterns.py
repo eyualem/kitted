@@ -94,11 +94,11 @@ def features(rd, lk, r16):
     f["a blazer"] = any(g.get("subcategory") == "blazer" for g in outs)
     f["wrinkled or worn"] = any(g.get("condition") not in (None, "clean", "na") for g in tops + outs + bots)
     det = set(r16.get("detected_styles") or [])
-    f["reads streetwear"] = "streetwear" in det
-    f["reads minimal"] = "minimal" in det
-    f["reads streetwear and minimal together"] = {"streetwear", "minimal"} <= det
-    f["reads smart casual or tailored"] = bool(det & {"smart_casual", "tailored", "prep"})
-    f["reads workwear"] = "workwear" in det
+    for sname in R.STYLE_ORDER:                                        # the detector's own names (rubric.STYLE_ORDER)
+        f[f"reads {R.STYLE_NAMES[sname]}"] = sname in det
+    f["reads streetwear and minimal together"] = {"streetwear", "minimalist"} <= det
+    f["reads smart casual or classic prep"] = bool(det & {"smart_casual", "classic_prep"})
+    f["reads no look at all"] = not det
     lifts = r16["v16"]["lifts"]
     f["no lift"] = not lifts
     f["exactly one lift"] = len(lifts) == 1

@@ -3261,3 +3261,9 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The long top** reads the reading's `below_crotch` by default (on the phone today); the body ruler is an option until it's on the phone.
     - **Dry run, raw ratings, held-out half over 8 fresh splits:** 80.5% within a point, r 0.62. The fitted shorts charge is 0.75. Still short of the r bar (0.69). v16 with the switch off is unchanged.
     - **Claude's call:** the shorts-length answer joins the second-look dict per photo, so the engine reads every per-photo extra (looks, ruler, shorts) the same way, and only the taste rules look at them.
+
+475. **Fix: the taste patterns used look names the detector doesn't produce (Nov 16; found by the rules-by-style session, PR #127).** `taste_patterns.py` checked `minimal`, `prep` and `tailored` where the detector says `minimalist` and `classic_prep` (and has no `tailored` yet), so two rows never fired. Every look now gets its own row from `rubric.STYLE_ORDER`.
+    - **New finding:** a minimal look is a plus to him: 26 photos, 7.77 vs 6.76; within leg shape +1.0 on straight legs and +0.2 on wide; v16 under-scores it.
+    - Classic prep makes no difference to him (v16 over-scores it by about 0.7). "No look" is a passenger of leg shape.
+    - The flags, the re-rate sheet and the taste-rule dry run are unchanged.
+    - **Lesson:** a feature that never fires gives no error. It just reads as "no effect". Taking names from the detector's own list, instead of typing them, removes the trap, and a row with 0 photos should be printed rather than dropped.

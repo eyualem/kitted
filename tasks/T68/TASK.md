@@ -314,3 +314,10 @@ How the pass keeps that:
 - **Held-out half, 8 fresh splits:** **80.5% within a point** on average (78–84%), **r 0.62** (0.59–0.68); before the shorts look, 78% and 0.62. Within-a-point now just meets its bar; r is still short of 0.69.
 - **Every bar with these sizes** (`results/v16-taste/`): B2 6/6, B3 12/18, B4 misses H7 (by design) and S5, B5 gold 21.1 and his checks 28.1, B6 219/223, B1 on all 164 136/164 with r 0.62 (half of it tuned).
 - v16 with the switch off is still identical, and conformance passes 501/501.
+
+**Correction (Nov 16), found by the rules-by-style session (PR #127).** `taste_patterns.py` used look names the detector doesn't produce: `minimal` and `prep` instead of `minimalist` and `classic_prep`, and `tailored`, which isn't built yet. So "reads minimal" and the prep half of "smart casual or tailored" never fired. Every look now gets its own row, named from `rubric.STYLE_ORDER`. What changes:
+- **Minimal is a real plus to him, partly:** 26 photos, 7.77 vs 6.76 overall (high confidence), and v16 under-scores it. Within leg shape: +1.0 on straight legs (8 photos), +0.2 on wide (14). Most of his minimal outfits are wide and neutral (23 of 26 all neutrals), so some of the +1.0 overall is the legs and colors. *Medium.* Add to the patterns: **a minimal look is a plus, mostly on straight legs.**
+- **Classic prep makes no difference to him** (20 photos, 6.92 both ways), but v16 over-scores it by about 0.7. *Low.*
+- **"No look at all"** (78 photos, −0.45 overall) is a passenger of leg shape: within each leg it's −0.1 to −0.2. Not a pattern.
+- **Streetwear with minimal** fires on 1 photo. Too few to test; his C032 note stays the only evidence.
+- **Nothing else moved.** The flags and the re-rate sheet are unchanged, and the taste rules don't use look names, so the dry run is unchanged.
