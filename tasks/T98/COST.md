@@ -1,6 +1,6 @@
 # T98: cost estimate for the optional paid round
 
-**Status:** the founder said yes in the coordinating session (Nov 16: "you have my yes for the test"); that session runs `extraction-test/proportions_looks.py`. The T98 session makes no paid call. Prepared set: 24 shorts photos (C140 has no face-hidden close-up) and 102 long-top crops (12 long, 16 borderline, 74 not), 252 calls for 2 runs, about 55 cents.
+**Status: run Nov 16, $0.4137 (252 calls, ~0.164¢ each).** Shorts length passed; the long-top question failed (`extraction-test/results/reading-proportions/report.md`). The founder said yes in the coordinating session (Nov 16: "you have my yes for the test"); that session runs `extraction-test/proportions_looks.py`. The T98 session makes no paid call. Prepared set: 24 shorts photos (C140 has no face-hidden close-up) and 102 long-top crops (12 long, 16 borderline, 74 not), 252 calls for 2 runs, about 55 cents.
 
 Nothing in T98 so far has cost money: the $0 round used stored readings and the Mac's own body ruler.
 

@@ -1,10 +1,10 @@
 # Can the app see tight legs, a long top, a bulky top and shorts that don't work? (T98)
 
-*Nov 16, 2026. Claude. **$0 spent**: no model calls. Script `extraction-test/proportions_test.py`; every number below is in `numbers.txt`; the Mac's measurements are in `measures.csv`.*
+*Nov 16, 2026. Claude. The $0 round: script `extraction-test/proportions_test.py`, numbers in `numbers.txt`, the Mac's measurements in `measures.csv`. The paid round (**$0.4137**, 252 calls, run by the coordinating session under the founder's yes): script `extraction-test/proportions_looks.py`, answers in `results/proportions-looks1/` (`raw.json`, `report.txt`).*
 
 ## The short answer
 
-The founder's blind scores do punish these four things. But today's reading misses less than we thought: **two of the four are already in the stored readings, steady enough for a rule, and simply not used the way his scores use them.** One needs the new body ruler, and one still needs a 25-photo check.
+The founder's blind scores do punish these four things. But today's reading misses less than we thought: **two of the four are already in the stored readings, steady enough for a rule, and simply not used the way his scores use them.** The long top needs the new body ruler (a new AI question failed again). Shorts length passes with the October narrow look, now checked on his own photos.
 
 | The thing | Best read | Right | Steady | Cost per check | Good enough for |
 |---|---|---|---|---|---|
@@ -12,7 +12,7 @@ The founder's blind scores do punish these four things. But today's reading miss
 | **A top that's too long** | **new: the body ruler** (code on his joints) + today's reading for "no jacket, untucked" | 8 of 8 measured long tops; false alarm on 8 of 122 others (7%); 1 long top couldn't be measured | 1 of 12 firing photos changed across 2 readings × 2 copies; the same photo always gives the same answer | $0 (on the phone; half a second on the Mac) | A **small rule** (half a point) or a tip. Not a dealbreaker: with long tops this rare, about half of all alarms are wrong |
 | **A bulky top** | today's reading, upper-body `volume` 4 or 5 | 5 of 7 bulky tops; false alarm 5 of 124 | flips 8 in 49 photos where it fires (16%) | $0 | **A tip only.** His scores don't punish bulky tops: he gave them 7.75 on average (others 6.85) |
 | **Shorts: fit** | today's reading, `volume` 4 or 5 (or `leg_shape wide`) | 9 of 13 wide shorts, never wrong (0 of 11) | volume flips 1 in 11 where it fires | $0 | A **rule** (wide shorts score higher: 7.5 vs 6.5) |
-| **Shorts: length** | the October narrow look (not yet on his photos) | 99% on 24 gold photos in October; the Mac's shorts ruler gets only 65% | 92% (October) | ~0.22¢ | **Not verified on his photos.** About 11¢ checks it on his 25 (asked separately) |
+| **Shorts: length** | the October narrow look (`prompt_shorts1.txt`) on the lower close-up | **43 of 48 answers right (90%)** on his 24 shorts; every above-the-knee pair right; the 5 misses are knee-length shorts read as above (3) or below (2). The Mac's shorts ruler gets only 65% | **23 of 24** photos the same on both runs; when it says "above the knee", 1 flip in 11 | 0.16¢ (measured) | **Passes. A rule:** a shorts-above-the-knee charge (his scores: 6.2 above, 7.0 at, 7.8 below). Not a cap: its errors sit on knee-length shorts |
 | **Shorts: the top over them** | the long-top read above | (as above) | (as above) | $0 | Same as the long top |
 
 ## What his scores say (the 150 blind ratings, mean 6.95)
@@ -54,6 +54,13 @@ The founder's blind scores do punish these four things. But today's reading miss
 - **Length:** today's scoring call doesn't read it, and the Mac's shorts ruler fails (65% right, unsure 5 of 25, flips 3 in 20 on a resized copy). The October narrow look (`prompt_shorts1.txt`) is the candidate; it has never seen his photos.
 - **The top over them:** every shorts outfit he called off had a top hanging to the crotch, so this is the long-top read, not a new one.
 
+## The paid round (Nov 16, $0.4137 of the 70¢ stop)
+
+Bars written before any call (`tasks/T98/COST.md`). 252 calls, no errors: 5 pilot and 247 more, 2 runs each; about 0.164¢ a call (157 thinking tokens on average, billed with thinking off).
+
+- **Shorts length passes.** Above the knee vs at or below: 43 of 48 answers right (bar 90%); 23 of 24 photos steady (bar 90%); never "can't see". All 16 answers on above-the-knee shorts are right; the misses are all knee-length shorts (C079, C131 read above both times; C114 once; C026, C103 read below, which doesn't change the two-way call).
+- **The long-top presence question fails every bar**, on a hip-to-knee crop the code cut from his joints: clear long tops caught 5 of 12 (bar 7 of 9), false yes 5 of 72 (7%, bar under 5%), and 4 of the 12 photos where it fires flip between runs (33%, bar 10%). Obvious long tees (pin-038, pin-070, pin-071, stock-s02, C042, C097) still read "pants show" both times. That is the #199 and #465 lesson a third time: asking the model where a hem ends fails, in any wording and on any crop. **The long top stays with the body ruler.**
+
 ## How it was tested
 
 - **Labels (Claude's eye, Nov 16):** all 150 photos of his blind sheet, from the face-hidden copies, written and committed before any run (`extraction-test/proportions_labels.csv`, commit b3363f2a). The 13 photos with his notes were labelled with the notes already read. Long tops also used the Nov 14 labels (62 photos). One labeller; every photo profile unknown; age bands unknown, so no split by age band or look.
@@ -62,12 +69,11 @@ The founder's blind scores do punish these four things. But today's reading miss
 - **Thresholds:** judged leave-one-out (each photo by a cut chosen without it), so the accuracy isn't flattered by fitting the cut to the answers.
 - **Not tested:** the phone itself; his own saved checks (none in this set); dark-on-dark and same-color outfits (the ruler skips them); a second labeller.
 
-## What the rescoring session can use now ($0)
+## What the rescoring session can use now
 
 1. **Legs:** grade by `leg_shape`: `skinny` the big charge, `slim` a smaller one. (How v16 charges `slim` today wasn't checked here.)
 2. **Shorts fit:** wide or roomy shorts (bottom `volume` 4–5) score higher than regular or slim ones.
 3. **Long top:** the body ruler's "top ends at or past the crotch, untucked, no jacket" as a half-point charge or a tip, once it's ported to the phone. Until then `below_crotch` (catches half, rarely wrong) is the safe stand-in.
 4. **Bulk:** no rule.
-5. **Shorts length:** wait for the 11¢ check on his photos (or use the October narrow look's gold result, knowing it hasn't seen his photos).
-
-The paid round that would close the two gaps is costed in `tasks/T98/COST.md` (about 56¢, waiting on his OK).
+5. **Shorts length:** the October narrow look (a second-look call on the lower close-up, ~0.16¢, only when the reading names shorts) can back an above-the-knee charge. It's not in the app yet: `secondLook.ts` has no shorts question.
+6. **The top over shorts:** the long-top read (the body ruler), nothing new.
