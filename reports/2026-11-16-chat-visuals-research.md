@@ -56,6 +56,9 @@ Date: 2026-11-16. Research only; no app was installed, no account made, nothing 
 - **ChatGPT:** every product has a bookmark that saves it to a Favorites library; one tap, and tapping again removes it. Seen in OpenAI's help page. [OpenAI help](https://help.openai.com/en/articles/11128490-shopping-with-chatgpt-search)
 - **Apple's HIG** (the rule book for iOS design) says: keep people in control, let them dismiss content they do not want and undo actions they did not agree to; and do not use an alert merely to give information, nor for common actions that can be undone. A card in the chat with an Undo meets this; a pop-up alert does not. [HIG: Generative AI](https://developer.apple.com/design/human-interface-guidelines/generative-ai), [HIG: Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts)
 
+![Indyx: the original snapshot as an inset on the cleaned item](2026-11-16-chat-visuals-research/indyx-photo-to-clean-item.jpg)
+(Also in the folder, not used above: `alta-daily-outfit-home.jpg`, `acloset-ai-stylist-entry.jpg`.)
+
 **Fits Kitted?** Yes, and it is Kitted's own idea with little precedent in the field, so it is a differentiator. It fits two existing rules: the closet belongs to the closet service (CLAUDE.md), and Kitted already has an "Added {n} to Closet" row after a scored check. Watch-outs: the card should show Kit's reading of the piece (never a guess about the person), No thanks must cost nothing (no nag the next time the same piece is mentioned), and a piece Kit is unsure about should ask a short question first.
 
 ### P4. Color swatch row
