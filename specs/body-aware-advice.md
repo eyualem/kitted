@@ -1,5 +1,7 @@
 # Body-aware advice
 
+**Approved by the founder:** 2026-11-16
+
 After this, a guy who tells Kit how shirts and jeans off the rack fit him, and his height band, gets fixes, answers and outfit ideas that lead with the cuts that suit his frame, while his score stays about the outfit, and nothing in the app ever says anything about his body.
 
 **Part of:** `specs.md` → F17 (new), F5 (Kit), F6 (morning card), F9 (You), Data. Interview: T97, Nov 16, 2026.

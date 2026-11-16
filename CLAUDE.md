@@ -40,7 +40,7 @@ A chat-first stylist iOS app for guys 18–30: send an outfit photo, get a fit s
 - Navigation and setup must be flawless: check plans against Apple's HIG and the UX checklist in `research-context.md` §C14.
 
 ## Hard lines (never break; the detail lives in the spec)
-- **Never rate faces, bodies, weight or skin,** and never say anything about a user's body. Traditional clothing is "not rated".
+- **Never rate faces, bodies, weight or skin, and never say anything about a user's body.** He may tell Kit his height band and how clothes fit him: never read from a photo, never his weight. It only picks which cuts Kitted suggests, never a score, and Kit never says it back. Traditional clothing is "not rated".
 - **"The AI sees, the code judges, the AI explains."** The vision model only describes clothes; `@kitted/core` computes every score and number; the AI only puts it into words. Same photo, same score.
 - **The Python engine in `extraction-test/` is the scoring source of truth.** `@kitted/core` must match it exactly (the parity tests). Never edit fixtures to make tests pass.
 - **Privacy:** only the copy with every face blurred is sent for scoring; if the head can't be found, nothing is sent. The server keeps no questions or answers, and no photos unless he turns on photo backup (off by default; his own photos, readable only by his account). Location is approximate, for weather only, never stored.
