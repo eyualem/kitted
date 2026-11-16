@@ -2,7 +2,7 @@
 
 Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** `907e1fdb` · 2026-11-16 · tests: `extraction-test/vision/print_faces_test.py` (and the stubs in `app/modules/kitted-vision/ios/KittedPrep.swift`)
+**Lock:** `884ab66a` · 2026-11-16 · tests: `extraction-test/vision/print_faces_test.py` (re-lock for disputes D2–D4, TASK.md → Disputes; first lock `907e1fdb`, with the stubs in `app/modules/kitted-vision/ios/KittedPrep.swift`)
 
 **Scope.** The plan line's one check is **F2.2** (`specs.md`): "Only the face-blurred copy leaves the phone; with no head found, nothing is sent and the card says why", read with §"How a check works" step 1, the "Head not found" row and the **Never** line ("a face sent unblurred").
 - The founder's direction of Nov 16 (through the coordinator): a face printed on his own clothes isn't a person's face; his own face stays strict, including his reflection and a second mirror panel; anything touching his head is hidden; strangers' faces get no new work.
