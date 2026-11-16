@@ -346,6 +346,120 @@ def load_looks():
     return out
 
 
+def narrow(lk, pool_only, open_jacket):
+    """Two narrower readings of the looks, for his call (paper only, not in the engine)."""
+    lk = dict(lk)
+    if pool_only and lk.get("covers_shoe") == "mostly" and lk.get("pant_end") != "pooling":
+        lk["covers_shoe"] = "partly"                                  # still rests on the shoe; no 5.5 cap
+    if open_jacket and lk.get("outer_kind") == "jacket_or_coat" and lk.get("under_shows") == "clearly":
+        lk["under_shows"] = "a_little"                                # a tee below an open jacket is the look
+    return lk
+
+
+F4 = H.DATA / "inputs/gold-judge/founder4"
+
+
+def load_founder4():
+    """His 150 blind ratings (Nov 16; the combined sheet). Returns ({gold photo: score} for sheet 1's gold photos,
+    every row as {cid: (sheet, score, note, description)}). The key (.mapping/) is read only because he has finished."""
+    rf, mf = F4 / "ratings.csv", F4 / ".mapping/mapping.csv"
+    if not (rf.exists() and mf.exists()):
+        return {}, {}
+    import csv
+    g2p = {m["gid"]: m["photo"] for m in json.load(open(H.DATA / "inputs/gold-judge/manifest.json"))}
+    key = {r["id"]: r for r in csv.DictReader(open(mf))}
+    gold, rows = {}, {}
+    for r in csv.DictReader(open(rf)):
+        k = key[r["id"]]
+        rows[r["id"]] = (k["from_sheet"], float(r["score"]), r["note"].strip(), k["description"])
+        if k["gold_id"] and k["gold_id"] in g2p:
+            gold[g2p[k["gold_id"]]] = float(r["score"])
+    return gold, rows
+
+
+def run_b1_full(say, runs, panel, founder, gold15, gold16, looked):
+    """B1 on every photo he rated that has stored readings: his first 20 and sheet 1's gold photos from the 150.
+    His words (Nov 16): the ratings are taste and may fluctuate, so they set direction, not single-photo tuning."""
+    f4, rows = load_founder4()
+    if not f4:
+        say("== B1 on the full set: his 150 ratings not found (inputs/gold-judge/founder4/); not run ==")
+        return None
+    def b1(name, xs, hv):
+        w1 = sum(abs(x - y) <= 1 for x, y in zip(xs, hv))
+        return w1, f"{name:34s} within 1 {w1:2d}/{len(hv)} ({100 * w1 / len(hv):3.0f}%)  r {pearson(xs, hv):.3f}  mean {st.mean(xs):.2f} (his {st.mean(hv):.2f})"
+    allh = {**{p: v for p, v in founder.items()}, **f4}
+    groups = (("his first 20", {p: v for p, v in founder.items() if p in runs and gold16[p][0]["overall"] is not None}),
+              ("sheet 1 of the 150 (gold photos)", {p: v for p, v in f4.items() if p in runs and gold16[p][0]["overall"] is not None}),
+              ("all rated with readings", {p: v for p, v in allh.items() if p in runs and gold16[p][0]["overall"] is not None}))
+    n_unread = sum(1 for r in rows.values() if r[0] != "sheet1")
+    say(f"== B1 on the full set: his 150 (Nov 16): {len(f4)} are gold photos with stored readings; "
+        f"{n_unread} (sheet 2 and the new 20) have no reading yet ==")
+    sp = shares(list(r[1] for r in rows.values()))
+    say(f"  his 150, by band  {fmt_shares(sp)}   mean {st.mean(r[1] for r in rows.values()):.2f}")
+    verdict = None
+    for gname, G in groups:
+        ps = sorted(G)
+        hv = [G[p] for p in ps]
+        say(f"  {gname} ({len(ps)}):")
+        lines = [b1("v15", [gold15[p][0]["overall"] for p in ps], hv),
+                 b1("v16 (stored readings)", [gold16[p][0]["overall"] for p in ps], hv)]
+        if looked and all(p in looked for p in ps):
+            lines.append(b1("v16 with the looks (his marks)", [looked[p][1][0]["overall"] for p in ps], hv))
+            rec = [sc(runs[p][0], "everyday", PROFILE, narrow(load_looks()[p][0], False, True), tune={"v16_h7_cap": 6.5})["overall"]
+                   for p in ps]
+            lines.append(b1("v16 looks, H7 hold + jacket peek free", rec, hv))
+        pp = [p for p in ps if p in panel]
+        lines.append(b1("the AI panel", [panel[p] for p in pp], [G[p] for p in pp]))
+        for _, ln in lines:
+            say("    " + ln)
+        if gname == "all rated with readings":
+            w1 = lines[1][0]
+            r16 = pearson([gold16[p][0]["overall"] for p in ps], hv)
+            verdict = w1 >= 0.8 * len(ps) and r16 >= 0.69
+            say(f"B1 (all {len(ps)} with readings) within 1 on 8 in 10 ({w1}/{len(ps)}) and r >= 0.69 ({r16:.3f}): "
+                f"{'PASS' if verdict else 'FAIL'}")
+    return verdict, f4, rows
+
+
+def taste_calls(say, runs, panel, founder, gold16, looked, f4, rows):
+    """The five Y34 calls, checked against everything he has rated (direction only)."""
+    looks = load_looks()
+    H4 = {**founder, **f4}
+    ps = [p for p in H4 if p in runs and gold16[p][0]["overall"] is not None]
+    def line(name, q, eng=None):
+        if not q:
+            return say(f"  {name}: none in his ratings")
+        hv = [H4[p] for p in q]
+        e = [eng(p) for p in q] if eng else [gold16[p][0]["overall"] for p in q]
+        pv = [panel[p] for p in q if p in panel]
+        say(f"  {name} ({len(q)}): his mean {st.mean(hv):.2f} (6.5 or under {sum(h <= 6.5 for h in hv)}, 7+ {sum(h >= 7 for h in hv)}); "
+            f"v16 {st.mean(e):.2f}; panel {st.mean(pv) if pv else float('nan'):.2f}")
+    say(f"== The Y34 taste calls against his ratings ({len(ps)} rated photos with readings; his mean "
+        f"{st.mean(H4[p] for p in ps):.2f}) ==")
+    plain = [p for p in ps if why(gold16[p][0]) == "nothing off, nothing chosen"]
+    line("1. nothing off, nothing chosen (v16 shows 7.0)", plain)
+    def has(r, pre):
+        return any(x["check"].startswith(pre) for part in r["parts"].values() for x in part["reasons"])
+    sl = [p for p in ps if has(gold16[p][0], "SK1")]
+    line("2. slides out of the house (SK1)", sl)
+    desc = [r for r in rows.values() if r[0] != "sheet1" and "slides" in r[3].lower()]
+    if desc:
+        say(f"     slides by description on sheet 2 and the new 20 (no reading): {len(desc)}, his mean {st.mean(r[1] for r in desc):.2f} "
+            f"({', '.join(f'{r[1]:g}' for r in desc)})")
+    l5 = [p for p in ps if [x["id"] for x in gold16[p][0]["v16"]["lifts"]] == ["L5"]]
+    nol = [p for p in ps if not gold16[p][0]["v16"]["lifts"]]
+    line("3. one accent (L5) the only lift", l5)
+    line("   no lift at all", nol)
+    if looked:
+        h7 = [p for p in ps if p in looked and any(c["id"] == "H7" for c in looked[p][1][0]["v16"]["caps"])]
+        line("4. pants pile on the shoe (H7, with looks)", h7, lambda p: looked[p][1][0]["overall"])
+        pk = [p for p in ps if p in looks and P._second_look(looks[p][0], P.TUNE["v16"])["peek"]]
+        pj = [p for p in pk if looks[p][0].get("outer_kind") == "jacket_or_coat"]
+        line("5. a top clearly below the outer piece (with looks)", pk, lambda p: looked[p][1][0]["overall"])
+        line("   ... under a jacket or coat", pj, lambda p: looked[p][1][0]["overall"])
+        line("   ... under anything else", [p for p in pk if p not in pj], lambda p: looked[p][1][0]["overall"])
+
+
 def run_looks(say, runs, panel, founder, gold15, gold16, ps):
     """Round 2: the same stored readings plus the fresh second looks (U: a top peeking below the outer piece;
     L: the hem on the shoe). Only the second look changes, so every move here is the looks' doing."""
@@ -424,13 +538,6 @@ def run_looks(say, runs, panel, founder, gold15, gold16, ps):
         f"{st.mean(panel[p] for p in lp if p in panel):.2f}")
 
     # two narrower readings of the looks, for his call (not in the engine)
-    def narrow(lk, pool_only, open_jacket):
-        lk = dict(lk)
-        if pool_only and lk.get("covers_shoe") == "mostly" and lk.get("pant_end") != "pooling":
-            lk["covers_shoe"] = "partly"                                  # still rests on the shoe; no 5.5 cap
-        if open_jacket and lk.get("outer_kind") == "jacket_or_coat" and lk.get("under_shows") == "clearly":
-            lk["under_shows"] = "a_little"                                # a tee below an open jacket is the look
-        return lk
     say("  two narrower versions, for his call (paper only):")
     for label, po, oj, tn in (("as built", False, False, None), ("H7 only when the hem reads pooling", True, False, None),
                               ("no peek under a jacket or coat", False, True, None), ("both", True, True, None),
@@ -629,6 +736,12 @@ def main():
     say("  How often each v16 rule fires on the gold set (cool, first reading): " + ", ".join(f"{k} {n}" for k, n in sorted(cnt.items())))
     say()
     looked = run_looks(say, runs, panel, founder, gold15, gold16, ps)
+    say()
+    full = run_b1_full(say, runs, panel, founder, gold15, gold16, looked)
+    if full is not None:
+        fails += (not full[0]) - (not ok1)                                # the full set replaces the 20-photo verdict
+        say()
+        taste_calls(say, runs, panel, founder, gold16, looked, full[1], full[2])
     say()
     say(f"{'ALL BARS PASS' if not fails else f'{fails} BAR CHECK(S) FAIL'} (the bars are judged on the stored readings; "
         f"round 2 above is reported beside them)")

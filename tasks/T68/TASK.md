@@ -106,3 +106,39 @@ The gold set's stored readings (Oct 12) carry no second looks, so v16's pooling 
   - Recommendation: the last row, the best balance. It keeps most of the gain with him, matches the panel best, and comes 2 photos short of the steadiness bar (the bar is not loosened).
   - It reverses two of his marks, so it is his call (Y34): H7 as a 5.5 sink (#466), and the "clearly hangs below costs 0.5" peek (#367, which was about a zipped fleece, not an open jacket).
   - The engine keeps his marks (`v16_h7_cap=5.5`, a knob for the test only).
+
+## His 150 blind ratings (Nov 16; `results/v16/report.txt`, "B1 on the full set" and "The Y34 taste calls"; $0)
+
+He rated all 150 photos on the combined sheet (`inputs/gold-judge/founder4/`). The key was opened only after he finished. In his words, the ratings are taste and "may fluctuate", so they are used for direction (order, r, the big gaps), never to tune single photos, and the bar is not loosened. His spread across the bands (3–4.5 / 5–5.5 / 6–6.5 / 7–7.5 / 8–8.5 / 9–9.5) is 0 / 15 / 35 / 20 / 21 / 9%, with a mean of 6.95.
+
+**Which photos can be checked:** 54 of the 150 are gold photos with stored readings (sheet 1). With his first 20, that makes 74. Sheet 2 (76) and the 20 new photos have no reading yet.
+
+**B1 on all 74: FAIL** (bar: within 1 point on 8 in 10, and r 0.69 or more).
+
+| | His first 20 | Sheet 1's 54 | All 74 |
+|---|---|---|---|
+| v15 | 17/20, r 0.46 | 41/54, r 0.62 | 58/74 (78%), r 0.60 |
+| **v16** (stored readings) | 15/20, r 0.33 | 42/54, r 0.64 | **57/74 (77%), r 0.61** |
+| v16 with the looks (his marks) | 16/20, r 0.45 | 41/54, r 0.58 | 57/74, r 0.58 |
+| v16 with the looks, H7 a hold + peek under a jacket free | 16/20, r 0.40 | 41/54, r 0.62 | 57/74, r 0.60 |
+| The AI panel | 16/20, r 0.69 | 47/54, r 0.81 | 63/74 (85%), r 0.80 |
+
+- **v16 is as close to him as v15 overall, and closer on the new 54.** Both fall short of the bar: 3 photos short of 8 in 10, and r 0.61 against 0.69.
+- **The AI panel reads his taste better than the rules do** (r 0.80). The gap is what the rules can't see. His notes name it: "tights for jeans", "shirt way too long", "pants too tight and high on the ankle", "shirt too bulky", "shorts are not it". Top length, tightness and bulk are exactly the reads the scoring call doesn't have (#465).
+- **The looks don't help on the bigger set** (r 0.58). The first-20 gain came mostly from one photo, the camp shirt with loafers.
+
+**The five Y34 calls against his ratings** (74 photos; small groups, so direction only):
+
+1. **Plain basics 7 or 6.5:** on the 9 photos where v16 sees nothing off and nothing chosen, he averages **7.39**, with 5 at 7 or more. *Keep 7* (unchanged).
+2. **Slides out of the house:** his 4 with readings average **6.12**, and v16 gives 5.88. The 2 slides outfits on sheet 2 (by description) both got 6. *Keep the charge*: his two 7s in the first 20 were the exception (changed: this was open).
+3. **One accent (L5) as a lift:** his 8 photos where L5 is the only lift average **6.12**, *lower* than his photos with no lift (6.60); v16 gives them 6.88 and the panel 6.31. *Drop L5 as a lift* (changed: the data now says no).
+4. **Pants pile on the shoe:** his 3 average **6.83**, and v16 with the looks puts them at 5.5. *A 6.5 hold, not a 5.5 sink* (unchanged; 3 photos is thin).
+5. **A top clearly showing below the outer piece:** his 5 average **7.50**, above his mean of 7.20, so it isn't a fault to him on these. But his C013 note, "the inner layer sitting higher would have given it a better rating", says a long inner layer can cost. *Keep his Oct 21 rule's 0.5, but don't let the peek also cancel the layer lift.* That double hit is what swings scores and breaks steadiness (changed: was "free under a jacket"; the one jacket case has n = 1).
+
+**The 96 photos with no reading, for his OK (not run; the earlier $2 is spent).** The estimate counts thinking tokens:
+- **The scoring call:** 4,030 in, 788 out and about 300 thinking (#465) = **0.71¢**.
+- **The two looks:** **0.41¢**, measured Nov 15 ($1.8424 over 450 photo-runs).
+- **One run:** 96 × 1.12¢ ≈ **$1.08**; stop at $1.25.
+- **Two runs:** ≈ $2.15; this only adds steadiness, which 223 gold photos already measure.
+- **Recommendation: one run.** B1 uses the first reading.
+- **Prep comes first:** face-hidden copies and close-ups made on the Mac with the app's own prep, $0. Photos the prep refuses are not read.
