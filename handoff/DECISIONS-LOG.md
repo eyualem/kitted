@@ -3261,3 +3261,17 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The long top** reads the reading's `below_crotch` by default (on the phone today); the body ruler is an option until it's on the phone.
     - **Dry run, raw ratings, held-out half over 8 fresh splits:** 80.5% within a point, r 0.62. The fitted shorts charge is 0.75. Still short of the r bar (0.69). v16 with the switch off is unchanged.
     - **Claude's call:** the shorts-length answer joins the second-look dict per photo, so the engine reads every per-photo extra (looks, ruler, shorts) the same way, and only the taste rules look at them.
+478. **His taste rules, look by look: a proposal on paper, waiting on his call between A and B (rules-by-style, Nov 16, $0; nothing in the engine changed).** His words: "make sure u make the rules specific to what preferences the user has like streetwear or a combination like streetwear and formal." Report `rubric/research/rules-by-style.md`; data `extraction-test/rules_by_style.py` → `results/taste1/by_style.txt`.
+    - **The conflict, laid out for him, not decided:** (A) the rules follow the outfit's own detected look, so the same photo gets the same score and picks shape only fixes, Kit's words and ties (keeps #60.1, #80 and `CLAUDE.md`'s "same photo, same score"); (B) they follow the user's picks, so one photo scores differently per user. Recommended A.
+    - **Found:** 78 of his 164 read as no look and only 13 as streetwear. His wide-leg preference holds in every look except Tailored (TL1's test by hand: slim 7.12 (4), straight 7.19 (8)). Colors cost him in smart casual (−0.46, 14), prep and workwear (−0.62, 4 each), not in streetwear or minimal (3 each). One lift scores below none in every look (all: −0.33, 69 vs +0.11, 57).
+    - **Proposed (the table in the report):**
+      - The wide-leg plus is full in streetwear and minimal, half elsewhere, off in Tailored.
+      - Colors are off in the loud looks and only the second color costs in prep and workwear.
+      - The hem-over-the-shoe plus only on wide legs (prop.1), off in Tailored (suit.3).
+      - L3 and L7b come back everywhere (layer.2, contrast.2: the four win a clash); L5 only in minimal and Tailored, half in smart casual.
+      - The shorts charge off (no creator calls shorts a fault).
+      - The long top half in streetwear and vintage sport (prop.16).
+    - **Mixes:** each plus at the friendliest detected look's size, each charge at the gentlest, from the pick-free detected set (never the label). Streetwear + tailored can't be detected today (streetwear's veto holds every tailored piece), so "smart streetwear" is a new mix needing his yes and a short spec.
+    - **Lesson (method):** a pooled pattern can be one look's pattern in disguise, so each rule was checked inside each look *and* against his average for the same leg shape. Wide legs come with trousers and longer hems, so without the leg baseline the hem and trouser effects would be counted twice.
+    - **Bug noted for the rescoring session:** `taste_patterns.py` uses look keys `minimal`/`prep`, but the detector says `minimalist`/`classic_prep`. Two Round 3 rows never fired; the other numbers don't depend on them.
+    - **Not done:** prep transcripts. The four barely define prep (world.20); YouTube search didn't render in the built-in browser, and the one 2026 video read only names "Ivy Prep".

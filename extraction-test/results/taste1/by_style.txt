@@ -1,0 +1,314 @@
+His taste rules, look by look (164 rated photos with a reading; his mean 6.92; the look is the outfit's own, detected with no picks)
+His average by leg, all photos: skinny 5.41 (11), slim 6.24 (27), straight 6.72 (51), wide 7.84 (47), shorts 6.98 (28)
+
+== How the 164 read (pick-free label) ==
+  no look         78   his mean 6.68
+  smart casual    27   his mean 6.78
+  minimal         22   his mean 7.91
+  streetwear      13   his mean 7.65
+  workwear        13   his mean 6.50
+  classic prep    10   his mean 6.50
+  vintage sport    1   his mean 7.50
+== Detected sets (a photo passes every look listed; mixes are the sets with 2+) ==
+  no look                                   78
+  smart casual                              20
+  classic prep + smart casual               15
+  minimal + smart casual                    11
+  streetwear                                11
+  workwear                                   9
+  minimal                                    9
+  classic prep + minimal + smart casual      4
+  workwear + streetwear                      2
+  streetwear + minimal + smart casual        1
+  vintage sport                              1
+  streetwear + smart casual                  1
+  workwear + smart casual                    1
+  workwear + minimal                         1
+
+== The leg rule: his raw average by leg shape, inside each group (n in brackets) ==
+  label workwear                                   skinny - (0)  slim 6.25 (4)  straight 5.90 (5)  wide 7.50 (4)  shorts - (0)
+  label streetwear                                 skinny - (0)  slim - (0)  straight - (0)  wide 7.78 (9)  shorts 7.38 (4)
+  label classic prep                               skinny 5.50 (1)  slim 6.00 (1)  straight 6.10 (5)  wide 7.67 (3)  shorts - (0)
+  label minimal                                    skinny - (0)  slim - (0)  straight 7.50 (8)  wide 8.12 (12)  shorts 8.25 (2)
+  label smart casual                               skinny 5.00 (1)  slim 6.36 (7)  straight 6.86 (11)  wide 7.43 (7)  shorts 6.00 (1)
+  label no look                                    skinny 5.44 (9)  slim 6.20 (15)  straight 6.68 (22)  wide 8.00 (12)  shorts 6.80 (20)
+  detected workwear                                skinny - (0)  slim 6.25 (4)  straight 5.90 (5)  wide 7.50 (4)  shorts - (0)
+  detected streetwear                              skinny - (0)  slim - (0)  straight - (0)  wide 7.64 (11)  shorts 7.38 (4)
+  detected classic prep                            skinny 5.50 (1)  slim 6.33 (3)  straight 6.61 (9)  wide 7.92 (6)  shorts - (0)
+  detected minimal                                 skinny - (0)  slim - (0)  straight 7.39 (9)  wide 7.93 (15)  shorts 8.25 (2)
+  detected smart casual                            skinny 5.25 (2)  slim 6.31 (8)  straight 6.83 (24)  wide 7.83 (18)  shorts 6.00 (1)
+  street-led (street/work/vintage/outdoor label)   skinny - (0)  slim 6.25 (4)  straight 5.90 (5)  wide 7.69 (13)  shorts 7.40 (5)
+  clean-led (minimal/prep/smart casual label)      skinny 5.25 (2)  slim 6.31 (8)  straight 6.92 (24)  wide 7.84 (22)  shorts 7.50 (3)
+  any tailored jacket or trousers (no look today)  skinny 5.50 (2)  slim 6.46 (12)  straight 7.26 (19)  wide 8.05 (21)  shorts - (0)
+  tailored (the T94 spec's test, by hand)          skinny - (0)  slim 7.12 (4)  straight 7.19 (8)  wide 6.00 (1)  shorts - (0)
+  all                                              skinny 5.41 (11)  slim 6.24 (27)  straight 6.72 (51)  wide 7.84 (47)  shorts 6.98 (28)
+
+== Shorts: his raw average with shorts vs every other bottom, inside each group ==
+  label streetwear                                 shorts 7.38 (4)  others 7.78 (9)  wide legs 7.78 (9)
+  label minimal                                    shorts 8.25 (2)  others 7.88 (20)  wide legs 8.12 (12)
+  label smart casual                               shorts 6.00 (1)  others 6.81 (26)  wide legs 7.43 (7)
+  label no look                                    shorts 6.80 (20)  others 6.64 (58)  wide legs 8.00 (12)
+  detected streetwear                              shorts 7.38 (4)  others 7.64 (11)  wide legs 7.64 (11)
+  detected minimal                                 shorts 8.25 (2)  others 7.73 (24)  wide legs 7.93 (15)
+  detected smart casual                            shorts 6.00 (1)  others 7.04 (52)  wide legs 7.83 (18)
+  street-led (street/work/vintage/outdoor label)   shorts 7.40 (5)  others 7.02 (22)  wide legs 7.69 (13)
+  clean-led (minimal/prep/smart casual label)      shorts 7.50 (3)  others 7.13 (56)  wide legs 7.84 (22)
+  all                                              shorts 6.98 (28)  others 6.90 (136)  wide legs 7.84 (47)
+
+== One lift against none (both against his leg average) ==
+  label streetwear                                 none +0.35 (3)  one +0.02 (8)  two+ (2)
+  label minimal                                    none +1.09 (7)  one -0.14 (8)  two+ +0.82 (7)
+  label smart casual                               none +0.23 (3)  one -0.28 (13)  two+ +0.10 (11)
+  label no look                                    none -0.09 (39)  one -0.37 (27)  two+ +0.90 (12)
+  detected streetwear                              none +0.35 (3)  one -0.15 (10)  two+ (2)
+  detected minimal                                 none +1.09 (7)  one -0.28 (12)  two+ +0.82 (7)
+  detected smart casual                            none +0.43 (9)  one -0.35 (22)  two+ +0.27 (22)
+  street-led (street/work/vintage/outdoor label)   none +0.43 (6)  one -0.29 (17)  two+ -0.40 (4)
+  clean-led (minimal/prep/smart casual label)      none +0.61 (12)  one -0.32 (25)  two+ +0.33 (22)
+  any tailored jacket or trousers (no look today)  none +0.25 (5)  one -0.09 (24)  two+ +0.74 (25)
+  all                                              none +0.11 (57)  one -0.33 (69)  two+ +0.43 (38)
+
+== Every other rule: his score against his own leg average, with vs without, inside each group ==
+   (diff = with minus without; n = photos with the rule; '-' = under 3 with or without)
+-- a color beside the neutrals
+   label workwear                                   n   4  with -0.85  without -0.22  diff -0.62
+   label streetwear                                 n   3  with -0.01  without +0.10  diff -0.11
+   label classic prep                               n   4  with -0.50  without -0.29  diff -0.20
+   label minimal                                    n   3  with +0.53  without +0.56  diff -0.02
+   label smart casual                               n   7  with -0.56  without +0.10  diff -0.66
+   label no look                                    n  27  with -0.37  without +0.14  diff -0.52
+   detected workwear                                n   4  with -0.85  without -0.22  diff -0.62
+   detected streetwear                              n   3  with -0.01  without -0.05  diff +0.05
+   detected classic prep                            n   4  with -0.50  without +0.12  diff -0.62
+   detected minimal                                 n   3  with +0.53  without +0.36  diff +0.17
+   detected smart casual                            n  14  with -0.30  without +0.16  diff -0.46
+   street-led (street/work/vintage/outdoor label)   n   7  with -0.49  without -0.02  diff -0.46
+   clean-led (minimal/prep/smart casual label)      n  14  with -0.31  without +0.24  diff -0.55
+   any tailored jacket or trousers (no look today)  n  13  with +0.09  without +0.40  diff -0.31
+   tailored (the T94 spec's test, by hand)          n   1  -
+   all                                              n  48  with -0.37  without +0.15  diff -0.52
+-- two colors or more
+   label workwear                                   n   1  -
+   label no look                                    n   1  -
+   detected workwear                                n   1  -
+   street-led (street/work/vintage/outdoor label)   n   1  -
+   all                                              n   2  -
+-- hem over the shoe (full leg)
+   label workwear                                   n   2  -
+   label streetwear                                 n   4  with +0.53  without -0.13  diff +0.66
+   label classic prep                               n   2  -
+   label minimal                                    n   5  with +1.21  without +0.36  diff +0.85
+   label smart casual                               n   5  with -0.49  without +0.03  diff -0.52
+   label no look                                    n   8  with +0.47  without -0.09  diff +0.57
+   detected workwear                                n   2  -
+   detected streetwear                              n   5  with +0.06  without -0.10  diff +0.16
+   detected classic prep                            n   4  with +0.44  without -0.13  diff +0.57
+   detected minimal                                 n   8  with +0.71  without +0.24  diff +0.47
+   detected smart casual                            n  12  with +0.29  without -0.04  diff +0.33
+   street-led (street/work/vintage/outdoor label)   n   6  with +0.08  without -0.21  diff +0.28
+   clean-led (minimal/prep/smart casual label)      n  12  with +0.38  without +0.04  diff +0.33
+   any tailored jacket or trousers (no look today)  n  13  with +0.45  without +0.29  diff +0.16
+   all                                              n  26  with +0.34  without -0.06  diff +0.40
+-- open layer over a tee (L3)
+   label workwear                                   n   3  with -1.09  without -0.21  diff -0.88
+   label minimal                                    n   1  -
+   label smart casual                               n   2  -
+   label no look                                    n   2  -
+   detected workwear                                n   3  with -1.09  without -0.21  diff -0.88
+   detected streetwear                              n   1  -
+   detected minimal                                 n   1  -
+   detected smart casual                            n   4  with -0.83  without +0.11  diff -0.94
+   street-led (street/work/vintage/outdoor label)   n   3  with -1.09  without -0.03  diff -1.07
+   clean-led (minimal/prep/smart casual label)      n   3  with -0.87  without +0.17  diff -1.03
+   all                                              n   8  with -0.79  without +0.04  diff -0.83
+-- one accent (L5)
+   label workwear                                   n   4  with -0.85  without -0.22  diff -0.62
+   label streetwear                                 n   2  -
+   label classic prep                               n   2  -
+   label minimal                                    n   2  -
+   label smart casual                               n   6  with -0.34  without +0.01  diff -0.36
+   label no look                                    n  17  with -0.26  without +0.03  diff -0.29
+   detected workwear                                n   4  with -0.85  without -0.22  diff -0.62
+   detected streetwear                              n   2  -
+   detected classic prep                            n   2  -
+   detected minimal                                 n   2  -
+   detected smart casual                            n  10  with -0.17  without +0.08  diff -0.25
+   street-led (street/work/vintage/outdoor label)   n   6  with -0.34  without -0.09  diff -0.26
+   clean-led (minimal/prep/smart casual label)      n  10  with -0.18  without +0.17  diff -0.35
+   any tailored jacket or trousers (no look today)  n   9  with +0.24  without +0.34  diff -0.10
+   all                                              n  33  with -0.25  without +0.06  diff -0.32
+-- one smart piece (L7b)
+   label workwear                                   n   1  -
+   label classic prep                               n   3  with +0.01  without -0.54  diff +0.55
+   label minimal                                    n   6  with +0.59  without +0.54  diff +0.05
+   label smart casual                               n   5  with -0.28  without -0.02  diff -0.25
+   label no look                                    n  12  with +0.02  without -0.05  diff +0.07
+   detected workwear                                n   1  -
+   detected classic prep                            n   4  with +0.08  without -0.03  diff +0.11
+   detected minimal                                 n   7  with +0.48  without +0.35  diff +0.13
+   detected smart casual                            n  12  with +0.21  without -0.01  diff +0.23
+   street-led (street/work/vintage/outdoor label)   n   1  -
+   clean-led (minimal/prep/smart casual label)      n  14  with +0.16  without +0.10  diff +0.06
+   any tailored jacket or trousers (no look today)  n  20  with +0.11  without +0.45  diff -0.34
+   tailored (the T94 spec's test, by hand)          n   1  -
+   all                                              n  27  with +0.07  without -0.01  diff +0.08
+-- exactly one lift
+   label workwear                                   n   9  with -0.55  without -0.10  diff -0.45
+   label streetwear                                 n   8  with +0.02  without +0.17  diff -0.16
+   label classic prep                               n   4  with -0.80  without -0.09  diff -0.70
+   label minimal                                    n   8  with -0.14  without +0.95  diff -1.09
+   label smart casual                               n  13  with -0.28  without +0.13  diff -0.41
+   label no look                                    n  27  with -0.37  without +0.14  diff -0.51
+   detected workwear                                n   9  with -0.55  without -0.10  diff -0.45
+   detected streetwear                              n  10  with -0.15  without +0.17  diff -0.33
+   detected classic prep                            n   7  with -0.50  without +0.28  diff -0.78
+   detected minimal                                 n  12  with -0.28  without +0.95  diff -1.23
+   detected smart casual                            n  22  with -0.35  without +0.31  diff -0.67
+   street-led (street/work/vintage/outdoor label)   n  17  with -0.29  without +0.10  diff -0.38
+   clean-led (minimal/prep/smart casual label)      n  25  with -0.32  without +0.43  diff -0.75
+   any tailored jacket or trousers (no look today)  n  24  with -0.09  without +0.66  diff -0.75
+   tailored (the T94 spec's test, by hand)          n   6  with -0.24  without +0.99  diff -1.24
+   all                                              n  69  with -0.33  without +0.24  diff -0.57
+-- two or more lifts
+   label workwear                                   n   2  -
+   label streetwear                                 n   2  -
+   label classic prep                               n   4  with +0.10  without -0.69  diff +0.79
+   label minimal                                    n   7  with +0.82  without +0.43  diff +0.39
+   label smart casual                               n  11  with +0.10  without -0.18  diff +0.28
+   label no look                                    n  12  with +0.90  without -0.20  diff +1.10
+   detected workwear                                n   2  -
+   detected streetwear                              n   2  -
+   detected classic prep                            n  10  with +0.43  without -0.49  diff +0.92
+   detected minimal                                 n   7  with +0.82  without +0.22  diff +0.60
+   detected smart casual                            n  22  with +0.27  without -0.13  diff +0.39
+   street-led (street/work/vintage/outdoor label)   n   4  with -0.40  without -0.10  diff -0.30
+   clean-led (minimal/prep/smart casual label)      n  22  with +0.33  without -0.02  diff +0.34
+   any tailored jacket or trousers (no look today)  n  25  with +0.74  without -0.03  diff +0.77
+   tailored (the T94 spec's test, by hand)          n   7  with +0.99  without -0.24  diff +1.24
+   all                                              n  38  with +0.43  without -0.13  diff +0.56
+-- long top
+   label vintage sport                              n   1  -
+   label streetwear                                 n   2  -
+   label smart casual                               n   1  -
+   label no look                                    n  13  with -0.47  without +0.05  diff -0.52
+   detected vintage sport                           n   1  -
+   detected streetwear                              n   2  -
+   detected smart casual                            n   1  -
+   street-led (street/work/vintage/outdoor label)   n   3  with -0.10  without -0.15  diff +0.05
+   clean-led (minimal/prep/smart casual label)      n   1  -
+   any tailored jacket or trousers (no look today)  n   1  -
+   all                                              n  17  with -0.45  without +0.05  diff -0.50
+-- layered
+   label workwear                                   n  11  -
+   label streetwear                                 n   6  with -0.51  without +0.58  diff -1.09
+   label classic prep                               n   6  with -0.69  without +0.10  diff -0.79
+   label minimal                                    n   4  with -0.56  without +0.80  diff -1.36
+   label smart casual                               n  11  with -0.26  without +0.06  diff -0.32
+   label no look                                    n  19  with +0.45  without -0.19  diff +0.65
+   detected workwear                                n  11  -
+   detected streetwear                              n   8  with -0.59  without +0.58  diff -1.17
+   detected classic prep                            n   8  with -0.51  without +0.36  diff -0.87
+   detected minimal                                 n   8  with -0.56  without +0.80  diff -1.36
+   detected smart casual                            n  22  with -0.36  without +0.32  diff -0.68
+   street-led (street/work/vintage/outdoor label)   n  17  with -0.50  without +0.46  diff -0.96
+   clean-led (minimal/prep/smart casual label)      n  21  with -0.44  without +0.42  diff -0.85
+   any tailored jacket or trousers (no look today)  n  27  with +0.04  without +0.61  diff -0.57
+   tailored (the T94 spec's test, by hand)          n  11  -
+   all                                              n  57  with -0.16  without +0.08  diff -0.24
+-- trousers or suit trousers
+   label workwear                                   n   1  -
+   label classic prep                               n   5  with -0.39  without -0.36  diff -0.03
+   label minimal                                    n  11  with +0.80  without +0.32  diff +0.48
+   label smart casual                               n  19  with +0.11  without -0.48  diff +0.58
+   label no look                                    n  11  with +1.01  without -0.21  diff +1.21
+   detected workwear                                n   1  -
+   detected classic prep                            n  14  with +0.12  without -0.36  diff +0.48
+   detected minimal                                 n  13  with +0.52  without +0.25  diff +0.26
+   detected smart casual                            n  32  with +0.24  without -0.27  diff +0.51
+   street-led (street/work/vintage/outdoor label)   n   1  -
+   clean-led (minimal/prep/smart casual label)      n  35  with +0.25  without -0.09  diff +0.34
+   any tailored jacket or trousers (no look today)  n  47  with +0.41  without -0.23  diff +0.64
+   tailored (the T94 spec's test, by hand)          n  13  -
+   all                                              n  47  with +0.41  without -0.16  diff +0.57
+-- a tailored jacket
+   label classic prep                               n   4  with -0.80  without -0.09  diff -0.71
+   label smart casual                               n   7  with -0.03  without -0.08  diff +0.05
+   label no look                                    n  10  with +0.54  without -0.12  diff +0.66
+   detected classic prep                            n   8  with -0.39  without +0.27  diff -0.66
+   detected minimal                                 n   1  -
+   detected smart casual                            n  11  with -0.31  without +0.13  diff -0.44
+   clean-led (minimal/prep/smart casual label)      n  11  with -0.31  without +0.21  diff -0.52
+   any tailored jacket or trousers (no look today)  n  21  with +0.10  without +0.47  diff -0.38
+   tailored (the T94 spec's test, by hand)          n  13  -
+   all                                              n  21  with +0.10  without -0.01  diff +0.11
+
+== The photos in the clean-led and tailored groups (for reading by eye) ==
+  C009      his 7.5 v16 8  smart casual leg straight  [two or more lifts; trousers or suit trousers]  knit_polo (tan_camel) + trousers (khaki_beige, straight) + loafer (brown)
+  C012      his 7.5 v16 7.5  minimal      leg straight  []  tee (white) + chinos (black, straight) + chelsea_boot (black)
+  C014      his 8 v16 7.5  minimal      leg straight  [one smart piece (L7b); exactly one lift; trousers or suit trousers]  sweater (light_grey) + tee (white) + trousers (grey, straight) + white_leather_sneaker (white)
+  C015      his 8.5 v16 8  smart casual leg straight  [two or more lifts; trousers or suit trousers]  oxford_shirt (light_blue) + trousers (black, straight) + loafer (multicolor)
+  C016      TAILORED his 7 v16 7  smart casual leg slim  [exactly one lift; layered; trousers or suit trousers; a tailored jacket]  suit_jacket (navy) + tee (charcoal) + trousers (black, slim) + suede_chukka (grey)
+  C024      his 6 v16 6.5  classic prep leg slim  [layered; a tailored jacket]  unstructured_blazer (black) + tee (grey) + chinos (olive, slim) + canvas_sneaker (brown)
+  C027      his 6 v16 7.5  smart casual leg shorts  [open layer over a tee (L3); exactly one lift; layered]  tank_top (black) + overshirt (charcoal) + shorts (black, straight) + white_leather_sneaker (white)
+  C034      his 7.5 v16 7  smart casual leg wide  [layered; trousers or suit trousers]  overcoat (charcoal) + sweater (tan_camel) + trousers (olive, relaxed) + low_profile_sneaker (white)
+  C038      his 6 v16 8  smart casual leg straight  [a color beside the neutrals; one accent (L5); two or more lifts]  dress_shirt (purple) + chinos (brown, straight) + dress_shoe (brown)
+  C041      his 8.5 v16 7  minimal      leg wide  []  drawstring_trousers (black, barrel) + bomber (tan_camel) + retro_runner (grey)
+  C043      his 8 v16 7.5  minimal      leg straight  [a color beside the neutrals; hem over the shoe (full leg); trousers or suit trousers]  other (burgundy) + trousers (charcoal, straight) + loafer (black)
+  C049      his 7 v16 8  smart casual leg straight  [two or more lifts; trousers or suit trousers]  leather_jacket (black) + trousers (grey, straight) + dress_shoe (black)
+  C051      his 7 v16 7.5  minimal      leg wide  [a color beside the neutrals; one accent (L5); exactly one lift; layered; trousers or suit trousers]  overcoat (burgundy) + sweater (grey) + trousers (charcoal, relaxed) + work_boot (black)
+  C052      TAILORED his 6 v16 8  smart casual leg slim  [two or more lifts; layered; trousers or suit trousers; a tailored jacket]  blazer (off_white_cream) + tee (black) + trousers (black, slim) + derby (black)
+  C056      TAILORED his 6 v16 7.5  smart casual leg straight  [exactly one lift; trousers or suit trousers; a tailored jacket]  sport_coat (white) + trousers (grey, straight) + loafer (brown)
+  C059      his 5.5 v16 7.5  no look      leg skinny  [one smart piece (L7b); exactly one lift; layered; a tailored jacket]  blazer (black) + tee (white) + jeans (denim_mid, skinny) + low_profile_sneaker (white)
+  C065      his 5.5 v16 6.5  classic prep leg skinny  [one smart piece (L7b); exactly one lift; layered; a tailored jacket]  blazer (grey) + dress_shirt (white) + jeans (denim_mid, skinny) + white_leather_sneaker (white)
+  C074      his 6 v16 7  smart casual leg slim  [one smart piece (L7b); exactly one lift; layered; trousers or suit trousers]  leather_jacket (black) + tee (black) + trousers (grey, slim) + chelsea_boot (black)
+  C082      TAILORED his 7.5 v16 7.5  smart casual leg straight  [exactly one lift; layered; trousers or suit trousers; a tailored jacket]  suit_jacket (black) + dress_shirt (black) + suit_trousers (charcoal, straight) + dress_shoe (black)
+  C085      his 8.5 v16 7  minimal      leg shorts  []  tee (black) + shorts (black, wide) + retro_runner (grey)
+  C086      TAILORED his 7 v16 7  smart casual leg slim  [exactly one lift; trousers or suit trousers; a tailored jacket]  blazer (black) + trousers (navy, slim) + derby (black)
+  C088      his 6 v16 7  no look      leg slim  [one smart piece (L7b); exactly one lift; layered; a tailored jacket]  sport_coat (tan_camel) + dress_shirt (white) + jeans (denim_mid, slim) + canvas_sneaker (white)
+  C094      his 5.5 v16 7.5  minimal      leg straight  [open layer over a tee (L3); exactly one lift; layered]  tee (light_blue) + overshirt (navy) + chinos (charcoal, straight)
+  C106      his 6.5 v16 7.5  no look      leg slim  [one smart piece (L7b); exactly one lift; a tailored jacket]  sport_coat (grey) + jeans (denim_dark, slim) + canvas_sneaker (black)
+  C107      his 6.5 v16 7.5  minimal      leg wide  [one smart piece (L7b); exactly one lift; layered]  fleece (black) + dress_shirt (black) + drawstring_trousers (black, wide) + derby (black)
+  C109      his 8 v16 7  minimal      leg straight  [trousers or suit trousers]  trousers (charcoal, straight) + dress_shoe (black)
+  C111      TAILORED his 6 v16 7  classic prep leg wide  [exactly one lift; layered; trousers or suit trousers; a tailored jacket]  tee (brown) + cardigan (black) + unstructured_blazer (black) + trousers (charcoal, relaxed) + chelsea_boot (bl
+  C116      TAILORED his 7.5 v16 8  no look      leg straight  [two or more lifts; layered; trousers or suit trousers; a tailored jacket]  suit_jacket (black) + suit_trousers (black, straight) + dress_shirt (white) + dress_shoe (tan_camel)
+  C132      his 5.5 v16 7  no look      leg slim  [layered; a tailored jacket]  unstructured_blazer (navy) + tee (light_grey) + jeans (denim_mid, slim) + low_profile_sneaker (white)
+  C133      his 6 v16 8  smart casual leg straight  [a color beside the neutrals; one accent (L5); two or more lifts]  dress_shirt (purple) + chinos (charcoal, straight) + dress_shoe (black)
+  C135      his 8 v16 7.5  minimal      leg wide  [exactly one lift]  tee (white) + drawstring_trousers (brown, relaxed) + low_profile_sneaker (white)
+  C143      his 6 v16 8  smart casual leg wide  [a color beside the neutrals; one smart piece (L7b); two or more lifts; layered; trousers or suit trousers]  dress_shirt (white) + other (sage) + trousers (sage, relaxed) + loafer (black)
+  C146      his 8.5 v16 7  minimal      leg straight  [hem over the shoe (full leg)]  chore_coat (tan_camel) + chinos (black, straight) + derby (black)
+  ig-010    his 8 v16 8.5  classic prep leg wide  [a color beside the neutrals; one accent (L5); one smart piece (L7b); two or more lifts; trousers or suit trousers]  cardigan (green) + tee (white) + trousers (black, relaxed) + low_profile_sneaker (white)
+  ig-011    his 9 v16 8.5  smart casual leg wide  [a color beside the neutrals; one accent (L5); two or more lifts; trousers or suit trousers]  quarter_zip (green) + tee (white) + trousers (black, wide) + loafer (burgundy)
+  ig-023    his 8 v16 7.5  minimal      leg shorts  [one smart piece (L7b); exactly one lift]  dress_shirt (light_blue) + shorts (black, relaxed) + loafer (burgundy)
+  ig-027    his 8.5 v16 7  smart casual leg straight  [hem over the shoe (full leg)]  oxford_shirt (white) + jeans (denim_light, straight) + suede_chukka (brown)
+  ig-034    his 9 v16 8.5  minimal      leg wide  [a color beside the neutrals; one accent (L5); one smart piece (L7b); two or more lifts; trousers or suit trousers]  tee (burgundy) + trousers (off_white_cream, barrel) + loafer (black)
+  ig-035    his 8.5 v16 8.5  minimal      leg wide  [one smart piece (L7b); two or more lifts; trousers or suit trousers]  tee (olive) + trousers (brown, barrel) + loafer (black)
+  ig-045    his 8.5 v16 7.5  minimal      leg wide  [two or more lifts]  tee (black) + jeans (white, wide) + dress_shoe (black)
+  ig-046    his 9 v16 8  smart casual leg wide  [one smart piece (L7b); two or more lifts; trousers or suit trousers]  sweater (navy) + tee (white) + trousers (charcoal, wide) + loafer (black)
+  ig-048    his 9 v16 8  classic prep leg wide  [hem over the shoe (full leg); two or more lifts; trousers or suit trousers]  knit_polo (tan_camel) + trousers (black, wide) + loafer (black)
+  ig-059    TAILORED his 9.5 v16 8  no look      leg straight  [two or more lifts; layered; trousers or suit trousers; a tailored jacket]  suit_jacket (black) + dress_shirt (white) + suit_trousers (black, straight) + dress_shoe (black)
+  ig-071    his 8.5 v16 7  minimal      leg wide  [hem over the shoe (full leg); exactly one lift; trousers or suit trousers]  oxford_shirt (light_blue) + trousers (black, wide) + dress_shoe (black)
+  ig-093    his 8 v16 8.5  minimal      leg wide  [two or more lifts; trousers or suit trousers]  knit_polo (off_white_cream) + trousers (black, wide) + loafer (burgundy)
+  ig-110    his 9 v16 8  minimal      leg wide  [hem over the shoe (full leg); two or more lifts; layered; trousers or suit trousers]  leather_jacket (brown) + sweater (black) + trousers (black, wide) + loafer (brown)
+  ig-111    his 9 v16 8  minimal      leg wide  [hem over the shoe (full leg); two or more lifts; trousers or suit trousers]  knit_polo (black) + trousers (charcoal, wide) + dress_shoe (black)
+  ig-116    his 7 v16 8  smart casual leg wide  [hem over the shoe (full leg); two or more lifts]  quarter_zip (black) + jeans (denim_mid, wide) + loafer (black)
+  ig-117    his 7.5 v16 7.5  smart casual leg wide  [hem over the shoe (full leg); exactly one lift; trousers or suit trousers]  polo (white) + trousers (black, wide) + dress_shoe (black)
+  ig-129    his 7 v16 8  minimal      leg wide  [exactly one lift]  cardigan (light_blue) + jeans (denim_dark, relaxed) + suede_chukka (tan_camel)
+  ig-131    TAILORED his 8.5 v16 8  no look      leg slim  [two or more lifts; layered; trousers or suit trousers; a tailored jacket]  suit_jacket (black) + dress_shirt (white) + suit_trousers (black, slim) + dress_shoe (black)
+  pin-002   his 5 v16 6  smart casual leg skinny  [open layer over a tee (L3); exactly one lift; layered]  cardigan (tan_camel) + tee (light_blue) + jeans (denim_mid, skinny) + suede_chukka (brown)
+  pin-007   his 6 v16 7.5  smart casual leg straight  [exactly one lift; trousers or suit trousers]  dress_shirt (light_blue) + trousers (khaki_beige, straight) + loafer (brown)
+  pin-008   his 6.5 v16 8  classic prep leg straight  [a color beside the neutrals; one accent (L5); two or more lifts]  oxford_shirt (blue) + chinos (khaki_beige, straight) + canvas_sneaker (blue)
+  pin-033   his 5.5 v16 7.5  smart casual leg straight  [a color beside the neutrals; hem over the shoe (full leg); one accent (L5); exactly one lift; long top]  camp_collar_shirt (blue) + jeans (denim_dark, straight) + loafer (black)
+  pin-037   his 6.5 v16 7  classic prep leg straight  [hem over the shoe (full leg); one smart piece (L7b); exactly one lift; layered; trousers or suit trousers]  cardigan (charcoal) + tee (light_grey) + trousers (brown, flare_bootcut)
+  pin-051   his 5.5 v16 7  smart casual leg slim  [one smart piece (L7b); exactly one lift; trousers or suit trousers]  sweater (light_blue) + tee (white) + trousers (grey, slim) + suede_chukka (tan_camel)
+  pin-056   his 6 v16 6.5  smart casual leg wide  [a color beside the neutrals; hem over the shoe (full leg); one accent (L5); exactly one lift; layered; trousers or suit trousers; a tailored jacket]  chore_coat (olive) + blazer (grey) + dress_shirt (green) + suit_trousers (charcoal, relaxed) + work_boot (burg
+  pin-063   his 7 v16 7.5  no look      leg wide  [hem over the shoe (full leg); one smart piece (L7b); exactly one lift; layered; a tailored jacket]  blazer (black) + oxford_shirt (khaki_beige) + jeans (denim_mid, relaxed) + dress_shoe (brown)
+  rd-001    his 7 v16 6.5  minimal      leg straight  []  camp_collar_shirt (off_white_cream) + chinos (khaki_beige, straight) + loafer (brown)
+  rd-002    TAILORED his 7.5 v16 8  no look      leg straight  [two or more lifts; layered; trousers or suit trousers; a tailored jacket]  suit_jacket (olive) + suit_trousers (olive, straight) + dress_shirt (white) + derby (brown)
+  rd-004    his 7.5 v16 8  minimal      leg straight  [one smart piece (L7b); two or more lifts; trousers or suit trousers]  tee (black) + trousers (charcoal, straight) + loafer (black)
+  rd-007    his 7.5 v16 7  smart casual leg slim  [a color beside the neutrals; one accent (L5); exactly one lift; layered; trousers or suit trousers]  overcoat (black) + sweater (black) + trousers (burgundy, slim) + derby (black)
+  rd-008    TAILORED his 7 v16 8  smart casual leg straight  [one smart piece (L7b); two or more lifts; layered; trousers or suit trousers; a tailored jacket]  blazer (navy) + tee (navy) + trousers (khaki_beige, straight)
+  rd-010    TAILORED his 5.5 v16 7.5  classic prep leg straight  [a color beside the neutrals; exactly one lift; layered; trousers or suit trousers; a tailored jacket]  sport_coat (off_white_cream) + dress_shirt (blue) + trousers (khaki_beige, straight) + dress_shoe (brown)
+  rd-011    TAILORED his 7 v16 8  no look      leg straight  [two or more lifts; layered; trousers or suit trousers; a tailored jacket]  suit_jacket (black) + dress_shirt (black) + suit_trousers (black, straight) + dress_shoe (black)
+  rd-015    his 6 v16 7  classic prep leg straight  [a color beside the neutrals]  oxford_shirt (multicolor) + chinos (charcoal, straight)
+  rd-017    his 6 v16 8.5  classic prep leg straight  [two or more lifts; layered]  bomber (navy) + polo (off_white_cream) + chinos (brown, straight) + loafer (black)
+  rd-019    his 5.5 v16 7  smart casual leg slim  []  tee (brown) + chinos (off_white_cream, slim) + loafer (tan_camel)
