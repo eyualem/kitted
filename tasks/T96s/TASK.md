@@ -46,7 +46,7 @@ No constant from IMPLEMENTATION.md was changed.
   - red: leak set and kmeasure copies (one core, D1), and held out and regression (D5).
 - The same failures came up in the first `--full` (stopped early); `--quick` passed every line but these.
 
-**Not done or not verified here:** an iOS build and a phone check (no native install this session); `swiftc -typecheck` against the iOS SDKs (only the Mac typecheck and the harness compiles ran).
+**Not done or not verified here:** `npm run check` in `app/` wasn't run. The Mac had about 150 MB unused (PhysMem) after the full run, under the roughly 1 GB the coordinator set; this task changes no JS or TS. Also not done: an iOS build and a phone check (no native install this session); `swiftc -typecheck` against the iOS SDKs (only the Mac typecheck and the harness compiles ran).
 
 ## Disputes
 **D1 · T96's leak set vs T96s's grey square: one dense-hunt core that T96s's eye list calls "her hair" (implementer, Nov 16).**
