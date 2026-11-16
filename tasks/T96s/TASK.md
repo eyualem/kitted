@@ -73,3 +73,11 @@ No constant from IMPLEMENTATION.md was changed.
   - Rule 2 (a whole, upright pose) rightly declines. It's the guard that keeps his own face from being read as a print when the pose lies (S1–S7).
 - **Not a rule fault:** the test writer noted the same effect at lock ("the pasted face changed the body pose so `torsoJoints` was empty … placement faults, not rule faults") and capped the sizes; at 30 per placement it still happens 5 times in 36. `--quick` was 12 of 12.
 - **What I think it should say:** the (a) gate counts only photos where the pasted photo's own pose is whole (`torsoJoints` set, as the line already reports), or it reports these as "zone nil from the paste" outside the 90%. Loosening rule 2 to pass it would weaken the guard on his face, so I haven't.
+
+**D4 · T96s › grey square on him (2): one normal photo greyed by a "face" T96 sees on his hand, above his hips (implementer, Nov 16, `--full`).**
+- **The test:** (2) at `--full` measured 336 photos. One is worse than main + 0.02: `inputs/ig/Screenshot 2026-10-12 at 1.44.25 PM.png`, with 5.9% of his outline flat grey vs main's 3.9%. `--quick` samples 60, and this photo wasn't among them.
+- **What makes the grey:** the tile pass finds a "face" at [410, 547, 43, 43] (confidence 0.58) on his left hand. His left wrist is at (471, 553). T96 hides and greys its head box [397, 524, 68, 81].
+  - This build does exactly what round 3 does here: no print (the box's centre is outside his shoulders, so rule 4 turns it away), no `otherHeads`, and no "him again".
+  - The S1 and s25 squares are fixed; this one isn't a pose head.
+- **Why it looks wrong:** TESTING.md → Scope lists it as out of scope: "the 'faces' the detector imagines on his shoes, jeans or a hand (T96 greys them) stay as T96 leaves them". But (2) leaves out only "the head boxes the sweep drew for faces below his hip line". This hand is held at waist height, above his hips (641), so it isn't left out.
+- **What I think it should say:** (2) also leaves out the head boxes drawn for tile faces centred within his hands' reach: the box holds a wrist joint, or its centre lies outside his shoulders. Or (2) compares with round 3, not main, for regions T96 added and this task doesn't touch. Making a hand "face" un-greyed is founder question 3 (legs, feet, hands), a later task, so I haven't built it.
