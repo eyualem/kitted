@@ -182,6 +182,11 @@ The founder said T96's lines stay locked until he approves a re-scope. This task
 6. The grey-square fix touches `otherHeads` only (not `otherBodies`), by "head already hidden as his" plus the cap.
 7. `sweepVersion` stays 1.
 
+**Answers (coordinator, Nov 16; DECISIONS-LOG #474)**
+- Founder 1: **yes**, from his own words ("bluring out faces on shirts too … is not right"). The decision is logged with no `specs.md` edit; the T96 re-scope still waits on his separate yes.
+- Founder 2–4: the defaults stand for now (scans unchanged; legs and feet out; the person held against his chest accepted). They went to the founder through the parent session. A different answer adds a case later; it doesn't change this task's fit-photo checks.
+- Technical 1–7: accepted as written.
+
 ## Risks in the lane
 - **His own face read as a print.** The worst failure. The guards are rules 2–5 together. Every trap on the probed photos is a bad pose, and each is turned away by rule 2 alone (missing hips or shoulders, or shoulders outside his box). A wrong but complete pose isn't seen in these sets; the built "pose lies" check (TESTING.md) covers it as well as built photos can.
 - **Closet measuring** (`Measure.run`) still treats a whole-photo print as a head and leaves it out of the shirt's colours: `locate` is locked by T96's no-regression line. This only affects prints the whole-photo pass finds; none in the probed sets. It's a reading cost, not privacy.

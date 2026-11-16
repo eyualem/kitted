@@ -3193,3 +3193,23 @@ Contradictions settled and decisions changed during the build. Newest last.
   - The time line and `npm run check`: the Mac had about 70–120 MB free all day. No JS or TS changed, and round 2's check was green. The same sweep measured 187 ms median and 217 ms p95 at normal load.
   - A full iOS build, the phone, and real two-panel mirror photos (Y37).
 - **Next:** the founder's answer on the YuNet trial (about 230 KB, MIT). Then the test writer strengthens the three tests and a new round (round 4 needs his OK to reopen the loop) takes the code defects. Nothing ships without his yes on PR #125.
+
+474. **T96s: a face printed on his own clothes is not a face; it's left alone (Nov 16).**
+- **The founder (Nov 16):** "the app is accidentally bluring out faces on shirts too whic is not right". Also: "we're mainly protecting the user, the literal user". So no YuNet and no more work on strangers' faces. His own face stays strict, including his reflection and a second mirror panel.
+- **Where it comes from (the planner's $0 probe, 2,818 photos):**
+  - T96's tile pass finds every torso print and greys it, and its re-check would then refuse the photo.
+  - Main's whole-photo pass can blur a large, clear print, and can mistake it for his face.
+- **The rule:** a face is left alone only when all of these hold. Otherwise nothing changes.
+  - It's a fit photo.
+  - His pose is whole and upright: neck, both shoulders and both hips, on his outline.
+  - His head is found apart from the face.
+  - The box lies in his torso band, from the shoulders to the hips plus 15%.
+  - It's clear of his head region grown 25%, with no head joint inside it.
+  - At least 90% of it is on his own outline.
+  - No other person claims it.
+- **Constants:** `printHemShare` 0.15, `printHeadGap` 0.25, `printMinOnOutline` 0.9, `printMaxWidthShare` 0.8; the pose minimums are in `tasks/T96s/IMPLEMENTATION.md`.
+- **The re-check:** it skips prints by the same rule; there is no new refusal reason.
+- **Folded in:** T96 round 3's grey square on his head. A second pose body whose head lies inside his own head regions gets no `otherHeads` box, and the 0.9 × shoulder-span term is capped.
+- **Real cases found (only 3, plus one after "Which one is you?"):** two of his saved ig screenshots and two Fashionpedia photos. Built prints are an extra, never the only proof.
+- **Defaults sent to the founder:** clothes scans of a graphic tee stay blurred, legs and feet are out of scope, and a person held against his chest is accepted as residual risk.
+- **No change to `specs.md` or to T96's locked lines.** The re-scope ("Your face is always blurred before anything is sent; if we can't find it, nothing is sent. Other faces are blurred when we spot them; faces printed on clothes aren't.") waits on his yes. If a T96 line goes red only because of a correctly left-alone print, that's a dispute, not a change.
