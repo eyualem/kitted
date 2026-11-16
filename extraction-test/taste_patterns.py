@@ -150,11 +150,12 @@ def main():
         f"{st.mean(v16.values()):.2f}). 'gap' = his score minus v16's: a gap that differs with and without a pattern "
         f"is taste today's rules miss.")
     say(f"{'pattern':58s} {'n':>4s}  {'his with':>8s} {'without':>8s} {'diff':>6s}  {'gap with':>8s} {'without':>8s}  conf")
-    res = []
+    res, few = [], []
     for name in sorted({n for f in F.values() for n in f}):
         yes = [k for k in ks if F[k].get(name)]
         no = [k for k in ks if name in F[k] and not F[k][name]]
         if len(yes) < 3 or len(no) < 3:
+            few.append(f"{name} ({len(yes)})")                        # printed, never dropped silently
             continue
         a, b = [his[k] for k in yes], [his[k] for k in no]
         ga, gb = [his[k] - v16[k] for k in yes], [his[k] - v16[k] for k in no]
@@ -164,6 +165,7 @@ def main():
     for name, n, ma, mb, t, ga, gb, tg in sorted(res, key=lambda x: -abs(x[4])):
         say(f"{name:58s} {n:4d}  {ma:8.2f} {mb:8.2f} {ma - mb:+6.2f}  {ga:+8.2f} {gb:+8.2f}  {conf(t, n)}"
             f"{'' if conf(tg, n) == 'low' else f' (rules miss it: {conf(tg, n)})'}")
+    say("Too few photos to compare (fewer than 3 with or without): " + (", ".join(few) or "none"))
     # his notes
     say()
     say("His notes (sheet id, his score, v16, the reading):")

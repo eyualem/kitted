@@ -44,6 +44,7 @@ cargos                                                        9      6.83     6.
 dressy shoes with jeans or cargos                            11      7.00     6.91  +0.09     -0.41    -0.23  low
 a single top, nothing over it                                96      6.92     6.91  +0.01     -0.08    -0.46  low (rules miss it: medium)
 reads classic prep                                           20      6.92     6.92  +0.01     -0.68    -0.18  low (rules miss it: medium)
+Too few photos to compare (fewer than 3 with or without): joggers, sweats or track pants (1), reads outdoor (0), reads streetwear and minimal together (1), reads vintage sport (1), slides or sandals (0), two or more colors (2)
 
 His notes (sheet id, his score, v16, the reading):
   C001 6 (v16 not read): "too bulky on top"  [black hoodie, wide light jeans pooling at the ankle, black slides]
