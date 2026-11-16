@@ -329,3 +329,51 @@ How the pass keeps that:
   - **Chunky or running shoes under slim legs:** 5 photos, 5.70 vs 6.96, *medium*.
   - **Retro runners:** no difference.
   - The flags, the sheet and the taste rules are unchanged. The taste rules use the engine's own checks, not these rows.
+
+## Round 3 results: his re-rate, the consistent key, and every bar (Nov 16, $0)
+
+He re-rated all 19 blind (`inputs/gold-judge/founder5/ratings.csv`; his export matches).
+
+**How consistent he is** (`results/taste1/key_report.txt`):
+- **Very consistent.** The 10 unflagged repeats moved 0.40 points on average: 8 of 10 within half a point, all 10 within a point.
+- **No pull toward the middle at the top:** his high repeats went 8.50 → 8.62. His low ones went 5.50 → 5.83 (two photos up half a point each), which is inside his noise.
+- **The 9 flagged photos moved even less (0.22).** He kept his own distinctions:
+  - the white oxford and light jeans stayed 8.5 while the light-blue oxford and dark jeans stayed 6;
+  - the 9.5 black suit stayed 9.5 while its three near-identical suits each went *down* half a point (7.5 → 7, 7.5 → 7, 7 → 6.5);
+  - the graphic tee, shorts and loafers rose to 9;
+  - both 5.5s stayed 5.5.
+- **So the "inconsistent" pairs weren't noise.** They are differences he sees and the reading doesn't (colors, fit, finish). The reading calls those outfits near-identical; he doesn't.
+
+**The consistent key** (`results/taste1/consistent_key.json`) is his re-rate on the 19 and his original elsewhere. It keeps his range: every band within 1.2 points of raw (bar 3), the mean 6.93 against 6.92, still 5–9.5, and 9–9.5 a little wider (8.5 → 9.8%). His rule holds: lows stay low, highs stay high.
+
+**The taste rules on held-out halves**, averaged over 8 fresh splits (`results/taste1/splits_summary.txt`; still switched off in the engine):
+
+| | Raw ratings | Consistent key |
+|---|---|---|
+| v15 (today) | 76.1% within a point, r 0.53 | 77.0%, r 0.52 |
+| v16 (with the looks) | 73.2%, r 0.45 | 72.4%, r 0.43 |
+| **v16 + his taste rules** | **81.1%** (78–84), **r 0.62** (0.59–0.68) | **79.6%** (77–82), **r 0.60** (0.57–0.66) |
+
+- The earlier "80.5%" was my arithmetic slip: the same 8 splits average 81.1%.
+- The consistent key is slightly harder: he widened the gaps between outfits the reading calls the same, and no rule can see those gaps.
+- **B1 on the honest number:** within a point **passes on raw** (81%, bar 80%) and is just under on the key (79.6%). **r fails on both** (0.62 and 0.60, bar 0.69). The AI panel reaches 0.79 on the 74 it judged.
+
+**Every bar** (`results/v16/`, `v16-consistent/`, `v16-taste/`, `v16-taste-consistent/`):
+
+| Bar | v16 (rules off), raw | v16, key | v16 + taste rules (dry run), raw | v16 + taste rules, key |
+|---|---|---|---|---|
+| B1, all 164 (half of it tuned the rules) | 120/164, r 0.48 FAIL | 118/164, r 0.46 FAIL | 139/164 (85%), r 0.64, with the looks: FAIL on r | 136/164 (83%), r 0.63: FAIL on r |
+| B1, held out (the honest one) | 73%, r 0.45 | 72%, r 0.43 | **81%, r 0.62**: FAIL on r | 80%, r 0.60: FAIL |
+| B2, creators' pairs | 6/6 PASS | 6/6 | 6/6 PASS | 6/6 |
+| B3, anchors | 13/18 FAIL | 13/18 | 12/18 FAIL | 12/18 |
+| B4, dealbreaker examples | all PASS | all PASS | misses H7 (by design: it becomes a tip) and S5 (blazer with gym shorts and a quiet accent: 5.5) | same |
+| B5, worst band gap, gold / his checks | 17.7 / 26.5 FAIL | same | 21.1 / 28.1 FAIL | same |
+| B6, steadiness | 218/223 PASS | same | 219/223 PASS | same |
+
+v15 alongside: B1 on all 164 is 124/164 (76%), r 0.51 raw and 125/164, r 0.50 on the key; B6 218/223.
+
+**What it means:**
+- The taste rules are the first version to beat today's scoring on photos it wasn't tuned on, on both keys.
+- They are still short on ranking (r), and they cost B3 one anchor, B4 two rows (one by his own call) and some band shares.
+- The r gap is what the reading can't see (fit, finish, exact colors); his re-rate confirmed that this is taste, not noise.
+- **Not switched on.** That waits on his yes on the patterns and his A/B call on rules by style (PR #127).

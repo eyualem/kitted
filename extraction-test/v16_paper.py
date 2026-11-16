@@ -323,6 +323,7 @@ def run_named(say, runs, ph, cr):
 
 # ============================================================================================ main
 LOOKS = HERE / "results" / "gold-looks1" / "raw.json"
+KEY = None                                                             # --key consistent: his consistent answer key
 
 
 def load_looks():
@@ -508,6 +509,9 @@ def run_b1_full(say, runs, panel, founder, gold15, gold16, looked):
         say("== B1 on the full set: his 150 ratings not found (inputs/gold-judge/founder4/); not run ==")
         return None
     pool = rated_pool(runs, founder, f4, rows)
+    if KEY:                                                            # the consistent key replaces his scores
+        pool = {k: (KEY.get(k, v[0]),) + v[1:] for k, v in pool.items()}
+        say("  (his consistent key: his blind re-rate where he gave one, his original elsewhere)")
     S = score_pool(pool)
     pool = {k: v for k, v in pool.items() if all(S[k][n]["overall"] is not None for n, *_ in ARMS)}
     n150 = sum(1 for k, v in pool.items() if v[1] != "his first 20")
@@ -683,10 +687,18 @@ def main():
         print(s)
         lines.append(s)
 
-    global OUT
+    global OUT, KEY
     if "--taste" in sys.argv:                                         # every bar with the taste rules on (round 3)
         P.TUNE["v16"]["taste"] = json.loads(Path(sys.argv[sys.argv.index("--taste") + 1]).read_text())["taste"]
         OUT = HERE / "results" / "v16-taste"
+    if "--key" in sys.argv and sys.argv[sys.argv.index("--key") + 1] == "consistent":
+        kf = HERE / "results/taste1/consistent_key.json"              # his blind re-rate where he gave one (round 3)
+        k = json.loads(kf.read_text())
+        if not k.get("range_kept"):
+            print("The consistent key moves his band shares more than 3 points; not used.")
+            return 1
+        KEY = k["key"]
+        OUT = OUT.parent / (OUT.name + "-consistent")
     fit_only = "--fit" in sys.argv
     if "--curve" in sys.argv:                                         # explore: score with another curve (a,b,k)
         P.TUNE["v16"]["curve"] = tuple(float(x) for x in sys.argv[sys.argv.index("--curve") + 1].split(","))

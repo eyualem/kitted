@@ -3268,3 +3268,12 @@ Contradictions settled and decisions changed during the build. Newest last.
     - The flags, the re-rate sheet and the taste-rule dry run are unchanged.
     - **Then the shoe names, the same bug** (found by printing the zero-photo rows): `slides_sandals`, `white_leather_sneaker`, `retro_runner` and `drawstring_trousers` were missed. Fixed from the reading's schema. Slides now show 8 photos at his 6.38 (v16 a little harsher than him); trousers +0.59 (high). Nothing else moved.
     - **Lesson:** a feature that never fires gives no error. It just reads as "no effect". Taking names from the detector's own list, instead of typing them, removes the trap, and a row with 0 photos should be printed rather than dropped.
+
+477. **His re-rate: he is consistent, the key keeps his range, and the taste rules beat today's scoring on unseen photos but stay short on r (T68 round 3, Nov 16, $0).** (476 is T98's on its branch.)
+    - **His drift** (10 unflagged repeats): 0.40 points on average, all within 1, and no pull to the middle (highs 8.50 → 8.62).
+    - **The 9 flagged moved 0.22.** He kept every distinction the reading calls near-identical and widened the black-suit gap, so those gaps are taste the reading misses, not noise.
+    - **The consistent key** (his re-rate on the 19) keeps every band within 1.2 points of raw.
+    - **Held out, 8 fresh splits:** taste rules 81.1% within a point and r 0.62 on raw, 79.6% and 0.60 on the key. v15: 76% and 0.53. v16: 73% and 0.45. B1's within-1 passes on raw only; r fails on both (bar 0.69).
+    - **Every bar with the dry-run rules:** B2 6/6, B3 12/18, B4 misses H7 (by design) and S5, B5 worse (21.1 / 28.1), B6 219/223. The rules stay off until his yes on the patterns and on rules by style.
+    - **Correction:** the 8-split average reported earlier as 80.5% is 81.1% (an arithmetic slip).
+    - **Lesson:** a re-rate measures the rater, not just the ratings. Here it showed the "inconsistencies" were deliberate, which moves the remaining gap from his scores to the reading.
