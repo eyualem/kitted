@@ -1,4 +1,5 @@
-"""T96 · F2.2: no stranger's face in anything sent (strict, privacy). The test writer's file, locked: tasks/T96/TESTING.md.
+"""T96 · F2.2: his face never sent unblurred; other faces blurred when the app spots them; prints on his clothes left
+alone (founder, Nov 16, #475). Strict, privacy. The test writer's file, locked: tasks/T96/TESTING.md.
 
   /Users/eyu/Desktop/files/Kitted/extraction-test/.venv-mp/bin/python extraction-test/vision/face_leak_test.py --full
   ... --quick                      the implementer's loop (stub checks, leak set, 60 normal, 40 built photos): never a pass
@@ -455,6 +456,7 @@ case "sweep":
       row["reason"] = s.reason ?? NSNull()
       row["hide"] = s.hide.map(r4)
       row["swept"] = s.swept.map { r4($0.box) + [Double($0.confidence)] }
+      row["prints"] = s.prints.map(r4)
       row["coveredExtra"] = s.coveredExtra
       row["ms"] = s.ms
       row["imageNil"] = s.image == nil
@@ -649,15 +651,21 @@ class Pose:
 
     def heads(self, arr):
         """Every head on the original and its 2×2 tiles (the larger kept when two overlap)."""
+        return self.look(arr)[0]
+
+    def look(self, arr):
+        """heads() as above, and the bodies (body_parts) on the whole original."""
         H, W = arr.shape[:2]
-        found = []
-        for x, y, w, h in [[0, 0, W, H]] + oracle_tiles(W, H, [2]):
+        found, bodies = [], []
+        for t, (x, y, w, h) in enumerate([[0, 0, W, H]] + oracle_tiles(W, H, [2])):
             for p in self.poses(arr[y:y + h, x:x + w], (x, y)):
+                if t == 0:
+                    bodies.append(body_parts(p))
                 c = head_core(p)
                 if c:
                     found.append(c)
         found.sort(key=lambda b: -b[2] * b[3])
-        return dedupe(found, 0.3)
+        return dedupe(found, 0.3), bodies
 
 
 # ---------------------------------------------------------------- copies and the "hidden" verdict
@@ -851,7 +859,9 @@ class Ctx:
                 continue
             r["png"] = str(d / f"o{i}.png")
             r["hunt"] = [f[:4] for f in sorted(r["faces"], key=lambda f: -f[4]) if f[4] >= 0.5]
-            r["heads"] = self.pose.heads(rgb(r["png"])) if mp else []
+            # what the app's own detector spots: Vision faces (conf >= 0.5) on the build's own grids (#475 re-scope)
+            r["spot"] = [f[:4] for f in r["faces"] if f[4] >= 0.5 and len(f) > 5 and int(f[5]) in build_grids(self)]
+            r["heads"], r["bodies"] = self.pose.look(rgb(r["png"])) if mp else ([], [])
             out[p] = r
         return out
 
@@ -881,6 +891,97 @@ def files_under(root):
 
 def no_kit(p):
     return p.replace(str(KIT) + "/", "")
+
+
+# ---------------------------------------------------------------- the founder's re-scope (Nov 16, #475)
+# "Your face is always blurred before anything is sent; if we can't find it, nothing is sent. Other faces are blurred when
+# we spot them; faces printed on clothes aren't." Each face core is one of four kinds:
+#   "print"     a face the build lists in `run`'s `prints` (T96s) that lies on his torso by MediaPipe: excused;
+#   "his"       on his head (today's own-head hide regions, or the head of a MediaPipe body on him): always strict;
+#   "spotted"   found by the app's own detector (Vision faces, conf >= 0.5) on the build's own tiles (`Prep.faceGrids`) of
+#               the original, or one of the baseline's Vision boxes (1, 2x2, 3x3 tiles): strict;
+#   "unspotted" anything else (MediaPipe-only heads, faces only a grid the build doesn't use finds): measured, reported.
+STRICT = ("his", "spotted")
+
+
+def inside_share(a, b):
+    """The share of box a's area inside box b."""
+    i = inter(a, b)
+    return (i[2] * i[3]) / (a[2] * a[3]) if i and a[2] * a[3] > 0 else 0.0
+
+
+def same_face(c, v):
+    """A face core and a detector box that are one face."""
+    return iou(c, v) >= 0.3 or inside_share(c, v) >= 0.5
+
+
+def build_grids(ctx):
+    """The build's own `Prep.faceGrids` (its tile pass)."""
+    if getattr(ctx, "_grids", None) is None:
+        ctx._grids = [int(g) for g in ctx.new.call("tiles", extra=["100", "100", "1"])[0]["faceGrids"]]
+    return ctx._grids
+
+
+def body_parts(p):
+    """A MediaPipe body: its head core (or None), its torso band (between the shoulders; the higher shoulder down to the
+    lower hip plus 15% of shoulder→hip, as T96s's PrintZone) or None, and its seen points."""
+    torso = None
+    if all(p[i][2] >= 0.5 for i in (11, 12, 23, 24)):
+        sy, hy = min(p[11][1], p[12][1]), max(p[23][1], p[24][1])
+        x0, x1 = min(p[11][0], p[12][0]), max(p[11][0], p[12][0])
+        if hy > sy and x1 > x0:
+            torso = [x0, sy, x1 - x0, (hy - sy) * 1.15]
+    return {"head": head_core(p), "torso": torso, "pts": [(q[0], q[1]) for q in p if q[2] >= 0.5]}
+
+
+def his_parts(loc, bodies):
+    """His head regions and his torso bands. `loc`: main's (today's) locate for the photo (with the pick, if any).
+    Heads: today's hide regions on his box's top 35% (the rule host_info uses), plus the head of every MediaPipe body with
+    at least half its seen points inside his box. Torsos: (torso band, that body's head) of the same bodies."""
+    main = loc.get("main") if loc and loc.get("status") == "ok" else None
+    if not main:
+        return [], []
+    heads = [h for h in loc.get("hide") or [] if overlaps(h, main) and h[1] < main[1] + 0.35 * main[3]]
+    torsos = []
+    for b in bodies or []:
+        pts = b["pts"]
+        inside = sum(1 for x, y in pts if main[0] <= x < main[0] + main[2] and main[1] <= y < main[1] + main[3])
+        if pts and inside >= 0.5 * len(pts):
+            if b["head"]:
+                heads.append(b["head"])
+            if b["torso"]:
+                torsos.append((b["torso"], b["head"]))
+    return heads, torsos
+
+
+def prints_of(res, W, H):
+    """`run`'s `prints` (T96s, normalized) in working pixels; [] when the key is missing (no excuse)."""
+    return [[p[0] * W, p[1] * H, p[2] * W, p[3] * H] for p in (res.get("prints") or [])]
+
+
+def on_his_torso(c, torsos):
+    """At least 90% of the box inside one of his torso bands, its centre below the shoulder line, and clear of that
+    body's head (grown 25%)."""
+    for t, head in torsos:
+        if inside_share(c, t) >= 0.9 and c[1] + c[3] / 2 > t[1] and not (head and overlaps(c, grow(head, 0.25))):
+            return True
+    return False
+
+
+def core_kind(c, spot, heads):
+    """'his', 'spotted' or 'unspotted' for one face core (before the print excuse, which depends on the result)."""
+    if any(inside_share(c, grow(h, 0.1)) >= 0.3 for h in heads):
+        return "his"
+    if any(same_face(c, v) for v in spot):
+        return "spotted"
+    return "unspotted"
+
+
+def kinds_for(cores, base, res, W, H, torsos):
+    """Each core's kind for one result: 'print' where the build lists it in `prints` and it lies on his torso."""
+    pr = prints_of(res, W, H)
+    return ["print" if pr and any(same_face(c, p) or inside_share(p, c) >= 0.5 for p in pr) and on_his_torso(c, torsos) else k
+            for c, k in zip(cores, base)]
 
 
 # ---------------------------------------------------------------- F2.2 · sweep logic
@@ -937,7 +1038,8 @@ def check_sweep_logic(ctx):
             locs = ctx.new.call("locate", [{"photo": p, "kind": k} for p in part for k in ("items", "snap")])
             for i, row in enumerate(rows):
                 ok_other = locs[2 * i]["status"] == "ok" and locs[2 * i + 1]["status"] == "ok"
-                if row.get("status0") == "ok" and not row["otherHeads"] and row.get("coveredExtra") == 0 and ok_other:
+                # (#475) and no print left alone (T96s): today's copy is the comparison only where locate's hide holds no print
+                if row.get("status0") == "ok" and not row["otherHeads"] and row.get("coveredExtra") == 0 and ok_other and not row.get("prints"):
                     chosen.append(row)
             if len(chosen) >= 4:
                 break
@@ -1236,6 +1338,7 @@ def _leak(ctx):
         d = ctx.scratch()
         photos = [r["path"] for r in part]
         tr = ctx.truth(photos, d)
+        lm = ctx.main.call("locate", [{"photo": p, "kind": "fit"} for p in photos])  # him, by today's code (#475)
         jobs = [{"photo": p, "root": fresh_root(d), "kind": k} for p in photos for k in ("fit", "snap", "items")]
         res = ctx.new.call("prep", jobs)
         for i, row in enumerate(part):
@@ -1245,7 +1348,10 @@ def _leak(ctx):
             s = W / row["size"][0]
             sc = lambda b: [v * s for v in b[:4]]
             cores, dropped = eye_drop(p, dedupe([sc(b) for b in row["faces"]] + t["hunt"] + t["heads"], 0.5), W, H)
-            rec = {"photo": no_kit(p), "source": row["source"], "size": [W, H], "cores": cores, "eyeDropped": dropped, "kinds": {}}
+            heads, torsos = his_parts(lm[i], t["bodies"])
+            base = [core_kind(c, [sc(b) for b in row["faces"]] + t["spot"], heads) for c in cores]
+            rec = {"photo": no_kit(p), "source": row["source"], "size": [W, H], "cores": cores, "eyeDropped": dropped, "kinds": {},
+                   "base": base, "torsos": torsos}
             for k, r in zip(("fit", "snap", "items"), res[3 * i:3 * i + 3]):
                 kr = {"status": r.get("status"), "reason": r.get("reason"), "error": r.get("error"),
                       "keys": sorted(x for x in r if not x.startswith("_"))}
@@ -1255,13 +1361,16 @@ def _leak(ctx):
                 if r.get("status") == "ok":
                     vs, errs = judge(r, k, orig, cores)
                     kr["errors"] = errs
-                    kr["leaks"] = [v for v in vs if v["v"] == "leak"]
+                    kr["coreKinds"] = kinds_for(cores, base, r, W, H, torsos)
+                    kr["prints"] = r.get("prints")
+                    kr["leaks"] = [dict(v, kind=kr["coreKinds"][v["core"]]) for v in vs if v["v"] == "leak"]
                     for v in kr["leaks"]:
-                        sheet.add(f"{len(ctx.leak)}-{k}-{v['copy']} {row['source'][:5]}", v["path"], v["box"])
+                        sheet.add(f"{len(ctx.leak)}-{k}-{v['copy']} {v['kind'][:4]} {row['source'][:5]}", v["path"], v["box"])
                     if k == "fit":
                         lk = [sc(b) for b in row["leaked"]]
                         gv, _ = judge(r, k, orig, lk, names={"upload"})
-                        kr["gate"] = [v for v in gv if v["v"] == "leak"]
+                        gk = kinds_for(lk, ["spotted"] * len(lk), r, W, H, torsos)  # a print on his torso is excused (#475)
+                        kr["gate"] = [v for v in gv if v["v"] == "leak" and gk[v["core"]] != "print"]
                 rec["kinds"][k] = kr
             ctx.leak[p] = rec
         shutil.rmtree(d, ignore_errors=True)
@@ -1285,24 +1394,37 @@ def check_leak_set(ctx):
                 per[k]["sent"] += 1
                 for e in kr.get("errors", []):
                     fails.append(f"{rec['photo']} {k}: {e}")
-                leaks += [(rec["photo"], k, v["copy"], v["box"], v.get("unchanged"), v.get("inside")) for v in kr["leaks"]]
+                leaks += [(rec["photo"], k, v["copy"], v["box"], v.get("unchanged"), v.get("inside"), v["kind"]) for v in kr["leaks"]]
             else:
                 key = f"{kr['status']}/{kr.get('reason')}" if not kr.get("error") else f"error {kr['error'][:40]}"
                 per[k]["refused"][key] = per[k]["refused"].get(key, 0) + 1
                 if k == "fit" and (kr["status"] != "couldNotFrame" or kr.get("keys") != REFUSAL_KEYS or not isinstance(kr.get("reason"), str) or not kr.get("reason")):
                     fails.append(f"{rec['photo']} fit: {kr['status']} with keys {kr.get('keys')}: a fit check sent today may only be "
                                  "refused by the sweep (couldNotFrame, a reason, exactly the five keys)")
-    photos_leaking = sorted({x[0] for x in leaks})
-    if leaks:
-        fails.append(f"{len(leaks)} face cores not hidden in {len(photos_leaking)} photos (first: {leaks[0][0]} {leaks[0][1]} "
-                     f"{leaks[0][2]}, unchanged {leaks[0][4]}, inside hidden {leaks[0][5]})")
+    # #475: his face and every face the app's own detector spots must be hidden; the rest is measured, not failed
+    strict = [x for x in leaks if x[6] in STRICT]
+    photos_leaking = sorted({x[0] for x in strict})
+    if strict:
+        fails.append(f"{len(strict)} face cores not hidden in {len(photos_leaking)} photos ({sum(1 for x in strict if x[6] == 'his')} "
+                     f"his own, {sum(1 for x in strict if x[6] == 'spotted')} spotted by the app's detector; first: {strict[0][0]} "
+                     f"{strict[0][1]} {strict[0][2]} {strict[0][6]}, unchanged {strict[0][4]}, inside hidden {strict[0][5]})")
     if per["fit"]["sent"] < 40:
         fails.append(f"only {per['fit']['sent']} of 59 fit checks sent (≥ 40: hide, don't just refuse)")
     gate = sum(len(rec["kinds"]["fit"].get("gate", [])) for rec in ctx.leak.values())
     dropped = sum(rec.get("eyeDropped", 0) for rec in ctx.leak.values())
-    return fails, {"per_kind": per, "leaks": len(leaks), "photos_leaking": photos_leaking, "sheet": ctx.leak_sheet,
+    tally = {}
+    for rec in ctx.leak.values():
+        for k, kr in rec["kinds"].items():
+            for kind in kr.get("coreKinds") or []:
+                tally.setdefault(k, {}).setdefault(kind, 0)
+                tally[k][kind] += 1
+    unsp = [x for x in leaks if x[6] == "unspotted"]
+    return fails, {"per_kind": per, "leaks_strict": len(strict), "photos_leaking": photos_leaking, "sheet": ctx.leak_sheet,
+                   "unspotted_not_hidden (measured, #475)": {"cores": len(unsp), "photos": len({x[0] for x in unsp})},
+                   "prints_excused (#475, T96s)": sum(1 for x in leaks if x[6] == "print"),
+                   "core_kinds_judged (per kind of check)": tally,
                    "gate_185_not_hidden (the held-out line's automatic gate)": gate,
-                   "cores_ruled_not_faces_by_eye (#471 D1)": dropped,
+                   "cores_ruled_not_faces_by_eye (#471 D1, D6)": dropped,
                    "leak_list": leaks[:300]}
 
 
@@ -1347,7 +1469,8 @@ def _normal(ctx):
         if mpp:
             tr2 = ctx.truth(mpp, ctx.scratch())
             for p in mpp:
-                tr[p]["hunt"], tr[p]["heads"] = tr2[p]["hunt"], tr2[p]["heads"]
+                for key in ("hunt", "heads", "spot", "bodies"):
+                    tr[p][key] = tr2[p][key]
         mk = masks(ctx, photos, d)
         lj = [{"photo": p, "kind": k} for p in photos for k in ("fit", "items")]
         lm, ln = ctx.main.call("locate", lj), ctx.new.call("locate", lj)
@@ -1355,6 +1478,12 @@ def _normal(ctx):
             w["root"] = fresh_root(d)
         mres = ctx.main.call("prep", warm + [{"photo": p, "root": fresh_root(d)} for p in photos])
         nres = ctx.new.call("prep", warm + [{"photo": p, "root": fresh_root(d)} for p in photos])
+        # (#475) MediaPipe bodies, for his torso, only where the build lists a print (no regression's print excuse)
+        withp = [p for i, p in enumerate(photos) if nres[i].get("prints") and not tr[p]["bodies"]]  # warm jobs emit no row
+        if withp:
+            tr3 = ctx.truth(withp, ctx.scratch(), grids=())
+            for p in withp:
+                tr[p]["bodies"] = tr3[p]["bodies"]
         # "Which one is you?" photos: each candidate picked
         pj, pk = [], []
         for i, p in enumerate(photos):
@@ -1405,6 +1534,9 @@ def _normal(ctx):
                 uh, uw = mu.shape[:2]
                 o = resize(orig, uw, uh)
                 s = uw / W
+                # (#475) a region that is the head box of a print the build leaves alone on his torso is excused
+                pr = prints_of(n, W, H)
+                _, torsos = his_parts(lm[2 * i], t.get("bodies")) if pr else ([], [])
                 for h in lm[2 * i]["hide"]:
                     c = inter([v * s for v in h], [0, 0, uw, uh])
                     if not c:
@@ -1414,7 +1546,8 @@ def _normal(ctx):
                         continue
                     go = grey(o[y0:y1, x0:x1])
                     rec["shares"].append([round(float((np.abs(grey(mu[y0:y1, x0:x1]) - go) < 12).mean()), 3),
-                                          round(float((np.abs(grey(nu[y0:y1, x0:x1]) - go) < 12).mean()), 3)])
+                                          round(float((np.abs(grey(nu[y0:y1, x0:x1]) - go) < 12).mean()), 3),
+                                          any(inside_share(q, h) >= 0.5 and on_his_torso(q, torsos) for q in pr)])
                 main = lm[2 * i]["main"]
                 if main and mk.get(p):
                     # the grey cover on his own outline (#472): never more than today's
@@ -1433,7 +1566,7 @@ def _normal(ctx):
                         if ch > 0.05:
                             sheet_b.add(f"{rec['photo'][-18:]} {ch:.0%}", uri_path(n["uploadUri"]), bx)
             picks = []
-            for (pp, c), j, r, rm in zip(pk, pj, pres, pmain):
+            for (pp, c), j, r, rm, pl in zip(pk, pj, pres, pmain, plm):
                 if pp != p:
                     continue
                 pc = {"cand": c, "status": r.get("status"), "picked": r.get("picked"), "mainStatus": rm.get("status")}
@@ -1457,13 +1590,16 @@ def _normal(ctx):
                         cov.append(round(float(g[out_].mean()) if out_.any() else 1.0, 3))
                     pc["cover"] = cov
                     pcores, _ = eye_drop(p, t["hunt"] + t["heads"], W, H)
+                    # (#475) him = the picked candidate (main's locate with that pick)
+                    heads, torsos = his_parts(pl, t["bodies"])
+                    pkinds = kinds_for(pcores, [core_kind(cc, t["spot"], heads) for cc in pcores], r, W, H, torsos)
                     vs, errs = judge(r, "fit", orig, pcores)
-                    pc["leaks"] = [v for v in vs if v["v"] == "leak"]
+                    pc["leaks"] = [dict(v, kind=pkinds[v["core"]]) for v in vs if v["v"] == "leak"]
                     pc["errors"] = errs
                     for v in pc["leaks"][:4]:
-                        sheet_p.add(f"{rec['photo'][-14:]} pick{c} {v['copy']}", v["path"], v["box"])
-                    ctx.picks[(p, c)] = {"result": r, "cores": pcores, "png": None}
-                    pc["leaks"] = [{k: v[k] for k in ("copy", "box", "unchanged", "inside", "grey") if k in v} for v in pc["leaks"]]
+                        sheet_p.add(f"{rec['photo'][-14:]} pick{c} {v['copy']} {v['kind'][:4]}", v["path"], v["box"])
+                    ctx.picks[(p, c)] = {"result": r, "cores": pcores, "kinds": pkinds, "png": None}
+                    pc["leaks"] = [{k: v[k] for k in ("copy", "box", "unchanged", "inside", "grey", "kind") if k in v} for v in pc["leaks"]]
                 picks.append(pc)
             rec["picks"] = picks
             normal[p] = rec
@@ -1511,8 +1647,9 @@ def check_false_refusals(ctx):
                 continue
             if any(c < 0.8 for c in pc["cover"]):
                 fails.append(f"{lab}: another candidate only {min(pc['cover']):.0%} covered grey outside his box")
-            if pc["leaks"]:
-                fails.append(f"{lab}: {len(pc['leaks'])} face cores not hidden (first {pc['leaks'][0]})")
+            strict = [v for v in pc["leaks"] if v["kind"] in STRICT]  # #475: his face and spotted faces only
+            if strict:
+                fails.append(f"{lab}: {len(strict)} face cores not hidden (first {strict[0]})")
             for e in pc["errors"]:
                 fails.append(f"{lab}: {e}")
     for r in recs:
@@ -1525,7 +1662,10 @@ def check_false_refusals(ctx):
            "totals": counts, "photos_with": {k: sum(1 for r in recs if r["counts"].get(k)) for k in counts},
            "cover_on_him_max": max([(r.get("coverOnHim") or [0, 0])[1] or 0 for r in recs] or [0]),
            "body_newly_hidden_over_5pct": sum(1 for b in body if b > 0.05), "body_newly_hidden_median": statistics.median(body) if body else None,
-           "sheets": ctx.normal_sheets, "picks": {r["photo"]: r["picks"] for r in recs if r["picks"]}}
+           "sheets": ctx.normal_sheets, "picks": {r["photo"]: r["picks"] for r in recs if r["picks"]},
+           "pick_cores_not_hidden_by_kind (#475: unspotted and print measured, not failed)":
+               {k: sum(1 for r in recs for pc in r["picks"] for v in pc.get("leaks") or [] if v["kind"] == k)
+                for k in ("his", "spotted", "unspotted", "print")}}
     return fails, rep
 
 
@@ -1582,15 +1722,16 @@ def check_heldout(ctx):
     rep = {}
     ctx.status1513 = {}
     for name, photos in sets:
-        st, sus = {}, 0
+        st, sus, by = {}, 0, {}
         for part in chunks(photos, 15):
             d = ctx.scratch()
             try:
                 tr = ctx.truth(part, d)
+                lm = ctx.main.call("locate", [{"photo": p, "kind": "fit"} for p in part])  # him, by today's code (#475)
                 res = ctx.new.call("prep", [{"photo": p, "root": fresh_root(d)} for p in part])
             except Crash as e:
                 return fails + [str(e)], rep
-            for p, r in zip(part, res):
+            for p, r, loc in zip(part, res, lm):
                 s = r.get("status") if "error" not in r else "error"
                 key = s if s == "ok" else f"{s}/{r.get('reason')}"
                 st[key] = st.get(key, 0) + 1
@@ -1599,17 +1740,27 @@ def check_heldout(ctx):
                 t = tr.get(p)
                 if s == "ok" and t:
                     orig = rgb(t["png"])
-                    hc, _ = eye_drop(p, dedupe(t["hunt"] + t["heads"], 0.5), orig.shape[1], orig.shape[0])
+                    Ho, Wo = orig.shape[:2]
+                    hc, _ = eye_drop(p, dedupe(t["hunt"] + t["heads"], 0.5), Wo, Ho)
+                    heads, torsos = his_parts(loc, t["bodies"])
+                    kinds = kinds_for(hc, [core_kind(c, t["spot"], heads) for c in hc], r, Wo, Ho, torsos)
                     vs, errs = judge(r, "fit", orig, hc, names={"upload"})
                     for v in vs:
                         if v["v"] == "leak":
-                            sus += 1
-                            sheets[name].add(f"{Path(p).parent.name[:8]}/{Path(p).stem[:12]}", v["path"], v["box"])
+                            k = kinds[v["core"]]
+                            by[k] = by.get(k, 0) + 1
+                            if k in STRICT:  # #475: his face, or a face the app's own detector spots, sent unhidden
+                                fails.append(f"{name} {no_kit(p)}: a {k} face core not hidden in the fit upload "
+                                             f"(unchanged {v.get('unchanged')}, inside hidden {v.get('inside')})")
+                            if k != "print":
+                                sus += 1
+                                sheets[name].add(f"{k[:4]} {Path(p).parent.name[:6]}/{Path(p).stem[:10]}", v["path"], v["box"])
             shutil.rmtree(d, ignore_errors=True)
             print(f"  {name}: {sum(st.values())}/{len(photos)}", flush=True)
-        rep[name] = {"photos": len(photos), "statuses": st, "suspects": sus, "sheet": sheets[name].finish()}
+        rep[name] = {"photos": len(photos), "statuses": st, "suspects": sus, "not_hidden_by_kind": by, "sheet": sheets[name].finish()}
     rep["gate_185"] = {"not_hidden": len(gate), "list": gate[:50]}
-    rep["eye"] = "every suspect on the sheets needs the reviewer's verdict (print, poster, screen, already pixelated, real) in TASK.md → Review"
+    rep["eye"] = ("#475: his face and spotted faces fail automatically; the unspotted suspects on the sheets are measured for "
+                  "the reviewer (print, poster, screen, already pixelated, real), not failed")
     return fails, rep
 
 
@@ -1623,7 +1774,10 @@ def check_no_regression(ctx):
     for r in ctx.normal.values():
         for x in r["locate"]:
             fails.append(f"{r['photo'][-24:]} locate differs from main: {x}")
-        for a, b in r["shares"]:
+        for a, b, excused in r["shares"]:
+            if excused:  # #475: the head box of a print the build leaves alone on his torso (T96s)
+                rep["print_regions_excused"] = rep.get("print_regions_excused", 0) + 1
+                continue
             if b > a + 0.05:
                 fails.append(f"{r['photo'][-24:]}: a hidden region is {b:.2f} unchanged now vs {a:.2f} on main")
     if ctx.full:
@@ -1691,7 +1845,10 @@ def check_kmeasure(ctx):
         o = resize(rgb(png), cw, ch)
         s = cw / W
         hr = [[r[0] * cw, r[1] * ch, r[2] * cw, r[3] * ch] for r in (fit.get("hidden") or [])]
-        bad = [v for v in (verdict([x * s for x in c], cp, o, hr) for c in rec["cores"]) if v[0] == "leak"]
+        kinds = fit.get("coreKinds") or rec["base"]
+        allbad = [(v, k) for v, k in ((verdict([x * s for x in c], cp, o, hr), k) for c, k in zip(rec["cores"], kinds)) if v[0] == "leak"]
+        bad = [v for v, k in allbad if k in STRICT]  # #475: his face and spotted faces; the rest measured
+        rep["zoom_unspotted_not_hidden"] = rep.get("zoom_unspotted_not_hidden", 0) + sum(1 for _, k in allbad if k == "unspotted")
         if bad:
             fails.append(f"zoom {rec['photo'][-28:]}: {len(bad)} face cores not hidden in <stem>.full.jpg (first {bad[0][1]})")
         shutil.rmtree(png.parent, ignore_errors=True)
@@ -1719,7 +1876,8 @@ def check_kmeasure(ctx):
             o = resize(orig, cw, ch)
             s = cw / W
             hr = [[r[0] * cw, r[1] * ch, r[2] * cw, r[3] * ch] for r in (pr["result"].get("hidden") or [])]
-            bad = [v for v in (verdict([x * s for x in cc], cp, o, hr) for cc in pr["cores"]) if v[0] == "leak"]
+            bad = [v for v, k in ((verdict([x * s for x in cc], cp, o, hr), k) for cc, k in zip(pr["cores"], pr["kinds"]))
+                   if v[0] == "leak" and k in STRICT]  # #475
             if bad:
                 fails.append(f"people {stem[:12]} pick {c}: {len(bad)} face cores not hidden (first {bad[0][1]})")
             shutil.rmtree(png.parent, ignore_errors=True)
@@ -1835,6 +1993,18 @@ def soft_oval(w, h):
 def paste(canvas, patch, mask, x, y):
     """Paste with a mask, clipped to the canvas (PIL handles negative offsets)."""
     canvas.paste(Image.fromarray(patch), (int(round(x)), int(round(y))), mask)
+
+
+def mark_spotted(ctx, builds, d):
+    """(#475) Each pasted face: does the app's own detector spot it? Vision (main's driver, conf >= 0.5) on the build's own
+    tiles (`Prep.faceGrids`) of the built photo finds a face that is the pasted core (same_face)."""
+    if not builds:
+        return
+    tb = ctx.truth([b["file"] for b in builds], d, grids=tuple(build_grids(ctx)), mp=False)
+    for b in builds:
+        t = tb.get(b["file"])
+        for f in b["faces"]:
+            f["spotted"] = bool(t) and any(same_face(f["core"], v) for v in t["spot"])
 
 
 def eval_built(ctx, builds, d, label):
@@ -2011,6 +2181,7 @@ def check_built_small(ctx):
             base.save(f_, quality=95)
             builds.append({"file": str(f_), "host": no_kit(h["photo"]), "faces": faces, "mine": h["mine"], "him": h["main"]})
         try:
+            mark_spotted(ctx, builds, d)
             results += eval_built(ctx, builds, d, "small")
         except Crash as e:
             return [str(e)], {}
@@ -2018,7 +2189,7 @@ def check_built_small(ctx):
             for f in b["faces"]:
                 if f["caught"] == "missed":
                     for v in f["miss"][:1]:
-                        sheet.add(f"{f['kind'][:4]} {f['px']}px {f['where']}", v["path"], v["box"])
+                        sheet.add(f"{'SPOT' if f['spotted'] else 'unsp'} {f['kind'][:4]} {f['px']}px {f['where']}", v["path"], v["box"])
                 f.pop("miss", None)
             for v in b["his"][:1]:
                 sheet.add(f"HIS face {v['copy']}", v["path"], v["box"])
@@ -2030,19 +2201,24 @@ def check_built_small(ctx):
     faces = [f for b in results for f in b["faces"]]
     if len(results) < want:
         fails.append(f"(setup) built {len(results)} of {want} photos")
+    # #475 (founder, Nov 16): a stranger's face is hidden "when we spot them". Every pasted face the app's own detector
+    # spots (mark_spotted) is hidden, covered or refused (100%, any kind, size or edge); the rest is measured, not failed.
     stats = {}
     for kind in ("frontal", "profile"):
         for band in ("12-19", "20-31", "32-64"):
             fs = [f for f in faces if f["kind"] == kind and f["band"] == band]
             caught = [f for f in fs if f["caught"] != "missed"]
-            stats[f"{kind} {band}"] = {"faces": len(fs), "caught": len(caught), "refused": sum(1 for f in fs if f["caught"].startswith("refused"))}
-            if (kind == "frontal" or band == "32-64") and len(caught) < len(fs):
-                fails.append(f"{kind} {band} px: {len(fs) - len(caught)} of {len(fs)} pasted faces sent unhidden")
+            sp = [f for f in fs if f["spotted"]]
+            sp_miss = [f for f in sp if f["caught"] == "missed"]
+            stats[f"{kind} {band}"] = {"faces": len(fs), "caught": len(caught), "refused": sum(1 for f in fs if f["caught"].startswith("refused")),
+                                       "spotted": len(sp), "spotted_missed": len(sp_miss)}
+            if sp_miss:
+                fails.append(f"{kind} {band} px: {len(sp_miss)} of {len(sp)} pasted faces the app's detector spots sent unhidden")
     cut = [f for f in faces if f["edge"]]
-    cut_miss = [f for f in cut if f["caught"] == "missed"]
+    cut_miss = [f for f in cut if f["caught"] == "missed" and f["spotted"]]
     if cut_miss:
-        fails.append(f"{len(cut_miss)} of {len(cut)} pasted faces cut by the frame edge sent unhidden (hidden, covered or "
-                     f"refused, any kind or size, eyes in the frame or not: #471 D3), first {cut_miss[0]['kind']} {cut_miss[0]['px']} px {cut_miss[0]['variant']}")
+        fails.append(f"{len(cut_miss)} of {sum(1 for f in cut if f['spotted'])} spotted pasted faces cut by the frame edge sent unhidden, "
+                     f"first {cut_miss[0]['kind']} {cut_miss[0]['px']} px {cut_miss[0]['variant']}")
     for v in ("side", "eyesIn", "topEyesOut"):
         if not any(f["variant"] == v and f["edge"] for f in faces):
             fails.append(f"(setup) no '{v}' edge face was built")
@@ -2054,6 +2230,9 @@ def check_built_small(ctx):
         fails.append(f"copy errors: {errs[:3]}")
     prof = stats.get("profile 12-19", {}), stats.get("profile 20-31", {})
     rep = {"photos": len(results), "faces": len(faces), "by_kind_and_size": stats,
+           "spotted": {"faces": sum(1 for f in faces if f["spotted"]), "missed": sum(1 for f in faces if f["spotted"] and f["caught"] == "missed")},
+           "unspotted (measured, #475)": {"faces": sum(1 for f in faces if not f["spotted"]),
+                                          "sent_unhidden": sum(1 for f in faces if not f["spotted"] and f["caught"] == "missed")},
            "profile_12_31_share": round(sum(p.get("caught", 0) for p in prof) / max(1, sum(p.get("faces", 0) for p in prof)), 3),
            "edges": {"clipped": sum(1 for f in faces if f["edge"]), "two_in_one_tile": sum(1 for f in faces if f["where"] == "bg2"),
                      "by_variant": {v: [sum(1 for f in faces if f["variant"] == v), sum(1 for f in faces if f["variant"] == v and f["caught"] == "missed")]
@@ -2061,7 +2240,7 @@ def check_built_small(ctx):
                      "eyes_out_of_frame": sum(1 for f in faces if not f["eyesInFrame"]),
                      "busy": sum(1 for f in faces if f["busy"])},
            "refused_photos": sum(1 for b in results if b["status"] != "ok"), "sheet": sheet.finish(),
-           "eye": "a profile 12–31 px miss the eye calls readable fails this line (TASK.md → Review)",
+           "eye": "#475: unspotted misses are measured for the reviewer, not failed; his own face always fails",
            "photos_detail": results}
     return fails, rep
 
@@ -2190,6 +2369,7 @@ def check_mirror_panel(ctx):
                            "faces": [{"type": typ, "what": what, "side": "left" if left else "right", "panel": round(s, 2),
                                       "core": sc(vis_c), "px": round(vis_c[3] * g * upc, 1), "cutTop": core[1] < 0}]})
         try:
+            mark_spotted(ctx, builds, d)
             got = eval_built(ctx, builds, d, "panel")
         except Crash as e:
             return [str(e)], {}
@@ -2197,7 +2377,7 @@ def check_mirror_panel(ctx):
             for f in b["faces"]:
                 if f["caught"] == "missed":
                     for v in f["miss"][:1]:
-                        sheet.add(f"({f['type']}) {f['what'][:8]} {f['px']}px", v["path"], v["box"])
+                        sheet.add(f"({f['type']}) {'SPOT' if f['spotted'] else 'unsp'} {f['what'][:8]} {f['px']}px", v["path"], v["box"])
                 f.pop("miss", None)
             for v in b["his"][:1]:
                 sheet.add(f"HIS main face {v['copy']}", v["path"], v["box"])
@@ -2211,9 +2391,14 @@ def check_mirror_panel(ctx):
     for typ in ("a", "b", "c"):
         fs = [f for b in results for f in b["faces"] if f["type"] == typ]
         miss = [f for f in fs if f["caught"] == "missed"]
-        stats[typ] = {"faces": len(fs), "missed": len(miss), "refused": sum(1 for f in fs if f["caught"].startswith("refused"))}
-        if miss:
-            fails.append(f"({typ}) {len(miss)} of {len(fs)} panel faces sent unhidden (first {miss[0]['what']} {miss[0]['px']} px)")
+        stats[typ] = {"faces": len(fs), "missed": len(miss), "refused": sum(1 for f in fs if f["caught"].startswith("refused")),
+                      "spotted": sum(1 for f in fs if f["spotted"]), "spotted_missed": sum(1 for f in miss if f["spotted"])}
+        # #475: (c) is his own reflection: always 100%. (a) and (b) are strangers in the panel: 100% of those the app's
+        # detector spots; the rest measured.
+        strict = miss if typ == "c" else [f for f in miss if f["spotted"]]
+        if strict:
+            fails.append(f"({typ}) {len(strict)} of {len(fs) if typ == 'c' else stats[typ]['spotted']} "
+                         f"{'of his second reflections' if typ == 'c' else 'spotted panel faces'} sent unhidden (first {strict[0]['what']} {strict[0]['px']} px)")
     his = sum(b["his"] for b in results)
     if his:
         fails.append(f"his main reflection's face unhidden in {his} copies")
@@ -2282,8 +2467,8 @@ def ensure_cutouts(ctx, need=24):
 
 def check_missed_people(ctx):
     """A stranger the person detector misses (main's locate finds no one but him), head out of the frame, so no face for
-    the sweep to find: only the missed-people cover hides them. Every sent copy must have the stranger's outline grey
-    (≥ 80% of it), report coveredExtra ≥ 1, and never put more grey on his own outline than today."""
+    the sweep to find: only the missed-people cover hides them. Since #475 (strangers best effort) the cover is measured;
+    gated: at least 80% sent, and never more grey on his own outline than today."""
     try:
         ensure_cutouts(ctx)
     except Crash as e:
@@ -2373,17 +2558,21 @@ def check_missed_people(ctx):
     sent = [r for r in results if r["status"] == "ok"]
     if len(sent) < 0.8 * len(results):
         fails.append(f"only {len(sent)} of {len(results)} sent: the missed person is to be covered, not the photo refused")
+    # #475: a stranger whose head is out of the frame has no face to blur; covering them is best effort, so the cover is
+    # measured (coveredExtra, the share of their outline grey), not failed. His photo still has to be sent, and the cover
+    # must never land on him.
+    covered = 0
     for r in sent:
         lab = Path(r["host"]).stem[-14:]
-        if not isinstance(r.get("coveredExtra"), int) or r["coveredExtra"] < 1:
-            fails.append(f"{lab}: coveredExtra {r.get('coveredExtra')}, expected ≥ 1")
         g = [x or 0 for x in r["strangerGrey"]]
-        if min(g) < 0.8:
-            fails.append(f"{lab}: the missed stranger's outline is {g[0]:.0%} / {g[1]:.0%} grey in the upload / detail copy (≥ 80%)")
+        if isinstance(r.get("coveredExtra"), int) and r["coveredExtra"] >= 1 and min(g) >= 0.8:
+            covered += 1
         a, b2 = r["coverOnHim"]
         if b2 is not None and b2 > (a or 0) + 0.02:
             fails.append(f"{lab}: the grey cover lands on his own outline: {b2:.0%} of it grey, {a or 0:.0%} today")
-    return fails, {"photos": len(results), "built": tried, "sent": len(sent), "sheet": sheet.finish(), "detail": results}
+    return fails, {"photos": len(results), "built": tried, "sent": len(sent),
+                   "covered (coveredExtra >= 1 and >= 80% of the outline grey; measured, #475)": covered,
+                   "sheet": sheet.finish(), "detail": results}
 
 
 # ---------------------------------------------------------------- calibration of T (how the constant above was set)
