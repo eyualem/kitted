@@ -302,3 +302,15 @@ How the pass keeps that:
   - S5 (a blazer with gym shorts), where the color charge drops the quiet-accent case to 5.5.
 
 **Waiting on:** his re-rate (Y38) and his yes on the patterns. Then the fit runs again on the raw ratings and on the consistent key, and every bar re-runs with v15 alongside. The shorts-length look (T98's 56¢ round) is not in.
+
+**Update from the reading test's paid round** (T98, PR #126, commit 449b8e7a, $0.4137 spent there; $0 here):
+- **Shorts above the knee: a new charge, `shorts_above`.** It reads the October narrow look's `shorts_end` on the lower close-up, which got 43/48 right and 23/24 steady, with every above-the-knee answer right. It's a charge, never a cap, since its misses sit at knee length. His 24 shorts photos carry the answer.
+  - **Needs a new second look:** the app's `secondLook.ts` has no shorts question yet (about 0.16¢ a check, only when the reading names shorts).
+- **The long top reads the reading's `below_crotch` by default** (`long_top_read: "reading"`), since that's what the phone has. It catches about half and is rarely wrong. The body ruler stays an option (`"ruler"`) until it's on the phone. The AI's long-top question failed a third time.
+- **Unchanged:** leg width stays a graded charge, not a cap; roomy shorts (volume 4–5) keep their rule; bulk gets no rule.
+
+**Dry run again, raw ratings:**
+- **Fitted:** wide legs +0.5, a single lift at half, a hem over the shoe +0.5, roomy shorts +0.5, shorts above the knee −0.75, colors −0.5 each. Skinny, slim and plain shorts came out 0.
+- **Held-out half, 8 fresh splits:** **80.5% within a point** on average (78–84%), **r 0.62** (0.59–0.68); before the shorts look, 78% and 0.62. Within-a-point now just meets its bar; r is still short of 0.69.
+- **Every bar with these sizes** (`results/v16-taste/`): B2 6/6, B3 12/18, B4 misses H7 (by design) and S5, B5 gold 21.1 and his checks 28.1, B6 219/223, B1 on all 164 136/164 with r 0.62 (half of it tuned).
+- v16 with the switch off is still identical, and conformance passes 501/501.

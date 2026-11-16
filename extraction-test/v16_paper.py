@@ -427,6 +427,31 @@ def load_ruler():
     return out
 
 
+def load_shorts_end():
+    """The October narrow look's shorts length on his 24 shorts photos (T98's paid round, PR #126, run 0):
+    {photo key: "above_knee" / "at_knee" / "below_knee"}, keyed by C-id and by gold photo id."""
+    import csv
+    import subprocess
+    f = HERE / "results/proportions-looks1/raw.json"
+    try:
+        txt = f.read_text() if f.exists() else subprocess.run(
+            ["git", "show", f"{RULER_REF}:extraction-test/results/proportions-looks1/raw.json"],
+            capture_output=True, text=True, check=True, cwd=HERE).stdout
+    except (subprocess.CalledProcessError, OSError):
+        return {}
+    out = {r["photo"]: r["json"].get("shorts_end") for r in json.loads(txt)
+           if r.get("arm") == "shorts" and r.get("run") == 0 and isinstance(r.get("json"), dict)}
+    try:
+        g2p = {m["gid"]: m["photo"] for m in json.load(open(H.DATA / "inputs/gold-judge/manifest.json"))}
+        for r in csv.DictReader(open(F4 / ".mapping/mapping.csv")):
+            p = g2p.get(r["gold_id"])
+            if p and r["id"] in out:
+                out.setdefault(p, out[r["id"]])
+    except OSError:
+        pass
+    return out
+
+
 def rated_pool(runs, founder, f4, rows):
     """Every photo he rated that has a reading, under one key: the gold photo id (stored Oct 12 reading, the Nov 15
     looks) or the sheet's C-id (the Nov 16 reading and looks). Returns {key: (his score, group, reading, look|None)}."""
@@ -442,10 +467,17 @@ def rated_pool(runs, founder, f4, rows):
     for c, (sheet, score, _, _) in rows.items():
         if c in rated:
             pool[c] = (score, "sheet 2" if sheet == "sheet2" else "the 20 new", rated[c][0], rated[c][1])
-    ruler = load_ruler()
-    for k, v in list(pool.items()):                                    # the long-top ruler rides with the second look
-        if k in ruler and v[3] is not None:                            # (read only by the taste rules)
-            pool[k] = (v[0], v[1], v[2], {**v[3], "long_top": ruler[k]})
+    ruler, shorts = load_ruler(), load_shorts_end()
+    for k, v in list(pool.items()):                                    # the long-top ruler and the shorts look ride with
+        if v[3] is None:                                               # the second look (read only by the taste rules)
+            continue
+        extra = {}
+        if k in ruler:
+            extra["long_top"] = ruler[k]
+        if k in shorts:
+            extra["shorts_end"] = shorts[k]
+        if extra:
+            pool[k] = (v[0], v[1], v[2], {**v[3], **extra})
     return pool
 
 

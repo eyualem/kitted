@@ -29,10 +29,10 @@ import hoodie_layer_paper as H  # noqa: E402
 
 OUT = HERE / "results" / "taste1"
 SEED = 20261116
-FIXED = {"lift_off": ["L3", "L5", "L7b"], "h7_tip": True, "long_top": 0.5}
+FIXED = {"lift_off": ["L3", "L5", "L7b"], "h7_tip": True, "long_top": 0.5, "long_top_read": "reading"}
 GRID = {"leg_skinny": [0, 0.5, 1.0, 1.5], "leg_slim": [0, 0.25, 0.5, 0.75, 1.0], "leg_wide": [0, 0.25, 0.5, 0.75],
         "one_lift": [1.0, 0.75, 0.5, 0.0], "hem_plus": [0, 0.25, 0.5], "shorts": [0, 0.25, 0.5],
-        "shorts_wide": [0, 0.25, 0.5], "color": [0, 0.25, 0.5]}
+        "shorts_wide": [0, 0.25, 0.5], "shorts_above": [0, 0.25, 0.5, 0.75], "color": [0, 0.25, 0.5]}
 
 
 def stats(xs, hv):
@@ -96,7 +96,7 @@ def main():
     say(f"His taste rules, fitted on half A, tested on the held-out half B ({'his consistent key' if consistent else 'his raw ratings'}; "
         f"{len(ks)} photos: A {len(A)}, B {len(B)}; seed {SEED})")
     say("Fitted sizes: " + ", ".join(f"{k} {T[k]}" for k in GRID) + f"; fixed: lifts off {', '.join(FIXED['lift_off'])}, "
-        f"the pooling cap a tip, the long top {FIXED['long_top']}")
+        f"the pooling cap a tip, the long top {FIXED['long_top']} (read: {FIXED['long_top_read']})")
     for name, half in (("A (fitted on it)", A), ("B (held out: the honest number)", B), ("all", ks)):
         hv = [his[k] for k in half]
         say(f"  half {name}:")

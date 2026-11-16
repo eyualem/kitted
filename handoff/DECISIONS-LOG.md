@@ -3255,3 +3255,9 @@ Contradictions settled and decisions changed during the build. Newest last.
       - A dealbreaker cap owns the taste charges, as it owns its part charges.
     - **Dry run, raw ratings, held-out half:** 78% within a point and r 0.62 on average over 8 random splits (73–85%, 0.57–0.68); v15 about 76% and 0.53, v16 about 73% and 0.45. Better than both, short of the bar (80%, 0.69). B2 6/6, B3 12/18, B6 219/223; B4 misses H7 (by design) and S5 (color charge); B5 worse.
     - **Lesson:** I changed the engine after looking at the held-out half (the cap fix, made for B4), and that half's number jumped from 78% to 84%. Once a test set has influenced a change it isn't clean, so the trustworthy figure is the average over fresh splits.
+
+474. **The taste rules take the shorts-length look and use the reading's long-top stand-in (T68 round 3, Nov 16, $0 here; T98's paid round, $0.4137, PR #126).**
+    - **New charge `shorts_above`:** shorts above the knee, read by the October narrow look's `shorts_end` (43/48 right, 23/24 steady). A charge, not a cap. It needs a shorts question added to the app's second looks before it can ship.
+    - **The long top** reads the reading's `below_crotch` by default (on the phone today); the body ruler is an option until it's on the phone.
+    - **Dry run, raw ratings, held-out half over 8 fresh splits:** 80.5% within a point, r 0.62. The fitted shorts charge is 0.75. Still short of the r bar (0.69). v16 with the switch off is unchanged.
+    - **Claude's call:** the shorts-length answer joins the second-look dict per photo, so the engine reads every per-photo extra (looks, ruler, shorts) the same way, and only the taste rules look at them.

@@ -7,6 +7,7 @@
   ],
   "h7_tip": true,
   "long_top": 0.5,
+  "long_top_read": "reading",
   "leg_skinny": 0,
   "leg_slim": 0,
   "leg_wide": 0.5,
@@ -14,6 +15,7 @@
   "hem_plus": 0.5,
   "shorts": 0,
   "shorts_wide": 0.5,
+  "shorts_above": 0.75,
   "color": 0.5
  },
  "key": "raw",

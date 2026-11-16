@@ -1883,8 +1883,12 @@ def _v16_taste(o, sl_raw, lifts, caps, t):
       leg_skinny, leg_slim, leg_wide   leg width, graded (his means: skinny 5.4, slim 6.2, straight 6.8, wide 8.3)
       shorts, shorts_wide   shorts cost a little; roomy shorts (volume 4-5, read clean 9/13) win some back
       color      each color beyond neutrals and denim, up to two
-      long_top   an untucked top with no jacket that ends low: the body ruler (second_look["long_top"]) where it
-                 measured, else the reading's below_crotch (half a point at most: a low base rate, never a cap)"""
+      shorts_above  shorts that end above the knee (the October narrow look, second_look["shorts_end"]; 43/48 right,
+                 23/24 steady on his shorts; not in the app's second looks yet): a charge, never a cap
+      long_top   an untucked top with no jacket that ends low, half a point at most (a low base rate, never a cap).
+                 long_top_read "reading" (default, what the phone has): the reading's below_crotch (catches about half,
+                 rarely wrong); "ruler": the Mac's body ruler (second_look["long_top"]) where it measured, else the
+                 reading (not on the phone yet)"""
     T = t.get("taste")
     if not T:
         return lifts, caps, []
@@ -1904,6 +1908,8 @@ def _v16_taste(o, sl_raw, lifts, caps, t):
             items.append((-T["shorts"], "T_shorts", "shorts"))
         if T.get("shorts_wide") and (B.get("volume") or 3) >= 4:
             items.append((T["shorts_wide"], "T_shorts_wide", "roomy shorts"))
+        if T.get("shorts_above") and (sl_raw or {}).get("shorts_end") == "above_knee":
+            items.append((-T["shorts_above"], "T_shorts_above", "shorts above the knee"))
     elif B is not None:
         size = {"skinny": -T.get("leg_skinny", 0.0), "slim": -T.get("leg_slim", 0.0),
                 "relaxed": T.get("leg_wide", 0.0), "wide": T.get("leg_wide", 0.0)}.get(leg, 0.0)
@@ -1919,7 +1925,7 @@ def _v16_taste(o, sl_raw, lifts, caps, t):
     if T.get("long_top") and not o["outers"] and o["tops"]:
         top = o["tops"][0]
         if top.get("tucked") not in ("full", "front", "half"):
-            ruler = (sl_raw or {}).get("long_top")
+            ruler = (sl_raw or {}).get("long_top") if T.get("long_top_read") == "ruler" else None
             long_ = ruler if ruler is not None else top.get("length") == "below_crotch"
             if long_:
                 items.append((-T["long_top"], "T_long_top", "the top ends low"))
