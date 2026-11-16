@@ -3218,7 +3218,7 @@ Contradictions settled and decisions changed during the build. Newest last.
 - **Main's path is covered too:** the phone runs main, whose whole-photo blur can catch a large print. Tests include a built large print that main's `locate` hides.
 - **No change to `specs.md` or to T96's locked lines.** The re-scope ("Your face is always blurred before anything is sent; if we can't find it, nothing is sent. Other faces are blurred when we spot them; faces printed on clothes aren't.") waits on his yes. If a T96 line goes red only because of a correctly left-alone print, that's a dispute, not a change.
 
-476. **T96 re-scoped to the founder's new privacy rule (Nov 16).** The founder's "Yes, change it" (#475, on the radar-scoring branch) approved this wording: "Your face is always blurred before anything is sent; if we can't find it, nothing is sent. Other faces are blurred when we spot them; faces printed on clothes aren't."
+477. **T96 re-scoped to the founder's new privacy rule (Nov 16).** The founder's "Yes, change it" (#475, on the radar-scoring branch) approved this wording: "Your face is always blurred before anything is sent; if we can't find it, nothing is sent. Other faces are blurred when we spot them; faces printed on clothes aren't."
 - **The test writer re-locked T96** (tests `050a2583`, Lock `6a916e4b`). Each face core is now one of four kinds:
   - **his** (always strict): his head, his reflection, and his second mirror reflection.
   - **spotted** (strict): a face the app's own tile pass finds. It must be hidden.
