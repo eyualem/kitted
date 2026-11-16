@@ -97,7 +97,7 @@ The `why.*` and `pwhy.*` keys, the Why sheet and the parts strip are being repla
 
 **No, for a rewording. Here is why, from the code:**
 - `CONSENT_VERSION = '2'` (`app/src/features/onboarding/complete.ts:26`), saved in the profile with the date when he agrees. Its doc comment says "a changed text asks again".
-- The gates: `mayUpload` (`wipe.ts:24`) accepts any saved version; `mayAsk` (`wipe.ts:34`) needs `Number(consentVersion) >= QUESTIONS_CONSENT_FROM` (2). `QUESTIONS_CONSENT_FROM` is why #329 bumped to 2: questions started going to a *new company* (OpenAI), so people who had agreed to Google only had to agree again.
+- The gates: `mayUpload` (`wipe.ts:28`) accepts any saved version; `mayAsk` (`wipe.ts:34`) needs `Number(consentVersion) >= QUESTIONS_CONSENT_FROM` (2). `QUESTIONS_CONSENT_FROM` is why #329 bumped to 2: questions started going to a *new company* (OpenAI), so people who had agreed to Google only had to agree again.
 - **A bump to '3' alone would change nothing for existing users**: version 2 still passes both gates. To re-ask everyone you would also raise `QUESTIONS_CONSENT_FROM` and `mayUpload`'s check. That is a bigger change than a rewording needs.
 - **Precedent:** the `en.ts` comment above the consent keys says height and build were dropped in #375: "less is sent, so the version stays 2". The same logic applies: the rule is **a new recipient, new kind of data, or longer retention bumps the version; the same data to the same kinds of recipients with different words does not.**
 - Someone who agreed to version 2 already agreed to a *more specific* text (named companies); the generic text is a subset of what they accepted, and nothing new is sent. I'd record that in DECISIONS-LOG when it ships.
