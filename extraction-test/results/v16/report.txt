@@ -394,37 +394,58 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
     H7 a 6.5 hold, not a 5.5 sink        steady 215/223  worst band gap 15.7  r with the panel 0.557  his 20: within 1 16/20, r 0.403
     H7 a 6.5 hold + no peek under a jacket steady 216/223  worst band gap 16.4  r with the panel 0.568  his 20: within 1 16/20, r 0.403
 
-== B1 on the full set: his 150 (Nov 16): 54 are gold photos with stored readings; 96 (sheet 2 and the new 20) have no reading yet ==
+== B1 on the full set: his 150 (Nov 16): 144 with a reading (left out: C001, C013, C032, C064, C071, C140, heads already under a mosaic block, so the prep sends nothing), plus his first 20 ==
   his 150, by band  3-4.5  0.0%  5-5.5 14.7%  6-6.5 34.7%  7-7.5 20.0%  8-8.5 21.3%  9-9.5  9.3%   mean 6.95
   his first 20 (20):
-    v15                                within 1 17/20 ( 85%)  r 0.457  mean 6.92 (his 6.60)
-    v16 (stored readings)              within 1 15/20 ( 75%)  r 0.326  mean 6.90 (his 6.60)
-    v16 with the looks (his marks)     within 1 16/20 ( 80%)  r 0.448  mean 6.80 (his 6.60)
-    v16 looks, H7 hold + jacket peek free within 1 16/20 ( 80%)  r 0.403  mean 6.85 (his 6.60)
-    the AI panel                       within 1 16/20 ( 80%)  r 0.694  mean 6.50 (his 6.60)
-  sheet 1 of the 150 (gold photos) (54):
-    v15                                within 1 41/54 ( 76%)  r 0.619  mean 7.20 (his 7.43)
-    v16 (stored readings)              within 1 42/54 ( 78%)  r 0.639  mean 7.43 (his 7.43)
-    v16 with the looks (his marks)     within 1 41/54 ( 76%)  r 0.577  mean 7.33 (his 7.43)
-    v16 looks, H7 hold + jacket peek free within 1 41/54 ( 76%)  r 0.617  mean 7.37 (his 7.43)
-    the AI panel                       within 1 47/54 ( 87%)  r 0.812  mean 7.16 (his 7.43)
-  all rated with readings (74):
-    v15                                within 1 58/74 ( 78%)  r 0.599  mean 7.13 (his 7.20)
-    v16 (stored readings)              within 1 57/74 ( 77%)  r 0.605  mean 7.28 (his 7.20)
-    v16 with the looks (his marks)     within 1 57/74 ( 77%)  r 0.581  mean 7.19 (his 7.20)
-    v16 looks, H7 hold + jacket peek free within 1 57/74 ( 77%)  r 0.603  mean 7.23 (his 7.20)
-    the AI panel                       within 1 63/74 ( 85%)  r 0.795  mean 6.98 (his 7.20)
-B1 (all 74 with readings) within 1 on 8 in 10 (57/74) and r >= 0.69 (0.605): FAIL
+    v15                                    within 1  17/20 ( 85%)  r 0.457  mean 6.92 (his 6.60)
+    v16 (no second looks)                  within 1  15/20 ( 75%)  r 0.326  mean 6.90 (his 6.60)
+    v16 with the looks (his marks)         within 1  16/20 ( 80%)  r 0.448  mean 6.80 (his 6.60)
+    v16 looks, H7 hold + jacket peek free  within 1  16/20 ( 80%)  r 0.403  mean 6.85 (his 6.60)
+    the AI panel                           within 1  16/20 ( 80%)  r 0.694  mean 6.50 (his 6.60)
+  sheet 1 (gold photos) (54):
+    v15                                    within 1  41/54 ( 76%)  r 0.619  mean 7.20 (his 7.43)
+    v16 (no second looks)                  within 1  42/54 ( 78%)  r 0.639  mean 7.43 (his 7.43)
+    v16 with the looks (his marks)         within 1  41/54 ( 76%)  r 0.577  mean 7.33 (his 7.43)
+    v16 looks, H7 hold + jacket peek free  within 1  41/54 ( 76%)  r 0.617  mean 7.37 (his 7.43)
+    the AI panel                           within 1  47/54 ( 87%)  r 0.812  mean 7.16 (his 7.43)
+  sheet 2 (71):
+    v15                                    within 1  53/71 ( 75%)  r 0.455  mean 6.90 (his 6.71)
+    v16 (no second looks)                  within 1  50/71 ( 70%)  r 0.308  mean 6.94 (his 6.71)
+    v16 with the looks (his marks)         within 1  50/71 ( 70%)  r 0.209  mean 6.87 (his 6.71)
+    v16 looks, H7 hold + jacket peek free  within 1  49/71 ( 69%)  r 0.266  mean 6.92 (his 6.71)
+  the 20 new (19):
+    v15                                    within 1  13/19 ( 68%)  r 0.208  mean 7.32 (his 6.58)
+    v16 (no second looks)                  within 1  13/19 ( 68%)  r 0.225  mean 7.45 (his 6.58)
+    v16 with the looks (his marks)         within 1  13/19 ( 68%)  r 0.225  mean 7.45 (his 6.58)
+    v16 looks, H7 hold + jacket peek free  within 1  13/19 ( 68%)  r 0.225  mean 7.45 (his 6.58)
+  all 150 with a reading (144):
+    v15                                    within 1 107/144 ( 74%)  r 0.517  mean 7.07 (his 6.96)
+    v16 (no second looks)                  within 1 105/144 ( 73%)  r 0.487  mean 7.19 (his 6.96)
+    v16 with the looks (his marks)         within 1 104/144 ( 72%)  r 0.415  mean 7.12 (his 6.96)
+    v16 looks, H7 hold + jacket peek free  within 1 103/144 ( 72%)  r 0.456  mean 7.16 (his 6.96)
+    the AI panel                           within 1  47/54 ( 87%)  r 0.812  mean 7.16 (his 7.43)
+  everything he rated (164):
+    v15                                    within 1 124/164 ( 76%)  r 0.513  mean 7.05 (his 6.92)
+    v16 (no second looks)                  within 1 120/164 ( 73%)  r 0.475  mean 7.16 (his 6.92)
+    v16 with the looks (his marks)         within 1 120/164 ( 73%)  r 0.424  mean 7.08 (his 6.92)
+    v16 looks, H7 hold + jacket peek free  within 1 119/164 ( 73%)  r 0.456  mean 7.12 (his 6.92)
+    the AI panel                           within 1  63/74 ( 85%)  r 0.795  mean 6.98 (his 7.20)
+B1 (all 164 rated photos with a reading, v16) within 1 on 8 in 10 (120/164) and r >= 0.69 (0.475): FAIL
+  v16's own shares on his 150 with a reading  3-4.5  0.0%  5-5.5  6.9%  6-6.5 16.7%  7-7.5 48.6%  8-8.5 27.8%  9-9.5  0.0%   (his: above)
 
-== The Y34 taste calls against his ratings (74 rated photos with readings; his mean 7.20) ==
-  1. nothing off, nothing chosen (v16 shows 7.0) (9): his mean 7.39 (6.5 or under 4, 7+ 5); v16 6.94; panel 7.06
-  2. slides out of the house (SK1) (4): his mean 6.12 (6.5 or under 2, 7+ 2); v16 5.88; panel 5.38
-     slides by description on sheet 2 and the new 20 (no reading): 2, his mean 6.00 (6, 6)
-  3. one accent (L5) the only lift (8): his mean 6.12 (6.5 or under 6, 7+ 2); v16 6.88; panel 6.31
-     no lift at all (20): his mean 6.60 (6.5 or under 12, 7+ 8); v16 6.38; panel 6.30
-  4. pants pile on the shoe (H7, with looks) (3): his mean 6.83 (6.5 or under 2, 7+ 1); v16 5.50; panel 6.67
-  5. a top clearly below the outer piece (with looks) (5): his mean 7.50 (6.5 or under 2, 7+ 3); v16 6.60; panel 7.10
-     ... under a jacket or coat (1): his mean 6.50 (6.5 or under 1, 7+ 0); v16 5.50; panel 7.00
-     ... under anything else (4): his mean 7.75 (6.5 or under 1, 7+ 3); v16 6.88; panel 7.12
+== The Y34 taste calls against his ratings (164 rated photos with a reading; his mean 6.92) ==
+  1. nothing off, nothing chosen (v16 shows 7.0) (27): his mean 7.46 (6.5 or under 8, 7+ 19); v16 7.02; panel 7.06 (9)
+  2. slides out of the house (SK1) (8): his mean 6.38 (6.5 or under 5, 7+ 3); v16 5.94; panel 5.38 (4)
+  3. one accent (L5) the only lift (18): his mean 6.11 (6.5 or under 14, 7+ 4); v16 7.00; panel 6.31 (8)
+     L5 among other lifts (15): his mean 7.57 (6.5 or under 6, 7+ 9); v16 8.07; panel 7.78 (9)
+     no lift at all (57): his mean 6.77 (6.5 or under 30, 7+ 27); v16 6.50; panel 6.30 (20)
+     one lift, not L5 (51): his mean 6.79 (6.5 or under 27, 7+ 24); v16 7.26; panel 6.83 (21)
+     two or more lifts (38): his mean 7.68 (6.5 or under 10, 7+ 28); v16 8.07; panel 7.86 (25)
+  4. pants pile on the shoe (H7, with looks) (5): his mean 7.40 (6.5 or under 2, 7+ 3); v16 5.50; panel 6.67 (3)
+     the look says the hem mostly covers the shoe (any leg) (26): his mean 7.96 (6.5 or under 4, 7+ 22); v16 7.31; panel 7.40 (21)
+  5. a top clearly below the outer piece (with looks) (8): his mean 7.31 (6.5 or under 4, 7+ 4); v16 6.62; panel 7.10 (5)
+     ... under a jacket or coat (4): his mean 6.88 (6.5 or under 3, 7+ 1); v16 6.38; panel 7.00 (1)
+     ... under anything else (4): his mean 7.75 (6.5 or under 1, 7+ 3); v16 6.88; panel 7.12 (4)
+     the top shows a little (costs nothing today) (16): his mean 7.66 (6.5 or under 3, 7+ 13); v16 7.50; panel 7.56 (8)
 
 8 BAR CHECK(S) FAIL (the bars are judged on the stored readings; round 2 above is reported beside them)

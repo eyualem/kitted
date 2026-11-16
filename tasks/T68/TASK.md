@@ -144,3 +144,41 @@ He rated all 150 photos on the combined sheet (`inputs/gold-judge/founder4/`). T
 - **Prep comes first:** face-hidden copies and close-ups made on the Mac with the app's own prep, $0. Photos the prep refuses are not read.
 
 **The read of the unread rated photos (Nov 16; script `extraction-test/rated_read.py`).** The app's own prep ran on his sheet's face-hidden copies, since the originals were deleted after face hiding: 90 of the 96 are ready, about $1.01 for one run (stop at $1.25). **Six are left out of the read and of B1: C001, C013, C032, C064, C071, C140.** Each head is already covered by a big mosaic block (likely from when the rating sheet was built), so the app finds no head and sends nothing. That is the privacy rule working as intended, not a print on the clothes fooling it; the face-hiding session checked each by eye and with main's prep. B1's full set is therefore at most 144 of his 150 (74 checked so far). **Status:** not run, $0 spent. The paid call was blocked by this session's permission check (the OK reached this session through the coordinating session); it waits on the founder's OK typed here.
+
+**Done (Nov 16): the read ran in the coordinating session after the founder's OK there ("you have my okay").** **Spent: $0.9013** (thinking tokens counted), under the $1.25 stop: a 2-photo pilot of 2.06¢, then the rest. All 270 calls answered (90 photos × the scoring call + two looks), 0 errors. Answers: `extraction-test/results/rated1/raw.json`. Thinking averaged 5 tokens on the scoring call and 253–272 on the looks.
+
+## B1 and the Y34 calls on everything he rated (Nov 16; `results/v16/report.txt`; $0 beyond the read)
+
+Ratings checked: 144 of the 150 with a reading (the six with covered heads left out), plus his first 20, **164 in all**. Gold photos use their stored Oct 12 readings; sheet 2 and the new photos use the Nov 16 reading. Each photo is read once, on a cool day, at Everyday, with the test profile.
+
+**B1: FAIL.**
+
+| Group | v15 | **v16** | v16 + the looks | The AI panel |
+|---|---|---|---|---|
+| His first 20 | 17/20, r 0.46 | 15/20, r 0.33 | 16/20, r 0.45 | 16/20, r 0.69 |
+| Sheet 1 (gold, 54) | 41/54, r 0.62 | 42/54, r 0.64 | 41/54, r 0.58 | 47/54, r 0.81 |
+| Sheet 2 (71) | 53/71, r 0.46 | 50/71, r 0.31 | 50/71, r 0.21 | n/a |
+| The new 20 (19 read) | 13/19, r 0.21 | 13/19, r 0.23 | 13/19, r 0.23 | n/a |
+| **All 164** | 124/164 (76%), r 0.51 | **120/164 (73%), r 0.48** | 120/164, r 0.42 | 63/74, r 0.80 |
+
+- **On the full set, v16 is slightly further from him than v15** (73% vs 76% within a point, r 0.48 vs 0.51). It is ahead only on the gold photos.
+- **v16 runs high on the photos read Nov 16.** On the new 20 it averages 7.45 against his 6.58.
+- **Adding the second looks makes it worse** (r 0.42).
+- **The AI panel is still the closest to him** (r 0.80 on the 74 it judged).
+- His notes point at what neither engine reads: tight legs, long or bulky tops, shorts. That missing information is the gap, not the curve or the caps.
+
+**The five Y34 calls, on all 164** (his mean 6.92):
+
+1. **Plain basics:** 27 photos where v16 sees nothing off and nothing chosen. He averages **7.46**, with 19 of 27 at 7 or more. *Keep 7* (holds; if anything he rates these a bit higher).
+2. **Slides out of the house:** 8 photos. He averages **6.38**, and v16 gives 5.94. *Keep a charge, about half a point smaller* (changed: v16 is a little harsher than him).
+3. **One accent (L5) as the only lift:** 18 photos. He averages **6.11**, *below* his no-lift photos (6.77); v16 gives them 7.00. *Drop L5 as a lift* (holds, more strongly).
+   - A single lift of any other kind (6.79) also scores no higher with him than no lift.
+   - Only two or more lifts track him (7.68).
+4. **Pants pile on the shoe:** H7 fires on 5 photos. He averages **7.40**, and v16 caps them at 5.5. On all 26 photos where the look says the hem mostly covers the shoe, he averages **7.96**. *Make H7 a tip with no points until a steadier read exists* (changed: was "a 6.5 hold"; his ratings don't support any cost).
+5. **A top below the outer piece:**
+   - **Clearly:** 8 photos, he averages **7.31**, above his mean.
+   - **Under a jacket:** 4 photos, 6.88.
+   - **Showing a little** (free today): 16 photos, 7.66.
+   - *Make the peek a tip, no points, and never cancel the layering lift* (changed: was "keep your 0.5"). His C013 note ("the inner layer sitting higher would have given it a better rating") was on a photo the prep couldn't read, so it is a single word against 8 photos.
+
+All five stay his calls; the engine keeps his marks until he answers.
