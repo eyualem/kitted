@@ -3217,3 +3217,13 @@ Contradictions settled and decisions changed during the build. Newest last.
   - A person held against his chest whom no detector separates is read as a print: an accepted risk under his "the literal user" rule.
 - **Main's path is covered too:** the phone runs main, whose whole-photo blur can catch a large print. Tests include a built large print that main's `locate` hides.
 - **No change to `specs.md` or to T96's locked lines.** The re-scope ("Your face is always blurred before anything is sent; if we can't find it, nothing is sent. Other faces are blurred when we spot them; faces printed on clothes aren't.") waits on his yes. If a T96 line goes red only because of a correctly left-alone print, that's a dispute, not a change.
+
+476. **T96 re-scoped to the founder's new privacy rule (Nov 16).** The founder's "Yes, change it" (#475, on the radar-scoring branch) approved this wording: "Your face is always blurred before anything is sent; if we can't find it, nothing is sent. Other faces are blurred when we spot them; faces printed on clothes aren't."
+- **The test writer re-locked T96** (tests `050a2583`, Lock `6a916e4b`). Each face core is now one of four kinds:
+  - **his** (always strict): his head, his reflection, and his second mirror reflection.
+  - **spotted** (strict): a face the app's own tile pass finds. It must be hidden.
+  - **unspotted** (measured and reported, never failed): side-on and edge faces of strangers, strangers no detector sees, the dark audience rows.
+  - **print** (excused): only when the build lists it in `prints` and it lies on his torso band.
+- **What didn't change:** no regression against main, false refusals, the re-check refusal, the purge and the timing.
+- **On the round-3 build with T96s stubs, `--quick` passes all 11 lines.** The planted bugs still bite: dropping the tile pass fails the leak set and the built faces, and listing his head as a print fails no regression.
+- **What this closes:** T96's "stuck" lines were all unspotted stranger faces. No YuNet; the face-model branch stays unmerged as a record.
