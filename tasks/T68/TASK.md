@@ -249,3 +249,11 @@ The data: 164 rated photos with a reading, his 13 notes, and the reading's facts
 - **The consistent key** = his re-rated score where he re-rated, his original elsewhere. His earlier `ratings.csv` files are never written, and nothing is smoothed toward any engine.
 
 **Next, once he has rated and confirmed the patterns:** the new rules in v16, fitted on a random half of the photos and tested on the other half (the held-out half is the honest number). Then every bar re-run on the raw ratings and on the consistent key, with v15 alongside. Rules that need a read the AI doesn't give yet (tight legs, top length, bulk) go in as waiting on a read.
+
+**His clarification (Nov 16):** "When I say "fix my scores," by the way, the low ones should still stay low, and the high ones should still stay high. I just want consistency."
+
+How the pass keeps that:
+- **Flags come from disagreement, never extremeness.** A pair is flagged because two near-identical outfits disagree, and a single photo because it sits 2+ points from his own most similar outfits. The 9 flagged span his range (5.5, 5.5, 6, 7, 7.5, 7.5, 8.5, 8.5, 9.5), high and low alike.
+- **A flag only puts a photo on the sheet.** His blind re-rate decides the score; nothing is averaged or pulled toward the middle.
+- **The check** (`extraction-test/consistent_key.py`, results `results/taste1/key_report.txt`): the key's band shares sit beside his raw ones. Every band must stay within 3 points, or the key isn't used until he has seen it. Today his raw shares (164 photos) are 0 / 15.9 / 33.5 / 22.6 / 19.5 / 8.5%, range 5–9.5.
+- **His 10 repeats measure his own drift on a second look.** That includes whether high and low scores drift toward the middle, so a move inside his noise isn't called a fix.

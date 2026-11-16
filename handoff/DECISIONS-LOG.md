@@ -3239,3 +3239,9 @@ Contradictions settled and decisions changed during the build. Newest last.
       - The sheet has 19 photos: 9 flagged and 10 repeats, 2 per score band.
       - His original ratings are never written. The consistent key = his re-rated score where he re-rated, his original elsewhere, never smoothed toward an engine (that would be circular).
     - **Lesson:** a pattern that looks strong on its own can be a passenger. Low clean sneakers looked like a −0.5 until leg shape was held fixed, and then the difference vanished. Check the obvious confounder before writing a rule.
+
+472. **The consistency pass keeps his range (Nov 16; the founder: "the low ones should still stay low, and the high ones should still stay high. I just want consistency").**
+    - The consistent key takes his blind re-rate where he gave one and his original elsewhere. Nothing is averaged, smoothed or pulled toward the middle.
+    - Flags come from two near-identical outfits disagreeing, or a score 2+ from his own similar outfits, never from a score being extreme.
+    - `extraction-test/consistent_key.py` reports his raw and the key's band shares side by side. The key is used only if every band stays within 3 points (Claude's tolerance for "a few"). His 10 repeats measure his own drift, including any pull toward the middle.
+    - **Lesson:** a re-rate can regress to the mean on its own: extreme scores drift toward the middle on a second look even with no real change in taste. Repeats of unflagged photos show the size of that drift, so it isn't mistaken for a fix.
