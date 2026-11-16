@@ -36,12 +36,12 @@ Guys who aren't into fashion don't know if an outfit works or what one change wo
 
 ## How a fit check works
 **"The AI sees, the code judges, the AI explains."**
-1. **On the phone:** fix orientation, strip location data, check quality. His photo is saved as he took it. A copy with every face blurred is made for sending; if the head can't be found, nothing is sent.
+1. **On the phone:** fix orientation, strip location data, check quality. His photo is saved as he took it. A copy with his face blurred is made for sending; if his head can't be found, nothing is sent. Other people's faces are blurred when the app spots them (not guaranteed); faces printed on clothes aren't blurred. (Founder, Nov 16.)
 2. **The vision model** (Gemini, behind `ReadingSource`) only describes the clothes. It never gives a number.
 3. **The code** (`@kitted/core`, matching the Python engine in `extraction-test/` exactly) computes every score and number. Same photo, same score. The rules in plain words: `rubric/v5-styles.md`.
 4. **The text model** puts the result into words. Every number it says is checked against the computed one.
 
-**Score words**, always with the number, never color alone: 5.5 and under Needs a fix · 6–6.5 Getting there · 7–7.5 Put together · 8–8.5 Sharp · 9+ Dialed in.
+**Score words**, always with the number, never color alone: 3–4.5 its own word (to be picked; the card advises a redo, not one fix) · 5–5.5 Needs a fix · 6–6.5 Getting there · 7–7.5 Put together · 8–8.5 Sharp · 9–9.5 Dialed in. Scores run from 3 to 9.5; 10 is never given. (Founder, Nov 13–14, #464.)
 
 ## Core flows
 
@@ -202,7 +202,7 @@ About 15 named events to PostHog (e.g. first check, re-check went up, free check
 | Purchase fails | nothing charged | F10.5 |
 | A screen crashes | data safe | "Something went wrong." … "Your fits and closet are safe on this phone." |
 
-**Never:** a face sent unblurred; his name sent to an AI; a score from the AI; a number in Kit's words that the code didn't compute; a result blurred or charged for; a photo on our server without the backup switch on; anything said about his body.
+**Never:** his face sent unblurred; his name sent to an AI; a score from the AI; a number in Kit's words that the code didn't compute; a result blurred or charged for; a photo on our server without the backup switch on; anything said about his body.
 
 ## Interfaces
 Tabs (iOS 26 glass tab bar, always labeled): **Stylist** (the chat, home) · **Closet** · **Lookbook** · **You**. Do things in Stylist; look at things in the other tabs. Screens and copy: `handoff/02-screens.md` and `mockups/kitted-mockups.html` (the mockups win on layout and copy unless a spec says why).
