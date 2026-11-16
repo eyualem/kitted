@@ -372,6 +372,7 @@ enum Waist {
   static func run(_ img: CGImage) -> (json: [String: Any], joints: [String: Ruler.Joint], hide: [CGRect], geo: Geo?, rgb: Measure.RGB?) {
     let t0 = CFAbsoluteTimeGetCurrent()
     applyOverrides()
+    Ruler.applyOverrides() // RULER_JOINT_MIN / RULER_HIP_MIN reach the waist ruler too (T98: face-hidden copies lower joint confidence)
     var located = Prep.locate(img)
     // Harness only: WAIST_PICK=i scores candidate i of a two-person photo, as the app does after "Which one is you?".
     if located.status == "multiplePeople", let i = ProcessInfo.processInfo.environment["WAIST_PICK"].flatMap(Int.init), i < located.candidates.count {
