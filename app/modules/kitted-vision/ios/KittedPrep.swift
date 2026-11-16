@@ -945,11 +945,11 @@ extension Prep {
   /// him by `himMargin` (his own outline, grown), each patch at least `instanceMinShare` of the grid and not mostly inside
   /// his box is covered: its own pixels, grown by `crowdGrow`, never onto his outline or that margin. Nothing is covered
   /// when his outline can't be told apart (no instance mask, or no label inside his box).
-  static func missedPeople(_ image: CGImage, found: Located) -> (count: Int, cover: Guide.Gray?, inst: Instances?) {
-    guard let main = found.main, let inst = personInstances(image) else { return (0, nil, nil) }
+  static func missedPeople(_ image: CGImage, found: Located) -> (count: Int, cover: Guide.Gray?) {
+    guard let main = found.main, let inst = personInstances(image) else { return (0, nil) }
     let W = CGFloat(image.width), H = CGFloat(image.height)
     guard let his = inst.counts(main.insetBy(dx: main.width * 0.1, dy: main.height * 0.05), W: W, H: H).labels.max(by: { $0.value < $1.value })?.key
-    else { return (0, nil, inst) }
+    else { return (0, nil) }
     let w = inst.w, h = inst.h, n = w * h
     let seg = Measure.personMask(image, w: w, h: h, quality: .accurate)
     // Already covered by locate, on this grid.
@@ -1046,7 +1046,7 @@ extension Prep {
       } }
       if cells > 0, fresh * 2 > cells { count += 1 }
     }
-    guard crowd.contains(255) else { return (0, nil, inst) }
+    guard crowd.contains(255) else { return (0, nil) }
     let reach = max(1, Int((crowdGrow * 2 * CGFloat(w)).rounded()))
     var close = [Bool](repeating: false, count: n)
     for y in 0..<h { for x in 0..<w where crowd[y * w + x] != 0 {
@@ -1060,7 +1060,7 @@ extension Prep {
     for y in 0..<h { for x in 0..<w where crowd[y * w + x] != 0 {
       for yy in max(0, y - g)...min(h - 1, y + g) { for xx in max(0, x - g)...min(w - 1, x + g) where !near[yy * w + xx] && !hisBox[yy * w + xx] { grown[yy * w + xx] = 255 } }
     } }
-    return (count, Guide.Gray(w: w, h: h, px: grown), inst)
+    return (count, Guide.Gray(w: w, h: h, px: grown))
   }
 
   /// Person pixels within this share of the grid width of his outline are taken for him (never covered).
@@ -1146,8 +1146,9 @@ extension Prep {
 
   /// After `locate` (status "ok"), on the upright working image: the copy that may be sent, or a refusal. Never changes
   /// found.status; it only covers and hides more, or refuses.
-  ///  0. zone = printZone(found) (T96s: nil unless a fit photo whose pose and head can be trusted); fit: the person
-  ///     instance mask, through `missedPeople` (rule 7 reads it).
+  ///  0. zone = printZone(found) (T96s: nil unless a fit photo whose pose and head can be trusted). Rule 7 runs without
+  ///     the instance mask here (the sweep only has it inside `missedPeople`, after the tile pass), so it's the
+  ///     `otherHeads` test; the same answer in steps 1, 2 and 4.
   ///  1. hide0 = found.hide without the head box of each whole-photo face that is a print on his top (T96s), plus his
   ///     fallback head box when a print was what stood in for his face (none: nothing is left alone). F = the faces
   ///     `detect` finds on every tile of `faceGrids` in today's copy (`locate`'s cover, and hiding hide0), de-duplicated,
@@ -1172,11 +1173,9 @@ extension Prep {
       return out
     }
 
-    // 0. Where a print can be (T96s), and the people the person detector missed (fit; its instance mask is rule 7's).
+    // 0. Where a print can be (T96s).
     let zone = printZone(found, kind: kind, W: W, H: H)
-    var missed: (count: Int, cover: Guide.Gray?, inst: Instances?) = (0, nil, nil)
-    if kind == .fit { missed = autoreleasepool { missedPeople(image, found: found) } }
-    func printed(_ f: CGRect) -> Bool { isPrint(f, zone: zone, found: found, instances: missed.inst) }
+    func printed(_ f: CGRect) -> Bool { isPrint(f, zone: zone, found: found, instances: nil) }
 
     // 1. locate's whole-photo faces that are prints on his top leave what's hidden. If one of them was what made locate
     // take a face for his (so it drew no head box from his joints or shoulders), that box is drawn in its place; with no
@@ -1226,9 +1225,12 @@ extension Prep {
     out.hide += heads
 
     // 2. People the person detector missed.
-    if let extra = missed.cover {
-      out.cover = found.cover.map { union($0, extra) } ?? extra
-      out.coveredExtra = missed.count
+    if kind == .fit {
+      let missed = autoreleasepool { missedPeople(image, found: found) }
+      if let extra = missed.cover {
+        out.cover = found.cover.map { union($0, extra) } ?? extra
+        out.coveredExtra = missed.count
+      }
     }
 
     // 3. The copy to send: today's when nothing was added, else drawn again with everything covered and hidden. A hidden
