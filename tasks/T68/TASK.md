@@ -453,3 +453,11 @@ Gold shares (cool, first reading): 1.3 / 10.8 / 17.0 / 46.6 / 24.2 / 0%, against
 - the order of a score.
 
 **Nothing goes into `@kitted/core` or the app until he approves the 15-outfit table** (Y41).
+
+**His review page (Nov 16, $0):** every outfit he rated blind (164: his first 20 + 144 of the 150), each with:
+- the face-hidden photo his sheet showed him;
+- his blind score and his re-rate;
+- today's score (v15) and the new one (v16 with his rules and the second looks);
+- the graded look and why it lands there.
+
+Sort by biggest change or biggest gap from him; filter moved up, moved down, or more than a point from him. The generator is `extraction-test/review_page.py`. The page, data and photos (neutral ids) go to `inputs/gold-judge/review-v16/`, which is git-ignored and served on port 8767 by its own `serve.py`. Header on these 164: today within a point 125/164, r 0.50; new 130/164, r 0.60. The rules were tuned on these photos; on unseen ones it's 78% and r 0.60.
