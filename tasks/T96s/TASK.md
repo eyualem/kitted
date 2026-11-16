@@ -106,3 +106,18 @@ No constant from IMPLEMENTATION.md was changed.
   - So these cores fail on round 3 too, under the re-locked rule; this task didn't cause them.
 - **The 8 held-out photos weren't compared.** They're held out (never opened by the implementer); their fails read the same way (his cores, unchanged 0.47–1.0).
 - **What I think it should say:** the T96 test writer re-baselines this line on round 3 under the re-lock (one `--full` run of `a00da29d`). Then "T96 still holds" compares against that (as it does for built small faces and missed people), not against "passes".
+
+**T96 test writer on D1 (Nov 16): upheld, not a face.** I looked at `2ddd0fbc…` at full size and at 6×. [308.5, 338.3, 16.2, 22.0] is wavy brown hair over her shoulder, well below her chin: no eyes, no skin. It's added to T96's `EYE_NOT_FACES` (add only, IoU ≥ 0.5 at 1024; the photo is 682×1024, so the box is in its own pixels). With it, T96's leak set passes on this build (0 strict leaks, fit 53 of 59 sent, 185-box gate 0). Kmeasure copies judges the same cores through the same list, so its one fail goes too; I didn't re-run it. Re-locked at `d1612584`.
+
+**T96 test writer on D5 (Nov 16): the gate was wrong as written, not a regression and not a code defect. Fixed; his face isn't loosened.**
+- **Round 3 against the gate:** I ran the locked file's own classification and judging on the 35 photos, on round 3 (`fdef92ba`, in a temporary worktree). It fails the same 35 cores with identical numbers; only `2ddd0fbc…` (D1) differs, hidden there by the oversized square. So this task didn't cause them, and the re-scoped gate failed round 3 too.
+- **By eye** (crops of the original and of the sent upload, all 36), none is a readable face in what's sent:
+  - **26 aren't faces:** MediaPipe "heads" on hands, wrists, a ring, a camera, a phone, sleeves, a shirt back, a necklace, lace, hair, a hat brim and a neck.
+  - **6 are real faces, fully pixelated in the upload:** `6a0f64b8`, `899bf79b`, `82edc318`, Pinterest 3.05.18 PM, `ew3gCk1zkso/f-08-08`, and his chin in `703a8b12`. A mosaic over a smooth face keeps 51–66% of the grey values within 12, so rule (b) calls it not hidden at T = 0.5.
+  - **The rest:** faces out of the frame (`m11`, `XIYvycsZxDk`), the interviewer in `Jh8dz` (pixelated), the woman behind her camera in `d7054d8a`.
+- **Fix** (TESTING.md → "Changed at the re-lock (T96s disputes D1 and D5)"):
+  - A Vision face box of his or of a spotted face, left outside the hidden rects, fails automatically.
+  - MediaPipe-only cores, and faces inside the hidden rects that fail only on the unchanged share, go on the sheets labelled EYE, where a readable one fails the line.
+  - T and every other line are unchanged.
+- **Proved on the 35 photos:** 0 automatic fails on this build. A planted "his head regions dropped from the blur and from `hidden`" gives 40 fails.
+- **No re-baseline needed:** the line now passes on both builds by the same rule. It still needs one `--full` (and the eye on the EYE crops) for the record.
