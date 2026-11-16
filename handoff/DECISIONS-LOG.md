@@ -3211,5 +3211,9 @@ Contradictions settled and decisions changed during the build. Newest last.
 - **The re-check:** it skips prints by the same rule; there is no new refusal reason.
 - **Folded in:** T96 round 3's grey square on his head. A second pose body whose head lies inside his own head regions gets no `otherHeads` box, and the 0.9 × shoulder-span term is capped.
 - **Real cases found (only 3, plus one after "Which one is you?"):** two of his saved ig screenshots and two Fashionpedia photos. Built prints are an extra, never the only proof.
-- **Defaults sent to the founder:** clothes scans of a graphic tee stay blurred, legs and feet are out of scope, and a person held against his chest is accepted as residual risk.
+- **Accepted by the founder (through the parent, Nov 16):**
+  - Flat clothes scans of a graphic tee stay blurred.
+  - Made-up faces on his shoes, jeans or a hand are a known gap, for a later task.
+  - A person held against his chest whom no detector separates is read as a print: an accepted risk under his "the literal user" rule.
+- **Main's path is covered too:** the phone runs main, whose whole-photo blur can catch a large print. Tests include a built large print that main's `locate` hides.
 - **No change to `specs.md` or to T96's locked lines.** The re-scope ("Your face is always blurred before anything is sent; if we can't find it, nothing is sent. Other faces are blurred when we spot them; faces printed on clothes aren't.") waits on his yes. If a T96 line goes red only because of a correctly left-alone print, that's a dispute, not a change.
