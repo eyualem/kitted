@@ -3245,3 +3245,13 @@ Contradictions settled and decisions changed during the build. Newest last.
     - Flags come from two near-identical outfits disagreeing, or a score 2+ from his own similar outfits, never from a score being extreme.
     - `extraction-test/consistent_key.py` reports his raw and the key's band shares side by side. The key is used only if every band stays within 3 points (Claude's tolerance for "a few"). His 10 repeats measure his own drift, including any pull toward the middle.
     - **Lesson:** a re-rate can regress to the mean on its own: extreme scores drift toward the middle on a second look even with no real change in taste. Repeats of unflagged photos show the size of that drift, so it isn't mistaken for a fix.
+
+473. **His taste rules wired into v16, switched off, with a half-split fit and test (T68 round 3, Nov 16, $0; a dry run until he confirms).**
+    - **Built:** `_v16_taste` in `extraction-test/rubrics/parts_proto.py` (`tune={"taste": ...}`, off by default; v16 and older engines unchanged, conformance 501/501), `extraction-test/taste_rules.py`, and `v16_paper.py --taste`.
+    - **Reads, from T98 (PR #126):** leg shape graded from the reading; roomy shorts from volume 4–5; the long top from the Mac's body ruler at t ≥ 0.62, untucked with no jacket, half a point at most.
+    - **Claude's calls:**
+      - The sizes are fitted on a random half by coordinate ascent on r + the share within a point.
+      - The evidence fixes three things without fitting: L3, L5 and L7b off, H7 as a tip, the long top at 0.5.
+      - A dealbreaker cap owns the taste charges, as it owns its part charges.
+    - **Dry run, raw ratings, held-out half:** 78% within a point and r 0.62 on average over 8 random splits (73–85%, 0.57–0.68); v15 about 76% and 0.53, v16 about 73% and 0.45. Better than both, short of the bar (80%, 0.69). B2 6/6, B3 12/18, B6 219/223; B4 misses H7 (by design) and S5 (color charge); B5 worse.
+    - **Lesson:** I changed the engine after looking at the held-out half (the cap fix, made for B4), and that half's number jumped from 78% to 84%. Once a test set has influenced a change it isn't clean, so the trustworthy figure is the average over fresh splits.

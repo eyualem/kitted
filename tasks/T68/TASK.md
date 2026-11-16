@@ -257,3 +257,48 @@ How the pass keeps that:
 - **A flag only puts a photo on the sheet.** His blind re-rate decides the score; nothing is averaged or pulled toward the middle.
 - **The check** (`extraction-test/consistent_key.py`, results `results/taste1/key_report.txt`): the key's band shares sit beside his raw ones. Every band must stay within 3 points, or the key isn't used until he has seen it. Today his raw shares (164 photos) are 0 / 15.9 / 33.5 / 22.6 / 19.5 / 8.5%, range 5–9.5.
 - **His 10 repeats measure his own drift on a second look.** That includes whether high and low scores drift toward the middle, so a move inside his noise isn't called a fix.
+
+### The taste rules, wired and switched off (Nov 16, $0; a dry run, not his confirmed rules)
+
+**Built so the re-run is ready the moment he confirms:**
+- **The engine:** `_v16_taste` in `extraction-test/rubrics/parts_proto.py`, switched on by `tune={"taste": {...}}`. Off by default, so v16 and every older engine score exactly as before: `results/v16/` is unchanged and conformance passes 501/501. The rules:
+  - leg width, graded (skinny, slim, wide);
+  - shorts, with roomy shorts (volume 4–5) winning some back;
+  - each color beyond neutrals, up to two;
+  - a hem over the shoe as a plus (look L);
+  - the long top, from the Mac's body ruler (T98, PR #126, read from its branch until it merges) and else the reading; half a point at most, never a cap;
+  - lifts L3, L5 and L7b off;
+  - a single lift at a fraction;
+  - the pooling cap as a tip.
+  - A dealbreaker cap owns the taste charges, as it owns its part charges, so a capped outfit lands at its cap.
+- **The harness:** `extraction-test/taste_rules.py` (`--key consistent` once his re-rate is in; `--seed` for other splits). It fits the sizes on a random half of the 164 (seed 20261116), tests on the other half, and drops each rule in turn on the held-out half. The sizes and the split go to `results/taste1/fitted_taste_raw.json`.
+- **Every bar with the rules on:** `v16_paper.py --taste results/taste1/fitted_taste_raw.json`, which writes `results/v16-taste/`.
+
+**Dry run on his raw ratings.** Fitted: wide legs +0.5, a single lift at half, a hem over the shoe +0.5, roomy shorts +0.5, colors −0.5 each. Skinny, slim and shorts came out 0, since v16's existing charges and caps already carry them.
+
+| | Within 1 point | r |
+|---|---|---|
+| Held-out half, the main split | 69/82 (84%) | 0.665 (v16 with the looks 79%, 0.585; v15 80%, 0.569) |
+| Held-out half, 8 other splits | **78% on average** (73–85%) | **0.62** (0.57–0.68) |
+| Same halves, v15 | about 76% | 0.53 |
+| Same halves, v16 | about 73% | 0.45 |
+
+- **The honest number is the 8-split average.** It beats both engines but stays short of the bar (80%, r 0.69). The main split's 84% is on the lucky end.
+- **I changed the engine after seeing the main held-out half.** The cap now owns the taste charges, a fix driven by the dealbreaker bar, but it moved the held-out number from 78% to 84%. That's why the 8 other splits are the number to trust.
+
+**Every bar with the dry-run rules** (`results/v16-taste/report.txt`):
+
+| Bar | With the dry-run rules | v16 without them |
+|---|---|---|
+| B1, all 164 | 136/164 (83%), r 0.62: FAIL on r. Half the photos tuned it, so this is not the honest number | 120/164 (73%), r 0.48 |
+| B2, the creators' pairs | 6/6 | 6/6 |
+| B3, the anchors | 12/18 | 13/18 |
+| B4, the dealbreaker examples | 2 miss | all pass |
+| B5, band shares, worst gap | gold 21.1, his checks 28.1 | gold 17.7, his checks 26.5 |
+| B6, steadiness | 219/223 | 218/223 |
+
+- **The two B4 misses:**
+  - H7, by design: the pooling cap becomes a tip, which is his call. If he says yes, the H7 example row goes with his own rule change, not because a bar was loosened.
+  - S5 (a blazer with gym shorts), where the color charge drops the quiet-accent case to 5.5.
+
+**Waiting on:** his re-rate (Y38) and his yes on the patterns. Then the fit runs again on the raw ratings and on the consistent key, and every bar re-runs with v15 alongside. The shorts-length look (T98's 56¢ round) is not in.

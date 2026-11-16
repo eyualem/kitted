@@ -494,7 +494,7 @@ VERSIONS["v15"] = "parts-proto-15 (Oct 28, 2026)"
 # What changes is the step after the parts (see v16_finish): faults count at full strength instead of being averaged
 # away, lifts stack to a ceiling, dealbreakers cap, the season counts, a fixed curve maps raw to shown, 3.0-9.5.
 _OFF16 = dict(v16=False, v16_color=False, sty3_off=False, v16_alpha=0.5, v16_beta=0.25, curve=(1.0, 1.0, 7.0),
-              v16_knit=0.0, v16_h9_cap=False, v16_h7_cap=5.5)
+              v16_knit=0.0, v16_h9_cap=False, v16_h7_cap=5.5, taste=None)
 for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15"):
     TUNE[_e].update(_OFF16)
 TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
@@ -506,7 +506,9 @@ TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
                    # layer.5 / ix.33: knit over knit (a cardigan over a sweater) on Style
                    v16_knit=1.5,
                    # H9 as a cap: off, the sleeve read flips between readings (it stays v15's Fit charge)
-                   v16_h9_cap=False, v16_h7_cap=5.5)
+                   v16_h9_cap=False, v16_h7_cap=5.5,
+                   # round 3 (Nov 16): his taste rules, off until he confirms them (a dict of sizes; see _v16_taste)
+                   taste=None)
 VERSIONS["v16"] = "parts-proto-16 (Nov 14, 2026, on paper)"
 HL_LAYERS = {"hoodie", "sweatshirt"}                             # v15 PRO-17: worn as the layer (outerwear) ...
 HL_TOPS = {"tee", "graphic_tee"}                                 # ... over a tee
@@ -1871,6 +1873,59 @@ def _v16_curve(raw, t):
     return 7.0 + (a if raw < k else b) * (raw - k)
 
 
+def _v16_taste(o, sl_raw, lifts, caps, t):
+    """Round 3 (T68, Nov 16): the founder's taste patterns as rules, all sizes in t["taste"] (None = off; v16 as built).
+    Returns (lifts, caps, items): lifts and caps after the taste rules, and the raw-score adjustments [(points, id, line)].
+      lift_off   lifts that don't count to him (his ratings: L3 -0.76, L5 -0.18, L7b +0.04 against his leg average)
+      one_lift   a single remaining lift counts at this fraction (one lift isn't a step to him; two are)
+      h7_tip     the pooling cap becomes a tip (he scores a hem over the shoe higher, not lower)
+      hem_plus   a hem that covers most of the shoe (look L), on a full leg: a plus
+      leg_skinny, leg_slim, leg_wide   leg width, graded (his means: skinny 5.4, slim 6.2, straight 6.8, wide 8.3)
+      shorts, shorts_wide   shorts cost a little; roomy shorts (volume 4-5, read clean 9/13) win some back
+      color      each color beyond neutrals and denim, up to two
+      long_top   an untucked top with no jacket that ends low: the body ruler (second_look["long_top"]) where it
+                 measured, else the reading's below_crotch (half a point at most: a low base rate, never a cap)"""
+    T = t.get("taste")
+    if not T:
+        return lifts, caps, []
+    items = []
+    off = set(T.get("lift_off") or ())
+    lifts = [x for x in lifts if x[0] not in off]
+    if len(lifts) == 1 and T.get("one_lift", 1.0) != 1.0:
+        a, b, c, d = lifts[0]
+        lifts = [(a, round(b * T["one_lift"], 3), c, d)]
+    if T.get("h7_tip"):
+        caps = [c for c in caps if c[1] != "H7"]
+    B = o["bottom"]
+    sub = B.get("subcategory") if B else None
+    leg = B.get("leg_shape") if B else None
+    if B is not None and sub in SHORTS:
+        if T.get("shorts"):
+            items.append((-T["shorts"], "T_shorts", "shorts"))
+        if T.get("shorts_wide") and (B.get("volume") or 3) >= 4:
+            items.append((T["shorts_wide"], "T_shorts_wide", "roomy shorts"))
+    elif B is not None:
+        size = {"skinny": -T.get("leg_skinny", 0.0), "slim": -T.get("leg_slim", 0.0),
+                "relaxed": T.get("leg_wide", 0.0), "wide": T.get("leg_wide", 0.0)}.get(leg, 0.0)
+        if size:
+            items.append((size, "T_leg", f"{leg} legs"))
+        if T.get("hem_plus") and sl_raw and sl_raw.get("covers_shoe") == "mostly":
+            items.append((T["hem_plus"], "T_hem", "a full hem over the shoe"))
+    if T.get("color"):
+        cols = {g.get("color_family") for g in o["tops"] + o["outers"] + ([B] if B else [])}
+        n = len({c for c in cols if c and c not in R.NEUTRALS and not str(c).startswith("denim")})
+        if n:
+            items.append((-T["color"] * min(n, 2), "T_color", f"{n} color{'s' if n > 1 else ''} beside the neutrals"))
+    if T.get("long_top") and not o["outers"] and o["tops"]:
+        top = o["tops"][0]
+        if top.get("tucked") not in ("full", "front", "half"):
+            ruler = (sl_raw or {}).get("long_top")
+            long_ = ruler if ruler is not None else top.get("length") == "below_crotch"
+            if long_:
+                items.append((-T["long_top"], "T_long_top", "the top ends low"))
+    return lifts, caps, items
+
+
 def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
     """v16's step after the parts. Returns the pieces score_parts puts in the result."""
     warm = o.get("season") == "warm"
@@ -1896,6 +1951,7 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
     lifts = _v16_lifts(o, parts, sl, t)
     lift_checks = {c for c, m in V16_LIFTS.items()}
     caps = _v16_caps(o, parts, sl_raw, occasion, t)
+    lifts, caps, taste = _v16_taste(o, sl_raw, lifts, caps, t)        # round 3: off unless t["taste"] is set
     if dep:                                                            # a clash never reads sharp: held at 7.0; with a
         if dep[2] == 1.5:                                              # second fault it sinks, and the cap owns the charge
             caps.append((5.5 if dep[0] != "H5" else 6.5, dep[0], "sink" if dep[0] != "H5" else "hold",
@@ -1922,6 +1978,9 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
         if hv is not None:
             heavy = (0.5, f"the {hv.get('subcategory').replace('_', ' ')} is a lot of layer for a warm day")
     raw = 7.0 + lift_sum + minor - drop - cond_ded - occ["deduction"] - (heavy[0] if heavy else 0.0)
+    if any(c[2] in ("sink", "hold") for c in caps):              # a dealbreaker owns the taste charges, as it owns
+        taste = [x for x in taste if x[0] > 0]                      # its part charges (the cap stands for them)
+    raw += sum(x[0] for x in taste)
     raw = clamp(raw, 3.0, 9.5)
     shown = clamp(_v16_curve(raw, t), 3.0, 9.5)
     # the ceilings: the stacking rule, the occasion, the dealbreakers
@@ -1967,7 +2026,7 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
                 "heavy_layer": heavy, "caps": [{"cap": c, "id": i, "kind": k, "line": l} for c, i, k, l in caps],
                 "stack_ceiling": stack, "one_look": one_look, "held_by": held_by, "raw": round(raw, 3),
                 "curved": round(shown, 3), "owned": owned_lines, "ceiling": min(c for c, _ in ceilings), "depends": dep,
-                "unread": V16_UNREAD},
+                "unread": V16_UNREAD, "taste": [{"points": a, "id": b, "line": c} for a, b, c in taste]},
     }
 
 

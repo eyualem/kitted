@@ -392,6 +392,41 @@ def load_rated():
     return {c: (v["read"], {**v.get("U", {}), **v.get("L", {})}) for c, v in got.items() if "read" in v}
 
 
+RULER_REF = "origin/claude/reading-test-proportions-54b447"      # T98's measures (PR #126), read until it merges
+RULER_CUT = 0.62                                                    # T98: top end t >= 0.62 = long (8/8, 7% false yes)
+
+
+def load_ruler():
+    """The Mac's body ruler on his rated photos (T98, $0): {photo key: True/False} where it measured, keyed both by
+    C-id and by gold photo id. Read from the local file once T98 is merged, else from its branch (read only)."""
+    import csv
+    import io
+    import subprocess
+    f = HERE / "results/reading-proportions/measures.csv"
+    try:
+        txt = f.read_text() if f.exists() else subprocess.run(
+            ["git", "show", f"{RULER_REF}:extraction-test/results/reading-proportions/measures.csv"],
+            capture_output=True, text=True, check=True, cwd=HERE).stdout
+    except (subprocess.CalledProcessError, OSError):
+        return {}
+    out = {}
+    for r in csv.DictReader(io.StringIO(txt)):
+        if r["pass"] != "c" or r["status"] != "ok":
+            continue
+        v = r["top_end"] or r["visual"]
+        if v:
+            out[r["id"]] = float(v) >= RULER_CUT
+    try:
+        g2p = {m["gid"]: m["photo"] for m in json.load(open(H.DATA / "inputs/gold-judge/manifest.json"))}
+        for r in csv.DictReader(open(F4 / ".mapping/mapping.csv")):
+            p = g2p.get(r["gold_id"])
+            if p and r["id"] in out and p not in out:
+                out[p] = out[r["id"]]
+    except OSError:
+        pass
+    return out
+
+
 def rated_pool(runs, founder, f4, rows):
     """Every photo he rated that has a reading, under one key: the gold photo id (stored Oct 12 reading, the Nov 15
     looks) or the sheet's C-id (the Nov 16 reading and looks). Returns {key: (his score, group, reading, look|None)}."""
@@ -407,6 +442,10 @@ def rated_pool(runs, founder, f4, rows):
     for c, (sheet, score, _, _) in rows.items():
         if c in rated:
             pool[c] = (score, "sheet 2" if sheet == "sheet2" else "the 20 new", rated[c][0], rated[c][1])
+    ruler = load_ruler()
+    for k, v in list(pool.items()):                                    # the long-top ruler rides with the second look
+        if k in ruler and v[3] is not None:                            # (read only by the taste rules)
+            pool[k] = (v[0], v[1], v[2], {**v[3], "long_top": ruler[k]})
     return pool
 
 
@@ -581,8 +620,10 @@ def run_looks(say, runs, panel, founder, gold15, gold16, ps):
     # the panel on the photos where each look rule fires
     pk = [p for p in lp if p in panel and P._second_look(looks[p][0], P.TUNE["v16"])["peek"]]
     h7 = [p for p in lp if p in panel and any(c["id"] == "H7" for c in res[p][1][0]["v16"]["caps"])]
-    say(f"  the panel where they fire: a clear peek ({len(pk)}) {st.mean(panel[p] for p in pk):.2f}, the H7 pooling cap ({len(h7)}) "
-        f"{st.mean(panel[p] for p in h7):.2f} ({sum(panel[p] <= 5.5 for p in h7)} at 5.5 or under); every gold photo "
+    def avg(q):
+        return f"{st.mean(panel[p] for p in q):.2f}" if q else "none"
+    say(f"  the panel where they fire: a clear peek ({len(pk)}) {avg(pk)}, the H7 pooling cap ({len(h7)}) "
+        f"{avg(h7)} ({sum(panel[p] <= 5.5 for p in h7)} at 5.5 or under); every gold photo "
         f"{st.mean(panel[p] for p in lp if p in panel):.2f}")
 
     # two narrower readings of the looks, for his call (not in the engine)
@@ -610,6 +651,10 @@ def main():
         print(s)
         lines.append(s)
 
+    global OUT
+    if "--taste" in sys.argv:                                         # every bar with the taste rules on (round 3)
+        P.TUNE["v16"]["taste"] = json.loads(Path(sys.argv[sys.argv.index("--taste") + 1]).read_text())["taste"]
+        OUT = HERE / "results" / "v16-taste"
     fit_only = "--fit" in sys.argv
     if "--curve" in sys.argv:                                         # explore: score with another curve (a,b,k)
         P.TUNE["v16"]["curve"] = tuple(float(x) for x in sys.argv[sys.argv.index("--curve") + 1].split(","))

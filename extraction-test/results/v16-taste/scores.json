@@ -1,0 +1,6523 @@
+{
+ "gold": {
+  "ig-001": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 1 lift; lifts L1 +0.5, L6 +0.25",
+   "pieces": "sweater (brown) + tee (white) + jeans (denim_mid, wide) + loafer (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L6 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-002": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "sweater (blue) + tee (white) + jeans (black, wide) + loafer (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-003": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "held by 1 lift; lifts L1 +0.5, L6 +0.25",
+   "pieces": "tee (black) + tee (light_grey) + jeans (denim_light, wide) + loafer (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L1 +0.5, L6 +0.25"
+  },
+  "ig-004": {
+   "v15": [
+    8.0,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "lifts L2 +0.375; faults -1 (X_knit_on_knit: the cardigan over the sweater: knit on knit blurs together; a smooth layer over the knit adds depth)",
+   "pieces": "cardigan (light_blue) + sweater (red) + trousers (black, barrel) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L2 +0.375; faults -1 (X_knit_on_knit: the cardigan over the sweater: knit on knit blurs together; a smooth layer over the knit adds depth)"
+  },
+  "ig-005": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L2 +0.375",
+   "pieces": "bomber (light_grey) + tee (white) + shorts (off_white_cream, wide) + chunky_sneaker (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L2 +0.375"
+  },
+  "ig-006": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "sweater (blue) + jeans (white, wide) + loafer (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-007": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "held by 0 lifts",
+   "pieces": "cardigan (navy) + tee (white) + sweatpants (navy, wide) + basketball_sneaker (multicolor)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-008": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.5,
+    8.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 2 lifts; lifts L2 +1, L7 +0.5",
+   "pieces": "bomber (navy) + tee (white) + jeans (denim_dark, wide) + basketball_sneaker (white)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L7 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-009": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L2 +0.375",
+   "pieces": "tee (white) + sweatshirt (navy) + cargos (denim_dark, wide) + work_boot (tan_camel)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-010": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": 8.0,
+   "why": "lifts L1 +0.25",
+   "pieces": "cardigan (green) + tee (white) + trousers (black, relaxed) + low_profile_sneaker (white)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "ig-011": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.5, L7 +0.5",
+   "pieces": "quarter_zip (green) + tee (white) + trousers (black, wide) + loafer (burgundy)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.5, L7 +0.5"
+  },
+  "ig-012": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L2 +0.375",
+   "pieces": "overshirt (green) + graphic_tee (white) + jeans (charcoal, wide) + work_boot (tan_camel)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L2 +0.375"
+  },
+  "ig-013": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "other (red) + tee (white) + cargos (light_blue, wide) + work_boot (brown)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "ig-014": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "hoodie (yellow) + tee (white) + jeans (denim_light, wide) + white_leather_sneaker (white)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-015": {
+   "v15": [
+    8.0,
+    7.0
+   ],
+   "v16_cool": [
+    8.0,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L2 +0.5",
+   "pieces": "bomber (grey) + tee (white) + jeans (denim_light, wide) + work_boot (tan_camel)",
+   "v15_looks": [
+    8.0,
+    7.0
+   ],
+   "v16_looks": [
+    8.0,
+    7.5
+   ],
+   "why_looks": "held by 1 lift; lifts L2 +0.5"
+  },
+  "ig-016": {
+   "v15": [
+    5.5,
+    5.5
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.5,
+    5.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by occasion; faults -1.5 (SK1_slides_out: slides read as staying in)",
+   "pieces": "puffer (off_white_cream) + hoodie (light_grey) + sweatpants (khaki_beige, wide) + slides_sandals (tan_camel)",
+   "v15_looks": [
+    5.5,
+    5.5
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "held by occasion; faults -1.5 (SK1_slides_out: slides read as staying in)"
+  },
+  "ig-017": {
+   "v15": [
+    7.5,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L2 +0.5",
+   "pieces": "bomber (brown) + sweatshirt (white) + trousers (black, wide) + retro_runner (multicolor)",
+   "v15_looks": [
+    7.5,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "lifts L2 +0.5"
+  },
+  "ig-018": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L2 +0.5",
+   "pieces": "denim_jacket (black) + tee (white) + jeans (black, wide) + other (tan_camel)",
+   "v15_looks": [
+    7.0,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    8.0
+   ],
+   "why_looks": "held by 0 lifts; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-019": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    8.0
+   ],
+   "v16_warm": [
+    6.0,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L2 +1, L6 +0.25; faults -1 (SK2_runners: running shoes read gym with these clothes)",
+   "pieces": "leather_jacket (black) + sweater (light_grey) + jeans (denim_mid, relaxed) + performance_runner (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    8.0
+   ],
+   "why_looks": "lifts L2 +1, L6 +0.25; faults -1 (SK2_runners: running shoes read gym with these clothes)"
+  },
+  "ig-020": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": 7.5,
+   "why": "nothing off, nothing chosen",
+   "pieces": "sweater (tan_camel) + tee (white) + shorts (khaki_beige, wide) + loafer (brown)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "ig-021": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "graphic_tee (white) + shorts (khaki_beige, relaxed) + loafer (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "ig-022": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "other (tan_camel) + dress_shirt (white) + shorts (black, straight) + loafer (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "ig-023": {
+   "v15": [
+    7.5,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "dress_shirt (light_blue) + shorts (black, relaxed) + loafer (burgundy)",
+   "v15_looks": [
+    7.5,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "ig-024": {
+   "v15": [
+    8.0,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "camp_collar_shirt (green) + trousers (black, wide) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-025": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 8.5,
+   "founder": null,
+   "why": "lifts L6 +0.125",
+   "pieces": "overshirt (red) + tee (white) + jeans (denim_dark, straight) + loafer (burgundy)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L6 +0.125"
+  },
+  "ig-027": {
+   "v15": [
+    7.5,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "oxford_shirt (white) + jeans (denim_light, straight) + suede_chukka (brown)",
+   "v15_looks": [
+    7.5,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "ig-028": {
+   "v15": [
+    7.0,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    6.5,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "overcoat (olive) + knit_polo (green) + jeans (denim_light, wide) + dress_shoe (black)",
+   "v15_looks": [
+    7.0,
+    7.5
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "ig-029": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "sweater (olive) + dress_shirt (light_blue) + jeans (denim_dark, wide) + derby (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-030": {
+   "v15": [
+    6.5,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "dress_shirt (light_blue) + shorts (khaki_beige, wide) + loafer (brown)",
+   "v15_looks": [
+    6.5,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.5
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "ig-031": {
+   "v15": [
+    7.5,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.5,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "sweater (blue) + trousers (charcoal, wide) + derby (black)",
+   "v15_looks": [
+    7.5,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-032": {
+   "v15": [
+    7.5,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": 7.5,
+   "why": "held by 0 lifts; lifts L2 +0.375",
+   "pieces": "other (charcoal) + tank_top (white) + cargos (olive, wide) + retro_runner (tan_camel)",
+   "v15_looks": [
+    7.5,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L2 +0.375"
+  },
+  "ig-033": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "tee (black) + jeans (denim_light, flare_bootcut) + loafer (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-034": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 9.0,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "tee (burgundy) + trousers (off_white_cream, barrel) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "ig-035": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 8.5,
+   "founder": null,
+   "why": "lifts L1 +0.5",
+   "pieces": "tee (olive) + trousers (brown, barrel) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "lifts L1 +0.5"
+  },
+  "ig-036": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "faults -0.75 (PB1_roomier_than_look: the roomy oxford shirt is roomier than the rest of the outfit calls for)",
+   "pieces": "oxford_shirt (off_white_cream) + jeans (denim_mid, barrel) + loafer (black)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "faults -0.75 (PB1_roomier_than_look: the roomy oxford shirt is roomier than the rest of the outfit calls for)"
+  },
+  "ig-037": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "held by occasion",
+   "pieces": "hoodie (navy) + sweatpants (light_grey, wide)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "held by occasion"
+  },
+  "ig-038": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L2 +0.375",
+   "pieces": "fleece (burgundy) + chinos (off_white_cream, wide) + work_boot (tan_camel)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L2 +0.375"
+  },
+  "ig-039": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "tee (white) + jeans (denim_light, wide) + dress_shoe (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-040": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L2 +0.5",
+   "pieces": "denim_jacket (denim_dark) + tee (off_white_cream) + jeans (denim_dark, wide) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L2 +0.5"
+  },
+  "ig-041": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "held by 1 lift; lifts L2 +1, L6 +0.25",
+   "pieces": "leather_jacket (brown) + tee (white) + jeans (denim_light, wide) + other (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L2 +1, L6 +0.25"
+  },
+  "ig-042": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "chore_coat (navy) + tee (white) + jeans (denim_dark, wide) + dress_shoe (brown)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "ig-043": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "sweater (purple) + tee (white) + jeans (denim_mid, wide) + dress_shoe (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-044": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L2 +0.5",
+   "pieces": "bomber (black) + tee (white) + trousers (tan_camel, wide) + dress_shoe (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L2 +0.5"
+  },
+  "ig-045": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 8.5,
+   "founder": null,
+   "why": "held by 1 lift; lifts L1 +0.5, L6 +0.25",
+   "pieces": "tee (black) + jeans (white, wide) + dress_shoe (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L1 +0.5, L6 +0.25"
+  },
+  "ig-046": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.5,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "sweater (navy) + tee (white) + trousers (charcoal, wide) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-047": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L2 +0.375",
+   "pieces": "chore_coat (denim_mid) + tee (white) + jeans (denim_dark, wide)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L2 +0.375"
+  },
+  "ig-048": {
+   "v15": [
+    8.0,
+    7.5
+   ],
+   "v16_cool": [
+    8.5,
+    8.5
+   ],
+   "v16_warm": [
+    8.5,
+    8.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.5, L7 +0.5",
+   "pieces": "knit_polo (tan_camel) + trousers (black, wide) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    7.5
+   ],
+   "v16_looks": [
+    8.5,
+    8.5
+   ],
+   "why_looks": "held by 2 lifts; lifts L1 +0.5, L7 +0.5"
+  },
+  "ig-049": {
+   "v15": [
+    7.0,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L7 +0.25",
+   "pieces": "cardigan (charcoal) + dress_shirt (pink) + trousers (black, wide) + loafer (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L7 +0.25"
+  },
+  "ig-050": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "tee (black) + trousers (grey, wide) + loafer (multicolor)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-051": {
+   "v15": [
+    8.0,
+    7.5
+   ],
+   "v16_cool": [
+    8.5,
+    7.5
+   ],
+   "v16_warm": [
+    8.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 2 lifts; lifts L1 +1, L7 +0.5",
+   "pieces": "knit_polo (black) + trousers (black, relaxed) + loafer (multicolor)",
+   "v15_looks": [
+    8.0,
+    7.5
+   ],
+   "v16_looks": [
+    8.5,
+    7.5
+   ],
+   "why_looks": "held by 2 lifts; lifts L1 +1, L7 +0.5"
+  },
+  "ig-052": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 1 lift; lifts L1 +0.5, L6 +0.25",
+   "pieces": "sweater (black) + tee (white) + jeans (denim_light, wide) + canvas_sneaker (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L6 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-053": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "held by 0 lifts",
+   "pieces": "sweatshirt (navy) + shorts (black, wide) + chunky_sneaker (white)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "ig-054": {
+   "v15": [
+    7.5,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 1 lift; lifts L2 +1, L6 +0.25",
+   "pieces": "bomber (brown) + trousers (black, wide) + low_profile_sneaker (brown)",
+   "v15_looks": [
+    7.5,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L2 +1, L6 +0.25"
+  },
+  "ig-055": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.5,
+    5.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "jersey (white) + shorts (black, relaxed) + slides_sandals (black)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "faults -1.25 (SK1_slides_out: slides read as staying in)"
+  },
+  "ig-056": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "held by 0 lifts",
+   "pieces": "chore_coat (black) + tee (white) + jeans (black, wide) + derby (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "ig-057": {
+   "v15": [
+    7.0,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 0 lifts",
+   "pieces": "knit_polo (olive) + tee (white) + trousers (black, wide) + dress_shoe (black)",
+   "v15_looks": [
+    7.0,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "ig-058": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "tee (light_blue) + jeans (black, wide)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-059": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.75, L7 +0.5",
+   "pieces": "suit_jacket (black) + dress_shirt (white) + suit_trousers (black, straight) + dress_shoe (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "lifts L1 +0.75, L7 +0.5"
+  },
+  "ig-060": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "tee (green) + jeans (khaki_beige, wide) + work_boot (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "ig-061": {
+   "v15": [
+    6.5,
+    8.0
+   ],
+   "v16_cool": [
+    6.5,
+    7.5
+   ],
+   "v16_warm": [
+    6.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": 8.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "sweatshirt (blue) + tee (white) + cargos (olive, wide) + derby (black)",
+   "v15_looks": [
+    6.5,
+    8.0
+   ],
+   "v16_looks": [
+    6.5,
+    7.0
+   ],
+   "why_looks": "faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-062": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "graphic_tee (white) + jeans (denim_mid, relaxed) + dress_shoe (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-063": {
+   "v15": [
+    7.0,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 0 lifts",
+   "pieces": "graphic_tee (black) + shorts (olive, wide) + work_boot (brown)",
+   "v15_looks": [
+    7.0,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "ig-064": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.25; faults -0.5 (SQ_worn: the shoes look worn)",
+   "pieces": "tee (charcoal) + jeans (brown, wide) + loafer (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.25; faults -0.5 (SQ_worn: the shoes look worn)"
+  },
+  "ig-065": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.5,
+    5.5
+   ],
+   "panel": 5.5,
+   "founder": 7.0,
+   "why": "faults -1.375 (SK1_slides_out: slides read as staying in)",
+   "pieces": "graphic_tee (purple) + shorts (brown, wide) + slides_sandals (black)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "faults -1.375 (SK1_slides_out: slides read as staying in)"
+  },
+  "ig-066": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L2 +0.375",
+   "pieces": "bomber (charcoal) + tee (black) + shorts (off_white_cream, wide) + chunky_sneaker (brown)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L2 +0.375"
+  },
+  "ig-067": {
+   "v15": [
+    7.5,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "tee (black) + jeans (white, wide) + loafer (grey)",
+   "v15_looks": [
+    7.5,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-068": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "faults -0.25 (H5_too_many_statements: too many things compete for attention)",
+   "pieces": "jersey (black) + shorts (olive, wide) + other (grey)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "faults -0.25 (H5_too_many_statements: too many things compete for attention)"
+  },
+  "ig-069": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "held by 0 lifts",
+   "pieces": "graphic_tee (black) + jeans (white, wide) + retro_runner (grey)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "ig-070": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "polo (white) + jeans (denim_mid, wide) + derby (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-071": {
+   "v15": [
+    7.0,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "oxford_shirt (light_blue) + trousers (black, wide) + dress_shoe (black)",
+   "v15_looks": [
+    7.0,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-072": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.25; faults -0.375 (SD2_too_casual: the shoes are more casual than the clothes)",
+   "pieces": "sweater (burgundy) + trousers (black, wide) + retro_runner (light_grey)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.25; faults -0.375 (SD2_too_casual: the shoes are more casual than the clothes)"
+  },
+  "ig-073": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L6 +0.125",
+   "pieces": "fleece (tan_camel) + tee (white) + cargos (black, wide) + work_boot (tan_camel)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L6 +0.125"
+  },
+  "ig-074": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L2 +0.375",
+   "pieces": "fleece (brown) + tee (white) + cargos (green, wide) + work_boot (tan_camel)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-075": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "fleece (tan_camel) + jeans (charcoal, wide) + work_boot (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-076": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L2 +0.5",
+   "pieces": "bomber (purple) + jeans (grey, wide) + work_boot (tan_camel)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "lifts L2 +0.5"
+  },
+  "ig-077": {
+   "v15": [
+    8.0,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L2 +0.5",
+   "pieces": "leather_jacket (brown) + hoodie (black) + jeans (black, wide) + work_boot (black)",
+   "v15_looks": [
+    8.0,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "lifts L2 +0.5"
+  },
+  "ig-078": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "flannel_shirt (blue) + jeans (denim_dark, wide) + work_boot (tan_camel)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-079": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "held by 1 lift; lifts L2 +1, L6 +0.25",
+   "pieces": "leather_jacket (black) + tee (white) + jeans (grey, wide) + chunky_sneaker (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L6 +0.125; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-080": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L2 +0.375",
+   "pieces": "shell_jacket (green) + jeans (charcoal, wide) + work_boot (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L2 +0.375"
+  },
+  "ig-081": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    8.0
+   ],
+   "v16_warm": [
+    7.5,
+    8.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "graphic_tee (black) + jeans (denim_mid, wide) + other (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    8.0
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-082": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "overshirt (red) + graphic_tee (white) + jeans (black, wide) + canvas_sneaker (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-083": {
+   "v15": [
+    7.5,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    7.5
+   ],
+   "v16_warm": [
+    8.0,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 1 lift; lifts L1 +0.5, L6 +0.25",
+   "pieces": "hoodie (black) + cargos (olive, wide) + other (black)",
+   "v15_looks": [
+    7.5,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L1 +0.5, L6 +0.25"
+  },
+  "ig-084": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "jersey (burgundy) + jeans (grey, wide) + work_boot (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-085": {
+   "v15": [
+    7.5,
+    8.0
+   ],
+   "v16_cool": [
+    8.5,
+    8.5
+   ],
+   "v16_warm": [
+    8.5,
+    8.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.5, L7 +0.5",
+   "pieces": "hoodie (charcoal) + jeans (charcoal, wide) + basketball_sneaker (black)",
+   "v15_looks": [
+    7.5,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L7 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-086": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "lifts L2 +0.5",
+   "pieces": "leather_jacket (charcoal) + graphic_tee (off_white_cream) + jeans (black, wide) + white_leather_sneaker (white)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L2 +0.5"
+  },
+  "ig-087": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "graphic_tee (charcoal) + jeans (denim_light, wide) + other (off_white_cream)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "ig-088": {
+   "v15": [
+    7.5,
+    7.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L2 +0.375",
+   "pieces": "shell_jacket (black) + jeans (denim_mid, wide) + work_boot (tan_camel)",
+   "v15_looks": [
+    7.5,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L2 +0.375"
+  },
+  "ig-089": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "sweater (blue) + sweatpants (grey, wide) + white_leather_sneaker (white)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "ig-090": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "faults -0.375 (SCol1_loud_vs_loud: a loud shoe competing with a loud piece)",
+   "pieces": "graphic_tee (off_white_cream) + sweatpants (grey, wide) + basketball_sneaker (multicolor)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; faults -0.375 (SCol1_loud_vs_loud: a loud shoe competing with a loud piece)"
+  },
+  "ig-091": {
+   "v15": [
+    7.5,
+    7.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "sweater (charcoal) + dress_shirt (off_white_cream) + trousers (charcoal, wide) + loafer (black)",
+   "v15_looks": [
+    7.5,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "ig-092": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    8.0
+   ],
+   "v16_warm": [
+    7.5,
+    8.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "oxford_shirt (off_white_cream) + jeans (denim_dark, barrel) + dress_shoe (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    8.0
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-093": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.5,
+    8.5
+   ],
+   "v16_warm": [
+    8.5,
+    8.5
+   ],
+   "panel": 8.5,
+   "founder": null,
+   "why": "held by 2 lifts; lifts L1 +1, L7 +0.5",
+   "pieces": "knit_polo (off_white_cream) + trousers (black, wide) + loafer (burgundy)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.5,
+    8.5
+   ],
+   "why_looks": "held by 2 lifts; lifts L1 +1, L7 +0.5"
+  },
+  "ig-094": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "oxford_shirt (green) + trousers (grey, wide) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-095": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "sweater (brown) + tee (white) + jeans (denim_mid, wide) + low_profile_sneaker (white)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-096": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "polo (white) + trousers (charcoal, wide) + dress_shoe (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-097": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 5.5,
+   "founder": 7.0,
+   "why": "lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "tee (charcoal) + chinos (black, wide) + slides_sandals (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in)"
+  },
+  "ig-098": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 6.0,
+   "founder": 6.5,
+   "why": "nothing off, nothing chosen",
+   "pieces": "oxford_shirt (white) + jeans (denim_mid, straight)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "ig-099": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    6.0,
+    5.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L1 +0.25; faults -1 (TK1_tank_alone: a tank top on its own reads gym or undershirt)",
+   "pieces": "tank_top (blue) + jeans (denim_mid, flare_bootcut) + low_profile_sneaker (navy)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    6.0,
+    5.5
+   ],
+   "why_looks": "lifts L1 +0.25; faults -1 (TK1_tank_alone: a tank top on its own reads gym or undershirt)"
+  },
+  "ig-100": {
+   "v15": [
+    6.5,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "lifts L1 +0.5; faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "oxford_shirt (white) + trousers (black, wide) + slides_sandals (brown)",
+   "v15_looks": [
+    6.5,
+    7.0
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "lifts L1 +0.5; faults -1.25 (SK1_slides_out: slides read as staying in)"
+  },
+  "ig-101": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    6.0,
+    6.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "faults -1 (TK1_tank_alone: a tank top on its own reads gym or undershirt)",
+   "pieces": "tank_top (light_grey) + shorts (khaki_beige, relaxed) + canvas_sneaker (black)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    6.0,
+    6.0
+   ],
+   "why_looks": "faults -1 (TK1_tank_alone: a tank top on its own reads gym or undershirt)"
+  },
+  "ig-102": {
+   "v15": [
+    6.0,
+    7.0
+   ],
+   "v16_cool": [
+    5.5,
+    6.5
+   ],
+   "v16_warm": [
+    5.5,
+    6.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "dress_shirt (light_blue) + trousers (off_white_cream, wide) + slides_sandals (black)",
+   "v15_looks": [
+    6.0,
+    7.0
+   ],
+   "v16_looks": [
+    5.5,
+    6.5
+   ],
+   "why_looks": "faults -1.25 (SK1_slides_out: slides read as staying in)"
+  },
+  "ig-103": {
+   "v15": [
+    5.5,
+    5.5
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.5,
+    5.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "faults -1.875 (SK1_slides_out: slides read as staying in)",
+   "pieces": "camp_collar_shirt (off_white_cream) + jeans (denim_light, wide) + slides_sandals (black)",
+   "v15_looks": [
+    5.5,
+    5.5
+   ],
+   "v16_looks": [
+    6.0,
+    6.0
+   ],
+   "why_looks": "faults -1.875 (SK1_slides_out: slides read as staying in)"
+  },
+  "ig-104": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 8.5,
+   "founder": null,
+   "why": "lifts L1 +0.5",
+   "pieces": "tee (charcoal) + trousers (off_white_cream, wide) + dress_shoe (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L1 +0.5"
+  },
+  "ig-105": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "hoodie (blue) + trousers (black, wide) + dress_shoe (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-106": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "oxford_shirt (light_blue) + jeans (black, wide) + dress_shoe (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "ig-107": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L6 +0.125",
+   "pieces": "sweatshirt (black) + jeans (denim_light, straight) + loafer (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L6 +0.125"
+  },
+  "ig-108": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.5
+   ],
+   "v16_warm": [
+    8.0,
+    7.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.5",
+   "pieces": "cardigan (grey) + dress_shirt (white) + trousers (black, wide) + dress_shoe (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.5
+   ],
+   "why_looks": "lifts L1 +0.5"
+  },
+  "ig-109": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "held by 1 lift; lifts L2 +1, L6 +0.25",
+   "pieces": "bomber (brown) + dress_shirt (light_blue) + jeans (denim_mid, wide) + loafer (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L2 +1, L6 +0.25"
+  },
+  "ig-110": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 8.5,
+   "founder": null,
+   "why": "held by 1 lift; lifts L2 +1, L6 +0.25",
+   "pieces": "leather_jacket (brown) + sweater (black) + trousers (black, wide) + loafer (brown)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L2 +1, L6 +0.25"
+  },
+  "ig-111": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 8.5,
+   "founder": null,
+   "why": "held by 1 lift; lifts L1 +1, L6 +0.25",
+   "pieces": "knit_polo (black) + trousers (charcoal, wide) + dress_shoe (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L1 +1, L6 +0.25"
+  },
+  "ig-112": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.5,
+    8.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 2 lifts; lifts L2 +0.75, L7 +0.5",
+   "pieces": "tee (white) + cardigan (charcoal) + trousers (grey, wide) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.5,
+    8.5
+   ],
+   "why_looks": "held by 2 lifts; lifts L2 +0.75, L7 +0.5"
+  },
+  "ig-113": {
+   "v15": [
+    8.0,
+    7.5
+   ],
+   "v16_cool": [
+    8.5,
+    7.5
+   ],
+   "v16_warm": [
+    8.5,
+    8.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.5, L7 +0.5",
+   "pieces": "knit_polo (black) + trousers (black, wide) + loafer (burgundy)",
+   "v15_looks": [
+    8.0,
+    7.5
+   ],
+   "v16_looks": [
+    8.5,
+    7.5
+   ],
+   "why_looks": "held by 2 lifts; lifts L1 +0.5, L7 +0.5"
+  },
+  "ig-114": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.5,
+    8.5
+   ],
+   "v16_warm": [
+    8.5,
+    8.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.5, L7 +0.5",
+   "pieces": "knit_polo (brown) + trousers (black, wide) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.5,
+    8.5
+   ],
+   "why_looks": "lifts L1 +0.5, L7 +0.5"
+  },
+  "ig-115": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.5,
+    8.5
+   ],
+   "v16_warm": [
+    8.5,
+    8.5
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.5, L7 +0.5",
+   "pieces": "knit_polo (black) + trousers (black, wide) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.5,
+    8.5
+   ],
+   "why_looks": "held by 2 lifts; lifts L1 +0.5, L7 +0.5"
+  },
+  "ig-116": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 7.5,
+   "founder": 7.0,
+   "why": "held by 1 lift; lifts L1 +0.5, L6 +0.25",
+   "pieces": "quarter_zip (black) + jeans (denim_mid, wide) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L1 +0.5, L6 +0.25"
+  },
+  "ig-117": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": 7.5,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "polo (white) + trousers (black, wide) + dress_shoe (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts; lifts L1 +0.25"
+  },
+  "ig-118": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "held by 1 lift; lifts L1 +1, L6 +0.25",
+   "pieces": "quarter_zip (black) + dress_shirt (white) + jeans (charcoal, wide) + derby (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "held by 1 lift; lifts L1 +1, L6 +0.25"
+  },
+  "ig-119": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.5, L7 +0.5",
+   "pieces": "knit_polo (white) + trousers (brown, straight) + derby (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "lifts L1 +0.5, L7 +0.5"
+  },
+  "ig-121": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.5",
+   "pieces": "sweater (off_white_cream) + trousers (black, wide) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "lifts L1 +0.5"
+  },
+  "ig-122": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "lifts L6 +0.125",
+   "pieces": "sweater (black) + shorts (tan_camel, straight) + derby (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L6 +0.125"
+  },
+  "ig-123": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.5; faults -1.75 (SX1_another_look: the graphic tee and the dressier pieces with it come from different looks)",
+   "pieces": "graphic_tee (off_white_cream) + chinos (khaki_beige, wide) + derby (black)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L1 +0.5; faults -1.75 (SX1_another_look: the graphic tee and the dressier pieces with it come from different looks)"
+  },
+  "ig-124": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L6 +0.125",
+   "pieces": "sweater (black) + jeans (denim_mid, straight) + chelsea_boot (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L6 +0.125"
+  },
+  "ig-125": {
+   "v15": [
+    7.5,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.5
+   ],
+   "v16_warm": [
+    8.0,
+    8.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.5",
+   "pieces": "polo (black) + chinos (off_white_cream, relaxed) + dress_shoe (brown)",
+   "v15_looks": [
+    7.5,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.5
+   ],
+   "why_looks": "lifts L1 +0.5"
+  },
+  "ig-126": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "cardigan (charcoal) + tee (white) + jeans (denim_dark, straight) + loafer (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "ig-127": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 6.5,
+   "founder": 6.5,
+   "why": "nothing off, nothing chosen",
+   "pieces": "tee (light_grey) + jeans (denim_mid, straight) + loafer (brown)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "ig-128": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "held by 0 lifts",
+   "pieces": "overcoat (navy) + trousers (black, wide) + loafer (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "ig-129": {
+   "v15": [
+    8.0,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "held by 0 lifts; lifts L2 +0.375",
+   "pieces": "cardigan (light_blue) + jeans (denim_dark, relaxed) + suede_chukka (tan_camel)",
+   "v15_looks": [
+    8.0,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.0
+   ],
+   "why_looks": "held by 0 lifts; lifts L2 +0.375"
+  },
+  "ig-130": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "puffer (black) + jeans (denim_mid, flare_bootcut) + loafer (brown)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "ig-131": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.75, L7 +0.5",
+   "pieces": "suit_jacket (black) + dress_shirt (white) + suit_trousers (black, slim) + dress_shoe (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "lifts L1 +0.75, L7 +0.5"
+  },
+  "ig-132": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.0
+   ],
+   "v16_warm": [
+    6.5,
+    6.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "dress_shirt (black) + trousers (black, flare_bootcut) + loafer (black)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    7.0,
+    6.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-001": {
+   "v15": [
+    5.5,
+    5.5
+   ],
+   "v16_cool": [
+    5.0,
+    5.0
+   ],
+   "v16_warm": [
+    4.5,
+    4.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "lifts L6 +0.125; faults -1.875 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)",
+   "pieces": "leather_jacket (black) + sweater (red) + jeans (charcoal, skinny) + dress_shoe (black)",
+   "v15_looks": [
+    5.5,
+    5.0
+   ],
+   "v16_looks": [
+    4.5,
+    4.5
+   ],
+   "why_looks": "lifts L6 +0.125; faults -2.125 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)"
+  },
+  "pin-002": {
+   "v15": [
+    6.0,
+    6.0
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.5,
+    5.5
+   ],
+   "panel": 7.0,
+   "founder": 5.0,
+   "why": "faults -1.625 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)",
+   "pieces": "cardigan (tan_camel) + tee (light_blue) + jeans (denim_mid, skinny) + suede_chukka (brown)",
+   "v15_looks": [
+    6.0,
+    6.0
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "faults -1.625 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)"
+  },
+  "pin-003": {
+   "v15": [
+    5.5,
+    5.5
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    6.0,
+    6.0
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "faults -1.375 (TK1_tank_alone: a tank top on its own reads gym or undershirt)",
+   "pieces": "tank_top (white) + jeans (denim_mid, slim) + canvas_sneaker (light_grey)",
+   "v15_looks": [
+    5.5,
+    5.5
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "faults -1.375 (TK1_tank_alone: a tank top on its own reads gym or undershirt)"
+  },
+  "pin-004": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "faults -0.5 (PN1_narrow_leg: the slim jeans would balance better with a straight leg)",
+   "pieces": "dress_shirt (navy) + jeans (denim_dark, slim) + dress_shoe (brown)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "faults -0.5 (PN1_narrow_leg: the slim jeans would balance better with a straight leg)"
+  },
+  "pin-005": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "faults -0.5 (PN1_narrow_leg: the slim trousers would balance better with a straight leg)",
+   "pieces": "oxford_shirt (khaki_beige) + trousers (black, slim) + dress_shoe (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "faults -0.5 (PN1_narrow_leg: the slim trousers would balance better with a straight leg)"
+  },
+  "pin-006": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.5
+   ],
+   "panel": 5.0,
+   "founder": null,
+   "why": "lifts L1 +0.25; faults -0.75 (CL1_loud_print: the big, loud check on the camp collar shirt takes over the outfit)",
+   "pieces": "camp_collar_shirt (light_blue) + jeans (denim_mid, wide) + retro_runner (white)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.25; faults -0.75 (CL1_loud_print: the big, loud check on the camp collar shirt takes over the outfit)"
+  },
+  "pin-007": {
+   "v15": [
+    7.0,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.5
+   ],
+   "panel": 5.5,
+   "founder": 6.0,
+   "why": "lifts L1 +0.25",
+   "pieces": "dress_shirt (light_blue) + trousers (khaki_beige, straight) + loafer (brown)",
+   "v15_looks": [
+    7.0,
+    7.5
+   ],
+   "v16_looks": [
+    7.0,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "pin-008": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L1 +0.5, L6 +0.25",
+   "pieces": "oxford_shirt (blue) + chinos (khaki_beige, straight) + canvas_sneaker (blue)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.5, L6 +0.25"
+  },
+  "pin-009": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.5,
+    5.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "faults -1 (PN1_narrow_leg: the skinny jeans read dated; a straight leg balances the outfit)",
+   "pieces": "oxford_shirt (blue) + jeans (navy, skinny) + dress_shoe (black)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "faults -1 (PN1_narrow_leg: the skinny jeans read dated; a straight leg balances the outfit)"
+  },
+  "pin-010": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    6.0,
+    6.0
+   ],
+   "v16_warm": [
+    6.0,
+    6.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "faults -0.5 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)",
+   "pieces": "dress_shirt (blue) + chinos (light_grey, slim) + dress_shoe (black)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    6.0,
+    6.0
+   ],
+   "why_looks": "faults -0.5 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)"
+  },
+  "pin-011": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "held by occasion",
+   "pieces": "hoodie (white) + joggers (black, slim) + retro_runner (grey)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "held by occasion"
+  },
+  "pin-012": {
+   "v15": [
+    5.5,
+    5.0
+   ],
+   "v16_cool": [
+    5.5,
+    5.0
+   ],
+   "v16_warm": [
+    5.5,
+    5.0
+   ],
+   "panel": 5.0,
+   "founder": null,
+   "why": "faults -1.625 (SK1_slides_out: slides read as staying in)",
+   "pieces": "graphic_tee (black) + jeans (grey, slim) + slides_sandals (blue)",
+   "v15_looks": [
+    5.5,
+    5.0
+   ],
+   "v16_looks": [
+    5.5,
+    5.0
+   ],
+   "why_looks": "faults -1.625 (SK1_slides_out: slides read as staying in)"
+  },
+  "pin-013": {
+   "v15": [
+    5.0,
+    5.0
+   ],
+   "v16_cool": [
+    5.0,
+    5.0
+   ],
+   "v16_warm": [
+    5.0,
+    5.0
+   ],
+   "panel": 6.0,
+   "founder": 5.5,
+   "why": "faults -1.812 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)",
+   "pieces": "graphic_tee (black) + jeans (denim_dark, skinny) + basketball_sneaker (red)",
+   "v15_looks": [
+    5.0,
+    5.0
+   ],
+   "v16_looks": [
+    5.0,
+    5.0
+   ],
+   "why_looks": "faults -1.812 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)"
+  },
+  "pin-014": {
+   "v15": [
+    5.0,
+    6.0
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.0,
+    5.0
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "faults -1.688 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)",
+   "pieces": "leather_jacket (black) + tee (white) + jeans (denim_mid, skinny) + low_profile_sneaker (white)",
+   "v15_looks": [
+    5.0,
+    6.0
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "faults -1.688 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)"
+  },
+  "pin-015": {
+   "v15": [
+    4.5,
+    4.5
+   ],
+   "v16_cool": [
+    5.0,
+    5.0
+   ],
+   "v16_warm": [
+    5.0,
+    5.0
+   ],
+   "panel": 5.0,
+   "founder": null,
+   "why": "faults -2.125 (PN1_narrow_leg: the skinny jeans read dated; a straight leg balances the outfit)",
+   "pieces": "graphic_tee (white) + jeans (denim_mid, skinny) + performance_runner (black)",
+   "v15_looks": [
+    4.5,
+    4.5
+   ],
+   "v16_looks": [
+    5.0,
+    5.0
+   ],
+   "why_looks": "faults -2.125 (PN1_narrow_leg: the skinny jeans read dated; a straight leg balances the outfit)"
+  },
+  "pin-016": {
+   "v15": [
+    5.0,
+    5.0
+   ],
+   "v16_cool": [
+    6.0,
+    6.0
+   ],
+   "v16_warm": [
+    6.0,
+    6.0
+   ],
+   "panel": 5.5,
+   "founder": null,
+   "why": "faults -1.25 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)",
+   "pieces": "tee (green) + jeans (denim_mid, skinny) + white_leather_sneaker (white)",
+   "v15_looks": [
+    5.0,
+    5.0
+   ],
+   "v16_looks": [
+    6.0,
+    6.0
+   ],
+   "why_looks": "faults -1.25 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)"
+  },
+  "pin-017": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "faults -0.75 (PN1_narrow_leg: the slim ripped jeans would balance better with a straight leg)",
+   "pieces": "graphic_tee (white) + jeans (denim_mid, slim)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "faults -0.75 (PN1_narrow_leg: the slim ripped jeans would balance better with a straight leg)"
+  },
+  "pin-018": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "oxford_shirt (blue) + trousers (light_grey, straight) + dress_shoe (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "pin-019": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "dress_shirt (pink) + trousers (grey, straight) + dress_shoe (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "pin-020": {
+   "v15": [
+    5.5,
+    5.5
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    6.0,
+    6.0
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "faults -1.375 (TK1_tank_alone: a tank top on its own reads gym or undershirt)",
+   "pieces": "tank_top (light_blue) + jeans (denim_mid, flare_bootcut)",
+   "v15_looks": [
+    5.5,
+    5.5
+   ],
+   "v16_looks": [
+    6.0,
+    6.0
+   ],
+   "why_looks": "faults -1.375 (TK1_tank_alone: a tank top on its own reads gym or undershirt)"
+  },
+  "pin-021": {
+   "v15": [
+    6.5,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    7.0
+   ],
+   "v16_warm": [
+    6.5,
+    7.0
+   ],
+   "panel": 4.5,
+   "founder": 6.5,
+   "why": "nothing off, nothing chosen",
+   "pieces": "dress_shirt (blue) + shorts (khaki_beige, wide)",
+   "v15_looks": [
+    6.5,
+    7.0
+   ],
+   "v16_looks": [
+    6.5,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-022": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    5.0,
+    5.0
+   ],
+   "v16_warm": [
+    5.0,
+    5.0
+   ],
+   "panel": 5.5,
+   "founder": null,
+   "why": "faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "tee (green) + shorts (khaki_beige, relaxed) + slides_sandals (brown)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    5.0,
+    5.0
+   ],
+   "why_looks": "faults -1.25 (SK1_slides_out: slides read as staying in)"
+  },
+  "pin-023": {
+   "v15": [
+    7.0,
+    6.5
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.5,
+    5.5
+   ],
+   "panel": 3.5,
+   "founder": null,
+   "why": "lifts L6 +0.125; faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "other (brown) + tee (white) + shorts (blue, straight) + slides_sandals (brown)",
+   "v15_looks": [
+    7.0,
+    6.5
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "lifts L6 +0.125; faults -1.25 (SK1_slides_out: slides read as staying in)"
+  },
+  "pin-025": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "sweater (blue) + tee (white) + jeans (charcoal, straight) + work_boot (brown)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-026": {
+   "v15": [
+    6.5,
+    7.0
+   ],
+   "v16_cool": [
+    6.0,
+    6.0
+   ],
+   "v16_warm": [
+    6.0,
+    6.0
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "faults -0.5 (SQ_worn: the shoes look worn)",
+   "pieces": "unstructured_blazer (charcoal) + flannel_shirt (green) + jeans (grey, straight) + low_profile_sneaker (black)",
+   "v15_looks": [
+    6.5,
+    7.0
+   ],
+   "v16_looks": [
+    6.0,
+    6.0
+   ],
+   "why_looks": "faults -0.5 (SQ_worn: the shoes look worn)"
+  },
+  "pin-027": {
+   "v15": [
+    6.0,
+    6.0
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.5,
+    5.5
+   ],
+   "panel": 5.5,
+   "founder": null,
+   "why": "faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)",
+   "pieces": "shell_jacket (navy) + graphic_tee (blue) + jeans (denim_mid, straight) + retro_runner (white)",
+   "v15_looks": [
+    6.0,
+    6.0
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)"
+  },
+  "pin-028": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    7.0
+   ],
+   "v16_warm": [
+    6.5,
+    7.0
+   ],
+   "panel": 5.5,
+   "founder": null,
+   "why": "faults -0.375 (SCol1_loud_vs_loud: a loud shoe competing with a loud piece)",
+   "pieces": "tee (blue) + shell_jacket (off_white_cream) + cargos (brown, straight) + basketball_sneaker (multicolor)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    6.5,
+    7.0
+   ],
+   "why_looks": "faults -0.375 (SCol1_loud_vs_loud: a loud shoe competing with a loud piece)"
+  },
+  "pin-029": {
+   "v15": [
+    7.5,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "field_jacket (olive) + jeans (denim_mid, straight) + work_boot (brown)",
+   "v15_looks": [
+    7.5,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-030": {
+   "v15": [
+    6.0,
+    6.0
+   ],
+   "v16_cool": [
+    4.5,
+    4.5
+   ],
+   "v16_warm": [
+    4.5,
+    4.5
+   ],
+   "panel": 5.5,
+   "founder": null,
+   "why": "faults -1.375 (SK1_slides_out: slides read as staying in)",
+   "pieces": "sweater (orange) + rain_jacket (pink) + chinos (purple, straight) + slides_sandals (olive)",
+   "v15_looks": [
+    6.0,
+    6.0
+   ],
+   "v16_looks": [
+    4.5,
+    4.5
+   ],
+   "why_looks": "faults -1.375 (SK1_slides_out: slides read as staying in)"
+  },
+  "pin-031": {
+   "v15": [
+    6.0,
+    6.0
+   ],
+   "v16_cool": [
+    5.5,
+    5.0
+   ],
+   "v16_warm": [
+    5.5,
+    5.0
+   ],
+   "panel": 5.0,
+   "founder": null,
+   "why": "faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)",
+   "pieces": "graphic_tee (orange) + jeans (black, slim)",
+   "v15_looks": [
+    6.0,
+    6.0
+   ],
+   "v16_looks": [
+    5.5,
+    5.0
+   ],
+   "why_looks": "faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)"
+  },
+  "pin-032": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    6.0,
+    6.5
+   ],
+   "v16_warm": [
+    6.0,
+    6.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "faults -0.5 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)",
+   "pieces": "sweatshirt (blue) + chinos (brown, slim) + low_profile_sneaker (white)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    6.0,
+    6.5
+   ],
+   "why_looks": "faults -0.5 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)"
+  },
+  "pin-033": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    6.0,
+    6.0
+   ],
+   "v16_warm": [
+    6.0,
+    6.0
+   ],
+   "panel": 5.0,
+   "founder": 5.5,
+   "why": "nothing off, nothing chosen",
+   "pieces": "camp_collar_shirt (blue) + jeans (denim_dark, straight) + loafer (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-034": {
+   "v15": [
+    7.0,
+    7.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 5.5,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "tee (yellow) + shorts (black, straight) + dress_shoe (black)",
+   "v15_looks": [
+    7.0,
+    7.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-035": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    6.0,
+    6.0
+   ],
+   "v16_warm": [
+    6.0,
+    6.0
+   ],
+   "panel": 5.5,
+   "founder": null,
+   "why": "faults -0.5 (PS3_fitted_shorts: the shorts look short and tight; a fuller pair balances the outfit)",
+   "pieces": "camp_collar_shirt (multicolor) + shorts (denim_mid, straight) + retro_runner (white)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    6.0,
+    6.0
+   ],
+   "why_looks": "faults -0.5 (PS3_fitted_shorts: the shorts look short and tight; a fuller pair balances the outfit)"
+  },
+  "pin-036": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "tee (black) + cargos (black, straight) + chunky_sneaker (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-037": {
+   "v15": [
+    7.0,
+    6.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.0
+   ],
+   "v16_warm": [
+    6.5,
+    6.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "faults -0.75 (CC6_same_pattern_scale: two of the same pattern at the same size)",
+   "pieces": "cardigan (charcoal) + tee (light_grey) + trousers (brown, flare_bootcut)",
+   "v15_looks": [
+    6.5,
+    6.0
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "faults -0.875 (CC6_same_pattern_scale: two of the same pattern at the same size)"
+  },
+  "pin-038": {
+   "v15": [
+    5.5,
+    6.0
+   ],
+   "v16_cool": [
+    5.0,
+    5.0
+   ],
+   "v16_warm": [
+    5.0,
+    5.0
+   ],
+   "panel": 5.0,
+   "founder": null,
+   "why": "faults -1.625 (SK2_runners: running shoes read gym with these clothes)",
+   "pieces": "graphic_tee (white) + athletic_shorts (blue, wide) + performance_runner (grey)",
+   "v15_looks": [
+    5.5,
+    6.0
+   ],
+   "v16_looks": [
+    5.0,
+    5.0
+   ],
+   "why_looks": "faults -1.625 (SK2_runners: running shoes read gym with these clothes)"
+  },
+  "pin-039": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    6.5
+   ],
+   "v16_warm": [
+    7.0,
+    6.5
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "graphic_tee (grey) + jeans (denim_mid, straight) + retro_runner (white)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    6.5
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-040": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "held by 0 lifts",
+   "pieces": "tee (navy) + jeans (denim_dark, relaxed) + canvas_sneaker (pink)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.0
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "pin-041": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L6 +0.125; faults -0.25 (SQ_worn: the shoes look worn)",
+   "pieces": "quarter_zip (brown) + jeans (denim_mid, flare_bootcut) + work_boot (brown)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L6 +0.125; faults -0.25 (SQ_worn: the shoes look worn)"
+  },
+  "pin-042": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "cardigan (burgundy) + graphic_tee (light_blue) + cargos (olive, wide) + low_profile_sneaker (white)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "pin-043": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "faults -0.375 (SCol1_loud_vs_loud: a loud shoe competing with a loud piece)",
+   "pieces": "cardigan (brown) + sweatshirt (sage) + jeans (grey, wide) + low_profile_sneaker (green)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "faults -0.375 (SCol1_loud_vs_loud: a loud shoe competing with a loud piece)"
+  },
+  "pin-044": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L1 +0.5, L7 +0.5",
+   "pieces": "polo (blue) + chinos (light_grey, straight) + loafer (brown)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.5, L7 +0.5"
+  },
+  "pin-046": {
+   "v15": [
+    6.0,
+    6.0
+   ],
+   "v16_cool": [
+    6.0,
+    6.5
+   ],
+   "v16_warm": [
+    5.5,
+    6.0
+   ],
+   "panel": 5.5,
+   "founder": null,
+   "why": "faults -0.688 (SQ_worn: the shoes look worn)",
+   "pieces": "overcoat (khaki_beige) + jeans (denim_dark, straight) + canvas_sneaker (black)",
+   "v15_looks": [
+    6.0,
+    6.0
+   ],
+   "v16_looks": [
+    6.0,
+    6.5
+   ],
+   "why_looks": "faults -0.688 (SQ_worn: the shoes look worn)"
+  },
+  "pin-047": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "held by 0 lifts",
+   "pieces": "flannel_shirt (tan_camel) + tee (light_grey) + jeans (denim_mid, relaxed) + work_boot (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "pin-048": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "faults -0.75 (CL1_loud_print: the big, loud check on the sweater takes over the outfit)",
+   "pieces": "sweater (navy) + dress_shirt (white) + chinos (grey, straight) + loafer (tan_camel)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "faults -0.75 (CL1_loud_print: the big, loud check on the sweater takes over the outfit)"
+  },
+  "pin-049": {
+   "v15": [
+    7.5,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    6.5
+   ],
+   "v16_warm": [
+    7.0,
+    6.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "field_jacket (charcoal) + sweater (red) + dress_shirt (light_blue) + trousers (grey, straight) + dress_shoe (black)",
+   "v15_looks": [
+    7.5,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    6.5
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-050": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "sweater (purple) + flannel_shirt (multicolor) + jeans (denim_dark, straight) + suede_chukka (tan_camel)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "pin-051": {
+   "v15": [
+    6.5,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    7.0
+   ],
+   "v16_warm": [
+    6.5,
+    7.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "faults -0.5 (PN1_narrow_leg: the slim trousers would balance better with a straight leg)",
+   "pieces": "sweater (light_blue) + tee (white) + trousers (grey, slim) + suede_chukka (tan_camel)",
+   "v15_looks": [
+    6.5,
+    7.0
+   ],
+   "v16_looks": [
+    6.5,
+    7.0
+   ],
+   "why_looks": "faults -0.5 (PN1_narrow_leg: the slim trousers would balance better with a straight leg)"
+  },
+  "pin-052": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L2 +0.5",
+   "pieces": "bomber (black) + oxford_shirt (light_blue) + jeans (denim_mid, straight) + suede_chukka (grey)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "lifts L2 +0.5"
+  },
+  "pin-053": {
+   "v15": [
+    7.0,
+    6.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.0
+   ],
+   "v16_warm": [
+    6.5,
+    6.0
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "faults -1 (SK2_runners: running shoes read gym with these clothes)",
+   "pieces": "field_jacket (brown) + hoodie (grey) + cargos (denim_mid, relaxed) + performance_runner (blue)",
+   "v15_looks": [
+    7.0,
+    6.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.0
+   ],
+   "why_looks": "faults -1 (SK2_runners: running shoes read gym with these clothes)"
+  },
+  "pin-054": {
+   "v15": [
+    6.0,
+    6.0
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.0,
+    5.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L2 +0.375; faults -1.5 (SK2_runners: running shoes read gym with these clothes)",
+   "pieces": "hoodie (black) + graphic_tee (white) + cargos (multicolor, straight) + performance_runner (black)",
+   "v15_looks": [
+    6.0,
+    6.0
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "lifts L2 +0.375; faults -1.5 (SK2_runners: running shoes read gym with these clothes)"
+  },
+  "pin-055": {
+   "v15": [
+    7.0,
+    7.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "rain_jacket (blue) + hoodie (navy) + jeans (denim_dark, straight) + work_boot (brown)",
+   "v15_looks": [
+    7.0,
+    7.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-056": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    6.0,
+    6.0
+   ],
+   "v16_warm": [
+    5.5,
+    5.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "faults -0.625 (SD2_too_casual: the shoes are more casual than the clothes)",
+   "pieces": "chore_coat (olive) + blazer (grey) + dress_shirt (green) + suit_trousers (charcoal, relaxed) + work_boot (burgundy)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.0
+   ],
+   "why_looks": "faults -0.625 (SD2_too_casual: the shoes are more casual than the clothes)"
+  },
+  "pin-057": {
+   "v15": [
+    6.0,
+    6.0
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.5,
+    5.5
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "faults -0.5 (SQ_worn: the shoes look worn)",
+   "pieces": "other (olive) + camp_collar_shirt (multicolor) + cargos (light_blue, straight) + canvas_sneaker (white)",
+   "v15_looks": [
+    6.0,
+    6.0
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "faults -0.5 (SQ_worn: the shoes look worn)"
+  },
+  "pin-058": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    7.0
+   ],
+   "v16_warm": [
+    6.5,
+    7.0
+   ],
+   "panel": 5.0,
+   "founder": 5.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "graphic_tee (pink) + shorts (denim_light, relaxed)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    6.5,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-059": {
+   "v15": [
+    6.0,
+    6.0
+   ],
+   "v16_cool": [
+    5.0,
+    5.0
+   ],
+   "v16_warm": [
+    5.0,
+    5.0
+   ],
+   "panel": 4.5,
+   "founder": null,
+   "why": "faults -1.375 (SK2_runners: running shoes read gym with these clothes)",
+   "pieces": "overshirt (green) + camp_collar_shirt (khaki_beige) + shorts (denim_mid, relaxed) + performance_runner (black)",
+   "v15_looks": [
+    6.0,
+    6.0
+   ],
+   "v16_looks": [
+    5.0,
+    5.0
+   ],
+   "why_looks": "faults -1.375 (SK2_runners: running shoes read gym with these clothes)"
+  },
+  "pin-060": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "tee (multicolor) + jeans (denim_light, straight) + derby (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.0,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "pin-061": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L1 +0.25; faults -0.5 (SQ_worn: the shoes look worn)",
+   "pieces": "camp_collar_shirt (denim_mid) + jeans (denim_light, straight) + canvas_sneaker (white)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L1 +0.25; faults -0.5 (SQ_worn: the shoes look worn)"
+  },
+  "pin-062": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "faults -0.75 (CL1_loud_print: the big, loud check on the sweater takes over the outfit)",
+   "pieces": "sweater (brown) + dress_shirt (light_blue) + trousers (grey, straight) + loafer (brown)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "faults -0.75 (CL1_loud_print: the big, loud check on the sweater takes over the outfit)"
+  },
+  "pin-063": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.0
+   ],
+   "v16_warm": [
+    7.5,
+    7.0
+   ],
+   "panel": 5.0,
+   "founder": null,
+   "why": "held by 0 lifts",
+   "pieces": "blazer (black) + oxford_shirt (khaki_beige) + jeans (denim_mid, relaxed) + dress_shoe (brown)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.0
+   ],
+   "why_looks": "held by 0 lifts"
+  },
+  "pin-064": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    6.5
+   ],
+   "v16_warm": [
+    7.0,
+    6.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "other (pink) + dress_shirt (light_blue) + jeans (denim_dark, straight) + loafer (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.0,
+    6.5
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "pin-065": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "lifts L7 +0.25; faults -0.5 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)",
+   "pieces": "knit_polo (brown) + chinos (off_white_cream, slim) + white_leather_sneaker (white)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L7 +0.25; faults -0.5 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)"
+  },
+  "pin-066": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "polo (off_white_cream) + jeans (charcoal, straight) + canvas_sneaker (white)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-067": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 5.0,
+   "founder": null,
+   "why": "faults -0.25 (H5_too_many_statements: too many things compete for attention)",
+   "pieces": "sweater (black) + cargos (khaki_beige, straight)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "faults -0.375 (PF10_peek: the top underneath shows below the outer piece)"
+  },
+  "pin-068": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L2 +0.5",
+   "pieces": "bomber (yellow) + sweatshirt (white) + trousers (brown, straight) + derby (tan_camel)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L2 +0.5"
+  },
+  "pin-069": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "other (grey) + oxford_shirt (tan_camel) + jeans (black, straight) + work_boot (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "pin-070": {
+   "v15": [
+    6.0,
+    6.0
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.5,
+    5.5
+   ],
+   "panel": 5.0,
+   "founder": null,
+   "why": "faults -1.062 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)",
+   "pieces": "graphic_tee (red) + jeans (red, straight) + basketball_sneaker (red)",
+   "v15_looks": [
+    6.0,
+    6.0
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "faults -1.062 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)"
+  },
+  "pin-071": {
+   "v15": [
+    6.0,
+    5.5
+   ],
+   "v16_cool": [
+    6.0,
+    6.0
+   ],
+   "v16_warm": [
+    6.0,
+    6.0
+   ],
+   "panel": 5.5,
+   "founder": null,
+   "why": "held by H10 (chunky sneakers under narrow legs); faults -0.75 (PN1_narrow_leg: the slim ripped jeans would balance better with a straight leg)",
+   "pieces": "tee (black) + jeans (denim_light, slim) + basketball_sneaker (white)",
+   "v15_looks": [
+    6.0,
+    5.5
+   ],
+   "v16_looks": [
+    6.0,
+    6.0
+   ],
+   "why_looks": "held by H10 (chunky sneakers under narrow legs); faults -0.75 (PN1_narrow_leg: the slim ripped jeans would balance better with a straight leg)"
+  },
+  "pin-072": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "faults -0.75 (PN1_narrow_leg: the slim ripped jeans would balance better with a straight leg)",
+   "pieces": "tee (charcoal) + jeans (denim_mid, slim) + canvas_sneaker (black)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "faults -0.75 (PN1_narrow_leg: the slim ripped jeans would balance better with a straight leg)"
+  },
+  "pin-073": {
+   "v15": [
+    6.5,
+    6.0
+   ],
+   "v16_cool": [
+    4.5,
+    5.0
+   ],
+   "v16_warm": [
+    4.5,
+    5.0
+   ],
+   "panel": 5.5,
+   "founder": 5.5,
+   "why": "faults -1.438 (PN1_narrow_leg: the skinny jeans read dated; a straight leg balances the outfit)",
+   "pieces": "bomber (black) + tee (multicolor) + jeans (blue, skinny) + canvas_sneaker (blue)",
+   "v15_looks": [
+    6.5,
+    6.0
+   ],
+   "v16_looks": [
+    4.5,
+    5.0
+   ],
+   "why_looks": "faults -1.438 (PN1_narrow_leg: the skinny jeans read dated; a straight leg balances the outfit)"
+  },
+  "pin-074": {
+   "v15": [
+    5.5,
+    5.5
+   ],
+   "v16_cool": [
+    5.5,
+    5.5
+   ],
+   "v16_warm": [
+    5.5,
+    5.5
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "faults -1.75 (SK2_runners: running shoes read gym with these clothes)",
+   "pieces": "graphic_tee (grey) + sweatpants (black, slim) + performance_runner (black)",
+   "v15_looks": [
+    5.5,
+    5.5
+   ],
+   "v16_looks": [
+    5.5,
+    5.5
+   ],
+   "why_looks": "faults -1.75 (SK2_runners: running shoes read gym with these clothes)"
+  },
+  "rd-001": {
+   "v15": [
+    6.5,
+    6.5
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.0,
+   "founder": 7.0,
+   "why": "faults -0.5 (CL2_light_on_light: light on light washes out; a darker pant would anchor it)",
+   "pieces": "camp_collar_shirt (off_white_cream) + chinos (khaki_beige, straight) + loafer (brown)",
+   "v15_looks": [
+    6.5,
+    6.5
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "faults -0.5 (CL2_light_on_light: light on light washes out; a darker pant would anchor it)"
+  },
+  "rd-002": {
+   "v15": [
+    8.0,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.75, L7 +0.5",
+   "pieces": "suit_jacket (olive) + suit_trousers (olive, straight) + dress_shirt (white) + derby (brown)",
+   "v15_looks": [
+    8.0,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "lifts L1 +0.75, L7 +0.5"
+  },
+  "rd-003": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    7.5
+   ],
+   "v16_warm": [
+    8.0,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.5",
+   "pieces": "tee (white) + jeans (denim_mid, relaxed) + white_leather_sneaker (white)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.5"
+  },
+  "rd-004": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 8.0,
+   "founder": null,
+   "why": "lifts L1 +0.5, L6 +0.25",
+   "pieces": "tee (black) + trousers (charcoal, straight) + loafer (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "lifts L1 +0.5, L6 +0.25"
+  },
+  "rd-005": {
+   "v15": [
+    7.0,
+    7.5
+   ],
+   "v16_cool": [
+    6.0,
+    6.5
+   ],
+   "v16_warm": [
+    6.0,
+    6.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "faults -0.5 (PS3_fitted_shorts: the shorts look short and tight; a fuller pair balances the outfit)",
+   "pieces": "tee (burgundy) + shorts (off_white_cream, slim) + low_profile_sneaker (black)",
+   "v15_looks": [
+    7.0,
+    7.5
+   ],
+   "v16_looks": [
+    6.0,
+    6.5
+   ],
+   "why_looks": "faults -0.5 (PS3_fitted_shorts: the shorts look short and tight; a fuller pair balances the outfit)"
+  },
+  "rd-006": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "dress_shirt (light_grey) + suit_trousers (black, straight) + dress_shoe (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.0
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "rd-007": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.0,
+    6.0
+   ],
+   "panel": 8.0,
+   "founder": 7.5,
+   "why": "faults -0.5 (PN1_narrow_leg: the slim trousers would balance better with a straight leg)",
+   "pieces": "overcoat (black) + sweater (black) + trousers (burgundy, slim) + derby (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "faults -0.5 (PN1_narrow_leg: the slim trousers would balance better with a straight leg)"
+  },
+  "rd-008": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.375",
+   "pieces": "blazer (navy) + tee (navy) + trousers (khaki_beige, straight)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.375"
+  },
+  "rd-009": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "oxford_shirt (denim_dark) + jeans (denim_dark, straight) + work_boot (black)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "rd-010": {
+   "v15": [
+    7.5,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    6.0
+   ],
+   "v16_warm": [
+    8.0,
+    7.5
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "lifts L1 +0.375; faults -0.5 (CL2_light_on_light: light on light washes out; a darker pant would anchor it)",
+   "pieces": "sport_coat (off_white_cream) + dress_shirt (blue) + trousers (khaki_beige, straight) + dress_shoe (brown)",
+   "v15_looks": [
+    7.5,
+    7.0
+   ],
+   "v16_looks": [
+    6.5,
+    6.0
+   ],
+   "why_looks": "lifts L1 +0.375; faults -0.5 (CL2_light_on_light: light on light washes out; a darker pant would anchor it)"
+  },
+  "rd-011": {
+   "v15": [
+    7.5,
+    8.0
+   ],
+   "v16_cool": [
+    8.0,
+    8.0
+   ],
+   "v16_warm": [
+    8.0,
+    8.0
+   ],
+   "panel": 6.0,
+   "founder": null,
+   "why": "lifts L1 +0.75, L7 +0.5",
+   "pieces": "suit_jacket (black) + dress_shirt (black) + suit_trousers (black, straight) + dress_shoe (black)",
+   "v15_looks": [
+    7.5,
+    8.0
+   ],
+   "v16_looks": [
+    8.0,
+    8.0
+   ],
+   "why_looks": "lifts L1 +0.75, L7 +0.5"
+  },
+  "rd-012": {
+   "v15": [
+    7.5,
+    7.5
+   ],
+   "v16_cool": [
+    7.5,
+    7.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "dress_shirt (white) + trousers (black, straight) + derby (brown)",
+   "v15_looks": [
+    7.5,
+    7.5
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "rd-013": {
+   "v15": [
+    6.5,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "faults -0.75 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)",
+   "pieces": "polo (navy) + chinos (charcoal, slim) + retro_runner (grey)",
+   "v15_looks": [
+    6.5,
+    7.0
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "faults -0.75 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)"
+  },
+  "rd-014": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    6.5
+   ],
+   "v16_warm": [
+    7.0,
+    6.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L7 +0.25",
+   "pieces": "oxford_shirt (light_blue) + chinos (khaki_beige, straight) + loafer (brown)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    6.5
+   ],
+   "why_looks": "lifts L7 +0.25"
+  },
+  "rd-015": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    6.5,
+    6.5
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 6.0,
+   "founder": 6.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "oxford_shirt (multicolor) + chinos (charcoal, straight)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    6.5,
+    6.5
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "rd-016": {
+   "v15": [
+    7.5,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.0,
+   "founder": null,
+   "why": "lifts L1 +0.25",
+   "pieces": "camp_collar_shirt (off_white_cream) + chinos (burgundy, straight) + derby (black)",
+   "v15_looks": [
+    7.5,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L1 +0.25"
+  },
+  "rd-017": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    8.5,
+    8.5
+   ],
+   "v16_warm": [
+    7.5,
+    7.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "lifts L2 +1, L7 +0.5",
+   "pieces": "bomber (navy) + polo (off_white_cream) + chinos (brown, straight) + loafer (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    8.5,
+    8.5
+   ],
+   "why_looks": "lifts L2 +1, L7 +0.5"
+  },
+  "rd-018": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.5
+   ],
+   "v16_warm": [
+    7.0,
+    7.5
+   ],
+   "panel": 6.5,
+   "founder": null,
+   "why": "nothing off, nothing chosen",
+   "pieces": "oxford_shirt (olive) + jeans (denim_dark, straight) + low_profile_sneaker (white)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.5,
+    7.5
+   ],
+   "why_looks": "nothing off, nothing chosen"
+  },
+  "rd-019": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    6.5
+   ],
+   "v16_warm": [
+    7.0,
+    6.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "faults -0.5 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)",
+   "pieces": "tee (brown) + chinos (off_white_cream, slim) + loafer (tan_camel)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    6.5
+   ],
+   "why_looks": "faults -0.5 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)"
+  },
+  "rd-020": {
+   "v15": [
+    8.0,
+    8.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    6.5,
+    6.5
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L2 +0.5",
+   "pieces": "leather_jacket (brown) + flannel_shirt (orange) + jeans (black, straight) + work_boot (black)",
+   "v15_looks": [
+    8.0,
+    8.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.5
+   ],
+   "why_looks": "lifts L2 +0.5"
+  },
+  "rd-021": {
+   "v15": [
+    7.0,
+    7.0
+   ],
+   "v16_cool": [
+    7.0,
+    7.0
+   ],
+   "v16_warm": [
+    7.0,
+    7.0
+   ],
+   "panel": 7.5,
+   "founder": null,
+   "why": "lifts L1 +0.25; faults -0.75 (H3_another_world: formal and very casual pieces fight)",
+   "pieces": "tee (white) + suit_trousers (charcoal, straight) + loafer (black)",
+   "v15_looks": [
+    7.0,
+    7.0
+   ],
+   "v16_looks": [
+    7.0,
+    7.0
+   ],
+   "why_looks": "lifts L1 +0.25; faults -0.75 (H3_another_world: formal and very casual pieces fight)"
+  }
+ },
+ "phone": {
+  "phone-8bc29d": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "nothing off, nothing chosen",
+   "pieces": "overshirt (off_white_cream) + hoodie (grey) + jeans (black, wide) + other (grey)"
+  },
+  "phone-d6559a": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "hoodie (grey) + jeans (black, straight) + other (grey)"
+  },
+  "phone-f07193": {
+   "occ": "class",
+   "v15": 6.5,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "nothing off, nothing chosen",
+   "pieces": "tee (grey) + overshirt (tan_camel) + jeans (black, wide) + other (grey)"
+  },
+  "phone-e026de": {
+   "occ": "class",
+   "v15": 6.5,
+   "v16_cool": 6.0,
+   "v16_warm": 6.0,
+   "why": "faults -1.5 (SK1_slides_out: slides read as staying in)",
+   "pieces": "overshirt (tan_camel) + sweatshirt (grey) + jeans (black, wide) + slides_sandals (grey)"
+  },
+  "phone-1f1997": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 6.5,
+   "v16_warm": 6.5,
+   "why": "faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "hoodie (black) + jeans (black, wide) + slides_sandals (black)"
+  },
+  "phone-d58b14": {
+   "occ": "class",
+   "v15": 6.5,
+   "v16_cool": 6.0,
+   "v16_warm": 6.0,
+   "why": "faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "hoodie (black) + jeans (black, straight) + slides_sandals (black)"
+  },
+  "phone-d918c0": {
+   "occ": "class",
+   "v15": 7.5,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "fleece (olive) + flannel_shirt (orange) + jeans (black, wide) + suede_chukka (khaki_beige)"
+  },
+  "phone-968016": {
+   "occ": "class",
+   "v15": 7.5,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "sweatshirt (green) + jeans (black, wide) + white_leather_sneaker (white)"
+  },
+  "phone-fb0b17": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "lifts L6 +0.125",
+   "pieces": "chore_coat (navy) + tee (white) + jeans (charcoal, straight) + low_profile_sneaker (navy)"
+  },
+  "phone-f4870b": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "lifts L6 +0.125",
+   "pieces": "chore_coat (navy) + tee (white) + jeans (charcoal, straight) + low_profile_sneaker (navy)"
+  },
+  "phone-403ade": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "held by 0 lifts",
+   "pieces": "tee (black) + jeans (black, wide) + white_leather_sneaker (white)"
+  },
+  "phone-8ad378": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "held by 0 lifts",
+   "pieces": "tee (black) + jeans (black, wide) + white_leather_sneaker (white)"
+  },
+  "phone-d1967f": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "held by 0 lifts",
+   "pieces": "suit_jacket (navy) + tee (black) + jeans (denim_mid, relaxed) + suede_chukka (grey)"
+  },
+  "phone-703a8b": {
+   "occ": "class",
+   "v15": 7.5,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "lifts L1 +0.25",
+   "pieces": "polo (blue) + jeans (denim_mid, straight)"
+  },
+  "phone-ebe23f": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "other (black) + jeans (charcoal, straight) + white_leather_sneaker (white)"
+  },
+  "phone-af7e93": {
+   "occ": "class",
+   "v15": 8.0,
+   "v16_cool": 8.5,
+   "v16_warm": 7.5,
+   "why": "lifts L2 +0.75, L7 +0.5",
+   "pieces": "oxford_shirt (off_white_cream) + jeans (denim_mid, wide) + basketball_sneaker (black) + hoodie (green)"
+  },
+  "phone-e438d4": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "lifts L6 +0.125",
+   "pieces": "chore_coat (navy) + tee (white) + jeans (charcoal, straight) + low_profile_sneaker (navy)"
+  },
+  "phone-9d3ef4": {
+   "occ": "class",
+   "v15": 6.5,
+   "v16_cool": 6.5,
+   "v16_warm": 6.5,
+   "why": "faults -0.75 (PN1_narrow_leg: the slim ripped jeans would balance better with a straight leg)",
+   "pieces": "sweatshirt (black) + jeans (denim_mid, slim)"
+  },
+  "phone-602c13": {
+   "occ": "class",
+   "v15": 6.5,
+   "v16_cool": 6.5,
+   "v16_warm": 6.5,
+   "why": "faults -0.75 (PN1_narrow_leg: the slim ripped jeans would balance better with a straight leg)",
+   "pieces": "polo (black) + jeans (denim_mid, slim)"
+  },
+  "phone-9a2e71": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "lifts L1 +0.25; faults -0.5 (SQ_worn: the shoes look worn)",
+   "pieces": "polo (black) + jeans (denim_dark, straight) + white_leather_sneaker (white)"
+  },
+  "phone-3239a6": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "oxford_shirt (off_white_cream) + jeans (denim_dark, straight) + white_leather_sneaker (white)"
+  },
+  "phone-4c21bb": {
+   "occ": "class",
+   "v15": 7.5,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "lifts L1 +0.25",
+   "pieces": "oxford_shirt (multicolor) + jeans (denim_dark, straight) + white_leather_sneaker (white)"
+  },
+  "phone-7f3c60": {
+   "occ": "class",
+   "v15": 6.5,
+   "v16_cool": 6.0,
+   "v16_warm": 6.0,
+   "why": "faults -0.5 (PN1_narrow_leg: the slim jeans would balance better with a straight leg)",
+   "pieces": "oxford_shirt (multicolor) + jeans (off_white_cream, straight)"
+  },
+  "phone-0a864e": {
+   "occ": "class",
+   "v15": 6.0,
+   "v16_cool": 6.0,
+   "v16_warm": 6.5,
+   "why": "faults -0.75 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)",
+   "pieces": "oxford_shirt (off_white_cream) + chinos (khaki_beige, slim)"
+  },
+  "phone-729b22": {
+   "occ": "class",
+   "v15": 7.0,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "lifts L1 +0.25",
+   "pieces": "graphic_tee (navy) + jeans (off_white_cream, straight)"
+  },
+  "phone-1f1b29": {
+   "occ": "class",
+   "v15": 6.5,
+   "v16_cool": 5.0,
+   "v16_warm": 5.0,
+   "why": "faults -0.875 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)",
+   "pieces": "graphic_tee (blue) + chinos (green, straight)"
+  },
+  "phone-6bf356": {
+   "occ": "class",
+   "v15": 8.0,
+   "v16_cool": 8.5,
+   "v16_warm": 8.5,
+   "why": "lifts L1 +0.5, L7 +0.5",
+   "pieces": "hoodie (navy) + jeans (denim_mid, wide) + chunky_sneaker (white)"
+  },
+  "phone-b17b22": {
+   "occ": "class",
+   "v15": 7.5,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "tee (black) + jeans (denim_light, wide) + white_leather_sneaker (white)"
+  },
+  "phone-e16ac6": {
+   "occ": "class",
+   "v15": 7.5,
+   "v16_cool": 6.0,
+   "v16_warm": 6.0,
+   "why": "lifts L1 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in)",
+   "pieces": "graphic_tee (red) + jeans (black, wide) + slides_sandals (black)"
+  },
+  "phone-6f1aee": {
+   "occ": "class",
+   "v15": 7.5,
+   "v16_cool": 6.0,
+   "v16_warm": 6.0,
+   "why": "lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "graphic_tee (red) + jeans (black, wide) + slides_sandals (black)"
+  },
+  "phone-fd52eb": {
+   "occ": "going_out",
+   "v15": 6.5,
+   "v16_cool": 5.5,
+   "v16_warm": 5.5,
+   "why": "faults -1.5 (SK1_slides_out: slides read as staying in)",
+   "pieces": "overshirt (brown) + sweatshirt (green) + jeans (denim_mid, wide) + slides_sandals (black)"
+  },
+  "phone-23999f": {
+   "occ": "going_out",
+   "v15": 7.5,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "sweatshirt (green) + jeans (denim_mid, wide) + retro_runner (white) + overshirt (brown)"
+  },
+  "phone-83ff37": {
+   "occ": "going_out",
+   "v15": 7.5,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "tee (blue) + jeans (denim_light, wide) + white_leather_sneaker (white)"
+  },
+  "phone-94df92": {
+   "occ": "everyday",
+   "v15": 7.0,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "held by 0 lifts",
+   "pieces": "overshirt (brown) + tee (navy) + jeans (denim_mid, relaxed) + retro_runner (white)"
+  },
+  "phone-b89ce4": {
+   "occ": "everyday",
+   "v15": 6.5,
+   "v16_cool": 5.5,
+   "v16_warm": 5.5,
+   "why": "faults -1.5 (SK1_slides_out: slides read as staying in)",
+   "pieces": "sweatshirt (green) + jeans (denim_mid, relaxed) + slides_sandals (black)"
+  },
+  "phone-5780bb": {
+   "occ": "everyday",
+   "v15": 7.5,
+   "v16_cool": 8.0,
+   "v16_warm": 8.0,
+   "why": "held by 1 lift; lifts L1 +0.5",
+   "pieces": "tee (navy) + overshirt (brown) + jeans (denim_light, relaxed) + chunky_sneaker (white)"
+  },
+  "phone-aa20f9": {
+   "occ": "everyday",
+   "v15": 5.5,
+   "v16_cool": 5.5,
+   "v16_warm": 5.5,
+   "why": "held by S9 (a stain on the tee); faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "tee (charcoal) + jeans (denim_light, straight) + slides_sandals (black)"
+  },
+  "phone-cf069a": {
+   "occ": "everyday",
+   "v15": 7.5,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "lifts L1 +0.5, L6 +0.25; faults -1 (SK2_runners: running shoes read gym with these clothes)",
+   "pieces": "hoodie (black) + jeans (denim_light, relaxed) + performance_runner (black)"
+  },
+  "phone-68f3da": {
+   "occ": "everyday",
+   "v15": 7.0,
+   "v16_cool": 7.0,
+   "v16_warm": 6.5,
+   "why": "nothing off, nothing chosen",
+   "pieces": "fleece (grey) + trousers (black, straight)"
+  },
+  "phone-5c11a4": {
+   "occ": "everyday",
+   "v15": 6.5,
+   "v16_cool": 6.0,
+   "v16_warm": 6.0,
+   "why": "lifts L6 +0.125; faults -1.5 (SK1_slides_out: slides read as staying in)",
+   "pieces": "overshirt (brown) + tee (black) + jeans (denim_mid, wide) + slides_sandals (black)"
+  },
+  "phone-2a1a76": {
+   "occ": "everyday",
+   "v15": 7.0,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "held by 0 lifts",
+   "pieces": "sweatshirt (black) + jeans (black, relaxed) + suede_chukka (grey)"
+  },
+  "phone-cc5817": {
+   "occ": "everyday",
+   "v15": 7.5,
+   "v16_cool": 6.0,
+   "v16_warm": 6.0,
+   "why": "lifts L1 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in)",
+   "pieces": "sweatshirt (green) + jeans (black, wide) + slides_sandals (black)"
+  },
+  "phone-7f14a4": {
+   "occ": "everyday",
+   "v15": 7.0,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "held by 0 lifts",
+   "pieces": "flannel_shirt (brown) + jeans (charcoal, wide) + retro_runner (light_grey)"
+  },
+  "phone-c994c2": {
+   "occ": "everyday",
+   "v15": 8.0,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "lifts L1 +0.25",
+   "pieces": "tee (blue) + jeans (denim_light, relaxed) + chunky_sneaker (white)"
+  },
+  "phone-a5ff95": {
+   "occ": "everyday",
+   "v15": 7.5,
+   "v16_cool": 7.5,
+   "v16_warm": 7.0,
+   "why": "held by 0 lifts; lifts L2 +0.375",
+   "pieces": "fleece (charcoal) + tee (black) + jeans (denim_light, wide) + suede_chukka (grey)"
+  },
+  "phone-a765e8": {
+   "occ": "everyday",
+   "v15": 5.5,
+   "v16_cool": 5.5,
+   "v16_warm": 5.5,
+   "why": "held by occasion; faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "hoodie (grey) + sweatpants (black, relaxed) + slides_sandals (black)"
+  },
+  "phone-b0f0c8": {
+   "occ": "everyday",
+   "v15": 7.5,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "hoodie (grey) + jeans (black, relaxed) + other (grey)"
+  },
+  "phone-680a61": {
+   "occ": "everyday",
+   "v15": 5.5,
+   "v16_cool": 5.5,
+   "v16_warm": 5.5,
+   "why": "held by occasion; faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "hoodie (grey) + sweatpants (black, wide) + slides_sandals (black)"
+  },
+  "phone-a1d1e5": {
+   "occ": "everyday",
+   "v15": 7.0,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "dress_shirt (white) + suit_trousers (navy, slim)"
+  },
+  "phone-cccd69": {
+   "occ": "everyday",
+   "v15": 7.5,
+   "v16_cool": 8.0,
+   "v16_warm": 8.0,
+   "why": "lifts L1 +0.75, L7 +0.5",
+   "pieces": "sport_coat (light_blue) + dress_shirt (white) + trousers (navy, straight) + loafer (black)"
+  },
+  "phone-6b14db": {
+   "occ": "everyday",
+   "v15": 5.5,
+   "v16_cool": 5.5,
+   "v16_warm": 5.5,
+   "why": "held by occasion; faults -1.25 (SK1_slides_out: slides read as staying in)",
+   "pieces": "hoodie (charcoal) + sweatpants (black, slim) + slides_sandals (black)"
+  },
+  "phone-5e2307": {
+   "occ": "everyday",
+   "v15": 7.0,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "field_jacket (brown) + tee (light_blue) + jeans (charcoal, straight)"
+  },
+  "phone-0d39d6": {
+   "occ": "everyday",
+   "v15": 7.0,
+   "v16_cool": 6.5,
+   "v16_warm": 6.5,
+   "why": "lifts L1 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in)",
+   "pieces": "hoodie (grey) + jeans (black, wide) + slides_sandals (navy)"
+  },
+  "phone-5a9049": {
+   "occ": "everyday",
+   "v15": 7.0,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "oxford_shirt (orange) + jeans (charcoal, wide) + low_profile_sneaker (grey)"
+  },
+  "phone-bee15a": {
+   "occ": "going_out",
+   "v15": 6.5,
+   "v16_cool": 6.5,
+   "v16_warm": 6.5,
+   "why": "faults -1 (SK2_runners: running shoes read gym with these clothes)",
+   "pieces": "hoodie (black) + jeans (black, relaxed) + performance_runner (black)"
+  },
+  "phone-00c9ab": {
+   "occ": "going_out",
+   "v15": 7.5,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "tee (black) + jeans (denim_light, relaxed) + work_boot (grey)"
+  },
+  "phone-70f0aa": {
+   "occ": "going_out",
+   "v15": 7.5,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "sweatshirt (green) + jeans (denim_light, relaxed) + suede_chukka (grey)"
+  },
+  "phone-d911e9": {
+   "occ": "going_out",
+   "v15": 7.5,
+   "v16_cool": 7.0,
+   "v16_warm": 7.0,
+   "why": "nothing off, nothing chosen",
+   "pieces": "sweatshirt (green) + jeans (denim_light, relaxed) + suede_chukka (tan_camel)"
+  },
+  "phone-dcb1b2": {
+   "occ": "everyday",
+   "v15": 8.0,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "hoodie (charcoal) + jeans (denim_light, wide) + white_leather_sneaker (white)"
+  },
+  "phone-e992fd": {
+   "occ": "everyday",
+   "v15": 8.0,
+   "v16_cool": 7.5,
+   "v16_warm": 7.5,
+   "why": "held by 0 lifts; lifts L1 +0.25",
+   "pieces": "hoodie (grey) + jeans (denim_mid, wide) + white_leather_sneaker (white)"
+  },
+  "phone-4c4bef": {
+   "occ": "everyday",
+   "v15": 6.5,
+   "v16_cool": 6.5,
+   "v16_warm": 6.5,
+   "why": "faults -1.125 (SK2_runners: running shoes read gym with these clothes)",
+   "pieces": "overshirt (off_white_cream) + hoodie (charcoal) + jeans (denim_mid, relaxed) + performance_runner (black)"
+  },
+  "phone-950979": {
+   "occ": "everyday",
+   "v15": 8.0,
+   "v16_cool": 8.5,
+   "v16_warm": 7.5,
+   "why": "held by 2 lifts; lifts L2 +0.75, L7 +0.5",
+   "pieces": "hoodie (charcoal) + jeans (denim_mid, relaxed) + chunky_sneaker (white) + overshirt (off_white_cream)"
+  }
+ }
+}
