@@ -1,10 +1,8 @@
 {
  "mode": "full",
  "planted": null,
- "fails": [
-  "(2) 1 photos with more flat grey on his outline than main + 0.02 (first /Screenshot 2026-10-12 at 1.44.25\u202fPM.png: 5.9% vs 3.9%)"
- ],
- "seconds": 239,
+ "fails": [],
+ "seconds": 334,
  "(1) S1": {
   "his head regions (main)": [
    [
@@ -29,13 +27,7 @@
   }
  },
  "(2) photos measured": 336,
- "(2) worse": [
-  [
-   "inputs/ig/Screenshot 2026-10-12 at 1.44.25\u202fPM.png",
-   0.0385,
-   0.0593
-  ]
- ],
+ "(2) worse": [],
  "(2) S1": [
   [
    "inputs/pinterest/Screenshot 2026-10-12 at 2.55.27\u202fPM.png",
@@ -45,5 +37,5 @@
  ],
  "(3) other heads checked": 168,
  "(3) lost": [],
- "(3) panels": 10
+ "(3) panels": 7
 }

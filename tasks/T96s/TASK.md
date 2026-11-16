@@ -121,3 +121,27 @@ No constant from IMPLEMENTATION.md was changed.
   - T and every other line are unchanged.
 - **Proved on the 35 photos:** 0 automatic fails on this build. A planted "his head regions dropped from the blur and from `hidden`" gives 40 fails.
 - **No re-baseline needed:** the line now passes on both builds by the same rule. It still needs one `--full` (and the eye on the EYE crops) for the record.
+
+**T96s test writer on D2, D3 and D4 (Nov 16).** Judged against `specs.md` F2.2, IMPLEMENTATION.md (rules 2 and 5) and DECISIONS-LOG #474. Nothing about his own face is loosened.
+
+**D2 · built prints (b): upheld; the placement was wrong, rule 5 stands.**
+- (b) is meant to prove that a face touching his head stays hidden. At the lock I placed the paste **square's** top edge in his band grown 25% of the band's size. Inside a 1.6× square, the face sat 65–100 px lower, below his lower shoulder, on his outline and between his shoulders. By rule 5 as planned and logged (#474: clear of his head region grown by 0.25 of his narrowest head width), that's a chest print, so the test contradicted the spec.
+- **Fixed:** the pasted **face** now touches his head. The core's top edge lies inside his head band itself (from 40% of the way down the band to 2 px above its bottom), with the core's centre across the band's middle 40%. So every (b) face box intersects his head region before any gap is added.
+- **(b)'s head check made like for like:** the face is now pasted over his head regions, so for (b) his head is compared with main on the same built photo, not with main on the photo without the print. A face touching his head is hidden as today.
+- **Rule 5 at 0.25 stands.** I found no real case where a face of his, his chin or his neck, sits below his lower shoulder and clear of his band. His chin is inside the band (the band runs to 0.3 of his outline's height). His face sits below the shoulder line only when the pose lies (S1–S7), and rule 2 guards that (the pose-lies line's nil-zone check). The logic line keeps pinning the gap. So I'm not taking it to the founder.
+- `--full` on this build: (b) 30 of 30 hidden or refused, his face and head as main hides them on all 30.
+
+**D3 · built prints (a): upheld, with a guard against swallowing the line.**
+- When the paste breaks Vision's pose (no hips, or a scrambled body), the photo no longer shows him whole. The spec's rule 2 says the box is then treated exactly as today, so counting those prints as misses tests the photo, not the rule.
+- **Changed:** an (a) photo leaves the 90% count when **main's** `locate` on the pasted photo has lost any of his neck, shoulders or hips. It's judged from main's pose, never the build's, so a build can't excuse itself by breaking `torsoJoints`.
+- Such a photo still must not be refused, and his face is still checked.
+- **Added guard:** at least 24 of the 30 (a) photos (`--quick` 8) must keep a whole pose, or the line fails its setup. The excluded photos are listed.
+- `--full`: main's pose is broken on exactly the five the implementer named (`a-5`, `a-6`, `a-15`, `a-25`, `a-27`). The other 25 photos: 31 of 31 prints left alone, 0 refused.
+
+**D4 · grey square (2): upheld by eye, for that one box only.**
+- I looked at `ig … 1.44.25 PM` (696×1314) at 4×. The tile "face" [410, 547, 43, 43] (working) is his left fist with a ring, at his jacket hem at waist height: knuckles and a ring, no eyes or skin of a face. That's the known gap in TESTING.md's Scope ("shoes, jeans or a hand").
+- **Changed:** `T96S_EYE_HAND_FACES` lists the box at 1024 ([319.3, 425.9, 33.5, 33.5]). (2) leaves out the head box of a swept face matching a listed box (IoU ≥ 0.5), the way the eye lists work.
+- I didn't add a general "within his hands' reach" or "outside his shoulders" rule. That would also excuse a real stranger's face at that spot, and making hand faces un-greyed is founder question 3.
+- `--full` on this build: (2) 336 photos measured, 0 worse than main + 0.02. (1) S1 has no square. (3) keeps 168 of 168 other heads, with 7 panels.
+
+**Re-runs on this build (`12d4d235` plus the test changes), `--full`:** `PASS F2.2 · built prints` ((a) 31/31 on 25 photos, (b) 30/30, (c) 30/30, (L) 8 kept of 16 built, 8/8 left alone) and `PASS F2.2 · grey square on him`. Re-locked: see the Lock line in TESTING.md.

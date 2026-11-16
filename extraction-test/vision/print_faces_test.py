@@ -94,6 +94,11 @@ T96S_EYE_NOT_FACES = {
     "inputs/fashionpedia/images/test/2ddd0fbcbeb60656e0a46efe621b5a9f.jpg": [[308.5, 338.3, 16.2, 22.0]],   # her hair
     "inputs/fashionpedia/images/test/742ca0ded538281bfd2d1f3ea331773e.jpg": [[412.3, 819.2, 12.9, 6.7]],    # fabric
 }
+# Dispute D4: tile "faces" the test writer judged by eye to be his hand (TESTING.md → Scope: the known gap). Grey square (2)
+# leaves out the head box the sweep drew for a swept face matching a listed box (IoU ≥ 0.5 at the 1024 size), nothing else.
+T96S_EYE_HAND_FACES = {
+    f"inputs/ig/Screenshot 2026-10-12 at 1.44.25{NB}PM.png": [[319.3, 425.9, 33.5, 33.5]],   # his left fist with a ring
+}
 HOSTS = ("his phone", "mirror-fit-check-1")
 
 # Round 3's counts on T96's lines that are red there ("not worse", TESTING.md → T96 still holds).
@@ -1443,16 +1448,17 @@ def place_chest(h, m, rng, pw, ph, count=1):
     return None
 
 
-def place_head(h, rng, pw, ph):
-    """(b): the top edge inside his head band grown 25%, centred across it."""
+def place_head(h, rng, pw, ph, core):
+    """(b): the pasted face itself touches his head: its core's top edge inside his head band (from 40% down the band to
+    2 px above its bottom), the core's centre across the band's middle 40%. (Dispute D2: at the lock the square's top
+    edge was placed there, which could leave the face 65–100 px below the band, a chest print by rule 5.)"""
     b = h["band"]
     W, H = h["size"]
-    g = grow(b, 0.25)
     for _ in range(100):
-        y = rng.uniform(b[1] + 0.4 * b[3], g[1] + g[3] - 2)
+        cy = rng.uniform(b[1] + 0.4 * b[3], b[1] + b[3] - 2)
         cx = rng.uniform(b[0] + 0.3 * b[2], b[0] + 0.7 * b[2])
-        r = [cx - pw / 2, y, pw, ph]
-        if r[0] >= 0 and r[0] + pw <= W and y + ph <= H:
+        r = [cx - core[0] - core[2] / 2, cy - core[1], pw, ph]
+        if r[0] >= 0 and r[0] + pw <= W and r[1] >= 0 and r[1] + ph <= H:
             return r
     return None
 
@@ -1512,7 +1518,7 @@ def make_built(ctx, want, d):
                 ph, pw = patch.shape[:2]
                 rects = place_chest(h, m, rng, pw, ph, 2 if two else 1)
         elif typ == "b":
-            r = place_head(h, rng, pw, ph)
+            r = place_head(h, rng, pw, ph, core)
             rects = [r] if r else None
         else:
             r = place_beside(h, m, rng, pw, ph)
@@ -1577,6 +1583,7 @@ def check_built(ctx):
         rn = ctx.prep("new", files)
         rb = ctx.prep("before", files)
         rm = ctx.prep("main", [b["file"] for b in B["L"]])
+        la = ctx.locate("main", [b["file"] for b in B["a"]])
         lm = ctx.locate("main", [b["file"] for b in B["L"]])
         wt = ctx.truth([b["file"] for b in B["L"]], mp=False, grids=(1,))
     except Crash as e:
@@ -1612,18 +1619,29 @@ def check_built(ctx):
         n_ok = n_faces = 0
         misses = []
         before_alone = before_found = 0
+        pose_broken = []
         for b in items:
             h = b["host"]
             orig = rgb(b["file"])
             r, r0 = rn[b["file"]], rb[b["file"]]
             host_status = ctx.prep("new", [h["photo"]])[h["photo"]].get("status")
+            # (a), dispute D3: when main's own pose on the pasted photo no longer has his neck, both shoulders and both
+            # hips (the paste broke the pose), rule 2 rightly treats the print as today: it leaves the 90% count. It must
+            # still not be refused, and his face is still checked below. Judged from main's locate, never the build's.
+            broken = typ == "a" and not all(k_ in (la[b["file"]].get("joints") or {}) for k_ in ("neck", "lShoulder", "rShoulder", "lHip", "rHip"))
+            if broken:
+                pose_broken.append(Path(b["file"]).name)
             for k, fc in enumerate(b["faces"]):
-                n_faces += 1
                 lab = f"({typ}) {Path(b['file']).name} face {k + 1} {fc['px']} px"
                 if typ in ("a", "L"):
                     if r.get("status") != host_status:
+                        n_faces += 1
                         misses.append((lab, f"refused: {r.get('status')}/{r.get('reason')} (host {host_status})"))
                         continue
+                    if broken:
+                        continue
+                n_faces += 1
+                if typ in ("a", "L"):
                     al, errs = alone(r, "fit", orig, fc["core"])
                     if al and all(x["ok"] for x in al) and not errs:
                         n_ok += 1
@@ -1654,8 +1672,14 @@ def check_built(ctx):
                 ok, vs, errs = hidden_all(r, "fit", orig, mine, names={"upload", "detail"})
                 if not ok:
                     fails.append(f"({typ}) {Path(b['file']).name}: his own face not hidden in a sent copy")
-                hm = ctx.prep("main", [h["photo"]])[h["photo"]]
-                _, bad = head_hidden_as_main(h["locm"], r, hm, orig, regions=h["headRegions"], orig_main=rgb(h["png"]))
+                if typ == "b":
+                    # (b) pastes a face over his head regions, so the photo without it is no reference there: main on
+                    # this same built photo is (a face touching his head is hidden as today).
+                    hm = ctx.prep("main", [b["file"]])[b["file"]]
+                    _, bad = head_hidden_as_main(h["locm"], r, hm, orig, regions=h["headRegions"])
+                else:
+                    hm = ctx.prep("main", [h["photo"]])[h["photo"]]
+                    _, bad = head_hidden_as_main(h["locm"], r, hm, orig, regions=h["headRegions"], orig_main=rgb(h["png"]))
                 if bad:
                     fails.append(f"({typ}) {Path(b['file']).name}: his head less hidden than main hides it on the photo without the print "
                                  f"({bad[0]['copy']} {bad[0]['region']}: {bad[0]['new']} vs {bad[0]['main']} + 0.05)")
@@ -1663,6 +1687,12 @@ def check_built(ctx):
                 stood_in = [g for g in h["headRegions"] if not any(same_rect(g, x, 0.5) for x in lm[b["file"]]["hide"])]
                 b["mainDroppedHeadRegions"] = len(stood_in)
         stats[typ] = {"faces": n_faces, "ok": n_ok, "misses": misses[:40]}
+        if typ == "a":
+            stats["a"]["pose broken by the paste (main's locate): out of the count"] = pose_broken
+            counted = len(items) - len(pose_broken)
+            stats["a"]["photos counted"] = counted
+            if counted < (24 if ctx.full else 8):
+                fails.append(f"(a setup) only {counted} of {len(items)} (a) photos keep a whole pose under the paste (≥ {24 if ctx.full else 8})")
         if typ in ("a", "L"):
             stats[typ]["before_left_alone"] = before_alone
             stats[typ]["before_sweep_found_faces"] = before_found
@@ -1873,7 +1903,7 @@ def check_grey_square(ctx):
             mu, nu = rgb(uri_path(m["uploadUri"])), rgb(uri_path(n["uploadUri"]))
             s = mu.shape[1] / W
             hide0 = fl.norm_rects(loc["hide"], W, H)
-            gap = legs_gap(n, loc)
+            gap = legs_gap(n, loc, p)
             box = [v * s for v in loc["main"]]
             a, b = fl.outline_grey(mu, mk[p], box, hide0 + gap), fl.outline_grey(nu, mk[p], box, hide0 + gap)
             if a is None or b is None:
@@ -1898,7 +1928,7 @@ def check_grey_square(ctx):
                 W, H = loc["size"]
                 mu, nu = rgb(uri_path(m["uploadUri"])), rgb(uri_path(n["uploadUri"]))
                 s = mu.shape[1] / W
-                hide0 = fl.norm_rects(loc["hide"], W, H) + legs_gap(n, loc)
+                hide0 = fl.norm_rects(loc["hide"], W, H) + legs_gap(n, loc, s1)
                 a, b = fl.outline_grey(mu, mk, [v * s for v in loc["main"]], hide0), fl.outline_grey(nu, mk, [v * s for v in loc["main"]], hide0)
                 rep["(2) S1"] = [(no_kit(s1), a, b)]
                 if a is not None and b is not None and b > a + 0.02:
@@ -1956,18 +1986,28 @@ def check_grey_square(ctx):
     return fails, rep
 
 
-def legs_gap(res, loc):
+def face_in(r):
+    """Prep.faceIn: the face a head box was grown from."""
+    w, h = r[2] / 1.6, r[3] / 1.9
+    return [r[0] + r[2] / 2 - w / 2, r[1] + 0.55 * r[3] - h / 2, w, h]
+
+
+def legs_gap(res, loc, photo=None):
     """The known gap, out of this task's scope (TESTING.md → Scope): the head boxes the sweep drew for "faces" it found
     below his hip line (his shoes, jeans, a cuff). Normalized, from the end of `hidden` (T96 orders it locate's regions,
     other heads, then each swept face's head). Empty with no hips found."""
     j = loc.get("joints") or {}
     hips = [j[k][1] for k in ("lHip", "rHip") if k in j]
     n = res.get("sweptFaces") or 0
-    if not hips or not n:
+    if not n:
         return []
     W, H = loc["size"]
-    hip = sum(hips) / len(hips)
-    return [r for r in (res.get("hidden") or [])[-n:] if (r[1] + r[3] / 2) * H > hip]
+    swept = (res.get("hidden") or [])[-n:]
+    out = [r for r in swept if hips and (r[1] + r[3] / 2) * H > sum(hips) / len(hips)]
+    u = up_scale(W, H)
+    hands = T96S_EYE_HAND_FACES.get(no_kit(photo), []) if photo else []
+    out += [r for r in swept if r not in out and any(iou([v * u for v in face_in(denorm(r, W, H))], e) >= 0.5 for e in hands)]
+    return out
 
 
 def make_panels(ctx):
