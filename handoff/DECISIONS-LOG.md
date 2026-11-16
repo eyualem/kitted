@@ -3266,4 +3266,5 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **New finding:** a minimal look is a plus to him: 26 photos, 7.77 vs 6.76; within leg shape +1.0 on straight legs and +0.2 on wide; v16 under-scores it.
     - Classic prep makes no difference to him (v16 over-scores it by about 0.7). "No look" is a passenger of leg shape.
     - The flags, the re-rate sheet and the taste-rule dry run are unchanged.
+    - **Then the shoe names, the same bug** (found by printing the zero-photo rows): `slides_sandals`, `white_leather_sneaker`, `retro_runner` and `drawstring_trousers` were missed. Fixed from the reading's schema. Slides now show 8 photos at his 6.38 (v16 a little harsher than him); trousers +0.59 (high). Nothing else moved.
     - **Lesson:** a feature that never fires gives no error. It just reads as "no effect". Taking names from the detector's own list, instead of typing them, removes the trap, and a row with 0 photos should be printed rather than dropped.

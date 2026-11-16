@@ -66,7 +66,7 @@ def features(rd, lk, r16):
     f["joggers, sweats or track pants"] = sub in R.LOUNGE_BOTTOMS and sub not in P.SHORTS
     f["cargos"] = sub == "cargos"
     f["jeans"] = sub == "jeans"
-    f["trousers or chinos"] = sub in ("trousers", "chinos", "suit_trousers")
+    f["trousers or chinos"] = sub in ("trousers", "chinos", "suit_trousers", "drawstring_trousers")
     up = tops + outs
     f["a top reads long (below the crotch)"] = any(g.get("length") == "below_crotch" for g in tops)
     f["a big top (volume 4-5)"] = any((g.get("volume") or 3) >= 4 for g in tops)
@@ -84,11 +84,13 @@ def features(rd, lk, r16):
     f["a large graphic or print"] = any(g.get("pattern_scale") == "large" for g in tops + outs + bots)
     f["all black"] = bool(cols) and all(c == "black" for c in cols)
     ss = shoes[0].get("subcategory") if shoes else None
-    f["slides or sandals"] = ss in ("slide", "sandal", "slides", "sandals", "flip_flop")
-    f["running or chunky sneakers"] = ss in ("running_shoe", "chunky_sneaker", "trail_sneaker", "basketball_sneaker")
-    f["low clean sneakers"] = ss in ("low_profile_sneaker", "canvas_sneaker", "court_sneaker", "minimal_sneaker")
-    f["loafers, derbies or dress shoes"] = ss in ("loafer", "derby", "dress_shoe", "oxford")
-    f["boots"] = ss is not None and "boot" in ss or ss in ("suede_chukka", "chelsea_boot")
+    # the reading's own footwear names (schema.json; checked against every rated photo, Nov 16)
+    f["slides or sandals"] = ss == "slides_sandals"
+    f["running or chunky sneakers"] = ss in ("performance_runner", "chunky_sneaker", "basketball_sneaker")
+    f["retro runners"] = ss == "retro_runner"
+    f["low clean sneakers"] = ss in ("low_profile_sneaker", "canvas_sneaker", "white_leather_sneaker")
+    f["loafers, derbies or dress shoes"] = ss in ("loafer", "derby", "dress_shoe")
+    f["boots"] = ss in ("work_boot", "chelsea_boot", "suede_chukka")
     f["chunky or running shoes under slim legs"] = f["running or chunky sneakers"] and f["slim or skinny legs"]
     f["dressy shoes with jeans or cargos"] = f["loafers, derbies or dress shoes"] and sub in ("jeans", "cargos")
     f["a blazer"] = any(g.get("subcategory") == "blazer" for g in outs)

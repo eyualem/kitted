@@ -321,3 +321,11 @@ How the pass keeps that:
 - **"No look at all"** (78 photos, −0.45 overall) is a passenger of leg shape: within each leg it's −0.1 to −0.2. Not a pattern.
 - **Streetwear with minimal** fires on 1 photo. Too few to test; his C032 note stays the only evidence.
 - **Nothing else moved.** The flags and the re-rate sheet are unchanged, and the taste rules don't use look names, so the dry run is unchanged.
+- **The same kind of bug in the shoe names**, found by listing the patterns with too few photos.
+  - **What was wrong:** slides are `slides_sandals` in the reading (the rows used slide/sandal), `white_leather_sneaker` (12 photos) was missing from the low clean sneakers, `retro_runner` (13) had no row, and `drawstring_trousers` (7) wasn't counted with trousers. Now every group uses the reading's own names.
+  - **Slides** now fire: 8 photos, his 6.38 vs 6.95. v16 charges them a little harder than he does, which matches the slides call (keep a charge, about half a point smaller).
+  - **Trousers or chinos:** +0.59, 71 photos, now *high* confidence.
+  - **Low clean sneakers:** 33 photos, −0.45; still a passenger of leg shape.
+  - **Chunky or running shoes under slim legs:** 5 photos, 5.70 vs 6.96, *medium*.
+  - **Retro runners:** no difference.
+  - The flags, the sheet and the taste rules are unchanged. The taste rules use the engine's own checks, not these rows.
