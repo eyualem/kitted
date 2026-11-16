@@ -1,0 +1,8 @@
+{
+ "mode": "quick",
+ "planted": null,
+ "fails": [
+  "not run in --quick (T96's --full takes about an hour): never a pass"
+ ],
+ "seconds": 0
+}

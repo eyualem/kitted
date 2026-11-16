@@ -1,0 +1,8 @@
+{
+ "mode": "quick",
+ "planted": null,
+ "fails": [
+  "(1\u20136) driver `logic` crashed: driver/KittedPrep.swift:1216: Fatal error: T96s: not built"
+ ],
+ "seconds": 0
+}

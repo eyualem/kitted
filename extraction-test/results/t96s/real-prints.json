@@ -1,0 +1,687 @@
+{
+ "mode": "quick",
+ "planted": null,
+ "fails": [
+  "P1: print 1 not left alone (upload: unchanged 0.148, new grey 0.95; \u2265 0.90 and \u2264 0.02)",
+  "P1: run's result has no printsKept/prints keys",
+  "P1: no prints rect overlaps print 1's eye box (IoU \u2265 0.3 at 1024)",
+  "P2: print 1 not left alone (upload: unchanged 0.155, new grey 0.996; \u2265 0.90 and \u2264 0.02)",
+  "P2: run's result has no printsKept/prints keys",
+  "P2: no prints rect overlaps print 1's eye box (IoU \u2265 0.3 at 1024)",
+  "P3: print 1 not left alone (upload: unchanged 0.052, new grey 0.976; \u2265 0.90 and \u2264 0.02)",
+  "P3: run's result has no printsKept/prints keys",
+  "P3: no prints rect overlaps print 1's eye box (IoU \u2265 0.3 at 1024)",
+  "P4: run's result has no printsKept/prints keys"
+ ],
+ "seconds": 9,
+ "P4 pick": {
+  "locate": "multiplePeople",
+  "pick": [
+   0.32654319982849567,
+   0.16221217186907066,
+   0.3104938543564487,
+   0.6698190768794646
+  ],
+  "before": "ok",
+  "gated": true
+ },
+ "P1": {
+  "photo": "inputs/ig/Screenshot 2026-10-12 at 2.05.18\u202fPM.png",
+  "status": {
+   "new": "ok",
+   "before": "ok",
+   "main": "ok"
+  },
+  "reason": null,
+  "printsKept": null,
+  "gated": true,
+  "boxes": [
+   {
+    "box": [
+     260,
+     261,
+     19,
+     21
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 0.148,
+      "newGrey": 0.95,
+      "grey": 0.95,
+      "ok": false
+     },
+     {
+      "copy": "detail",
+      "unchanged": 0.171,
+      "newGrey": 0.931,
+      "grey": 0.931,
+      "ok": false
+     },
+     {
+      "copy": "upper",
+      "unchanged": 0.175,
+      "newGrey": 0.931,
+      "grey": 0.931,
+      "ok": false
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 0.148,
+      "newGrey": 0.95,
+      "grey": 0.95,
+      "ok": false
+     },
+     {
+      "copy": "detail",
+      "unchanged": 0.171,
+      "newGrey": 0.931,
+      "grey": 0.931,
+      "ok": false
+     },
+     {
+      "copy": "upper",
+      "unchanged": 0.175,
+      "newGrey": 0.931,
+      "grey": 0.931,
+      "ok": false
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   }
+  ],
+  "prints": [],
+  "head": [
+   {
+    "copy": "upload",
+    "region": [
+     312.8,
+     110.2,
+     168.2,
+     199.7
+    ],
+    "new": 0.107,
+    "main": 0.106
+   },
+   {
+    "copy": "upload",
+    "region": [
+     270.6,
+     47.1,
+     231.9,
+     285.4
+    ],
+    "new": 0.218,
+    "main": 0.217
+   },
+   {
+    "copy": "detail",
+    "region": [
+     312.8,
+     110.2,
+     168.2,
+     199.7
+    ],
+    "new": 0.104,
+    "main": 0.104
+   },
+   {
+    "copy": "detail",
+    "region": [
+     270.6,
+     47.1,
+     231.9,
+     285.4
+    ],
+    "new": 0.211,
+    "main": 0.211
+   }
+  ],
+  "fails": [
+   "P1: print 1 not left alone (upload: unchanged 0.148, new grey 0.95; \u2265 0.90 and \u2264 0.02)",
+   "P1: run's result has no printsKept/prints keys",
+   "P1: no prints rect overlaps print 1's eye box (IoU \u2265 0.3 at 1024)"
+  ]
+ },
+ "P2": {
+  "photo": "inputs/ig/Screenshot 2026-10-12 at 1.44.56\u202fPM.png",
+  "status": {
+   "new": "ok",
+   "before": "ok",
+   "main": "ok"
+  },
+  "reason": null,
+  "printsKept": null,
+  "gated": true,
+  "boxes": [
+   {
+    "box": [
+     246,
+     305,
+     20,
+     23
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 0.155,
+      "newGrey": 0.996,
+      "grey": 1.0,
+      "ok": false
+     },
+     {
+      "copy": "detail",
+      "unchanged": 0.15,
+      "newGrey": 0.997,
+      "grey": 1.0,
+      "ok": false
+     },
+     {
+      "copy": "upper",
+      "unchanged": 0.15,
+      "newGrey": 0.997,
+      "grey": 1.0,
+      "ok": false
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 0.155,
+      "newGrey": 0.996,
+      "grey": 1.0,
+      "ok": false
+     },
+     {
+      "copy": "detail",
+      "unchanged": 0.15,
+      "newGrey": 0.997,
+      "grey": 1.0,
+      "ok": false
+     },
+     {
+      "copy": "upper",
+      "unchanged": 0.15,
+      "newGrey": 0.997,
+      "grey": 1.0,
+      "ok": false
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   }
+  ],
+  "prints": [],
+  "head": [
+   {
+    "copy": "upload",
+    "region": [
+     308.6,
+     157.9,
+     171.3,
+     203.5
+    ],
+    "new": 0.073,
+    "main": 0.073
+   },
+   {
+    "copy": "upload",
+    "region": [
+     275.6,
+     71.4,
+     275.5,
+     339.0
+    ],
+    "new": 0.164,
+    "main": 0.164
+   },
+   {
+    "copy": "detail",
+    "region": [
+     308.6,
+     157.9,
+     171.3,
+     203.5
+    ],
+    "new": 0.073,
+    "main": 0.073
+   },
+   {
+    "copy": "detail",
+    "region": [
+     275.6,
+     71.4,
+     275.5,
+     339.0
+    ],
+    "new": 0.164,
+    "main": 0.164
+   }
+  ],
+  "fails": [
+   "P2: print 1 not left alone (upload: unchanged 0.155, new grey 0.996; \u2265 0.90 and \u2264 0.02)",
+   "P2: run's result has no printsKept/prints keys",
+   "P2: no prints rect overlaps print 1's eye box (IoU \u2265 0.3 at 1024)"
+  ]
+ },
+ "P3": {
+  "photo": "inputs/fashionpedia/images/test/f6890fd9ddbb8cf2d17a332eb72e0ea2.jpg",
+  "status": {
+   "new": "ok",
+   "before": "ok",
+   "main": "ok"
+  },
+  "reason": null,
+  "printsKept": null,
+  "gated": true,
+  "boxes": [
+   {
+    "box": [
+     319,
+     324,
+     40,
+     41
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 0.052,
+      "newGrey": 0.976,
+      "grey": 1.0,
+      "ok": false
+     },
+     {
+      "copy": "detail",
+      "unchanged": 0.052,
+      "newGrey": 0.976,
+      "grey": 1.0,
+      "ok": false
+     },
+     {
+      "copy": "upper",
+      "unchanged": 0.052,
+      "newGrey": 0.976,
+      "grey": 1.0,
+      "ok": false
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 0.052,
+      "newGrey": 0.976,
+      "grey": 1.0,
+      "ok": false
+     },
+     {
+      "copy": "detail",
+      "unchanged": 0.052,
+      "newGrey": 0.976,
+      "grey": 1.0,
+      "ok": false
+     },
+     {
+      "copy": "upper",
+      "unchanged": 0.052,
+      "newGrey": 0.976,
+      "grey": 1.0,
+      "ok": false
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   }
+  ],
+  "prints": [],
+  "head": [
+   {
+    "copy": "upload",
+    "region": [
+     277.0,
+     40.2,
+     136.3,
+     161.9
+    ],
+    "new": 0.349,
+    "main": 0.349
+   },
+   {
+    "copy": "upload",
+    "region": [
+     274.4,
+     39.7,
+     142.2,
+     175.0
+    ],
+    "new": 0.357,
+    "main": 0.357
+   },
+   {
+    "copy": "detail",
+    "region": [
+     277.0,
+     40.2,
+     136.3,
+     161.9
+    ],
+    "new": 0.349,
+    "main": 0.349
+   },
+   {
+    "copy": "detail",
+    "region": [
+     274.4,
+     39.7,
+     142.2,
+     175.0
+    ],
+    "new": 0.357,
+    "main": 0.357
+   }
+  ],
+  "fails": [
+   "P3: print 1 not left alone (upload: unchanged 0.052, new grey 0.976; \u2265 0.90 and \u2264 0.02)",
+   "P3: run's result has no printsKept/prints keys",
+   "P3: no prints rect overlaps print 1's eye box (IoU \u2265 0.3 at 1024)"
+  ]
+ },
+ "P4": {
+  "photo": "inputs/fashionpedia/images/test/6c1cf70085fef21a41cb374e84bfd6c3.jpg",
+  "status": {
+   "new": "ok",
+   "before": "ok",
+   "main": "ok"
+  },
+  "reason": null,
+  "printsKept": null,
+  "gated": true,
+  "boxes": [
+   {
+    "box": [
+     309,
+     344,
+     10,
+     15
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   },
+   {
+    "box": [
+     339,
+     345,
+     11,
+     14
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.019,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.019,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.013,
+      "ok": true
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.019,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.019,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.013,
+      "ok": true
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   },
+   {
+    "box": [
+     368,
+     343,
+     10,
+     15
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.007,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.007,
+      "ok": true
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.007,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.007,
+      "ok": true
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   },
+   {
+    "box": [
+     341,
+     394,
+     11,
+     15
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   }
+  ],
+  "prints": [],
+  "head": [
+   {
+    "copy": "upload",
+    "region": [
+     282.2,
+     150.5,
+     113.6,
+     134.9
+    ],
+    "new": 0.378,
+    "main": 0.378
+   },
+   {
+    "copy": "upload",
+    "region": [
+     292.9,
+     158.1,
+     93.5,
+     115.1
+    ],
+    "new": 0.237,
+    "main": 0.237
+   },
+   {
+    "copy": "detail",
+    "region": [
+     282.2,
+     150.5,
+     113.6,
+     134.9
+    ],
+    "new": 0.379,
+    "main": 0.379
+   },
+   {
+    "copy": "detail",
+    "region": [
+     292.9,
+     158.1,
+     93.5,
+     115.1
+    ],
+    "new": 0.239,
+    "main": 0.239
+   }
+  ],
+  "fails": [
+   "P4: run's result has no printsKept/prints keys"
+  ]
+ },
+ "pendant": {
+  "status": "ok",
+  "reason": null,
+  "printsKept": null,
+  "prints": null,
+  "sweptFaces": 1
+ },
+ "P3 in main's found.hide": false,
+ "sheet": "9 crops in extraction-test/results/t96s/real-prints"
+}

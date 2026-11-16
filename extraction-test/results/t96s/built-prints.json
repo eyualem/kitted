@@ -1,0 +1,986 @@
+{
+ "mode": "quick",
+ "planted": null,
+ "fails": [
+  "(a) 0 of 12 prints on his chest left alone (\u2265 90%); first miss (a) a-0.jpg face 1 29.3 px: upload: unchanged 0.148, new grey 0.0",
+  "(L) 3 of 3 large prints main's locate blurs not left alone (first (L) L-7.jpg face 1 43.7 px: upload: unchanged 0.211, new grey 0.0)"
+ ],
+ "seconds": 76,
+ "stats": {
+  "a": {
+   "faces": 12,
+   "ok": 0,
+   "misses": [
+    [
+     "(a) a-0.jpg face 1 29.3 px",
+     "upload: unchanged 0.148, new grey 0.0"
+    ],
+    [
+     "(a) a-1.jpg face 1 23.8 px",
+     "upload: unchanged 0.306, new grey 0.0"
+    ],
+    [
+     "(a) a-2.jpg face 1 28.3 px",
+     "upload: unchanged 0.279, new grey 0.0"
+    ],
+    [
+     "(a) a-3.jpg face 1 20.5 px",
+     "upload: unchanged 0.133, new grey 0.0"
+    ],
+    [
+     "(a) a-4.jpg face 1 22.1 px",
+     "upload: unchanged 0.063, new grey 1.0"
+    ],
+    [
+     "(a) a-4.jpg face 2 22.1 px",
+     "upload: unchanged 0.082, new grey 1.0"
+    ],
+    [
+     "(a) a-5.jpg face 1 34.7 px",
+     "upload: unchanged 0.188, new grey 0.0"
+    ],
+    [
+     "(a) a-6.jpg face 1 23.0 px",
+     "upload: unchanged 0.136, new grey 0.0"
+    ],
+    [
+     "(a) a-7.jpg face 1 24.8 px",
+     "upload: unchanged 0.274, new grey 0.0"
+    ],
+    [
+     "(a) a-8.jpg face 1 32.5 px",
+     "upload: unchanged 0.297, new grey 0.0"
+    ],
+    [
+     "(a) a-9.jpg face 1 24.5 px",
+     "upload: unchanged 0.08, new grey 1.0"
+    ],
+    [
+     "(a) a-9.jpg face 2 24.5 px",
+     "upload: unchanged 0.083, new grey 1.0"
+    ]
+   ],
+   "before_left_alone": 0,
+   "before_sweep_found_faces": 4
+  },
+  "b": {
+   "faces": 10,
+   "ok": 10,
+   "misses": []
+  },
+  "c": {
+   "faces": 10,
+   "ok": 10,
+   "misses": []
+  },
+  "L_built": 6,
+  "L_found_by_main_whole_photo_pass": 3,
+  "L_in_main_hide": 3,
+  "L_in_main_hide and on his chest by rule 4 (kept)": 3,
+  "L": {
+   "faces": 3,
+   "ok": 0,
+   "misses": [
+    [
+     "(L) L-7.jpg face 1 43.7 px",
+     "upload: unchanged 0.211, new grey 0.0"
+    ],
+    [
+     "(L) L-8.jpg face 1 50.7 px",
+     "upload: unchanged 0.151, new grey 0.0"
+    ],
+    [
+     "(L) L-17.jpg face 1 43.7 px",
+     "upload: unchanged 0.293, new grey 0.0"
+    ]
+   ],
+   "before_left_alone": 0,
+   "before_sweep_found_faces": 0
+  },
+  "L_photos where main's hide on the built photo lacks one of its head regions on the photo without the print": 3
+ },
+ "a_miss_reasons": {
+  "error": "driver `zone` crashed: driver/KittedPrep.swift:1216: Fatal error: T96s: not built"
+ },
+ "sheet": "15 crops in extraction-test/results/t96s/built-prints",
+ "built": {
+  "a": [
+   {
+    "file": "a-0.jpg",
+    "host": "screenshots/phone/20261021-012550/photos/c994c2b8c10158b5060e98ed0698a8caa907124cb58488146f8823e1d72a929f-photo.jpg",
+    "src": "07ca6418fec6b952b930f7fc19de9e38.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       791.9326905366323,
+       1036.750592573619,
+       80.08077849490475,
+       58.52513564294884
+      ],
+      "square": [
+       767.2025299981847,
+       1002.3132504976742,
+       129,
+       127
+      ],
+      "px": 29.3
+     }
+    ]
+   },
+   {
+    "file": "a-1.jpg",
+    "host": "screenshots/phone/20261017-212744/photos/23999fefa3d440ed4ba2124da1d8a810263110d3984d9721605afd9ecb014ed9-photo.jpg",
+    "src": "09a205e6a9500de4d5ec89446a3d9bf2.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       745.9440722151021,
+       1072.9827434385086,
+       75.83636127760786,
+       47.60128289081958
+      ],
+      "square": [
+       723.3061460949319,
+       1035.849467635139,
+       121,
+       122
+      ],
+      "px": 23.8
+     }
+    ]
+   },
+   {
+    "file": "a-2.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/8bc29df510c347b567670a567760d10e41dfa164486c4adf2e002eef95caf790-photo.jpg",
+    "src": "13a6b649fa1638fff877ec7b8676dae9.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       606.1881955486388,
+       1024.0625936528118,
+       94.44253521668514,
+       56.57761855913947
+      ],
+      "square": [
+       577.5899368445989,
+       976.4953609728465,
+       151,
+       151
+      ],
+      "px": 28.3
+     }
+    ]
+   },
+   {
+    "file": "a-3.jpg",
+    "host": "screenshots/phone/20261023-221517/photos/a5ff951fbe7c7707a2789714761a70aede8cf1e193acb4582990c2cb935a8d19-photo.jpg",
+    "src": "004e9e21cd1aca568a8ffc77a54638ce.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       830.1001726015601,
+       983.7357749217296,
+       77.8685957430184,
+       40.97661690023239
+      ],
+      "square": [
+       807.1588893547507,
+       941.9871105399434,
+       124,
+       124
+      ],
+      "px": 20.5
+     }
+    ]
+   },
+   {
+    "file": "a-4.jpg",
+    "host": "screenshots/phone/20261008-162946/photos/b0f0c8d84b93df08ba318706eda5ce27837a693f63d947f681930c153f813e97-photo.jpg",
+    "src": "07ca6418fec6b952b930f7fc19de9e38.jpg",
+    "two": true,
+    "faces": [
+     {
+      "core": [
+       624.6780718508335,
+       1149.3322631286715,
+       60.60563994792829,
+       44.292193024895504
+      ],
+      "square": [
+       605.9621298530545,
+       1123.2698647124128,
+       97,
+       96
+      ],
+      "px": 22.1
+     },
+     {
+      "core": [
+       729.6780718508335,
+       1149.3322631286715,
+       60.60563994792829,
+       44.292193024895504
+      ],
+      "square": [
+       710.9621298530545,
+       1123.2698647124128,
+       97,
+       96
+      ],
+      "px": 22.1
+     }
+    ]
+   },
+   {
+    "file": "a-5.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/3239a68d1618a0b69aaec9cc9555ed0a0fafd78227da58f93cef49ee707e27c6-photo.jpg",
+    "src": "0dc88e905c843875a508ffd6581170e7.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       641.703658446997,
+       802.2978627472277,
+       106.65979860021658,
+       69.44938122465155
+      ],
+      "square": [
+       609.8201956411151,
+       752.0292777667129,
+       171,
+       171
+      ],
+      "px": 34.7
+     }
+    ]
+   },
+   {
+    "file": "a-6.jpg",
+    "host": "inputs/mirror-fit-check-1/m12/before_mirror.jpg",
+    "src": "01bb382de271571e209dd10cc220c7bc.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       129.31296381225653,
+       249.46618821242234,
+       30.47456487407229,
+       23.030723527853457
+      ],
+      "square": [
+       120.11735234986955,
+       236.67530851529813,
+       49,
+       49
+      ],
+      "px": 23.0
+     }
+    ]
+   },
+   {
+    "file": "a-7.jpg",
+    "host": "screenshots/phone/20261017-212744/photos/fd52eb43e6c418d7e3939899ad190adc97afa276be9d4fbe3277654deecf54eb-photo.jpg",
+    "src": "119b337ea431d7795d5e60ad6b5a71a5.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       723.3240538329643,
+       926.1286054595823,
+       82.68528734941022,
+       49.6560006997342
+      ],
+      "square": [
+       699.1604238642417,
+       885.2643814841264,
+       131,
+       132
+      ],
+      "px": 24.8
+     }
+    ]
+   },
+   {
+    "file": "a-8.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/f0719366cc759dd076a1b37af72d6f3ba0342c7855378680609c5cf17b86ee56-photo.jpg",
+    "src": "06eca767af94ec50eb0503088708be13.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       658.6825011702323,
+       1054.0506113689512,
+       113.36612563788933,
+       64.9361472488901
+      ],
+      "square": [
+       624.8558862080879,
+       995.0405762859965,
+       182,
+       182
+      ],
+      "px": 32.5
+     }
+    ]
+   },
+   {
+    "file": "a-9.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/f0719366cc759dd076a1b37af72d6f3ba0342c7855378680609c5cf17b86ee56-photo.jpg",
+    "src": "07ca6418fec6b952b930f7fc19de9e38.jpg",
+    "two": true,
+    "faces": [
+     {
+      "core": [
+       596.4297480833218,
+       1077.0862626340645,
+       67.02924452173886,
+       48.98673191505939
+      ],
+      "square": [
+       575.7300994416826,
+       1048.2615051070864,
+       108,
+       107
+      ],
+      "px": 24.5
+     },
+     {
+      "core": [
+       712.4297480833218,
+       1077.0862626340645,
+       67.02924452173886,
+       48.98673191505939
+      ],
+      "square": [
+       691.7300994416826,
+       1048.2615051070864,
+       108,
+       107
+      ],
+      "px": 24.5
+     }
+    ]
+   }
+  ],
+  "b": [
+   {
+    "file": "b-0.jpg",
+    "host": "inputs/mirror-fit-check-1/m12/before_mirror.jpg",
+    "src": "119b337ea431d7795d5e60ad6b5a71a5.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       137.14052158912443,
+       209.1130853663879,
+       58.55256083357736,
+       35.163281097844376
+      ],
+      "square": [
+       120.02934668657053,
+       180.17559192660872,
+       93,
+       94
+      ],
+      "px": 35.2
+     }
+    ]
+   },
+   {
+    "file": "b-1.jpg",
+    "host": "screenshots/phone/20261017-212744/photos/fd52eb43e6c418d7e3939899ad190adc97afa276be9d4fbe3277654deecf54eb-photo.jpg",
+    "src": "0b48b477aa4075c5489c5bfb0df35017.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       702.5170802049239,
+       720.8613578773595,
+       141.16902552390007,
+       80.39940925241288
+      ],
+      "square": [
+       660.1267541225087,
+       648.1033634980255,
+       225,
+       225
+      ],
+      "px": 40.2
+     }
+    ]
+   },
+   {
+    "file": "b-2.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/f0719366cc759dd076a1b37af72d6f3ba0342c7855378680609c5cf17b86ee56-photo.jpg",
+    "src": "08680e1257c83a5a603ae3ef67ef3dde.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       599.8233244997302,
+       740.0071743761238,
+       173.52327759862587,
+       114.31313449309683
+      ],
+      "square": [
+       548.6149808569181,
+       659.3950209406034,
+       278,
+       278
+      ],
+      "px": 57.2
+     }
+    ]
+   },
+   {
+    "file": "b-3.jpg",
+    "host": "screenshots/phone/20261021-012550/photos/c994c2b8c10158b5060e98ed0698a8caa907124cb58488146f8823e1d72a929f-photo.jpg",
+    "src": "1050585bd1104969bc175e8bcdfd5311.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       767.978956317026,
+       869.6840152304294,
+       125.41499354396247,
+       75.80476863578292
+      ],
+      "square": [
+       730.3199824625254,
+       807.7581119904596,
+       202,
+       200
+      ],
+      "px": 37.9
+     }
+    ]
+   },
+   {
+    "file": "b-4.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/8bc29df510c347b567670a567760d10e41dfa164486c4adf2e002eef95caf790-photo.jpg",
+    "src": "0e9775fcd1a3b1d95aed773e684b3f49.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       577.0956558333534,
+       891.5933784337851,
+       172.8763116730532,
+       95.69498084569639
+      ],
+      "square": [
+       524.1759926499085,
+       801.8754756223617,
+       278,
+       276
+      ],
+      "px": 47.8
+     }
+    ]
+   },
+   {
+    "file": "b-5.jpg",
+    "host": "screenshots/phone/20261023-221517/photos/a5ff951fbe7c7707a2789714761a70aede8cf1e193acb4582990c2cb935a8d19-photo.jpg",
+    "src": "1050585bd1104969bc175e8bcdfd5311.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       818.9937970910039,
+       916.3944200770889,
+       244.53247407476684,
+       147.80312223733836
+      ],
+      "square": [
+       745.5668344325882,
+       795.652123636462,
+       393,
+       390
+      ],
+      "px": 73.9
+     }
+    ]
+   },
+   {
+    "file": "b-6.jpg",
+    "host": "screenshots/phone/20261008-162946/photos/0d39d642c5a03b6cd903be1edb18895e73ab1b174c36eda81b637efcaf99208c-photo.jpg",
+    "src": "03fc99c4deaf14724ef6277dec16b8e8.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       747.7257108165786,
+       962.7906784705345,
+       165.96781201693096,
+       112.08469206050646
+      ],
+      "square": [
+       697.9775510251914,
+       886.3125820436305,
+       265,
+       265
+      ],
+      "px": 56.0
+     }
+    ]
+   },
+   {
+    "file": "b-7.jpg",
+    "host": "screenshots/phone/20261008-162946/photos/b0f0c8d84b93df08ba318706eda5ce27837a693f63d947f681930c153f813e97-photo.jpg",
+    "src": "04e247377c80eb9f6e34c56595d68c95.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       706.321480374116,
+       698.4486434204698,
+       62.04730726227561,
+       59.21057701102428
+      ],
+      "square": [
+       687.0408153388655,
+       678.1504173513449,
+       101,
+       99
+      ],
+      "px": 29.6
+     }
+    ]
+   },
+   {
+    "file": "b-8.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/3239a68d1618a0b69aaec9cc9555ed0a0fafd78227da58f93cef49ee707e27c6-photo.jpg",
+    "src": "05488fcc74f81ae452dd55229003f58f.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       560.3307678861489,
+       828.3380688530267,
+       266.1811716822105,
+       148.32732578684414
+      ],
+      "square": [
+       479.99169612150445,
+       688.8028941566387,
+       427,
+       427
+      ],
+      "px": 74.2
+     }
+    ]
+   },
+   {
+    "file": "b-9.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/3239a68d1618a0b69aaec9cc9555ed0a0fafd78227da58f93cef49ee707e27c6-photo.jpg",
+    "src": "037bb8903e05afa1af566af09e2122ea.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       695.5157082926422,
+       506.1265380488206,
+       98.03596100465734,
+       76.2951411527155
+      ],
+      "square": [
+       666.4643632875519,
+       466.46043519922057,
+       157,
+       157
+      ],
+      "px": 38.1
+     }
+    ]
+   }
+  ],
+  "c": [
+   {
+    "file": "c-0.jpg",
+    "host": "screenshots/phone/20261008-162946/photos/0d39d642c5a03b6cd903be1edb18895e73ab1b174c36eda81b637efcaf99208c-photo.jpg",
+    "src": "15ff2886970f216c73cb0fef10c9f3c1.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       1132.1956600281667,
+       1051.1164133928967,
+       269.289085449619,
+       157.80609895248926
+      ],
+      "square": [
+       1049.9663261887372,
+       913.8947567344953,
+       432,
+       432
+      ],
+      "px": 78.9
+     }
+    ]
+   },
+   {
+    "file": "c-1.jpg",
+    "host": "screenshots/phone/20261008-162946/photos/b0f0c8d84b93df08ba318706eda5ce27837a693f63d947f681930c153f813e97-photo.jpg",
+    "src": "08680e1257c83a5a603ae3ef67ef3dde.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       1013.879984081378,
+       983.1552044738337,
+       151.2851068592112,
+       99.66314033787293
+      ],
+      "square": [
+       969.234332804518,
+       912.8740386532291,
+       242,
+       242
+      ],
+      "px": 49.8
+     }
+    ]
+   },
+   {
+    "file": "c-2.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/3239a68d1618a0b69aaec9cc9555ed0a0fafd78227da58f93cef49ee707e27c6-photo.jpg",
+    "src": "0e9775fcd1a3b1d95aed773e684b3f49.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       134.8092410638231,
+       795.1604399233383,
+       179.6190144797741,
+       99.42737662446379
+      ],
+      "square": [
+       79.82554980143257,
+       701.9432655850919,
+       289,
+       287
+      ],
+      "px": 49.7
+     }
+    ]
+   },
+   {
+    "file": "c-3.jpg",
+    "host": "inputs/mirror-fit-check-1/m12/before_mirror.jpg",
+    "src": "05b35a8b70fc204bc6e9339bbc613d22.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       301.5645254563346,
+       211.84872219041353,
+       47.41917864918992,
+       28.37744839138046
+      ],
+      "square": [
+       287.7081356118673,
+       188.41280662026801,
+       75,
+       75
+      ],
+      "px": 28.4
+     }
+    ]
+   },
+   {
+    "file": "c-4.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/f0719366cc759dd076a1b37af72d6f3ba0342c7855378680609c5cf17b86ee56-photo.jpg",
+    "src": "0d2c936a0c0acff642b5a8c5e85fd461.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       1257.690109778148,
+       970.6255397909556,
+       211.95567791573072,
+       133.73194115034937
+      ],
+      "square": [
+       1194.3529838115787,
+       868.8841635714604,
+       338,
+       338
+      ],
+      "px": 66.9
+     }
+    ]
+   },
+   {
+    "file": "c-5.jpg",
+    "host": "screenshots/phone/20261021-012550/photos/c994c2b8c10158b5060e98ed0698a8caa907124cb58488146f8823e1d72a929f-photo.jpg",
+    "src": "14918e2a402f109c12da34aa2a4fce45.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       1078.8555263929388,
+       974.8576098640523,
+       232.17616308387514,
+       135.74821880394325
+      ],
+      "square": [
+       1010.9370354812975,
+       856.8099080490674,
+       368,
+       372
+      ],
+      "px": 67.9
+     }
+    ]
+   },
+   {
+    "file": "c-6.jpg",
+    "host": "screenshots/phone/20261017-212744/photos/23999fefa3d440ed4ba2124da1d8a810263110d3984d9721605afd9ecb014ed9-photo.jpg",
+    "src": "0d2c936a0c0acff642b5a8c5e85fd461.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       409.6958886120864,
+       943.9038073669338,
+       102.6484736683781,
+       64.76533101062033
+      ],
+      "square": [
+       379.02221489434345,
+       894.6312562347883,
+       164,
+       164
+      ],
+      "px": 32.4
+     }
+    ]
+   },
+   {
+    "file": "c-7.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/8bc29df510c347b567670a567760d10e41dfa164486c4adf2e002eef95caf790-photo.jpg",
+    "src": "07ca6418fec6b952b930f7fc19de9e38.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       1232.1998068443718,
+       924.850548268848,
+       132.55885850262973,
+       96.87749445435875
+      ],
+      "square": [
+       1191.2636182461056,
+       867.8459231734226,
+       213,
+       211
+      ],
+      "px": 48.4
+     }
+    ]
+   },
+   {
+    "file": "c-8.jpg",
+    "host": "screenshots/phone/20261023-221517/photos/a5ff951fbe7c7707a2789714761a70aede8cf1e193acb4582990c2cb935a8d19-photo.jpg",
+    "src": "05df3749007ec999df0176b9db7c23e3.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       1307.1341651517228,
+       920.9588143434398,
+       155.33622997833237,
+       77.66811498916618
+      ],
+      "square": [
+       1261.0399912903397,
+       834.7091857211999,
+       249,
+       249
+      ],
+      "px": 38.8
+     }
+    ]
+   },
+   {
+    "file": "c-9.jpg",
+    "host": "screenshots/phone/20261023-221517/photos/a5ff951fbe7c7707a2789714761a70aede8cf1e193acb4582990c2cb935a8d19-photo.jpg",
+    "src": "0dc88e905c843875a508ffd6581170e7.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       1255.3826927313419,
+       888.4767139350724,
+       162.42140836132236,
+       105.75743116307906
+      ],
+      "square": [
+       1206.8305953119805,
+       811.9277753844848,
+       260,
+       260
+      ],
+      "px": 52.9
+     }
+    ]
+   }
+  ],
+  "L": [
+   {
+    "file": "L-3.jpg",
+    "host": "screenshots/phone/20261017-212744/photos/23999fefa3d440ed4ba2124da1d8a810263110d3984d9721605afd9ecb014ed9-photo.jpg",
+    "src": "P1",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       756.5856077432044,
+       1064.140445988993,
+       73.27069244384765,
+       80.98339691162109
+      ],
+      "square": [
+       738.5484893582527,
+       1050.082103718369,
+       110,
+       110
+      ],
+      "px": 40.5
+     }
+    ],
+    "inMainHide": false,
+    "onChestByRule4": false
+   },
+   {
+    "file": "L-7.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/f0719366cc759dd076a1b37af72d6f3ba0342c7855378680609c5cf17b86ee56-photo.jpg",
+    "src": "05b35a8b70fc204bc6e9339bbc613d22.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       632.3047726479253,
+       983.9340767837954,
+       146.1727423951748,
+       87.4753543125
+      ],
+      "square": [
+       605.4232092213034,
+       930.1616060274594,
+       198,
+       195
+      ],
+      "px": 43.7
+     }
+    ],
+    "inMainHide": true,
+    "onChestByRule4": true
+   },
+   {
+    "file": "L-8.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/3239a68d1618a0b69aaec9cc9555ed0a0fafd78227da58f93cef49ee707e27c6-photo.jpg",
+    "src": "01bb382de271571e209dd10cc220c7bc.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       635.274258854264,
+       814.8520266773842,
+       134.1291627431085,
+       101.3662271118164
+      ],
+      "square": [
+       612.2360383056714,
+       774.7444322707807,
+       181,
+       182
+      ],
+      "px": 50.7
+     }
+    ],
+    "inMainHide": true,
+    "onChestByRule4": true
+   },
+   {
+    "file": "L-10.jpg",
+    "host": "screenshots/phone/20261021-012550/photos/c994c2b8c10158b5060e98ed0698a8caa907124cb58488146f8823e1d72a929f-photo.jpg",
+    "src": "P2",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       788.9376302046246,
+       983.2339918281107,
+       73.87219450577444,
+       84.95302368164062
+      ],
+      "square": [
+       768.1867936047267,
+       967.7835341708685,
+       115,
+       115
+      ],
+      "px": 42.5
+     }
+    ],
+    "inMainHide": false,
+    "onChestByRule4": false
+   },
+   {
+    "file": "L-17.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/f0719366cc759dd076a1b37af72d6f3ba0342c7855378680609c5cf17b86ee56-photo.jpg",
+    "src": "00d5da56c02d426c4e4bf802b1888471.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       642.8545152865948,
+       1133.2688030143045,
+       133.24998404895703,
+       87.4753543125
+      ],
+      "square": [
+       618.6080447159674,
+       1086.1065695636776,
+       180,
+       180
+      ],
+      "px": 43.7
+     }
+    ],
+    "inMainHide": true,
+    "onChestByRule4": true
+   },
+   {
+    "file": "L-18.jpg",
+    "host": "screenshots/phone/20261014-180424/photos/3239a68d1618a0b69aaec9cc9555ed0a0fafd78227da58f93cef49ee707e27c6-photo.jpg",
+    "src": "065fd62a332e15121c5f8713a5bc6bbc.jpg",
+    "two": false,
+    "faces": [
+     {
+      "core": [
+       633.8415307010127,
+       890.9864724268782,
+       119.49681016386768,
+       89.20227985839843
+      ],
+      "square": [
+       612.6357945022972,
+       854.2128514885101,
+       162,
+       162
+      ],
+      "px": 44.6
+     }
+    ],
+    "inMainHide": false,
+    "onChestByRule4": false
+   }
+  ]
+ }
+}

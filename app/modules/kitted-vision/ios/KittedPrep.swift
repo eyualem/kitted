@@ -82,6 +82,13 @@ enum Prep {
     /// Fit, on the path that returns "ok": the box of every other body the pose sees (its joints, grown a little), pixels
     /// (T96). A stranger whose head is out of the frame is still a body; only the sweep covers it.
     var otherBodies: [CGRect] = []
+    // T96s (stubs from the test writer; the implementer sets them in locate, tasks/T96s/IMPLEMENTATION.md → Interfaces).
+    var faces: [CGRect] = []
+    var headBand: CGRect?
+    var headPoints: [CGPoint] = []
+    var fallbackHead: CGRect?
+    var outline: Guide.Gray?
+    var torsoJoints: [String: CGPoint] = [:]
   }
 
   /// A person mask with the cover's pixels taken out (another person's outline is never his), any two resolutions.
@@ -880,6 +887,7 @@ extension Prep {
     var swept: [Face]           // faces the tile pass found in the covered, hidden copy (then hidden)
     var coveredExtra: Int       // people covered that locate didn't cover (missed by the person detector)
     var ms: Int                 // the sweep's time
+    var prints: [CGRect] = []   // T96s (stub): face boxes left alone as prints
   }
 
   /// People `locate` didn't cover (fit only): how many, and the cover drawn for them. "Other people" are the person
@@ -1185,6 +1193,31 @@ extension Prep {
     guard purged else { return }
     try? fm.createDirectory(at: dir, withIntermediateDirectories: true)
     try? Data().write(to: marker)
+  }
+}
+
+// T96s: a face printed on his own top is left alone (stubs from the test writer: tasks/T96s/IMPLEMENTATION.md → Interfaces).
+extension Prep {
+  struct PrintZone {
+    var torso: CGRect
+    var shoulderSpan: CGFloat
+    var head: [CGRect]
+    var headWidth: CGFloat
+    var headPoints: [CGPoint]
+    var outline: Guide.Gray
+  }
+
+  static let printHemShare: CGFloat = 0.15
+  static let printHeadGap: CGFloat = 0.25
+  static let printMinOnOutline: CGFloat = 0.9
+  static let printMaxWidthShare: CGFloat = 0.8
+
+  static func printZone(_ found: Located, kind: Kind, W: CGFloat, H: CGFloat) -> PrintZone? {
+    fatalError("T96s: not built")
+  }
+
+  static func isPrint(_ face: CGRect, zone: PrintZone?, found: Located, instances: Instances?) -> Bool {
+    fatalError("T96s: not built")
   }
 }
 
