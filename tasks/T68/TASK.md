@@ -182,3 +182,70 @@ Ratings checked: 144 of the 150 with a reading (the six with covered heads left 
    - *Make the peek a tip, no points, and never cancel the layering lift* (changed: was "keep your 0.5"). His C013 note ("the inner layer sitting higher would have given it a better rating") was on a photo the prep couldn't read, so it is a single word against 8 photos.
 
 All five stay his calls; the engine keeps his marks until he answers.
+
+## Round 3: his taste patterns and his own consistency (Nov 16, $0; `extraction-test/taste_patterns.py`, `results/taste1/patterns.txt`)
+
+The founder (Nov 16): "Fix my scores... Detect patterns and refactor my scores. Let them stay consistent with my taste... Add those new rules to the [rater], and then we can run the test again."
+
+The data: 164 rated photos with a reading, his 13 notes, and the reading's facts (pieces, fits, colors, shoes, the second looks). For each pattern: how many photos, his average with and without it, and a confidence (Welch's t: high is |t| ≥ 3 with 10+ photos, medium is |t| ≥ 2 with 5+). Many patterns travel together (wide legs come with trousers, longer hems and dressier shoes), so each was also checked **within one leg shape**. Only what survives that is listed as his.
+
+**What drives his scores, strongest first:**
+
+1. **How wide the legs are, by far the biggest thing.**
+   - Average by leg: slim or skinny 6.00 (40 photos), straight 6.69 (54), wide or relaxed 7.63 (64). That is a 1.6-point spread. *High confidence.*
+   - Today's rules miss half of it: v16 under-scores wide legs and over-scores straight ones by about 0.3–0.7.
+   - Skinny alone: 5.41 (11).
+2. **Pants that pull** (the reading's "strain" on the pants): 5.62 (17) vs 7.07.
+   - Even among slim legs, pulling costs more: 5.62 vs 6.28.
+   - His notes say it in words: "tights for jeans", "too tight and high on the ankle". *High.*
+3. **A long hem that covers the shoe is a plus to him, not a fault.**
+   - Wide legs: 8.10 with the hem over the shoe (21) vs 7.41 without. Straight legs: 7.62 (4) vs 6.61.
+   - This is the opposite of the pooling cap (H7). *High.*
+4. **Dressy shoes** (loafers, derbies, dress shoes): higher at every leg shape (+0.5 to +0.9). Today's rules already give most of it. *High.*
+5. **Trousers over jeans:** +0.4 to +0.7 at every leg shape. *Medium.*
+6. **Two or more lifts**: 7.68 vs 6.69. *High.*
+   - **A single lift isn't worth anything to him.** One lift scores *lower* than none on straight and wide legs.
+   - By lift, measured against his average for that leg shape:
+
+   | Lift | Photos | Against his leg average |
+   |---|---|---|
+   | One look top to toe (L7) | 16 | +0.75 |
+   | A deliberate shape (L1) | 40 | +0.49 |
+   | A short layer over a full leg (L2) | 17 | +0.27 |
+   | A color picked up (L6) | 10 | +0.11 |
+   | One smart piece with casual ones (L7b) | 27 | +0.04 |
+   | One accent (L5) | 33 | −0.18 |
+   | **An open layer over a tee (L3)** | 8 | **−0.76** |
+
+7. **Neutral palettes:** all neutrals (and denim) score +0.5 to +0.8 over outfits with a color, on straight and wide legs. A second color isn't common enough to measure. His C006 note: "maybe a bit too many colors". *Medium.*
+8. **A long top** (the reading says below the crotch): 6.00 (8) vs 6.96; on wide legs 6.50 (3) vs 7.69. His C042 note: "shirt way too long". *Medium; the read is unproven (#465).*
+9. **Layering is not a plus to him:** with wide legs, layered 7.26 (19) vs 7.79 (45). v16 over-credits it by about 0.6. *Medium.*
+10. **Shorts cost a little:** with wide legs, 7.30 (20) vs 7.78. Twice in his notes: "shorts are not it". *Low to medium.*
+11. **Low clean sneakers:** 6.48 (21) vs 6.98, but within each leg shape there is no difference. *Not a pattern of its own; the leg shape explains it.*
+12. **Big, roomy tops are fine on wide legs** (8.07, 7 photos). "Too bulky" in his notes is about a specific boxy shirt or hoodie, not volume in general. *Low; not a rule.*
+13. **Not about the outfit:** mirror selfies score +0.4 to +0.7 at every leg shape. That is a bias in how he rates photos, so no rule. Streetwear-plus-minimal shows up only in one note (C032, which the prep refused), so there's too little to test.
+
+**What this means for the rules (proposed; built only after he confirms):**
+- leg width as a main driver (wide up, slim down, skinny and pulling further down);
+- no cost for a long hem over the shoe; H7 becomes a tip;
+- lifts reweighted: L7, L1 and L2 count; L5 and L7b don't; L3 doesn't count;
+- a single lift adds little, two or more add the real step;
+- layering on its own no longer lifts;
+- a small charge for shorts and for a second color;
+- a long top costs, waiting on a steady read;
+- tightness from "strain" (a read to verify).
+
+### His own consistency: the re-rate sheet
+
+- **Near-identical outfits he scored 1.5+ apart: 4 pairs, 6 photos.**
+  - A white oxford, straight light jeans and brown chukkas at 8.5 vs a light-blue oxford, straight dark jeans and brown chukkas at 6.
+  - A black suit, white shirt and black shoes at 9.5 vs three near-identical black suits at 7, 7.5 and 7.5.
+- **Scores 2+ points from his 6 most similar outfits: 4 photos**, including a graphic tee, relaxed shorts and loafers at 8.5 (his similar outfits average 6.2), and a tee, slim chinos and dress shoes at 5.5 (similar: 7.5).
+- **The sheet** (`inputs/gold-judge/founder5/`, built by `extraction-test/rerate_sheet.py`, seed 20261116) has **19 photos**:
+  - the 9 flagged;
+  - 10 unflagged repeats, 2 from each score band, to measure his own noise.
+  - Shuffled so no two from one flag sit side by side. He isn't told which is which.
+  - Same server as founder4: every tap saves to `founder5/ratings.csv`, port 8766. Tested: a rating saved to disk, a wrong id refused, the key not served; the test rating was deleted.
+- **The consistent key** = his re-rated score where he re-rated, his original elsewhere. His earlier `ratings.csv` files are never written, and nothing is smoothed toward any engine.
+
+**Next, once he has rated and confirmed the patterns:** the new rules in v16, fitted on a random half of the photos and tested on the other half (the held-out half is the honest number). Then every bar re-run on the raw ratings and on the consistent key, with v15 alongside. Rules that need a read the AI doesn't give yet (tight legs, top length, bulk) go in as waiting on a read.

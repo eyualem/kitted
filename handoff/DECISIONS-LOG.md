@@ -3222,3 +3222,20 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **The Y34 calls, re-checked:** plain basics stay 7 (27 photos, his mean 7.46); slides keep a charge but about half a point smaller (8 photos, his 6.38 vs v16's 5.94); drop L5 (18 photos, his 6.11, below his no-lift 6.77); **H7 becomes a tip with no points** (his 5 average 7.40, and the 26 "mostly covers the shoe" photos 7.96); **the peek becomes a tip with no points and never cancels the layering lift** (8 clear peeks average 7.31). All still his calls.
     - **Lesson:** one lift isn't a signal to him (a single non-accent lift 6.79 vs none 6.77); two or more lifts are (7.68). The stacking rule is right, but the first step is worth less than the rules give it.
     - **Lesson:** a gain on 20 photos (the looks, Nov 15) reversed on 164. Check a change on the biggest honest set before believing it.
+
+471. **His taste patterns found, and a blind re-rate sheet for his own consistency (T68 round 3, Nov 16, $0). The founder: "Detect patterns and refactor my scores. Let them stay consistent with my taste... Add those new rules to the [rater], and then we can run the test again." Files: `extraction-test/taste_patterns.py` → `results/taste1/`, `extraction-test/rerate_sheet.py` → `inputs/gold-judge/founder5/` (git-ignored), the plain-words list in `tasks/T68/TASK.md` (Round 3).**
+    - **His patterns** (164 photos; each checked within one leg shape, because wide legs bring trousers, long hems and dressy shoes with them):
+      - leg width is his main driver: slim 6.00, straight 6.69, wide 7.63;
+      - pulling pants cost more (5.62);
+      - a long hem over the shoe is a plus (+0.7 on wide legs), the opposite of H7;
+      - dressy shoes +0.5 to +0.9; trousers over jeans +0.4 to +0.7; neutral palettes +0.5 to +0.8;
+      - lifts: one look top to toe (L7) +0.75, a deliberate shape (L1) +0.49, a short layer (L2) +0.27; one smart piece (L7b) about 0, an accent (L5) −0.18, an open layer over a tee (L3) −0.76;
+      - one lift isn't a step, two are; layering alone isn't a plus; shorts −0.5; a long top costs (read unproven).
+      - Mirror selfies +0.4 to +0.7 is a rating bias, not an outfit rule.
+    - **Claude's calls:**
+      - Confidence comes from Welch's t with a minimum count, and is reported beside every number.
+      - "Near-identical" means the same pieces and fits, with colors close (Jaccard ≥ 0.75 without colors, or ≥ 0.6 with them).
+      - "Far from his own pattern" means 2+ points from his 6 most similar outfits.
+      - The sheet has 19 photos: 9 flagged and 10 repeats, 2 per score band.
+      - His original ratings are never written. The consistent key = his re-rated score where he re-rated, his original elsewhere, never smoothed toward an engine (that would be circular).
+    - **Lesson:** a pattern that looks strong on its own can be a passenger. Low clean sneakers looked like a −0.5 until leg shape was held fixed, and then the difference vanished. Check the obvious confounder before writing a rule.
