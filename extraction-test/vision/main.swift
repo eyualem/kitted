@@ -165,8 +165,16 @@ case "locate":
   // kmeasure locate <photo.jpg>: what photo prep hides (Prep.locate), as JSON (#188).
   guard args.count == 3, let img = load(args[2]) else { print("bad args"); exit(2) }
   let f = Prep.locate(img)
+  // T96s: the whole-photo faces, his fallback head box, his torso joints and the print zone (null when the rule can't
+  // be trusted), for the harness and the eye.
+  let zone = Prep.printZone(f, kind: .fit, W: CGFloat(img.width), H: CGFloat(img.height))
+  let zoneRow: Any = zone.map { z in
+    ["torso": rectDict(z.torso), "shoulderSpan": Double(z.shoulderSpan), "head": z.head.map(rectDict), "headWidth": Double(z.headWidth)] as [String: Any]
+  } ?? NSNull()
   let d = try JSONSerialization.data(withJSONObject: ["status": f.status, "hide": f.hide.map(rectDict), "main": f.main.map(rectDict) ?? [:],
-    "joints": f.joints.mapValues { [Int($0.x), Int($0.y)] }, "size": [img.width, img.height]] as [String: Any], options: [.sortedKeys])
+    "joints": f.joints.mapValues { [Int($0.x), Int($0.y)] }, "size": [img.width, img.height],
+    "faces": f.faces.map(rectDict), "fallbackHead": f.fallbackHead.map(rectDict) ?? NSNull(),
+    "torsoJoints": f.torsoJoints.mapValues { [Int($0.x), Int($0.y)] }, "zone": zoneRow] as [String: Any], options: [.sortedKeys])
   print(String(data: d, encoding: .utf8)!)
 
 case "prep":

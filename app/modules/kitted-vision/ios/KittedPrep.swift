@@ -82,12 +82,19 @@ enum Prep {
     /// Fit, on the path that returns "ok": the box of every other body the pose sees (its joints, grown a little), pixels
     /// (T96). A stranger whose head is out of the frame is still a body; only the sweep covers it.
     var otherBodies: [CGRect] = []
-    // T96s (stubs from the test writer; the implementer sets them in locate, tasks/T96s/IMPLEMENTATION.md → Interfaces).
+    // T96s: what the print rule (`printZone`, `isPrint`) reads, all copied from values locate already computes.
+    /// The whole-photo face boxes, in order; hide[0..<faces.count] are their head boxes.
     var faces: [CGRect] = []
+    /// His head band (the same rect appended to hide), nil when none.
     var headBand: CGRect?
+    /// His head joints (nose, eyes, ears) on his outline.
     var headPoints: [CGPoint] = []
+    /// The head-joint box, else the shoulder box, that locate draws when no face is his; computed whether or not drawn.
     var fallbackHead: CGRect?
+    /// Fit: the person mask locate used, the cover taken out; nil when none.
     var outline: Guide.Gray?
+    /// neck, lShoulder, rShoulder, lHip, rHip of his body, only when each is > 0.3 and the neck and shoulders are on his
+    /// outline (empty otherwise).
     var torsoJoints: [String: CGPoint] = [:]
   }
 
@@ -336,6 +343,7 @@ enum Prep {
     let bodies = pose.results ?? []
     var out = Located(status: "ok", errors: errors)
     out.hide = faceBoxes.map { headBox(around: $0) }
+    out.faces = faceBoxes
     out.people = people.count
     // A snap or a scan has no "him" to keep: every body's head is hidden in what's sent (T96), set before the early
     // return below (a body with only head points has no person box).
@@ -429,6 +437,8 @@ enum Prep {
       ? Measure.personMask(image, w: maskW, h: Int((CGFloat(maskW) * H / W).rounded()), quality: .balanced).map { excluding($0, out.cover) } : nil
     let band = mask.flatMap { headBand($0, main: main, W: W, H: H) }
     if let band { out.hide.append(band) }
+    out.headBand = band
+    if kind == .fit { out.outline = mask }
     func onOutline(_ r: CGRect) -> Bool {
       guard let m = mask else { return true }
       return maskShare(m, r, W: W, H: H) >= 0.15 || (band?.intersects(r) ?? false)
@@ -438,15 +448,25 @@ enum Prep {
     let headPts = headJoints.compactMap { joint($0) }.filter { onOutline($0) }
     let shoulders = [joint(.leftShoulder), joint(.rightShoulder)].compactMap { $0 }.filter { onOutline($0) }
     let mainHasFace = faceBoxes.contains { $0.intersects(main.insetBy(dx: -main.width * 0.1, dy: -main.height * 0.05)) && onOutline($0) }
+    // His head from the head joints, else the space above his shoulders (computed whether or not it's drawn, T96s).
+    let jointHead = headJointBox(headPts, main: main)
+    var shoulderHead: CGRect?
+    if shoulders.count == 2 {
+      let span = abs(shoulders[0].x - shoulders[1].x)
+      let top = min(shoulders[0].y, shoulders[1].y)
+      shoulderHead = CGRect(x: (shoulders[0].x + shoulders[1].x) / 2 - span * 0.55, y: top - span * 1.25, width: span * 1.1, height: span * 1.25)
+    }
+    out.headPoints = headPts
+    out.fallbackHead = jointHead ?? shoulderHead
+    if let n = joint(.neck), let ls = joint(.leftShoulder), let rs = joint(.rightShoulder), let lh = joint(.leftHip), let rh = joint(.rightHip),
+       onOutline(n), onOutline(ls), onOutline(rs) {
+      out.torsoJoints = ["neck": n, "lShoulder": ls, "rShoulder": rs, "lHip": lh, "rHip": rh]
+    }
     if !mainHasFace {
-      if headPts.count >= 2, let minX = headPts.map(\.x).min(), let maxX = headPts.map(\.x).max(),
-         let minY = headPts.map(\.y).min(), let maxY = headPts.map(\.y).max() {
-        let side = max(maxX - minX, maxY - minY, main.width * 0.18)
-        out.hide.append(headBox(around: CGRect(x: (minX + maxX) / 2 - side / 2, y: (minY + maxY) / 2 - side / 2, width: side, height: side)))
-      } else if shoulders.count == 2 {
-        let span = abs(shoulders[0].x - shoulders[1].x)
-        let top = min(shoulders[0].y, shoulders[1].y)
-        out.hide.append(CGRect(x: (shoulders[0].x + shoulders[1].x) / 2 - span * 0.55, y: top - span * 1.25, width: span * 1.1, height: span * 1.25))
+      if let jointHead {
+        out.hide.append(jointHead)
+      } else if let shoulderHead {
+        out.hide.append(shoulderHead)
       } else if kind == .snap, shoulders.isEmpty {
         // A snap of his legs and shoes (#313): no upper body in view, so no head to look for; any face found is hidden
         // above. (A fit photo here can't be sent, and a top band would hide his waistband in a look-down shot.)
@@ -474,10 +494,33 @@ enum Prep {
     // Everyone else the body pose sees (T96): a profile, a person the person detector missed, a second reflection.
     if kind == .fit {
       let others = bodies.filter { $0 !== body }
-      out.otherHeads = others.compactMap { poseHead($0, W: W, H: H) }
+      // T96s: a body the pose found twice (him again) gets no head of its own. Both must hold: its head's centre lies
+      // inside a region already hidden as his (his head band, the head box drawn for him, or the head box of a face taken
+      // for his), and its body is about his body (its box overlaps his by IoU ≥ himAgainIoU). The second keeps a stranger:
+      // a runway audience member whose face touches his box has a small body of her own, so her head stays hidden.
+      let grownMain = main.insetBy(dx: -main.width * 0.1, dy: -main.height * 0.05)
+      let hisFaces = faceBoxes.filter { $0.intersects(grownMain) && onOutline($0) }.map { headBox(around: $0) }
+      let mine = [band, mainHasFace ? nil : out.fallbackHead].compactMap { $0 } + hisFaces
+      out.otherHeads = others.compactMap { b -> CGRect? in
+        guard let h = poseHead(b, W: W, H: H, capSpan: true) else { return nil }
+        let c = CGPoint(x: h.midX, y: h.midY)
+        if mine.contains(where: { $0.contains(c) }), let ob = otherBodyBox(b, W: W, H: H), iou(ob, main) >= himAgainIoU { return nil }
+        return h
+      }
       out.otherBodies = others.compactMap { otherBodyBox($0, W: W, H: H) }
     }
     return out
+  }
+
+  /// Another pose body whose box overlaps his by at least this IoU is him found twice (when its head is his, T96s).
+  static let himAgainIoU: CGFloat = 0.5
+
+  /// locate's head box from his head joints (at least 2 on his outline), nil with fewer.
+  static func headJointBox(_ pts: [CGPoint], main: CGRect) -> CGRect? {
+    guard pts.count >= 2, let minX = pts.map(\.x).min(), let maxX = pts.map(\.x).max(),
+          let minY = pts.map(\.y).min(), let maxY = pts.map(\.y).max() else { return nil }
+    let side = max(maxX - minX, maxY - minY, main.width * 0.18)
+    return headBox(around: CGRect(x: (minX + maxX) / 2 - side / 2, y: (minY + maxY) / 2 - side / 2, width: side, height: side))
   }
 
   /// Another body's box for the missed-people cover: its joints (confidence > 0.3, at least 4), grown 25% across and 20%
@@ -497,8 +540,9 @@ enum Prep {
   /// A body's head region from its head points (nose, eyes, ears at confidence > 0.3), pixels, origin top-left; nil
   /// without any (T96). A square on their mean, side max(2.2 × their spread, 0.9 × the shoulder span when both shoulders
   /// are seen, the distance from their centre to the nearest shoulder seen, 2% of the long edge), grown to the whole head
-  /// like a face box.
-  static func poseHead(_ b: VNHumanBodyPoseObservation, W: CGFloat, H: CGFloat) -> CGRect? {
+  /// like a face box. `capSpan` (fit photos, T96s): the shoulder-span term is capped like the nearest-shoulder term, so a
+  /// body put together wrongly can't draw a square over half of him. Snaps and scans keep it uncapped (unchanged).
+  static func poseHead(_ b: VNHumanBodyPoseObservation, W: CGFloat, H: CGFloat, capSpan: Bool = false) -> CGRect? {
     func pt(_ n: VNHumanBodyPoseObservation.JointName) -> CGPoint? {
       guard let p = try? b.recognizedPoint(n), p.confidence > 0.3 else { return nil }
       return CGPoint(x: p.location.x * W, y: (1 - p.location.y) * H)
@@ -510,7 +554,10 @@ enum Prep {
     var side = max(2.2 * spread, 0.02 * max(W, H))
     let cx = xs.reduce(0, +) / CGFloat(pts.count), cy = ys.reduce(0, +) / CGFloat(pts.count)
     let shoulders = [pt(.leftShoulder), pt(.rightShoulder)].compactMap { $0 }
-    if shoulders.count == 2 { side = max(side, 0.9 * hypot(shoulders[0].x - shoulders[1].x, shoulders[0].y - shoulders[1].y)) }
+    if shoulders.count == 2 {
+      let span = 0.9 * hypot(shoulders[0].x - shoulders[1].x, shoulders[0].y - shoulders[1].y)
+      side = max(side, capSpan ? min(span, poseHeadMaxShare * max(W, H)) : span)
+    }
     // With few head points seen (a small or turned head), the head is about as tall as its centre is from the nearest
     // shoulder; capped, so a body put together wrongly can't hide half the photo.
     if let near = shoulders.map({ hypot($0.x - cx, $0.y - cy) }).min() { side = max(side, min(near, poseHeadMaxShare * max(W, H))) }
@@ -590,6 +637,8 @@ enum Prep {
       // What the sweep added (T96): faces it found and hid, other bodies' heads, people covered the person detector missed.
       "sweptFaces": swept.swept.count, "otherHeads": found.otherHeads.count, "coveredExtra": swept.coveredExtra,
       "sweepMs": swept.ms, "hidden": swept.hide.map(norm),
+      // Faces printed on his own top, left alone (T96s): fit only, so always 0 and [] for a snap or a scan.
+      "printsKept": swept.prints.count, "prints": swept.prints.map(norm),
       // Everyone else covered (Oct 14): how many, and whether he was picked automatically or chose himself.
       "masked": found.others.count, "autoPicked": found.picked == nil && !found.others.isEmpty,
     ]
@@ -882,12 +931,12 @@ extension Prep {
     var status: String          // "ok" | "couldNotFrame"
     var reason: String?         // nil when ok; "faceRemains" | "sweepFailed" when refused
     var image: CGImage?         // the copy to send (covered, then every region hidden); nil when refused
-    var hide: [CGRect]          // every region hidden in `image`: found.hide + found.otherHeads + headBox of each swept face
+    var hide: [CGRect]          // every region hidden in `image`: found.hide (less a print's head box, T96s) + found.otherHeads + headBox of each swept face
     var cover: Guide.Gray?      // the final cover (found.cover plus missed people), nil when none
     var swept: [Face]           // faces the tile pass found in the covered, hidden copy (then hidden)
     var coveredExtra: Int       // people covered that locate didn't cover (missed by the person detector)
     var ms: Int                 // the sweep's time
-    var prints: [CGRect] = []   // T96s (stub): face boxes left alone as prints
+    var prints: [CGRect] = []   // T96s: face boxes left alone as prints (locate's and the tile pass's), de-duplicated (IoU ≥ 0.5)
   }
 
   /// People `locate` didn't cover (fit only): how many, and the cover drawn for them. "Other people" are the person
@@ -896,11 +945,11 @@ extension Prep {
   /// him by `himMargin` (his own outline, grown), each patch at least `instanceMinShare` of the grid and not mostly inside
   /// his box is covered: its own pixels, grown by `crowdGrow`, never onto his outline or that margin. Nothing is covered
   /// when his outline can't be told apart (no instance mask, or no label inside his box).
-  static func missedPeople(_ image: CGImage, found: Located) -> (count: Int, cover: Guide.Gray?) {
-    guard let main = found.main, let inst = personInstances(image) else { return (0, nil) }
+  static func missedPeople(_ image: CGImage, found: Located) -> (count: Int, cover: Guide.Gray?, inst: Instances?) {
+    guard let main = found.main, let inst = personInstances(image) else { return (0, nil, nil) }
     let W = CGFloat(image.width), H = CGFloat(image.height)
     guard let his = inst.counts(main.insetBy(dx: main.width * 0.1, dy: main.height * 0.05), W: W, H: H).labels.max(by: { $0.value < $1.value })?.key
-    else { return (0, nil) }
+    else { return (0, nil, inst) }
     let w = inst.w, h = inst.h, n = w * h
     let seg = Measure.personMask(image, w: w, h: h, quality: .accurate)
     // Already covered by locate, on this grid.
@@ -997,7 +1046,7 @@ extension Prep {
       } }
       if cells > 0, fresh * 2 > cells { count += 1 }
     }
-    guard crowd.contains(255) else { return (0, nil) }
+    guard crowd.contains(255) else { return (0, nil, inst) }
     let reach = max(1, Int((crowdGrow * 2 * CGFloat(w)).rounded()))
     var close = [Bool](repeating: false, count: n)
     for y in 0..<h { for x in 0..<w where crowd[y * w + x] != 0 {
@@ -1011,7 +1060,7 @@ extension Prep {
     for y in 0..<h { for x in 0..<w where crowd[y * w + x] != 0 {
       for yy in max(0, y - g)...min(h - 1, y + g) { for xx in max(0, x - g)...min(w - 1, x + g) where !near[yy * w + xx] && !hisBox[yy * w + xx] { grown[yy * w + xx] = 255 } }
     } }
-    return (count, Guide.Gray(w: w, h: h, px: grown))
+    return (count, Guide.Gray(w: w, h: h, px: grown), inst)
   }
 
   /// Person pixels within this share of the grid width of his outline are taken for him (never covered).
@@ -1097,13 +1146,18 @@ extension Prep {
 
   /// After `locate` (status "ok"), on the upright working image: the copy that may be sent, or a refusal. Never changes
   /// found.status; it only covers and hides more, or refuses.
-  ///  1. F = the faces `detect` finds on every tile of `faceGrids` in today's copy (`locate`'s cover and hiding),
-  ///     de-duplicated. Looked at before the new layers below: a face half under a new cover or a pose head box is
+  ///  0. zone = printZone(found) (T96s: nil unless a fit photo whose pose and head can be trusted); fit: the person
+  ///     instance mask, through `missedPeople` (rule 7 reads it).
+  ///  1. hide0 = found.hide without the head box of each whole-photo face that is a print on his top (T96s), plus his
+  ///     fallback head box when a print was what stood in for his face (none: nothing is left alone). F = the faces
+  ///     `detect` finds on every tile of `faceGrids` in today's copy (`locate`'s cover, and hiding hide0), de-duplicated,
+  ///     prints set aside. Looked at before the new layers below: a face half under a new cover or a pose head box is
   ///     still found whole, and so hidden whole.
   ///  2. cover = found.cover, plus (fit) every person the outline sees that isn't him and locate didn't cover
-  ///  3. hide = found.hide + found.otherHeads + each face's head; the copy = hideRegions(coverOthers(image, cover), hide),
+  ///  3. hide = hide0 + found.otherHeads + each face's head; the copy = hideRegions(coverOthers(image, cover), hide),
   ///     then any hidden face the blur barely changed is filled flat grey
-  ///  4. F non-empty: the tiles touching the faces' heads are looked at again in the copy: any face → "faceRemains".
+  ///  4. F non-empty: the tiles touching the faces' heads are looked at again in the copy: any face that isn't a print
+  ///     → "faceRemains".
   ///  Any detector error, or a cover or blur that can't be drawn → "sweepFailed".
   static func sweep(_ image: CGImage, found: Located, kind: Kind, detect: FaceDetect = detectFaces) -> Swept {
     let t0 = CFAbsoluteTimeGetCurrent()
@@ -1118,9 +1172,39 @@ extension Prep {
       return out
     }
 
-    // 1. Today's copy, looked at in tiles.
+    // 0. Where a print can be (T96s), and the people the person detector missed (fit; its instance mask is rule 7's).
+    let zone = printZone(found, kind: kind, W: W, H: H)
+    var missed: (count: Int, cover: Guide.Gray?, inst: Instances?) = (0, nil, nil)
+    if kind == .fit { missed = autoreleasepool { missedPeople(image, found: found) } }
+    func printed(_ f: CGRect) -> Bool { isPrint(f, zone: zone, found: found, instances: missed.inst) }
+
+    // 1. locate's whole-photo faces that are prints on his top leave what's hidden. If one of them was what made locate
+    // take a face for his (so it drew no head box from his joints or shoulders), that box is drawn in its place; with no
+    // such box nothing is left alone.
+    var hide0 = found.hide
+    var prints: [CGRect] = []
+    if zone != nil, !found.faces.isEmpty, let main = found.main {
+      let n = min(found.faces.count, found.hide.count)
+      let left = (0..<n).filter { printed(found.faces[$0]) }
+      if !left.isEmpty {
+        let grown = main.insetBy(dx: -main.width * 0.1, dy: -main.height * 0.05)
+        func his(_ f: CGRect) -> Bool {
+          f.intersects(grown) && (found.outline.map { maskShare($0, f, W: W, H: H) >= 0.15 } ?? true || (found.headBand?.intersects(f) ?? false))
+        }
+        let kept = (0..<n).filter { !left.contains($0) }
+        let stoodIn = left.contains { his(found.faces[$0]) } && !kept.contains { his(found.faces[$0]) }
+        if !stoodIn || found.fallbackHead != nil {
+          hide0 = kept.map { found.hide[$0] } + Array(found.hide.dropFirst(n))
+          if stoodIn, let fb = found.fallbackHead { hide0.append(fb) }
+          prints = left.map { found.faces[$0] }
+        }
+      }
+    }
+    out.hide = hide0 + found.otherHeads
+
+    // Today's copy, looked at in tiles.
     let coveredToday: CGImage? = found.cover == nil ? image : coverOthers(image, found.cover!)
-    guard let coveredToday, let today = hideRegions(coveredToday, found.hide) else { return finish("couldNotFrame", "sweepFailed", nil) }
+    guard let coveredToday, let today = hideRegions(coveredToday, hide0) else { return finish("couldNotFrame", "sweepFailed", nil) }
     let grid = tiles(W: W, H: H, grids: faceGrids)
     var faces: [Face] = []
     do {
@@ -1128,44 +1212,50 @@ extension Prep {
     } catch {
       return finish("couldNotFrame", "sweepFailed", nil)
     }
-    // A face wholly inside one region locate hid (his own, a poster's) is hidden as today; one only partly inside
-    // (a stranger half under his head box) is hidden in full.
-    out.swept = dedupe(faces).filter { f in !found.hide.contains { area($0.intersection(f.box)) >= alreadyHiddenShare * area(f.box) } }
+    // A print on his top is left alone (T96s). A face wholly inside one region locate hid (his own, a poster's) is hidden
+    // as today; one only partly inside (a stranger half under his head box) is hidden in full.
+    var found1: [Face] = []
+    for f in dedupe(faces) {
+      if printed(f.box) { prints.append(f.box); continue }
+      if hide0.contains(where: { area($0.intersection(f.box)) >= alreadyHiddenShare * area(f.box) }) { continue }
+      found1.append(f)
+    }
+    out.swept = found1
+    out.prints = dedupe(prints.map { Face(box: $0, confidence: 1) }).map(\.box)
     let heads = out.swept.map { headBox(around: $0.box) }
     out.hide += heads
 
     // 2. People the person detector missed.
-    if kind == .fit {
-      let missed = autoreleasepool { missedPeople(image, found: found) }
-      if let extra = missed.cover {
-        out.cover = found.cover.map { union($0, extra) } ?? extra
-        out.coveredExtra = missed.count
-      }
+    if let extra = missed.cover {
+      out.cover = found.cover.map { union($0, extra) } ?? extra
+      out.coveredExtra = missed.count
     }
 
     // 3. The copy to send: today's when nothing was added, else drawn again with everything covered and hidden. A hidden
     // face the blur barely changed (very dark or washed out) is filled flat grey.
     var sent = today
-    if out.coveredExtra > 0 || out.hide.count > found.hide.count {
+    if out.coveredExtra > 0 || out.hide.count > hide0.count {
       let covered: CGImage? = out.cover == nil ? image : coverOthers(image, out.cover!)
       guard let covered, let drawn = hideRegions(covered, out.hide) else { return finish("couldNotFrame", "sweepFailed", nil) }
       sent = drawn
     }
     // Filled flat grey: every head the sweep added (another body's, or a face found in today's copy: never his face
-    // as locate hid it), like everyone else's body under the cover; and any of locate's regions the blur barely changed.
-    let added = Array(out.hide.dropFirst(found.hide.count))
-    let weak = found.hide.filter { r in (unchangedShare(image, sent, in: faceIn(r)) ?? 0) >= hiddenMaxUnchanged }
+    // as locate hid it), like everyone else's body under the cover; and any region still hidden from locate's that the
+    // blur barely changed (a print's head box left out of hide0 is never filled).
+    let added = Array(out.hide.dropFirst(hide0.count))
+    let weak = hide0.filter { r in (unchangedShare(image, sent, in: faceIn(r)) ?? 0) >= hiddenMaxUnchanged }
     if !(added + weak).isEmpty {
       guard let filled = autoreleasepool(invoking: { fillRegions(sent, weak + added) }) else { return finish("couldNotFrame", "sweepFailed", nil) }
       sent = filled
     }
 
     // 4. The faces found are hidden now: the tiles touching them are looked at again (pixels elsewhere were only covered
-    // or blurred more, which can't make a face findable).
+    // or blurred more, which can't make a face findable). A print found again is still a print (the rule reads only
+    // `found` and the box); any other face refuses.
     do {
       for t in grid where heads.contains(where: { $0.intersects(t) }) {
         let again = try autoreleasepool { try detect(sent, t) }
-        if !again.isEmpty { return finish("couldNotFrame", "faceRemains", nil) }
+        if again.contains(where: { !printed($0.box) }) { return finish("couldNotFrame", "faceRemains", nil) }
       }
     } catch {
       return finish("couldNotFrame", "sweepFailed", nil)
@@ -1196,28 +1286,108 @@ extension Prep {
   }
 }
 
-// T96s: a face printed on his own top is left alone (stubs from the test writer: tasks/T96s/IMPLEMENTATION.md → Interfaces).
+// T96s: a face printed on his own top is left alone (tasks/T96s/IMPLEMENTATION.md, DECISIONS-LOG #474). A face box is
+// a print only when every rule below holds; when any fails or can't be run, the box is treated exactly as before.
+//   1. A fit photo, status ok.
+//   2. His pose is whole and upright: neck, both shoulders and both hips (> 0.3); the neck and shoulders inside his box
+//      and on his outline; the hips below the lower shoulder by ≥ 15% of his box height; the shoulders ≥ 10% of its width apart.
+//   3. His head is found apart from the box: his head band, his head-joint box, or a whole-photo face on his outline,
+//      each centred above his lower shoulder.
+//   4. The box lies in his torso band (inclusive): below the lower shoulder, above the hip line + printHemShare of
+//      shoulder→hip, its centre between the shoulders, no wider than printMaxWidthShare of the span.
+//   5. It's clear of his head region grown by printHeadGap of his head width, and none of his head joints lies inside
+//      it grown 1.5×.
+//   6. At least printMinOnOutline of it lies on his outline.
+//   7. No other body's head touches it, and no other instance label covers more than 10% of it (when the mask ran).
 extension Prep {
+  /// Where a face box can be a print on his own top, and what can't be touched. Nil when the rule can't be trusted.
   struct PrintZone {
-    var torso: CGRect
+    var torso: CGRect            // x: between the two shoulders; y: lower shoulder → hip line + printHemShare × (hip − shoulder)
     var shoulderSpan: CGFloat
-    var head: [CGRect]
-    var headWidth: CGFloat
-    var headPoints: [CGPoint]
-    var outline: Guide.Gray
+    var head: [CGRect]           // his head region: band, head-joint box, whole-photo faces centred above the shoulder line on his outline
+    var headWidth: CGFloat       // the narrowest of `head`'s widths, as a face (a headBox's width / 1.6; the band's width / 1.3)
+    var headPoints: [CGPoint]    // his nose, eyes, ears (confidence > 0.3, on his outline)
+    var outline: Guide.Gray      // the person mask locate used, the cover taken out
+    var size: CGSize             // the working image's W × H (rules 6 and 7 map the masks back with it)
   }
 
-  static let printHemShare: CGFloat = 0.15
-  static let printHeadGap: CGFloat = 0.25
-  static let printMinOnOutline: CGFloat = 0.9
-  static let printMaxWidthShare: CGFloat = 0.8
+  static let printHemShare: CGFloat = 0.15      // the band reaches this share of shoulder→hip below the hips
+  static let printHeadGap: CGFloat = 0.25       // his head region grown by this share of his head width
+  static let printMinOnOutline: CGFloat = 0.9   // share of the box on his outline
+  static let printMaxWidthShare: CGFloat = 0.8  // the box's width at most this share of the shoulder span
+  /// Rule 2's pose minimums: hips below the lower shoulder by this share of his box height; shoulder span this share of its width.
+  static let printMinTorsoShare: CGFloat = 0.15
+  static let printMinSpanShare: CGFloat = 0.1
+  /// Rule 7: another instance label on more than this share of the box claims it.
+  static let printMaxOtherLabel: CGFloat = 0.1
+  /// Edges are inclusive; this absorbs floating-point noise only (a thousandth of a pixel).
+  static let printEdgeSlack: CGFloat = 0.001
 
+  /// A point is on the outline the way locate reads it: a 4 px square at least 15% on the mask.
+  static func onMask(_ m: Guide.Gray, _ p: CGPoint, W: CGFloat, H: CGFloat) -> Bool {
+    maskShare(m, CGRect(x: p.x - 2, y: p.y - 2, width: 4, height: 4), W: W, H: H) >= 0.15
+  }
+
+  /// The zone for `found` (fit, status "ok"), or nil (rules 1–3). Pure: same `found`, same zone.
   static func printZone(_ found: Located, kind: Kind, W: CGFloat, H: CGFloat) -> PrintZone? {
-    fatalError("T96s: not built")
+    // 1. Fit only.
+    guard kind == .fit, found.status == "ok", let main = found.main, let outline = found.outline else { return nil }
+    // 2. His pose, whole and upright.
+    let t = found.torsoJoints
+    guard let neck = t["neck"], let ls = t["lShoulder"], let rs = t["rShoulder"], let lh = t["lHip"], let rh = t["rHip"] else { return nil }
+    for p in [neck, ls, rs] {
+      guard main.contains(p), onMask(outline, p, W: W, H: H) else { return nil }
+    }
+    let shoulderLine = max(ls.y, rs.y)
+    let hipLine = min(lh.y, rh.y)
+    let span = abs(ls.x - rs.x)
+    guard hipLine - shoulderLine >= printMinTorsoShare * main.height, span >= printMinSpanShare * main.width else { return nil }
+    // 3. His head, found apart from the box.
+    func above(_ r: CGRect) -> Bool { r.midY < shoulderLine }
+    var head: [CGRect] = []
+    var widths: [CGFloat] = []
+    if let band = found.headBand, above(band) { head.append(band); widths.append(band.width / 1.3) }
+    if let jb = headJointBox(found.headPoints, main: main), above(jb) { head.append(jb); widths.append(jb.width / 1.6) }
+    let grown = main.insetBy(dx: -main.width * 0.1, dy: -main.height * 0.05)
+    for f in found.faces {
+      let hb = headBox(around: f)
+      guard f.intersects(grown), f.midY < shoulderLine, above(hb),
+            maskShare(outline, f, W: W, H: H) >= 0.15 || (found.headBand?.intersects(f) ?? false) else { continue }
+      head.append(hb)
+      widths.append(hb.width / 1.6)
+    }
+    guard !head.isEmpty, let headWidth = widths.min() else { return nil }
+    let hem = hipLine + printHemShare * (hipLine - shoulderLine)
+    let torso = CGRect(x: min(ls.x, rs.x), y: shoulderLine, width: span, height: hem - shoulderLine)
+    return PrintZone(torso: torso, shoulderSpan: span, head: head, headWidth: headWidth, headPoints: found.headPoints, outline: outline,
+                     size: CGSize(width: W, height: H))
   }
 
+  /// True only when `face` (a face box, not a head box) passes rules 4–7 against `zone`; false when `zone` is nil.
+  /// `instances`: the instance mask when the sweep ran it (rule 7), else nil.
   static func isPrint(_ face: CGRect, zone: PrintZone?, found: Located, instances: Instances?) -> Bool {
-    fatalError("T96s: not built")
+    guard let z = zone, !face.isNull, face.width > 0, face.height > 0 else { return false }
+    let e = printEdgeSlack
+    // 4. On his torso.
+    guard face.minY >= z.torso.minY - e, face.maxY <= z.torso.maxY + e,
+          face.midX >= z.torso.minX - e, face.midX <= z.torso.maxX + e,
+          face.width <= printMaxWidthShare * z.shoulderSpan + e else { return false }
+    // 5. Clear of his head.
+    let gap = printHeadGap * z.headWidth
+    if z.head.contains(where: { $0.insetBy(dx: -gap, dy: -gap).intersects(face) }) { return false }
+    let big = face.insetBy(dx: -face.width * 0.25, dy: -face.height * 0.25)
+    if z.headPoints.contains(where: { big.contains($0) }) { return false }
+    // 6. On his own outline.
+    let W = z.size.width, H = z.size.height
+    guard maskShare(z.outline, face, W: W, H: H) >= printMinOnOutline else { return false }
+    // 7. Nobody else claims it.
+    if found.otherHeads.contains(where: { $0.intersects(face) }) { return false }
+    if let inst = instances, let main = found.main {
+      let his = inst.counts(main.insetBy(dx: main.width * 0.1, dy: main.height * 0.05), W: W, H: H).labels.max(by: { $0.value < $1.value })?.key
+      let c = inst.counts(face, W: W, H: H)
+      if c.labels.contains(where: { $0.key != his && CGFloat($0.value) > printMaxOtherLabel * CGFloat(max(1, c.all)) }) { return false }
+    }
+    return true
   }
 }
 
