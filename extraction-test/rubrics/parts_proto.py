@@ -502,13 +502,17 @@ TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
                    v16_alpha=0.5, v16_beta=0.25,
                    # the curve: shown = 7 + a(raw - 7) under 7, 7 + b(raw - 7) over it; fitted once on the gold set
                    # to the target shares by ../v16_paper.py --fit, then fixed here
-                   curve=(1.0, 0.8, 7.0),
+                   curve=(1.1, 0.85, 7.0),                          # refit Nov 16 with his taste rules on (was 1.0, 0.8)
                    # layer.5 / ix.33: knit over knit (a cardigan over a sweater) on Style
                    v16_knit=1.5,
                    # H9 as a cap: off, the sleeve read flips between readings (it stays v15's Fit charge)
                    v16_h9_cap=False, v16_h7_cap=5.5,
-                   # round 3 (Nov 16): his taste rules, off until he confirms them (a dict of sizes; see _v16_taste)
-                   taste=None)
+                   # round 3 (Nov 16): his taste rules, on since his yes ("yea, i want to go the recommended way"):
+                   # the base sizes fitted on all 164 rated photos against his consistent key (taste_rules.py --all
+                   # --key consistent), each scaled by TASTE_BY_LOOK for the graded look; the creators win clashes
+                   taste=dict(lift_off=[], h7_tip=True, long_top=0.5, long_top_read="reading", shorts=0, one_lift=0.5,
+                              leg_skinny=0, leg_slim=0, leg_wide=0.5, hem_plus=0.5, shorts_wide=0.5, shorts_above=0.25,
+                              color=0.5))
 VERSIONS["v16"] = "parts-proto-16 (Nov 14, 2026, on paper)"
 HL_LAYERS = {"hoodie", "sweatshirt"}                             # v15 PRO-17: worn as the layer (outerwear) ...
 HL_TOPS = {"tee", "graphic_tee"}                                 # ... over a tee
@@ -1873,28 +1877,94 @@ def _v16_curve(raw, t):
     return 7.0 + (a if raw < k else b) * (raw - k)
 
 
+# ---- Round 3: his taste rules, keyed by the look the outfit is graded as (T68, Nov 16; the founder's yes:
+# "yea, i want to go the recommended way" = patterns yes, rules follow the outfit's own look (A), the creators win
+# where his ratings and theirs clash, Tailored recognized in scoring). The table is rubric/research/rules-by-style.md
+# §3 (PR #127): 1 = the rule's size, 0.5 = half, 0 = off, "2nd" = the first color is free. A mix takes, rule by rule,
+# the friendliest value over its looks (the largest plus, the gentlest charge). A look missing from a row = 1.
+TL_JACKET = {"suit_jacket", "blazer", "sport_coat", "unstructured_blazer"}
+TL_NEVER = {"jeans", "chinos", "cargos", "sweatpants", "joggers", "shorts", "athletic_shorts", "track_pants",
+            "chunky_sneaker", "performance_runner", "basketball_sneaker", "slides_sandals", "work_boot", "hoodie",
+            "sweatshirt", "graphic_tee", "tank_top", "jersey", "fleece"}
+TASTE_BY_LOOK = {
+    # a. wide or relaxed legs: full where the look is built on volume; off in tailored (sil.8, suit.5)
+    "leg_wide": {"vintage_sport": 0.5, "outdoor": 0.5, "workwear": 0.5, "streetwear": 1, "tailored": 0,
+                 "classic_prep": 0.5, "minimalist": 1, "smart_casual": 0.5, "none": 0.5},
+    # c. roomy shorts follow the wide-leg column (tailored never has shorts)
+    "shorts_wide": {"vintage_sport": 0.5, "outdoor": 0.5, "workwear": 0.5, "streetwear": 1, "tailored": 0,
+                    "classic_prep": 0.5, "minimalist": 1, "smart_casual": 0.5, "none": 0.5},
+    # d. colors beside the neutrals: off in the loud looks, the first free in prep and workwear (world.15, color.12)
+    "color": {"vintage_sport": 0, "outdoor": 0, "workwear": "2nd", "streetwear": 0, "tailored": 1,
+              "classic_prep": "2nd", "minimalist": 0.5, "smart_casual": 1, "none": 0.5},
+    # e. a hem covering the shoe, wide legs only (prop.9; off in tailored, suit.3; half where prop.14 asks more)
+    "hem_plus": {"vintage_sport": 1, "outdoor": 1, "workwear": 1, "streetwear": 1, "tailored": 0,
+                 "classic_prep": 0.5, "minimalist": 1, "smart_casual": 0.5, "none": 1},
+    # g. one accent (L5): a lift where the quiet base is the look (color.2)
+    "L5": {"vintage_sport": 0, "outdoor": 0, "workwear": 0, "streetwear": 0, "tailored": 1, "classic_prep": 0,
+           "minimalist": 1, "smart_casual": 0.5, "none": 0},
+    # j. a long top: half where a long street proportion can work (prop.16)
+    "long_top": {"vintage_sport": 0.5, "streetwear": 0.5},
+}
+
+
+def is_tailored(main):
+    """specs/tailored.md TL1: a tailored jacket and dress trousers, nothing from the 'never' list, nothing at
+    roominess 5 (with a jacket and dress trousers in view, TL1's points rule always passes)."""
+    subs = {g.get("subcategory") for g in main}
+    return (bool(subs & TL_JACKET) and bool(subs & {"suit_trousers", "trousers"}) and not subs & TL_NEVER
+            and all((g.get("volume") or 3) < 5 for g in main))
+
+
+def graded_looks(o, graded_look=None):
+    """The look(s) the taste rules follow. graded_look: a look key or a list of them (his pick after the photo, when
+    that step exists); None = the outfit's own looks: the pick-free detected set, plus Tailored by TL1. Never his
+    profile picks. An empty set grades as "none"."""
+    if graded_look:
+        g = {graded_look} if isinstance(graded_look, str) else set(graded_look)
+    else:
+        g = set(o["det"])
+        if is_tailored(o["main"]):                                   # TL2's look-alike rule: Tailored stands for the
+            g = (g - {"smart_casual", "classic_prep"}) | {"tailored"}  # smart casual or prep it also passes
+    return g or {"none"}
+
+
+def _look_val(rule, looks):
+    row = TASTE_BY_LOOK.get(rule)
+    return [1 if row is None else row.get(lk, 1) for lk in looks]
+
+
 def _v16_taste(o, sl_raw, lifts, caps, t):
-    """Round 3 (T68, Nov 16): the founder's taste patterns as rules, all sizes in t["taste"] (None = off; v16 as built).
-    Returns (lifts, caps, items): lifts and caps after the taste rules, and the raw-score adjustments [(points, id, line)].
-      lift_off   lifts that don't count to him (his ratings: L3 -0.76, L5 -0.18, L7b +0.04 against his leg average)
-      one_lift   a single remaining lift counts at this fraction (one lift isn't a step to him; two are)
-      h7_tip     the pooling cap becomes a tip (he scores a hem over the shoe higher, not lower)
-      hem_plus   a hem that covers most of the shoe (look L), on a full leg: a plus
-      leg_skinny, leg_slim, leg_wide   leg width, graded (his means: skinny 5.4, slim 6.2, straight 6.8, wide 8.3)
-      shorts, shorts_wide   shorts cost a little; roomy shorts (volume 4-5, read clean 9/13) win some back
+    """Round 3 (T68, Nov 16): the founder's taste patterns as rules, all base sizes in t["taste"] (None = off), each
+    scaled by TASTE_BY_LOOK for the look(s) the outfit is graded as (o["graded"]). Returns (lifts, caps, items):
+    lifts and caps after the taste rules, and the raw-score adjustments [(points, id, line)].
+      lift_off   lifts that never count (empty since the creators won the clash: L3 and L7b count everywhere, L5 by look)
+      one_lift   a single remaining lift counts at this fraction (his taste in every look: one lift isn't a step)
+      h7_tip     the pooling cap becomes a tip
+      hem_plus   a hem that covers most of the shoe (look L) on a wide or relaxed leg (never on a straight one: prop.1)
+      leg_skinny, leg_slim, leg_wide   leg width, graded
+      shorts, shorts_wide   a shorts charge (0: no creator calls shorts a fault) and roomy shorts (volume 4-5)
+      shorts_above  shorts that end above the knee (the October narrow look, second_look["shorts_end"]; not in the
+                 app's second looks yet): a charge, never a cap
       color      each color beyond neutrals and denim, up to two
-      shorts_above  shorts that end above the knee (the October narrow look, second_look["shorts_end"]; 43/48 right,
-                 23/24 steady on his shorts; not in the app's second looks yet): a charge, never a cap
-      long_top   an untucked top with no jacket that ends low, half a point at most (a low base rate, never a cap).
-                 long_top_read "reading" (default, what the phone has): the reading's below_crotch (catches about half,
-                 rarely wrong); "ruler": the Mac's body ruler (second_look["long_top"]) where it measured, else the
-                 reading (not on the phone yet)"""
+      long_top   an untucked top with no jacket that ends low, half a point at most, never a cap; long_top_read
+                 "reading" (default: the reading's below_crotch) or "ruler" (the Mac's body ruler, second_look["long_top"])"""
     T = t.get("taste")
     if not T:
         return lifts, caps, []
+    looks = o.get("graded") or {"none"}
     items = []
     off = set(T.get("lift_off") or ())
-    lifts = [x for x in lifts if x[0] not in off]
+    out = []
+    for a, b, c, d in lifts:
+        if a in off:
+            continue
+        if a in TASTE_BY_LOOK:
+            m = max(_look_val(a, looks))
+            if not m:
+                continue
+            b = round(b * m, 3)
+        out.append((a, b, c, d))
+    lifts = out
     if len(lifts) == 1 and T.get("one_lift", 1.0) != 1.0:
         a, b, c, d = lifts[0]
         lifts = [(a, round(b * T["one_lift"], 3), c, d)]
@@ -1907,28 +1977,36 @@ def _v16_taste(o, sl_raw, lifts, caps, t):
         if T.get("shorts"):
             items.append((-T["shorts"], "T_shorts", "shorts"))
         if T.get("shorts_wide") and (B.get("volume") or 3) >= 4:
-            items.append((T["shorts_wide"], "T_shorts_wide", "roomy shorts"))
+            m = max(_look_val("shorts_wide", looks))
+            if m:
+                items.append((T["shorts_wide"] * m, "T_shorts_wide", "roomy shorts"))
         if T.get("shorts_above") and (sl_raw or {}).get("shorts_end") == "above_knee":
             items.append((-T["shorts_above"], "T_shorts_above", "shorts above the knee"))
     elif B is not None:
-        size = {"skinny": -T.get("leg_skinny", 0.0), "slim": -T.get("leg_slim", 0.0),
-                "relaxed": T.get("leg_wide", 0.0), "wide": T.get("leg_wide", 0.0)}.get(leg, 0.0)
-        if size:
-            items.append((size, "T_leg", f"{leg} legs"))
-        if T.get("hem_plus") and sl_raw and sl_raw.get("covers_shoe") == "mostly":
-            items.append((T["hem_plus"], "T_hem", "a full hem over the shoe"))
+        if leg in ("relaxed", "wide"):
+            m = max(_look_val("leg_wide", looks))
+            if T.get("leg_wide") and m:
+                items.append((T["leg_wide"] * m, "T_leg", f"{leg} legs"))
+            mh = max(_look_val("hem_plus", looks))
+            if T.get("hem_plus") and mh and sl_raw and sl_raw.get("covers_shoe") == "mostly":
+                items.append((T["hem_plus"] * mh, "T_hem", "a full hem over the shoe"))
+        elif leg in ("skinny", "slim") and T.get(f"leg_{leg}"):
+            items.append((-T[f"leg_{leg}"], "T_leg", f"{leg} legs"))
     if T.get("color"):
         cols = {g.get("color_family") for g in o["tops"] + o["outers"] + ([B] if B else [])}
-        n = len({c for c in cols if c and c not in R.NEUTRALS and not str(c).startswith("denim")})
+        n = min(2, len({c for c in cols if c and c not in R.NEUTRALS and not str(c).startswith("denim")}))
         if n:
-            items.append((-T["color"] * min(n, 2), "T_color", f"{n} color{'s' if n > 1 else ''} beside the neutrals"))
+            charged = min((max(n - 1, 0) if m == "2nd" else n * m) for m in _look_val("color", looks))
+            if charged:
+                items.append((-T["color"] * charged, "T_color", f"{n} color{'s' if n > 1 else ''} beside the neutrals"))
     if T.get("long_top") and not o["outers"] and o["tops"]:
         top = o["tops"][0]
-        if top.get("tucked") not in ("full", "front", "half"):
+        if top.get("tucked") not in ("full", "half"):
             ruler = (sl_raw or {}).get("long_top") if T.get("long_top_read") == "ruler" else None
             long_ = ruler if ruler is not None else top.get("length") == "below_crotch"
-            if long_:
-                items.append((-T["long_top"], "T_long_top", "the top ends low"))
+            m = min(_look_val("long_top", looks))
+            if long_ and m:
+                items.append((-T["long_top"] * m, "T_long_top", "the top ends low"))
     return lifts, caps, items
 
 
@@ -2032,7 +2110,8 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
                 "heavy_layer": heavy, "caps": [{"cap": c, "id": i, "kind": k, "line": l} for c, i, k, l in caps],
                 "stack_ceiling": stack, "one_look": one_look, "held_by": held_by, "raw": round(raw, 3),
                 "curved": round(shown, 3), "owned": owned_lines, "ceiling": min(c for c, _ in ceilings), "depends": dep,
-                "unread": V16_UNREAD, "taste": [{"points": a, "id": b, "line": c} for a, b, c in taste]},
+                "unread": V16_UNREAD, "taste": [{"points": a, "id": b, "line": c} for a, b, c in taste],
+                "graded_look": sorted(o.get("graded") or [])},
     }
 
 
@@ -2057,7 +2136,7 @@ def _outfit(garments, styles):
 
 
 def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v15", tune=None,
-                season=None):
+                season=None, graded_look=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
     _second_look). engine: "v15" (v14 + a hoodie or sweatshirt layered over a tee, PRO-17; default), "v14" (the casual and athletic
@@ -2082,6 +2161,7 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     o["t"] = t
     o["occasion"] = occasion
     o["season"] = season if t["v16"] else None                     # v16: "warm", or "cool" (mild and cold; the default)
+    o["graded"] = graded_looks(o, graded_look)                       # round 3: the look(s) the taste rules follow
 
     color = _color(o, boldness, t)
     o["color_fault"] = bool(color.reasons) and any(r["points"] < 0 for r in color.reasons)

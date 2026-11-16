@@ -377,3 +377,79 @@ v15 alongside: B1 on all 164 is 124/164 (76%), r 0.51 raw and 125/164, r 0.50 on
 - They are still short on ranking (r), and they cost B3 one anchor, B4 two rows (one by his own call) and some band shares.
 - The r gap is what the reading can't see (fit, finish, exact colors); his re-rate confirmed that this is taste, not noise.
 - **Not switched on.** That waits on his yes on the patterns and his A/B call on rules by style (PR #127).
+
+## Round 3 built: his taste rules on, keyed by the outfit's look (Nov 16, $0)
+
+**His yes (Nov 16):** "yea, i want to go the recommended way", answering "Accept my recommendations: patterns yes, style rules A, creators win clashes, tailored recognized?"
+
+**What's built** (`extraction-test/rubrics/parts_proto.py`; v15 and every older engine untouched; conformance 501/501):
+- **His taste rules are on in v16.** The base sizes were fitted on all 164 photos against his consistent key: wide or relaxed legs +0.5, a hem over the shoe on a wide leg +0.5, roomy shorts +0.5, shorts above the knee −0.25, each color −0.5, a long top −0.5, a single lift at half. Each is scaled by look from `TASTE_BY_LOOK`, which is `rubric/research/rules-by-style.md` §3 (PR #127). Fixed by the table rather than fitted:
+  - one lift at half (row i);
+  - skinny and slim add 0 (row b: v16's own charges carry them);
+  - plain shorts 0;
+  - L3 and L7b lift everywhere, and L5 by look (the creators win);
+  - the pooling cap is a tip.
+- **`score_parts(..., graded_look=None)`.** The look the rules follow. The default is the outfit's own pick-free detected looks, plus Tailored by TL1. His profile picks are never read for it (checked: three pick sets, same score).
+  - **My call:** TL2's look-alike rule applies to grading too, so Tailored stands in for the smart casual or prep it also passes. Otherwise the mix rule would always hand a suit smart casual's friendlier sizes, and Tailored's column would never apply.
+  - A mix takes the friendliest value per rule.
+  - Same photo + same graded look = same score (checked).
+- **Tailored is recognized in scoring:** `is_tailored`, TL1's jacket + dress trousers + "never" list. `extraction-test/graded_look_check.py` passes TL1.1–TL1.6 from the approved spec.
+- **The curve refit** with the rules on, under the steadiness bar: (1.1, 0.85), was (1.0, 0.8).
+- **Two corrections against the table, made before the final numbers:**
+  - the first all-photos fit set one lift to 0 and skinny/slim to 0.5, against rows i and b; they are now fixed by the table;
+  - the slim charge had made two photos flip and broke steadiness (217/223).
+
+**The honest numbers: held-out halves, 8 fresh splits** (`results/taste1/splits_summary.txt`):
+
+| | Raw ratings | Consistent key |
+|---|---|---|
+| v15 (today) | 76.1% within a point, r 0.53 | 77.0%, r 0.52 |
+| v16 rules off | 74.2%, r 0.45 | 73.5%, r 0.44 |
+| **v16 with his rules** | **78.2%** (74–82), **r 0.60** (0.54–0.64) | **76.7%** (73–79), **r 0.58** (0.53–0.62) |
+
+- It ranks his photos more like he does than v15 (+0.06 r), and is about even on "within a point".
+- Letting the creators win the four clashes cost about 2 points against the dry run (81%), which was pure his-taste.
+- **B1 still fails** (80% and r 0.69).
+
+**Every bar, v16 with his rules** (`results/v16/report.txt`; `results/v16-consistent/` on the key):
+
+| Bar | v16 with his rules | v16 before (rules off) | v15 |
+|---|---|---|---|
+| B1, his ratings | held out 78% / r 0.60 (raw), 77% / 0.58 (key); on all 164 130/164, r 0.59 (the sizes saw these): **FAIL** | 73% / 0.45 held out | 76% / 0.53 |
+| B2, creators' pairs | **6/6 PASS** | 6/6 | 5/6 |
+| B3, anchors | **15/18** FAIL (3 miss) | 13/18 | 10/18 |
+| B4, dealbreaker examples | every row but H7 PASS; H7 is now a tip by his call | all | – |
+| B5, worst band gap | gold **16.6**, his checks **23.2**: FAIL | 17.7 / 26.5 | 29.6 / 32.9 |
+| B6, steadiness | **218/223 PASS** | 218/223 | 218/223 |
+| B7, v15 untouched | PASS (501/501, hoodie paper, `graded_look_check.py`) | | |
+
+Gold shares (cool, first reading): 1.3 / 10.8 / 17.0 / 46.6 / 24.2 / 0%, against the target 5 / 15 / 30 / 30 / 15 / 5.
+
+**The 15 named outfits** (`results/v16/named.md`, for his yes; his blind score where he rated it):
+
+| Outfit | Today | New | His | Graded as | What moved it |
+|---|---|---|---|---|---|
+| His check: grey hoodie, black wide jeans, navy slides | 7 | **6.5** | | streetwear | slides out of the house −1.5; wide legs +0.5 |
+| His check: grey tee under a tan overshirt, black wide jeans (Class) | 6.5 | **7.5** | | no look | an open layer +0.25 (one lift, half); wide legs +0.25 |
+| His check: charcoal hoodie, cream overshirt, relaxed jeans, chunky sneakers | 8 | **8.5** | | streetwear | a short layer, one look top to toe; relaxed legs +0.5 |
+| His check: charcoal hoodie, light wide jeans, white leather sneakers | 8 | **7.5** | | streetwear | one lift counts half, so no step past 7.5; wide legs +0.5 |
+| His check: charcoal tee with a clear stain, light jeans, slides | 5.5 | **5.5** | | no look | the stain caps it at 5.5 |
+| His check: black sweatshirt, slim ripped jeans (Class) | 6.5 | **6** | | no look | the slim leg (v16's own charge) |
+| Gold: black graphic tee, skinny jeans, red basketball sneakers | 5 | **5** | 5.5 | no look | skinny ripped jeans |
+| Gold: green cardigan over a white tee, relaxed black trousers, white sneakers | 8 | **8.5** | 8 | classic prep, smart casual | a shape, an accent (half), a smart piece; relaxed legs +0.25 |
+| Gold: pink graphic tee, light denim shorts | 7 | **6.5** | 5 | no look | a color −0.25 |
+| Gold: blue sweatshirt over a tee, olive wide cargos, black derbies | 6.5 | **6.5** | 8 | no look | the peek −0.25; wide legs +0.25, a color −0.25 |
+| Tim's before: oversized tee, denim jacket, skinny jeans (his 4.5) | 5.5 | **5** | | no look | skinny ripped jeans |
+| Tim's favorite: brown blazer, white tee, black trousers (his 9) | 7 | **8.5** | | tailored | a tailored line, one smart piece |
+| Wanhee's red bomber over dark trousers (his 7.5) | 7.5 | **8** | | no look | a short layer, a smart piece; a color −0.25 |
+| Made up: red tee, yellow chinos, purple sneakers | 6.5 | **4.5** | | no look | three brights cap it at 4.5 |
+| Made up: boxy white tee tucked into wide charcoal trousers, burgundy cardigan, loafers | 8 | **8.5** | | smart casual | a short layer, an accent, top to toe; wide legs +0.25, a color −0.5 |
+
+**The proposed rubric change** (`tasks/T68/v5-styles-v16.diff`, not applied):
+- a new [TST] section with the table by look and the graded look;
+- [DB-H7] as a tip;
+- [LFT-5] by look, and [LFT-S] (one lift at half);
+- [SCO-10]'s refit curve;
+- the order of a score.
+
+**Nothing goes into `@kitted/core` or the app until he approves the 15-outfit table** (Y41).

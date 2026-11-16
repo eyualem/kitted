@@ -116,6 +116,8 @@ def why(r):
             bits.append(f"faults -{v['fault_drop']:g} ({w['check']}: {w['line']})")
     if v["heavy_layer"]:
         bits.append(f"heavy layer -{v['heavy_layer'][0]:g}")
+    if v.get("taste"):                                                 # round 3: his taste rules
+        bits.append("taste: " + ", ".join(f"{x['line']} {x['points']:+g}" for x in v["taste"]))
     return "; ".join(bits) or "nothing off, nothing chosen"
 
 
@@ -295,9 +297,17 @@ NAMED = [
 ]
 
 
-def run_named(say, runs, ph, cr):
-    say("== 15 named outfits: v15 -> v16 (cool day; warm in brackets) and the rule that moved it ==")
+LOOK_NAMES = {**R.STYLE_NAMES, "tailored": "tailored", "none": "no look"}
+
+
+def run_named(say, runs, ph, cr, his=None):
+    """The 15 named outfits for his yes: today's score (v15), the new one (v16 with his taste rules, cool day; warm in
+    brackets), his own blind score where he rated it, the look the rules followed, and why. Also writes named.md."""
+    say("== 15 named outfits: v15 -> v16 (cool day; warm in brackets), his score, the graded look, and why ==")
+    looks = load_looks()
+    rows = []
     for src, key, name in NAMED:
+        mine = None
         if src == "phone":
             v = ph.get(key)
             if v is None:
@@ -309,8 +319,10 @@ def run_named(say, runs, ph, cr):
             b, a, w = b["overall"], a, w["overall"]
         elif src == "gold":
             rd = runs[key][0]
-            b, a, w = sc(rd, "everyday", PROFILE, engine="v15")["overall"], sc(rd, "everyday", PROFILE), \
-                sc(rd, "everyday", PROFILE, season="warm")["overall"]
+            lk = (looks.get(key) or [None])[0]
+            b, a, w = sc(rd, "everyday", PROFILE, engine="v15")["overall"], sc(rd, "everyday", PROFILE, lk), \
+                sc(rd, "everyday", PROFILE, lk, season="warm")["overall"]
+            mine = (his or {}).get(key)
         elif src == "creator":
             b, _ = med(cr[key], "v15")
             m, xs = med(cr[key])
@@ -318,7 +330,14 @@ def run_named(say, runs, ph, cr):
             a = next(x for x in xs if x["overall"] == m)
         else:
             b, a, w = sc(key, engine="v15")["overall"], sc(key), sc(key, season="warm")["overall"]
-        say(f"  {b:>4g} -> {a['overall']:<4g} [{w:g}]  {name}\n        {why(a)}")
+        gl = ", ".join(LOOK_NAMES.get(x, x) for x in a["v16"]["graded_look"])
+        say(f"  {b:>4g} -> {a['overall']:<4g} [{w:g}]  {name}" + (f"  (his {mine:g})" if mine is not None else "")
+            + f"\n        graded as {gl}; {why(a)}")
+        rows.append((name, b, a["overall"], w, mine, gl, why(a)))
+    md = ["| Outfit | Today (v15) | New (v16) | Warm day | His score | Graded as | Why |", "|---|---|---|---|---|---|---|"]
+    for name, b, a, w, mine, gl, wy in rows:
+        md.append(f"| {name} | {b:g} | **{a:g}** | {w:g} | {'' if mine is None else f'{mine:g}'} | {gl} | {wy} |")
+    (OUT / "named.md").write_text("\n".join(md) + "\n")
 
 
 # ============================================================================================ main
@@ -826,7 +845,13 @@ def main():
             f"\n        why: {why(a)}")
     say()
 
-    run_named(say, runs, ph, cr)
+    hisk = dict(founder)
+    f4n, _ = load_founder4()
+    hisk.update(f4n)
+    if KEY:
+        hisk.update({k: v for k, v in KEY.items() if k in hisk})
+    OUT.mkdir(parents=True, exist_ok=True)
+    run_named(say, runs, ph, cr, hisk)
     say()
     # ---- what the season moves
     say("== What the season moves (cool -> warm, first reading) ==")

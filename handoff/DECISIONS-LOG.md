@@ -3277,3 +3277,20 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Every bar with the dry-run rules:** B2 6/6, B3 12/18, B4 misses H7 (by design) and S5, B5 worse (21.1 / 28.1), B6 219/223. The rules stay off until his yes on the patterns and on rules by style.
     - **Correction:** the 8-split average reported earlier as 80.5% is 81.1% (an arithmetic slip).
     - **Lesson:** a re-rate measures the rater, not just the ratings. Here it showed the "inconsistencies" were deliberate, which moves the remaining gap from his scores to the reading.
+
+479. **His taste rules are on in v16, keyed by the outfit's graded look, Tailored recognized, the curve refit (T68 round 3, Nov 16, $0).** (476 is T98's, 478 rules-by-style's, on their branches.)
+    - **The founder:** "yea, i want to go the recommended way" (patterns yes; rules follow the outfit's own look, option A; the creators win clashes; Tailored recognized in scoring).
+    - **Built:**
+      - `TASTE_BY_LOOK` (rules-by-style.md §3), `graded_looks`, `is_tailored` (TL1) and `score_parts(graded_look=...)` in `extraction-test/rubrics/parts_proto.py`;
+      - base sizes fitted on all 164 against his consistent key: wide +0.5, hem on a wide leg +0.5, roomy shorts +0.5, shorts above the knee −0.25, colors −0.5, long top −0.5;
+      - fixed by the table: one lift at half, skinny/slim 0, plain shorts 0, L3/L7b everywhere, L5 by look, H7 a tip;
+      - the curve (1.1, 0.85), was (1.0, 0.8).
+    - **Claude's calls:**
+      - TL2's look-alike rule also decides grading (Tailored replaces the smart casual or prep it passes), or the mix rule would make Tailored's column dead.
+      - Table rows win over the fit where the table names a value: the first all-photos fit gave one lift 0 and skinny/slim 0.5, and the slim charge broke steadiness (217/223).
+      - Final sizes are fitted on all photos after the held-out check.
+    - **Results:**
+      - Held out over 8 splits: 78.2% within a point and r 0.60 (raw), 76.7% and 0.58 (key); v15 76% and 0.53; v16 with the rules off 74% and 0.45. B1 fails.
+      - B2 6/6, B3 15/18 (was 13), B4 all but H7 (his call), B5 16.6 / 23.2 (was 17.7 / 26.5), B6 218/223.
+      - The 15-outfit table is in `tasks/T68/TASK.md`; the rubric diff is updated (not applied).
+    - **Lesson:** letting the creators win four clashes cost about 2 points of agreement with his ratings. That's the price of an outside yardstick, and the reason it's his explicit call, not a tuning choice.

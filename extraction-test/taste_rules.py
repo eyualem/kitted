@@ -29,9 +29,13 @@ import hoodie_layer_paper as H  # noqa: E402
 
 OUT = HERE / "results" / "taste1"
 SEED = 20261116
-FIXED = {"lift_off": ["L3", "L5", "L7b"], "h7_tip": True, "long_top": 0.5, "long_top_read": "reading"}
-GRID = {"leg_skinny": [0, 0.5, 1.0, 1.5], "leg_slim": [0, 0.25, 0.5, 0.75, 1.0], "leg_wide": [0, 0.25, 0.5, 0.75],
-        "one_lift": [1.0, 0.75, 0.5, 0.0], "hem_plus": [0, 0.25, 0.5], "shorts": [0, 0.25, 0.5],
+# the founder's yes (Nov 16): the creators win clashes, so no lift is off (L3, L7b count; L5 by look) and the plain
+# shorts charge is 0 (no creator calls shorts a fault); parts_proto.TASTE_BY_LOOK scales each size by the graded look
+FIXED = {"lift_off": [], "h7_tip": True, "long_top": 0.5, "long_top_read": "reading", "shorts": 0,
+         "one_lift": 0.5,                                              # the table: a single lift at half (rule i)
+         "leg_skinny": 0, "leg_slim": 0}                               # row b: v16's own charges carry them (adds 0)
+GRID = {"leg_wide": [0, 0.25, 0.5, 0.75],
+        "hem_plus": [0, 0.25, 0.5],
         "shorts_wide": [0, 0.25, 0.5], "shorts_above": [0, 0.25, 0.5, 0.75], "color": [0, 0.25, 0.5]}
 
 
@@ -61,13 +65,15 @@ def main():
     sh = ks[:]
     rng.shuffle(sh)
     A, B = sorted(sh[: len(sh) // 2]), sorted(sh[len(sh) // 2:])
+    if "--all" in sys.argv:                                            # the final sizes: fitted on every photo
+        A = B = sorted(ks)
     his = {k: pool[k][0] for k in ks}
     cache = {}
 
     def score(k, T):
         tk = (k, json.dumps(T, sort_keys=True))
         if tk not in cache:
-            cache[tk] = V.sc(pool[k][2], "everyday", V.PROFILE, pool[k][3], tune={"taste": T} if T else None)["overall"]
+            cache[tk] = V.sc(pool[k][2], "everyday", V.PROFILE, pool[k][3], tune={"taste": T})["overall"]  # None = off
         return cache[tk]
 
     def obj(T, half):
@@ -95,23 +101,23 @@ def main():
         lines.append(s)
     say(f"His taste rules, fitted on half A, tested on the held-out half B ({'his consistent key' if consistent else 'his raw ratings'}; "
         f"{len(ks)} photos: A {len(A)}, B {len(B)}; seed {SEED})")
-    say("Fitted sizes: " + ", ".join(f"{k} {T[k]}" for k in GRID) + f"; fixed: lifts off {', '.join(FIXED['lift_off'])}, "
-        f"the pooling cap a tip, the long top {FIXED['long_top']} (read: {FIXED['long_top_read']})")
+    say("Fitted sizes: " + ", ".join(f"{k} {T[k]}" for k in GRID) + f"; fixed: lifts off {', '.join(FIXED['lift_off']) or 'none'}, plain shorts {FIXED['shorts']}, "
+        f"a single lift at {FIXED['one_lift']}, skinny and slim 0 (row b), the pooling cap a tip, the long top {FIXED['long_top']} (read: {FIXED['long_top_read']})")
     for name, half in (("A (fitted on it)", A), ("B (held out: the honest number)", B), ("all", ks)):
         hv = [his[k] for k in half]
         say(f"  half {name}:")
         for label, f in (("v15", lambda k: V.sc(pool[k][2], "everyday", V.PROFILE, engine="v15")["overall"]),
-                         ("v16 (with the looks)", lambda k: score(k, None)), ("v16 + his taste rules", lambda k: score(k, T))):
+                         ("v16 rules off (looks)", lambda k: score(k, None)), ("v16 + his taste rules", lambda k: score(k, T))):
             w1, n, r, m = stats([f(k) for k in half], hv)
             say(f"    {label:24s} within 1 {w1:3d}/{n} ({100 * w1 / n:3.0f}%)  r {r:.3f}  mean {m:.2f} (his {st.mean(hv):.2f})")
     say("  each rule's share on half B (r with it on; then with only that rule off):")
     base = stats([score(k, T) for k in B], [his[k] for k in B])
-    for name in list(GRID) + ["lift_off", "long_top"]:
-        off = dict(T, **{name: [] if name == "lift_off" else (1.0 if name == "one_lift" else 0)})
+    for name in list(GRID) + ["long_top"]:
+        off = dict(T, **{name: 1.0 if name == "one_lift" else 0})
         w1, n, r, _ = stats([score(k, off) for k in B], [his[k] for k in B])
         say(f"    without {name:12s} r {r:.3f} (with {base[2]:.3f}), within 1 {w1}/{n} (with {base[0]})")
     OUT.mkdir(parents=True, exist_ok=True)
-    tag = "consistent" if consistent else "raw"
+    tag = ("consistent" if consistent else "raw") + ("_all" if "--all" in sys.argv else "")
     (OUT / f"taste_rules_{tag}.txt").write_text("\n".join(lines) + "\n")
     (OUT / f"fitted_taste_{tag}.json").write_text(json.dumps({"taste": T, "key": tag, "seed": SEED, "A": A, "B": B}, indent=1))
     return 0
