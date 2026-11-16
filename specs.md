@@ -28,7 +28,7 @@ Guys who aren't into fashion don't know if an outfit works or what one change wo
 ## Non-goals (not at launch, on purpose)
 - Android, iPad layouts, a web app, any store outside the US.
 - Scoring womenswear (dresses, skirts, heels): "not rated yet".
-- Faces, bodies, weight, skin, haircuts, grooming, fitness or dating advice.
+- Rating faces, bodies, weight or skin; haircuts, grooming, fitness or dating advice. (Cuts suited to the height and fit he tells Kit are clothes advice: F17.)
 - Email sign-in (Apple and Google only).
 - A free trial of Pro, a lifetime plan, a weekly plan, Family Sharing, a founding offer **(assumed)**.
 - The two-shot check, the drawn figure, "Should I buy this?", fitting-room mode, accessories in the score (all under Later).
@@ -102,7 +102,7 @@ He tells Kit a piece was read wrong ("those jeans are straight") and taps Re-sco
 Kit answers about clothes, shoes, accessories, fit, care and shopping, using his looks, his fit if given, what he told Kit and his closet as words, never a photo.
 - F5.1 The agreement says Kit is an AI, before his first check or question; asked, Kit says so plainly.
 - F5.2 Off-topic questions (haircuts, grooming, fitness, dating) get a short friendly decline, and don't count: "I stick to clothes. Ask me what to wear to it." (draft)
-- F5.3 Kit never comments on his face, body, weight or skin.
+- F5.3 Kit never comments on his face, body, weight or skin, and never says his height or fit answers back (F17).
 - F5.4 Offline: "You're offline, so I couldn't answer that. It doesn't count."
 - F5.5 Explain rating: Kit names at most two rules, only ones the code used for that check, and says no number but the score. It's free (never a question) and once per check; offline or when the AI fails, a code-written line says the same.
 
@@ -125,7 +125,7 @@ Every past check with its photo, score and fixes; a look's page with "Show in ch
 - F8.1 Past scores stay visible forever, free, never blurred.
 
 ### F9. You
-The settings home, named You, with no gear and no separate Settings page (`specs/setup-and-you.md`): Style profile (name, looks 1·2·3, fit), today's checks, then the settings rows: Notifications, Appearance, Plan & usage, Privacy & data ("See what I send" shows the real blurred copy; "What Kit knows" lists each fact with its source, removable; "Delete all my data"), and Help & about.
+The settings home, named You, with no gear and no separate Settings page (`specs/setup-and-you.md`): Style profile (name, looks 1·2·3, fit, and optionally his height band and how shirts and jeans fit him, F17), today's checks, then the settings rows: Notifications, Appearance, Plan & usage, Privacy & data ("See what I send" shows the real blurred copy; "What Kit knows" lists each fact with its source, removable; "Delete all my data"), and Help & about.
 - F9.1 "Delete all my data" (and "Delete account and all data" when signed in) removes everything on the phone and on our server, with no way back.
 - F9.2 Picked looks change the order of fixes and advice, never a score.
 
@@ -171,6 +171,11 @@ About 15 named events to PostHog (e.g. first check, re-check went up, free check
 - F16.1 No event carries a photo, a question's words, his name, his birth year or his location.
 - F16.2 The 60-day success numbers can be read from it.
 
+### F17. Body-aware advice
+Optional, and he tells it; nothing is read from a photo. Kit asks once, only when an answer would change what he's shown: how shirts and jeans off the rack fit him, and his height band (never his weight). The answers pick which cuts lead in the card's fix, Kit's answers and the morning card, with a small "Picked for your fit" tag; they never change a score, and nothing the app says names his body. Detail: `specs/body-aware-advice.md`.
+- F17.1 Same photo, same score, with or without his answers.
+- F17.2 His answers never leave the phone except in his own synced profile when signed in; only the cuts they pick go with questions to Kit.
+
 ## Data
 | Thing | What matters | Lives where | Kept how long |
 |---|---|---|---|
@@ -178,8 +183,8 @@ About 15 named events to PostHog (e.g. first check, re-check went up, free check
 | Face-blurred copy | the only image sent | Google (Gemini) | up to 55 days (Google's abuse checks; no training) |
 | Fit checks | reading, score, fixes, occasion, look | the phone; Firestore if signed in | until deleted |
 | Closet pieces | kind, color, fit, cut-out, wears | the phone; Firestore if signed in | until deleted |
-| Style profile, what Kit knows | name (optional), looks, fit, facts with sources; the name is never sent to the AI | the phone; Firestore if signed in | until deleted |
-| Questions to Kit | text + closet as words; for Explain rating, that check's two rules as words | OpenAI | up to 30 days (abuse checks; no training); never by us |
+| Style profile, what Kit knows | name (optional), looks, fit, height band and fit answers (optional), facts with sources; the name and the answers are never sent to the AI | the phone; Firestore if signed in | until deleted |
+| Questions to Kit | text + closet as words; the cuts that suit him, if he told Kit; for Explain rating, that check's two rules as words | OpenAI | up to 30 days (abuse checks; no training); never by us |
 | Usage counts | free checks used, today's checks and questions, Pro status | our server, by device ID (+ account) | while the app is used |
 | Spend | today's AI spend | our server | rolling |
 | Events | named events, random ID | PostHog | PostHog's retention |
