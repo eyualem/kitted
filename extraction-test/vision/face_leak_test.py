@@ -64,6 +64,8 @@ EYE_NOT_FACES = {
     "inputs/youtube/shots/2QZhiKgPceA/f-03-15.jpg": [[640.9, 125.0, 9.0, 5.8]],
     "inputs/fashionpedia/images/test/1b8c03a610d653da2492f3c8235e36a5.jpg": [[143.4, 450.5, 39.4, 21.8]],
     "inputs/fashionpedia/images/test/227a61b64bca65ba3a3247a253d05fb1.jpg": [[382.6, 385.8, 5.9, 8.5]],
+    # T96s D1 (Nov 16): her hair, below her chin (also T96S_EYE_NOT_FACES in print_faces_test.py)
+    "inputs/fashionpedia/images/test/2ddd0fbcbeb60656e0a46efe621b5a9f.jpg": [[308.5, 338.3, 16.2, 22.0]],
     "inputs/fashionpedia/images/test/4a09beb74d1d68b783666f5580b2f266.jpg": [[306.6, 422.5, 4.6, 8.0]],          # hair
     "inputs/fashionpedia/images/test/4d7048cf94764599b60357d281c12a6d.jpg": [[350.1, 891.5, 12.3, 24.5]],        # a belly
     # D6 (round 3): MediaPipe-only cores on the runway model herself
@@ -1722,7 +1724,7 @@ def check_heldout(ctx):
     rep = {}
     ctx.status1513 = {}
     for name, photos in sets:
-        st, sus, by = {}, 0, {}
+        st, sus, by, eye = {}, 0, {}, {}
         for part in chunks(photos, 15):
             d = ctx.scratch()
             try:
@@ -1749,18 +1751,29 @@ def check_heldout(ctx):
                         if v["v"] == "leak":
                             k = kinds[v["core"]]
                             by[k] = by.get(k, 0) + 1
-                            if k in STRICT:  # #475: his face, or a face the app's own detector spots, sent unhidden
-                                fails.append(f"{name} {no_kit(p)}: a {k} face core not hidden in the fit upload "
-                                             f"(unchanged {v.get('unchanged')}, inside hidden {v.get('inside')})")
+                            # #475, settled at T96s D5: automatic only where a Vision face box (the app's own detector)
+                            # of his or a spotted face was left outside the hidden rects; a MediaPipe-only core, or a
+                            # face inside them that fails only on its unchanged share (a mosaic over a smooth face), goes
+                            # to the eye, where a readable face of his, or a readable spotted face, fails the line.
+                            vision = any(iou(hc[v["core"]], h) > 0.99 for h in t["hunt"])
+                            auto = k in STRICT and vision and (v.get("inside") or 0) < 0.9
+                            if auto:
+                                fails.append(f"{name} {no_kit(p)}: a {k} face box left outside the hidden rects in the fit "
+                                             f"upload (unchanged {v.get('unchanged')}, inside hidden {v.get('inside')})")
+                            if k in STRICT and not auto:
+                                eye[k] = eye.get(k, 0) + 1
                             if k != "print":
                                 sus += 1
-                                sheets[name].add(f"{k[:4]} {Path(p).parent.name[:6]}/{Path(p).stem[:10]}", v["path"], v["box"])
+                                lab = ("EYE " if k in STRICT and not auto else "") + k[:4]
+                                sheets[name].add(f"{lab} {Path(p).parent.name[:6]}/{Path(p).stem[:10]}", v["path"], v["box"])
             shutil.rmtree(d, ignore_errors=True)
             print(f"  {name}: {sum(st.values())}/{len(photos)}", flush=True)
-        rep[name] = {"photos": len(photos), "statuses": st, "suspects": sus, "not_hidden_by_kind": by, "sheet": sheets[name].finish()}
+        rep[name] = {"photos": len(photos), "statuses": st, "suspects": sus, "not_hidden_by_kind": by,
+                     "for_the_eye (his or spotted, a readable one fails)": eye, "sheet": sheets[name].finish()}
     rep["gate_185"] = {"not_hidden": len(gate), "list": gate[:50]}
-    rep["eye"] = ("#475: his face and spotted faces fail automatically; the unspotted suspects on the sheets are measured for "
-                  "the reviewer (print, poster, screen, already pixelated, real), not failed")
+    rep["eye"] = ("#475 / T96s D5: a Vision face box of his or a spotted face outside the hidden rects fails automatically. "
+                  "Crops labelled EYE (his or spotted: MediaPipe-only, or inside the hidden rects with unchanged > T) fail the "
+                  "line when the eye calls one a readable face; the other suspects are measured, not failed")
     return fails, rep
 
 
