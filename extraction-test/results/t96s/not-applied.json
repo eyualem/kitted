@@ -1,17 +1,8 @@
 {
- "mode": "quick",
+ "mode": "full",
  "planted": null,
- "fails": [
-  "(1)  at 2.05.18\u202fPM snap: printsKept None, prints None; expected 0 and []",
-  "(1)  at 1.44.56\u202fPM snap: printsKept None, prints None; expected 0 and []",
-  "(1) 7a332eb72e0ea2 snap: printsKept None, prints None; expected 0 and []",
-  "(1)  at 2.05.18\u202fPM items: printsKept None, prints None; expected 0 and []",
-  "(1)  at 1.44.56\u202fPM items: printsKept None, prints None; expected 0 and []",
-  "(1) 7a332eb72e0ea2 items: printsKept None, prints None; expected 0 and []",
-  "(2) P1 cropped at y 336: printsKept None, prints None; expected 0 and []",
-  "(2) P2 cropped at y 381: printsKept None, prints None; expected 0 and []"
- ],
- "seconds": 5,
+ "fails": [],
+ "seconds": 8,
  "(1)  at 2.05.18\u202fPM snap": "ok/None",
  "(1)  at 1.44.56\u202fPM snap": "ok/None",
  "(1) 7a332eb72e0ea2 snap": "ok/None",

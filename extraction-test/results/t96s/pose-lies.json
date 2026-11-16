@@ -1,10 +1,8 @@
 {
- "mode": "quick",
+ "mode": "full",
  "planted": null,
- "fails": [
-  "(rule 2) driver `zone` crashed: driver/KittedPrep.swift:1216: Fatal error: T96s: not built"
- ],
- "seconds": 9,
+ "fails": [],
+ "seconds": 10,
  "S1": {
   "photo": "inputs/pinterest/Screenshot 2026-10-12 at 2.55.27\u202fPM.png",
   "status": {
@@ -20,17 +18,17 @@
   "face": [
    {
     "copy": "upload",
-    "v": "covered",
-    "unchanged": null,
-    "inside": null,
-    "grey": 1.0
+    "v": "hidden",
+    "unchanged": 0.234,
+    "inside": 1.0,
+    "grey": 0.0
    },
    {
     "copy": "detail",
-    "v": "covered",
-    "unchanged": null,
-    "inside": null,
-    "grey": 1.0
+    "v": "hidden",
+    "unchanged": 0.237,
+    "inside": 1.0,
+    "grey": 0.0
    }
   ],
   "regions": [
@@ -42,7 +40,7 @@
      212.6,
      252.5
     ],
-    "new": 0.154,
+    "new": 0.171,
     "main": 0.171
    },
    {
@@ -53,10 +51,11 @@
      212.6,
      252.5
     ],
-    "new": 0.153,
+    "new": 0.168,
     "main": 0.168
    }
-  ]
+  ],
+  "zone": null
  },
  "S2": {
   "photo": "inputs/fashionpedia/images/test/caa7c7b751d4acf2ef5a8aaf1896d3f0.jpg",
@@ -72,7 +71,8 @@
    "neck",
    "rElbow",
    "rShoulder"
-  ]
+  ],
+  "zone": null
  },
  "S3": {
   "photo": "inputs/fashionpedia/images/test/cefdf3bda4f600792ddbed990887d837.jpg",
@@ -92,17 +92,17 @@
   "face": [
    {
     "copy": "upload",
-    "v": "covered",
-    "unchanged": null,
-    "inside": null,
-    "grey": 1.0
+    "v": "hidden",
+    "unchanged": 0.109,
+    "inside": 1.0,
+    "grey": 0.0
    },
    {
     "copy": "detail",
-    "v": "covered",
-    "unchanged": null,
-    "inside": null,
-    "grey": 1.0
+    "v": "hidden",
+    "unchanged": 0.106,
+    "inside": 1.0,
+    "grey": 0.0
    }
   ],
   "regions": [
@@ -114,7 +114,7 @@
      80.4,
      95.5
     ],
-    "new": 0.072,
+    "new": 0.102,
     "main": 0.102
    },
    {
@@ -158,7 +158,7 @@
      117.8,
      144.9
     ],
-    "new": 0.037,
+    "new": 0.128,
     "main": 0.128
    },
    {
@@ -169,7 +169,7 @@
      80.4,
      95.5
     ],
-    "new": 0.072,
+    "new": 0.103,
     "main": 0.103
    },
    {
@@ -213,10 +213,11 @@
      117.8,
      144.9
     ],
-    "new": 0.037,
+    "new": 0.128,
     "main": 0.128
    }
-  ]
+  ],
+  "zone": null
  },
  "S4": {
   "photo": "inputs/fashionpedia/images/test/d5da50f251cc2ba7d90e5ab8251d2b94.jpg",
@@ -237,17 +238,17 @@
   "face": [
    {
     "copy": "upload",
-    "v": "covered",
-    "unchanged": null,
-    "inside": null,
-    "grey": 1.0
+    "v": "hidden",
+    "unchanged": 0.107,
+    "inside": 1.0,
+    "grey": 0.0
    },
    {
     "copy": "detail",
-    "v": "covered",
-    "unchanged": null,
-    "inside": null,
-    "grey": 1.0
+    "v": "hidden",
+    "unchanged": 0.108,
+    "inside": 1.0,
+    "grey": 0.0
    }
   ],
   "regions": [
@@ -259,7 +260,7 @@
      114.6,
      136.1
     ],
-    "new": 0.104,
+    "new": 0.286,
     "main": 0.286
    },
    {
@@ -292,7 +293,7 @@
      114.6,
      136.1
     ],
-    "new": 0.104,
+    "new": 0.285,
     "main": 0.285
    },
    {
@@ -317,7 +318,8 @@
     "new": 0.138,
     "main": 0.173
    }
-  ]
+  ],
+  "zone": null
  },
  "S5": {
   "photo": "inputs/fashionpedia/images/test/f304cfe8f41748fa2e35cb7b670b4a54.jpg",
@@ -344,17 +346,17 @@
   "face": [
    {
     "copy": "upload",
-    "v": "covered",
-    "unchanged": null,
-    "inside": null,
-    "grey": 1.0
+    "v": "hidden",
+    "unchanged": 0.272,
+    "inside": 1.0,
+    "grey": 0.0
    },
    {
     "copy": "detail",
-    "v": "covered",
-    "unchanged": null,
-    "inside": null,
-    "grey": 1.0
+    "v": "hidden",
+    "unchanged": 0.272,
+    "inside": 1.0,
+    "grey": 0.0
    }
   ],
   "regions": [
@@ -366,7 +368,7 @@
      255.7,
      303.7
     ],
-    "new": 0.268,
+    "new": 0.23,
     "main": 0.23
    },
    {
@@ -377,7 +379,7 @@
      249.6,
      306.6
     ],
-    "new": 0.255,
+    "new": 0.213,
     "main": 0.213
    },
    {
@@ -388,7 +390,7 @@
      255.7,
      303.7
     ],
-    "new": 0.268,
+    "new": 0.231,
     "main": 0.23
    },
    {
@@ -399,10 +401,11 @@
      249.6,
      306.6
     ],
-    "new": 0.255,
+    "new": 0.213,
     "main": 0.212
    }
-  ]
+  ],
+  "zone": null
  },
  "S6": {
   "photo": "inputs/fashionpedia/images/test/956bd805fafef7524b88d3629224b151.jpg",
@@ -658,7 +661,8 @@
     "new": 0.204,
     "main": 0.204
    }
-  ]
+  ],
+  "zone": null
  },
  "S7": {
   "photo": "inputs/fashionpedia/images/test/4f90696201ecfc4a4fe2ca9dfacc42c8.jpg",
@@ -679,17 +683,17 @@
   "face": [
    {
     "copy": "upload",
-    "v": "covered",
-    "unchanged": null,
-    "inside": null,
-    "grey": 1.0
+    "v": "hidden",
+    "unchanged": 0.283,
+    "inside": 1.0,
+    "grey": 0.0
    },
    {
     "copy": "detail",
-    "v": "covered",
-    "unchanged": null,
-    "inside": null,
-    "grey": 1.0
+    "v": "hidden",
+    "unchanged": 0.282,
+    "inside": 1.0,
+    "grey": 0.0
    }
   ],
   "regions": [
@@ -701,7 +705,7 @@
      139.5,
      165.6
     ],
-    "new": 0.207,
+    "new": 0.219,
     "main": 0.224
    },
    {
@@ -734,7 +738,7 @@
      73.7,
      87.5
     ],
-    "new": 0.111,
+    "new": 0.18,
     "main": 0.23
    },
    {
@@ -778,7 +782,7 @@
      159.3,
      196.1
     ],
-    "new": 0.175,
+    "new": 0.194,
     "main": 0.2
    },
    {
@@ -789,7 +793,7 @@
      139.5,
      165.6
     ],
-    "new": 0.207,
+    "new": 0.218,
     "main": 0.223
    },
    {
@@ -822,7 +826,7 @@
      73.7,
      87.5
     ],
-    "new": 0.111,
+    "new": 0.179,
     "main": 0.231
    },
    {
@@ -866,10 +870,11 @@
      159.3,
      196.1
     ],
-    "new": 0.175,
+    "new": 0.193,
     "main": 0.2
    }
-  ]
+  ],
+  "zone": null
  },
  "sheet": "no crops"
 }

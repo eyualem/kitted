@@ -33,6 +33,21 @@
 
 No constant from IMPLEMENTATION.md was changed.
 
+**Results (`print_faces_test.py --full`, Nov 16, at `4bba24cb`; JSON in `extraction-test/results/t96s/`):**
+- PASS: print rule logic; real prints sent (P1, P2, P3 each left alone, with one `prints` rect); his face when the pose lies; strangers at torso height; re-check and prints; where the rule doesn't apply; same photo.
+- FAIL built prints:
+  - (a) 31 of 36 left alone (D3);
+  - (b) 28 of 30 hidden (D2);
+  - (c) passes;
+  - (L) 8 of 8 kept prints left alone (main's whole-photo blur path).
+- FAIL grey square on him: (1) S1 passes; (2) 335 of 336 pass, and the one left is a hand face T96 greys (D4); (3) passes (0 of 168 lost; second-mirror-panel reflections hidden).
+- FAIL T96 still holds (T96 `--full`, 110 min):
+  - pass: sweep logic, old sends purged, same photo, false refusals, time (reported), built small faces, second mirror panel, missed people, no regression;
+  - red: leak set and kmeasure copies (one core, D1), and held out and regression (D5).
+- The same failures came up in the first `--full` (stopped early); `--quick` passed every line but these.
+
+**Not done or not verified here:** an iOS build and a phone check (no native install this session); `swiftc -typecheck` against the iOS SDKs (only the Mac typecheck and the harness compiles ran).
+
 ## Disputes
 **D1 · T96's leak set vs T96s's grey square: one dense-hunt core that T96s's eye list calls "her hair" (implementer, Nov 16).**
 - **The T96 line:** `face_leak_test.py` › `F2.2 · leak set` (locked at `6a916e4b`). With this build it fails on one core only:
@@ -81,3 +96,13 @@ No constant from IMPLEMENTATION.md was changed.
   - The S1 and s25 squares are fixed; this one isn't a pose head.
 - **Why it looks wrong:** TESTING.md → Scope lists it as out of scope: "the 'faces' the detector imagines on his shoes, jeans or a hand (T96 greys them) stay as T96 leaves them". But (2) leaves out only "the head boxes the sweep drew for faces below his hip line". This hand is held at waist height, above his hips (641), so it isn't left out.
 - **What I think it should say:** (2) also leaves out the head boxes drawn for tile faces centred within his hands' reach: the box holds a wrist joint, or its centre lies outside his shoulders. Or (2) compares with round 3, not main, for regions T96 added and this task doesn't touch. Making a hand "face" un-greyed is founder question 3 (legs, feet, hands), a later task, so I haven't built it.
+
+**D5 · T96 › held out and regression (automatic part) is red at `--full`, and on the 26 non-held-out photos I could compare, round 3 hides exactly the same (implementer, Nov 16).**
+- **The line:** `face_leak_test.py --full` run inside "T96 still holds". 36 cores fail: 8 held-out photos and 27 baseline photos, all but one "his" cores.
+- **The committed round-3 JSON can't be compared:** `extraction-test/results/t96/held-out-and-regression.json` (0 fails) was run under the old lock, before the re-lock (#477) split cores into his, spotted, unspotted and print. DECISIONS-LOG #477 says the re-locked file passes on round 3 at `--quick`, and `--quick` doesn't run this line.
+- **What I checked:** the failing baseline photos (not held out), through a Mac probe that prints `locate`'s `otherHeads` and the sweep's `hide` and `swept`, on this build and on round 3 (`a00da29d`).
+  - On 26 of the 27, both builds give the same rects (for example: `mirror-fit-check-1/m11/before_mirror.jpg` hides nothing on either; `fitcheck-photos/s19/before_phone.jpg` the same two rects).
+  - The 27th is `2ddd0fbc…`, which is D1.
+  - So these cores fail on round 3 too, under the re-locked rule; this task didn't cause them.
+- **The 8 held-out photos weren't compared.** They're held out (never opened by the implementer); their fails read the same way (his cores, unchanged 0.47–1.0).
+- **What I think it should say:** the T96 test writer re-baselines this line on round 3 under the re-lock (one `--full` run of `a00da29d`). Then "T96 still holds" compares against that (as it does for built small faces and missed people), not against "passes".

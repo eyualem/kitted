@@ -1,47 +1,99 @@
 {
- "mode": "quick",
+ "mode": "full",
  "planted": null,
- "fails": [
-  "12 at 2.05.18\u202fPM: run's result has no prints/printsKept keys",
-  "12 at 1.44.56\u202fPM: run's result has no prints/printsKept keys",
-  "d17a332eb72e0ea2: run's result has no prints/printsKept keys",
-  "12 at 2.55.27\u202fPM: run's result has no prints/printsKept keys",
-  "a-0: run's result has no prints/printsKept keys",
-  "a-1: run's result has no prints/printsKept keys",
-  "a-2: run's result has no prints/printsKept keys",
-  "a-3: run's result has no prints/printsKept keys"
- ],
+ "fails": [],
  "seconds": 6,
  "12 at 2.05.18\u202fPM": {
   "status": "ok",
-  "prints": null
+  "prints": [
+   [
+    0.5645178601231878,
+    0.2604576088266358,
+    0.027632021964285415,
+    0.01264640141189808
+   ]
+  ]
  },
  "12 at 1.44.56\u202fPM": {
   "status": "ok",
-  "prints": null
+  "prints": [
+   [
+    0.4732738839394135,
+    0.2960497828630301,
+    0.043121848352916575,
+    0.021846876694605902
+   ]
+  ]
  },
  "d17a332eb72e0ea2": {
   "status": "ok",
-  "prints": null
+  "prints": [
+   [
+    0.4656347271987669,
+    0.30779575736960396,
+    0.07418983494031132,
+    0.04948404087917879
+   ]
+  ]
  },
  "12 at 2.55.27\u202fPM": {
   "status": "ok",
-  "prints": null
+  "prints": []
  },
  "a-0": {
   "status": "ok",
-  "prints": null
+  "prints": [
+   [
+    0.5140848755836487,
+    0.49570292606949806,
+    0.06518454849720001,
+    0.04888841137290001
+   ]
+  ]
  },
  "a-1": {
   "status": "ok",
-  "prints": null
+  "prints": [
+   [
+    0.47843971848487854,
+    0.5125657729804516,
+    0.06105461344122887,
+    0.045790959149599075
+   ]
+  ]
  },
  "a-2": {
   "status": "ok",
-  "prints": null
+  "prints": [
+   [
+    0.3964509963989258,
+    0.4864029437303543,
+    0.07692287117242813,
+    0.05769215524196625
+   ],
+   [
+    0.41312773475025705,
+    0.49204858926532324,
+    0.05221002702213203,
+    0.039157519160653464
+   ]
+  ]
  },
  "a-3": {
   "status": "ok",
-  "prints": null
+  "prints": [
+   [
+    0.5367677351459861,
+    0.47088584954326507,
+    0.060173122600341834,
+    0.04512984371103812
+   ],
+   [
+    0.5412139170027027,
+    0.47630412582111603,
+    0.038457638293039054,
+    0.028843228063124116
+   ]
+  ]
  }
 }

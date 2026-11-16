@@ -1,8 +1,1095 @@
 {
- "mode": "quick",
+ "mode": "full",
  "planted": null,
- "fails": [
-  "(1\u20136) driver `logic` crashed: driver/KittedPrep.swift:1216: Fatal error: T96s: not built"
- ],
- "seconds": 0
+ "fails": [],
+ "seconds": 0,
+ "cases": {
+  "base": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ],
+     [
+      442.4,
+      324.76,
+      115.2,
+      136.79999999999998
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ]
+    ],
+    "headWidth": 72,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": true,
+    "onHemLine": true,
+    "onShoulderLine": true,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": true
+   }
+  },
+  "band reaches 580 (rule 5: inside his head region)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      380
+     ],
+     [
+      442.4,
+      324.76,
+      115.2,
+      136.79999999999998
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ]
+    ],
+    "headWidth": 72,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": true,
+    "onHemLine": true,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "band ends at the shoulder line (rule 5: the 25% gap)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      340
+     ],
+     [
+      442.4,
+      324.76,
+      115.2,
+      136.79999999999998
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ]
+    ],
+    "headWidth": 72,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "gap550": false,
+    "gap566": true,
+    "ok": true,
+    "onHemLine": true,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": true
+   }
+  },
+  "mask emptied left of x 500 (rule 6)": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "mask emptied left of x 500 below the shoulders only (rule 6 alone)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ],
+     [
+      442.4,
+      324.76,
+      115.2,
+      136.79999999999998
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ]
+    ],
+    "headWidth": 72,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": true,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "mask emptied left of x 454 below the shoulders (95% on: rule 6 passes)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ],
+     [
+      442.4,
+      324.76,
+      115.2,
+      136.79999999999998
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ]
+    ],
+    "headWidth": 72,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": true,
+    "onHemLine": true,
+    "onShoulderLine": true,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": true
+   }
+  },
+  "mask emptied left of x 456 below the shoulders (about 92% on: rule 6 passes, every time)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ],
+     [
+      442.4,
+      324.76,
+      115.2,
+      136.79999999999998
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ]
+    ],
+    "headWidth": 72,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": true,
+    "onHemLine": true,
+    "onShoulderLine": true,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": true,
+    "y610": true,
+    "y650": true,
+    "y690": true,
+    "y730": true,
+    "y770": true,
+    "y810": true,
+    "y850": true,
+    "y890": true
+   }
+  },
+  "another head over the box (rule 7)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ],
+     [
+      442.4,
+      324.76,
+      115.2,
+      136.79999999999998
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ]
+    ],
+    "headWidth": 72,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "clear900": true,
+    "ok": false,
+    "onHemLine": true,
+    "onShoulderLine": true,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": true
+   }
+  },
+  "a head point inside the box (rule 5)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ],
+     [
+      212,
+      183.79999999999995,
+      576,
+      684
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ],
+     [
+      490,
+      740
+     ]
+    ],
+    "headWidth": 153.84615384615384,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": true,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "a head point inside the box grown 1.5\u00d7 (rule 5)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ],
+     [
+      234.5,
+      211.04999999999995,
+      496,
+      589
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ],
+     [
+      435,
+      690
+     ]
+    ],
+    "headWidth": 153.84615384615384,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": true,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "tilted shoulders: the lower one is the line (rule 4)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ],
+     [
+      442.4,
+      324.76,
+      115.2,
+      136.79999999999998
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ]
+    ],
+    "headWidth": 72,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     560,
+     240,
+     621
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": true,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "t545": false,
+    "t565": true,
+    "tooWide": false,
+    "under560": true
+   }
+  },
+  "instance mask: only his label (rule 7 passes)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ],
+     [
+      442.4,
+      324.76,
+      115.2,
+      136.79999999999998
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ]
+    ],
+    "headWidth": 72,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": true,
+    "onHemLine": true,
+    "onShoulderLine": true,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": true
+   }
+  },
+  "instance mask: another label over half the box (rule 7)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ],
+     [
+      442.4,
+      324.76,
+      115.2,
+      136.79999999999998
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ]
+    ],
+    "headWidth": 72,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": true,
+    "onShoulderLine": true,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": true
+   }
+  },
+  "head band only (no head points)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ]
+    ],
+    "headPoints": [],
+    "headWidth": 153.84615384615384,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": true,
+    "onHemLine": true,
+    "onShoulderLine": true,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": true
+   }
+  },
+  "a face above his shoulders as his only head region": {
+   "zone": {
+    "head": [
+     [
+      436,
+      286.4,
+      128,
+      152
+     ]
+    ],
+    "headPoints": [],
+    "headWidth": 80,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": true,
+    "onHemLine": true,
+    "onShoulderLine": true,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": true
+   }
+  },
+  "hips 280 below the shoulders (\u2265 15% of his box)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ],
+     [
+      442.4,
+      324.76,
+      115.2,
+      136.79999999999998
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ]
+    ],
+    "headWidth": 72,
+    "shoulderSpan": 240,
+    "torso": [
+     380,
+     540,
+     240,
+     322
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": true,
+    "onHemLine": false,
+    "onShoulderLine": true,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": true
+   }
+  },
+  "shoulder span 60 (\u2265 10% of his box)": {
+   "zone": {
+    "head": [
+     [
+      400,
+      200,
+      200,
+      300
+     ],
+     [
+      442.4,
+      324.76,
+      115.2,
+      136.79999999999998
+     ]
+    ],
+    "headPoints": [
+     [
+      470,
+      380
+     ],
+     [
+      530,
+      380
+     ],
+     [
+      500,
+      420
+     ]
+    ],
+    "headWidth": 72,
+    "shoulderSpan": 60,
+    "torso": [
+     470,
+     540,
+     60,
+     644
+    ]
+   },
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "narrow": true,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "kind snap": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "kind items": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "status couldNotFrame": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "status multiplePeople": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "status noPerson": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "no neck": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "no lShoulder": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "no rShoulder": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "no lHip": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "no rHip": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "a shoulder outside his box (on the outline)": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "hips 250 below the shoulders (under 15% of his box)": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "shoulder span 35 (under 10% of his box)": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "narrow": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "no outline": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "no head region (no band, points, faces or fallback)": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "no head region (only the shoulder box locate would draw)": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  },
+  "no head region (only a face below his shoulders: the print itself)": {
+   "zone": null,
+   "print": {
+    "aboveShoulder": false,
+    "centreOut": false,
+    "ok": false,
+    "onHemLine": false,
+    "onShoulderLine": false,
+    "pastHem": false,
+    "pxAboveShoulder": false,
+    "pxPastHem": false,
+    "tooWide": false,
+    "under560": false
+   }
+  }
+ }
 }

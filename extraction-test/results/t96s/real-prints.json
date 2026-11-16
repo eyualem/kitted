@@ -1,19 +1,8 @@
 {
- "mode": "quick",
+ "mode": "full",
  "planted": null,
- "fails": [
-  "P1: print 1 not left alone (upload: unchanged 0.148, new grey 0.95; \u2265 0.90 and \u2264 0.02)",
-  "P1: run's result has no printsKept/prints keys",
-  "P1: no prints rect overlaps print 1's eye box (IoU \u2265 0.3 at 1024)",
-  "P2: print 1 not left alone (upload: unchanged 0.155, new grey 0.996; \u2265 0.90 and \u2264 0.02)",
-  "P2: run's result has no printsKept/prints keys",
-  "P2: no prints rect overlaps print 1's eye box (IoU \u2265 0.3 at 1024)",
-  "P3: print 1 not left alone (upload: unchanged 0.052, new grey 0.976; \u2265 0.90 and \u2264 0.02)",
-  "P3: run's result has no printsKept/prints keys",
-  "P3: no prints rect overlaps print 1's eye box (IoU \u2265 0.3 at 1024)",
-  "P4: run's result has no printsKept/prints keys"
- ],
- "seconds": 9,
+ "fails": [],
+ "seconds": 10,
  "P4 pick": {
   "locate": "multiplePeople",
   "pick": [
@@ -33,7 +22,7 @@
    "main": "ok"
   },
   "reason": null,
-  "printsKept": null,
+  "printsKept": 1,
   "gated": true,
   "boxes": [
    {
@@ -69,31 +58,38 @@
     "new": [
      {
       "copy": "upload",
-      "unchanged": 0.148,
-      "newGrey": 0.95,
-      "grey": 0.95,
-      "ok": false
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
      },
      {
       "copy": "detail",
-      "unchanged": 0.171,
-      "newGrey": 0.931,
-      "grey": 0.931,
-      "ok": false
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
      },
      {
       "copy": "upper",
-      "unchanged": 0.175,
-      "newGrey": 0.931,
-      "grey": 0.931,
-      "ok": false
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
      }
     ],
     "mainWholePhotoFace": [],
     "inMainHide": false
    }
   ],
-  "prints": [],
+  "prints": [
+   [
+    390.6,
+    393.8,
+    19.1,
+    19.1
+   ]
+  ],
   "head": [
    {
     "copy": "upload",
@@ -103,7 +99,7 @@
      168.2,
      199.7
     ],
-    "new": 0.107,
+    "new": 0.106,
     "main": 0.106
    },
    {
@@ -114,7 +110,7 @@
      231.9,
      285.4
     ],
-    "new": 0.218,
+    "new": 0.217,
     "main": 0.217
    },
    {
@@ -140,11 +136,7 @@
     "main": 0.211
    }
   ],
-  "fails": [
-   "P1: print 1 not left alone (upload: unchanged 0.148, new grey 0.95; \u2265 0.90 and \u2264 0.02)",
-   "P1: run's result has no printsKept/prints keys",
-   "P1: no prints rect overlaps print 1's eye box (IoU \u2265 0.3 at 1024)"
-  ]
+  "fails": []
  },
  "P2": {
   "photo": "inputs/ig/Screenshot 2026-10-12 at 1.44.56\u202fPM.png",
@@ -154,7 +146,7 @@
    "main": "ok"
   },
   "reason": null,
-  "printsKept": null,
+  "printsKept": 1,
   "gated": true,
   "boxes": [
    {
@@ -190,31 +182,38 @@
     "new": [
      {
       "copy": "upload",
-      "unchanged": 0.155,
-      "newGrey": 0.996,
-      "grey": 1.0,
-      "ok": false
+      "unchanged": 0.996,
+      "newGrey": 0.0,
+      "grey": 0.004,
+      "ok": true
      },
      {
       "copy": "detail",
-      "unchanged": 0.15,
-      "newGrey": 0.997,
-      "grey": 1.0,
-      "ok": false
+      "unchanged": 1.0,
+      "newGrey": 0.001,
+      "grey": 0.004,
+      "ok": true
      },
      {
       "copy": "upper",
-      "unchanged": 0.15,
-      "newGrey": 0.997,
-      "grey": 1.0,
-      "ok": false
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.002,
+      "ok": true
      }
     ],
     "mainWholePhotoFace": [],
     "inMainHide": false
    }
   ],
-  "prints": [],
+  "prints": [
+   [
+    361.6,
+    446.4,
+    32.9,
+    32.9
+   ]
+  ],
   "head": [
    {
     "copy": "upload",
@@ -261,11 +260,7 @@
     "main": 0.164
    }
   ],
-  "fails": [
-   "P2: print 1 not left alone (upload: unchanged 0.155, new grey 0.996; \u2265 0.90 and \u2264 0.02)",
-   "P2: run's result has no printsKept/prints keys",
-   "P2: no prints rect overlaps print 1's eye box (IoU \u2265 0.3 at 1024)"
-  ]
+  "fails": []
  },
  "P3": {
   "photo": "inputs/fashionpedia/images/test/f6890fd9ddbb8cf2d17a332eb72e0ea2.jpg",
@@ -275,7 +270,7 @@
    "main": "ok"
   },
   "reason": null,
-  "printsKept": null,
+  "printsKept": 1,
   "gated": true,
   "boxes": [
    {
@@ -311,31 +306,38 @@
     "new": [
      {
       "copy": "upload",
-      "unchanged": 0.052,
-      "newGrey": 0.976,
-      "grey": 1.0,
-      "ok": false
+      "unchanged": 1.0,
+      "newGrey": 0.001,
+      "grey": 0.024,
+      "ok": true
      },
      {
       "copy": "detail",
-      "unchanged": 0.052,
-      "newGrey": 0.976,
-      "grey": 1.0,
-      "ok": false
+      "unchanged": 1.0,
+      "newGrey": 0.002,
+      "grey": 0.026,
+      "ok": true
      },
      {
       "copy": "upper",
-      "unchanged": 0.052,
-      "newGrey": 0.976,
-      "grey": 1.0,
-      "ok": false
+      "unchanged": 1.0,
+      "newGrey": 0.005,
+      "grey": 0.026,
+      "ok": true
      }
     ],
     "mainWholePhotoFace": [],
     "inMainHide": false
    }
   ],
-  "prints": [],
+  "prints": [
+   [
+    318.0,
+    315.2,
+    50.7,
+    50.7
+   ]
+  ],
   "head": [
    {
     "copy": "upload",
@@ -382,11 +384,7 @@
     "main": 0.357
    }
   ],
-  "fails": [
-   "P3: print 1 not left alone (upload: unchanged 0.052, new grey 0.976; \u2265 0.90 and \u2264 0.02)",
-   "P3: run's result has no printsKept/prints keys",
-   "P3: no prints rect overlaps print 1's eye box (IoU \u2265 0.3 at 1024)"
-  ]
+  "fails": []
  },
  "P4": {
   "photo": "inputs/fashionpedia/images/test/6c1cf70085fef21a41cb374e84bfd6c3.jpg",
@@ -396,7 +394,7 @@
    "main": "ok"
   },
   "reason": null,
-  "printsKept": null,
+  "printsKept": 0,
   "gated": true,
   "boxes": [
    {
@@ -671,17 +669,22 @@
     "main": 0.239
    }
   ],
-  "fails": [
-   "P4: run's result has no printsKept/prints keys"
-  ]
+  "fails": []
  },
  "pendant": {
   "status": "ok",
   "reason": null,
-  "printsKept": null,
-  "prints": null,
-  "sweptFaces": 1
+  "printsKept": 1,
+  "prints": [
+   [
+    0.6129436552524566,
+    0.29831986608335775,
+    0.05432302951812744,
+    0.027644190341474938
+   ]
+  ],
+  "sweptFaces": 0
  },
  "P3 in main's found.hide": false,
- "sheet": "9 crops in extraction-test/results/t96s/real-prints"
+ "sheet": "no crops"
 }
