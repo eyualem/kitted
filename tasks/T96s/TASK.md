@@ -52,3 +52,24 @@ No constant from IMPLEMENTATION.md was changed.
   - Any rule that passes both lines would be a special case for one photo.
 - **What I think it should say:** T96's leak set should leave this core out the way it leaves out its other eye-ruled non-faces (T96's `EYE_NOT_FACES`, IoU ≥ 0.5 at 1024): add [308.5, 338.3, 16.2, 22.0] for `2ddd0fbc…` ("her hair", already judged by the T96s test writer). That adds an eye verdict; it loosens no threshold. Until then, "T96 still holds" fails on this one core, and I'm reporting it, not working around it.
 - **Shipped:** the narrower "him again" rule (Built → Deviations 1). This fixes S1 and s25 and keeps every stranger's head (grey square (3): 0 of 168 lost).
+
+**D2 · T96s › built prints (b): 2 of 30 "touching his head" faces lie where rule 5 (as planned) calls them chest prints (implementer, Nov 16, first `--full`).**
+- **The test:** `print_faces_test.py` › `F2.2 · built prints` (b) expects 100% hidden. `--full` measured 28 of 30. The misses were `b-4.jpg` (core 29 px) and `b-5.jpg` (core 61 px), both sent untouched (upload "leak", unchanged 1.0). `--quick` was 10 of 10.
+- **Why it looks wrong:**
+  - `place_head` puts the **paste square's** top edge inside the band grown by 25% of the band's own size (`fl.grow`). The face core sits lower inside a 1.6× square.
+  - Rule 5 as written (IMPLEMENTATION.md → The fix 5, Interfaces; DECISIONS-LOG #474): "doesn't intersect his head region grown by 25% of his head width", where head width is "the narrowest of `head`'s widths, as a face".
+  - Rebuilt from the test's own seed and measured with this build:
+    - `b-4`: band [617, 478, 265, 326], bottom 804; narrowest head width 126, so the gap is 32. Vision's boxes on the print start at y 869 and 882, 65–78 px below the band. That's below his lower shoulder (796), wholly on his outline, and between his shoulders.
+    - `b-5`: band bottom 807; head width 108, so the gap is 27. The print's face boxes start at y 906–942, about 100 px below the band and clear even of the band grown 25% of its height (891). Its square is 300 px tall.
+  - So by the spec's own rule, both faces are on his chest.
+- **Why I didn't widen the gap:** the logic line pins it. "Band ends at the shoulder line": band [400, 200, 200, 340], a box at y 566 must be a print, so the gap must be under 26 px with head width 72 (k < 0.36). `b-4` needs k > 0.52 and `b-5` k > 0.92. No constant, and no head-size scale (narrowest width, band width or band height), satisfies both locked lines. A rule keyed to his detected face would, but that's a new rule tuned to these photos, not the spec.
+- **What I think it should say:** (b) places the **face box** (the core grown to the detector's box), not the paste square, with its top inside his head region grown as rule 5 defines it. Or (b) counts as "touching" only faces whose core intersects the band grown 25%. Either keeps (b) a must-hide test of what rule 5 promises. The privacy call (how far below his band a face may sit and still be a print) is the coordinator's and the founder's, not mine.
+
+**D3 · T96s › built prints (a): 31 of 36 left alone at `--full` (≥ 90% asked), every miss a pose the paste broke (implementer, Nov 16).**
+- **The 5 misses:** `a-5`, `a-6`, `a-15`, `a-25` and `a-27`. On each, the line's own report gives `printZone` nil and `torsoJoints` empty, so the print is blurred as today.
+- Rebuilt and probed:
+  - `a-6`: Vision's pose on the pasted photo finds no hips at all (neck, shoulders, elbows and wrists only).
+  - `a-5`: the pose is scrambled (a neck at (327, 367), far from him; one shoulder; no hips).
+  - Rule 2 (a whole, upright pose) rightly declines. It's the guard that keeps his own face from being read as a print when the pose lies (S1–S7).
+- **Not a rule fault:** the test writer noted the same effect at lock ("the pasted face changed the body pose so `torsoJoints` was empty … placement faults, not rule faults") and capped the sizes; at 30 per placement it still happens 5 times in 36. `--quick` was 12 of 12.
+- **What I think it should say:** the (a) gate counts only photos where the pasted photo's own pose is whole (`torsoJoints` set, as the line already reports), or it reports these as "zone nil from the paste" outside the 90%. Loosening rule 2 to pass it would weaken the guard on his face, so I haven't.
