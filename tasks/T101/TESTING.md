@@ -1,0 +1,88 @@
+# T101 · Testing contract
+
+Written by the planner. T101 is a **normal** task: the builder writes these tests alongside the code (no locked test writer), each named with its criterion ID, and a separate reviewer reads the result. Nothing here is weakened to pass; a change to this file goes in TASK.md → Disputes with the reason. Results never go here.
+
+**Lock:** none (normal task).
+
+Plan-line criteria: KC9.1, KC9.2, KC9.3, KC2.2 (the drawing only). All four are below (4). Interfaces and names are in `tasks/T101/IMPLEMENTATION.md`.
+
+**Shared set-up.**
+- *Logic tests* (`app/src/__tests__/drawnPieces.test.ts`, plain Jest): the real `artSpec`, `renderFlat`, `drawnItem`, core's `G`, `FAMILY_HEX`, `displayHex`. No store, no network, no mocks. "Draws" means `renderFlat(artSpec(item).flat, { scheme, id: 'x' })`.
+- *Component tests* (`app/src/__tests__/drawnPieceArt.test.tsx`, `@testing-library/react-native`): `react-native-svg`'s `SvgXml` mocked as a `View` carrying its `xml` prop (testID `svg`); `useTheme` mocked to return the scheme under test; for the `ClosetTile` test, `GarmentArt` mocked as a marker `View` (testID `garment-art`) carrying its `spec`, and the design system mocked as in `cardNoAddTile.test.tsx` (Reanimated needs the native runtime).
+- *Baseline fixture:* `app/src/__tests__/fixtures/flatsBaseline.json`, generated from `main` before `flats.ts` changes (IMPLEMENTATION.md Step 0).
+- *The 25 families* are the keys of core's `FAMILY_HEX`, read in the test, so a 26th color can't slip in unseen.
+- *Element list* (what `SvgXml` can draw): `svg defs g path rect circle ellipse line polygon polyline linearGradient radialGradient stop pattern`. The test pulls every `<name` out of the string and checks each is in this list.
+
+## Criteria
+
+- **KC9.1** · A watch, a belt, a cap and a beanie are drawn in code like the other pieces (never AI images), in light and dark, in any palette color, at closet-tile and card sizes.
+  · how: unit on the generated drawing + manual screenshots (contact sheet) for how it looks
+  · test: `drawnPieces.test.ts` › `KC9.1 · the four accessories draw in every color and both themes`; `KC9.1 · each accessory is its own drawing`; `KC9.1 · a black piece keeps an edge in dark and a white one in light`; `KC9.1 · the accessory shape fills a tile like a top or pants`; `KC9.1 · every drawing that existed is byte-identical`
+  · expect:
+    - for each of `watch`, `belt`, `cap`, `beanie` × each of the 25 families × `light` and `dark`: `drawnItem({ kind, family, name: 'x' })` is not null; `artSpec(item).shape === 'accessory'` and `.flat.kind === 'accessory'` and `.flat.type === kind`; the string starts with `<svg`, contains `viewBox="0 0 200 200"`, contains the family's swatch hex as drawn (case-insensitive, as a `fill`), has no `NaN` or `undefined`, no `<text`, no `<image`, no `href`, and every element is in the element list; the same call twice gives the same string.
+    - the four drawings differ from each other in the same color and scheme (6 pairs), a cap differs from a beanie, and the same accessory in two families differs.
+    - dark scheme with `#1E2026` (black): each of the four contains the faint light rim `<g fill="none" stroke="#fff" stroke-opacity=".22"`; the same four in light do not. Light scheme with `#F2F0EA` (white): each of the four contains the thin ink outline (`stroke-opacity=".12" stroke-width="2.4"`); in dark they do not.
+    - `tileArtBox('accessory', w, w, 0.8)` is `{ size: Math.round(w * 0.8), dy: 0 }` for w = 76, 110 and 152, the sizes of a card tile, a Closet tile and a largest-text card tile.
+    - the baseline: for every `TopType`, `BottomType` and `ShoeType`, three colors (`#1E2026`, `#F2F0EA`, `#B98E62`) and both schemes, the SHA-256 of today's `renderFlat` equals the fixture's entry (all of them; 0 differences).
+  · must not: an accessory that draws as a top (a tee-shaped watch); any `<text`, `<image` or brand word on an accessory (even with `brand: 'NIKE'` on the flat); an element `SvgXml` can't draw; a drawing that is the same for two different accessories or two different colors; a non-accessory drawing that changed by one byte.
+  · edges: a very dark color in dark and a very light one in light (above); `JSON.parse(JSON.stringify(spec))` of a stored drawn piece draws the same as the original (Past chats redraw from what was stored); junk input (`kind: ''`, `family: ''`, `metal: 'copper'`, `name: ''`) never throws.
+  · how (manual): contact sheet screenshots, `tasks/T101/shots/<NN>-accessories-<tile|closet|large>-<light|dark>.png`: see UI inventory.
+
+- **KC9.2** · A watch can show a metal tone (gold, silver or black) as a drawing detail, not a new color family. Accessories still never affect a score.
+  · how: unit + one scoring check against the real engine
+  · test: `drawnPieces.test.ts` › `KC9.2 · a watch's metal changes the case and nothing else`; `KC9.2 · metal is not a color family`; `KC9.2 · metal and face are for watches only`; `KC9.2 · a watch with no strap color is a bracelet in its metal`; `KC9.2 · a digital face`; `KC9.2 · an accessory moves no score`
+  · expect:
+    - `drawnItem({ kind: 'watch', family: 'black', name: 'x', metal })` for `gold`, `silver`, `black`: `artSpec(...).flat` matches `{ kind: 'accessory', type: 'watch', metal, color: '#1E2026' }`; `renderFlat` contains `METAL_HEX[metal]` (`#C9A44C`, `#C5C9CF`, `#2A2D34`); the three strings are pairwise different; `item.garment.color_family === 'black'`, `item.art.family === 'black'` and `item.hex === '#1E2026'` in all three (the metal moved nothing about the color); `item.art.details` contains `metal_gold`, `metal_silver`, `metal_black` respectively.
+    - no metal: `flat.metal` is undefined and the string contains `#C5C9CF` (silver). `art.details: ['metal_copper']` gives the same as no metal. `['metal_silver', 'metal_gold']` gives gold (gold, then silver, then black).
+    - `'gold'`, `'silver'` and `'black'` are not among the 25 families, and `drawnItem({ kind: 'watch', family: 'gold', ... })` draws grey (`#9CA0A6`), not a gold strap.
+    - belt, cap and beanie with `metal: 'gold'` draw exactly the same string as without it, in both schemes.
+    - `family: 'multicolor'` with `metal: 'gold'`: `flat.bracelet === true`, the string contains `#C9A44C`. `family: 'black'` with `metal: 'gold'`: `flat.bracelet` is falsy, the strap is `#1E2026` and the case `#C9A44C`.
+    - `face: 'digital'` (or `art.details: ['digital']`): `flat.face === 'digital'`, the string differs from the analog one in the same metal and color, and has no `<text`.
+    - scoring: take the bundled reading `demoReadingById('s14')`, add one accessory garment (`G('accessory', 'watch', 'black')`, then the same as `'belt'`, `'hat'`, and with `metal` details on a closet-shaped row) and score it the way T38's test does (`evaluateCheck` or `overallFor` with the same options as without the accessory): the overall score, the sub-scores and the fixes are equal, deep-equal, to the same reading without any accessory, for every one of them.
+  · must not: a 26th color family, or any change to `garment.color_family`, `art.family` or `hex` because of a metal; a metal on anything but a watch; a score that moves, by even 0.1, because a watch, belt or hat is present or because of its metal.
+  · edges: an unknown or empty metal string; two metals at once (above).
+
+- **KC9.3** · A piece he adds from chat ("I have a gold digital watch") draws with these drawings in Closet too.
+  · how: unit (the row Closet will hold) + component (`ClosetTile`); the real Closet screen is "not testable yet" until T106 writes the row
+  · test: `drawnPieces.test.ts` › `KC9.3 · a closet row built from a drawn piece draws the same picture`; `KC9.3 · a reading's hat draws as a cap and other accessories are as before`; `drawnPieceArt.test.tsx` › `KC9.3 · a chat-added watch is a dashed, faded Closet tile with the accessory drawing`
+  · expect:
+    - for each of `{ kind: 'watch', family: 'multicolor', metal: 'gold', face: 'digital', name: 'Gold digital watch' }`, `{ kind: 'belt', family: 'black', name: 'Black belt' }`, `{ kind: 'cap', family: 'navy', name: 'Navy cap' }`, `{ kind: 'beanie', family: 'charcoal', name: 'Charcoal beanie' }`: a closet-row-shaped object `{ ...drawnItem(spec), id: 'C-1', slot: 'accessory', source: 'chat', isPhotographed: false, ... }` gives `artSpec(row)` deep-equal to `artSpec(drawnItem(spec))`, `shape === 'accessory'`, `a11y === spec.name` and `glyphs` `[]`. The gold digital watch's flat matches `{ type: 'watch', metal: 'gold', bracelet: true, face: 'digital' }`; the beanie's `type` is `'beanie'` and the cap's `'cap'`; `row.hex === displayHex(family)`.
+    - a row with `garment` `G('accessory', 'hat', 'navy')` draws a `cap`; `G('accessory', 'bag', 'black')` and `G('accessory', 'other', 'black')` still give `flat.kind === 'top'`, `type === 'tee'` exactly as today.
+    - `ClosetTile` rendered with that watch row (`isPhotographed: false`): the tile has a dashed border (`borderStyle: 'dashed'`), the art is at `opacity: 0.5`, its VoiceOver label is `Gold digital watch`, the `garment-art` marker's `spec.shape` is `'accessory'`, and its `size` is `tileArtBox('accessory', size, size, 0.8).size`.
+  · must not: a chat-added accessory drawn as a tee in Closet; a differently drawn picture in the chat card and in Closet for the same piece; a new word added to VoiceOver beyond the piece's name.
+  · edges: a piece with no `art` at all (a v3-only row) still draws as its subcategory says (a `beanie` subcategory is a beanie, metal silver, no throw).
+
+- **KC2.2** (the drawing only) · A piece he doesn't own is drawn in one of the 25 named colors. (The dashed tile, `You'd need` and the tag are T104; `Yours` never appearing is T104's tile.)
+  · how: unit + component
+  · test: `drawnPieces.test.ts` › `KC2.2 · a drawn piece is drawn in its family's swatch`; `KC2.2 · a drawn piece needs no closet row`; `KC2.2 · every kind draws`; `KC2.2 · a kind that can't be drawn is the slot's stand-in or nothing`; `KC2.2 · the name never decides the color`; `drawnPieceArt.test.tsx` › `KC2.2 · PieceArt draws a drawn piece and a closet row alike`; `KC2.2 · PieceArt draws nothing for a piece it can't draw`
+  · expect:
+    - for each of the 25 families and one kind from each slot (`tee`, `bomber`, `chinos`, `work_boot`): `drawnItem({ kind, family, name: 'x' }).hex === FAMILY_HEX[family]`, `artSpec(...).flat.color` is that hex, and the string contains it. `{ kind: 'work_boot', family: 'black', name: 'Black work boots' }` draws `#1E2026`.
+    - a drawn piece has none of the keys `id`, `slot`, `isPhotographed`, `source`, `photoFile`, `starterId`; `drawnItem` runs with no store, clock or network set up.
+    - every entry of `DRAWN_KINDS` draws in both schemes with no `NaN` or `undefined`, has a non-null `pieceSlotOf`, and `DRAWN_KINDS` has no duplicate; it contains `chelsea_boot`, `overshirt`, `henley`, `jorts`, `watch`, `belt`, `cap`, `beanie` and not `bag`. `pieceSlotOf('bomber') === 'outer'`, `('tee') === 'top'`, `('jeans') === 'bottom'`, `('loafer') === 'shoes'`, `('watch') === 'accessory'`, `('bag') === null`.
+    - `{ kind: 'bag', family: 'black', name: 'Black bag' }` with `slotHint: 'shoes'` draws a `low_profile_sneaker` flat in `#1E2026` (`'top'` a `tee`, `'outer'` a `field_jacket`, `'bottom'` `chinos`); with no hint or with `'accessory'`, `drawnItem` is `null`. An unknown family (`'teal'`) gives `#9CA0A6`, never `#ECEEF1`.
+    - `{ kind: 'henley', ... }`: `item.garment.subcategory === 'tee'`, `item.art.kind === 'henley'`, the flat's `neck === 'henley'` (it draws as Closet draws a henley).
+    - `{ kind: 'work_boot', family: 'black', name: 'Brown boots' }` draws black: the name never changes the drawing.
+    - component: `PieceArt` given a closet row and given the matching drawn piece gives the same `xml` for the same kind and color; given an undrawable piece it renders an empty box of `size` × `size` with no `svg` and doesn't throw.
+  · must not: a drawn piece drawn in a color other than its family's swatch; a drawn piece that needs, creates or reads a closet row; a wrong picture for an undrawable kind (a sneaker for a bag with no hint); a color chosen from the name.
+  · edges: offline (nothing in the path touches the network or storage); wipe or reinstall (a drawn piece is three facts on a card, redrawn on every launch, nothing cached on disk); a failure midway (junk input never throws, above).
+
+## UI inventory
+T101 draws pictures only. It adds no word, no button, no testID and no screen: the tile's words (`You'd need`, `Yours`, names) are T104's, and the Closet tile's label is the existing one. What each state shows, and where to see it:
+
+| State | Visible elements | Words | VoiceOver | testID | Where it shows |
+|---|---|---|---|---|---|
+| Watch, belt, cap, beanie on a card tile | the drawing only, on the tile's own surface, at about 61 pt (a 76 pt tile × 0.8) | none | the drawing is hidden (`GarmentArt` already hides it); its parent reads the piece's name | none new | contact sheet now; T104's outfit and Example cards on a demo screen later |
+| The same on a Closet tile (3 across, about 88 pt art) | the drawing, ghosted (dashed edge, half opacity) for a chat piece | none | the existing tile label: the name | none new | contact sheet now; `ClosetTile` component test now; real Closet after T106 |
+| Largest text size (a bigger tile, art about 120 pt) | the same drawing, larger | none | same | none new | contact sheet at the large size; iOS with T104's screens |
+| The watch in each metal (gold, silver, black) and as a bracelet and a digital face | the four variants side by side | none | same | none new | contact sheet only |
+| A very dark and a very light piece of each accessory | black `#1E2026` and white `#F2F0EA`, each of the four | none | same | none new | contact sheet, light and dark: the black one keeps its rim in dark, the white one its outline in light |
+| A drawn piece with no closet row (a black work boot, a tan bomber) | the drawing | none | the name | none new | contact sheet |
+
+Each row in light, dark and the large size; the contact sheet is a throwaway page in the Browser pane (IMPLEMENTATION.md technical default 6). Screenshots are named `tasks/T101/shots/<NN>-<state>-<light|dark>.png` and linked from the PR.
+
+## Not testable yet
+Never dropped, never counted as done.
+- **KC9.1 on iOS, at card size and at the largest text size** · why: there is no screen that draws a watch, belt, cap or beanie on a card until T104, and T101 adds no demo screen (`demo/` is outside the lane). The Browser pane draws SVG more permissively than `react-native-svg`; the element-list test narrows that gap but doesn't close it. · would verify it: T104's demo screens (an outfit card with a watch and a belt, an Example card with a beanie) screenshotted on the Simulator in light, dark and the largest text size.
+- **KC9.3 in the real Closet screen after an Add from chat** · why: the closet service can't write an accessory row yet (T106), and Closet has no accessory section (open question 1). · would verify it: T106's Add on a "gold digital watch" mention, then the Closet tab on the Simulator (a manual check in T106's TESTING.md).
+- **KC2.2's dashed tile, the `You'd need` tag and `Yours` never showing** · why: those belong to T104's tile; T101 supplies only the picture. · would verify it: T104's component tests and screenshots.
+- **"Reads clearly" for a person** · why: whether a 61 pt watch looks like a watch is the founder's eye, not a test. · would verify it: the contact-sheet screenshots in the PR (light and dark, three sizes); his yes or what to change.
