@@ -1,8 +1,8 @@
 {
- "mode": "quick",
+ "mode": "full",
  "planted": null,
  "fails": [],
- "seconds": 1,
+ "seconds": 0,
  "print stood in, no band, 3 head joints": {
   "status": "ok",
   "reason": null,

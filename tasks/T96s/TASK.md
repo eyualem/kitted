@@ -48,6 +48,25 @@ No constant from IMPLEMENTATION.md was changed.
 
 **Not done or not verified here:** `npm run check` in `app/` wasn't run. The Mac had about 150 MB unused (PhysMem) after the full run, under the roughly 1 GB the coordinator set; this task changes no JS or TS. Also not done: an iOS build and a phone check (no native install this session); `swiftc -typecheck` against the iOS SDKs (only the Mac typecheck and the harness compiles ran).
 
+### Built (round 2, Nov 17; DECISIONS-LOG #478)
+**What changed:** the one code change #478 asks for. Deviation 4 is undone: rule 7 in the sweep reads the person instance mask again, whenever the photo has one. A face box that another person's label claims (more than 10% of it) is never a print, so T96's rule hides it.
+- In `sweep`, step 0 runs `personInstances(image)` once on a fit photo. Steps 1, 2 and 4 pass it to `isPrint`, and step 2's missed-people cover reads the same mask through the new `missedPeople(_:found:inst:)` overload, so the mask still runs only once. The old `missedPeople(_:found:)` calls the overload, so its behaviour is unchanged.
+- Snaps and scans are unchanged (no zone, no mask).
+- Commit `dfe2ba18`, `KittedPrep.swift` only. No constant changed.
+
+**What it does on the pinned case** (`ig … 1.45.52 PM`): another person's label claims 24.1% of the torso face box [302.4, 667.1, 92.3, 92.3]. It's no longer in `prints`, and it's covered in the upload and detail copy.
+
+**Results (`print_faces_test.py --full`, Nov 17, at `dfe2ba18`):**
+- All 12 lines pass.
+  - Built prints: (a) 31 of 31 gated, (b) 30 of 30, (c) 30 of 30, (L) 8 of 8.
+  - Real prints: P1, P2, P3 each keep their print (`printsKept` 1). Restoring the mask lost no real print.
+  - Grey square: 336 photos measured, 0 heads lost.
+  - Someone over his chest: the pinned case passes. Built faces left alone (reported): this build 15 of 24, round 3 0, main 18. The instance mask gives every pasted figure his own label, so none of them reaches the mask.
+- T96 still holds: T96's `--full` passes all 12 lines (43 min). Time: `sweepMs` median 196 ms, p95 239 ms; `visionMs` median 27 ms (main 28).
+- `--quick` passed every line before the full run.
+
+**Not run:** `npm run check` in `app/`. The Mac had about 270 MB unused (PhysMem) after the full run, under the roughly 1 GB the coordinator set; this task changes no JS or TS. Also not done: an iOS build, a phone check, or a typecheck against the iOS SDKs (only the Mac typecheck and the harness compiles ran).
+
 ## Disputes
 **D1 · T96's leak set vs T96s's grey square: one dense-hunt core that T96s's eye list calls "her hair" (implementer, Nov 16).**
 - **The T96 line:** `face_leak_test.py` › `F2.2 · leak set` (locked at `6a916e4b`). With this build it fails on one core only:
