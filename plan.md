@@ -247,11 +247,13 @@ Claude builds with the default until you decide.
 - **The redesign stage (eyualem/kitted#83):** parked until after the beta (you, Nov 10); unmerged and unchanged.
 - **"Get your head in the shot" (the head-not-found line, spec F2.2):** the designer and critic found it misses the usual causes (turned away, far, dim); "Face the camera…" would fit more. Default: the spec's words until you say otherwise (#434).
 - **Formal wear as a look:** settled Nov 12 (your "Yes, add Tailored"): an 8th look, Tailored; its spec is T93. Log #460.
+- **A stronger AI as the judge or the reader:** settled Nov 17 (your "Let's just go with the code. We'll do the testing later"): the code keeps judging (v16, T69). The AI-judge test (PR #137) found Sonnet alone at about the same cost a hair closer to your taste (83% within a point vs 82%) but less steady, missing rules the code catches, and unable to name the fix. Later, when you say: the cost-equal test with Flash judging by the rules (about 50¢, cap 75¢) and whether a stronger model reads the pieces better ($0 first). Log #481.
 
 ---
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-17 · radar-scoring-research: the AI-judge test read and its leak caught (PR #137: the code-plus-AI mix is 86% within a point, r 0.68 once fair); you chose to stay with the code and test a stronger AI later (log #481)
 - 2026-11-17 · radar-scoring-research: the scoring flow handed to the look-picker interview, widened to the whole flow (when the look and occasion are asked; card options that don't change the score go); the morning card's occasion guess added to T50 for its interview (your "Yes, add it")
 - 2026-11-17 · t101-drawn-pieces: Kit can now draw a watch, belt, cap and beanie (light and dark, any color; a watch in gold, silver or black metal, analog or digital) and any piece from just a kind, a color and a name, with no closet row; nothing on a screen changes until T104 and T106; verified in three rounds, contact sheets in `tasks/T101/shots/`; log #480; PR #134
 - 2026-11-17 · t103-allowed-colors: built the core function that lists the colors the scoring rules wouldn't mark down for a slot (24 colors, not 25: "multicolor" is a print label); no score moves, parity 100%; verifier READY after one test-strengthening round; log #479; PR open, waiting for your OK
@@ -266,4 +268,3 @@ The last 15 sessions, newest first.
 - 2026-11-11 · rating-evaluation-taste: the beta's privacy page live (kitted-a5b45.web.app/privacy, your OK, `legal/`); TestFlight Test Information filled; "Friends beta" with your 7 testers; build 0.1.0 (3) waiting for Apple's beta review, invites go out on approval; the app's own privacy link (`links.ts`) still empty; log #454
 - 2026-11-11 · rating-evaluation-taste: TestFlight build 0.1.0 (3) from main `50c219f9` (EAS `d3572a42`, auto-submit scheduled; your "I want the build started now"), tagged `testflight/0.1.0-3`; started before the checks at your ask: then typecheck, lint, 853 core and 1,944 app tests passed, guard:release passed; the 5 tap-through flows not run (the Mac's memory); the slides fix (T93) not in it; your phone pass is Y29
 - 2026-11-11 · hoodie-layer-credit: setup's style screen merged (#109, your "Merge it"): "What's your style?", the own-words box rides the keyboard and gets the cursor, no Not sure (7 taps to the camera); log #447–#449; needs a new TestFlight build to reach phones
-- 2026-11-11 · hoodie-layer-credit: the style screen's new wording (you picked B from the mockup, `tasks/looks-wording/design.html`) added to PR #109 with the spec line, test and flows; log #449
