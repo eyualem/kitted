@@ -116,10 +116,9 @@ public class KittedVisionModule: Module {
     }
 
     /// "Try again" after a failed read: the upload copy from the first prep (Caches/upload).
+    /// Copies made before the face sweep (T96) are never resent: Prep purges them first (#472).
     AsyncFunction("reloadUpload") { (sha256: String) -> String? in
-      let url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        .appendingPathComponent("upload", isDirectory: true).appendingPathComponent("\(sha256).jpg")
-      return (try? Data(contentsOf: url))?.base64EncodedString()
+      return Prep.reloadUpload(sha: sha256)
     }
 
     /// "Try again": the close-ups from the first prep (#104), in order; empty when they're gone.

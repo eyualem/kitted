@@ -1,0 +1,41 @@
+{
+ "mode": "full",
+ "planted": null,
+ "fails": [],
+ "seconds": 281,
+ "(1) S1": {
+  "his head regions (main)": [
+   [
+    204.11228828430177,
+    49.12844338357448,
+    212.64801635742188,
+    252.51951874494551
+   ]
+  ],
+  "new": [],
+  "before": [
+   [
+    78.9,
+    -131.5,
+    441.9,
+    524.8
+   ]
+  ],
+  "status": {
+   "new": "ok",
+   "before": "ok"
+  }
+ },
+ "(2) photos measured": 336,
+ "(2) worse": [],
+ "(2) S1": [
+  [
+   "inputs/pinterest/Screenshot 2026-10-12 at 2.55.27\u202fPM.png",
+   0.0018,
+   0.0018
+  ]
+ ],
+ "(3) other heads checked": 168,
+ "(3) lost": [],
+ "(3) panels": 10
+}

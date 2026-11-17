@@ -71,3 +71,4 @@ export {
   type ItemProfile, type ProfileExtra, type IdentityReason, type IdentityResult, type Decision, type ReconcileEntry,
   type ReadingReconcileEntry, type StoredProfile,
 } from "./closetIdentity";
+export { allowedColors, COLOR_CHOICES, type AllowedColorsInput, type AllowedColorsEngines } from "./allowedColors";

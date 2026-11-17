@@ -1,0 +1,31 @@
+{
+ "mode": "full",
+ "fails": [],
+ "seconds": 76,
+ "per_kind": {
+  "fit": {
+   "sent": 53,
+   "refused": {
+    "couldNotFrame/faceRemains": 6
+   }
+  },
+  "snap": {
+   "sent": 54,
+   "refused": {
+    "couldNotFrame/faceRemains": 5
+   }
+  },
+  "items": {
+   "sent": 54,
+   "refused": {
+    "couldNotFrame/faceRemains": 5
+   }
+  }
+ },
+ "leaks": 0,
+ "photos_leaking": [],
+ "sheet": "0 crops in extraction-test/results/t96/leak-set",
+ "gate_185_not_hidden (the held-out line's automatic gate)": 0,
+ "cores_ruled_not_faces_by_eye (#471 D1)": 17,
+ "leak_list": []
+}

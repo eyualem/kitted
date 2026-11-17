@@ -1,0 +1,64 @@
+{
+ "mode": "full",
+ "planted": null,
+ "fails": [],
+ "seconds": 17,
+ "targets": [
+  "P1",
+  "P2",
+  "built a-0.jpg",
+  "built a-1.jpg",
+  "built a-2.jpg",
+  "built a-3.jpg"
+ ],
+ "P1": {
+  "(1) new": "ok/None",
+  "(1) B unchanged in the detail copy": 0.005625,
+  "(1) before": "couldNotFrame/faceRemains",
+  "Q": [
+   229.86629605293274,
+   559.646390914917,
+   28.0546875,
+   31.0078125
+  ],
+  "Q on outline": 0.30069124423963134,
+  "(2) B": "couldNotFrame/faceRemains",
+  "(3) half on his outline": "couldNotFrame/faceRemains",
+  "(4) throws on the 7th call": "couldNotFrame/sweepFailed"
+ },
+ "P2": {
+  "(1) new": "ok/None",
+  "(1) B unchanged in the detail copy": 0.045,
+  "(1) before": "couldNotFrame/faceRemains",
+  "Q": [
+   200.15662097930908,
+   751.0412030220032,
+   29.453125,
+   33.87109375
+  ],
+  "Q on outline": 0.3500522466039707,
+  "(2) B": "couldNotFrame/faceRemains",
+  "(3) half on his outline": "couldNotFrame/faceRemains",
+  "(4) throws on the 7th call": "couldNotFrame/sweepFailed"
+ },
+ "built a-0.jpg": {
+  "(1) new": "ok/None",
+  "(1) B unchanged in the detail copy": 0.000625,
+  "(1) before": "couldNotFrame/faceRemains"
+ },
+ "built a-1.jpg": {
+  "(1) new": "ok/None",
+  "(1) B unchanged in the detail copy": 0.005,
+  "(1) before": "couldNotFrame/faceRemains"
+ },
+ "built a-2.jpg": {
+  "(1) new": "ok/None",
+  "(1) B unchanged in the detail copy": 0.005625,
+  "(1) before": "couldNotFrame/faceRemains"
+ },
+ "built a-3.jpg": {
+  "(1) new": "ok/None",
+  "(1) B unchanged in the detail copy": 0.0025,
+  "(1) before": "couldNotFrame/faceRemains"
+ }
+}
