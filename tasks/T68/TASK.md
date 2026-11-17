@@ -631,3 +631,19 @@ It runs on the lower close-up, only for photos in pants. It would replace `leg_s
 - **Stage 2, about 74¢, only if stage 1 passes:** the other 140 gold photos twice and the 75 rated photos in pants once, for steadiness and his ratings in full.
 - **Total about $0.99, hard stop $1.10.**
 - **In the app** it would be a third look, about +0.21¢ on each check with pants.
+
+**The leg-width look: ready to run (Nov 17).** The founder: "Run the free test, and then let me know how it goes. Then you can run the paid test with my permission." It runs in the coordinating session under his OK, after the reading-test session's free cutout-outline test. Not run here; $0 spent here.
+- **Stage 1** is now the **31** gold photos in pants whose stored leg read differs between readings, plus 29 steady ones (seed 20261117). Still 60 photos, twice each.
+- **Commands,** from `extraction-test/`, with `KITTED_DATA=/Users/eyu/Desktop/files/Kitted` and the key in `GEMINI_API_KEY`, never printed. Add `--dry` to count with no key and no calls.
+  - pilot, 4 calls, about 1¢: `/usr/bin/python3 leg_look.py --set gold --runs 2 --only ig-051,pin-040 --budget 0.02`
+  - stage 1, 120 calls, about 25¢: `/usr/bin/python3 leg_look.py --set gold --stage 1 --runs 2 --budget 0.30`
+  - then, $0: `/usr/bin/python3 leg_look_report.py`. Stage 1 passes when the two runs agree on the leg class on 90% or more, and the score flips from the leg read go away.
+  - stage 2a, only if stage 1 passes, 280 calls, about 58¢: `/usr/bin/python3 leg_look.py --set gold --stage 2 --runs 2 --budget 0.95`
+  - stage 2b, 75 calls, about 16¢: `/usr/bin/python3 leg_look.py --set rated --runs 1 --budget 1.10`
+- **About $1.00 in all.** Budgets are running totals over every stored call. Each call in flight holds 0.6¢ until its real cost is known, so a rare long-thinking call can't overshoot a stop by more than about 2¢.
+- **The engine reads the look when it's in the second look:**
+  - knee hangs away, or the opening is wider than the shoe → a full leg;
+  - knee clings and the opening is narrower → slim;
+  - otherwise → straight;
+  - a stored "skinny" is kept, since it's never wrong.
+  - It feeds only the taste rules and the silhouette lift. Without it nothing changes (`results/v16/` is the same).

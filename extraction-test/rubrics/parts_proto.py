@@ -1962,6 +1962,16 @@ def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
     if not T:
         return lifts, caps, [], set()
     looks = o.get("graded") or {"none"}
+    o0 = o                                                            # the outfit itself (o may become a copy below)
+    # round 5: the leg-width look (prompt_look_w.txt), when the second look carries it: knee hangs away or the opening is
+    # wider than the shoe = a full leg; the knee clings and the opening is narrower = narrow; else straight. It stands in
+    # for the scoring call's leg_shape in these taste rules only (a copy of the bottom; the reading isn't changed).
+    lw = (sl_raw or {}).get("knee"), (sl_raw or {}).get("opening")
+    if o["bottom"] is not None and o["bottom"].get("subcategory") not in SHORTS and any(x and x != "not_visible" for x in lw):
+        cls = ("wide" if "hangs_away" in lw or "wider" in lw else
+               "slim" if lw[0] in ("clings", None, "not_visible") and lw[1] in ("narrower", None, "not_visible") else "straight")
+        if not (cls == "slim" and o["bottom"].get("leg_shape") == "skinny"):   # "skinny" is never wrong (T98): keep it
+            o = dict(o, bottom=dict(o["bottom"], leg_shape=cls))
     items, waived = [], set()
     pending_sil = None
     # Nov 17 (the founder, card by card): "proportions are a very important thing that we have to nail".
@@ -2052,7 +2062,7 @@ def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
     elif len(lifts) == 1 and T.get("one_lift", 1.0) != 1.0 and lifts[0][0] != "SIL":   # a great shape alone still lifts
         a, b, c, d = lifts[0]
         lifts = [(a, round(b * T["one_lift"], 3), c, d)]
-    o["stack_n"] = stack_n if T.get("stack_prehalf") else None
+    o0["stack_n"] = stack_n if T.get("stack_prehalf") else None
     if pending_sil is not None and T.get("sil_mode") == "single":
         if not lifts or lifts[0][1] < pending_sil[1]:
             lifts = [pending_sil]

@@ -12,9 +12,12 @@ close-up (the body crop where there's no split), only when the reading's bottom 
 joggers (never shorts: their fit already reads well from volume).
 
   export GEMINI_API_KEY=...       (never printed or written)
-  /usr/bin/python3 leg_look.py --set gold --runs 2 --only ig-051,pin-040 --budget 0.02     (pilot)
-  /usr/bin/python3 leg_look.py --set gold --runs 2 --budget <his OK>
-  /usr/bin/python3 leg_look.py --set rated --runs 1 --budget <his OK>
+  /usr/bin/python3 leg_look.py --set gold --runs 2 --only ig-051,pin-040 --budget 0.02     (pilot, 4 calls)
+  /usr/bin/python3 leg_look.py --set gold --stage 1 --runs 2 --budget 0.30                 (stage 1, ~25c)
+  /usr/bin/python3 leg_look.py --set gold --stage 2 --runs 2 --budget 0.95                 (stage 2a, only if 1 passes)
+  /usr/bin/python3 leg_look.py --set rated --runs 1 --budget 1.10                          (stage 2b)
+  add --dry to any of them to count the calls with no key and no calls. Budgets are totals over every call stored in
+  results/leg-look1/, so each stop includes the stages before it.
 
 Cost counts thinking tokens at the output price (#465). Resumable; stops before the budget.
 """
@@ -39,7 +42,9 @@ PANTS = {"jeans", "trousers", "chinos", "cargos", "suit_trousers", "drawstring_t
 SETS = {"gold": (DATA / "extraction-test/results/gold1/raw.json", DATA / "extraction-test/results/gold1/images"),
         "rated": (HERE / "results/rated1/raw.json", HERE / "results/rated1/images")}
 OUT = HERE / "results" / "leg-look1"
-PER_CALL = 0.0025                                                # dollars held per call until its real cost is known
+PER_CALL = 0.006            # dollars held per call in flight until its real cost is known (the average is 0.0021; this
+                            # covers a long-thinking call, so 4 calls in flight overshoot the stop by about 2 cents at most)
+SEED = 20261117
 
 
 def cents(r):
@@ -61,6 +66,27 @@ def photos(name):
     return sorted(out)
 
 
+def leg_flips():
+    """Gold photos in pants whose two stored readings disagree on leg_shape (31 of 200)."""
+    d = {}
+    for r in json.loads(SETS["gold"][0].read_text()):
+        j = r.get("json")
+        if isinstance(j, dict):
+            b = next((g for g in j.get("garments", []) if g.get("category") == "bottom"), {})
+            d.setdefault(r["photo"], set()).add(b.get("leg_shape"))
+    return sorted(p for p in photos("gold") if len(d.get(p, ())) > 1)
+
+
+def stage(n):
+    """Stage 1: every leg-flip photo plus steady ones at random (seeded) up to 60. Stage 2: the rest of the gold set."""
+    import random
+    allp = photos("gold")
+    flips = leg_flips()
+    rest = [p for p in allp if p not in flips]
+    one = sorted(flips + random.Random(SEED).sample(rest, max(0, 60 - len(flips))))
+    return one if n == 1 else [p for p in allp if p not in one]
+
+
 def image(name, pid):
     img = SETS[name][1]
     p = img / f"{pid}.lower.jpg"
@@ -72,8 +98,18 @@ def main():
     ap.add_argument("--set", choices=list(SETS), required=True)
     ap.add_argument("--runs", type=int, default=2)
     ap.add_argument("--only", default="")
+    ap.add_argument("--stage", type=int, choices=(1, 2), help="gold only: 1 = the 31 leg-flip photos + 29 steady, 2 = the rest")
+    ap.add_argument("--dry", action="store_true", help="count the calls and the estimate, no key, no calls")
     ap.add_argument("--budget", type=float, required=True, help="dollars, all calls ever stored here")
     a = ap.parse_args()
+    ps = [p for p in photos(a.set) if not a.only or p in a.only.split(",")]
+    if a.stage:
+        ps = [p for p in stage(a.stage) if p in ps]
+    if a.dry:
+        n = sum(1 for p in ps if image(a.set, p).exists()) * a.runs
+        print(f"dry: {a.set}{' stage ' + str(a.stage) if a.stage else ''}: {len(ps)} photos x {a.runs} runs = {n} calls, "
+              f"about {n * 0.209:.1f} cents at look L's measured 0.209c a call (thinking counted)")
+        return 0
     key = os.environ.get("GEMINI_API_KEY")
     if not key:
         print("GEMINI_API_KEY isn't set")
@@ -83,7 +119,6 @@ def main():
     rows = json.loads(rawf.read_text()) if rawf.exists() else []
     done = {(r["set"], r["photo"], r["run"]) for r in rows if r.get("json")}
     spent = sum(cents(r) for r in rows) / 100
-    ps = [p for p in photos(a.set) if not a.only or p in a.only.split(",")]
     jobs = [(p, i) for i in range(a.runs) for p in ps if (a.set, p, i) not in done and image(a.set, p).exists()]
     print(f"{len(ps)} photos in pants, {len(jobs)} calls to make, ${spent:.4f} spent before this run")
     lock = threading.Lock()
