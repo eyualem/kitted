@@ -16,6 +16,7 @@ import { LOOKS } from '@/features/onboarding/looks';
 import { t } from '@/i18n/en';
 import { oneLine } from './context';
 import { checkSentence, type GateContext } from './gate';
+import { isBodyRating } from './guards';
 import { garmentOf } from './memory';
 
 export type PieceSlot = 'top' | 'bottom' | 'shoes' | 'outer' | 'accessory';
@@ -489,7 +490,7 @@ export function checkFollowUps(raw: unknown, o: { question: string; gate: GateCo
     if (!/^\p{Lu}/u.test(text)) continue;
     if (words.slice(1).some((w) => /^\p{Lu}/u.test(w) && !WORD_OK.has(w.replace(/[^\p{L}']+$/u, '')))) continue;
     if (/(?:^|[^\p{L}])\p{Lu}{2,}(?![\p{L}])/u.test(text)) continue;
-    if (checkSentence(text, o.gate)) continue;
+    if (checkSentence(text, o.gate) || isBodyRating(text)) continue;
     const n = sayNorm(text);
     if (!n || n === asked || seen.has(n)) continue;
     const mine = new Set(n.split(' '));

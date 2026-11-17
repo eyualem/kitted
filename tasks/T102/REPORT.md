@@ -80,3 +80,9 @@ Proposed tests (not written; for the test writer):
 1. **code** · `app/src/features/ask/cards.ts` `checkFollowUps`: first-person body phrasings ("Rate my body", "Do I look fat?", "Am I too skinny?", "Is my build ok?") pass. Fix: also drop a tap for which `isBodyRating(text)` (from `guards.ts`) is true. Small, in the lane.
 2. **test** · add proposed test 1 above (the fix needs a test that fails without it), and proposed test 2 (the surviving `n === asked` mutant).
 Everything else passes; every "not verified" names its verifier (drawing and tile: T101/T104; Example title: T104 screenshots; real-model 100% and block failures: T110; Past-chats words: T104; phone: Y33). `npm run check` itself did not run (memory): run it once the Mac has memory, before merge. · rounds: 1 of 3
+
+## Round 2 build
+- Fixed the verifier's code defect (item 1): `checkFollowUps` in `app/src/features/ask/cards.ts` now also drops a tap when `isBodyRating(text)` (from `./guards`) is true. Two lines: one import, one extra condition beside `checkSentence`. No other file touched.
+- Tests: `kitFollowUps.test.ts` now passes (the 4 that were red). 14 ask-related suites run with `npx jest --no-watchman -i` (kitFollowUps, kitCards, kitCardsStored, kitArrives, askC2/C3/C4/C7, askGuards, askJudge, askPipeline, askProviders, askRotation, askVoice): 527 passed, 0 failed.
+- `npx tsc --noEmit` clean; `eslint src/features/ask` clean. `npm run check` not run (597 MB unused memory at the time, under the 1 GB bar): run it once before merge.
+- Deviations: none. Disputes: none.
