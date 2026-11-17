@@ -3227,3 +3227,15 @@ Contradictions settled and decisions changed during the build. Newest last.
 - **What didn't change:** no regression against main, false refusals, the re-check refusal, the purge and the timing.
 - **On the round-3 build with T96s stubs, `--quick` passes all 11 lines.** The planted bugs still bite: dropping the tile pass fails the leak set and the built faces, and listing his head as a print fails no regression.
 - **What this closes:** T96's "stuck" lines were all unspotted stranger faces. No YuNet; the face-model branch stays unmerged as a record.
+
+478. **T96s round 1 verified; the sweep's rule 7 gets the instance mask back (coordinator, Nov 17).**
+- **The verifier's round 1:**
+  - Every T96s line passes at `--full`. The re-scoped T96 passes all 12 lines on this build: 0 strict leaks; 53 of 59 fit checks sent; held out 0 automatic fails; sweep median 192 ms, p95 230 ms.
+  - 924 runs on 800 unprobed Fashionpedia photos left 0 boxes alone as prints.
+  - By eye, P1–P3 send the print readable and his face pixelated. S1 has no grey square.
+- **The test gap:** dropping his fallback head box (drawn when a print stood in for his face) isn't caught, because every built host has a head band. The test writer adds a case with no band.
+- **The decision:**
+  - **What happened:** the implementer's Deviation 4 dropped the instance mask from rule 7 in the sweep, because on one built photo (a-6) the mask called the pasted print a second person. A-6 now leaves the count anyway: its pose is broken (D3).
+  - **What the verifier measured:** with a copy of his own face pasted on his chest, 8 of 12 were sent readable as "prints". Round 3 hid all 12.
+  - **The accepted risk (#474) covers only a person "whom no detector separates".** Dropping a detector that can separate them goes beyond what the founder accepted. "When in doubt, send nothing" points the same way.
+  - **So round 2:** rule 7 in the sweep uses the instance mask when the photo has one, and a box another instance label claims isn't a print. This stays as long as P1–P3 and the built prints still pass. If a real print is lost, the numbers come back here before anything is dropped.
