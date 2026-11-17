@@ -3326,3 +3326,14 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Why it stops at 213:** 8 of the 10 remaining flips are the scoring call reading the same leg as straight once and relaxed or wide the other time. v15's own shape lifts move with that read, so no rule can hide it.
     - **The paid fix (his OK needed):** a narrow leg-width look asking what can be seen (`prompt_look_w.txt`). Stage 1 about 25¢, stage 2 about 74¢, about $0.99 in all, stop $1.10 (at look L's measured 0.209¢ with thinking).
     - **Lesson:** a rule built on a read can't be steadier than the read. The free fixes shrink the steps a flip causes; only a steadier read removes the flip.
+
+482. **The leg-width look: steady, but its "wide" means "not tight", so it's a tie-break, not a replacement; steadiness 215/223 with it, still 3 short (T68 round 6, Nov 17).** Ran in the coordinating session under the founder's "Yes, run it": **$0.9652** in all (thinking counted; pilot 3 calls, stage 1 120, stages 2a and 2b to 475 calls, all answered), under the $1.10 stop.
+    - **The look:** its two runs agree on 96% of the gold photos (192/200; stage 1 60/60). It calls 14/17 tight pants narrow, 0/71 loose ones narrow, and 66/71 untight ones wide.
+    - **His ratings separate the reading's wide (8.21) from its straight that the look calls wide (6.86),** so replacing the leg read gives straight pants the wide credit: 79.4% held out, against 81.2% without the look.
+    - **Built:** `leg_look_mode="tiebreak"` (the look settles only the straight/relaxed zone: wide → relaxed, straight → straight, narrow → slim; a stored wide, slim or skinny stays) for the taste rules and the silhouette lift; `v16_paper.py` reports B6 with each reading's own look beside B6 as written.
+    - **Results:** held out 81.4% and r 0.63 (raw), 80.6% and 0.62 (key); B6 with the look 215/223 (as written 213); B2 6/6, B3 17/18, B5 19.5/21.6.
+    - **Claude's calls:**
+      - The refit sizes with the look (SIL 1.5, wide 0.5) were dropped, because they broke B2 (5/6).
+      - The look stays out of the rest of the score; letting it in gave 214.
+    - **What's left:** the 8 remaining flips come from other reads (the shoe type, the top's length, the pants type), not the leg.
+    - **Lesson:** a steady read isn't the same as a right read. A classifier that puts everything in one bucket agrees with itself perfectly, so test it against labels and outcomes before letting it replace anything.

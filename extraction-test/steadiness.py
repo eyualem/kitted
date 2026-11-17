@@ -30,16 +30,27 @@ def facts(rd):
             "colors": tuple(sorted(x.get("color_family") for x in g if x["category"] in ("top", "outerwear", "bottom")))}
 
 
-def steadiness(over=None, verbose=False):
+def steadiness(over=None, verbose=False, looks="none"):
+    """looks: "none" (B6 as written: the stored readings alone), "leg" (each reading with its own leg-width look run),
+    or "all" (each reading with its own looks U, L and the leg-width look)."""
     if over:
         P.TUNE["v16"]["taste"] = dict(P.TUNE["v16"]["taste"], **over)
     runs, _, _, _ = H.load_gold()
+    leg, ul = V.load_leg_look(), V.load_looks()
+
+    def sl(p, i):
+        d = {}
+        if looks == "all" and len(ul.get(p) or []) > i:
+            d.update(ul[p][i])
+        if looks in ("leg", "all") and i in leg.get(p, {}):
+            d.update(leg[p][i])
+        return d or None
     flips, why = [], Counter()
     total = 0
     for p, rs in sorted(runs.items()):
         if len(rs) < 2:
             continue
-        a = [V.sc(r, "everyday", V.PROFILE) for r in rs[:2]]
+        a = [V.sc(r, "everyday", V.PROFILE, sl(p, i)) for i, r in enumerate(rs[:2])]
         if any(x["overall"] is None for x in a):
             continue
         total += 1
@@ -67,4 +78,5 @@ def steadiness(over=None, verbose=False):
 
 
 if __name__ == "__main__":
-    steadiness(json.loads(sys.argv[1]) if len(sys.argv) > 1 else None, verbose=True)
+    steadiness(json.loads(sys.argv[1]) if len(sys.argv) > 1 else None, verbose=True,
+               looks=sys.argv[2] if len(sys.argv) > 2 else "none")

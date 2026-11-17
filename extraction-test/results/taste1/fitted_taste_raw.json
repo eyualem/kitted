@@ -14,6 +14,7 @@
   "one_lift_mode": "first",
   "stack_prehalf": true,
   "relaxed_factor": 0.5,
+  "leg_look_mode": "off",
   "sil": 1.5,
   "sil_line": 0.5,
   "sil_tonal": 0,

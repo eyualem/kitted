@@ -647,3 +647,59 @@ It runs on the lower close-up, only for photos in pants. It would replace `leg_s
   - otherwise → straight;
   - a stored "skinny" is kept, since it's never wrong.
   - It feeds only the taste rules and the silhouette lift. Without it nothing changes (`results/v16/` is the same).
+
+## Round 6: the leg-width look, run and wired in (Nov 17)
+
+**Ran in the coordinating session** under the founder's "Yes, run it". **Spent: $0.9652** (thinking tokens counted), under the $1.10 stop. Answers in `extraction-test/results/leg-look1/` (`run.log` has every stage).
+
+| Stage | Calls | Running total |
+|---|---|---|
+| Pilot | 3 of 4 (the 2¢ stop caught the 4th) | $0.0058 |
+| Stage 1 | 120 | $0.2479 |
+| Stage 2a | 400 stored in all | $0.8065 |
+| Stage 2b | 475 stored in all, all answered | **$0.9652** |
+
+**The look is steady:**
+- its two runs agree on the leg class on 60/60 photos in stage 1, and 192/200 (96%) over the gold set;
+- the reading's `leg_shape` flips on 31 of the same 200.
+
+**But its "wide" means "not tight":**
+- **Eye labels (T98):** it calls 14 of 17 tight pants narrow, and never calls loose pants narrow (0 of 71). But it calls 66 of 71 untight pants wide, including 37 the reading calls straight.
+- **His ratings tell them apart:**
+
+| Reading says | Look says | Photos | His average |
+|---|---|---|---|
+| wide | wide | 31 | **8.21** |
+| straight | wide | 37 | **6.86** |
+| straight | straight | 10 | 6.20 |
+
+- So as a **replacement** it hands straight pants the wide-leg credit: held out it drops to 79.4% within a point (r 0.61), against 81.2% without it.
+
+**Wired in as a tie-break** (`leg_look_mode="tiebreak"`, the default; taste rules and the silhouette lift only, never v15):
+- where the reading says straight or relaxed, the look settles it: look wide → relaxed (partial credit), look straight → straight, look narrow → slim;
+- a stored wide, slim or skinny is kept;
+- his ratings back it: straight pants the look calls wide average 6.86, between his straight (6.20) and his wide (8.21).
+- Letting it reach the whole v16 score didn't help (214).
+
+**Results** (each reading with its own look, as the app would have):
+
+| Bar | With the look | Before |
+|---|---|---|
+| Held out, 8 splits | **81.4%, r 0.63** (raw); **80.6%, r 0.62** (key) | 81.2%, 0.64 / 80.3%, 0.63 |
+| B6 with each reading's own leg look (the app's case) | **215/223** | 213 |
+| B6 as written (stored readings, no looks) | 213/223: FAIL (bar 218) | |
+| B2 / B3 / B4 | 6/6 / 17/18 / all but H7 | |
+| B5 worst gap, gold / his checks | 19.5 / 21.6 | |
+
+- **The sizes stay at round 5's:** silhouette 1.75, wide 0.75, neutrals +0.25. A refit with the look preferred smaller sizes, but those dropped B2 to 5/6 and his checks' band gap to 31.3, so they weren't used.
+- **The 8 flips left aren't the leg** (`steadiness.py '{}' leg`):
+  - the shoe read (a derby on one reading, a work boot on the other);
+  - the top's length read;
+  - the pants type (trousers vs chinos);
+  - the silhouette lift blocked by one small other lift on one reading;
+  - shorts colors.
+  - Neither the larger-lift mode nor a flatter curve moves it past 215.
+- **His noted outfits:** the tan chore coat rises to 7.5 (it was 7; the look reads its chinos as relaxed). The rest are as in round 5: the oxford with wide trousers 8, the three wide-shorts outfits 8, the suit 7.5.
+- **The review page is refreshed:** 131/164 within a point, r 0.62 on these photos.
+
+**In the app** this look would add about 0.21¢ to each check in pants, as a third second look. It needs the founder's yes before T69.

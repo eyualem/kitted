@@ -512,7 +512,7 @@ TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
                    # --key consistent), each scaled by TASTE_BY_LOOK for the graded look; the creators win clashes
                    # Nov 17 (card by card): + the silhouette lift (SIL, alone), one color free, slides fine on a warm
                    # casual day, runners fine with casual pieces, skinny costs in every look; refit on all 164
-                   taste=dict(lift_off=[], h7_tip=True, long_top=0.5, long_top_read="reading", shorts=0, one_lift=0.5,
+                   taste=dict(leg_look_mode="tiebreak", lift_off=[], h7_tip=True, long_top=0.5, long_top_read="reading", shorts=0, one_lift=0.5,
                               leg_slim=0, color=0, sandals_warm=True, runners_casual=True, sil_mode="alone",
                               one_lift_mode="first", stack_prehalf=True, relaxed_factor=0.5,   # round 5: steadiness
                               sil=1.75, sil_line=0.5, sil_tonal=0.25, leg_skinny=0.5, leg_wide=0.75, hem_plus=0.5,
@@ -1967,11 +1967,22 @@ def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
     # wider than the shoe = a full leg; the knee clings and the opening is narrower = narrow; else straight. It stands in
     # for the scoring call's leg_shape in these taste rules only (a copy of the bottom; the reading isn't changed).
     lw = (sl_raw or {}).get("knee"), (sl_raw or {}).get("opening")
-    if o["bottom"] is not None and o["bottom"].get("subcategory") not in SHORTS and any(x and x != "not_visible" for x in lw):
+    mode = T.get("leg_look_mode", "tiebreak")
+    if (mode != "off" and o["bottom"] is not None and o["bottom"].get("subcategory") not in SHORTS
+            and any(x and x != "not_visible" for x in lw)):
         cls = ("wide" if "hangs_away" in lw or "wider" in lw else
                "slim" if lw[0] in ("clings", None, "not_visible") and lw[1] in ("narrower", None, "not_visible") else "straight")
-        if not (cls == "slim" and o["bottom"].get("leg_shape") == "skinny"):   # "skinny" is never wrong (T98): keep it
-            o = dict(o, bottom=dict(o["bottom"], leg_shape=cls))
+        stored = o["bottom"].get("leg_shape")
+        if mode == "replace":
+            new_leg = stored if (cls == "slim" and stored == "skinny") else cls   # "skinny" is never wrong (T98): kept
+        else:
+            # tie-break (Nov 17, measured): the look's "wide" means "not tight" (66 of 71 untight pants), so it only
+            # settles the zone the scoring call flips in: straight or relaxed. Look wide -> relaxed (partial credit),
+            # look straight -> straight, look narrow (never wrong: 0 of 71) -> slim. A stored wide, slim or skinny stays.
+            new_leg = ({"wide": "relaxed", "straight": "straight", "slim": "slim"}[cls]
+                       if stored in ("straight", "relaxed") else stored)
+        if new_leg != stored:
+            o = dict(o, bottom=dict(o["bottom"], leg_shape=new_leg))
     items, waived = [], set()
     pending_sil = None
     # Nov 17 (the founder, card by card): "proportions are a very important thing that we have to nail".
@@ -2259,6 +2270,16 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     if not garments:
         return {"overall": None, "reason": "nothing_readable", "parts": {}, "na_parts": PART_ORDER[:]}
     garments = _refile(R._normalize(garments))
+    Tt = t.get("taste") or {}
+    if t["v16"] and Tt.get("leg_look_global") and second_look:         # round 5: the leg-width look settles the
+        lw = second_look.get("knee"), second_look.get("opening")      # straight/relaxed zone for the whole v16 score
+        if any(x and x != "not_visible" for x in lw):
+            cls = ("relaxed" if "hangs_away" in lw or "wider" in lw else
+                   "slim" if lw[0] in ("clings", None, "not_visible") and lw[1] in ("narrower", None, "not_visible")
+                   else "straight")
+            garments = [dict(g, leg_shape=cls) if (g.get("category") == "bottom" and g.get("subcategory") not in SHORTS
+                                                   and g.get("leg_shape") in ("straight", "relaxed")) else g
+                        for g in garments]
     care_tips = _unsure_care(garments, t)                            # v7: condition reads count only when "clear"
     o = _outfit(garments, styles)
     o["mirror"] = bool(scene.get("mirror_selfie"))
