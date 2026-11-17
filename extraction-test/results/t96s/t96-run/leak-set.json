@@ -1,7 +1,7 @@
 {
  "mode": "full",
  "fails": [],
- "seconds": 80,
+ "seconds": 108,
  "per_kind": {
   "fit": {
    "sent": 53,

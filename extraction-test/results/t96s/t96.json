@@ -2,7 +2,7 @@
  "mode": "full",
  "planted": null,
  "fails": [],
- "seconds": 2579,
+ "seconds": 2850,
  "lines": [
   "PASS F2.2 \u00b7 sweep logic",
   "PASS F2.2 \u00b7 old sends purged",
@@ -20,6 +20,6 @@
  "time (reported, not gated while the Mac has under 1 GB free)": [
   "PASS F2.2 \u00b7 time"
  ],
- "minutes": 43,
+ "minutes": 47,
  "results": "extraction-test/results/t96s/t96-run"
 }

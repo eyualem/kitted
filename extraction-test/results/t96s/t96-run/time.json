@@ -5,30 +5,30 @@
  "n": 336,
  "visionMs": {
   "main": [
-   28.0,
-   44.5
+   44.0,
+   105.75
   ],
   "new": [
-   27.0,
-   39.25
+   44.0,
+   69.75
   ]
  },
  "totalMs": {
   "main": [
-   121.0,
-   178.0
+   153.0,
+   312.75
   ],
   "new": [
-   315.0,
-   382.5
+   437.5,
+   576.5
   ]
  },
  "sweepMs": [
-  196.0,
-  239.25
+  283.5,
+  399.5
  ],
  "edges": {
-  "inputs/youtube/shots/0JtnbgtbQfE/f-03-52.jpg (23 faces, 854\u00d7480)": 279,
+  "inputs/youtube/shots/0JtnbgtbQfE/f-03-52.jpg (23 faces, 854\u00d7480)": 475,
   "inputs/youtube/shots/ove4zof6W2k/f-09-17.jpg (5 faces, 640\u00d7360)": null
  }
 }

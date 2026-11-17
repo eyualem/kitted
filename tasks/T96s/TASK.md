@@ -281,3 +281,78 @@ No constant from IMPLEMENTATION.md was changed.
   - **Red on `56f8355f`:** listed as a print and sent unhidden (unchanged 1.0). A scratch copy with `personInstances` passed to rule 7 in the sweep passes it (covered grey). That copy also still passes real prints and built prints at `--quick`, so #478's condition holds there.
   - **The verifier's set, rebuilt with its seed, plus a second-person variant: reported, not gated.** On all 12 built faces the instance mask merges the pasted figure into his own label. So the mask can't claim them: `56f8355f` leaves 4 of 6 and 3 of 6 alone, and the copy with the mask leaves exactly the same. This answers the verifier's limit 1: the mask wouldn't have caught those cases. They stay the accepted risk (#474), now measured.
   - **Not testable as asked:** a built "second person over his chest" whose face the mask labels separately. No paste I tried got its own label, and the normal and leak sets hold only the one real case above.
+
+### Review, round 2 (verifier, Nov 17, on `3851055f`: code `dfe2ba18`, tests locked at `0aa8928e`)
+The coordinator asked for this verdict in `REPORT.md`, but the harness refuses new report files from a subagent, so it's recorded here.
+
+**Verdict: ready.**
+- Every line passes at `--full`, run fresh by me on this build.
+- Every planted bug was caught by at least one test.
+- The lock holds.
+- Each "not verified" item names what would verify it.
+- No code or test defects.
+
+**What he'll see** (You → Privacy → "See what I send"): his face pixelated as before, the graphic on his shirt left clear. Round 2 adds one guard: when the person outline shows another person covering part of a "print", it's hidden instead. Checked on the Mac only, not on his phone or a tee of his own.
+
+**The lock.**
+- No test file changed after `0aa8928e`: `git diff 0aa8928e..HEAD -- extraction-test/vision/ tasks/T96s/TESTING.md tasks/T96/TESTING.md` is empty.
+- After round 1, only the test writer's `3023c4ea` and `0aa8928e` touched the tests. They add two lines and the `unhid` detector, and loosen nothing. The two lines they replace are extensions (`orig` also loads for `unhid:`, two new entries in the check table).
+- `dfe2ba18` touches only `KittedPrep.swift`, and does what #478 asks:
+  - `sweep` runs `personInstances(image)` once on a fit photo;
+  - steps 1, 2 and 4 pass it to `isPrint`;
+  - missed people read it through `missedPeople(_:found:inst:)`;
+  - the old `missedPeople(_:found:)` calls the overload with the same mask as before.
+
+  It runs on the same image, once, as before. No JS or TS changed.
+- `swiftc -typecheck` passes against the iOS Simulator SDK.
+
+**Suites, run fresh on this build.**
+- **`print_faces_test.py --full`, the 10 lines that go through `sweep`** (12 min): all pass.
+  - Real prints: P1, P2 and P3 each keep their print.
+  - Pose lies: S1–S7 hidden, zones nil.
+  - Strangers: X1 plus 24 leak photos.
+  - Built prints: (a) 31/31, (b) 30/30, (c) 30/30, (L) 8/8.
+  - Re-check and prints.
+  - Grey square: no square on S1; 0 of 336 worse than main; 168 of 168 heads kept.
+  - Where the rule doesn't apply.
+  - Same photo.
+  - His head box when a print stood in: his head-joint box is in `hide`, blurred (unchanged 0.16–0.29); the print is left alone at 1.0; both controls hold.
+  - Someone over his chest: the pinned case has another label on 24.1% of the box, isn't in `prints`, and is covered in the upload and detail. Reported: built faces left alone, 15 of 24 on this build, 0 on round 3, 18 on main.
+- **Reused, not re-run:** "print rule logic" (no `sweep`; `isPrint` and `printZone` didn't change).
+- **T96 `face_leak_test.py --full`**, inside "T96 still holds" (48 min): `PASS`, all 12 lines.
+  - Leak set: 0 strict leaks, 53 of 59 fit checks sent, gate 0.
+  - Kmeasure copies: 53, 0 not hidden.
+  - False refusals: 0 new.
+  - Missed people: 12 of 12 sent, 9 covered.
+  - Held out: 0 automatic fails.
+  - Time: `sweepMs` median 284 ms, p95 400 ms (limits 400 / 800). Higher than the implementer's 196 / 239 because the Mac was swapping; reported, not gated, while under 1 GB is free.
+
+**Planted bugs** (scratch copies, `--new-from`, `--quick`):
+| Round-2 change | Bug | Caught by |
+|---|---|---|
+| Rule 7 reads the mask in the sweep | `instances: nil` in `sweep` again | someone over his chest: `1.45.52 PM: another person's label claims 24% … yet it's listed as a print` (+1) |
+| Rule 7's threshold | `printMaxOtherLabel` 0.1 → 0.3 | someone over his chest: the same failure (+1) |
+| The overload reads `inst` | the overload ignores `inst` (no missed-people cover) | strangers at torso height: `X2 f-09-17: status ok, the round-3 build's couldNotFrame/faceRemains` (+2). Built prints, grey square and someone over his chest pass under it: one line guards it. |
+
+**Eye verdicts.**
+- **P1–P3** (the original next to the sent upload, with main alongside): the surf print, the man in the pink suit and Nefertiti are all readable and untouched, the same as on main. Each subject's face is pixelated. Restoring the mask cost no real print.
+- **The pinned case, `ig … 1.45.52 PM`:**
+  - The gated box is his hand holding a cup at his waist (no real face; the line gates it with a stand-in detector).
+  - The photographers behind his arm are under the grey cover, on this build and on main.
+  - His face is pixelated.
+  - A small grey square on his other hand by the bag strap is T96's known hand gap, out of scope.
+  - No readable face is left.
+- **T96's held-out EYE crops:** the same 35 as round 1. The labels and crops are pixel-identical, so round 1's verdict stands: none is a readable face.
+
+**Defects.**
+- **code:** none.
+- **test:** none. Round 1's test 1 is closed by "his head box when a print stood in".
+- **limit 1 (accepted, #474; now measured):** a figure over his chest that the instance mask merges into his own label. Self 8 of 12, other 7 of 12 left alone (round 3: 0; main: 10 and 8). Restoring the mask doesn't change these.
+- **limit 2:** the instance-mask gate rests on one real photo; there's no other case locally.
+- **limit 3:** the necklace pendant (`2.51.33 PM`) is kept as a print. Not a face, so harmless.
+
+**Not verified.**
+- **`npm run check`:** about 200 MB free, under the roughly 1 GB required. No JS or TS changed. Would verify it: one run with about 1 GB free.
+- **The iOS build and the phone's Neural Engine:** would verify it: `tools/phone/install.sh`, then checks pulled with `pull.sh`.
+- **His own graphic tees:** would verify it: the founder's to-do, 3–5 mirror checks in a face-print tee, one in front of a second mirror panel.
+- **The device-SDK typecheck for round 2:** only the Simulator SDK was run. Round 1 passed on both, and `dfe2ba18` adds no new API.
