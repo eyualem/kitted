@@ -242,6 +242,34 @@ describe('KC9.2 · a watch can show a metal, and accessories never move a score'
     expect(must({ kind: 'tee', family: 'navy', name: 'x', metal: 'gold', face: 'digital' })).toEqual(must({ kind: 'tee', family: 'navy', name: 'x' }));
   });
 
+  it('KC9.2 · metal, face and bracelet on a belt, cap or beanie flat draw nothing different', () => {
+    // The drawing itself ignores them (flats.ts), even when a flat somehow carries them; and artSpec never puts them there.
+    for (const kind of ['belt', 'cap', 'beanie'] as const) {
+      for (const family of ['brown', 'black', 'multicolor']) {
+        const item = must({ kind, family, name: 'x' });
+        const flat = artSpec(item).flat as FlatSpec;
+        for (const scheme of SCHEMES) {
+          const bare = renderFlat(flat, { scheme, id: 'x' });
+          for (const metal of ['gold', 'silver', 'black'] as const) {
+            const loaded = renderFlat({ ...flat, metal, face: 'digital', bracelet: true } as FlatSpec, { scheme, id: 'x' });
+            expect(loaded).toBe(bare);
+            expect(loaded).not.toContain(METAL_HEX[metal]);
+          }
+          expect(bare).not.toContain(GOLD);
+        }
+        // a stored row that says metal_gold and digital: the flat has no metal, face or bracelet
+        const row = { ...item, art: { ...item.art!, details: ['metal_gold', 'digital'] } } as ArtItem;
+        const rowFlat = artSpec(row).flat as unknown as Record<string, unknown>;
+        expect(rowFlat.metal).toBeUndefined();
+        expect(rowFlat.face).toBeUndefined();
+        expect(rowFlat.bracelet).toBeUndefined();
+        expect('metal' in rowFlat || 'face' in rowFlat || 'bracelet' in rowFlat).toBe(false);
+        expect(artSpec(row).flat).toEqual(artSpec(item).flat);
+        for (const scheme of SCHEMES) expect(draw(row, scheme)).toBe(draw(item, scheme));
+      }
+    }
+  });
+
   it("KC9.2 · a watch with no strap color is a bracelet in its metal", () => {
     // no metal: silver, and unset on the flat
     const none = must({ kind: 'watch', family: 'black', name: 'x' });
