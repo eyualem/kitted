@@ -9,6 +9,11 @@ import {
 } from "../src/index";
 import { loadReading, seedCloset } from "./helpers";
 
+// Taken at load time, before any test (so before any allowedColors call), so guard G3 does not depend on test order:
+// a write made by an earlier test is still a difference from these copies.
+const RUBRIC_AT_LOAD = structuredClone(RUBRIC_DATA);
+const PARTS_AT_LOAD = structuredClone(PARTS_DATA);
+
 // ---------------------------------------------------------------- the lists (palette order)
 const ALL24: ColorFamily[] = [
   "white", "off_white_cream", "light_grey", "grey", "charcoal", "black", "navy", "light_blue", "blue", "denim_light", "denim_mid",
@@ -382,13 +387,20 @@ describe("KC3.3 · guards (no score moves)", () => {
   });
 
   it("KC3.3 · T103-G3 · engine data is not written", () => {
-    const rubric = clonePlain(RUBRIC_DATA);
-    const parts = clonePlain(PARTS_DATA);
     let n = 0;
     for (const id of CASE_IDS) for (const c of CASES[id]!) { allowedColors(c.input); n++; }
     expect(n).toBe(Object.values(CASES).reduce((s, cs) => s + cs.length, 0));
-    expect(RUBRIC_DATA).toEqual(rubric);
-    expect(PARTS_DATA).toEqual(parts);
+    expect(RUBRIC_DATA).toEqual(RUBRIC_AT_LOAD);
+    expect(PARTS_DATA).toEqual(PARTS_AT_LOAD);
+  });
+
+  it("KC3.3 · T103-G5 · an empty entry among the other pieces gives [] and does not throw", () => {
+    const piece = tee("white");
+    for (const bad of [undefined, null]) {
+      let got: ColorFamily[] | undefined;
+      expect(() => { got = allowedColors({ others: [bad as unknown as Garment, jeans("blue")], piece }); }).not.toThrow();
+      expect(got).toEqual([]);
+    }
   });
 
   it("KC3.3 · T103-G4 · inputs are not mutated (frozen inputs give the same lists)", () => {
