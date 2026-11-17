@@ -76,6 +76,20 @@ export interface ShoeFlat extends FlatBase {
 
 export type FlatSpec = TopFlat | BottomFlat | ShoeFlat;
 
+// T101 stubs (tests written first): the accessory types and metal tones; the implementer fills the values in and
+// adds AccessoryFlat to FlatSpec.
+export type AccessoryType = 'watch' | 'belt' | 'cap' | 'beanie';
+export type WatchMetal = 'gold' | 'silver' | 'black';
+export const WATCH_METALS: readonly WatchMetal[] = [];
+export const METAL_HEX = {} as Readonly<Record<WatchMetal, string>>;
+export interface AccessoryFlat extends FlatBase {
+  kind: 'accessory';
+  type: AccessoryType;
+  metal?: WatchMetal;
+  bracelet?: boolean;
+  face?: 'analog' | 'digital';
+}
+
 // ---------------------------------------------------------------- color helpers
 const clamp = (v: number) => Math.max(0, Math.min(255, v));
 function rgb(h: string): [number, number, number] {

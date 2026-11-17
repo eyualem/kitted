@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useTheme } from '@/design-system/theme';
 import type { ClosetArt, ClosetItemRow } from '@/data/types';
-import { artSpec, type ArtSpec } from './artSpec';
+import { artSpec, type ArtSpec, type DrawnPieceSpec, type PieceSlot } from './artSpec';
 import { renderFlat } from './flats';
 
 export function GarmentArt({ spec, size }: { spec: ArtSpec; size: number }) {
@@ -22,6 +22,7 @@ export function GarmentArt({ spec, size }: { spec: ArtSpec; size: number }) {
 }
 
 /** A closet piece (or a reading's garment) drawn at `size`: the morning card, outfit tiles, Which shoes?. */
-export function PieceArt({ item, size }: { item: Pick<ClosetItemRow, 'garment' | 'hex'> & { art?: ClosetArt | null; name?: string }; size: number }) {
+export function PieceArt({ item, size }: { item: (Pick<ClosetItemRow, 'garment' | 'hex'> & { art?: ClosetArt | null; name?: string }) | DrawnPieceSpec; size: number; slot?: PieceSlot }) {
+  if ('kind' in item && 'family' in item) throw new Error('T101: not built');
   return <GarmentArt spec={artSpec({ garment: item.garment, hex: item.hex, art: item.art ?? null, name: item.name ?? '' })} size={size} />;
 }

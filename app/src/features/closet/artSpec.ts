@@ -6,7 +6,7 @@
 import { shadeFromId } from '@kitted/core';
 import type { ClosetArt, ClosetItemRow } from '@/data/types';
 import { t, type StringKey } from '@/i18n/en';
-import type { BottomFlat, BottomType, FlatSpec, ShoeType, TopFlat, TopType } from './flats';
+import type { BottomFlat, BottomType, FlatSpec, ShoeType, TopFlat, TopType, WatchMetal } from './flats';
 import { contrastLine, mix } from './flats';
 import { brandWord } from './itemName';
 import { isVariant, KIND_SLEEVES, VARIANTS } from './kinds';
@@ -185,4 +185,25 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
     : shape === 'top' && vol !== 3 ? t('closet.edit.a11y.fit', { fit: t(vol <= 2 ? 'value.topFit.slim' : vol === 4 ? 'value.topFit.relaxed' : 'value.topFit.oversized') }).toLowerCase()
       : null;
   return { shape, flat, glyphs: ordered, a11y: [item.name, ...(cut ? [cut] : []), ...said].join(', ') };
+}
+
+// ---------------------------------------------------------------- T101 stubs (tests written first)
+export type PieceSlot = 'top' | 'outer' | 'bottom' | 'shoes' | 'accessory';
+export type ArtItem = Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'name'>;
+export interface DrawnPieceSpec {
+  kind: string;
+  family: string;
+  name: string;
+  metal?: WatchMetal;
+  face?: 'analog' | 'digital';
+}
+export const DRAWN_KINDS: readonly string[] = [];
+export function pieceSlotOf(_kind: string): PieceSlot | null {
+  throw new Error('T101: not built');
+}
+export function drawnItem(_piece: DrawnPieceSpec, _slotHint?: PieceSlot): ArtItem | null {
+  throw new Error('T101: not built');
+}
+export function pieceArtSpec(_item: ArtItem | DrawnPieceSpec, _slotHint?: PieceSlot): ArtSpec | null {
+  throw new Error('T101: not built');
 }
