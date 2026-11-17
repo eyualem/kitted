@@ -370,7 +370,7 @@ const flatOf = (cat: string, sub: string, fam = 'brown') => artSpec({ garment: G
 
 describe('C4', () => {
   test('C4: in a tile, a drawn shoe spans at least 80% of the tile\'s drawing width, like a top or pants', () => {
-    const { tileArtBox } = jest.requireActual<{ tileArtBox: (shape: 'top' | 'bottom' | 'shoe', w: number, h: number, scale?: number) => { size: number; dy: number } }>('../features/closet/tileArt');
+    const { tileArtBox } = jest.requireActual<{ tileArtBox: (shape: 'top' | 'bottom' | 'shoe' | 'accessory', w: number, h: number, scale?: number) => { size: number; dy: number } }>('../features/closet/tileArt');
     // The Closet grid's tiles (aspect 0.92) at phone widths, and a square tile.
     for (const [w, aspect] of [[110, 0.92], [118, 0.92], [160, 0.92], [96, 1]] as const) {
       const h = Math.round(w * aspect);
