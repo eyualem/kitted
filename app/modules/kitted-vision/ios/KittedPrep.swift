@@ -946,7 +946,12 @@ extension Prep {
   /// his box is covered: its own pixels, grown by `crowdGrow`, never onto his outline or that margin. Nothing is covered
   /// when his outline can't be told apart (no instance mask, or no label inside his box).
   static func missedPeople(_ image: CGImage, found: Located) -> (count: Int, cover: Guide.Gray?) {
-    guard let main = found.main, let inst = personInstances(image) else { return (0, nil) }
+    missedPeople(image, found: found, inst: personInstances(image))
+  }
+
+  /// The same, with the instance mask already run on `image` (the sweep runs it once for rule 7 and this, T96s).
+  static func missedPeople(_ image: CGImage, found: Located, inst: Instances?) -> (count: Int, cover: Guide.Gray?) {
+    guard let main = found.main, let inst else { return (0, nil) }
     let W = CGFloat(image.width), H = CGFloat(image.height)
     guard let his = inst.counts(main.insetBy(dx: main.width * 0.1, dy: main.height * 0.05), W: W, H: H).labels.max(by: { $0.value < $1.value })?.key
     else { return (0, nil) }
@@ -1146,9 +1151,9 @@ extension Prep {
 
   /// After `locate` (status "ok"), on the upright working image: the copy that may be sent, or a refusal. Never changes
   /// found.status; it only covers and hides more, or refuses.
-  ///  0. zone = printZone(found) (T96s: nil unless a fit photo whose pose and head can be trusted). Rule 7 runs without
-  ///     the instance mask here (the sweep only has it inside `missedPeople`, after the tile pass), so it's the
-  ///     `otherHeads` test; the same answer in steps 1, 2 and 4.
+  ///  0. zone = printZone(found) (T96s: nil unless a fit photo whose pose and head can be trusted), and (fit) the person
+  ///     instance mask, run once: rule 7 reads it in steps 1, 2 and 4 (a face another person's label claims is never a
+  ///     print, DECISIONS-LOG #478), and step 2's missed people use it.
   ///  1. hide0 = found.hide without the head box of each whole-photo face that is a print on his top (T96s), plus his
   ///     fallback head box when a print was what stood in for his face (none: nothing is left alone). F = the faces
   ///     `detect` finds on every tile of `faceGrids` in today's copy (`locate`'s cover, and hiding hide0), de-duplicated,
@@ -1173,9 +1178,11 @@ extension Prep {
       return out
     }
 
-    // 0. Where a print can be (T96s).
+    // 0. Where a print can be (T96s), and the instance mask (fit), run once: a face box another person's label claims
+    // is never a print (rule 7, #478), and the missed-people cover below reads the same mask.
     let zone = printZone(found, kind: kind, W: W, H: H)
-    func printed(_ f: CGRect) -> Bool { isPrint(f, zone: zone, found: found, instances: nil) }
+    let inst: Instances? = kind == .fit && found.main != nil ? autoreleasepool { personInstances(image) } : nil
+    func printed(_ f: CGRect) -> Bool { isPrint(f, zone: zone, found: found, instances: inst) }
 
     // 1. locate's whole-photo faces that are prints on his top leave what's hidden. If one of them was what made locate
     // take a face for his (so it drew no head box from his joints or shoulders), that box is drawn in its place; with no
@@ -1226,7 +1233,7 @@ extension Prep {
 
     // 2. People the person detector missed.
     if kind == .fit {
-      let missed = autoreleasepool { missedPeople(image, found: found) }
+      let missed = autoreleasepool { missedPeople(image, found: found, inst: inst) }
       if let extra = missed.cover {
         out.cover = found.cover.map { union($0, extra) } ?? extra
         out.coveredExtra = missed.count
