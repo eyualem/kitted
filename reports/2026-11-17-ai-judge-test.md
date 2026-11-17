@@ -4,7 +4,7 @@
 
 ## The answer in one paragraph
 
-Yes, it's a little closer to your taste, but not by enough to hand it the score on its own. On your 164 blind ratings, a Claude Sonnet judge with one look per photo lands **within a point of you 83% of the time with r 0.67**. v16, the engine you just approved, gets **82% and r 0.63**. The judge also uses the scale more like you do. But **it isn't steady enough**: two looks at the same photo agree within half a point on only 91–95% of photos (v16: 97.8%, the bar). It also misses 4 of the creators' 18 anchors (v16 misses 1), and it can't say which rule capped the score. **The best number in the test came from a hybrid:** v16's score and the AI's, blended about 60/40, with the code's dealbreaker caps on top. That reached **86% within a point and r 0.69, the first arm to clear both of your agreement bars**, and it stays as steady as v16. My recommendation: **ship v16 as approved (T69), then test the hybrid as an add-on.** It needs your yes on the hard line, a new privacy line if the provider is Claude, and one small paid check (below).
+Yes, it's a little closer to your taste, but not by enough to hand it the score on its own. On your 164 blind ratings, a Claude Sonnet judge with one look per photo lands **within a point of you 83% of the time with r 0.67**. v16, the engine you just approved, gets **82% and r 0.63**. The judge also uses the scale more like you do. But **it isn't steady enough**: two looks at the same photo agree within half a point on only 91–95% of photos (v16: 97.8%, the bar). It also misses 4 of the creators' 18 anchors (v16 misses 1), and it can't say which rule capped the score. **The best number in the test came from a hybrid:** v16's score and the AI's, blended about 60/40, with the code's dealbreaker caps on top. That reached **86% within a point and r 0.68**, the best of any arm, with v16 refitted fairly on each half (see the table). It is just under your 0.69 bar, and it stays as steady as v16. My recommendation: **ship v16 as approved (T69), then test the hybrid as an add-on.** It needs your yes on the hard line, a new privacy line if the provider is Claude, and one small paid check (below).
 
 ## What was tested
 
@@ -28,12 +28,14 @@ Yes, it's a little closer to your taste, but not by enough to hand it the score 
 
 ## The numbers, side by side
 
-**"Held out"** means tested on photos the method wasn't tuned on. v16's taste rules were fitted on your ratings, so its honest number comes from fitting on one half and testing on the other, 8 times. The AI was tuned on nothing of yours, so every photo is held out for it. The blends fit one number (the AI's weight) on half A and are tested on half B, over the same 8 splits.
+**"Held out"** means tested on photos the method wasn't tuned on. v16's taste rules were fitted on your ratings, so its honest number comes from fitting on one half and testing on the other, 8 times. The AI was tuned on nothing of yours, so every photo is held out for it. The blends fit the AI's weight on half A and are tested on half B, over the same 8 splits. Inside each blend, v16's taste sizes are also refitted on half A only (`refit_blend.py`). That refit reproduces T68's own held-out v16 exactly (82.0%, r 0.63).
+
+*Correction, Nov 17:* the first version blended the AI with the full-fit v16, whose sizes had seen all 164 of your ratings, so it showed the hybrid at 85.8% and r 0.69. Refitted fairly, it's 86.0% and r 0.68. That's the same agreement, just under the r bar rather than on it.
 
 | | v16 (approved) | AI judge, 1 call | AI judge, median of 3 calls | Hybrid: blend + caps | Bar |
 |---|---|---|---|---|---|
-| **Within 1 point of you** (held out) | 82.0% | **82.8%** | 84.3% | **85.8%** | 80% |
-| **r with you** (held out) | 0.63 | 0.67 | 0.68 | **0.69** | 0.69 |
+| **Within 1 point of you** (held out) | 82.0% | **82.8%** | 84.3% | **86.0%** | 80% |
+| **r with you** (held out) | 0.63 | 0.67 | 0.68 | **0.68** (just under) | 0.69 |
 | Same, on your consistent key (all 164) | 80.5%, r 0.62 | 81–86%, r 0.64–0.69 | 84.8%, r 0.68 | (not split) | |
 | **Creators' before/after pairs** the right way | 6/6 | 6/6 (median); one run each 6, 5, 5 | 6/6 | caps hold v16's | 6/6 |
 | **Creators' anchors** in their band | 17/18 | **14/18** | 14/18 | (v16's caps; see below) | 18 |
@@ -106,7 +108,7 @@ The script is ready and dry-runs clean: `extraction-test/ai_judge/gemini_judge.p
 
 ## Ranked recommendation
 
-1. **Ship v16 now (T69), then test the hybrid as an add-on (recommended).** v16 is already approved, steady and explainable, and the hybrid is built on top of v16's score, so nothing is lost by shipping first. The hybrid is the only arm that cleared both of your agreement bars (86%, r 0.69). It keeps the caps, the fix line and Why adding up, and it's as steady as v16. Before it goes in the app it needs:
+1. **Ship v16 now (T69), then test the hybrid as an add-on (recommended).** v16 is already approved, steady and explainable, and the hybrid is built on top of v16's score, so nothing is lost by shipping first. The hybrid has the best agreement of any arm: 86% within a point, r 0.68, against v16's 82% and 0.63. It's just under your 0.69 bar on r, a gap inside the split-to-split noise (0.64–0.70). It keeps the caps, the fix line and Why adding up, and it's as steady as v16. Before it goes in the app it needs:
    - your yes on bending the hard line;
    - the one-photo-per-call API check above (≈ $1.30, cap $2);
    - a privacy line if the provider is Claude;
@@ -116,6 +118,7 @@ The script is ready and dry-runs clean: `extraction-test/ai_judge/gemini_judge.p
 
 ## What's real, what isn't
 
+- **Reproducing:** the scripts read v16 through `V16_DIR`, a checkout of `claude/rescoring-v16-58d34b` at commit `51f658df` (PR #124), plus that worktree's git-ignored reading results. They run from main only once #124 is merged (details at the top of `extraction-test/ai_judge/BRIEF.md`).
 - **Real:** every number above comes from the runs on disk (`inputs/ai-judge/out/`, scored by `score_runs.py`; aggregates in `extraction-test/results/ai-judge1/report-claude.txt`). v16's numbers come from the approved engine on the v16 branch.
 - **Not verified:**
   - one-photo-per-call behaviour;

@@ -19,6 +19,8 @@ The bars, as tasks/T68/TASK.md and v16_paper.py count them:
   B6 steadiness: two runs within half a point (v16's bar: 218 of 223 = 97.8%). Each run saw a fresh order and fresh
      neighbours, so this is also the order-swap test for absolute scores. Pairs (Variant P): verdict flips when A
      and B swap.
+  NOTE: W/WG/Wm here use the full-fit v16 (its sizes saw half B), so they are flattered; the honest blend is
+     refit_blend.py (v16 refit on each half A).
   Hybrids: (G) the AI's score inside the code's guardrails (3-9.5, v16's dealbreaker cap on that photo's reading);
      (W) a blend w*AI + (1-w)*v16, w fitted on half A of each split, tested on half B; (WG) the blend, then the caps.
 """

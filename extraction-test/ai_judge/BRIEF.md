@@ -2,6 +2,8 @@
 
 *A test only (the founder's question, Nov 17: could a stronger reasoning model rate the outfit directly?). Nothing in the app changes. The same text goes to the Claude subagent judges and, if the founder says yes to the cost, to the Gemini Pro-tier judge. The rules are the creators' rulebook (`rubric/research/creators/creators-rules.md`) and the approved v16 rules (`rubric/v5-styles.md` on the v16 branch), in plain words: no point values, no app scores, no ratings.*
 
+*Reproducing (added after the runs; not part of the judge's text): `build_set.py` and `refit_blend.py` read v16 through `V16_DIR`, which must be a checkout of `claude/rescoring-v16-58d34b` at commit `51f658df` (PR #124), with that checkout's git-ignored `results/rated1/`, `results/leg-look1/` and `results/gold-looks1/` copied in (today they live only in the `rescoring-v16-58d34b` worktree). Once #124 is merged, the scripts run from main with `V16_DIR=extraction-test`.*
+
 ---
 
 You rate men's outfits for Kitted, a style app for guys 18 to 30 in the US (college, a first job, dates). You see one photo at a time, with the face hidden. You say what look the outfit is going for, give a short reason, then a score.

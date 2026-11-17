@@ -1,0 +1,16 @@
+The hybrid with v16 refit on each half A (164 photos; seeds 1-8; taste_rules.py's FIXED + GRID)
+  seed 1: v16 refit 84% r 0.639; W 89% r 0.675 (w 0.4)
+  seed 2: v16 refit 79% r 0.650; W 83% r 0.702 (w 0.5)
+  seed 3: v16 refit 82% r 0.577; W 85% r 0.669 (w 0.3)
+  seed 4: v16 refit 84% r 0.654; W 89% r 0.698 (w 0.3)
+  seed 5: v16 refit 82% r 0.677; W 82% r 0.675 (w 0.5)
+  seed 6: v16 refit 82% r 0.630; W 89% r 0.672 (w 0.4)
+  seed 7: v16 refit 82% r 0.591; W 85% r 0.643 (w 0.3)
+  seed 8: v16 refit 82% r 0.627; W 83% r 0.671 (w 0.5)
+
+Held-out half B, averages over the 8 splits (range):
+  v16 refit on half A                      within 1 82.0% (79-84)  r 0.631 (0.58-0.68)
+  AI one call (run 1)                      within 1 81.9% (79-85)  r 0.656 (0.62-0.70)
+  W: blend, AI one call + v16 refit        within 1 85.7% (82-89)  r 0.676 (0.64-0.70)  AI weight 0.4/0.5/0.3/0.3/0.5/0.4/0.3/0.5
+  WG: blend + v16's caps                   within 1 86.0% (82-89)  r 0.675 (0.64-0.70)  AI weight 0.4/0.3/0.3/0.3/0.5/0.4/0.3/0.5
+  Wm: blend, AI median of 3 + v16 refit    within 1 84.9% (82-88)  r 0.686 (0.65-0.73)  AI weight 0.7/0.5/0.3/0.5/0.9/0.7/0.3/0.5
