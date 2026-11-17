@@ -143,6 +143,71 @@ describe('KC1.3 · the checker keeps at most 3 taps, in order', () => {
     expect(check(['Make it warmer', good], 'Anything else?')).toEqual(['Make it warmer', good]);
   });
 
+  // Round 3 (verifier): the body check over-blocked clothes taps about his own clothes. A size or age word (tall, short,
+  // big, small, old, thin, wide, heavy, slim) is a body word only when it describes him ("am I", "I'm", "do I look",
+  // "make me look", "I look", or "look <word>" with no garment as subject). A body-part word stays a body word except
+  // when a garment noun makes it a clothing word ("face mask"). Each tap here is 30 characters or fewer and about clothes.
+  it.each([
+    ['Pair it with my short boots'],
+    ['Match my tall socks'],
+    ['Try my wide jeans'],
+    ['Go with my slim chinos'],
+    ['What goes with my old jacket?'],
+    ['Show me my big boots'],
+    ['Is my hoodie too big?'],
+    ['Is my jacket too short?'],
+    ['Is my watch too big?'],
+    ['Can I wear my old boots?'],
+    ['Do my sneakers look fat?'],
+    ['Show me tall boots'],
+    ['Show me something shorter'],
+    ['Show me a shorter jacket'],
+    ['Show me a heavy coat'],
+    ['Heavier jacket for me?'],
+    ['Should I get a big coat?'],
+    ['Do I need a thin jacket?'],
+    ['Is my hat the right shape?'],
+    ['Is my face mask ok?'],
+    ['Does this fit my style?'],
+    ['Does it go with my jeans?'],
+    ['Does my shirt fit well?'],
+    ['Try a bigger scarf'],
+    ['Show me lighter colors'],
+    ['Show me a looser fit'],
+    ['Show me something warmer'],
+  ])('KC1.3 · kept: a size, age or fit word about his clothes (%s)', (good) => {
+    expect(good.length).toBeLessThanOrEqual(30);
+    expect(checkSentence(good, GATE)).toBeNull(); // the gate has no quarrel with it
+    expect(isBodyRating(good)).toBe(false); // nor the typed-message guard: only the follow-up check can drop it
+    expect(check([good], 'Anything else?')).toEqual([good]);
+    expect(check(['Make it warmer', good], 'Anything else?')).toEqual(['Make it warmer', good]);
+    expect(check([good, 'Make it warmer', 'Add a watch', 'Show me jackets'], 'Anything else?')).toEqual([good, 'Make it warmer', 'Add a watch']);
+  });
+
+  // Round 3 (verifier): body taps the round 3 lists missed, and the "look <body word>" form with no first person and no
+  // garment as subject. They must stay dropped after the over-block above is fixed.
+  it.each([
+    ['Does that look fat?'],
+    ['Looks too skinny?'],
+    ['Am I too lean?'],
+    ['Am I too pale?'],
+    ['Am I too hairy?'],
+    ['Am I pear shaped?'],
+    ['Am I a bit pudgy?'],
+    ['Do I look sexy?'],
+    ['Do I look weak?'],
+    ['Do I look gaunt?'],
+    ['Is my torso long?'],
+    ['Does my hairline show?'],
+    ['Hide my love handles'],
+    ['Does this suit my complexion?'],
+  ])('KC1.3 · dropped: a body tap the lists missed (%s)', (bad) => {
+    expect(checkSentence(bad, GATE)).toBeNull(); // not the gate's doing: the follow-up check must drop it
+    expect(check([bad])).toEqual([]);
+    expect(check([bad, 'What should I buy first?'])).toEqual(['What should I buy first?']);
+    expect(check(['Show me jackets', bad, 'Add a watch'])).toEqual(['Show me jackets', 'Add a watch']);
+  });
+
   it('KC1.3 · a one-word tap that is his one-word question is dropped, a different one-word tap stays', () => {
     expect(check(['Dressier'], 'Dressier?')).toEqual([]);
     expect(check(['Dressier', 'Warmer'], 'Dressier?')).toEqual(['Warmer']);
