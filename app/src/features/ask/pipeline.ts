@@ -133,6 +133,11 @@ export interface AskPayload {
   tryPro?: boolean;
 }
 
+/** T102: not built. The taps under the newest answer (0 to 3), or null. */
+export function latestFollowUps(_thread: readonly ChatMessage[]): { messageId: string; taps: string[] } | null {
+  throw new Error('T102: not built');
+}
+
 function row(id: string, createdAt: number, role: ChatMessage['role'], text: string, extra: Partial<ChatMessage> = {}, payload: AskPayload = {}): ChatMessage {
   return {
     id, createdAt, role, kind: 'text', text, cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [],

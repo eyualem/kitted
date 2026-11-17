@@ -2,7 +2,7 @@
 
 Written by the planner from `specs/kit-stylist-chat.md` (approved 2026-11-17). Size: normal, so the implementer writes these tests with the code and one separate reviewer reads them. Words, labels and layout are not tested here (T104 shows them in screenshots).
 
-**Lock:** not locked (normal task) · tests: `app/src/__tests__/kitCards.test.ts`, `app/src/__tests__/kitCardsStored.test.ts`, `app/src/__tests__/kitFollowUps.test.ts`
+**Lock:** pending · tests: `app/src/__tests__/kitCards.test.ts`, `app/src/__tests__/kitCardsStored.test.ts`, `app/src/__tests__/kitFollowUps.test.ts`
 
 **Criteria covered: 10.** Plan-line IDs: KC1.2, KC1.3, KC1.5, KC2.1, KC2.2, KC2.3, KC2.4, KC2.5, KC2.6, KC2.9. Each appears below.
 
@@ -112,3 +112,29 @@ Never dropped, never counted as done.
 
 ## Founder answers that change examples above (Nov 17)
 Drawn piece names use the closet's own noun for the kind (not "collared shirt" or "chore jacket"): wherever an example here says "collared shirt" or "chore jacket", the test uses the closet's noun for `oxford_shirt` / `chore_coat` (see IMPLEMENTATION.md, Open questions, answer 2). Color names are the spec's words. A piece he owns in another color is not substituted (kind and color family must both match).
+
+
+## Test record (test writer, Nov 17, before any code)
+Files: `app/src/__tests__/kitCards.test.ts` (KC1.2, KC2.1 to KC2.6, KC2.9 and the card side of the plain checks), `app/src/__tests__/kitCardsStored.test.ts` (KC1.5), `app/src/__tests__/kitFollowUps.test.ts` (KC1.3 and the closing block, gemini.ts and providers.ts). Shared helpers (not tests): `app/src/testing/kitCardsHelpers.ts`. Stubs, each throwing `T102: not built`, are in `cards.ts` (`slotOfKind`, `colorName`, `kindNoun`, `cardPiece`, `cardKey`, `shownKeysToday`, `askedAgain`, `exampleOutfit`, `optionsNow`, `buyPiece`, `colorPieces`, `nextBuyFor`, `checkFollowUps`, an empty `KIND_SLOT`, and the types `PieceSlot` and `CardPiece`) and `pipeline.ts` (`latestFollowUps`). The widened `AskCard` union, `CardInput`'s new fields and `outfitNow`'s new result fields are the implementer's: the tests read them through local casts so they type-check today. `prompt.ts`, `closing.ts`, `source.ts`, `gemini.ts`, `providers.ts` and `prepare.ts` are untouched.
+
+Run on a clean checkout: 225 tests in the three files, 187 red, 38 exist-and-bite; the 15 existing ask suites (361 tests) still pass.
+
+| Criterion | Tests | red: how it fails today | exists: bites via |
+|---|---|---|---|
+| KC1.2 | 9 | the array case and the stored card shape fail on an assertion (a card has no `needs` or `example`; the colors block builds no card); `PROMPT_VERSION` is 4 and the closing format lacks `followUps`, options and colors | 3 exist: add and changed from the model (planted `case 'add'` and `case 'changed'` in `buildCard` → red), an unknown type (planted pass-through of any typed block → red), a code-built card winning (planted `buildCard(...) ?? correct` in `prepare.ts` → red) |
+| KC1.3 | 48 | 47 fail: `checkFollowUps` and `latestFollowUps` throw `not built`; the stored row has no `followUps`; `parseClosing` of a `followUps`-only block is null; the `done` events of Gemini, OpenAI and Anthropic carry no `followUps` | 1 exists: `{"other":1}` and malformed JSON stay `null` (guards the parser change) |
+| KC1.5 | 95 | the new shapes (options, colors, add, changed) read back `null`; `outfitNow` has no `needs` or `example`; `optionsNow` and the new button flags are missing | 34 exist: old and unchanged shapes round trip, malformed shapes are `null`, a merged piece is gone, `linkedPiece` of a removed piece, a gone outfit has no Wear this. Planted bugs: storedCard accepting any options, add, colors or changed → 11 red; any non-empty object → 3 red; stripping `needs` and dropping `check` → 14 red; `outfitNow` using `!isDeleted` → merged test red; `linkedPiece` returning a removed piece → red; `wear` ignoring `gone` → red |
+| KC2.1 | 7 | the outfit keeps his old behaviour (no `needs`, no substitution, `avoid` ignored) and `nextBuyFor` throws | none |
+| KC2.2 | 17 | `cardPiece`, `colorName`, `kindNoun`, `slotOfKind`, `colorPieces`, `buyPiece` throw; a drawn need today makes no card; the colors and buy-with-why cases fail on an assertion | none |
+| KC2.3 | 11 | an outfit with `pieces: []` builds no card today; `exampleOutfit` throws | none |
+| KC2.4 | 9 | an options block builds no card today | none (the "one entry left" test opens with a positive control, so it is red) |
+| KC2.5 | 10 (the table of 9 asks, each as its own test, and one 100% test) | no card today | none |
+| KC2.6 | 8 | `cardKey`, `shownKeysToday`, `askedAgain` throw; the stored card has no `needs`, so the prepare-level test fails first | none |
+| KC2.9 | 11 | `needs` is never written; an outfit with 3 accessories or 6 clothing pieces builds today | none |
+
+### Choices the spec text left open (the test writer's reading; change only with the founder's yes or a dispute)
+- **Example fallback.** `IMPLEMENTATION.md` says picks come first, then the Starter list; the KC2.3 line above says "with both shown and no other picked look, `null`". The founder's spec (KC2.3: "his picked looks first, then the Starter catalog") settles it: the test expects the Starter outfit (`starterList(styles)`, first row with a pick for top, bottom, shoes) next, and `null` only when that one is shown too.
+- **`exampleOutfit`'s `avoid`** is read as a set of kind keys (`'hoodie'`), as "the example chooser avoids kinds in `avoid`" says. In `buildCard` the same input holds closet ids.
+- **Names.** Color word from the spec's table, noun from the closet (`garmentName`), denim families on jeans from `colorWord` ("Dark jeans"). The test checks `startsWith(color word)` and `endsWith(noun)` for every kind by family, and exact names for the spec's examples ("Off-white oxford", "Black work boots", "Navy jacket" for a harrington). A khaki family reads "Beige chinos" here (the spec's word), not the closet's "Khaki".
+- **"off white".** Core's `parseShade('off white')` gives `white`, not `off_white_cream` (`'off-white'` and `'cream'` do). The contract above says `cardPiece('collared shirt', 'off white')` is `off_white_cream`, so `cardPiece` must handle it itself (or T103 must fix the parse); the colors-card tests use unambiguous words.
+- **Not tested, and why:** the 80% word-overlap rule of `checkFollowUps` (the overlap measure is not defined: over the smaller set, the larger, or Jaccard); a verdict clash giving no taps (needs a rules verdict the harness does not set up); `cardSpoken` for the new shapes (T104 writes them, a locked test would break it); `evidence.ts` reading an example's empty `itemIds` (T105's file, harmless by `outfitKey([]) === null`).

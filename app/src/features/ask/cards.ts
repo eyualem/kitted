@@ -2,8 +2,8 @@
 // named, never from its text. Each kind is checked against his real data; anything that doesn't check out drops
 // the card and keeps the answer. Cards are stored by id (not by the per-question handles), so Past chats can draw
 // them again later; a piece removed since then shows "No longer in your closet".
-import { outfitKey, outfitValid, type ClosetItem, type Styles } from '@kitted/core';
-import { OCCASIONS, type ClosetItemRow, type FitCheckRow, type OccasionKey } from '@/data/types';
+import { outfitKey, outfitValid, type ClosetItem, type Styles, type ZoneOffset } from '@kitted/core';
+import { OCCASIONS, type ChatMessage, type ClosetItemRow, type FitCheckRow, type OccasionKey } from '@/data/types';
 import { outfitsOn } from '@/features/closet/outfitsSwitch';
 import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { starterGain } from '@/features/finish/gains';
@@ -25,6 +25,56 @@ export type AskCard =
   /** "That score is wrong" about today's check (09 §20.8 G19): opens its Not quite right?. Built by code from the route
    *  (prepare.ts), never from the model's block. */
   | { type: 'correct'; checkId: string };
+
+// ---------------------------------------------------------------- T102 stubs (tests first: each throws until built)
+export type PieceSlot = 'top' | 'bottom' | 'shoes' | 'outer' | 'accessory';
+/** The only shape a drawn piece has (T101 draws it, T104 shows it). */
+export interface CardPiece {
+  kind: string;
+  color: string;
+  name: string;
+}
+/** T102: not built. Every drawable kind and its slot. */
+export const KIND_SLOT: Readonly<Record<string, PieceSlot>> = {};
+export function slotOfKind(_kind: string): PieceSlot | null {
+  throw new Error('T102: not built');
+}
+export function colorName(_family: string): string | null {
+  throw new Error('T102: not built');
+}
+export function kindNoun(_kind: string): string {
+  throw new Error('T102: not built');
+}
+export function cardPiece(_kind: unknown, _color: unknown): CardPiece | null {
+  throw new Error('T102: not built');
+}
+export function cardKey(_card: AskCard): string | null {
+  throw new Error('T102: not built');
+}
+export function shownKeysToday(_chat: readonly ChatMessage[], _today: string, _zone: ZoneOffset): Set<string> {
+  throw new Error('T102: not built');
+}
+export const askedAgain = (_question: string): boolean => {
+  throw new Error('T102: not built');
+};
+export function exampleOutfit(_styles: Styles | null, _shown: ReadonlySet<string>, _avoid?: ReadonlySet<string>): CardPiece[] | null {
+  throw new Error('T102: not built');
+}
+export function optionsNow(_card: AskCard, _closet: readonly ClosetItemRow[]): { entries: ({ item: ClosetItemRow } | { piece: CardPiece } | { gone: true })[] } {
+  throw new Error('T102: not built');
+}
+export function buyPiece(_card: Extract<AskCard, { type: 'buy' }>): CardPiece | null {
+  throw new Error('T102: not built');
+}
+export function colorPieces(_card: AskCard): CardPiece[] {
+  throw new Error('T102: not built');
+}
+export function nextBuyFor(_piece: CardPiece, _styles: Styles | null): string | null {
+  throw new Error('T102: not built');
+}
+export function checkFollowUps(_raw: unknown, _o: { question: string; gate: GateContext }): string[] {
+  throw new Error('T102: not built');
+}
 
 export interface CardInput {
   handles: Readonly<Record<string, string>>;
