@@ -2,7 +2,7 @@
 
 Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** `<commit SHA>` · <date> · tests: `app/packages/kitted-core/test/allowedColors.test.ts`
+**Lock:** `9d0cf0040d6b0711e7d9fa55632893ab08140853` · 2026-11-17 · tests: `app/packages/kitted-core/test/allowedColors.test.ts`
 
 **Plan line IDs:** KC3.3. One ID; this file covers it with the cases below (KC3.3 · a to p, q, r and s1 to s7) and five guards that the plan line states in words ("no score moves, parity stays 100%": T103-G1 to G5).
 
