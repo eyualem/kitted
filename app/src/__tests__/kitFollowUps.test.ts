@@ -3,6 +3,7 @@
 import { createClosingSplitter, EMPTY_BLOCK, parseClosing } from '@/features/ask/closing';
 import { checkFollowUps } from '@/features/ask/cards';
 import { checkSentence } from '@/features/ask/gate';
+import { isBodyRating } from '@/features/ask/guards';
 import { ASK_MODEL, createAskGemini, type AskGeminiOptions } from '@/features/ask/gemini';
 import { liveAnswer } from '@/features/ask/live';
 import { latestFollowUps } from '@/features/ask/pipeline';
@@ -59,6 +60,27 @@ describe('KC1.3 · the checker keeps at most 3 taps, in order', () => {
     expect(check(['Show me jackets'], 'show me jackets!')).toEqual([]);
     expect(check(['Show me jackets', 'Make it dressier'], 'show me jackets!')).toEqual(['Make it dressier']);
     expect(check(['Show me jackets'], 'What goes with my jeans?')).toEqual(['Show me jackets']);
+  });
+
+  // Hard line (CLAUDE.md): never rate faces or bodies. A tap is sent as his message, so a tap that asks Kit to rate
+  // his body would invite exactly that. The guard `isBodyRating` (ask/guards.ts) already knows these first-person forms.
+  it.each([
+    ['Rate my body'],
+    ['Do I look fat?'],
+    ['Am I too skinny?'],
+    ['Is my build ok?'],
+  ])('KC1.3 · dropped: a first-person body phrasing (%s)', (bad) => {
+    expect(isBodyRating(bad)).toBe(true); // the guard's own verdict, so this test is about the follow-up check using it
+    expect(checkSentence(bad, GATE)).toBeNull(); // ... and not about the sentence gate, which has no quarrel with it
+    expect(check([bad])).toEqual([]);
+    expect(check([bad, 'What should I buy first?'])).toEqual(['What should I buy first?']);
+    expect(check(['Show me jackets', bad, 'Add a watch'])).toEqual(['Show me jackets', 'Add a watch']);
+  });
+
+  it('KC1.3 · a one-word tap that is his one-word question is dropped, a different one-word tap stays', () => {
+    expect(check(['Dressier'], 'Dressier?')).toEqual([]);
+    expect(check(['Dressier', 'Warmer'], 'Dressier?')).toEqual(['Warmer']);
+    expect(check(['Warmer'], 'Dressier?')).toEqual(['Warmer']);
   });
 
   it('KC1.3 · a duplicate of an earlier tap in the list is dropped', () => {
