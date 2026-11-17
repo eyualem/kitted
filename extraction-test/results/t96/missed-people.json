@@ -1,0 +1,196 @@
+{
+ "mode": "full",
+ "fails": [
+  "6fcce726-photo: the missed stranger's outline is 30% / 30% grey in the upload / detail copy (\u2265 80%)",
+  "760e55d9-photo: the missed stranger's outline is 1% / 1% grey in the upload / detail copy (\u2265 80%)",
+  "eecf54eb-photo: coveredExtra 0, expected \u2265 1",
+  "eecf54eb-photo: the missed stranger's outline is 0% / 0% grey in the upload / detail copy (\u2265 80%)"
+ ],
+ "seconds": 89,
+ "photos": 12,
+ "built": 48,
+ "sent": 12,
+ "sheet": "3 crops in extraction-test/results/t96/missed-people",
+ "detail": [
+  {
+   "host": "screenshots/phone/20261014-180424/photos/b17b226c247cee3d48ef7fca709045bdaeed14ad5c6e8792a0f3cd9862136771-photo.jpg",
+   "src": "02182c58daf61dc5c5c64bb112b1f826.jpg",
+   "status": "ok",
+   "reason": null,
+   "coveredExtra": 2,
+   "strangerGrey": [
+    1.0,
+    1.0
+   ],
+   "coverOnHim": [
+    0.009154194222067525,
+    0.009154194222067525
+   ]
+  },
+  {
+   "host": "screenshots/phone/20261014-180424/photos/d918c0325d8593bd45ce8cae8b5977a5286bbc31c94647a5ac1515d4145fe762-photo.jpg",
+   "src": "0b48b477aa4075c5489c5bfb0df35017.jpg",
+   "status": "ok",
+   "reason": null,
+   "coveredExtra": 2,
+   "strangerGrey": [
+    1.0,
+    1.0
+   ],
+   "coverOnHim": [
+    0.0003117021908211126,
+    0.0003117021908211126
+   ]
+  },
+  {
+   "host": "screenshots/phone/20261023-221517/photos/00c9ab4652ade133190cf885140d1b8bea819f6cd31ae18d98cee955b846bbbd-photo.jpg",
+   "src": "065fd62a332e15121c5f8713a5bc6bbc.jpg",
+   "status": "ok",
+   "reason": null,
+   "coveredExtra": 2,
+   "strangerGrey": [
+    1.0,
+    1.0
+   ],
+   "coverOnHim": [
+    0.011611793376977111,
+    0.011611793376977111
+   ]
+  },
+  {
+   "host": "screenshots/phone/20261014-180424/photos/403ade260c5ce82ba406a271de5651ac853c6264ba3971f05a192da36fcce726-photo.jpg",
+   "src": "1dfe4eb7f1f6a38b6871f0f166d1f4e4.jpg",
+   "status": "ok",
+   "reason": null,
+   "coveredExtra": 1,
+   "strangerGrey": [
+    0.29843670543462214,
+    0.30307260341719444
+   ],
+   "coverOnHim": [
+    0.003689037804176397,
+    0.003689037804176397
+   ]
+  },
+  {
+   "host": "screenshots/phone/20261014-180424/photos/0a864ea87372cfb3d6fe61a4e596531892fbb9646039ccb75fb3ba31760e55d9-photo.jpg",
+   "src": "1dfe4eb7f1f6a38b6871f0f166d1f4e4.jpg",
+   "status": "ok",
+   "reason": null,
+   "coveredExtra": 2,
+   "strangerGrey": [
+    0.006068526010525939,
+    0.005728417383443222
+   ],
+   "coverOnHim": [
+    0.011208958099577256,
+    0.011208958099577256
+   ]
+  },
+  {
+   "host": "screenshots/phone/20261014-180424/photos/8bc29df510c347b567670a567760d10e41dfa164486c4adf2e002eef95caf790-photo.jpg",
+   "src": "09a205e6a9500de4d5ec89446a3d9bf2.jpg",
+   "status": "ok",
+   "reason": null,
+   "coveredExtra": 2,
+   "strangerGrey": [
+    1.0,
+    1.0
+   ],
+   "coverOnHim": [
+    0.009025896288828682,
+    0.009025896288828682
+   ]
+  },
+  {
+   "host": "screenshots/phone/20261014-180424/photos/d6559a0a1884a223e8c6512531d1d8c69cd902556d3baf7fe811e70dfaf08833-photo.jpg",
+   "src": "14918e2a402f109c12da34aa2a4fce45.jpg",
+   "status": "ok",
+   "reason": null,
+   "coveredExtra": 1,
+   "strangerGrey": [
+    1.0,
+    1.0
+   ],
+   "coverOnHim": [
+    0.001196507969333944,
+    0.001196507969333944
+   ]
+  },
+  {
+   "host": "screenshots/phone/20261023-221517/photos/a5ff951fbe7c7707a2789714761a70aede8cf1e193acb4582990c2cb935a8d19-photo.jpg",
+   "src": "00d5da56c02d426c4e4bf802b1888471.jpg",
+   "status": "ok",
+   "reason": null,
+   "coveredExtra": 2,
+   "strangerGrey": [
+    1.0,
+    1.0
+   ],
+   "coverOnHim": [
+    0.0035601997410763826,
+    0.0035601997410763826
+   ]
+  },
+  {
+   "host": "inputs/mirror-fit-check-1/m10/before_mirror.jpg",
+   "src": "004e9e21cd1aca568a8ffc77a54638ce.jpg",
+   "status": "ok",
+   "reason": null,
+   "coveredExtra": 1,
+   "strangerGrey": [
+    1.0,
+    1.0
+   ],
+   "coverOnHim": [
+    0.00012417269939031205,
+    0.00012417269939031205
+   ]
+  },
+  {
+   "host": "screenshots/phone/20261017-212744/photos/fd52eb43e6c418d7e3939899ad190adc97afa276be9d4fbe3277654deecf54eb-photo.jpg",
+   "src": "05df3749007ec999df0176b9db7c23e3.jpg",
+   "status": "ok",
+   "reason": null,
+   "coveredExtra": 0,
+   "strangerGrey": [
+    0.000501398638306856,
+    0.0004906740868182581
+   ],
+   "coverOnHim": [
+    0.0008691674290942361,
+    0.0008691674290942361
+   ]
+  },
+  {
+   "host": "inputs/mirror-fit-check-1/m03/before_mirror.jpg",
+   "src": "12da876e7f7a7e754f0ffe635dfb79f0.jpg",
+   "status": "ok",
+   "reason": null,
+   "coveredExtra": 2,
+   "strangerGrey": [
+    1.0,
+    1.0
+   ],
+   "coverOnHim": [
+    0.03005130710969949,
+    0.03005130710969949
+   ]
+  },
+  {
+   "host": "screenshots/phone/20261014-180424/photos/9d3ef4120a83efbc6144c257253eceaa1d3c31a7aa6fb47ad26bfecca4de14f6-photo.jpg",
+   "src": "02182c58daf61dc5c5c64bb112b1f826.jpg",
+   "status": "ok",
+   "reason": null,
+   "coveredExtra": 2,
+   "strangerGrey": [
+    1.0,
+    1.0
+   ],
+   "coverOnHim": [
+    0.0008105884630274874,
+    0.0008105884630274874
+   ]
+  }
+ ]
+}

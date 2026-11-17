@@ -1,0 +1,25 @@
+{
+ "mode": "full",
+ "planted": null,
+ "fails": [],
+ "seconds": 2850,
+ "lines": [
+  "PASS F2.2 \u00b7 sweep logic",
+  "PASS F2.2 \u00b7 old sends purged",
+  "PASS F2.2 \u00b7 same photo",
+  "PASS F2.2 \u00b7 leak set",
+  "PASS F2.2 \u00b7 kmeasure copies",
+  "PASS F2.2 \u00b7 false refusals",
+  "PASS F2.2 \u00b7 time",
+  "PASS F2.2 \u00b7 built small faces",
+  "PASS F2.2 \u00b7 second mirror panel",
+  "PASS F2.2 \u00b7 missed people",
+  "PASS F2.2 \u00b7 held out and regression",
+  "PASS F2.2 \u00b7 no regression"
+ ],
+ "time (reported, not gated while the Mac has under 1 GB free)": [
+  "PASS F2.2 \u00b7 time"
+ ],
+ "minutes": 47,
+ "results": "extraction-test/results/t96s/t96-run"
+}

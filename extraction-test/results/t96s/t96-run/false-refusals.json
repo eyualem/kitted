@@ -1,0 +1,152 @@
+{
+ "mode": "full",
+ "fails": [],
+ "seconds": 0,
+ "photos": 342,
+ "newly_refused": [],
+ "totals": {
+  "sweptFaces": 19,
+  "otherHeads": 11,
+  "coveredExtra": 20
+ },
+ "photos_with": {
+  "sweptFaces": 16,
+  "otherHeads": 9,
+  "coveredExtra": 14
+ },
+ "cover_on_him_max": 0.113402670580594,
+ "body_newly_hidden_over_5pct": 1,
+ "body_newly_hidden_median": 0.0,
+ "sheets": [
+  "0 crops in extraction-test/results/t96/false-refusals",
+  "1 crops in extraction-test/results/t96/body-newly-hidden",
+  "0 crops in extraction-test/results/t96/picked"
+ ],
+ "picks": {
+  "screenshots/phone/20261014-180424/photos/1f1b29a09abde8891d6cda3ea2ea42e41c2e308ddce907e92c3c08a1970bd838-photo.jpg": [
+   {
+    "cand": 0,
+    "status": "ok",
+    "picked": 0,
+    "mainStatus": "ok",
+    "cover": [
+     1.0
+    ],
+    "leaks": [],
+    "errors": []
+   },
+   {
+    "cand": 1,
+    "status": "couldNotFrame",
+    "picked": null,
+    "mainStatus": "couldNotFrame"
+   }
+  ],
+  "screenshots/phone/20261014-180424/photos/602c13070fecc34fc5ae3117cdebdc457110b232597e1b29118a6b568020112d-photo.jpg": [
+   {
+    "cand": 0,
+    "status": "ok",
+    "picked": 0,
+    "mainStatus": "ok",
+    "cover": [
+     1.0
+    ],
+    "leaks": [],
+    "errors": []
+   },
+   {
+    "cand": 1,
+    "status": "couldNotFrame",
+    "picked": null,
+    "mainStatus": "couldNotFrame"
+   }
+  ],
+  "screenshots/phone/20261014-180424/photos/6bf3569758d4b7ff2fa3f6b806501c3162a8493ac096155f84396eead9e477c7-photo.jpg": [
+   {
+    "cand": 0,
+    "status": "ok",
+    "picked": 0,
+    "mainStatus": "ok",
+    "cover": [
+     1.0
+    ],
+    "leaks": [],
+    "errors": []
+   },
+   {
+    "cand": 1,
+    "status": "couldNotFrame",
+    "picked": null,
+    "mainStatus": "couldNotFrame"
+   }
+  ],
+  "screenshots/phone/20261014-180424/photos/729b223ae0c599d3e5f3aa07069a5611f4900897b5efeb5a55e468c0d1022344-photo.jpg": [
+   {
+    "cand": 0,
+    "status": "ok",
+    "picked": 0,
+    "mainStatus": "ok",
+    "cover": [
+     1.0
+    ],
+    "leaks": [],
+    "errors": []
+   },
+   {
+    "cand": 1,
+    "status": "couldNotFrame",
+    "picked": null,
+    "mainStatus": "couldNotFrame"
+   }
+  ],
+  "screenshots/phone/20261023-221517/photos/bee15a7e103de253cce730feda4f6b669ef5bbb5184e9763bf86f33ab23a4856-photo.jpg": [
+   {
+    "cand": 0,
+    "status": "ok",
+    "picked": 0,
+    "mainStatus": "ok",
+    "cover": [
+     1.0
+    ],
+    "leaks": [],
+    "errors": []
+   },
+   {
+    "cand": 1,
+    "status": "couldNotFrame",
+    "picked": null,
+    "mainStatus": "couldNotFrame"
+   }
+  ],
+  "inputs/ig/Screenshot 2026-10-12 at 1.46.01\u202fPM.png": [
+   {
+    "cand": 0,
+    "status": "ok",
+    "picked": 0,
+    "mainStatus": "ok",
+    "cover": [
+     1.0
+    ],
+    "leaks": [],
+    "errors": []
+   },
+   {
+    "cand": 1,
+    "status": "ok",
+    "picked": 1,
+    "mainStatus": "ok",
+    "cover": [
+     1.0
+    ],
+    "leaks": [],
+    "errors": []
+   }
+  ]
+ },
+ "pick_cores_not_hidden_by_kind (#475: unspotted and print measured, not failed)": {
+  "his": 0,
+  "spotted": 0,
+  "unspotted": 0,
+  "print": 0
+ }
+}

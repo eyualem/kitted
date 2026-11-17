@@ -1,0 +1,103 @@
+{
+ "mode": "full",
+ "planted": null,
+ "fails": [],
+ "seconds": 0,
+ "print stood in, no band, 3 head joints": {
+  "status": "ok",
+  "reason": null,
+  "hide": [
+   [
+    442.4,
+    124.76,
+    115.2,
+    136.79999999999998
+   ]
+  ],
+  "prints": [
+   [
+    450,
+    500,
+    80,
+    80
+   ]
+  ],
+  "shares": {
+   "core": 0.14429012345679013,
+   "jb": 0.15748375812093954,
+   "jb2": 0.15748375812093954,
+   "print": 1
+  }
+ },
+ "print stood in, no band, 2 head joints": {
+  "status": "ok",
+  "reason": null,
+  "hide": [
+   [
+    442.4,
+    104.76,
+    115.2,
+    136.79999999999998
+   ]
+  ],
+  "prints": [
+   [
+    450,
+    500,
+    80,
+    80
+   ]
+  ],
+  "shares": {
+   "core": 0.15354938271604937,
+   "jb": 0.28910544727636184,
+   "jb2": 0.1692903548225887,
+   "print": 1
+  }
+ },
+ "no band and no head joints (no head region: no zone)": {
+  "status": "ok",
+  "reason": null,
+  "hide": [
+   [
+    426,
+    456.4,
+    128,
+    152
+   ]
+  ],
+  "prints": [],
+  "shares": {
+   "core": 1,
+   "jb": 1,
+   "jb2": 1,
+   "print": 0.18625
+  }
+ },
+ "his own face also found above his shoulders": {
+  "status": "ok",
+  "reason": null,
+  "hide": [
+   [
+    436,
+    106.39999999999999,
+    128,
+    152
+   ]
+  ],
+  "prints": [
+   [
+    450,
+    500,
+    80,
+    80
+   ]
+  ],
+  "shares": {
+   "core": 0.15895061728395063,
+   "jb": 0.16141929035482258,
+   "jb2": 0.16141929035482258,
+   "print": 1
+  }
+ }
+}
