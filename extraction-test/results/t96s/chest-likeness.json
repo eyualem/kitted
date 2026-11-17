@@ -1,0 +1,258 @@
+{
+ "mode": "quick",
+ "planted": null,
+ "fails": [
+  "(instance mask) Screenshot 2026-10-12 at 1.45.52\u202fPM.png: another person's label claims 24% of the face box on his torso, yet it's listed as a print",
+  "(instance mask) Screenshot 2026-10-12 at 1.45.52\u202fPM.png: the face box another label claims is sent unhidden"
+ ],
+ "seconds": 31,
+ "photos": [
+  {
+   "file": "self-0.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261021-012550/photos/c994c2b8c10158b5060e98ed0698a8caa907124cb58488146f8823e1d72a929f-photo.jpg",
+   "scale": 0.522,
+   "px": 25.1,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-1.jpg",
+   "set": "self",
+   "host": "inputs/mirror-fit-check-1/m12/before_mirror.jpg",
+   "scale": 0.428,
+   "px": 14.4,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-2.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261008-162946/photos/0d39d642c5a03b6cd903be1edb18895e73ab1b174c36eda81b637efcaf99208c-photo.jpg",
+   "scale": 0.449,
+   "px": 24.2,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-3.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261017-212744/photos/23999fefa3d440ed4ba2124da1d8a810263110d3984d9721605afd9ecb014ed9-photo.jpg",
+   "scale": 0.465,
+   "px": 21.7,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-4.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261017-212744/photos/fd52eb43e6c418d7e3939899ad190adc97afa276be9d4fbe3277654deecf54eb-photo.jpg",
+   "scale": 0.375,
+   "px": 15.7,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-5.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261008-162946/photos/b0f0c8d84b93df08ba318706eda5ce27837a693f63d947f681930c153f813e97-photo.jpg",
+   "scale": 0.384,
+   "px": 23.5,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-0.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261021-012550/photos/c994c2b8c10158b5060e98ed0698a8caa907124cb58488146f8823e1d72a929f-photo.jpg",
+   "scale": 0.457,
+   "px": 7.7,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-1.jpg",
+   "set": "other",
+   "host": "inputs/mirror-fit-check-1/m12/before_mirror.jpg",
+   "scale": 0.456,
+   "px": 49.2,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": false
+  },
+  {
+   "file": "other-2.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261008-162946/photos/0d39d642c5a03b6cd903be1edb18895e73ab1b174c36eda81b637efcaf99208c-photo.jpg",
+   "scale": 0.492,
+   "px": 23.0,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-3.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261017-212744/photos/23999fefa3d440ed4ba2124da1d8a810263110d3984d9721605afd9ecb014ed9-photo.jpg",
+   "scale": 0.563,
+   "px": 23.6,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-4.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261017-212744/photos/fd52eb43e6c418d7e3939899ad190adc97afa276be9d4fbe3277654deecf54eb-photo.jpg",
+   "scale": 0.431,
+   "px": 26.3,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-5.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261008-162946/photos/b0f0c8d84b93df08ba318706eda5ce27837a693f63d947f681930c153f813e97-photo.jpg",
+   "scale": 0.403,
+   "px": 23.9,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  }
+ ],
+ "pinned instance-mask cases": [
+  {
+   "photo": "inputs/ig/Screenshot 2026-10-12 at 1.45.52\u202fPM.png",
+   "box": [
+    302.4,
+    667.1,
+    92.3,
+    92.3
+   ],
+   "otherLabelShare": 0.241,
+   "new": "ok/None",
+   "before": "ok/None",
+   "prints": [
+    [
+     0.2982248520710059,
+     0.4013838748495788,
+     0.09102564102564102,
+     0.05553549939831528
+    ]
+   ],
+   "verdicts": [
+    {
+     "copy": "upload",
+     "v": "leak",
+     "unchanged": 1.0,
+     "inside": 0.0
+    },
+    {
+     "copy": "detail",
+     "v": "leak",
+     "unchanged": 1.0,
+     "inside": 0.0
+    }
+   ]
+  }
+ ],
+ "claimed by another label (gated)": 0,
+ "left alone (reported)": {
+  "new": "7 of 12",
+  "before": "0 of 12",
+  "main": "11 of 12"
+ },
+ "left alone by set (reported)": {
+  "self": {
+   "new": 4,
+   "before": 0,
+   "main": 6
+  },
+  "other": {
+   "new": 3,
+   "before": 0,
+   "main": 5
+  }
+ },
+ "note": "none of the 12 built faces over his chest is claimed by another instance label (the mask gives the pasted figure his own label), so only the pinned real case reaches the instance-mask behaviour"
+}

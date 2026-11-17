@@ -99,6 +99,10 @@ T96S_EYE_NOT_FACES = {
 T96S_EYE_HAND_FACES = {
     f"inputs/ig/Screenshot 2026-10-12 at 1.44.25{NB}PM.png": [[319.3, 425.9, 33.5, 33.5]],   # his left fist with a ring
 }
+# #478: a real photo where Vision's instance mask gives another person's label to part of his torso band (found by a
+# scan of the normal and leak sets at the re-lock, Nov 17: the only one). The box is between his shoulders, on his
+# outline and clear of his head (isPrint true without the mask), with another label over 24% of it. Working pixels.
+INST_CASES = [(f"inputs/ig/Screenshot 2026-10-12 at 1.45.52{NB}PM.png", [302.4, 667.1, 92.3, 92.3])]
 HOSTS = ("his phone", "mirror-fit-check-1")
 
 # Round 3's counts on T96's lines that are red there ("not worse", TESTING.md → T96 still holds).
@@ -118,6 +122,8 @@ CHECKS = [
     ("recheck", "re-check and prints"),
     ("grey-square", "grey square on him"),
     ("not-applied", "where the rule doesn't apply"),
+    ("fallback-head", "his head box when a print stood in"),
+    ("chest-likeness", "someone over his chest"),
     ("t96", "T96 still holds"),
     ("same-photo", "same photo"),
 ]
@@ -241,6 +247,7 @@ func detector(_ spec: String, orig: CGImage?, calls: UnsafeMutablePointer<Int>) 
   }
   var fixed: CGRect?, P: CGRect?, B: CGRect?
   if name == "always" { fixed = box(Substring(arg)) }
+  if name == "unhid" { B = box(Substring(arg)) }
   if name == "pb" { let s = arg.split(separator: ";"); P = box(s[0]); B = box(s[1]) }
   let throwAt = Int(arg) ?? 0
   var origB: [UInt8]?
@@ -254,6 +261,11 @@ func detector(_ spec: String, orig: CGImage?, calls: UnsafeMutablePointer<Int>) 
     case "throwAt":
       if calls.pointee == throwAt { throw NSError(domain: "T96s stand-in detector", code: 7) }
       return []
+    case "unhid":
+      // sees B on every tile that holds it while B's pixels are unchanged from the original
+      guard let B, let origB, r.contains(B), let c = image.cropping(to: B) else { return [] }
+      let share = unchangedShare(origB, rgba(c), w: c.width, h: c.height, CGRect(x: 0, y: 0, width: c.width, height: c.height))
+      return share > 0.5 ? [Prep.Face(box: B, confidence: 0.9)] : []
     case "pb":
       var out: [Prep.Face] = []
       if r.contains(P!) { out.append(Prep.Face(box: P!, confidence: 0.9)) }
@@ -449,7 +461,7 @@ case "prep":
       do {
         #if R3
         let spec = (j["detector"] as? String) ?? "real"
-        let orig = spec.hasPrefix("pb:") ? load(path).image : nil
+        let orig = (spec.hasPrefix("pb:") || spec.hasPrefix("unhid:")) ? load(path).image : nil
         let r = try withUnsafeMutablePointer(to: &calls) { c in
           try Prep.run(uri: path, kind: kindOf(j), pick: nums(j["pick"]), detect: detector(spec, orig: orig, calls: c))
         }
@@ -461,6 +473,27 @@ case "prep":
       row["_photo"] = path
       row["_calls"] = calls
       emit(row)
+    }
+  }
+
+case "instances":
+  // [{photo, boxes}]: Prep.personInstances on the working image (what the sweep runs), his label (the most pixels in
+  // locate's main box inset 10% / 5%, as missedPeople and isPrint read it), and per box each label's share of it.
+  for j in jobs(args[2]) {
+    autoreleasepool {
+      let path = j["photo"] as! String
+      guard let img = load(path).image else { emit(["photo": path, "error": "unreadable"]); return }
+      let W = CGFloat(img.width), H = CGFloat(img.height)
+      let f = Prep.locate(img)
+      guard let main = f.main, let inst = Prep.personInstances(img) else { emit(["photo": path, "inst": NSNull()]); return }
+      let his = inst.counts(main.insetBy(dx: main.width * 0.1, dy: main.height * 0.05), W: W, H: H).labels.max(by: { $0.value < $1.value })?.key
+      let rows: [[String: Double]] = ((j["boxes"] as? [Any]) ?? []).compactMap(rect).map { b in
+        let c = inst.counts(b, W: W, H: H)
+        var o: [String: Double] = [:]
+        for (k, v) in c.labels { o[String(k)] = Double(v) / Double(max(1, c.all)) }
+        return o
+      }
+      emit(["photo": path, "his": his.map { Int($0) } ?? -1, "boxes": rows, "status": f.status])
     }
   }
 
@@ -503,6 +536,38 @@ case "zone":
             "faces": f.faces.map(r4), "headBand": f.headBand.map(r4) ?? NSNull(), "fallbackHead": f.fallbackHead.map(r4) ?? NSNull(),
             "headPoints": f.headPoints.map { [Double($0.x), Double($0.y)] }, "torsoJoints": f.torsoJoints.mapValues { [Double($0.x), Double($0.y)] },
             "outlineNil": f.outline == nil])
+    }
+  }
+
+case "sweepunit":
+  // [{name, W, H, seed, found, detector, measure: {name: rect}}]: Prep.sweep on a seeded noise image (4 px blocks) with a
+  // hand-built Located and a stand-in detector; what it hid and printed, and each measured rect's unchanged share.
+  for j in jobs(args[2]) {
+    autoreleasepool {
+      let w = Int(num(j["W"])!), h = Int(num(j["H"])!)
+      var state = UInt64(num(j["seed"]) ?? 1) &* 6364136223846793005 &+ 1442695040888963407
+      var px = [UInt8](repeating: 255, count: w * h * 4)
+      for by in stride(from: 0, to: h, by: 4) { for bx in stride(from: 0, to: w, by: 4) {
+        state = state &* 6364136223846793005 &+ 1442695040888963407
+        let r = UInt8((state >> 33) & 255), g = UInt8((state >> 41) & 255), b = UInt8((state >> 49) & 255)
+        for y in by..<min(h, by + 4) { for x in bx..<min(w, bx + 4) { let i = (y * w + x) * 4; px[i] = r; px[i + 1] = g; px[i + 2] = b } }
+      } }
+      let provider = CGDataProvider(data: Data(px) as CFData)!
+      let img = CGImage(width: w, height: h, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: w * 4, space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                        bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue), provider: provider, decode: nil,
+                        shouldInterpolate: false, intent: .defaultIntent)!
+      let f = handLocated(j["found"] as! [String: Any], W: CGFloat(w), H: CGFloat(h))
+      var calls = 0
+      let s = withUnsafeMutablePointer(to: &calls) { c in
+        Prep.sweep(img, found: f, kind: .fit, detect: detector((j["detector"] as? String) ?? "none", orig: img, calls: c))
+      }
+      var shares: [String: Double] = [:]
+      if let si = s.image {
+        let a = rgba(img), b = rgba(si)
+        for (k, v) in (j["measure"] as? [String: Any]) ?? [:] { if let r = rect(v) { shares[k] = unchangedShare(a, b, w: w, h: h, r) } }
+      }
+      emit(["name": j["name"] as! String, "status": s.status, "reason": s.reason ?? NSNull(), "hide": s.hide.map(r4), "prints": s.prints.map(r4),
+            "shares": shares, "imageNil": s.image == nil])
     }
   }
 
@@ -1020,6 +1085,235 @@ def check_logic(ctx):
         fails.append(f"(1) tilted shoulders: torso starts at y {tilt['torso'][1]}, expected 560 (the lower shoulder)")
     rep["cases"] = rows
     return fails, rep
+
+
+# ---------------------------------------------------------------- F2.2 · his head box when a print stood in (#478, verifier test 1)
+CUT = [300, 0, 400, 1900]            # his box, his outline running off the top edge: no head band
+CUT_TORSO = {"neck": [500, 320], "lShoulder": [380, 340], "rShoulder": [620, 340], "lHip": [420, 900], "rHip": [580, 900]}
+CUT_PTS = [[470, 180], [530, 180], [500, 220]]
+CUT_PRINT = [450, 500, 80, 80]
+
+
+def cut_found(points=None, faces=None, fallback="auto"):
+    """A Located as locate fills it when his head is cut at the top edge (no band) and a print on his chest is the only
+    whole-photo face: locate took the print for his face, so it drew no head box from his joints (hide = the faces'
+    head boxes only), while fallbackHead holds the head-joint box it would have drawn."""
+    pts = CUT_PTS if points is None else points
+    faces = [CUT_PRINT] if faces is None else faces
+    fb = joint_box(pts, CUT) if fallback == "auto" else fallback
+    if fallback == "auto" and fb is None:
+        fb = shoulder_box(CUT_TORSO)
+    return {"status": "ok", "main": CUT, "hide": [headbox(f) for f in faces], "joints": dict(CUT_TORSO), "torsoJoints": dict(CUT_TORSO),
+            "faces": faces, "headBand": None, "headPoints": pts, "fallbackHead": fb, "otherHeads": [],
+            "mask": {"w": 1000, "h": 2000, "fill": [CUT], "empty": []}}
+
+
+def check_fallback_head(ctx):
+    """A sweep unit (stand-in detector `none`, a seeded noise image, hand-built Located): with no head band, the head-joint
+    box must replace the print's head box in Swept.hide and blur his head in the copy, and the print is left alone.
+    Controls: with no head joints there's no zone, so the print stays hidden; with his own face also found, his face's
+    head box stays."""
+    fails, rep_ = [], {}
+    jb = joint_box(CUT_PTS, CUT)                         # [442.4, 124.76, 115.2, 136.8]
+    core = [464, 164, 72, 72]                            # the square his head points span, the face inside jb
+    his_face = [460, 150, 80, 80]
+    cases = [
+        ("print stood in, no band, 3 head joints", cut_found()),
+        ("print stood in, no band, 2 head joints", cut_found(points=CUT_PTS[:2])),
+        ("no band and no head joints (no head region: no zone)", cut_found(points=[])),
+        ("his own face also found above his shoulders", cut_found(faces=[his_face, CUT_PRINT])),
+    ]
+    measure = {"core": core, "print": CUT_PRINT, "jb": jb}
+    jobs = [{"name": n, "W": 1000, "H": 2000, "seed": 478 + i, "found": f, "detector": "none",
+             "measure": dict(measure, jb2=joint_box(f["headPoints"], CUT) or core)} for i, (n, f) in enumerate(cases)]
+    try:
+        rows = ctx.new.call("sweepunit", jobs)
+    except Crash as e:
+        return [f"(unit) {e}"], {}
+    for (n, f), r in zip(cases, rows):
+        rep_[n] = {k: r.get(k) for k in ("status", "reason", "hide", "prints", "shares")}
+        if r.get("status") != "ok":
+            fails.append(f"{n}: {r.get('status')}/{r.get('reason')}, expected ok")
+            continue
+        hide, pr, sh = r["hide"], r["prints"], r["shares"]
+        has = lambda x: any(same_rect(x, h, 0.5) for h in hide)
+        if n.startswith("print stood in"):
+            fb = f["fallbackHead"]
+            if not has(fb):
+                fails.append(f"{n}: Swept.hide lacks his head-joint box {[round(v, 1) for v in fb]}: nothing hides his face")
+            if has(headbox(CUT_PRINT)):
+                fails.append(f"{n}: the print's head box is still in Swept.hide")
+            if not any(iou(x, CUT_PRINT) >= 0.5 for x in pr):
+                fails.append(f"{n}: prints {pr} doesn't hold the print")
+            if sh.get("jb2", 1) > T:
+                fails.append(f"{n}: his head (the head-joint square) is {sh.get('jb2'):.2f} unchanged in the copy (≤ T {T})")
+            if sh.get("print", 0) < 0.9:
+                fails.append(f"{n}: the print is {sh.get('print'):.2f} unchanged (≥ 0.90: left alone)")
+        elif n.startswith("no band and no head joints"):
+            if pr:
+                fails.append(f"{n}: prints {pr}: with no head region nothing is a print")
+            if not has(headbox(CUT_PRINT)) or sh.get("print", 1) > T:
+                fails.append(f"{n}: the print isn't hidden as today (in hide {has(headbox(CUT_PRINT))}, unchanged {sh.get('print')})")
+        else:
+            if not has(headbox(his_face)):
+                fails.append(f"{n}: his own face's head box left Swept.hide")
+            if sh.get("core", 1) > T:
+                fails.append(f"{n}: his face is {sh.get('core'):.2f} unchanged (≤ T {T})")
+            if not any(iou(x, CUT_PRINT) >= 0.5 for x in pr):
+                fails.append(f"{n}: prints {pr} doesn't hold the print")
+    return fails, rep_
+
+
+# ---------------------------------------------------------------- F2.2 · someone over his chest (#478: rule 7 with the instance mask in the sweep)
+def make_reflections(ctx):
+    """Two built sets, both a person over his chest whose face lands between his shoulders, 25–45% of the way from
+    shoulder to hip:
+      "self": the verifier's set (round 1, rebuilt with its seed): the whole of him, cut by main's outline, flipped and
+              scaled 0.35–0.55 (his own smaller reflection);
+      "other": the same with another host's figure (a second person leaning over his chest), scaled 0.4–0.6.
+    12 each (6 in --quick). Each: the file, the pasted face core (working pixels), his host, the set."""
+    if getattr(ctx, "refl", None) is not None:
+        return ctx.refl
+    n = 12 if ctx.full else 6
+    hosts = ensure_hosts(ctx, n + 1)
+    out = []
+
+    def cut(h):
+        orig = rgb(h["png"])
+        m = outline_arr(h)
+        mine = sorted(h["mine"], key=lambda c: -c[2] * c[3])
+        if not mine:
+            return None
+        ys, xs = np.where(m)
+        x0, x1, y0, y1 = xs.min(), xs.max() + 1, ys.min(), ys.max() + 1
+        return orig, m, mine[0], (x0, x1, y0, y1)
+
+    for kind, seed, lo, hi in (("self", 4242, 0.35, 0.55), ("other", SEED + 9, 0.4, 0.6)):
+        rng = random.Random(seed)
+        for i, h in enumerate(hosts[:n]):
+            src_h = h if kind == "self" else hosts[(i + 1) % len(hosts)]
+            c = cut(src_h)
+            if c is None:
+                continue
+            sorig, m, core, (x0, x1, y0, y1) = c
+            base = rgb(h["png"])
+            crop, alpha = sorig[y0:y1, x0:x1], (m[y0:y1, x0:x1] * 255).astype(np.uint8)
+            cw = x1 - x0
+            if kind == "self":
+                crop, alpha = crop[:, ::-1], alpha[:, ::-1]
+                cx_c = cw - (core[0] + core[2] / 2 - x0)
+            else:
+                cx_c = core[0] + core[2] / 2 - x0
+            cy_c = core[1] + core[3] / 2 - y0
+            j = h["joints"]
+            ls, rs = j["lShoulder"], j["rShoulder"]
+            sh, hip = max(ls[1], rs[1]), min(j["lHip"][1], j["rHip"][1])
+            sc = rng.uniform(lo, hi)
+            tx = (ls[0] + rs[0]) / 2 + rng.uniform(-0.1, 0.1) * abs(ls[0] - rs[0])
+            ty = sh + rng.uniform(0.25, 0.45) * (hip - sh)
+            pw, ph = max(1, int(cw * sc)), max(1, int((y1 - y0) * sc))
+            im = Image.fromarray(np.ascontiguousarray(crop)).resize((pw, ph), Image.LANCZOS)
+            am = Image.fromarray(np.ascontiguousarray(alpha)).resize((pw, ph), Image.NEAREST)
+            px, py = tx - cx_c * sc, ty - cy_c * sc
+            canvas = Image.fromarray(base.copy())
+            canvas.paste(im, (int(round(px)), int(round(py))), am)
+            rcore = [px + (cx_c - core[2] / 2) * sc, py + (cy_c - core[3] / 2) * sc, core[2] * sc, core[3] * sc]
+            fp = ctx.built_dir() / f"{kind}-{i}.jpg"
+            canvas.save(fp, quality=95)
+            out.append({"file": str(fp), "core": rcore, "host": h, "scale": round(sc, 3), "set": kind})
+    ctx.refl = out
+    return out
+
+
+def check_chest_likeness(ctx):
+    """Gate: a face over his chest that another instance label claims (> 10% of it, Prep.personInstances on main's
+    build, his label the most pixels in his box) is never a print: with the real detector it's not in `prints`; with a
+    stand-in detector that sees it until it's hidden (`unhid`) it ends hidden by T96's rule or the photo is refused.
+    Reported, not gated: how many pasted faces each build leaves alone (the detectors may not reach them)."""
+    fails, rep_ = [], {"photos": []}
+    try:
+        R = make_reflections(ctx)
+        files = [x["file"] for x in R]
+        rn = ctx.prep("new", files)
+        rb = ctx.prep("before", files)
+        rm = ctx.prep("main", files)
+        inst = {x["file"]: r for x, r in zip(R, ctx.main.call("instances", [{"photo": x["file"], "boxes": [grow(x["core"], 0.15)]} for x in R]))}
+    except Crash as e:
+        return [str(e)], {}
+    claimed = 0
+    counts = {"new": 0, "before": 0, "main": 0}
+    for x in R:
+        orig = rgb(x["file"])
+        F = grow(x["core"], 0.15)
+        iv = inst[x["file"]]
+        his = iv.get("his")
+        shares = (iv.get("boxes") or [{}])[0] if iv.get("inst", True) is not None else {}
+        other = max([v for k, v in shares.items() if int(k) != his] or [0])
+        rec = {"file": Path(x["file"]).name, "set": x["set"], "host": no_kit(x["host"]["photo"]), "scale": x["scale"], "px": round(x["core"][3] * up_scale(orig.shape[1], orig.shape[0]), 1),
+               "otherLabelShare": round(other, 3), "status": {}}
+        for b, rr in (("new", rn), ("before", rb), ("main", rm)):
+            r = rr[x["file"]]
+            rec["status"][b] = f"{r.get('status')}/{r.get('reason')}"
+            if r.get("status") == "ok":
+                al, _ = alone(r, "fit", orig, x["core"])
+                la = bool(al and all(a["ok"] for a in al))
+                counts[b] += la
+                rec[f"{b} left alone"] = la
+        if other > 0.1:
+            claimed += 1
+            r = rn[x["file"]]
+            if r.get("status") == "ok" and any(overlaps(p_, x["core"]) for p_ in prints_of(r)):
+                fails.append(f"{rec['file']}: another person's label claims {other:.0%} of the face over his chest, yet `prints` lists it")
+            try:
+                u = ctx.new.call("prep", [{"photo": x["file"], "root": fresh_root(ctx.scratch()), "detector": "unhid:" + ",".join(f"{v:.3f}" for v in F)}])[0]
+            except Crash as e:
+                fails.append(f"{rec['file']}: {e}")
+                continue
+            rec["unhid"] = f"{u.get('status')}/{u.get('reason')}"
+            if u.get("status") == "ok":
+                if any(overlaps(p_, F) for p_ in prints_of(u)):
+                    fails.append(f"{rec['file']}: claimed by another label ({other:.0%}), the stand-in face is listed as a print")
+                ok, vs, errs = hidden_all(u, "fit", orig, [x["core"]], names={"upload", "detail"})
+                if not ok:
+                    fails.append(f"{rec['file']}: claimed by another label ({other:.0%}), the face is sent unhidden")
+        rep_["photos"].append(rec)
+    # The pinned real case: a stand-in face there, seen until it's hidden. The instance mask claims it, so it's no print:
+    # it must end hidden by T96's rule (or the photo refused), and never in `prints`.
+    pinned = []
+    for rel, box in INST_CASES:
+        p = K(rel)
+        try:
+            iv = ctx.main.call("instances", [{"photo": p, "boxes": [box]}])[0]
+            sh_ = (iv.get("boxes") or [{}])[0]
+            other = max([v for k, v in sh_.items() if int(k) != iv.get("his")] or [0])
+            u = ctx.new.call("prep", [{"photo": p, "root": fresh_root(ctx.scratch()), "detector": "unhid:" + ",".join(f"{v:.3f}" for v in box)}])[0]
+            ub = ctx.before.call("prep", [{"photo": p, "root": fresh_root(ctx.scratch()), "detector": "unhid:" + ",".join(f"{v:.3f}" for v in box)}])[0]
+        except Crash as e:
+            fails.append(f"(instance mask) {e}")
+            continue
+        rec = {"photo": no_kit(p), "box": box, "otherLabelShare": round(other, 3), "new": f"{u.get('status')}/{u.get('reason')}",
+               "before": f"{ub.get('status')}/{ub.get('reason')}"}
+        if other <= 0.1:
+            fails.append(f"(instance mask setup) {Path(p).name}: another label covers {other:.0%} of the box, not over 10%")
+        elif u.get("status") == "ok":
+            orig = rgb(ctx.truth([p], mp=False, grids=(1,))[p]["png"])
+            rec["prints"] = u.get("prints")
+            if any(overlaps(p_, box) for p_ in prints_of(u)):
+                fails.append(f"(instance mask) {Path(p).name}: another person's label claims {other:.0%} of the face box on his torso, yet it's listed as a print")
+            ok, vs, errs = hidden_all(u, "fit", orig, [box], names={"upload", "detail"})
+            rec["verdicts"] = [{k: v.get(k) for k in ("copy", "v", "unchanged", "inside")} for v in vs]
+            if not ok:
+                fails.append(f"(instance mask) {Path(p).name}: the face box another label claims is sent unhidden")
+        pinned.append(rec)
+    rep_["pinned instance-mask cases"] = pinned
+    rep_["claimed by another label (gated)"] = claimed
+    rep_["left alone (reported)"] = {b: f"{v} of {len(R)}" for b, v in counts.items()}
+    rep_["left alone by set (reported)"] = {st: {b: sum(1 for r in rep_["photos"] if r["set"] == st and r.get(f"{b} left alone")) for b in ("new", "before", "main")}
+                                            for st in ("self", "other")}
+    if not claimed:
+        rep_["note"] = (f"none of the {len(R)} built faces over his chest is claimed by another instance label (the mask gives the pasted "
+                        "figure his own label), so only the pinned real case reaches the instance-mask behaviour")
+    return fails, rep_
 
 
 # ---------------------------------------------------------------- shared: the real photos through three builds
@@ -2223,7 +2517,7 @@ def check_same_photo(ctx):
 # ---------------------------------------------------------------- main
 FUNCS = {"logic": check_logic, "real-prints": check_real_prints, "pose-lies": check_pose_lies, "strangers": check_strangers,
          "built-prints": check_built, "recheck": check_recheck, "grey-square": check_grey_square, "not-applied": check_not_applied,
-         "t96": check_t96, "same-photo": check_same_photo}
+         "t96": check_t96, "same-photo": check_same_photo, "fallback-head": check_fallback_head, "chest-likeness": check_chest_likeness}
 
 
 def main():

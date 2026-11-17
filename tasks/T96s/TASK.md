@@ -250,3 +250,15 @@ No constant from IMPLEMENTATION.md was changed.
 - **His own graphic tees:** none of his phone checks has one. Would verify it: the founder's to-do, 3–5 mirror checks in a tee or hoodie with a face on it, one in front of a second mirror panel.
 - **The planted fallback-head bug at `--full`:** run at `--quick` only. `--full` uses the same band-only hosts, so it can't reach the case either (test 1).
 - **Whether the instance mask would have caught the reflection cases:** limit 1.
+
+**T96s test writer on round 1's test gaps (Nov 17, DECISIONS-LOG #478).** Two lines added; nothing loosened.
+- **Test 1, his head box when a print stood in:** new line `F2.2 · his head box when a print stood in`.
+  - What it is: a `Prep.sweep` unit, stand-in detector `none`, on a seeded noise image with a hand-built `Located`. His outline runs off the top edge (no band), 2–3 head joints show, and the print is the only whole-photo face.
+  - Expect: his head-joint box in `Swept.hide` and blurred (≤ T), the print left alone. Two controls: with no head joints there's no zone and the print stays hidden; with his own face also found, that face's box stays.
+  - Passes on the build at `56f8355f`. **Bites:** with `hide0.append(fb)` removed, `… Swept.hide lacks his head-joint box [442.4, 124.8, 115.2, 136.8]: nothing hides his face` (+3).
+  - Not added: built (L) on a host cut at the top edge. The unit reaches the case directly.
+- **Test 2, rule 7 with the instance mask in the sweep:** new line `F2.2 · someone over his chest`.
+  - **Gate:** a pinned real case, `ig … 1.45.52 PM`. The instance mask gives another person's label 24% of a face-sized box on his torso that passes rules 4–6. A stand-in face there must not be a print and must end hidden.
+  - **Red on `56f8355f`:** listed as a print and sent unhidden (unchanged 1.0). A scratch copy with `personInstances` passed to rule 7 in the sweep passes it (covered grey). That copy also still passes real prints and built prints at `--quick`, so #478's condition holds there.
+  - **The verifier's set, rebuilt with its seed, plus a second-person variant: reported, not gated.** On all 12 built faces the instance mask merges the pasted figure into his own label. So the mask can't claim them: `56f8355f` leaves 4 of 6 and 3 of 6 alone, and the copy with the mask leaves exactly the same. This answers the verifier's limit 1: the mask wouldn't have caught those cases. They stay the accepted risk (#474), now measured.
+  - **Not testable as asked:** a built "second person over his chest" whose face the mask labels separately. No paste I tried got its own label, and the normal and leak sets hold only the one real case above.

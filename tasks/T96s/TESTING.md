@@ -178,6 +178,31 @@ Written by the session; tests written and locked by the test writer. The task's 
 - **F2.2** · Same photo, same copy · how: Mac harness · test: `print_faces_test.py` › `F2.2 · same photo` · expect: P1, P2, P3, S1 and 4 built (a) photos, each prepped twice into fresh roots: identical `sha256`, upload, detail and close-up bytes; identical result keys and values except the `*Ms` timings; identical `prints` · must not: a sent copy or a print verdict that changes between two preps · red: passes on the round-3 build; bites via a jittered `printMinOnOutline` (0.9 ± random 0.05)
   - **Added:** an ok result must carry `printsKept` and `prints` (Interfaces), so with the stubs it's red: `12 at 2.05.18 PM: run's result has no prints/printsKept keys`.
   - **Found at lock:** the jitter plant does **not** bite this line. The real and built prints sit far from the 0.9 line (about 1.0 on his outline). The logic line's (6) bites it (about 92% on the outline, asked twice in two processes). The reference build passes here.
+- **F2.2** · His head box when a print stood in for his face *(added Nov 17 for the verifier's round 1, test 1; DECISIONS-LOG #478)* · how: unit, Swift driver (`sweepunit`), `Prep.sweep` with the stand-in detector `none` on a seeded noise image (4 px blocks, 1000×2000) and a hand-built `Located`.
+  - His box [300, 0, 400, 1900] runs off the top edge, so there's no head band. Neck (500, 320), shoulders (380, 340) and (620, 340), hips (420, 900) and (580, 900), the outline filling his box.
+  - The print [450, 500, 80, 80] is `locate`'s only whole-photo face, so `hide` = its head box only. `locate` took it for his face and drew no box from his joints. `fallbackHead` is his head-joint box.
+  - test: `print_faces_test.py` › `F2.2 · his head box when a print stood in` · expect:
+  - (1) With head points (470, 180), (530, 180), (500, 220), and again with the first two only: status ok; `Swept.hide` holds his head-joint box ([442.4, 124.76, 115.2, 136.8] with three points) and not the print's head box; `prints` holds the print; the square his head points span is ≤ T unchanged in the copy (blurred); the print ≥ 0.90 unchanged (left alone).
+  - (2) Control: no head points, so no head region and no zone. Nothing is a print, and the print's head box stays hidden (≤ T unchanged).
+  - (3) Control: his own face [460, 150, 80, 80] also found above his shoulders. Its head box stays in `hide` and his face is ≤ T unchanged; the print is left alone.
+  - must not: his face sent with no box over it because a print stood in for it · edges: two head joints (the minimum for a head-joint box); no band
+  - Built (L) on a host cut at the top edge wasn't added: the unit reaches the case directly and bites, and memory was tight. The sweep's image is the copy the upload, detail and close-ups are cut from.
+  - **red:** passes on the build at `56f8355f` (the line exists there). **Bites:** with `if stoodIn, let fb = found.fallbackHead { hide0.append(fb) }` removed (a scratch copy, `--new-from`): `FAIL … print stood in, no band, 3 head joints: Swept.hide lacks his head-joint box [442.4, 124.8, 115.2, 136.8]: nothing hides his face` (+3 more).
+- **F2.2** · Someone over his chest: a face another instance label claims is never a print *(added Nov 17, DECISIONS-LOG #478: rule 7 in the sweep uses the instance mask)* · how: Mac harness, `Prep.run` (fit).
+  - **Gated, the pinned real case** (`INST_CASES`): `ig … 1.45.52 PM`, box [302.4, 667.1, 92.3, 92.3] (working pixels).
+    - It's on his torso between his shoulders, on his outline and clear of his head, so `isPrint` is true without the mask. Vision's instance mask (`Prep.personInstances`, main's build, his label = the most pixels in his box) gives another label 24% of it.
+    - A scan of the normal and leak sets at the re-lock found only this photo. The other label is a person behind his arm spilling onto his torso.
+    - A stand-in detector `unhid` sees the box until its pixels are hidden. Expect: the box is not in `prints`, and it ends hidden by T96's rule in the upload and detail copy (or the photo is refused). The line fails its setup if the other label stops covering more than 10% of it.
+  - **Built, the verifier's set rebuilt** (`make_reflections`). "self": the whole of him, cut by main's outline, flipped and scaled 0.35–0.55, with seed 4242. "other": another host's figure, scaled 0.4–0.6. Each is pasted so the face lands between his shoulders, 25–45% of the way to his hips; 12 each (`--quick` 6).
+    - Gated only where another instance label claims over 10% of the pasted face: then it's not in `prints` (real detector), and with `unhid` it ends hidden or refused.
+    - How many each build leaves alone is reported, not gated: the detectors can't separate a figure the instance mask merges with him.
+  - test: `print_faces_test.py` › `F2.2 · someone over his chest` · must not: a face the instance mask gives to another person left alone as a print · edges: the instance mask merging the pasted figure with him (no gate)
+  - **Found at the re-lock (`--quick`):**
+    - On all 12 built faces (6 self, 6 other), the instance mask gives the pasted figure **his own label** (one label in the photo), so no built case is claimed.
+    - Left alone: on the build at `56f8355f` 4 of 6 self and 3 of 6 other; round 3 none; main 6 and 5.
+    - A scratch copy of that build with the mask passed to rule 7 in the sweep leaves the same 4 and 3 alone. The mask wouldn't have caught the verifier's reflection cases; this remains the accepted risk (#474, founder 4), now measured.
+  - **red** (the build at `56f8355f`, no mask in the sweep): `FAIL F2.2 · someone over his chest: (instance mask) Screenshot 2026-10-12 at 1.45.52 PM.png: another person's label claims 24% of the face box on his torso, yet it's listed as a print`, and it's sent unhidden (upload "leak", unchanged 1.0).
+  - The scratch copy with the mask passes (the box covered grey in both copies).
 - **F2.2** · Nothing else breaks · how: existing checks · test: `npm run check` in `app/` · expect: green, no test file changed (no JS or TS change in this task) · must not: an existing test edited · red: n/a
 
 ## Edges from the spec's failure table
