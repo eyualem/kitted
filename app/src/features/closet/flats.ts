@@ -74,21 +74,24 @@ export interface ShoeFlat extends FlatBase {
   canvas?: boolean;
 }
 
-export type FlatSpec = TopFlat | BottomFlat | ShoeFlat;
-
-// T101 stubs (tests written first): the accessory types and metal tones; the implementer fills the values in and
-// adds AccessoryFlat to FlatSpec.
 export type AccessoryType = 'watch' | 'belt' | 'cap' | 'beanie';
 export type WatchMetal = 'gold' | 'silver' | 'black';
-export const WATCH_METALS: readonly WatchMetal[] = [];
-export const METAL_HEX = {} as Readonly<Record<WatchMetal, string>>;
+export const WATCH_METALS: readonly WatchMetal[] = ['gold', 'silver', 'black'];
+/** The case (and bracelet) fill for each tone. The drawing fills the case with exactly this hex. */
+export const METAL_HEX: Readonly<Record<WatchMetal, string>> = { gold: '#C9A44C', silver: '#C5C9CF', black: '#2A2D34' };
+
 export interface AccessoryFlat extends FlatBase {
   kind: 'accessory';
   type: AccessoryType;
+  /** Watch only: the case's tone (and the bracelet's). Unset draws silver. Ignored on a belt, cap or beanie. */
   metal?: WatchMetal;
+  /** Watch only: a metal bracelet in `metal`'s tone instead of a strap in `color`. */
   bracelet?: boolean;
+  /** Watch only: 'digital' draws a dark display with lit digits (no text element); unset draws an analog dial. */
   face?: 'analog' | 'digital';
 }
+
+export type FlatSpec = TopFlat | BottomFlat | ShoeFlat | AccessoryFlat;
 
 // ---------------------------------------------------------------- color helpers
 const clamp = (v: number) => Math.max(0, Math.min(255, v));
@@ -792,6 +795,200 @@ function shoe(s: ShoeFlat, ctx: Ctx): string {
   return out;
 }
 
+
+// ======================================================================== ACCESSORIES (T101)
+// A watch, a belt, a cap and a beanie, drawn like the other flats: the same ground shadow, edge, fold and halo rules, the
+// piece's color as a plain fill (strap, leather, cloth), never a brand word or any text. Added as their own functions;
+// the top, bottom and shoe drawings above are untouched.
+const rectD = (x: number, y: number, w: number, h: number) => `M${f(x)},${f(y)} h${f(w)} v${f(h)} h${f(-w)} Z`;
+
+/** The ground shadow: an offset silhouette (no blur, so it maps 1:1 to react-native-svg). */
+function groundShadow(ctx: Ctx, paths: string[]): string {
+  return `<g transform="translate(1,2.5)" fill="#000" opacity="${ctx.scheme === 'dark' ? 0.2 : 0.07}">${paths.map((d) => `<path d="${d}"/>`).join('')}</g>`;
+}
+
+/** A lit seven-segment digit at (x, y), 8 wide and 14 tall: the segments named in `on`, as one path. */
+function segments(x: number, y: number, on: string): string {
+  const w = 8;
+  const h = 14;
+  const m = h / 2;
+  const seg: Record<string, string> = {
+    a: `M${x + 1},${y} H${x + w - 1}`, b: `M${x + w},${y + 1} V${y + m - 1}`, c: `M${x + w},${y + m + 1} V${y + h - 1}`,
+    d: `M${x + 1},${y + h} H${x + w - 1}`, e: `M${x},${y + m + 1} V${y + h - 1}`, g: `M${x + 1},${y + m} H${x + w - 1}`,
+    f: `M${x},${y + 1} V${y + m - 1}`,
+  };
+  return on.split('').map((k) => seg[k]).join(' ');
+}
+
+function watch(s: AccessoryFlat, ctx: Ctx): string {
+  const { id } = ctx;
+  const c = s.color;
+  const metal = METAL_HEX[s.metal ?? 'silver'] ?? METAL_HEX.silver;
+  const strapC = s.bracelet ? metal : c;
+  const edge = edgeFor(strapC, ctx.scheme);
+  const metalEdge = edgeFor(metal, ctx.scheme);
+  const cx = 100;
+  const cy = 100;
+  const topStrap = 'M79,14 Q79,6 87,6 L113,6 Q121,6 121,14 L126,66 L74,66 Z';
+  const botStrap = 'M74,134 L126,134 L121,186 Q121,194 113,194 L87,194 Q79,194 79,186 Z';
+  const caseD = `M${cx - 38},${cy} a38,38 0 1,0 76,0 a38,38 0 1,0 -76,0 Z`;
+  let out = groundShadow(ctx, [topStrap, botStrap, caseD]);
+  out += halo(ctx, strapC, [topStrap, botStrap]) + halo(ctx, metal, [caseD]);
+
+  // the crown, behind the case
+  out += `<rect x="134" y="92" width="11" height="16" rx="3" fill="${mix(metal, -0.12)}" stroke="${metalEdge}" stroke-width="1"/><path d="M138,94 V106 M141,94 V106" stroke="#000" stroke-opacity=".22" stroke-width=".8"/>`;
+
+  if (s.bracelet) {
+    // linked segments in the metal's tone
+    const link = (x: number, y: number, h: number) =>
+      `<rect x="${x}" y="${f(y)}" width="46" height="${h}" rx="2.5" fill="${metal}" stroke="${metalEdge}" stroke-width=".9"/><rect x="${x + 9}" y="${f(y + 1.6)}" width="28" height="${f(h - 3.2)}" rx="1.5" fill="${mix(metal, 0.16)}" opacity=".75"/>`;
+    for (let i = 0; i < 6; i++) out += link(77, 8 + i * 9.5, 8.2);
+    for (let i = 0; i < 6; i++) out += link(77, 137 + i * 9.5, 8.2);
+    out += `<path d="M100,10 V62 M100,138 V190" stroke="#000" stroke-opacity=".12" stroke-width=".7"/>`;
+    out += `<path d="${topStrap}" fill="url(#${id}sx)"/><path d="${botStrap}" fill="url(#${id}sx)"/>`;
+  } else {
+    const st = lum(c) < 0.12 ? mix(c, 0.32) : mix(c, -0.3);
+    out += `<path d="${topStrap}" fill="${c}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${topStrap}" fill="url(#${id}sx)"/><path d="${topStrap}" fill="url(#${id}ty)"/>`;
+    out += `<path d="${botStrap}" fill="${c}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${botStrap}" fill="url(#${id}sx)"/><path d="${botStrap}" fill="url(#${id}ty)"/>`;
+    out += `<path d="M84,13 L80.5,62 M116,13 L119.5,62 M80.5,138 L84,187 M119.5,138 L116,187" ${stitch(st, 0.7)}/>`;
+    out += fold(ctx, 'M84,52 Q100,56 116,52', 2, 0.8);
+    // the keeper loop and the buckle holes on the lower strap
+    out += `<path d="${rectD(75, 143, 50, 7)}" fill="${mix(c, lum(c) < 0.12 ? 0.08 : -0.08)}" stroke="${edge}" stroke-width=".9"/>`;
+    for (const y of [160, 170, 180]) out += `<circle cx="100" cy="${y}" r="2.3" fill="#000" opacity=".3"/><circle cx="100.5" cy="${y + 0.7}" r="1" fill="#fff" opacity=".12"/>`;
+  }
+
+  // the case: a metal ring around the dial
+  out += `<path d="${caseD}" fill="${metal}" stroke="${metalEdge}" stroke-width="1.3"/><path d="${caseD}" fill="url(#${id}wg)"/>`;
+  out += `<circle cx="${cx}" cy="${cy}" r="33" fill="${mix(metal, 0.2)}" stroke="${metalEdge}" stroke-width=".9"/>`;
+  const dark = s.metal === 'black';
+  if (s.face === 'digital') {
+    out += `<circle cx="${cx}" cy="${cy}" r="29" fill="#16181D" stroke="#000" stroke-opacity=".5" stroke-width=".8"/>`;
+    out += `<path d="${rectD(74, 88, 52, 24)}" fill="#0C0E11" stroke="#2C3036" stroke-width=".9"/>`;
+    const lit = '#B7F0D2';
+    const xs = [78, 90, 104, 116];
+    const ghost = xs.map((x) => segments(x, 93, 'abcdefg')).join(' ');
+    out += `<path d="${ghost}" fill="none" stroke="${lit}" stroke-opacity=".1" stroke-width="1.9" stroke-linecap="round"/>`;
+    const on = `${segments(78, 93, 'bc')} ${segments(90, 93, 'abcdef')} ${segments(104, 93, 'abcdef')} ${segments(116, 93, 'abcdefg')}`;
+    out += `<path d="${on}" fill="none" stroke="${lit}" stroke-width="1.9" stroke-linecap="round"/>`;
+    out += `<circle cx="99" cy="97.5" r="1.1" fill="${lit}"/><circle cx="99" cy="103.5" r="1.1" fill="${lit}"/>`;
+  } else {
+    const face = dark ? '#1A1C22' : '#F6F5F1';
+    const ink = dark ? '#E9E7E1' : '#2B2E36';
+    out += `<circle cx="${cx}" cy="${cy}" r="29" fill="${face}" stroke="${metalEdge}" stroke-opacity=".6" stroke-width=".8"/>`;
+    let big = '';
+    let small = '';
+    for (let i = 0; i < 12; i++) {
+      const a = (i * Math.PI) / 6;
+      const sin = Math.sin(a);
+      const cos = Math.cos(a);
+      const r0 = i % 3 === 0 ? 20.5 : 23.5;
+      const seg = `M${f(cx + sin * r0)},${f(cy - cos * r0)} L${f(cx + sin * 26.5)},${f(cy - cos * 26.5)} `;
+      if (i % 3 === 0) big += seg;
+      else small += seg;
+    }
+    out += `<path d="${small}" stroke="${ink}" stroke-width="1" stroke-linecap="round" opacity=".7"/><path d="${big}" stroke="${ink}" stroke-width="2.2" stroke-linecap="round"/>`;
+    // 10:10: the hour hand to ten, the minute hand to two
+    out += `<polygon points="${cx},${cy - 2.4} ${f(cx - 13.4)},${f(cy - 8.6)} ${cx},${cy + 2.4}" fill="${ink}"/>`;
+    out += `<polygon points="${cx},${cy - 2} ${f(cx + 17.7)},${f(cy - 10.2)} ${cx},${cy + 2}" fill="${ink}"/>`;
+    out += `<circle cx="${cx}" cy="${cy}" r="2.8" fill="${ink}"/><circle cx="${cx}" cy="${cy}" r="1" fill="${metal}"/>`;
+  }
+  // a soft glare across the glass
+  out += `<path d="M${cx - 24},${cy - 12} A26,26 0 0,1 ${cx + 4},${cy - 26} L${cx + 2},${cy - 14} Z" fill="#fff" opacity=".1"/>`;
+  return out;
+}
+
+function belt(s: AccessoryFlat, ctx: Ctx): string {
+  const { id } = ctx;
+  const c = s.color;
+  const edge = edgeFor(c, ctx.scheme);
+  const st = lum(c) < 0.12 ? mix(c, 0.3) : mix(c, -0.3);
+  const steel = '#B9BDC4';
+  const steelEdge = '#6D7178';
+  // a strap laid out in a gentle loop (an open ring), the buckle on the left, holes on the right half
+  const ring = 'M22,100 a78,70 0 1,0 156,0 a78,70 0 1,0 -156,0 Z M44,100 a56,48 0 1,1 112,0 a56,48 0 1,1 -112,0 Z';
+  const frame = 'M10,84 h46 v32 h-46 Z M18,91 v18 h30 v-18 Z';
+  const g = 'transform="rotate(-8 100 100)"';
+  let out = `<g ${g}>`;
+  out += groundShadow(ctx, [ring, frame]);
+  out += halo(ctx, c, [ring]) + halo(ctx, steel, [frame]);
+  out += `<path d="${ring}" fill="${c}" fill-rule="evenodd" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/>`;
+  out += `<path d="${ring}" fill="url(#${id}ty)" fill-rule="evenodd"/>`;
+  out += `<path d="M33,100 a67,59 0 1,0 134,0 a67,59 0 1,0 -134,0 Z" ${stitch(st, 0.8)}/>`;
+  out += `<path d="M28,100 a72,64 0 1,0 144,0 a72,64 0 1,0 -144,0 Z M39,100 a61,53 0 1,0 122,0 a61,53 0 1,0 -122,0 Z" fill="none" stroke="#000" stroke-opacity=".08" stroke-width=".8"/>`;
+  // the holes along the strap's right side
+  for (let i = 0; i < 5; i++) {
+    const a = ((i - 2) * 17 * Math.PI) / 180;
+    const hx = 100 + Math.cos(a) * 67;
+    const hy = 100 + Math.sin(a) * 59;
+    out += `<circle cx="${f(hx)}" cy="${f(hy)}" r="3.1" fill="#000" opacity=".34"/><circle cx="${f(hx + 0.5)}" cy="${f(hy + 0.8)}" r="1.3" fill="#fff" opacity=".12"/>`;
+  }
+  // the keeper loop under the buckle
+  out += `<path d="${rectD(24, 126, 18, 10)}" fill="${mix(c, lum(c) < 0.12 ? 0.08 : -0.1)}" stroke="${edge}" stroke-width=".9"/>`;
+  // the buckle: a steel frame across the strap and its prong
+  out += `<path d="${frame}" fill="${steel}" fill-rule="evenodd" stroke="${steelEdge}" stroke-width="1.1" stroke-linejoin="round"/><path d="${frame}" fill="url(#${id}wg)" fill-rule="evenodd"/>`;
+  out += `<path d="M33,86 V114" stroke="${steelEdge}" stroke-width="2.4" stroke-linecap="round"/><path d="M32.2,87 V113" stroke="#fff" stroke-opacity=".4" stroke-width=".7"/>`;
+  out += `</g>`;
+  return out;
+}
+
+function cap(s: AccessoryFlat, ctx: Ctx): string {
+  const { id } = ctx;
+  const c = s.color;
+  const edge = edgeFor(c, ctx.scheme);
+  const st = lum(c) < 0.12 ? mix(c, 0.3) : mix(c, -0.3);
+  const seam = lum(c) < 0.12 ? mix(c, 0.2) : mix(c, -0.22);
+  const btn = mix(c, lum(c) < 0.12 ? 0.1 : -0.08);
+  // a baseball cap from the side, the brim to the right (the other flats' shoes face right too)
+  const dome = 'M22,124 C18,64 52,32 96,32 C134,32 158,58 162,96 L164,124 Z';
+  const band = 'M22,122 L164,122 L162,138 Q92,152 24,138 Z';
+  const brim = 'M142,98 C170,92 198,106 198,124 C190,138 160,140 122,140 Z';
+  let out = `<g transform="translate(0,12)">`;
+  out += groundShadow(ctx, [dome, band, brim]);
+  out += halo(ctx, c, [dome, band, brim]);
+  out += `<path d="${band}" fill="${c}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${band}" fill="#000" opacity=".16"/>`;
+  out += `<path d="${dome}" fill="${c}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${dome}" fill="url(#${id}sx)"/><path d="${dome}" fill="url(#${id}ty)"/>`;
+  // six panels: seams from the button down to the band
+  out += `<path d="M96,34 C84,62 78,94 78,122 M96,34 C112,60 124,92 130,122 M96,34 C62,46 44,84 40,120 M96,34 C132,40 154,64 160,98" fill="none" stroke="${seam}" stroke-width="1.5" stroke-linecap="round"/>`;
+  out += `<path d="M100,36 C89,63 83,95 83,121 M92,36 C79,63 73,94 73,121 M101,37 C117,62 129,92 135,121" ${stitch(st, 0.55)}/>`;
+  out += `<path d="M26,120 H162" stroke="${seam}" stroke-width="1.2"/>`;
+  out += `<circle cx="96" cy="33" r="6" fill="${btn}" stroke="${edge}" stroke-width="1"/>`;
+  out += `<circle cx="64" cy="64" r="1.6" fill="#000" opacity=".3"/><circle cx="128" cy="62" r="1.6" fill="#000" opacity=".3"/>`;
+  // the brim, curved and stitched, over the dome's front
+  out += `<path d="${brim}" fill="${c}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${brim}" fill="url(#${id}ty)"/><path d="${brim}" fill="#000" opacity=".12"/>`;
+  out += `<path d="M148,104 C170,100 190,110 192,122" ${stitch(st, 0.55)}/><path d="M142,116 C162,112 180,118 186,128" ${stitch(st, 0.55)}/>`;
+  out += fold(ctx, 'M56,100 Q60,112 58,120', 2, 0.6);
+  out += `</g>`;
+  return out;
+}
+
+function beanie(s: AccessoryFlat, ctx: Ctx): string {
+  const { id } = ctx;
+  const c = s.color;
+  const edge = edgeFor(c, ctx.scheme);
+  const rib = lum(c) < 0.12 ? mix(c, 0.22) : mix(c, -0.2);
+  const dome = 'M34,112 C32,60 62,30 100,30 C138,30 168,60 166,112 Z';
+  const cuff = 'M26,106 Q26,100 34,100 L166,100 Q174,100 174,106 L174,160 Q174,168 166,168 L34,168 Q26,168 26,160 Z';
+  let out = groundShadow(ctx, [dome, cuff]);
+  out += halo(ctx, c, [dome, cuff]);
+  out += `<path d="${dome}" fill="${c}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${dome}" fill="url(#${id}sx)"/><path d="${dome}" fill="url(#${id}ty)"/>`;
+  // the knit: ribs running from the crown down to the cuff
+  let ribs = '';
+  for (let i = -4; i <= 4; i++) ribs += `M${f(100 + i * 1.5)},32 C${f(100 + i * 9)},60 ${f(100 + i * 15.5)},88 ${f(100 + i * 15.8)},108 `;
+  out += `<path d="${ribs}" fill="none" stroke="${rib}" stroke-width="1.5" stroke-linecap="round" opacity=".85"/>`;
+  // the folded cuff: a thicker, ribbed band
+  out += `<path d="${cuff}" fill="${c}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/>`;
+  let cr = '';
+  for (let x = 36; x < 174; x += 7.2) cr += `M${f(x)},104 V164 `;
+  out += `<path d="${cr}" fill="none" stroke="${rib}" stroke-width="2.4" stroke-linecap="round" opacity=".7"/>`;
+  out += `<path d="${cuff}" fill="url(#${id}sx)"/><path d="${cuff}" fill="url(#${id}ty)"/>`;
+  out += `<path d="M28,103 H172" stroke="#000" stroke-opacity=".2" stroke-width="2.4" stroke-linecap="round"/><path d="M28,106.5 H172" stroke="#fff" stroke-opacity=".1" stroke-width="1" stroke-linecap="round"/>`;
+  return out;
+}
+
+function accessory(s: AccessoryFlat, ctx: Ctx): string {
+  return s.type === 'watch' ? watch(s, ctx) : s.type === 'belt' ? belt(s, ctx) : s.type === 'cap' ? cap(s, ctx) : beanie(s, ctx);
+}
+
 // ======================================================================== entry
 /** The SVG for one piece: a 200 × 200 viewBox, transparent background. `id` keeps defs unique per instance. */
 export function renderFlat(spec: FlatSpec, opts: { scheme?: FlatScheme; id?: string } = {}): string {
@@ -799,6 +996,6 @@ export function renderFlat(spec: FlatSpec, opts: { scheme?: FlatScheme; id?: str
   const id = (opts.id ?? 'k').replace(/[^a-zA-Z0-9]/g, '') || 'k';
   const ctx: Ctx = { id, scheme, foldK: lum(spec.color) > 0.6 ? 0.5 : 1, rim: scheme === 'light' && (lightnessOf(spec.color) ?? 0) >= RIM_L };
   const defs = shadeDefs(id, scheme) + patternDefs(`${id}p`, spec.pattern, spec.color);
-  const body = spec.kind === 'top' ? top(spec, ctx) : spec.kind === 'bottom' ? bottom(spec, ctx) : shoe(spec, ctx);
+  const body = spec.kind === 'top' ? top(spec, ctx) : spec.kind === 'bottom' ? bottom(spec, ctx) : spec.kind === 'accessory' ? accessory(spec, ctx) : shoe(spec, ctx);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs>${defs}</defs>${body}</svg>`;
 }

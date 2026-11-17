@@ -3,11 +3,11 @@
 // brand, shoe profile, denim wear) to a FlatSpec for flats.ts, in the piece's own tile color. A v3-only piece
 // (no closet call yet) draws its type's usual details. The brand is a plain word, never a logo shape.
 // Pure: GarmentArt.tsx renders it.
-import { shadeFromId } from '@kitted/core';
+import { FAMILY_HEX, G, shadeFromId } from '@kitted/core';
 import type { ClosetArt, ClosetItemRow } from '@/data/types';
 import { t, type StringKey } from '@/i18n/en';
-import type { BottomFlat, BottomType, FlatSpec, ShoeType, TopFlat, TopType, WatchMetal } from './flats';
-import { contrastLine, mix } from './flats';
+import type { AccessoryFlat, BottomFlat, BottomType, FlatSpec, ShoeType, TopFlat, TopType, WatchMetal } from './flats';
+import { contrastLine, mix, WATCH_METALS } from './flats';
 import { brandWord } from './itemName';
 import { isVariant, KIND_SLEEVES, VARIANTS } from './kinds';
 import { isLongSleeved } from './sleeves';
@@ -16,7 +16,7 @@ export type Glyph =
   | 'fullZip' | 'halfZip' | 'drawstrings' | 'pouch' | 'chestPocket' | 'cargoPockets' | 'sideStripe' | 'cuffs' | 'beltLoops'
   | 'collarButtons' | 'rips' | 'fade' | 'graphic' | 'stripes' | 'checks' | 'chunkySole' | 'waistDrawstring';
 
-export type ArtShape = 'top' | 'bottom' | 'shoe';
+export type ArtShape = 'top' | 'bottom' | 'shoe' | 'accessory';
 
 export interface ArtSpec {
   shape: ArtShape;
@@ -63,14 +63,18 @@ const LEG_A11Y: Record<string, StringKey> = {
   skinny: 'value.leg.skinny', slim: 'value.leg.slim', straight: 'value.leg.straight', relaxed: 'value.leg.relaxed', wide: 'value.leg.wide',
 };
 
+/** The subcategories drawn as an accessory (T101); 'hat' draws as a cap. A bag or anything else keeps its old drawing. */
+const ACCESSORY_SUBS: readonly string[] = ['watch', 'belt', 'hat', 'cap', 'beanie'];
+
 function shapeOf(category: unknown, sub: string): ArtShape {
   if (SHOE[sub] || category === 'footwear') return 'shoe';
   if (BOTTOM[sub] || category === 'bottom') return 'bottom';
+  if (category === 'accessory' && ACCESSORY_SUBS.includes(sub)) return 'accessory';
   return 'top';
 }
 
 /** The drawing for a piece. */
-export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'name'>): ArtSpec {
+export function artSpec(item: ArtItem): ArtSpec {
   const g = item.garment;
   const sub = String(g.subcategory ?? '');
   const shape = shapeOf(g.category, sub);
@@ -88,6 +92,18 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
   const glyphs = new Set<Glyph>();
   let flat: FlatSpec;
 
+  if (shape === 'accessory') {
+    // A watch, belt, cap or beanie (T101): no glyphs and no new words, so VoiceOver reads the piece's name only.
+    const type: AccessoryFlat['type'] = sub === 'hat' ? 'cap' : (sub as AccessoryFlat['type']);
+    const metal: WatchMetal | undefined = type === 'watch' ? WATCH_METALS.find((m) => d.has(`metal_${m}`)) : undefined;
+    flat = {
+      kind: 'accessory', type, color: c,
+      ...(metal ? { metal } : {}),
+      ...(type === 'watch' && String(g.color_family) === 'multicolor' ? { bracelet: true } : {}),
+      ...(type === 'watch' && d.has('digital') ? { face: 'digital' as const } : {}),
+    };
+    return { shape, flat, glyphs: [], a11y: item.name };
+  }
   if (shape === 'top') {
     let type: TopType = TOP[kind] ?? TOP[sub] ?? (g.category === 'outerwear' ? 'jacket' : 'tee');
     if (type === 'crew' && d.has('half_zip')) type = 'quarter_zip';
@@ -187,23 +203,84 @@ export function artSpec(item: Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'n
   return { shape, flat, glyphs: ordered, a11y: [item.name, ...(cut ? [cut] : []), ...said].join(', ') };
 }
 
-// ---------------------------------------------------------------- T101 stubs (tests written first)
+// ---------------------------------------------------------------- pieces drawn without a closet row (T101)
+/** Where a kind sits. 'accessory' is not a Closet slot (ClosetSlot has four); it is only used here and by cards. */
 export type PieceSlot = 'top' | 'outer' | 'bottom' | 'shoes' | 'accessory';
+/** What artSpec reads: a closet row's drawing fields. A closet row satisfies it, and so does `drawnItem(...)`'s result. */
 export type ArtItem = Pick<ClosetItemRow, 'garment' | 'hex' | 'art' | 'name'>;
+
+/** A piece with no closet row: what a card stores and draws. Three facts, plus a watch's metal and face. */
 export interface DrawnPieceSpec {
+  /** A reading subcategory ('chelsea_boot', 'tee', 'bomber'), a closet-only kind key ('henley', 'zip_hoodie', 'jorts'),
+   *  or one of 'watch' | 'belt' | 'cap' | 'beanie'. */
   kind: string;
+  /** One of the 25 color families (core FAMILY_HEX keys). The drawing is in this family's swatch. */
   family: string;
+  /** Its name as the card shows it. Used for VoiceOver; never decides the drawing. */
   name: string;
+  /** A watch's metal tone, a detail and never a color family. Ignored on every other kind. */
   metal?: WatchMetal;
+  /** A watch's face. Ignored on every other kind. Unset draws analog. */
   face?: 'analog' | 'digital';
 }
-export const DRAWN_KINDS: readonly string[] = [];
-export function pieceSlotOf(_kind: string): PieceSlot | null {
-  throw new Error('T101: not built');
+
+const ACCESSORY_KINDS: readonly string[] = ['watch', 'belt', 'cap', 'beanie'];
+const OUTER_KINDS: readonly string[] = [
+  'chore_coat', 'denim_jacket', 'bomber', 'leather_jacket', 'field_jacket', 'shell_jacket', 'rain_jacket', 'puffer', 'blazer',
+  'unstructured_blazer', 'sport_coat', 'suit_jacket', 'overcoat',
+];
+const has = (table: object, key: string) => Object.prototype.hasOwnProperty.call(table, key);
+
+/** Every kind `drawnItem` draws on its own: the reading kinds above, the closet-only kinds, and the four accessories. */
+export const DRAWN_KINDS: readonly string[] = [...Object.keys(TOP), ...Object.keys(BOTTOM), ...Object.keys(SHOE), ...ACCESSORY_KINDS];
+
+/** The slot a kind belongs to, or null for a kind not in DRAWN_KINDS. */
+export function pieceSlotOf(kind: string): PieceSlot | null {
+  if (has(TOP, kind)) return OUTER_KINDS.includes(kind) ? 'outer' : 'top';
+  if (has(BOTTOM, kind)) return 'bottom';
+  if (has(SHOE, kind)) return 'shoes';
+  return ACCESSORY_KINDS.includes(kind) ? 'accessory' : null;
 }
-export function drawnItem(_piece: DrawnPieceSpec, _slotHint?: PieceSlot): ArtItem | null {
-  throw new Error('T101: not built');
+
+/** What an undrawable kind is drawn as under each slot: a plain piece in the right color. */
+const STAND_IN: Partial<Record<PieceSlot, string>> = { top: 'tee', outer: 'field_jacket', bottom: 'chinos', shoes: 'low_profile_sneaker' };
+const SLOT_CATEGORY = { top: 'top', outer: 'outerwear', bottom: 'bottom', shoes: 'footwear', accessory: 'accessory' } as const;
+
+/**
+ * The drawable form of a drawn piece, shaped like a closet row's drawing fields and carrying no id, no slot and no photo,
+ * so it cannot be mistaken for one of his pieces. An unknown family draws grey. `slotHint` only matters when `kind` is not
+ * in DRAWN_KINDS: it picks that slot's plain stand-in; with no hint, or 'accessory', an undrawable kind gives null.
+ */
+export function drawnItem(piece: DrawnPieceSpec, slotHint?: PieceSlot): ArtItem | null {
+  let kind = String(piece.kind ?? '');
+  let slot = pieceSlotOf(kind);
+  if (!slot) {
+    const stand = slotHint ? STAND_IN[slotHint] : undefined;
+    if (!stand) return null;
+    kind = stand;
+    slot = pieceSlotOf(kind)!;
+  }
+  const family = typeof piece.family === 'string' && has(FAMILY_HEX, piece.family) ? piece.family : 'grey';
+  const sub = isVariant(kind) ? VARIANTS[kind]!.sub : kind;
+  const details: string[] = [];
+  if (kind === 'watch') {
+    if (WATCH_METALS.includes(piece.metal as WatchMetal)) details.push(`metal_${piece.metal}`);
+    if (piece.face === 'digital') details.push('digital');
+  }
+  return {
+    garment: G(SLOT_CATEGORY[slot], sub, family),
+    hex: FAMILY_HEX[family]!,
+    art: { family, shade: null, details, brand: null, shoeProfile: null, denimWear: null, pattern: 'solid', ...(isVariant(kind) ? { kind } : {}) },
+    name: String(piece.name ?? ''),
+  };
 }
-export function pieceArtSpec(_item: ArtItem | DrawnPieceSpec, _slotHint?: PieceSlot): ArtSpec | null {
-  throw new Error('T101: not built');
+
+/** Everything that draws one piece, closet row or not, as the pure function PieceArt calls. A DrawnPieceSpec is told
+ *  apart from a closet row by having both `kind` and `family` at its top level; null when it can't be drawn. */
+export function pieceArtSpec(item: ArtItem | DrawnPieceSpec, slotHint?: PieceSlot): ArtSpec | null {
+  if ('kind' in item && 'family' in item) {
+    const drawn = drawnItem(item, slotHint);
+    return drawn ? artSpec(drawn) : null;
+  }
+  return artSpec(item);
 }
