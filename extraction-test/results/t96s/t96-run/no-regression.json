@@ -1,0 +1,12 @@
+{
+ "mode": "full",
+ "fails": [],
+ "seconds": 74,
+ "baseline_loosened": 0,
+ "face_gap": [
+  "H1: PASS",
+  "H2: PASS",
+  "H3: PASS",
+  "H4: PASS"
+ ]
+}

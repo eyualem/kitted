@@ -1,0 +1,37 @@
+{
+ "mode": "full",
+ "fails": [
+  "sweepMs median 668 ms (\u2264 400)",
+  "sweepMs p95 1068 ms (\u2264 800)"
+ ],
+ "seconds": 0,
+ "n": 336,
+ "visionMs": {
+  "main": [
+   95.5,
+   182.5
+  ],
+  "new": [
+   99.0,
+   164.5
+  ]
+ },
+ "totalMs": {
+  "main": [
+   386.5,
+   743.0
+  ],
+  "new": [
+   1084.0,
+   1651.0
+  ]
+ },
+ "sweepMs": [
+  668.0,
+  1068.0
+ ],
+ "edges": {
+  "inputs/youtube/shots/0JtnbgtbQfE/f-03-52.jpg (23 faces, 854\u00d7480)": 657,
+  "inputs/youtube/shots/ove4zof6W2k/f-09-17.jpg (5 faces, 640\u00d7360)": null
+ }
+}

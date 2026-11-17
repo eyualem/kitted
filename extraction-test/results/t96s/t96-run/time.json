@@ -1,0 +1,34 @@
+{
+ "mode": "full",
+ "fails": [],
+ "seconds": 0,
+ "n": 336,
+ "visionMs": {
+  "main": [
+   44.0,
+   105.75
+  ],
+  "new": [
+   44.0,
+   69.75
+  ]
+ },
+ "totalMs": {
+  "main": [
+   153.0,
+   312.75
+  ],
+  "new": [
+   437.5,
+   576.5
+  ]
+ },
+ "sweepMs": [
+  283.5,
+  399.5
+ ],
+ "edges": {
+  "inputs/youtube/shots/0JtnbgtbQfE/f-03-52.jpg (23 faces, 854\u00d7480)": 475,
+  "inputs/youtube/shots/ove4zof6W2k/f-09-17.jpg (5 faces, 640\u00d7360)": null
+ }
+}
