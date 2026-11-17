@@ -145,3 +145,108 @@ No constant from IMPLEMENTATION.md was changed.
 - `--full` on this build: (2) 336 photos measured, 0 worse than main + 0.02. (1) S1 has no square. (3) keeps 168 of 168 other heads, with 7 panels.
 
 **Re-runs on this build (`12d4d235` plus the test changes), `--full`:** `PASS F2.2 · built prints` ((a) 31/31 on 25 photos, (b) 30/30, (c) 30/30, (L) 8 kept of 16 built, 8/8 left alone) and `PASS F2.2 · grey square on him`. Re-locked: see the Lock line in TESTING.md.
+
+## Review
+**Verifier, Nov 16–17, on `d43a85a2` (build `56f8355f`; no Swift changed after it).** I read TESTING.md, IMPLEMENTATION.md, T96's TESTING.md and DECISIONS-LOG #474 and #477 first, then the diff, and Built last.
+
+**Verdict: not ready. There is one test defect (a planted bug no test catches) and no code defect.** Every T96s line passes at `--full` on this build, and so does every T96 line. No print-rule bug I planted reached his own face on any real photo. The one gap is test 1 below: there's a safety net no test exercises.
+
+### The locks
+- **T96s:** `print_faces_test.py` and this TESTING.md changed only in the test writer's commits (`907e1fdb`, `7d72a9c9`, `884ab66a`, `d43a85a2`). No implementer commit touches them (`eeb31594`, `7555dd97`, `1df9798f`, `4bba24cb`, `b82bf1b9`, `56f8355f`).
+  - D3 and D4 add, or narrow by eye. Main's pose decides D3, with a floor of 24 whole-pose photos out of 30; D4 adds one hand box judged by eye.
+  - D2 moves (b) from the paste square to the face itself. That narrows what (b) tests, but the lock as written contradicted rule 5 as #474 states it, and the 25% gap is still pinned by the logic line (a box at y 550 is not a print, one at y 566 is). Accepted.
+- **T96:** `face_leak_test.py` and T96's TESTING.md changed after the re-scope (`050a2583` / `6a916e4b`) only in the test writer's `d1612584` / `12d4d235`.
+  - D1 adds one eye verdict (her hair). Fine.
+  - D5 is the one change that isn't strictly an addition. Two kinds of "his" core move from the automatic gate to the eye: one that's MediaPipe-only, and one inside the hidden rects that fails only on its unchanged share. It isn't looser than the first lock, where the eye judged every held-out suspect. I accept it because I did the eye on every EYE crop (below).
+- **What the diff touches:** since `a00da29d`, only `KittedPrep.swift`, `extraction-test/vision/main.swift`, the tests, result JSON and docs changed. All of them are in IMPLEMENTATION.md → Files, and Deviations 1–4 explain the differences.
+  - No JS or TS changed against `1c34082d`: `git diff 1c34082d..HEAD -- app/` lists only `KittedPrep.swift` and T96's `KittedVisionModule.swift`.
+  - The app code has no test hook and no hard-coded test value (I grepped for the photo names, the eye boxes and `#if`).
+  - `swiftc -typecheck` of the three Swift files passes against the iOS Simulator SDK and the device SDK (arm64, iOS 17). The implementer hadn't run this.
+
+### Re-run myself, `--full`
+- **T96s lines** (every line but T96's re-run, Nov 16): all 9 pass, with the implementer's numbers; only the timings differ.
+  - Real prints: P1, P2 and P3 left alone at 0.996–1.0 unchanged, one `prints` rect each. P4 (picked) passes, untouched.
+  - Pose lies: S1–S7 have no print on the face, the face is hidden, and the zone is nil on every one.
+  - Strangers: X1 plus 24 leak photos.
+  - Built prints: (a) 31 of 31 on 25 photos (a-5, a-6, a-15, a-25 and a-27 are out of the count because the paste broke main's pose); (b) 30 of 30; (c) 30 of 30; (L) 8 kept of 16 built, 8 of 8 left alone.
+  - Re-check: P1, P2 and 4 built photos.
+  - Grey square: (1) no square on S1; (2) 0 of 336 photos worse than main; (3) 168 of 168 other heads kept, with 10 panels.
+  - Where the rule doesn't apply; same photo.
+- **T96 still holds** (T96's `face_leak_test.py --full` as a subprocess, after the D1 and D5 re-lock, 53 min, Nov 16): `PASS`, all 12 T96 lines pass.
+  - Leak set: 0 strict leaks; fit 53 of 59 sent; 185-box gate 0.
+  - Kmeasure copies: 53 zoom copies, 0 not hidden.
+  - False refusals: 0 newly refused.
+  - Built small faces: 83 of 83 spotted faces caught, at least round 3's count in every band.
+  - Second mirror panel: (c) 13 of 13.
+  - Missed people: 12 of 12 sent, 9 covered.
+  - Held out and regression: 0 automatic fails; gate 0 of 185.
+  - No regression.
+  - Time: `sweepMs` median 192 ms, p95 230 ms; `visionMs` 27 ms on both builds. This line is reported, not gated, below 1 GB free.
+  - JSON in `extraction-test/results/t96s/t96-run/`.
+
+### Planted bugs (scratch copies only, through `--new-from`; the worktree was never edited)
+| Line | Bug planted in `KittedPrep.swift` | Caught? |
+|---|---|---|
+| print rule logic | rule 4 reads the box's centre, not its top | yes: `isPrint([450, 539, 80, 80]) True, expected False` (+1) |
+| real prints sent | a tile print is listed but still hidden (`continue` removed) | yes: `P1: print 1 not left alone (unchanged 0.148, new grey 0.95)` (+2) |
+| his face when the pose lies | a missing hip is guessed from the shoulders; again with rule 5 removed too | yes, both: `S6: printZone […], expected nil` (only S6; the head band hides all seven faces either way) |
+| strangers at torso height | anything in the zone's band counts as a print (rules 4's x-test, 5, 6 and 7 gone) | yes: `X1: a prints rect overlaps a stranger's face` (+21) |
+| built prints | the fallback head box isn't drawn when a print stood in for his face | **no** (`--quick`): see test 1 |
+| re-check and prints | any refound face counts as a print while a zone exists | yes: `(2) B P1: ok, expected couldNotFrame/faceRemains` (+11) |
+| grey square on him | `himAgainIoU` 0.5 → 0.9 | yes: `(1) S1: a hidden rect [78.9, -131.5, 441.9, 524.8] … lies on his head` (+2) |
+| where the rule doesn't apply | snaps get a zone | not caught alone, because `outline` is set for fit photos only, so the zone stays nil (two guards). With the outline set for snaps too: yes, `P2 snap: printsKept 1` (+7) |
+| same photo | a coin flip in `isPrint` | yes: `a-0: results differ in [… 'uploadBase64' …]` (+6) |
+| T96 still holds | not planted: one plant costs a full T96 run; T96's own bites are in its TESTING.md | n/a |
+
+### Eye verdicts
+- **P1–P3** (the original next to the sent upload, at the whole photo and around the print; main shown alongside):
+  - **P1**, the surf photo print: the woman is readable in the upload, the same as on main. His face is visible in this photo, not behind the phone as TESTING.md says. It's pixelated in the upload, the same as on main. A fair pass.
+  - **P2**, the band tee: the printed man in the pink suit is readable, the same as on main. His face under the cap is fully pixelated. Pass.
+  - **P3**, the Nefertiti print: crisp and untouched. Her face is pixelated. Pass.
+  - **P4** (picked): her face is pixelated. The small portraits are untouched, as on round 3 and main. The audience is covered.
+  - **S1:** no grey square. His face is pixelated, the same as on main.
+- **T96's held-out EYE crops** (the D5 rule): 9 held-out (8 his, 1 spotted) and 26 baseline (all his). None is a readable face.
+  - Held out: #34, #51 and #73 are fully pixelated faces. #55 and #56 are a necklace, hair and shoulder under a pixelated face. #58 is a camera and hands below a pixelated face. #61 is a denim chest. #89 (the spotted one) is a grey fill. #106 is a lace hem.
+  - Baseline:
+    - fully pixelated faces: #1, #8, #35, #142, #162, #169, #187, #235, #243, #273, #313, #333;
+    - not faces:
+      - hands: #59, #168, #171 (a ring), #183, #217;
+      - hair: #119, #307;
+      - collars: #138 (the face is out of frame), #254;
+      - dark or blurred patches: #176, #177, #199, #303;
+      - #279, a red object in a hand.
+  - The crop numbers are files in `extraction-test/results/t96/held-out-*/crops/`.
+
+### Tried to break it: his own face read as a print
+- **A lying or tilted pose (geometry, read in the code):**
+  - With his head below his hips in the photo, rule 2 fails (the hips must be below the shoulders).
+  - Lying sideways, the shoulders are nearly one above the other, so the span test fails (≥ 10% of his box width).
+  - Upright and tilted, his face sits above the lower shoulder. Rule 4 needs the whole box below it.
+- **Bending forward, his face in front of his chest:** his head joints fall inside the box grown 1.5×, so rule 5 fails. Only a face the pose sees no head joints on could pass, and none of the probes found one.
+- **800 photos nobody had probed:** every Fashionpedia photo at index % 8 = 2 or 4, the split the planner didn't probe and the implementer never opened. `Prep.run` (fit), and every candidate re-run picked on the 56 "Which one is you?" photos: 924 runs, 847 sent, **0 boxes left alone as prints**. So no real face, his or anyone's, was read as a print there.
+- **A crop at the shoulders:** "where the rule doesn't apply" (2) passes (P1 and P2 cut just below his shoulder tops).
+- **"Which one is you?":** P4's pick and the 56 probe photos with every candidate picked. Nothing was left alone.
+- **His own reflection on his chest (built, 12 of his phone and mirror photos):** a copy of him, flipped and scaled 0.35–0.55, pasted so its face sits between his shoulders.
+  - **This build:** 8 of 12 sent with that face readable (31–57 px), each listed in `prints`.
+  - **Round 3 hides all 12. Main leaves all 12 visible.**
+  - A real reflection can't sit in front of his torso, so this is the accepted "someone in front of his chest whom no detector separates" risk (#474), here with his own likeness. Deviation 4 (no instance mask in rule 7 during the sweep) removes the one detector that might have claimed it. I didn't verify whether the mask would have. See limit 1.
+- **His real face and his reflection on real photos:** S1–S7 hidden; the second mirror panel's (c) reflections 13 of 13 (T96) and 10 panels in grey square (3).
+
+### Defects
+- **test 1 · the planted "fallback head box not drawn" went uncaught.** In `sweep` step 1, when a print was the only face that stood in for his, `hide0.append(fb)` draws his head box from his joints or shoulders instead. Removing that line passed `built prints` at `--quick`.
+  - Why: every built-print host is chosen with a head band (`ensure_hosts` requires `band`), and the band hides his face anyway.
+  - The box matters where his outline touches the top edge (no band) and at least two head joints show. Main would draw the head-joint box there, but when a print stands in, `locate` draws none, so only this line hides his face.
+  - **Proposed test:** a sweep unit with the stand-in detector `none`, on a hand-built `Located`. The print is the only whole-photo face, `headBand` is nil, there are 2+ head points, and the zone comes from the head-joint box. Expect the head-joint box in `Swept.hide` and blurred in the copy.
+  - Or: (L) on a host cut at the top edge (the ig-098 kind) with a large print main's whole-photo pass finds. Expect his head cores hidden.
+- **code:** none found.
+- **limit 1 · someone in front of his chest whom no detector separates, his own likeness included** (accepted, #474, founder 4). Measured above: 8 of 12 built cases sent readable on this build; round 3 hid all 12 and main hides none.
+  - This needs the coordinator's or the founder's eye. Deviation 4 dropped the instance mask from rule 7 during the sweep (it once claimed a built print, a-6).
+  - Would verify the trade: the same 12 built photos with the mask in steps 2 and 4, against built prints (a) and (L).
+- **limit 2:** the necklace pendant (`2.51.33 PM`) is listed as a print (`printsKept` 1). It isn't a face, so this is harmless and reported only, as TESTING.md says.
+
+### Not verified
+- **`npm run check` in `app/`:** 141 MB free (PhysMem) at 02:49, under the roughly 1 GB required. No JS or TS changed against `1c34082d`. Would verify it: one run, borrowing `node_modules` by symlink, with about 1 GB free.
+- **The iOS build and the phone's Neural Engine:** no native build or install this session (memory). Would verify it: `tools/phone/install.sh`, then the founder's to-do checks pulled with `tools/phone/pull.sh` (TESTING.md → "Not testable yet").
+- **His own graphic tees:** none of his phone checks has one. Would verify it: the founder's to-do, 3–5 mirror checks in a tee or hoodie with a face on it, one in front of a second mirror panel.
+- **The planted fallback-head bug at `--full`:** run at `--quick` only. `--full` uses the same band-only hosts, so it can't reach the case either (test 1).
+- **Whether the instance mask would have caught the reflection cases:** limit 1.

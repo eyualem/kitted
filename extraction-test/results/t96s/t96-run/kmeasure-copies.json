@@ -1,9 +1,7 @@
 {
  "mode": "full",
- "fails": [
-  "zoom beb60656e0a46efe621b5a9f.jpg: 1 face cores not hidden in <stem>.full.jpg (first {'grey': 0.0, 'inside': 0.696, 'unchanged': 0.322, 'px': [17, 23]})"
- ],
- "seconds": 471,
+ "fails": [],
+ "seconds": 440,
  "zoom_unspotted_not_hidden": 0,
  "zoom_written": 53
 }

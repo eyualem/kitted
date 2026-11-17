@@ -1,44 +1,7 @@
 {
  "mode": "full",
- "fails": [
-  "held-out inputs/fashionpedia/images/test/6a0f64b86eb9ed8ebebc65f773a988cf.jpg: a his face core not hidden in the fit upload (unchanged 0.514, inside hidden 1.0)",
-  "held-out inputs/fashionpedia/images/test/899bf79bd131b497859a231916f4ef04.jpg: a his face core not hidden in the fit upload (unchanged 0.527, inside hidden 1.0)",
-  "held-out inputs/fashionpedia/images/test/9245d76e247ffdaaf4d7cee0ed8f3445.jpg: a his face core not hidden in the fit upload (unchanged 0.936, inside hidden 0.083)",
-  "held-out inputs/fashionpedia/images/test/9245d76e247ffdaaf4d7cee0ed8f3445.jpg: a his face core not hidden in the fit upload (unchanged 0.876, inside hidden 0.129)",
-  "held-out inputs/fashionpedia/images/test/96b202445bdc16ebc3e93ae5788ed63e.jpg: a his face core not hidden in the fit upload (unchanged 0.985, inside hidden 0.0)",
-  "held-out inputs/fashionpedia/images/test/9947f3f56aa4fab3b07bca98b09d7bfe.jpg: a his face core not hidden in the fit upload (unchanged 0.472, inside hidden 0.528)",
-  "held-out inputs/fashionpedia/images/test/af92e368c6849d604fdf2b7b1dc22daa.jpg: a his face core not hidden in the fit upload (unchanged 0.611, inside hidden 0.02)",
-  "held-out inputs/fashionpedia/images/test/d7054d8a639b2385be571b5795d183cb.jpg: a spotted face core not hidden in the fit upload (unchanged 0.37, inside hidden 0.609)",
-  "held-out inputs/fashionpedia/images/test/f4ffe227f128ce8aa508f300c03966b7.jpg: a his face core not hidden in the fit upload (unchanged 1.0, inside hidden 0.0)",
-  "baseline screenshots/phone/20261014-180424/photos/703a8b1263fb31ad7a889c064d930f4cddabcce2afba730f27a9a37047c8097c-photo.jpg: a his face core not hidden in the fit upload (unchanged 0.529, inside hidden 1.0)",
-  "baseline screenshots/phone/20261014-180424/photos/fb0b17cbae82f31df62a6e195e0185d2e2801dc265253668a2e1dcc3dc86eb82-photo.jpg: a his face core not hidden in the fit upload (unchanged 0.611, inside hidden 0.505)",
-  "baseline inputs/pinterest/Screenshot 2026-10-12 at 3.05.18\u202fPM.png: a his face core not hidden in the fit upload (unchanged 0.513, inside hidden 1.0)",
-  "baseline inputs/pinterest/Screenshot 2026-10-12 at 3.19.49\u202fPM.png: a his face core not hidden in the fit upload (unchanged 0.371, inside hidden 0.732)",
-  "baseline inputs/ig/Screenshot 2026-10-12 at 1.49.29\u202fPM.png: a his face core not hidden in the fit upload (unchanged 0.993, inside hidden 0.048)",
-  "baseline inputs/mirror-fit-check-1/m11/before_mirror.jpg: a his face core not hidden in the fit upload (unchanged 1.0, inside hidden 0.0)",
-  "baseline inputs/fitcheck-photos/s19/before_phone.jpg: a his face core not hidden in the fit upload (unchanged 0.408, inside hidden 0.843)",
-  "baseline inputs/youtube/shots/RtxJqd5Drps/f-05-05.jpg: a his face core not hidden in the fit upload (unchanged 0.429, inside hidden 0.773)",
-  "baseline inputs/youtube/shots/K2HS3_8cTx8/f-01-13.jpg: a his face core not hidden in the fit upload (unchanged 1.0, inside hidden 0.0)",
-  "baseline inputs/youtube/shots/Jh8dz-KZcfY/f-02-48.jpg: a his face core not hidden in the fit upload (unchanged 0.468, inside hidden 0.585)",
-  "baseline inputs/youtube/shots/4fb4GyOylK8/f-17-05.jpg: a his face core not hidden in the fit upload (unchanged 1.0, inside hidden 0.0)",
-  "baseline inputs/youtube/shots/cwLasFLe-DY/f-20-45.jpg: a his face core not hidden in the fit upload (unchanged 1.0, inside hidden 0.0)",
-  "baseline inputs/youtube/shots/cwLasFLe-DY/f-17-57.jpg: a his face core not hidden in the fit upload (unchanged 0.782, inside hidden 1.0)",
-  "baseline inputs/youtube/shots/UNkA9HhbjXY/f-09-17.jpg: a his face core not hidden in the fit upload (unchanged 1.0, inside hidden 0.0)",
-  "baseline inputs/youtube/shots/vziGl_FxQb0/f-04-23.jpg: a his face core not hidden in the fit upload (unchanged 0.602, inside hidden 1.0)",
-  "baseline inputs/youtube/shots/bLcGL6rKBBg/f-06-25.jpg: a his face core not hidden in the fit upload (unchanged 0.567, inside hidden 0.56)",
-  "baseline inputs/youtube/shots/z_acMbzNfoQ/f-07-39.jpg: a his face core not hidden in the fit upload (unchanged 1.0, inside hidden 0.0)",
-  "baseline inputs/youtube/shots/ew3gCk1zkso/f-08-08.jpg: a his face core not hidden in the fit upload (unchanged 0.657, inside hidden 1.0)",
-  "baseline inputs/youtube/shots/4Jrq_F1Ayp8/f-04-00.jpg: a his face core not hidden in the fit upload (unchanged 0.616, inside hidden 0.403)",
-  "baseline inputs/youtube/shots/XIYvycsZxDk/f-03-30.jpg: a his face core not hidden in the fit upload (unchanged 1.0, inside hidden 0.0)",
-  "baseline inputs/fashionpedia/images/test/0bf1bfb33db3cee939902582642ac1bb.jpg: a his face core not hidden in the fit upload (unchanged 0.462, inside hidden 0.556)",
-  "baseline inputs/fashionpedia/images/test/2c0c4094e2c3988fd3be0146f2c2488f.jpg: a his face core not hidden in the fit upload (unchanged 1.0, inside hidden 0.0)",
-  "baseline inputs/fashionpedia/images/test/2ddd0fbcbeb60656e0a46efe621b5a9f.jpg: a his face core not hidden in the fit upload (unchanged 0.322, inside hidden 0.696)",
-  "baseline inputs/fashionpedia/images/test/5c671460791fcc0a8c22a6dc6b014619.jpg: a his face core not hidden in the fit upload (unchanged 0.533, inside hidden 0.4)",
-  "baseline inputs/fashionpedia/images/test/7064070549ca197a6bbf5be963dd3550.jpg: a his face core not hidden in the fit upload (unchanged 1.0, inside hidden 0.0)",
-  "baseline inputs/fashionpedia/images/test/82edc3185777021c8126adb09a816d61.jpg: a his face core not hidden in the fit upload (unchanged 0.543, inside hidden 1.0)",
-  "baseline inputs/fashionpedia/images/test/b43e2fe7588b2fda2ef5c8bfce607da0.jpg: a his face core not hidden in the fit upload (unchanged 0.871, inside hidden 0.163)"
- ],
- "seconds": 5521,
+ "fails": [],
+ "seconds": 2204,
  "held-out": {
   "photos": 400,
   "statuses": {
@@ -53,6 +16,10 @@
    "his": 8,
    "spotted": 1
   },
+  "for_the_eye (his or spotted, a readable one fails)": {
+   "his": 8,
+   "spotted": 1
+  },
   "sheet": "110 crops in extraction-test/results/t96/held-out-held-out"
  },
  "baseline": {
@@ -64,17 +31,20 @@
    "noPerson/None": 105,
    "couldNotFrame/None": 29
   },
-  "suspects": 362,
+  "suspects": 361,
   "not_hidden_by_kind": {
    "unspotted": 335,
-   "his": 27,
+   "his": 26,
    "print": 3
   },
-  "sheet": "362 crops in extraction-test/results/t96/held-out-baseline"
+  "for_the_eye (his or spotted, a readable one fails)": {
+   "his": 26
+  },
+  "sheet": "361 crops in extraction-test/results/t96/held-out-baseline"
  },
  "gate_185": {
   "not_hidden": 0,
   "list": []
  },
- "eye": "#475: his face and spotted faces fail automatically; the unspotted suspects on the sheets are measured for the reviewer (print, poster, screen, already pixelated, real), not failed"
+ "eye": "#475 / T96s D5: a Vision face box of his or a spotted face outside the hidden rects fails automatically. Crops labelled EYE (his or spotted: MediaPipe-only, or inside the hidden rects with unchanged > T) fail the line when the eye calls one a readable face; the other suspects are measured, not failed"
 }

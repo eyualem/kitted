@@ -2,7 +2,7 @@
  "mode": "full",
  "planted": null,
  "fails": [],
- "seconds": 334,
+ "seconds": 10778,
  "(1) S1": {
   "his head regions (main)": [
    [
@@ -37,5 +37,5 @@
  ],
  "(3) other heads checked": 168,
  "(3) lost": [],
- "(3) panels": 7
+ "(3) panels": 10
 }

@@ -1,9 +1,7 @@
 {
  "mode": "full",
- "fails": [
-  "3 face cores not hidden in 1 photos (3 his own, 0 spotted by the app's detector; first: inputs/fashionpedia/images/test/2ddd0fbcbeb60656e0a46efe621b5a9f.jpg fit upload his, unchanged 0.322, inside hidden 0.696)"
- ],
- "seconds": 81,
+ "fails": [],
+ "seconds": 79,
  "per_kind": {
   "fit": {
    "sent": 53,
@@ -24,11 +22,9 @@
    }
   }
  },
- "leaks_strict": 3,
- "photos_leaking": [
-  "inputs/fashionpedia/images/test/2ddd0fbcbeb60656e0a46efe621b5a9f.jpg"
- ],
- "sheet": "3 crops in extraction-test/results/t96/leak-set",
+ "leaks_strict": 0,
+ "photos_leaking": [],
+ "sheet": "0 crops in extraction-test/results/t96/leak-set",
  "unspotted_not_hidden (measured, #475)": {
   "cores": 0,
   "photos": 0
@@ -37,64 +33,21 @@
  "core_kinds_judged (per kind of check)": {
   "snap": {
    "spotted": 332,
-   "his": 120,
+   "his": 119,
    "unspotted": 6
   },
   "items": {
    "spotted": 332,
-   "his": 120,
+   "his": 119,
    "unspotted": 6
   },
   "fit": {
    "spotted": 341,
    "unspotted": 8,
-   "his": 117
+   "his": 116
   }
  },
  "gate_185_not_hidden (the held-out line's automatic gate)": 0,
- "cores_ruled_not_faces_by_eye (#471 D1, D6)": 17,
- "leak_list": [
-  [
-   "inputs/fashionpedia/images/test/2ddd0fbcbeb60656e0a46efe621b5a9f.jpg",
-   "fit",
-   "upload",
-   [
-    308.5,
-    338.3,
-    16.2,
-    22.0
-   ],
-   0.322,
-   0.696,
-   "his"
-  ],
-  [
-   "inputs/fashionpedia/images/test/2ddd0fbcbeb60656e0a46efe621b5a9f.jpg",
-   "fit",
-   "detail",
-   [
-    308.5,
-    338.3,
-    16.2,
-    22.0
-   ],
-   0.322,
-   0.696,
-   "his"
-  ],
-  [
-   "inputs/fashionpedia/images/test/2ddd0fbcbeb60656e0a46efe621b5a9f.jpg",
-   "fit",
-   "upper",
-   [
-    308.5,
-    296.3,
-    16.2,
-    22.0
-   ],
-   0.322,
-   0.696,
-   "his"
-  ]
- ]
+ "cores_ruled_not_faces_by_eye (#471 D1, D6)": 18,
+ "leak_list": []
 }

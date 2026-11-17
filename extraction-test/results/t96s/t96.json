@@ -1,29 +1,25 @@
 {
  "mode": "full",
  "planted": null,
- "fails": [
-  "T96 'leak set' is red: FAIL F2.2 \u00b7 leak set: 3 face cores not hidden in 1 photos (3 his own, 0 spotted by the app's detector; first: inputs/fashionpedia/images/test/2ddd0fbcbeb60656e0a46efe621b5a9f.jpg fit upload his, uncha",
-  "T96 'kmeasure copies' is red: FAIL F2.2 \u00b7 kmeasure copies: zoom beb60656e0a46efe621b5a9f.jpg: 1 face cores not hidden in <stem>.full.jpg (first {'grey': 0.0, 'inside': 0.696, 'unchanged': 0.322, 'px': [17, 23]})",
-  "T96 'held out and regression' is red: FAIL F2.2 \u00b7 held out and regression: held-out inputs/fashionpedia/images/test/6a0f64b86eb9ed8ebebc65f773a988cf.jpg: a his face core not hidden in the fit upload (unchanged 0.514, inside hidden 1.0) (+"
- ],
- "seconds": 6584,
+ "fails": [],
+ "seconds": 3200,
  "lines": [
   "PASS F2.2 \u00b7 sweep logic",
   "PASS F2.2 \u00b7 old sends purged",
   "PASS F2.2 \u00b7 same photo",
-  "FAIL F2.2 \u00b7 leak set: 3 face cores not hidden in 1 photos (3 his own, 0 spotted by the app's detector; first: inputs/fashionpedia/images/test/2ddd0fbcbeb60656e0a46efe621b5a9f.jpg fit upload his, unchanged 0.322, inside hidden 0.696)",
-  "FAIL F2.2 \u00b7 kmeasure copies: zoom beb60656e0a46efe621b5a9f.jpg: 1 face cores not hidden in <stem>.full.jpg (first {'grey': 0.0, 'inside': 0.696, 'unchanged': 0.322, 'px': [17, 23]})",
+  "PASS F2.2 \u00b7 leak set",
+  "PASS F2.2 \u00b7 kmeasure copies",
   "PASS F2.2 \u00b7 false refusals",
   "PASS F2.2 \u00b7 time",
   "PASS F2.2 \u00b7 built small faces",
   "PASS F2.2 \u00b7 second mirror panel",
   "PASS F2.2 \u00b7 missed people",
-  "FAIL F2.2 \u00b7 held out and regression: held-out inputs/fashionpedia/images/test/6a0f64b86eb9ed8ebebc65f773a988cf.jpg: a his face core not hidden in the fit upload (unchanged 0.514, inside hidden 1.0) (+35 more, see results/t96/held-out-and-regression.json)",
+  "PASS F2.2 \u00b7 held out and regression",
   "PASS F2.2 \u00b7 no regression"
  ],
  "time (reported, not gated while the Mac has under 1 GB free)": [
   "PASS F2.2 \u00b7 time"
  ],
- "minutes": 110,
+ "minutes": 53,
  "results": "extraction-test/results/t96s/t96-run"
 }

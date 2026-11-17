@@ -1,7 +1,7 @@
 {
  "mode": "full",
  "fails": [],
- "seconds": 91,
+ "seconds": 90,
  "photos": 40,
  "by_type": {
   "a": {
@@ -44,7 +44,7 @@
  "sheet": "0 crops in extraction-test/results/t96/second-mirror-panel",
  "photos_detail": [
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/09fe8cd3/panel-0.jpg",
+   "file": "/private/tmp/t96-built-067384676d/9d79f2f2/panel-0.jpg",
    "host": "inputs/mirror-fit-check-1/m04/before_mirror.jpg",
    "status": "ok",
    "reason": null,
@@ -92,7 +92,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/12dbafb1/panel-1.jpg",
+   "file": "/private/tmp/t96-built-067384676d/b7c3ba57/panel-1.jpg",
    "host": "screenshots/phone/20261008-162946/photos/6b14dbaf24f1df9ebed0f939332a93877dc18130bea8fa974241dca76222044c-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -140,7 +140,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/508f293f/panel-2.jpg",
+   "file": "/private/tmp/t96-built-067384676d/57a1e075/panel-2.jpg",
    "host": "screenshots/phone/20261014-180424/photos/f4870b8532e83ca603183aca23389c5c7e528da3ba5ddb7c4491c3db6ab9f65f-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -188,7 +188,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/ec3a8049/panel-3.jpg",
+   "file": "/private/tmp/t96-built-067384676d/2352c827/panel-3.jpg",
    "host": "screenshots/phone/20261014-180424/photos/4c21bb56d82b953d0d1ca9321d181697742f7fc56da6e979aff68f5cd1e87590-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -236,7 +236,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/f9f4edc9/panel-4.jpg",
+   "file": "/private/tmp/t96-built-067384676d/43420974/panel-4.jpg",
    "host": "inputs/mirror-fit-check-1/m01/before_mirror.jpg",
    "status": "ok",
    "reason": null,
@@ -284,7 +284,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/3be1dd5c/panel-5.jpg",
+   "file": "/private/tmp/t96-built-067384676d/8b91f8c6/panel-5.jpg",
    "host": "screenshots/phone/20261008-162946/photos/a765e8e35386cd6a6bcb7e3a842e470bd4093ca8ecb24c508f88e6f7a3f727cf-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -332,7 +332,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/efcc0793/panel-6.jpg",
+   "file": "/private/tmp/t96-built-067384676d/1da97925/panel-6.jpg",
    "host": "screenshots/phone/20261024-153001/photos/9509794292a0fdcc1670f6441e6d025507efc229009f2051976c4fadca5427c0-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -380,7 +380,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/9e057cd2/panel-7.jpg",
+   "file": "/private/tmp/t96-built-067384676d/e685b4b8/panel-7.jpg",
    "host": "screenshots/phone/20261023-221517/photos/a5ff951fbe7c7707a2789714761a70aede8cf1e193acb4582990c2cb935a8d19-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -428,7 +428,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/524035fc/panel-8.jpg",
+   "file": "/private/tmp/t96-built-067384676d/bd9ae08d/panel-8.jpg",
    "host": "screenshots/phone/20261008-162946/photos/b0f0c8d84b93df08ba318706eda5ce27837a693f63d947f681930c153f813e97-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -476,7 +476,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/7dc0a659/panel-9.jpg",
+   "file": "/private/tmp/t96-built-067384676d/dff73857/panel-9.jpg",
    "host": "screenshots/phone/20261014-180424/photos/968016f009ad3f2fff6fc3d89685999f49385d82e86d42faf23b04dad5408313-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -524,7 +524,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/84eed9be/panel-10.jpg",
+   "file": "/private/tmp/t96-built-067384676d/581d92d4/panel-10.jpg",
    "host": "screenshots/phone/20261014-180424/photos/af7e93eb16143f9c6ff6854764b8fbc07b17905686c9fd254079e631c178a8f6-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -572,7 +572,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/60f73748/panel-11.jpg",
+   "file": "/private/tmp/t96-built-067384676d/800878b2/panel-11.jpg",
    "host": "screenshots/phone/20261021-012550/photos/cc581725df4b5c08b0864d072ac07ee84abca7b74087fabe14a823741f530daf-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -620,7 +620,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/80af05c2/panel-12.jpg",
+   "file": "/private/tmp/t96-built-067384676d/4f2c5887/panel-12.jpg",
    "host": "screenshots/phone/20261008-162946/photos/5a9049aab2d9510ed8c5b3c163688b0dd5290a3595da17e623280e8916eec3ac-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -668,7 +668,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/2872acab/panel-13.jpg",
+   "file": "/private/tmp/t96-built-067384676d/0cc7449d/panel-13.jpg",
    "host": "screenshots/phone/20261014-180424/photos/8ad378e73c5a16bcb38a1c58f7b490a5d7cbfa0d856a123b37c26f07a44f3f0c-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -716,7 +716,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/fa2d930b/panel-14.jpg",
+   "file": "/private/tmp/t96-built-067384676d/a590da50/panel-14.jpg",
    "host": "screenshots/phone/20261014-180424/photos/403ade260c5ce82ba406a271de5651ac853c6264ba3971f05a192da36fcce726-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -764,7 +764,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/6c7ba12c/panel-15.jpg",
+   "file": "/private/tmp/t96-built-067384676d/6dd8c3ba/panel-15.jpg",
    "host": "inputs/mirror-fit-check-1/m09/before_mirror.jpg",
    "status": "ok",
    "reason": null,
@@ -812,7 +812,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/e35310a9/panel-16.jpg",
+   "file": "/private/tmp/t96-built-067384676d/3bb9cc21/panel-16.jpg",
    "host": "screenshots/phone/20261017-212744/photos/fd52eb43e6c418d7e3939899ad190adc97afa276be9d4fbe3277654deecf54eb-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -860,7 +860,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/1ef7a14c/panel-17.jpg",
+   "file": "/private/tmp/t96-built-067384676d/65d564ab/panel-17.jpg",
    "host": "screenshots/phone/20261014-180424/photos/9d3ef4120a83efbc6144c257253eceaa1d3c31a7aa6fb47ad26bfecca4de14f6-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -908,7 +908,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/afb3f960/panel-18.jpg",
+   "file": "/private/tmp/t96-built-067384676d/2cc9cf45/panel-18.jpg",
    "host": "screenshots/phone/20261014-180424/photos/d1967fabb97ffbf8f54a14dd3f17e7ebe7111d04c661b98e6eae185ff68f0d00-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -956,7 +956,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/cf69ad65/panel-19.jpg",
+   "file": "/private/tmp/t96-built-067384676d/683e6721/panel-19.jpg",
    "host": "screenshots/phone/20261021-012550/photos/94df92fd22ee05c85aef91609716c3b1452f9e6183d7cff97aa9ce063ec36de1-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1004,7 +1004,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/6cc19397/panel-20.jpg",
+   "file": "/private/tmp/t96-built-067384676d/a67cb1bf/panel-20.jpg",
    "host": "screenshots/phone/20261014-180424/photos/7f14a43e30f31d5e9d6f6d9a40582c8b4ee160ffcdb984d48d1a7684e1ed7108-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1052,7 +1052,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/8119a645/panel-21.jpg",
+   "file": "/private/tmp/t96-built-067384676d/22029a58/panel-21.jpg",
    "host": "screenshots/phone/20261021-012550/photos/2a1a768577c53a69dc5dbf0fafc51fe2d34c505c33f6d1a799eebde630fa4090-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1100,7 +1100,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/37d1e288/panel-22.jpg",
+   "file": "/private/tmp/t96-built-067384676d/4eb8988b/panel-22.jpg",
    "host": "screenshots/phone/20261014-180424/photos/f0719366cc759dd076a1b37af72d6f3ba0342c7855378680609c5cf17b86ee56-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1148,7 +1148,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/934fe649/panel-23.jpg",
+   "file": "/private/tmp/t96-built-067384676d/5023d4fe/panel-23.jpg",
    "host": "screenshots/phone/20261014-180424/photos/9a2e711a1c303aaf57d599f9234e83220708a52b9bc6bda7dd14fcea1289be8f-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1196,7 +1196,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/836a1ff5/panel-24.jpg",
+   "file": "/private/tmp/t96-built-067384676d/202497b4/panel-24.jpg",
    "host": "screenshots/phone/20261014-180424/photos/d918c0325d8593bd45ce8cae8b5977a5286bbc31c94647a5ac1515d4145fe762-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1244,7 +1244,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/a331530d/panel-25.jpg",
+   "file": "/private/tmp/t96-built-067384676d/297b79a4/panel-25.jpg",
    "host": "screenshots/phone/20261014-180424/photos/d6559a0a1884a223e8c6512531d1d8c69cd902556d3baf7fe811e70dfaf08833-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1292,7 +1292,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/64ce1b18/panel-26.jpg",
+   "file": "/private/tmp/t96-built-067384676d/bfffc986/panel-26.jpg",
    "host": "screenshots/phone/20261017-212744/photos/23999fefa3d440ed4ba2124da1d8a810263110d3984d9721605afd9ecb014ed9-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1340,7 +1340,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/bdff2d41/panel-27.jpg",
+   "file": "/private/tmp/t96-built-067384676d/63317805/panel-27.jpg",
    "host": "inputs/mirror-fit-check-1/m02/before_mirror.jpg",
    "status": "ok",
    "reason": null,
@@ -1388,7 +1388,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/013e292c/panel-28.jpg",
+   "file": "/private/tmp/t96-built-067384676d/fd0b6af3/panel-28.jpg",
    "host": "screenshots/phone/20261021-012550/photos/5780bbb3c81193dd79d3517c8f73dad01211fa4344be7302a52a292bb68c57ea-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1436,7 +1436,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/efe75ab7/panel-29.jpg",
+   "file": "/private/tmp/t96-built-067384676d/02177e60/panel-29.jpg",
    "host": "screenshots/phone/20261023-221517/photos/00c9ab4652ade133190cf885140d1b8bea819f6cd31ae18d98cee955b846bbbd-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1484,7 +1484,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/888e80af/panel-30.jpg",
+   "file": "/private/tmp/t96-built-067384676d/aee1a5af/panel-30.jpg",
    "host": "screenshots/phone/20261014-180424/photos/7f3c605309c7c6a0c8e84012e4522ace2f7bdfab1783157ffa6b153e713e04d5-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1532,7 +1532,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/df18d5f8/panel-31.jpg",
+   "file": "/private/tmp/t96-built-067384676d/1f79c2f8/panel-31.jpg",
    "host": "screenshots/phone/20261014-180424/photos/0a864ea87372cfb3d6fe61a4e596531892fbb9646039ccb75fb3ba31760e55d9-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1580,7 +1580,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/6d08f947/panel-32.jpg",
+   "file": "/private/tmp/t96-built-067384676d/4cbbe40e/panel-32.jpg",
    "host": "screenshots/phone/20261014-180424/photos/3239a68d1618a0b69aaec9cc9555ed0a0fafd78227da58f93cef49ee707e27c6-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1628,7 +1628,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/5727a7d4/panel-33.jpg",
+   "file": "/private/tmp/t96-built-067384676d/cba97e90/panel-33.jpg",
    "host": "screenshots/phone/20261008-162946/photos/7de605c9fbadfdb5ae68478f1cbf76266d076044c6d5013dd6b2d34a587ae6ea-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1676,7 +1676,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/69044210/panel-34.jpg",
+   "file": "/private/tmp/t96-built-067384676d/aac79742/panel-34.jpg",
    "host": "screenshots/phone/20261021-012550/photos/aa20f9b6842cd767f1a8688e1aeebd5f22e61cfabd65dd6f25bb6356cc85d2a5-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1724,7 +1724,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/d979fae1/panel-35.jpg",
+   "file": "/private/tmp/t96-built-067384676d/0ca11517/panel-35.jpg",
    "host": "screenshots/phone/20261023-221517/photos/70f0aaa2fc3c4ba5dc355d9a58720cd13e5b3a72f675c7e5bf1fb0dbe30cd697-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1772,7 +1772,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/643ffa4f/panel-36.jpg",
+   "file": "/private/tmp/t96-built-067384676d/61468370/panel-36.jpg",
    "host": "inputs/mirror-fit-check-1/m06/before_mirror.jpg",
    "status": "ok",
    "reason": null,
@@ -1820,7 +1820,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/93938033/panel-37.jpg",
+   "file": "/private/tmp/t96-built-067384676d/cf07e062/panel-37.jpg",
    "host": "screenshots/phone/20261008-162946/photos/0d39d642c5a03b6cd903be1edb18895e73ab1b174c36eda81b637efcaf99208c-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1868,7 +1868,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/c27aec84/panel-38.jpg",
+   "file": "/private/tmp/t96-built-067384676d/fd5d59c1/panel-38.jpg",
    "host": "screenshots/phone/20261014-180424/photos/e026de2ad49038ee95dae8f102cc8d7c14b5fbbaae08028d3e232f7c81524de2-photo.jpg",
    "status": "ok",
    "reason": null,
@@ -1916,7 +1916,7 @@
    "errors": []
   },
   {
-   "file": "/private/tmp/t96-built-e09bb4ff16/9c93d127/panel-39.jpg",
+   "file": "/private/tmp/t96-built-067384676d/3d968c50/panel-39.jpg",
    "host": "screenshots/phone/20261014-180424/photos/ebe23fb3a57a072e4882c0b94e888321c7fc999895bbf10e96e05caf7a945d75-photo.jpg",
    "status": "ok",
    "reason": null,
