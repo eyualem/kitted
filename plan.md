@@ -7,7 +7,7 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 ## Where things stand
 - **On your phone today:** fit checks with scores, fixes and re-checks; Closet, Lookbook and You; Kit answering for real; the morning and evening card with real weather; share cards (cut until after launch, T67 switches them off); voice input (not yet confirmed on your phone).
 - **Built but switched off:** the paywall and purchases (a pretend store), sign-in and backup (waiting in open pull requests), notifications.
-- **The beta comes first:** friends test for free with no paywall. The app and the live server both hold testers to 3 fit checks and 20 questions a day (T14, deployed and checked live Nov 8). The paywall and real purchases wait for launch.
+- **The beta is paused (you, Nov 16):** the chat isn't good enough to spend testers' time on; it restarts after Kit's rebuild (the "Kit's stylist chat" lane) and your replay of Thursday's evening (Y33). Friends test for free with no paywall. The app and the live server both hold testers to 3 fit checks and 20 questions a day (T14, deployed and checked live Nov 8). The paywall and real purchases wait for launch.
 - **Still on the old rules:** the 1-week trial, Pro at 10 checks and 50 questions, free at 1 check a day forever with 5 questions.
 - **Not built yet:** the 7 free checks, greeting you by name, the spend cap working the spec's way, the app-only server lock (App Check), PostHog, reading scanned clothes, "not rated" for womenswear, Apple's age check.
 - **3 pull requests are waiting,** each with work before it can merge: sign-in and backup (T41) and the card's outfit picks (T64). The other 7 were merged or closed in T1.
@@ -16,7 +16,7 @@ Where the build stands and what's next. What the app *is* lives in `specs.md`; h
 
 ## Next up
 1. Apple's weather (T80) waits until after the beta (you, Nov 9): the beta keeps the US weather service, which needs no Apple step.
-2. Put the beta on TestFlight and invite your friends (T85).
+2. Rebuild Kit's chat to the approved spec (T101–T110), then restart the beta (T85, paused Nov 16).
 3. Start your two launch photo sets now; they take the longest (Y5, Y6).
 4. Read scanned clothes into Closet; your clothes photos are in (T70).
 
@@ -163,7 +163,8 @@ Spec: `specs/kit-stylist-chat.md` (interview: T100), drawn in `mockups/kit-styli
 Lane files: `app/src/features/ask`, Kit's card views in `app/src/features/stylist/cards`, plus the borrowed files each task names. In `ask/`, tasks that share a file go one at a time; T58 and T59 (Kit and the morning card) also touch `ask/`, so they take turns with this lane.  
 Order: T101, T102, T103 and T109 at once; then T104 and T105 at once; then T106, T107, T108 one after another (they share `router.ts` and `memory.ts`); T110 last.
 
-- [~] kit-stylist-chat · **T100** · PR #130 · Write the Kit stylist chat spec with you and draw its answers (approved Nov 17, with cards that fit their content) · *done: your yes · files: specs/kit-stylist-chat.md, mockups/kit-stylist-chat.html*
+- [x] 2026-11-17, #130 · **T100** · Write the Kit stylist chat spec with you and draw its answers (approved Nov 17, with cards that fit their content) · *done: your yes · files: specs/kit-stylist-chat.md, mockups/kit-stylist-chat.html*
+- [x] 2026-11-17, #129 · **piece-color-mismatch** · tiny · *(beta, Thursday's chat)* A color he names in chat ("my boots are black") becomes the piece's color for good, so its name and drawing match; shots on the web preview only, not yet on a phone · *files: ask/memory.ts, one test*
 - [ ] **T101** · normal · *(beta)* Pieces drawn without a closet row, and new drawings for a watch, belt, cap and beanie: a drawn piece (kind, color family, name) that `PieceArt` draws; the four accessories in light and dark at tile and card sizes; a watch's metal tone as a detail · *after T100 · checks: KC9.1–KC9.3, KC2.2 (the drawing) · files: closet/{flats,artSpec}.ts, closet/GarmentArt.tsx (borrowed from the Closet lane)*
 - [ ] **T102** · normal · *(beta)* The card shapes and their checks: outfit cards with pieces he'd need and examples, options, colors, add, changed, the drawn buy card, follow-ups stored on the message; his pieces first, at most 2 needed else an Example, options from one slot and never the replaced piece, one card an answer; Past chats still read the old shapes · *after T100 · checks: KC1.2, KC1.3, KC1.5, KC2.1–KC2.6, KC2.9 · files: ask/{cards,closing,pipeline}.ts, ask/prompt.ts (the closing format only)*
 - [ ] **T103** · strict · *(beta)* The colors the scoring rules allow: a new core function giving, for one slot in an outfit, which of the 25 color families the rules wouldn't mark down; no score moves, parity stays 100% · *after T100 · checks: KC3.3 (the list) · files: core (a new file and its tests; borrowed from the Fit check and scoring lane)*
@@ -244,6 +245,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-17 · chat-app-improvements (control): you paused the friends' beta (Nov 16, log #462); Thursday's chat reviewed from your 14 screenshots (`inputs/2026-11-12-thursday-chat/`, git-ignored); child sessions wrote the visuals inventory and research (`reports/`), the audit of what the app reveals (branch `claude/competent-driscoll-931840`, waiting on your picks) and Kit's spec; merged #130 (spec) and #129 (boots drawn in the color he names), your "Yes, merge both"
 - 2026-11-17 · kit-stylist-chat: Kit as a real stylist, specced with you (`specs/kit-stylist-chat.md`) and drawn in dark and light (`mockups/kit-stylist-chat.html`): his pieces first and pieces he'd need on dashed tiles, colors drawn on the piece, an add card that asks, corrections that stick and are free, Next buy in the chat, a 7-day memory, still no shops, the beta at 30 questions; split into T101–T110; you approved it the same day, adding that a card fits its content (KC1.6); the four linked docs edited with that yes; PR #130; log #461
 - 2026-11-13 · style-preference-onboarding: you picked A (this-or-that for everyone, log #459) and said yes to an 8th look, Tailored (#460); its spec written with you (`specs/tailored.md`: a suit, or a blazer with dress trousers and dressy shoes, clean sneakers OK; name only, no score moves; ships with the style game; two suits on its tile), approved Nov 13; the game mockup now shows 8 looks; merged (#121, your "Yes, merge it")
 - 2026-11-12 · style-preference-onboarding: brainstorm for setup's style step; three working phone mockups drawn with the app's own outfit drawings (`tasks/style-quiz/design.html`, private link in Y30): A this-or-that (6 picks, 12 taps to the camera), B one-of-three (3 picks, 9 taps), C today's grid with a "Not sure? Try this or that" row (7 taps, 13 if played; recommended); words are drafts; nothing built, no spec changed
@@ -258,4 +260,3 @@ The last 15 sessions, newest first.
 - 2026-11-11 · hoodie-layer-credit: the result card's one "Why 7.5?" button checked on a Release Simulator build (light and dark, the button opens the Why sheet), then merged (#108, your "Check, then merge")
 - 2026-11-11 · result-card-actions: the result card's bottom row is one "Why 7.5?" button (you picked it from three), "Not quite right?" off the card as the explain-rating spec already says; checked on the web preview in light and dark, not yet on the Simulator; PR open
 - 2026-11-11 · hoodie-layer-credit: the launch screen's K made a bit smaller, 120 to 96 pt (your ask); seen on a Release Simulator build; merged (#107); on your phone after the next TestFlight build
-- 2026-11-11 · hoodie-layer-credit: main tested with all three merged (types, lint, 853 scoring and 1,941 app tests pass; a Release Simulator build shows the K launch screen, only Kit's offer before the first check, the You tiles); no-all-caps merged (#106, log #444)
