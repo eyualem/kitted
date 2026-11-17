@@ -67,6 +67,7 @@ def main():
         truth[k] = {"kind": "rated", "group": group, "his": his, "key": key.get(k, his), "v16": r16["overall"],
                     "v15": r15["overall"], "panel": panel.get(k), "season": season or "cool",
                     "caps": [c["id"] for c in v.get("caps", [])], "held_by": v.get("held_by"),
+                    "cap": min((c["cap"] for c in v.get("caps", [])), default=None),
                     "pieces": H.desc(rd), "image": str(image_for(k, g2c, f2p))}
     cr = V.load_creators()
     stills = {pid: step for _, pid, step in V.ANCHORS}
@@ -81,11 +82,14 @@ def main():
     if missing:
         print("missing images:", missing)
         return 1
-    if OUT.exists():
+    if OUT.exists() and "--truth-only" not in sys.argv:
         for d in OUT.glob("run*"):
             shutil.rmtree(d)
     (OUT / ".key").mkdir(parents=True, exist_ok=True)
     (OUT / ".key" / "truth.json").write_text(json.dumps(truth, indent=1))
+    if "--truth-only" in sys.argv:                   # refresh the key without touching the judges' folders
+        print(f"{len(truth)} photos: truth.json rewritten")
+        return 0
     rng = random.Random(SEED)
     letters = "ABCDEFGHJKLMNPQRSTUVWXYZ"
     used = set()
