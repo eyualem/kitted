@@ -1,0 +1,13 @@
+# T103 · Report
+
+## Summary for the founder
+Nothing changes in the app yet. This adds the piece Kit's color answers will stand on: given an outfit and one slot, the code lists the colors the scoring rules would not mark down there (24 colors; "multicolor" is a print label, not a color you buy, so it is left out, which differs from the spec's "25"). Kit may later pick only from that list, so Kit can't suggest a color the score would punish. Real: it asks the same scoring engine the app already uses, so no rule is copied and no score moves; the Python parity tests stay at 100%. Not checked: real photographed outfits, speed on the phone, and how the lists feel to you. T105 (the gate) and T110 (the paid run) will show that.
+
+## Verification (verifier's verdict, round 2 of 3, transcribed by the coordinator because the verifier cannot write files)
+**READY.** No code or test defects left.
+- **Lock:** the test file is additive against the first lock (9d0cf004); the final lock is 7a34b7cd. No test weakened, no `.only`/`.skip`, no fixture, engine data, `extraction-test/`, `app/src/` or `firebase/` change. Diff since the plan: `allowedColors.ts`, one export line in `index.ts`, the test file, `plan.md`, and the T103 docs.
+- **Suites:** `allowedColors.test.ts` 36 of 36; full core suite 31 files, 889 of 889 (parity included); `tsc` clean. The implementer's `npm run check` passed at build time; the coordinator reran it after the last test change (see PR).
+- **Criteria:** KC3.3 (cases a to p, q, r over 108 seed-closet asks, s1 to s7) pass; guards G1 (no score moves), G2, G3, G4, G5 pass.
+- **Break it on purpose, all caught:** color part only; zero baseline; no tolerance; old color/saturation kept; boldness or occasion ignored; `multicolor` listed; wrong order; duplicates; input mutated; engine error rethrown or returning all 24; positives counted as deductions; candidate first in the reading; unscored costing 1; deductions under 1 ignored; tolerance 0.6; wrong defaults; an idempotent write to `PARTS_DATA` or `RUBRIC_DATA` (round 1 missed this; G3 now takes its copies at module load and a full run catches it).
+- **Round 1 defect (test, fixed):** G3 depended on test order. The test writer fixed it and added G5 (a null entry among the other pieces gives `[]`), recorded in TASK.md → Disputes.
+- **Not verified:** that an allowed color earns no deduction on a real photographed outfit (the list is judged on a synthetic full-body reading); the model picking only from the list and the sentence gate dropping other colors (T105, T110); phone speed (about 1.4 ms per call here; Y33 replay); no UI, so no Simulator.
