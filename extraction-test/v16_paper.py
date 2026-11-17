@@ -41,6 +41,12 @@ CREATORS = H.DATA / "extraction-test/results/creators1/raw.json"
 Y32 = Path.home() / "Downloads" / "ratings.csv"
 
 
+def season_for(rd):
+    """His rated photos carry no weather (Nov 17): a photo in shorts is read as a warm day, every other as cool."""
+    B = next((g for g in rd.get("garments", []) if g.get("category") == "bottom"), None)
+    return "warm" if B is not None and B.get("subcategory") in P.SHORTS else None
+
+
 def sc(rd, occ="everyday", styles=None, sl=None, season=None, engine="v16", tune=None):
     return P.score_parts(rd, occ, styles or {}, sl, "a_little", engine=engine, tune=tune,
                          season=season if engine == "v16" else None)
@@ -513,7 +519,7 @@ def score_pool(pool):
         row = {}
         for name, kw, use, tn in ARMS:
             sl = None if not use or lk is None else (narrow(lk, False, True) if use == "narrow" else lk)
-            r = sc(rd, "everyday", PROFILE, sl, tune=tn, **kw)
+            r = sc(rd, "everyday", PROFILE, sl, tune=tn, season=season_for(rd), **kw)
             row[name] = r
         out[k] = row
     return out

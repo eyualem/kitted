@@ -15,6 +15,7 @@ r + the share within 1 point on half A, one rule at a time over a small grid (co
 the evidence, not fitted: which lifts are off (L3, L5, L7b), the pooling cap as a tip, the long top's half point.
 """
 import json
+import os
 import random
 import statistics as st
 import sys
@@ -33,10 +34,23 @@ SEED = 20261116
 # shorts charge is 0 (no creator calls shorts a fault); parts_proto.TASTE_BY_LOOK scales each size by the graded look
 FIXED = {"lift_off": [], "h7_tip": True, "long_top": 0.5, "long_top_read": "reading", "shorts": 0,
          "one_lift": 0.5,                                              # the table: a single lift at half (rule i)
-         "leg_skinny": 0, "leg_slim": 0}                               # row b: v16's own charges carry them (adds 0)
-GRID = {"leg_wide": [0, 0.25, 0.5, 0.75],
+         "leg_slim": 0,                                                # row b: slim is v16's own charge (and free in tailored)
+         # Nov 17, card by card: one color is free (his "point"); slides fine on a warm casual day; runners fine with
+         # casual pieces
+         "color": 0, "sandals_warm": True, "runners_casual": True,
+         "sil_mode": "alone"}                                          # SIL lifts a great shape when nothing else does
+GRID = {"sil": [0.5, 0.75, 1.0, 1.25, 1.5, 1.75], "sil_line": [0.5, 0.75, 1.0], "sil_tonal": [0, 0.25, 0.5],
+        "leg_skinny": [0.5, 1.0, 1.5],                                # Nov 17: skinny costs in every look, tailored too
+        "leg_wide": [0, 0.25, 0.5, 0.75],
         "hem_plus": [0, 0.25, 0.5],
-        "shorts_wide": [0, 0.25, 0.5], "shorts_above": [0, 0.25, 0.5, 0.75], "color": [0, 0.25, 0.5]}
+        "shorts_wide": [0, 0.25, 0.5], "shorts_above": [0, 0.25, 0.5, 0.75]}
+
+
+if os.environ.get("TASTE_OVERRIDE"):                                # ablations: fix some sizes, drop them from the fit
+    _ov = json.loads(os.environ["TASTE_OVERRIDE"])
+    FIXED.update(_ov)
+    for _k in _ov:
+        GRID.pop(_k, None)
 
 
 def stats(xs, hv):
@@ -73,7 +87,8 @@ def main():
     def score(k, T):
         tk = (k, json.dumps(T, sort_keys=True))
         if tk not in cache:
-            cache[tk] = V.sc(pool[k][2], "everyday", V.PROFILE, pool[k][3], tune={"taste": T})["overall"]  # None = off
+            cache[tk] = V.sc(pool[k][2], "everyday", V.PROFILE, pool[k][3], tune={"taste": T},       # None = off
+                             season=None if os.environ.get("TASTE_NOSEASON") else V.season_for(pool[k][2]))["overall"]
         return cache[tk]
 
     def obj(T, half):
@@ -102,7 +117,7 @@ def main():
     say(f"His taste rules, fitted on half A, tested on the held-out half B ({'his consistent key' if consistent else 'his raw ratings'}; "
         f"{len(ks)} photos: A {len(A)}, B {len(B)}; seed {SEED})")
     say("Fitted sizes: " + ", ".join(f"{k} {T[k]}" for k in GRID) + f"; fixed: lifts off {', '.join(FIXED['lift_off']) or 'none'}, plain shorts {FIXED['shorts']}, "
-        f"a single lift at {FIXED['one_lift']}, skinny and slim 0 (row b), the pooling cap a tip, the long top {FIXED['long_top']} (read: {FIXED['long_top_read']})")
+        f"a single lift at {FIXED['one_lift']}, slim 0 (row b), one color free, slides fine warm and casual, runners fine casual, the pooling cap a tip, the long top {FIXED['long_top']} (read: {FIXED['long_top_read']})")
     for name, half in (("A (fitted on it)", A), ("B (held out: the honest number)", B), ("all", ks)):
         hv = [his[k] for k in half]
         say(f"  half {name}:")

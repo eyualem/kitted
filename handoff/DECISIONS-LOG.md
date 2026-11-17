@@ -3294,3 +3294,18 @@ Contradictions settled and decisions changed during the build. Newest last.
       - B2 6/6, B3 15/18 (was 13), B4 all but H7 (his call), B5 16.6 / 23.2 (was 17.7 / 26.5), B6 218/223.
       - The 15-outfit table is in `tasks/T68/TASK.md`; the rubric diff is updated (not applied).
     - **Lesson:** letting the creators win four clashes cost about 2 points of agreement with his ratings. That's the price of an outside yardstick, and the reason it's his explicit call, not a tuning choice.
+
+480. **His card-by-card fixes in v16: a silhouette lift, one color free, slides fine on a warm casual day, runners fine with casual pieces, skinny charged everywhere (T68 round 4, Nov 17, $0).**
+    - **The founder:** "proportions are a very important thing that we have to nail"; sandals fine "if the top and the bottom are some streetwear", not with a tailored or professional piece; no wrinkle read ("If it costs more, we don't have to check wrinkles").
+    - **Built:** SIL (+1.25: a full leg over a real shoe, or a matched suit's straight line at half; nothing off; it lifts only when nothing else does); L5 in every look; the one-color charge off; the slides and runner waivers; skinny −0.5; shorts photos read as warm.
+    - **Held out, 8 splits:** 81.6% within a point and r 0.63 (raw); 80.2% and 0.62 (key). B1's within-a-point passes for the first time; r doesn't.
+    - **Claude's calls:**
+      - **SIL only when nothing else lifts.** Stacked, it double-counted the shape and cost 5 points held out. Chosen from three modes on the same splits, so slightly flattered.
+      - **No straight-line SIL except a matched suit:** 19 photos, his 6.8 against 8.1.
+      - **No blanket 9 for a clean suit:** his own matched suits run 6.5–9.5.
+      - **Shorts photos read as warm,** others cool; the gold bars stay cool.
+    - **Steadiness fails** (209/223; bar 218): leg-width flips, the accent found on one reading only, and one-lift-at-half steps.
+      - Only a steady version (no SIL, accent by look, one lift full) passes (218), at 77% held out.
+      - That's his call. Recommended: keep his asks on paper and steady the leg read before T69.
+    - **Not read, for later:** a sweater on the shoulders; socks (the echo case).
+    - **Lesson:** the same fix can help or hurt depending on how it combines. SIL alone matched him (−0.16) and stacked it overshot (−1.1), so test interactions, not just single rules.

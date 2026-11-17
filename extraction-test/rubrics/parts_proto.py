@@ -510,9 +510,12 @@ TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
                    # round 3 (Nov 16): his taste rules, on since his yes ("yea, i want to go the recommended way"):
                    # the base sizes fitted on all 164 rated photos against his consistent key (taste_rules.py --all
                    # --key consistent), each scaled by TASTE_BY_LOOK for the graded look; the creators win clashes
+                   # Nov 17 (card by card): + the silhouette lift (SIL, alone), one color free, slides fine on a warm
+                   # casual day, runners fine with casual pieces, skinny costs in every look; refit on all 164
                    taste=dict(lift_off=[], h7_tip=True, long_top=0.5, long_top_read="reading", shorts=0, one_lift=0.5,
-                              leg_skinny=0, leg_slim=0, leg_wide=0.5, hem_plus=0.5, shorts_wide=0.5, shorts_above=0.25,
-                              color=0.5))
+                              leg_slim=0, color=0, sandals_warm=True, runners_casual=True, sil_mode="alone",
+                              sil=1.25, sil_line=0.5, sil_tonal=0, leg_skinny=0.5, leg_wide=0.5, hem_plus=0.25,
+                              shorts_wide=0.5, shorts_above=0.5))
 VERSIONS["v16"] = "parts-proto-16 (Nov 14, 2026, on paper)"
 HL_LAYERS = {"hoodie", "sweatshirt"}                             # v15 PRO-17: worn as the layer (outerwear) ...
 HL_TOPS = {"tee", "graphic_tee"}                                 # ... over a tee
@@ -1659,7 +1662,9 @@ V16_LIFTS = {
     "H2_clear_top_to_toe": ("L7", 0.5, False),
     "H2_suit": ("L7", 0.5, False),
 }
-V16_LIFT_NAMES = {"L1": "a deliberate shape (a waist, a tuck, the look's own silhouette)", "L2": "a short layer over a full leg",
+PRO_PIECES = {"suit_jacket", "blazer", "sport_coat", "unstructured_blazer", "dress_shirt", "suit_trousers", "trousers"}
+V16_LIFT_NAMES = {"SIL": "a strong silhouette (a full leg over a real shoe, or a straight line to a dressy shoe)",
+                  "L1": "a deliberate shape (a waist, a tuck, the look's own silhouette)", "L2": "a short layer over a full leg",
                   "L3": "an open layer over a tee", "L4s": "a light tonal summer outfit", "L5": "one accent on a calm base",
                   "L6": "a color picked up", "L7": "one look top to toe", "L7b": "one smart piece with casual ones",
                   "SL1": "a fitted top over loose trousers, summer's shape"}
@@ -1899,12 +1904,16 @@ TASTE_BY_LOOK = {
     # e. a hem covering the shoe, wide legs only (prop.9; off in tailored, suit.3; half where prop.14 asks more)
     "hem_plus": {"vintage_sport": 1, "outdoor": 1, "workwear": 1, "streetwear": 1, "tailored": 0,
                  "classic_prep": 0.5, "minimalist": 1, "smart_casual": 0.5, "none": 1},
-    # g. one accent (L5): a lift where the quiet base is the look (color.2)
-    "L5": {"vintage_sport": 0, "outdoor": 0, "workwear": 0, "streetwear": 0, "tailored": 1, "classic_prep": 0,
-           "minimalist": 1, "smart_casual": 0.5, "none": 0},
+    # g. one accent (L5): a lift in every look since Nov 17 (the founder: one accent on a neutral base is Wanhee's
+    # "point", color.2), so it has no row here
     # j. a long top: half where a long street proportion can work (prop.16)
     "long_top": {"vintage_sport": 0.5, "streetwear": 0.5},
 }
+
+
+# the Nov 16 accent row (minimal and tailored full, smart casual half, the rest off); used when taste["accent_by_look"]
+L5_BY_LOOK = {"vintage_sport": 0, "outdoor": 0, "workwear": 0, "streetwear": 0, "tailored": 1, "classic_prep": 0,
+              "minimalist": 1, "smart_casual": 0.5, "none": 0}
 
 
 def is_tailored(main):
@@ -1933,7 +1942,7 @@ def _look_val(rule, looks):
     return [1 if row is None else row.get(lk, 1) for lk in looks]
 
 
-def _v16_taste(o, sl_raw, lifts, caps, t):
+def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
     """Round 3 (T68, Nov 16): the founder's taste patterns as rules, all base sizes in t["taste"] (None = off), each
     scaled by TASTE_BY_LOOK for the look(s) the outfit is graded as (o["graded"]). Returns (lifts, caps, items):
     lifts and caps after the taste rules, and the raw-score adjustments [(points, id, line)].
@@ -1950,24 +1959,91 @@ def _v16_taste(o, sl_raw, lifts, caps, t):
                  "reading" (default: the reading's below_crotch) or "ruler" (the Mac's body ruler, second_look["long_top"])"""
     T = t.get("taste")
     if not T:
-        return lifts, caps, []
+        return lifts, caps, [], set()
     looks = o.get("graded") or {"none"}
-    items = []
+    items, waived = [], set()
+    pending_sil = None
+    # Nov 17 (the founder, card by card): "proportions are a very important thing that we have to nail".
+    # SIL, a strong silhouette, as a lift of its own (sil.2, sil.7, sil.10, prop.3, prop.10, prop.11, prop.15): nothing
+    # off in fit or proportions, no dealbreaker, the top not hanging long, and either
+    #   a full leg (wide or relaxed trousers, or roomy or wide shorts) over a real shoe (any but slides and runners), or
+    #   a straight line: straight trousers (slim too in tailored) over loafers, derbies, dress shoes or boots.
+    # All neutrals (and denim) add sil_tonal: "in one color the outline is the whole outfit" (sil.7).
+    if T.get("sil") and parts is not None:
+        B, S = o["bottom"], o["shoes"]
+        sub_b = B.get("subcategory") if B else None
+        legb = B.get("leg_shape") if B else None
+        ss = S.get("subcategory") if S else None
+        real = ss is not None and ss not in SLIDES | RUNNER | {"other"}
+        if sub_b in SHORTS:
+            full = (B.get("volume") or 3) >= 4 or legb in R.LOOSE
+        else:
+            full = legb in R.LOOSE
+        subs = {g.get("subcategory") for g in o["main"]}
+        jk = next((g for g in o["outers"] if g.get("subcategory") == "suit_jacket"), None)
+        suit_matched = (jk is not None and sub_b == "suit_trousers" and jk.get("color_family") == B.get("color_family"))
+        # the straight line counts only for a clean matched suit (Nov 17: "a clean, matched suit can reach 9"); his
+        # ratings don't lift other straight-leg outfits (19 photos: his 6.8 against 8.1 with it)
+        line = (suit_matched and (legb in ("straight", "slim")) and ss in {"loafer", "derby", "dress_shoe", "chelsea_boot"}
+                and "suit_jacket" in subs)
+        long_top = any(g.get("length") == "below_crotch" and g.get("tucked") not in ("full", "half")
+                       for g in o["tops"] + o["outers"])
+        shape_fault = any(r["points"] < 0 for k in ("fit", "proportions") for r in parts[k].reasons)
+        dealbreaker = any(c[2] in ("sink", "hold") for c in caps)
+        if ((full and real) or line) and not long_top and not shape_fault and not dealbreaker:
+            cols = {g.get("color_family") for g in o["tops"] + o["outers"] + [B]}
+            tonal = all(c in R.NEUTRALS or str(c).startswith("denim") for c in cols if c)
+            size = T["sil"] * (1.0 if full else T.get("sil_line", 1.0)) + (T.get("sil_tonal", 0.0) if tonal else 0.0)
+            what = (f"{'roomy shorts' if sub_b in SHORTS else legb + ' ' + sub_b.replace('_', ' ')} over "
+                    f"{ss.replace('_', ' ')}s" if full else f"a straight line down to the {ss.replace('_', ' ')}s")
+            sil = ("SIL", round(size, 3), f"a strong silhouette: {what}" + (", all in neutrals" if tonal else ""), False)
+            mode = T.get("sil_mode", "alone")
+            if mode == "alone":                                       # only when nothing else lifts
+                if not lifts:
+                    lifts = [sil]
+            elif mode == "single":                                    # with at most one other lift: the larger of the
+                pending_sil = sil                                     # two (after the one-lift rule, below); two or
+                pending_sil = sil if len(lifts) <= 1 else None        # more lifts already stack past it
+            elif mode == "top_up":                                    # applied after the one-lift rule (below)
+                pending_sil = sil
+            else:                                                     # one shape credit: the larger of SIL and L1/SL1
+                shape = [x for x in lifts if x[0] in ("L1", "SL1")]
+                if not shape or max(x[1] for x in shape) < sil[1]:
+                    lifts = [x for x in lifts if x[0] not in ("L1", "SL1")] + [sil]
+    # sandals and slides (Nov 17): fine on a warm day with streetwear or casual pieces; they still cost with a tailored
+    # or professional piece, and on a cool day. Runners: no charge with athletic or casual pieces, only with dressy ones.
+    pro = any(g.get("subcategory") in PRO_PIECES for g in o["main"])
+    if T.get("sandals_warm") and o.get("season") == "warm" and not pro:
+        waived |= {"SK1_slides_out", "SK1b_hem_drags"}
+    if T.get("runners_casual") and not pro:
+        waived |= {"SK2_runners"}
     off = set(T.get("lift_off") or ())
     out = []
     for a, b, c, d in lifts:
         if a in off:
             continue
-        if a in TASTE_BY_LOOK:
+        if a == "L5" and T.get("accent_by_look"):
+            m = max(L5_BY_LOOK.get(lk, 1) for lk in looks)
+            if not m:
+                continue
+            b = round(b * m, 3)
+        elif a in TASTE_BY_LOOK:
             m = max(_look_val(a, looks))
             if not m:
                 continue
             b = round(b * m, 3)
         out.append((a, b, c, d))
     lifts = out
-    if len(lifts) == 1 and T.get("one_lift", 1.0) != 1.0:
+    if len(lifts) == 1 and T.get("one_lift", 1.0) != 1.0 and lifts[0][0] != "SIL":   # a great shape alone still lifts
         a, b, c, d = lifts[0]
         lifts = [(a, round(b * T["one_lift"], 3), c, d)]
+    if pending_sil is not None and T.get("sil_mode") == "single":
+        if not lifts or lifts[0][1] < pending_sil[1]:
+            lifts = [pending_sil]
+    elif pending_sil is not None:                                     # top-up: with a great shape the lifts come to at
+        have = sum(x[1] for x in lifts)                               # least SIL's size; steady when a small lift flips
+        if pending_sil[1] > have:
+            lifts = lifts + [(pending_sil[0], round(pending_sil[1] - have, 3), pending_sil[2], False)]
     if T.get("h7_tip"):
         caps = [c for c in caps if c[1] != "H7"]
     B = o["bottom"]
@@ -2007,7 +2083,7 @@ def _v16_taste(o, sl_raw, lifts, caps, t):
             m = min(_look_val("long_top", looks))
             if long_ and m:
                 items.append((-T["long_top"] * m, "T_long_top", "the top ends low"))
-    return lifts, caps, items
+    return lifts, caps, items, waived
 
 
 def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
@@ -2035,7 +2111,7 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
     lifts = _v16_lifts(o, parts, sl, t)
     lift_checks = {c for c, m in V16_LIFTS.items()}
     caps = _v16_caps(o, parts, sl_raw, occasion, t)
-    lifts, caps, taste = _v16_taste(o, sl_raw, lifts, caps, t)        # round 3: off unless t["taste"] is set
+    lifts, caps, taste, waived = _v16_taste(o, sl_raw, lifts, caps, t, parts)   # round 3: off unless t["taste"] is set
     if dep:                                                            # a clash never reads sharp: held at 7.0; with a
         if dep[2] == 1.5:                                              # second fault it sinks, and the cap owns the charge
             caps.append((5.5 if dep[0] != "H5" else 6.5, dep[0], "sink" if dep[0] != "H5" else "hold",
@@ -2043,7 +2119,7 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
         else:
             caps.append((7.0, dep[0], "clash", "the two halves come from different worlds"))
     owned = set().union(*[V16_OWNS.get(c[1], set()) for c in caps if c[2] != "clash"]) if caps else set()
-    owned |= V16_UNSTEADY
+    owned |= V16_UNSTEADY | waived
     # faults: the worst part's charges at alpha, every other part's at beta (they no longer average away); a charge a
     # dealbreaker owns is left out, since the cap stands for it
     negs = sorted((-sum(r["points"] for r in parts[k].reasons if r["points"] < 0 and r["check"] not in owned)
@@ -2071,7 +2147,8 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
     subs = {g.get("subcategory") for g in o["main"]}
     one_look = bool(o["det"]) or ("suit_jacket" in subs and "suit_trousers" in subs) or any(x[0] == "L7b" for x in lifts)
     n = sum(1 for x in lifts if x[1] >= 0.5)
-    anything_off = any(r["points"] < 0 for p in parts.values() for r in p.reasons) or bool(cond["faults"]) or bool(caps)
+    anything_off = (any(r["points"] < 0 and r["check"] not in waived for p in parts.values() for r in p.reasons)
+                    or bool(cond["faults"]) or bool(caps))
     owned_lines = sorted(owned & {r["check"] for p in parts.values() for r in p.reasons})
     if n == 0:
         stack = 7.5

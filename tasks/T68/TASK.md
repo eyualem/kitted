@@ -461,3 +461,74 @@ Gold shares (cool, first reading): 1.3 / 10.8 / 17.0 / 46.6 / 24.2 / 0%, against
 - the graded look and why it lands there.
 
 Sort by biggest change or biggest gap from him; filter moved up, moved down, or more than a point from him. The generator is `extraction-test/review_page.py`. The page, data and photos (neutral ids) go to `inputs/gold-judge/review-v16/`, which is git-ignored and served on port 8767 by its own `serve.py`. Header on these 164: today within a point 125/164, r 0.50; new 130/164, r 0.60. The rules were tuned on these photos; on unseen ones it's 78% and r 0.60.
+
+## Round 4: his card-by-card fixes (Nov 17, $0; still on paper)
+
+His words: "proportions are a very important thing that we have to nail... I would put a bit more energy into that one"; sandals "with streetwear... make an outfit look good sometimes", but not with a tailored or professional piece; "If it costs more, we don't have to check wrinkles" (no wrinkle read).
+
+**Built in v16** (`_v16_taste`; v15 untouched, conformance 501/501, `graded_look_check.py` passes):
+1. **A silhouette lift, SIL (+1.25), from reads that already pass.**
+   - **When it fires:** a full leg (wide or relaxed trousers, or roomy or wide shorts) over a real shoe; or a clean matched suit's straight line to dressy shoes (half size). Nothing may be off in fit or proportions, no dealbreaker, and the top must not hang past the crotch.
+   - **How it counts:** it lifts a great shape **when nothing else lifts**, counts as a lift for stacking, and isn't halved as a single lift, so "nothing off and a great shape" reaches 8.
+   - **Why "only when nothing else lifts":** with other lifts it double-counted the shape (his 48 such photos ran 1.1 points under it).
+   - **The straight line on its own isn't a lift:** his 19 straight-leg outfits with dressy shoes average 6.8, against 8.1 with it. It stays only for a matched suit.
+   - **The shape charges he named already exist:** a big top over skinny or slim legs (S1/S2/H1 caps), the long-top charge, and now skinny legs (fix 5).
+2. **Color:** the one-color charge is gone, and one accent on a neutral base is a lift in every look. A second accent echoing the first (the orange socks) can't be read, since socks aren't. Three or more colors and real clashes keep their own charges.
+3. **Slides:** no charge on a warm day with nothing tailored or professional; they still cost with one, and on a cool day. **The test photos have no weather:** a photo in shorts is read as a warm day, every other as cool (`v16_paper.season_for`). The gold bars stay on a cool day as written.
+4. **Runners:** no charge unless a tailored or professional piece is in the outfit.
+5. **Skinny legs:** −0.5 in every look, tailored included. Slim stays free in tailored.
+- **Not read, noted for later ($0):** a sweater draped on the shoulders; socks.
+
+**Held out, 8 fresh splits** (`results/taste1/nov17_versions.md`):
+
+| Version | Raw | Key | Steadiness (bar 218) |
+|---|---|---|---|
+| Nov 16 build | 78.2%, r 0.60 | 76.7%, r 0.58 | 218 |
+| **His asks (the engine now)** | **81.6%, r 0.63** | **80.2%, r 0.62** | **209: FAIL** |
+| His asks, but SIL takes the larger of one other lift | 79.6%, 0.62 | 78.2%, 0.61 | 211: FAIL |
+| Shape lift, accent by look, one lift at full | 78.7%, 0.61 | 77.4%, 0.60 | 214: FAIL |
+| Steady: no shape lift, accent by look, one lift at full | 77.1%, 0.59 | 75.8%, 0.58 | **218: PASS** |
+| v15 | 76.1%, 0.53 | 77.0%, 0.52 | 218 |
+
+- **Within a point now passes B1's 80% on both keys** for the first time. r is still under 0.69.
+- **Each fix alone, on raw ratings:**
+  - the shape lift stacked on other lifts was the one that hurt (74.8%, against 79.4% without it); only "when nothing else lifts" turned it into a gain;
+  - slides +1.2 points, skinny +1.0, warm shorts +0.9, runners +0.4;
+  - dropping the one-color charge costs about 1 point against his ratings, but it's his explicit call.
+- **Honesty:** I chose "when nothing else lifts" out of three modes on these same splits, so its held-out number is slightly flattered.
+
+**Steadiness fails** (209/223; v15 218). The flips are in the reading, not the rules:
+- the leg read relaxed on one reading and straight on the other;
+- an accent found on one reading only;
+- one lift against two, which the one-lift-at-half rule turns into a step.
+
+Only the steady version passes B6. Making the silhouette lift a top-up, or taking the larger lift, didn't fix it. **This is his call:** his asks match him best (82% held out) but wobble more between two photos of the same outfit (94% within half a point, against 98% today). Or take the steady version (77%). **Recommended:** keep his asks on paper and fix the wobble at the read (a steadier leg-width read is the main lever) before any of it goes into the app.
+
+**Other bars** (his asks): B2 6/6; B3 15/18; B4 every row but H7 (his call); B5 gold 20.9 (8–8.5 now 36% against a 15% target) and his checks 21.6 (was 23.2); B7 v15 untouched.
+
+**His noted outfits** (`results/taste1/noted_outfits.md`; reported, never tuned to alone):
+
+| Outfit | His | His target | Today | Nov 16 | **Now** | Steady |
+|---|---|---|---|---|---|---|
+| White tee, wide jorts, Timbs | 8.5 | 8 | 7 | 7.5 | **8** | 7.5 |
+| Tee, black wide jorts, Jordans | 9 | 8+ | 7 | 7.5 | **8** | 7.5 |
+| Black graphic tee, oversized olive cargo shorts, brown boots | 9 | 9 | 7 | 7.5 | **8** | 7.5 |
+| Light-blue oxford, khaki wide shorts, loafers | 8 (re-rate 9) | 8+ | 6.5 | 7 | **7** | 7.5 |
+| Light-blue oxford, wide black trousers, black shoes | 8.5 | 8+ | 7 | 7.5 | **7.5** | 8 |
+| Tan chore coat, black straight chinos, derbies | 8.5 | above 8 | 7.5 | 7 | **7** | 7 |
+| Black suit, white shirt, black shoes | 9.5 | 9 | 7.5 | 8 | **8** | 8 |
+| Navy overshirt, light-blue tee, charcoal chinos | 5.5 | 6.5 | 7 | 7.5 | **7.5** | 7.5 |
+| Blazer over very skinny jeans | 5.5 | well below 7 | 6.5 | 7 | **6.5** | 7 |
+| White tee, blue athletic shorts, grey runners | 6 | no runner charge | 5.5 | 4.5 | **5.5** | 5.5 |
+| Orange tee and shorts (the socks case) | 6 | – | 7.5 | 6.5 | **7** | 6.5 |
+| Purple graphic tee, brown wide shorts, slides (summer) | 7 | fine in summer | 6.5 | 5.5 | **7** | 7 |
+
+- **Hits:** the three wide-shorts outfits, runners and slides.
+- **The two oxford outfits:** a small other lift (a quarter-point smart piece, or a quarter-point shape) blocks the silhouette lift. "Take the larger" would lift both to 8, but it costs 2 points held out, so it isn't used.
+- **The suit stays 8.** His own near-identical matched suits sit at 6.5–7.5 even on re-rate, so a blanket 9 for a clean suit isn't supported by his ratings: the reading can't see what separates them.
+- **The chore coat:** the straight line isn't a lift for him on 19 photos.
+- **The navy overshirt:** the reading calls the chinos straight, not slim, so fix 5 can't reach it.
+
+**His review page is regenerated** (port 8767, same address): 132/164 within a point, r 0.62 on these photos; 82% and 0.63 on unseen ones. Shorts photos are read as a warm day.
+
+**The rubric diff is updated** (not applied): [TST-SIL], [TST-sk], [TST-sd] and [TST-rn]; [TST-d] off; [LFT-5] in every look; the shorts-above-knee and hem sizes refit.
