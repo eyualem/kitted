@@ -3174,3 +3174,4 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Words: a bold line plus one short line**, 40 words max with a card, 60 without. **New drawings:** watch, belt, cap, beanie.
     - **One paid test run up to 10¢** OK'd for T110.
     - Split into T101–T110 (plan.md, the new "Kit's stylist chat" lane).
+    - **Approved the same day ("I like the mockups... I approve the spec"), with one change: a card fits its content** ("it doesn't always have to fit the screen"): tiles keep one size and the card is only as wide as they need (KC1.6). With that yes, the linked lines changed: `specs/explain-rating.md` (a correction that changes a piece is free), `specs/free-and-pro.md` FP7 (30 questions), `handoff/07` §3.2 (the recap), `specs.md`'s data table.

@@ -1,5 +1,7 @@
 # Kit, the stylist in the chat
 
+**Approved by the founder:** 2026-11-17
+
 After this, Kit answers like a stylist who knows him: one short line of words, then a picture of the answer. His own pieces come first. Pieces he'd need are drawn and marked. Colors are shown on the piece itself. When he says he owns something, Kit offers to add it. When he corrects Kit, the closet piece changes and the misread never comes back. Kit knows the app's own screens, and it remembers him from one day to the next.
 
 **Part of:** `specs.md` F5 (Kit), F6 (the morning card, for dislikes only), F4 (fixing a misread). Works with `handoff/07-stylist-chat.md` (the engine, the context pack, the card path), `specs/explain-rating.md` (the Why button hands off to Kit; ER3 re-score), `specs/closet-beta.md` (Outfits and outfit counts off in the beta), `rubric/stylist-guide.md` (what Kit knows, its voice). Mockup: `mockups/kit-stylist-chat.html` (dark and light).
@@ -32,7 +34,7 @@ The founder wants the chat to feel like a real stylist with the full picture of 
 
 ### The shape of an answer
 1. **One bold line** that is the move ("Swap the olive sweater for your cream striped button-up."), then at most one short line of why, in grey.
-2. **One card under it** that is the answer as a picture: an outfit, options, colors, an add card, a changed piece, or a buy card. At most one card per answer.
+2. **One card under it** that is the answer as a picture: an outfit, options, colors, an add card, a changed piece, or a buy card. At most one card per answer. **The card fits its content** (the founder, Nov 17): tiles keep one size, so a card with two colors is narrow and a six-piece outfit wraps to a second row. It never stretches to fill the screen.
 3. **2–3 follow-up taps** under the latest answer only ("Make it dressier", "Show me jackets"). A tap sends it as his message.
 
 ### An outfit card (KC2)
@@ -75,6 +77,7 @@ Asked where to buy, Kit says so plainly and gives what to look for, with the pie
 - KC1.3 Follow-up taps: 0 to 3 under the latest Kit answer only. Each is at most 30 characters, in sentence case, with no emoji, about clothes, and not a repeat of what he just asked. They are proposed by the model and checked by code, which drops any that fail. They go away when he sends his next message, and never show under a limit line, a decline, the support card or an error.
 - KC1.4 Kit never says it can't do something the app just did or can do (add a piece, change a piece, show an outfit), and never says it did something the code didn't do. Checked on the test set (KC11).
 - KC1.5 Every card a Kit answer shows is rebuilt in Past chats from what was stored. A drawn piece always redraws; one of his pieces removed since shows `No longer in your closet`. Past chats' buttons (Add, No thanks, Undo) are read-only and show the outcome (`Added`, `Not added`).
+- KC1.6 **A card fits its content:** piece tiles are one fixed size (about 76 pt, larger with bigger text), and a card is only as wide as its tiles, tag line and buttons need, up to the screen width. More tiles than fit wrap to the next row. A card is never stretched to the screen's width when its content is narrower. Checked in screenshots: a 2-color card, a 3-option card, a 4-piece and a 6-piece outfit, at default and largest text.
 
 ## KC2. Outfits, options and examples
 - KC2.1 **His pieces first:** when his closet has a piece of the kind the outfit needs (not deleted, not one he'd rather not wear), the card uses his piece, not a drawn one.

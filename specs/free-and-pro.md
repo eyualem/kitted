@@ -1,6 +1,6 @@
 # Free and Pro
 
-**Approved by the founder:** 2026-11-07 (FP7, the beta: 2026-11-08)
+**Approved by the founder:** 2026-11-07 (FP7, the beta: 2026-11-08; 30 questions: 2026-11-17)
 
 After this, a new user knows from his first result how many free checks he has, is offered Pro at three honest moments with one price, and can always close the page and keep using everything that runs on code.
 
@@ -130,7 +130,7 @@ An inline card in the chat, under his photo. The photo is saved on the phone, ne
 ## FP7. The beta (TestFlight, until launch)
 Friends testing the app never pay and never see a price. The server says which rules a phone is on; during the beta it answers `beta` for everyone, and at launch it switches to free.
 
-- **Limits:** 3 fit checks a day, each with its re-check, and 20 questions a day. Days roll over at 4 am. No lifetime count.
+- **Limits:** 3 fit checks a day, each with its re-check, and 30 questions a day (20 until Nov 17; `specs/kit-stylist-chat.md` KC10). Days roll over at 4 am. No lifetime count.
 - **What counts:** as in "What counts": failed, offline, "not rated" and same-photo checks never count.
 - **At launch:** checks made in the beta never count toward the 7 free checks, so every tester starts launch with 7.
 - **Never during the beta:** the paywall, the soft page, `See Pro`, a price, the word "Pro", "free checks" or "trial" anywhere he can see.
@@ -139,11 +139,11 @@ Friends testing the app never pay and never see a price. The server says which r
 - Tag `Daily limit` · `Resets at 4 am`. Title `That's today's 3 fit checks.` Body `I'll save this photo and score it after 4 am.` One button: `Save for tomorrow`. The saved card works as in FP3.
 
 **Questions**
-- 21st question: `That's 20 questions today. More at 4 am.` No button; not counted.
+- 31st question: `That's 30 questions today. More at 4 am.` No button; not counted.
 
 **Counts he can see**
 - Stylist subtitle: no check line (a waiting photo and `{n} questions left today` keep their priority as built).
-- You → Plan: `Kitted beta` · `3 fit checks and 20 questions a day · resets at 4 am`. No button.
+- You → Plan: `Kitted beta` · `3 fit checks and 30 questions a day · resets at 4 am`. No button.
 
 ## Data
 - **Free checks used** (lifetime, free checks only) and **today's checks and questions**: the phone's mirror of the server's counts (the server is the truth from T21). A check carries whether it was made as Pro, so it never counts toward the 7.
@@ -202,9 +202,9 @@ Friends testing the app never pay and never see a price. The server says which r
 **The beta (T14)**
 - FP7.1 On the beta rules, a 4th photo in one 4 am–4 am day shows the beta limit card and sends nothing; the server also refuses a 4th check.
 - FP7.2 Each of the 3 checks keeps its re-check, and a re-check doesn't use one of the 3.
-- FP7.3 The 21st question shows FP7's line and isn't counted.
+- FP7.3 The 31st question shows FP7's line and isn't counted.
 - FP7.4 Failed, offline, "not rated" and same-photo checks never lower the count.
-- FP7.5 On the beta rules, no paywall or soft page opens from any moment in "The paywall opens only", and no visible string contains a price, "Pro", "free check" or "trial" (a copy test plus a flow through 4 photos and 21 questions).
+- FP7.5 On the beta rules, no paywall or soft page opens from any moment in "The paywall opens only", and no visible string contains a price, "Pro", "free check" or "trial" (a copy test plus a flow through 4 photos and 31 questions).
 - FP7.6 Checks made on the beta rules don't change the 7 free checks: switching the server to free afterwards shows `7 of 7 free checks left`.
 - FP7.7 You → Plan shows the FP7 row.
 

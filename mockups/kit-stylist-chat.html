@@ -57,13 +57,11 @@ h2{font-family:var(--display);font-size:22px;margin:44px auto 6px;max-width:1300
 .note{font-size:12.5px;color:var(--ink-3);text-align:center;margin:-2px 0 2px}
 
 /* the card */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+.card{align-self:flex-start;max-width:100%;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
 .tag{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--ink-3)}
 .tag .l{font-weight:600;color:var(--ink-2)}
-.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.tiles.three{grid-template-columns:repeat(3,1fr)}
-.tiles.two{grid-template-columns:repeat(2,1fr);max-width:70%}
-.tile{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--ink-2);line-height:1.22;position:relative}
+.tiles{display:flex;flex-wrap:wrap;gap:8px}
+.tile{width:76px;display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--ink-2);line-height:1.22;position:relative}
 .art{aspect-ratio:1;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;overflow:hidden}
 .art svg{width:78%;height:78%}
 .tile.need .art{background:transparent;border:1.5px dashed var(--dash)}
@@ -99,7 +97,7 @@ h2{font-family:var(--display);font-size:22px;margin:44px auto 6px;max-width:1300
 <body>
 <header class="top">
   <h1>Kit's answers, as a stylist's</h1>
-  <p class="lede">One bold line, one short line, then one card that is the answer as a picture. Every answer type in <code>specs/kit-stylist-chat.md</code> is shown in dark (left) and light (right), on Thursday's closet: tan bomber, olive sweater, dark jeans, black work boots, cream striped button-up. Solid tiles are his pieces. Dashed tiles are pieces he'd need. The drawings are rough stand-ins for the app's own; the layout and words are what you're approving.</p>
+  <p class="lede">One bold line, one short line, then one card that is the answer as a picture. Each card is only as wide as its content (tiles keep one size; six pieces wrap to a second row). Every answer type in <code>specs/kit-stylist-chat.md</code> is shown in dark (left) and light (right), on Thursday's closet: tan bomber, olive sweater, dark jeans, black work boots, cream striped button-up. Solid tiles are his pieces. Dashed tiles are pieces he'd need. The drawings are rough stand-ins for the app's own; the layout and words are what you're approving.</p>
 </header>
 
 <h2>1 · An outfit with a piece he'd need</h2>

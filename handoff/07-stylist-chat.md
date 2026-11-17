@@ -107,7 +107,7 @@ Built fresh on the phone for every question by one pure function, `buildStylistC
 - **Birth year or age, his name, units.** Age gives the advice nothing, and a stylist that knows he's 19 tends to talk down to him. (Height and build were on this list until #267; they're sent now, see §3.1 and §7.1. Weight is never asked for, never stored and never sent.)
 - **Any photo, crop, cut-out or the raw reading JSON** (the chat never sees an image; it sees the pieces' names and the check's reasons).
 - **Location.** Only the weather words above, which don't reveal where he is.
-- **Deleted facts, removed pieces, Past chats before today** (memory is the facts list, not old transcripts: he can see and delete every fact; he can't audit a transcript the model re-reads).
+- **Deleted facts, removed pieces, Past chats before today**, except the 7-day recap of Kit's own suggestions as piece names and his taps (`specs/kit-stylist-chat.md` KC7.2, Nov 17) (memory is the facts list, not old transcripts: he can see and delete every fact; he can't audit a transcript the model re-reads).
 - **Notification settings, plan, usage, consent state** (the app handles limits itself).
 
 ### 3.3 Consent: one wording change (decision D2)
