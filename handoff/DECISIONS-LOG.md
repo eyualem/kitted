@@ -3261,3 +3261,11 @@ Contradictions settled and decisions changed during the build. Newest last.
 
 480. **A piece with no closet row draws from kind, color family and name (T101, Nov 17).** `drawnItem` returns the same drawing fields a closet row holds, so a chat card and Closet draw one picture; an unknown family draws grey and an unknown kind the slot's stand-in (only when a slot is given). **Watch, belt, cap and beanie are drawn in code**; a watch's metal (gold, silver, black) and its analog or digital face are details of the drawing, ignored on every other kind. Cap and beanie are told apart by `garment.subcategory` (`hat` draws as a cap), not by new kinds. Claude kept the digital face because the spec's own example is "a gold digital watch". **Spec wording to fix with the founder's yes:** KC9.2 calls black "not a color family", but black is one; the tests mean that the metal black never changes the family black. A new Closet section for accessories is T106's call.
 
+## Nov 17 · The code keeps judging
+
+481. **The code judges; a stronger AI as judge or reader is tested later (the founder, Nov 17: "Let's just go with the code. We'll do the testing later.").** He asked whether a reasoning model with the rules could rate outfits instead of the code at the same cost. The AI-judge test (PR #137, `reports/2026-11-17-ai-judge-test.md`; $0, Sonnet subagents in batches of about 37) found:
+    - **Sonnet alone** reaches 83% within a point of him, r 0.67, at about 0.7–1.5¢ a check (estimated), against the code's 82%, r 0.63 at 1.29¢. It is steady within half a point on only 91–95% of photos (the code: 97.8%), gets 14 of 18 creator anchors (the code: 17), and gives no exact fix or Why rows.
+    - **The code-plus-AI mix** reaches 86%, r 0.68 once v16 is refit on each half; the first, leaky version showed r 0.69.
+    - **Haiku** is worse than the code (74%, r 0.42).
+    - **Not verified:** one photo per call, the real cost and wait, and whether a stronger model reads the pieces better.
+    - **Parked, on his word:** Flash judging by the rules (about 50¢, cap 75¢), a Sonnet API run (about $1.30, cap $2; needs his own Anthropic key and a privacy line), and the stronger-reader test. "The AI sees, the code judges" stays as written.
