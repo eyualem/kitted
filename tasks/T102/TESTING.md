@@ -2,7 +2,7 @@
 
 Written by the planner from `specs/kit-stylist-chat.md` (approved 2026-11-17). Size: normal, so the implementer writes these tests with the code and one separate reviewer reads them. Words, labels and layout are not tested here (T104 shows them in screenshots).
 
-**Lock:** pending · tests: `app/src/__tests__/kitCards.test.ts`, `app/src/__tests__/kitCardsStored.test.ts`, `app/src/__tests__/kitFollowUps.test.ts`
+**Lock:** locked at `eaa78fa04138e3e1afd0c3e89441f285d4d950f6` on 2026-11-17 · tests: `app/src/__tests__/kitCards.test.ts`, `app/src/__tests__/kitCardsStored.test.ts`, `app/src/__tests__/kitFollowUps.test.ts`
 
 **Criteria covered: 10.** Plan-line IDs: KC1.2, KC1.3, KC1.5, KC2.1, KC2.2, KC2.3, KC2.4, KC2.5, KC2.6, KC2.9. Each appears below.
 
