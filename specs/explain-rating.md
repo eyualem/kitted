@@ -70,7 +70,7 @@ On Nov 9 a friend testing the app felt overwhelmed by the numbers on the result 
 - The fallback is never labelled as one and never counted.
 
 ### Fixing a misread (replaces "Not quite right?" on the card)
-- **By telling Kit:** "those jeans are straight, not slim", "that's an overshirt, not a jacket". Kit's answer offers a tap card, `Re-score with straight jeans`; the tap opens the existing correction for that piece with his answer filled in, and it shows the new number before Save (F4.1). Saying it to Kit counts as a question; the re-score itself is free.
+- **By telling Kit:** "those jeans are straight, not slim", "that's an overshirt, not a jacket". Kit's answer offers a tap card, `Re-score with straight jeans`; the tap opens the existing correction for that piece with his answer filled in, and it shows the new number before Save (F4.1). Saying it to Kit is free when it changes the piece (`specs/kit-stylist-chat.md` KC5.5, Nov 17); the re-score itself is free.
 - **On Lookbook's look page:** a quiet row, `Fix what I read`, opens the same correction for that check.
 
 ### Lookbook's look page
@@ -139,7 +139,7 @@ Two quiet rows after the fixes: `How I scored` (today's math sheet, unchanged) a
 - The fix shown is a free one whenever the card has one (keeps F2.7 with one fix in view; the founder saw it in the ledger).
 - The tips go behind the same tap as the extra fixes.
 - 6 s before the fallback (Kit's first words land at a 0.66 s median on GPT-5.6 Luna, so 6 s is generous).
-- Saying a misread to Kit counts as a question; the re-score is free.
+- ~~Saying a misread to Kit counts as a question; the re-score is free.~~ Replaced Nov 17 (the founder's yes, `specs/kit-stylist-chat.md` KC5.5): a message in which the code changed one of his pieces is free; the re-score is free.
 
 ## Open questions
 - The plain and known names of all ~74 rules: drafted in the core task, OK'd by the founder (about 10 minutes) before the button ships.
