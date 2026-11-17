@@ -1,0 +1,87 @@
+AI judge test, judge = haiku; runs found: [1]; answers per run: run 1 184 of 184
+  not rated / no score: 0 answers
+
+== B1 His blind ratings (bar: within 1 point on 80%, r >= 0.69) ==
+  his raw ratings (164 photos):
+    v16 (in-sample: its sizes were fitted on these)  within 1 134/164 (81.7%)  r 0.630  mean 7.18 (his 6.92)  sd 0.88 (his 1.17)
+    v15 (the app today)                              within 1 124/164 (75.6%)  r 0.513  mean 7.05 (his 6.92)  sd 0.69 (his 1.17)
+    AI run 1 (one call per photo)                    within 1 122/164 (74.4%)  r 0.425  mean 7.04 (his 6.92)  sd 0.83 (his 1.17)
+    AI median of the runs (3x the cost)              within 1 122/164 (74.4%)  r 0.425  mean 7.04 (his 6.92)  sd 0.83 (his 1.17)
+  his consistent key (164 photos):
+    v16 (in-sample: its sizes were fitted on these)  within 1 132/164 (80.5%)  r 0.619  mean 7.18 (his 6.93)  sd 0.88 (his 1.18)
+    v15 (the app today)                              within 1 125/164 (76.2%)  r 0.496  mean 7.05 (his 6.93)  sd 0.69 (his 1.18)
+    AI run 1 (one call per photo)                    within 1 121/164 (73.8%)  r 0.413  mean 7.04 (his 6.93)  sd 0.83 (his 1.18)
+    AI median of the runs (3x the cost)              within 1 121/164 (73.8%)  r 0.413  mean 7.04 (his 6.93)  sd 0.83 (his 1.18)
+  AI run 1 vs v16: r 0.578
+  by group (AI run average | v16), raw:
+    his first 20             n  20  AI within 1 90.0% r 0.593  |  v16 80.0% r 0.608
+    sheet 1 (gold photos)    n  54  AI within 1 72.2% r 0.573  |  v16 88.9% r 0.758
+    sheet 2                  n  71  AI within 1 74.6% r 0.241  |  v16 81.7% r 0.567
+    the 20 new               n  19  AI within 1 63.2% r 0.303  |  v16 63.2% r 0.364
+
+== B1 on the 8 held-out halves (seeds 1-8, the split taste_rules.py uses; averages, range in brackets) ==
+  v16 (in-sample)                          within 1 82.2% (80-84)  r 0.651 (0.59-0.71)
+  AI, one call (run average)               within 1 73.5% (68-78)  r 0.419 (0.32-0.49)
+  AI median of 3                           within 1 73.5% (68-78)  r 0.419 (0.32-0.49)
+  G: AI one call inside the guardrails     within 1 73.5% (68-78)  r 0.426 (0.33-0.50)
+  W: blend, AI one call + v16              within 1 80.3% (74-83)  r 0.622 (0.49-0.67)  AI weight 0.0/0.0/0.0/0.0/0.4/0.0/0.0/0.7
+  WG: blend + guardrails                   within 1 80.3% (74-83)  r 0.622 (0.49-0.67)  AI weight 0.0/0.0/0.0/0.0/0.4/0.0/0.0/0.7
+  Wm: blend, AI median of 3 + v16          within 1 80.3% (74-83)  r 0.622 (0.49-0.67)  AI weight 0.0/0.0/0.0/0.0/0.4/0.0/0.0/0.7
+  v16's honest held-out (T68 round 7, sizes refitted on each half A): 82.0%, r 0.63 (raw); 81.1%, r 0.62 (key)
+
+== B2 The creators' before/after pairs (the after must score higher) ==
+  PASS  AI 5.5 -> 6.5  (runs 5.5->6.5)   v16 4.5 -> 7.5   oversized tee + denim jacket over skinny jeans -> relaxed jeans, cropped jacket
+  PASS  AI 6.5 -> 7.5  (runs 6.5->7.5)   v16 6 -> 7.5   knit on knit -> one knit, relaxed light jeans
+  FAIL  AI 8 -> 8  (runs 8->8)   v16 7.5 -> 8   all-navy flannel + jeans -> black flannel, tank, pleated trousers, loafers
+  PASS  AI 7.5 -> 8  (runs 7.5->8)   v16 6 -> 8   tight beige monochrome -> wider trousers, tucked tee, loafers
+  PASS  AI 6.5 -> 7.5  (runs 6.5->7.5)   v16 6.5 -> 7.5   skinny joggers -> straight trousers, plain sweater
+  PASS  AI 7 -> 7.5  (runs 7->7.5)   v16 6 -> 7   Frugal: the same tee 4 in shorter
+B2 median of runs: 5/6 (v16 6/6); each run: run 1 5/6
+
+== B3 The creators' anchors (step from the rulebook; median of runs) ==
+  PASS  step 4.5: AI 5.5 (runs 5.5)  v16 4.5   denim_jacket (black) + tee (white) + jeans (charcoal, skinny) + chelsea_boot (black)
+  PASS  step 7.5: AI 6.5 (runs 6.5)  v16 7.5   denim_jacket (charcoal) + tee (white) + trousers (black, straight) + dress_shoe (black)
+  FAIL  step 5: AI 6.5 (runs 6.5)  v16 6   cardigan (off_white_cream) + sweater (tan_camel) + jeans (denim_dark, slim) + low_profile_sneaker (white)
+  PASS  step 7.5: AI 7.5 (runs 7.5)  v16 7.5   sweater (off_white_cream) + jeans (denim_light, wide) + retro_runner (white)
+  PASS  step 6.5: AI 8 (runs 8)  v16 7.5   flannel_shirt (brown) + tee (navy) + jeans (denim_dark, straight) + retro_runner (off_white_cream)
+  PASS  step 9: AI 8 (runs 8)  v16 8   tank_top (white) + flannel_shirt (black) + trousers (black, wide) + dress_shoe (black)
+  FAIL  step 5: AI 7.5 (runs 7.5)  v16 6   overshirt (tan_camel) + tee (white) + chinos (khaki_beige, slim) + low_profile_sneaker (white)
+  PASS  step 8.5: AI 8 (runs 8)  v16 8   camp_collar_shirt (tan_camel) + tee (white) + trousers (off_white_cream, wide) + dress_shoe (black)
+  FAIL  step 4: AI 6.5 (runs 6.5)  v16 6.5   sweater (black) + joggers (black, skinny) + white_leather_sneaker (white)
+  PASS  step 8: AI 7.5 (runs 7.5)  v16 7.5   sweatshirt (black) + trousers (black, straight) + low_profile_sneaker (black)
+  PASS  step 7: AI 7 (runs 7)  v16 6.5   tee (white) + jeans (denim_light, straight) + white_leather_sneaker (white)
+  PASS  step 8: AI 8 (runs 8)  v16 7.5   blazer (tan_camel) + tee (white) + jeans (denim_light, straight) + loafer (black)
+  PASS  step 7.5: AI 7 (runs 7)  v16 7   flannel_shirt (black) + sweatpants (light_grey, relaxed) + loafer (black)
+  PASS  step 8: AI 8 (runs 8)  v16 7.5   blazer (brown) + tank_top (grey) + jeans (denim_light, straight) + loafer (black)
+  PASS  step 9: AI 8 (runs 8)  v16 8   blazer (brown) + tee (white) + trousers (black, straight) + dress_shoe (black)
+  PASS  step 7.5: AI 8 (runs 8)  v16 8   bomber (red) + sweater (tan_camel) + trousers (black, straight) + low_profile_sneaker (black)
+  FAIL  step 8: AI 6.5 (runs 6.5)  v16 7.5   bomber (black) + cardigan (purple) + chinos (green, straight)
+  FAIL  step 9: AI 7 (runs 7)  v16 7.5   suit_jacket (black) + trousers (black, wide) + dress_shoe (black)
+B3 13/18 (v16 17/18)
+
+== B4 The dealbreaker examples, written (Variant T; each run is a fresh order) ==
+B4: no written answers found
+
+== B5 Band shares on his 164 ==
+  target                3-4.5  5.0%  5-5.5 15.0%  6-6.5 30.0%  7-7.5 30.0%  8-8.5 15.0%  9-9.5  5.0%
+  his ratings           3-4.5  0.0%  5-5.5 15.9%  6-6.5 33.5%  7-7.5 22.6%  8-8.5 19.5%  9-9.5  8.5%   worst gap to target  7.4, to his  0.0
+  v16                   3-4.5  0.6%  5-5.5  7.3%  6-6.5 22.0%  7-7.5 39.0%  8-8.5 31.1%  9-9.5  0.0%   worst gap to target 16.1, to his 16.5
+  AI run 1              3-4.5  0.0%  5-5.5  7.9%  6-6.5 22.6%  7-7.5 45.7%  8-8.5 23.8%  9-9.5  0.0%   worst gap to target 15.7, to his 23.2
+  AI median             3-4.5  0.0%  5-5.5  7.9%  6-6.5 22.6%  7-7.5 45.7%  8-8.5 23.8%  9-9.5  0.0%   worst gap to target 15.7, to his 23.2
+
+== B6 Steadiness (bar: two runs within half a point on 97.8%, v16's 218/223) ==
+
+== The words (hard lines: never the body; the look it reads as) ==
+  reasons naming a body or face word: 9 of 184 (checked by hand below)
+    run 1: Black leather jacket, black layers and black cargo trousers form one tonal look. The trousers taper to a slim leg with tall chunky boots, which holds it at Gett
+    run 1: Orange crew tee with a large white graphic across the chest over slim dark trousers. The orange is one bright on a dark base, which works. The big graphic is th
+    run 1: Light blue shirt with sleeves rolled and tucked into khaki cargo shorts with a belt. The blue is one accent on neutral khaki, fine for a warm day. The shirt is 
+    run 1: Boxy white tee ending above the hip over wide black trousers with a frayed hem. Short top over a full leg is a strong shape, in a neutral black and white base. 
+    run 1: Olive long-sleeve henley tucked into brown wide pleated trousers, with a black braided belt and black loafers. The tucked top over a wide leg is a strong shape,
+    run 1: Cropped varsity jacket with wool body and tan sleeves over black wide balloon trousers and chunky sneakers. Short layer over a full leg is a great shape, and th
+    run 1: Dark shirt tucked into indigo jeans with a belt, a red striped tie as one accent, and white sneakers. Dressy tie with casual denim and sneakers is a deliberate 
+    run 1: A long white tee hangs below a distressed leather jacket and over skinny distressed jeans with tall boots. The oversized tee over skinny legs is a dealbreaker. 
+    run 1: Long white shirt, untucked and past the crotch, over slim black pants with tall lace-up boots. The untucked length is the main shape fault, and the slim leg hol
+  looks: streetwear 48, minimal 33, smart_casual 31, tailored 20, classic_prep 14, workwear 14, none 11, vintage_sport 7, outdoor 6
+  reason length: median 45 words, max 60
+  same look in all runs: 184/184

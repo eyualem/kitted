@@ -3261,3 +3261,15 @@ Contradictions settled and decisions changed during the build. Newest last.
 
 480. **A piece with no closet row draws from kind, color family and name (T101, Nov 17).** `drawnItem` returns the same drawing fields a closet row holds, so a chat card and Closet draw one picture; an unknown family draws grey and an unknown kind the slot's stand-in (only when a slot is given). **Watch, belt, cap and beanie are drawn in code**; a watch's metal (gold, silver, black) and its analog or digital face are details of the drawing, ignored on every other kind. Cap and beanie are told apart by `garment.subcategory` (`hat` draws as a cap), not by new kinds. Claude kept the digital face because the spec's own example is "a gold digital watch". **Spec wording to fix with the founder's yes:** KC9.2 calls black "not a color family", but black is one; the tests mean that the metal black never changes the family black. A new Closet section for accessories is T106's call.
 
+
+## Nov 17 · The AI-judge test (report only; nothing in the app changed)
+
+485. **A reasoning AI rating the photo directly is a little closer to his taste than v16, but not steady enough alone; a blend inside the code's caps is the best arm; v16 ships as approved (the founder's question, Nov 17; `reports/2026-11-17-ai-judge-test.md`, `extraction-test/ai_judge/`, $0).** Claude Sonnet subagents scored his 164 blind ratings plus the 20 creator stills, 3 runs with shuffled random ids, under a brief committed before any run (no ratings, no app scores, no point values). Results:
+    - One call, held out: 82.8% within 1, r 0.67 (v16 82.0%, r 0.63).
+    - Steadiness: two runs within ½ on 91–95% (v16 97.8%, the bar). The order swap flipped 13% of pair verdicts (ZOZO's GPT-4o: 57–74%).
+    - Creator anchors 14/18 (v16 17/18): knit on knit and tight beige scored 7.5. Pairs 6/6. Written dealbreakers 26/29.
+    - No body judgments in 552 reasons.
+    - The blend (≈0.4 AI + 0.6 v16, then the caps): 85.8%, r 0.69, the first arm past both B1 bars, as steady as v16. A pure shift of v16 gains nothing (81.4%, r 0.65), so the gain is the AI's information.
+    - Haiku 5.5 (the only model in today's price range) scored 74%, r 0.42: ruled out.
+
+    **Recommended:** ship v16 (T69), then test the hybrid as an add-on. Before any build it needs the founder's yes on bending "the code judges" (specs.md, CLAUDE.md), a new privacy line if the provider is Claude, a "Kit's eye" row in Why, and a paid one-photo-per-call API check (Sonnet, ≈$1.30, cap $2), because batch subagents may calibrate on neighbours. The Gemini 3.1 Pro arm (pilot ≈13¢, cap 20¢; full ≈$6.30) is scripted and not run, waiting on his yes. **Lesson:** where a rule can see the fact (knit on knit, a slim leg), the code beats the AI's eye; the AI adds most on overall shape and taste the reading can't name.
