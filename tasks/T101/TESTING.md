@@ -1,8 +1,8 @@
 # T101 · Testing contract
 
-Written by the planner. T101 is a **normal** task: the builder writes these tests alongside the code (no locked test writer), each named with its criterion ID, and a separate reviewer reads the result. Nothing here is weakened to pass; a change to this file goes in TASK.md → Disputes with the reason. Results never go here.
+Written by the planner. T101 is a **normal** task, but its tests were written first by a separate test writer and locked (see Lock), each named with its criterion ID; a separate reviewer reads the result. Nothing here is weakened to pass; a change to this file goes in TASK.md → Disputes with the reason. Results never go here.
 
-**Lock:** none (normal task).
+**Lock:** tests locked at `78819a1a` on 2026-11-17: `app/src/__tests__/drawnPieces.test.ts`, `app/src/__tests__/drawnPieceArt.test.tsx`, `app/src/__tests__/fixtures/flatsBaseline.json`. A later change adds or strengthens only; each one is recorded in TASK.md → Disputes with the reason.
 
 Plan-line criteria: KC9.1, KC9.2, KC9.3, KC2.2 (the drawing only). All four are below (4). Interfaces and names are in `tasks/T101/IMPLEMENTATION.md`.
 
