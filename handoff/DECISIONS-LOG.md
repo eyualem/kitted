@@ -3160,3 +3160,104 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Raised the same day, open:** formal wear (suits) isn't one of the looks; see plan.md's open decisions.
 
 460. **An 8th look, Tailored (founder, Nov 12: "Yes, add Tailored", after "we forgot to add formal wear, like suits and stuff").** Claude's recommendation, of two: (1) a new look named Tailored (suits, blazers, trousers, loafers), chosen; (2) keep formal as an occasion only (Interview, Event), with nothing in setup for a guy who likes dressing sharp. Not "Formal": it reads as black tie, which is an occasion. **Today:** a matching suit already earns the "reads as" credit as "a matching suit" ([STY-1], [SHO-7]) and is kept out of smart casual ([SMC-2]); blazers are classic prep and smart casual signature pieces; the tailored line fired on 6 of 74 real photos. **What it touches:** `specs.md` (the looks), a new `specs/` file written in an interview first, then a strict scoring task (the Python engine first, then `@kitted/core` parity), the setup tile and its drawings, the style game, You's Your style and Kit's words. **Main risk:** overlap with classic prep and smart casual, which already share the blazer, trousers and loafers.
+
+461. **Kit as a real stylist: the spec interview (founder, Nov 17; `specs/kit-stylist-chat.md`, mockup `mockups/kit-stylist-chat.html`).** From Thursday's beta chat (Nov 12; `inputs/2026-11-12-thursday-chat/review.md`): Kit denied adding a piece it had added, ignored "my boots are black", drew black boots brown, kept re-serving the same pieces, contradicted its own Next buy card, invented a screen, and gave colors and missing pieces as words only. His picks, Claude's recommendation each time unless marked:
+    - **All of it before friends test again, memory included** (Claude had recommended leaving day-2 memory and shops for a second build; he chose one bigger restart).
+    - **One card an answer, holding up to 3 choices** when he asks for options. Pieces he'd need drawn on a dashed tile with "You'd need"; an "Example" card when his closet can't make it. Tapping a "You'd need" tile: I have one / Next buy.
+    - **The add card (his idea):** shown only when the code finds no same-kind, same-color piece; "add it" adds at once with Undo; No thanks never asks again; a wrong read is fixed on the piece's Closet page or by a correction.
+    - **Corrections change the piece at once** (color, name, drawing, Undo, a Re-score tap) and **are free even with a question in them**: the mistake was Kit's. This replaces `specs/explain-rating.md`'s assumption that a misread counts. A piece he dislikes stays out of Kit's ideas and the morning card until he deletes the fact.
+    - **Colors drawn on the piece itself**, named; swatches for general questions. Claude settled that the code works out the allowed colors from the scoring rules and Kit picks only from them ("the code judges", applied to color).
+    - **Next buy's beta home is Kit's drawn buy card** (Closet's Outfits view stays off, `specs/closet-beta.md`). Claude settled that Kit's app map is built from the feature switches, so it can't name a screen that's off.
+    - **Memory: facts plus a 7-day recap** written by code (piece names and his taps only). This changes `handoff/07` §3.2's "past chats never sent".
+    - **Follow-up taps count** as questions (else a way around the limit). **The beta limit goes from 20 to 30** (= Pro), about 1.5¢ a tester a day at most.
+    - **Shops and brands: Kit keeps refusing** (Claude had recommended brands from a list he approves plus a search button; he chose to keep refusing). The line: "I don't point to shops, but here's what to look for:".
+    - **Words: a bold line plus one short line**, 40 words max with a card, 60 without. **New drawings:** watch, belt, cap, beanie.
+    - **One paid test run up to 10¢** OK'd for T110.
+    - Split into T101–T110 (plan.md, the new "Kit's stylist chat" lane).
+    - **Approved the same day ("I like the mockups... I approve the spec"), with one change: a card fits its content** ("it doesn't always have to fit the screen"): tiles keep one size and the card is only as wide as they need (KC1.6). With that yes, the linked lines changed: `specs/explain-rating.md` (a correction that changes a piece is free), `specs/free-and-pro.md` FP7 (30 questions), `handoff/07` §3.2 (the recap), `specs.md`'s data table.
+462. **The friends' beta is paused until Kit's chat is rebuilt (founder, Nov 16): "the app is pretty bad right now, so it would just be a waste of the beta testers' time, and it would also be a waste of money on my side."** His friend's Nov 12 chat (14 screenshots, `inputs/2026-11-12-thursday-chat/`, git-ignored) showed Kit denying an add it had just made, ignoring corrections ("my boots are black"), drawing black boots brown, answering in text where a picture was needed, and inventing a "buy-next section". The rebuild is `specs/kit-stylist-chat.md` (#461, T101–T110); the beta restarts after his replay (Y33). Build 0.1.0 (3) was waiting on Apple's beta review with invites set to go out on approval, so he removes it from "Friends beta" in App Store Connect himself. Also settled: a second person in a fit-check photo needs no new work, since every face found is hidden (#54). The audit of what the app reveals about how it works (branch `claude/competent-driscoll-931840`, `tasks/hide-how-it-works/TASK.md`) waits on his picks D1–D6.
+
+470. **Face hiding: strangers' faces in the background and in a second mirror panel (T96, Nov 14).** Measured at $0 with the app's whole prep (`kmeasure prep`) on 1,513 local photos and checked by eye (`tasks/T96/baseline/`): a stranger's face was readable in the sent copy of 46 of 354 sent Fashionpedia street and runway photos (mostly the audience behind the model) and 13 of 410 YouTube frames; 0 of 342 phone-style photos (his 59 checks, ig, pinterest, reddit, stock). Every leaked face was found by the same Vision face detector once the photo was cut into zoomed tiles; the app ran it once on the whole photo. #468's copies came from `kmeasure zoom`, which skips the grey cover over other people, so they overstate the background case; its 7 originals were deleted and are re-downloaded only with his yes. **Settled by the parent session (not taste, money or words):** a fix may newly refuse at most 2% of the 336 normal photos (6), and none of his 54 sent phone checks or the 12 mirror-set photos; above that the build stops and reports. A refusal keeps today's toast ("Couldn't frame this one. Try again."), no new words; its own line can come through T62 or a spec change he approves. His to-do Y37: real two-mirror and fitting-room photos.
+
+471. **T96 build disputes settled by the coordinator (Nov 14).** The first build cut the leak set from 2,644 face-core leaks in 59 photos to 159 in 22, refused none of his photos, and passed the mirror-panel, same-photo, purge, timing and no-regression checks, but 13 real faces in 11 photos (runway audiences, YouTube frames) were still readable in the sent copy. **D1 (by eye):** the 4 pick-edge cores (a jeans cuff, a sneaker, a hand with white dots, jeans over a sneaker) and the implementer's 15 listed leak-set cores aren't faces; they leave the count. **D2:** "accept the rest as a known limit" is refused: the spec's Never list says no face is sent unblurred, so the line stays at 0 readable faces. Allowed instead: (a) the sweep may also use a 4×4 grid and run its first pass on the original photo, not only on today's copy; (b) a crowd refusal: when the sweep finds several strangers' faces it can't be sure it got all of them, so the photo is refused (`couldNotFrame`, a `reason` for the log, today's toast, no new words). Both stay inside #470's limit (at most 6 of 336 normal photos newly refused, none of his own); privacy wins ties. **D3 (corrected the same day, the parent session citing #224: ig-098 was sent with mouth and chin unhidden):** the built face cut off at the top edge (mouth and chin in, eyes out) stays a locked case: a partial face at the frame edge must be hidden, covered or the photo refused, never sent; an eyes-in-frame version may be added as an extra case, not a replacement. The test writer's profile reading (ear, eye and nose geometry, because MediaPipe scores both ears about 1.0 on every pose) is accepted.
+
+472. **T96 round 2 verified, round 3 decided by the coordinator (Nov 14).** Round 2 (`78b5d4e7`): the leak set's 59 photos sent no readable stranger (54 sent, 5 refused), 0 of 336 normal photos newly refused, +124 ms per check on the Mac; the verifier's own run matched. Still failing: built side-on and edge faces (D4, D5: no Apple detector on the phone finds them; a profile-capable model needs the founder's yes for a download, asked through the parent session with YuNet, about 230 KB, MIT, as the recommended trial), 2 readable audience faces in the held-out runway photos, 2 frontal 12 px built faces, half a frontal face in a built mirror panel. **Round 3:** (1) a retry ("Try again") of a check that failed before the update must not send the old copy: the purge also runs on the reload path, and `KittedVisionModule.swift` may be touched for that (the plan had kept it out); (2) the grey cover over people the person detector missed must never land on his own outline (it greyed 35% and 15% of him on two photos); (3) the crowd refusal #471 allows should be used where the sweep can't clear an audience; (4) the test writer adds tests for the missed-people cover, the retry before the first prep, fixes the built set's host choice (it could never build 60 hosts on any build) and adds the back of a head (`12da876e…`) to the not-faces list. Constants from round 2, for the record: `alreadyHiddenShare` 0.95, `hiddenMaxUnchanged` 0.4, `alreadyCoveredShare` 0.8, `poseHeadMaxShare` 0.12, faceGrids 1–4.
+
+473. **T96 round 3 verified: stuck after the third round, waiting on the founder's face-model decision (Nov 15).**
+- **Round 3 (`2b8b373f`, `fdef92ba`):**
+  - The grey cover over people the person detector misses now works from Vision's person segmentation and the body pose. A patch or pose body that touches his outline or his box counts as him, so the cover never lands on him.
+  - "Try again" purges old copies before it reloads (`Prep.reloadUpload`; the module routes to it).
+  - New constants: `himMargin` 0.02 and `crowdGrow` 0.02, both shares of the grid. `alreadyCoveredShare` is removed.
+- **D6 upheld by the test writer and the verifier, by eye:** the two MediaPipe-only marks on the runway model in `5252d050…` are her cardigan stripes and a leg edge, not faces. Both were added to `EYE_NOT_FACES` (re-lock `75ea11f8`).
+- **The verifier's `--full` (8 of 13 lines pass):**
+  - Leak set: 0 readable strangers sent (53 of 59 sent, 6 refused).
+  - False refusals: 0 of 336 normal photos newly refused.
+  - Second mirror panel: 40 of 40 faces caught.
+  - Old sends purged, sweep logic, same photo, kmeasure copies and no regression also pass.
+- **Still failing:**
+  - **Built small faces:** profiles 12–31 px, eyes-out edge faces, and three frontal 16 px faces. These are limits of Apple's detectors (D4, D5) and need a profile-capable model, the founder's call.
+  - **Missed people:** 3 of 12 strangers that no on-device detector sees.
+  - **Held out, by eye:** one runway audience row (`5afdd6632b3d`, 2–3 readable faces at 25–35 px) is still sent, and `eaac0d86af82` is borderline. The crowd refusal was not built: the implementer found no on-device signal that fires on these photos without refusing audience photos the cover already clears.
+- **The verifier's other defects, for the next round:**
+  - A grey head square lands on his own head and shoulders on one photo (`2.55.27 PM`, 8% of him). The pose likely finds him twice; the 0.9 × shoulder-span term isn't capped.
+  - Old scan send copies (`Documents/scans/*-send.jpg`) aren't purged. This is latent: nothing sends them today.
+  - Three tests to strengthen:
+    - the "cover never on him" gate can't see the build's own grey squares;
+    - no built photo puts a missed stranger over his box, so a planted bug went uncaught;
+    - the panel line barely depends on the new code.
+- **Not verified:**
+  - The time line and `npm run check`: the Mac had about 70–120 MB free all day. No JS or TS changed, and round 2's check was green. The same sweep measured 187 ms median and 217 ms p95 at normal load.
+  - A full iOS build, the phone, and real two-panel mirror photos (Y37).
+- **Next:** the founder's answer on the YuNet trial (about 230 KB, MIT). Then the test writer strengthens the three tests and a new round (round 4 needs his OK to reopen the loop) takes the code defects. Nothing ships without his yes on PR #125.
+
+474. **T96s: a face printed on his own clothes is not a face; it's left alone (Nov 16).**
+- **The founder (Nov 16):** "the app is accidentally bluring out faces on shirts too whic is not right". Also: "we're mainly protecting the user, the literal user". So no YuNet and no more work on strangers' faces. His own face stays strict, including his reflection and a second mirror panel.
+- **Where it comes from (the planner's $0 probe, 2,818 photos):**
+  - T96's tile pass finds every torso print and greys it, and its re-check would then refuse the photo.
+  - Main's whole-photo pass can blur a large, clear print, and can mistake it for his face.
+- **The rule:** a face is left alone only when all of these hold. Otherwise nothing changes.
+  - It's a fit photo.
+  - His pose is whole and upright: neck, both shoulders and both hips, on his outline.
+  - His head is found apart from the face.
+  - The box lies in his torso band, from the shoulders to the hips plus 15%.
+  - It's clear of his head region grown 25%, with no head joint inside it.
+  - At least 90% of it is on his own outline.
+  - No other person claims it.
+- **Constants:** `printHemShare` 0.15, `printHeadGap` 0.25, `printMinOnOutline` 0.9, `printMaxWidthShare` 0.8; the pose minimums are in `tasks/T96s/IMPLEMENTATION.md`.
+- **The re-check:** it skips prints by the same rule; there is no new refusal reason.
+- **Folded in:** T96 round 3's grey square on his head. A second pose body whose head lies inside his own head regions gets no `otherHeads` box, and the 0.9 × shoulder-span term is capped.
+- **Real cases found (only 3, plus one after "Which one is you?"):** two of his saved ig screenshots and two Fashionpedia photos. Built prints are an extra, never the only proof.
+- **Accepted by the founder (through the parent, Nov 16):**
+  - Flat clothes scans of a graphic tee stay blurred.
+  - Made-up faces on his shoes, jeans or a hand are a known gap, for a later task.
+  - A person held against his chest whom no detector separates is read as a print: an accepted risk under his "the literal user" rule.
+- **Main's path is covered too:** the phone runs main, whose whole-photo blur can catch a large print. Tests include a built large print that main's `locate` hides.
+- **No change to `specs.md` or to T96's locked lines.** The re-scope ("Your face is always blurred before anything is sent; if we can't find it, nothing is sent. Other faces are blurred when we spot them; faces printed on clothes aren't.") waits on his yes. If a T96 line goes red only because of a correctly left-alone print, that's a dispute, not a change.
+
+477. **T96 re-scoped to the founder's new privacy rule (Nov 16).** The founder's "Yes, change it" (#475, on the radar-scoring branch) approved this wording: "Your face is always blurred before anything is sent; if we can't find it, nothing is sent. Other faces are blurred when we spot them; faces printed on clothes aren't."
+- **The test writer re-locked T96** (tests `050a2583`, Lock `6a916e4b`). Each face core is now one of four kinds:
+  - **his** (always strict): his head, his reflection, and his second mirror reflection.
+  - **spotted** (strict): a face the app's own tile pass finds. It must be hidden.
+  - **unspotted** (measured and reported, never failed): side-on and edge faces of strangers, strangers no detector sees, the dark audience rows.
+  - **print** (excused): only when the build lists it in `prints` and it lies on his torso band.
+- **What didn't change:** no regression against main, false refusals, the re-check refusal, the purge and the timing.
+- **On the round-3 build with T96s stubs, `--quick` passes all 11 lines.** The planted bugs still bite: dropping the tile pass fails the leak set and the built faces, and listing his head as a print fails no regression.
+- **What this closes:** T96's "stuck" lines were all unspotted stranger faces. No YuNet; the face-model branch stays unmerged as a record.
+
+478. **T96s round 1 verified; the sweep's rule 7 gets the instance mask back (coordinator, Nov 17).**
+- **The verifier's round 1:**
+  - Every T96s line passes at `--full`. The re-scoped T96 passes all 12 lines on this build: 0 strict leaks; 53 of 59 fit checks sent; held out 0 automatic fails; sweep median 192 ms, p95 230 ms.
+  - 924 runs on 800 unprobed Fashionpedia photos left 0 boxes alone as prints.
+  - By eye, P1–P3 send the print readable and his face pixelated. S1 has no grey square.
+- **The test gap:** dropping his fallback head box (drawn when a print stood in for his face) isn't caught, because every built host has a head band. The test writer adds a case with no band.
+- **The decision:**
+  - **What happened:** the implementer's Deviation 4 dropped the instance mask from rule 7 in the sweep, because on one built photo (a-6) the mask called the pasted print a second person. A-6 now leaves the count anyway: its pose is broken (D3).
+  - **What the verifier measured:** with a copy of his own face pasted on his chest, 8 of 12 were sent readable as "prints". Round 3 hid all 12.
+  - **The accepted risk (#474) covers only a person "whom no detector separates".** Dropping a detector that can separate them goes beyond what the founder accepted. "When in doubt, send nothing" points the same way.
+  - **So round 2:** rule 7 in the sweep uses the instance mask when the photo has one, and a box another instance label claims isn't a print. This stays as long as P1–P3 and the built prints still pass. If a real print is lost, the numbers come back here before anything is dropped.
+479. **T103: the allowed colors come from the scoring engine itself, 24 of the 25 families (Claude, Nov 17; `app/packages/kitted-core/src/allowedColors.ts`, `tasks/T103/`).** `allowedColors` asks the live parts engine to score the outfit once per candidate color and keeps the colors whose total deduction is no worse than the best color's, so a fault the other pieces already carry never empties the list and no rule is copied. Calling it moves no score. Defaults settled by Claude (technical): any deduction counts, even 0.5; the piece's own color and saturation are dropped; occasion and boldness are inputs (everyday, a little); accessories and traditional pieces get all 24 (T105 must still say "not rated"); any engine error returns an empty list. **One difference from the spec's words:** the list has 24 colors, not 25, because `multicolor` is the reading's label for a print, not a color one buys or draws as one swatch (KC3.3 says "the 25 colors"; the spec is unchanged and the founder can say otherwise, one filter in `COLOR_CHOICES`). Lesson: the list is long (typically 17–24 of 24), a ceiling for the gate and not advice, so KC3.3's "fewer than 2 colors survive" will rarely fire; T105's prompt must still ask for a good pick.
+
+## Nov 17 · T101: drawn pieces and four accessory drawings
+
+480. **A piece with no closet row draws from kind, color family and name (T101, Nov 17).** `drawnItem` returns the same drawing fields a closet row holds, so a chat card and Closet draw one picture; an unknown family draws grey and an unknown kind the slot's stand-in (only when a slot is given). **Watch, belt, cap and beanie are drawn in code**; a watch's metal (gold, silver, black) and its analog or digital face are details of the drawing, ignored on every other kind. Cap and beanie are told apart by `garment.subcategory` (`hat` draws as a cap), not by new kinds. Claude kept the digital face because the spec's own example is "a gold digital watch". **Spec wording to fix with the founder's yes:** KC9.2 calls black "not a color family", but black is one; the tests mean that the metal black never changes the family black. A new Closet section for accessories is T106's call.
+

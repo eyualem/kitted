@@ -1,0 +1,880 @@
+{
+ "mode": "full",
+ "planted": null,
+ "fails": [],
+ "seconds": 13,
+ "S1": {
+  "photo": "inputs/pinterest/Screenshot 2026-10-12 at 2.55.27\u202fPM.png",
+  "status": {
+   "new": "ok/None",
+   "before": "ok/None",
+   "main": "ok/None"
+  },
+  "joints": [
+   "lShoulder",
+   "neck"
+  ],
+  "prints": [],
+  "face": [
+   {
+    "copy": "upload",
+    "v": "hidden",
+    "unchanged": 0.234,
+    "inside": 1.0,
+    "grey": 0.0
+   },
+   {
+    "copy": "detail",
+    "v": "hidden",
+    "unchanged": 0.237,
+    "inside": 1.0,
+    "grey": 0.0
+   }
+  ],
+  "regions": [
+   {
+    "copy": "upload",
+    "region": [
+     204.1,
+     49.1,
+     212.6,
+     252.5
+    ],
+    "new": 0.171,
+    "main": 0.171
+   },
+   {
+    "copy": "detail",
+    "region": [
+     204.1,
+     49.1,
+     212.6,
+     252.5
+    ],
+    "new": 0.168,
+    "main": 0.168
+   }
+  ],
+  "zone": null
+ },
+ "S2": {
+  "photo": "inputs/fashionpedia/images/test/caa7c7b751d4acf2ef5a8aaf1896d3f0.jpg",
+  "status": {
+   "new": "couldNotFrame/faceRemains",
+   "before": "couldNotFrame/faceRemains",
+   "main": "ok/None"
+  },
+  "joints": [
+   "lElbow",
+   "lShoulder",
+   "lWrist",
+   "neck",
+   "rElbow",
+   "rShoulder"
+  ],
+  "zone": null
+ },
+ "S3": {
+  "photo": "inputs/fashionpedia/images/test/cefdf3bda4f600792ddbed990887d837.jpg",
+  "status": {
+   "new": "ok/None",
+   "before": "ok/None",
+   "main": "ok/None"
+  },
+  "joints": [
+   "lElbow",
+   "lShoulder",
+   "neck",
+   "rElbow",
+   "rShoulder"
+  ],
+  "prints": [],
+  "face": [
+   {
+    "copy": "upload",
+    "v": "hidden",
+    "unchanged": 0.109,
+    "inside": 1.0,
+    "grey": 0.0
+   },
+   {
+    "copy": "detail",
+    "v": "hidden",
+    "unchanged": 0.106,
+    "inside": 1.0,
+    "grey": 0.0
+   }
+  ],
+  "regions": [
+   {
+    "copy": "upload",
+    "region": [
+     340.7,
+     285.0,
+     80.4,
+     95.5
+    ],
+    "new": 0.102,
+    "main": 0.102
+   },
+   {
+    "copy": "upload",
+    "region": [
+     308.6,
+     111.2,
+     78.2,
+     92.8
+    ],
+    "new": 0.011,
+    "main": 0.947
+   },
+   {
+    "copy": "upload",
+    "region": [
+     510.1,
+     180.0,
+     64.2,
+     76.3
+    ],
+    "new": 0.0,
+    "main": 0.931
+   },
+   {
+    "copy": "upload",
+    "region": [
+     23.7,
+     626.3,
+     62.4,
+     74.1
+    ],
+    "new": 0.0,
+    "main": 0.52
+   },
+   {
+    "copy": "upload",
+    "region": [
+     298.1,
+     270.9,
+     117.8,
+     144.9
+    ],
+    "new": 0.128,
+    "main": 0.128
+   },
+   {
+    "copy": "detail",
+    "region": [
+     340.7,
+     285.0,
+     80.4,
+     95.5
+    ],
+    "new": 0.103,
+    "main": 0.103
+   },
+   {
+    "copy": "detail",
+    "region": [
+     308.6,
+     111.2,
+     78.2,
+     92.8
+    ],
+    "new": 0.011,
+    "main": 0.946
+   },
+   {
+    "copy": "detail",
+    "region": [
+     510.1,
+     180.0,
+     64.2,
+     76.3
+    ],
+    "new": 0.0,
+    "main": 0.928
+   },
+   {
+    "copy": "detail",
+    "region": [
+     23.7,
+     626.3,
+     62.4,
+     74.1
+    ],
+    "new": 0.0,
+    "main": 0.521
+   },
+   {
+    "copy": "detail",
+    "region": [
+     298.1,
+     270.9,
+     117.8,
+     144.9
+    ],
+    "new": 0.128,
+    "main": 0.128
+   }
+  ],
+  "zone": null
+ },
+ "S4": {
+  "photo": "inputs/fashionpedia/images/test/d5da50f251cc2ba7d90e5ab8251d2b94.jpg",
+  "status": {
+   "new": "ok/None",
+   "before": "ok/None",
+   "main": "ok/None"
+  },
+  "joints": [
+   "lKnee",
+   "lShoulder",
+   "neck",
+   "rElbow",
+   "rShoulder",
+   "rWrist"
+  ],
+  "prints": [],
+  "face": [
+   {
+    "copy": "upload",
+    "v": "hidden",
+    "unchanged": 0.107,
+    "inside": 1.0,
+    "grey": 0.0
+   },
+   {
+    "copy": "detail",
+    "v": "hidden",
+    "unchanged": 0.108,
+    "inside": 1.0,
+    "grey": 0.0
+   }
+  ],
+  "regions": [
+   {
+    "copy": "upload",
+    "region": [
+     433.9,
+     155.0,
+     114.6,
+     136.1
+    ],
+    "new": 0.286,
+    "main": 0.286
+   },
+   {
+    "copy": "upload",
+    "region": [
+     134.7,
+     156.2,
+     69.9,
+     83.1
+    ],
+    "new": 0.061,
+    "main": 0.163
+   },
+   {
+    "copy": "upload",
+    "region": [
+     40.4,
+     61.4,
+     135.2,
+     166.4
+    ],
+    "new": 0.137,
+    "main": 0.173
+   },
+   {
+    "copy": "detail",
+    "region": [
+     433.9,
+     155.0,
+     114.6,
+     136.1
+    ],
+    "new": 0.285,
+    "main": 0.285
+   },
+   {
+    "copy": "detail",
+    "region": [
+     134.7,
+     156.2,
+     69.9,
+     83.1
+    ],
+    "new": 0.061,
+    "main": 0.162
+   },
+   {
+    "copy": "detail",
+    "region": [
+     40.4,
+     61.4,
+     135.2,
+     166.4
+    ],
+    "new": 0.138,
+    "main": 0.173
+   }
+  ],
+  "zone": null
+ },
+ "S5": {
+  "photo": "inputs/fashionpedia/images/test/f304cfe8f41748fa2e35cb7b670b4a54.jpg",
+  "status": {
+   "new": "ok/None",
+   "before": "ok/None",
+   "main": "ok/None"
+  },
+  "joints": [
+   "lAnkle",
+   "lHip",
+   "lKnee",
+   "lShoulder",
+   "neck",
+   "rAnkle",
+   "rElbow",
+   "rHip",
+   "rKnee",
+   "rShoulder",
+   "rWrist",
+   "root"
+  ],
+  "prints": [],
+  "face": [
+   {
+    "copy": "upload",
+    "v": "hidden",
+    "unchanged": 0.272,
+    "inside": 1.0,
+    "grey": 0.0
+   },
+   {
+    "copy": "detail",
+    "v": "hidden",
+    "unchanged": 0.272,
+    "inside": 1.0,
+    "grey": 0.0
+   }
+  ],
+  "regions": [
+   {
+    "copy": "upload",
+    "region": [
+     203.3,
+     74.4,
+     255.7,
+     303.7
+    ],
+    "new": 0.23,
+    "main": 0.23
+   },
+   {
+    "copy": "upload",
+    "region": [
+     208.2,
+     43.9,
+     249.6,
+     306.6
+    ],
+    "new": 0.213,
+    "main": 0.213
+   },
+   {
+    "copy": "detail",
+    "region": [
+     203.3,
+     74.4,
+     255.7,
+     303.7
+    ],
+    "new": 0.231,
+    "main": 0.23
+   },
+   {
+    "copy": "detail",
+    "region": [
+     208.2,
+     43.9,
+     249.6,
+     306.6
+    ],
+    "new": 0.213,
+    "main": 0.212
+   }
+  ],
+  "zone": null
+ },
+ "S6": {
+  "photo": "inputs/fashionpedia/images/test/956bd805fafef7524b88d3629224b151.jpg",
+  "status": {
+   "new": "ok/None",
+   "before": "ok/None",
+   "main": "ok/None"
+  },
+  "joints": [
+   "lElbow",
+   "lHip",
+   "lShoulder",
+   "lWrist",
+   "neck",
+   "rShoulder",
+   "root"
+  ],
+  "prints": [],
+  "face": [
+   {
+    "copy": "upload",
+    "v": "hidden",
+    "unchanged": 0.194,
+    "inside": 1.0,
+    "grey": 0.0
+   },
+   {
+    "copy": "detail",
+    "v": "hidden",
+    "unchanged": 0.196,
+    "inside": 1.0,
+    "grey": 0.0
+   }
+  ],
+  "regions": [
+   {
+    "copy": "upload",
+    "region": [
+     451.0,
+     44.4,
+     117.9,
+     140.1
+    ],
+    "new": 0.178,
+    "main": 0.178
+   },
+   {
+    "copy": "upload",
+    "region": [
+     325.4,
+     451.2,
+     115.5,
+     137.1
+    ],
+    "new": 0.281,
+    "main": 0.313
+   },
+   {
+    "copy": "upload",
+    "region": [
+     900.2,
+     435.6,
+     121.5,
+     144.3
+    ],
+    "new": 0.007,
+    "main": 0.346
+   },
+   {
+    "copy": "upload",
+    "region": [
+     160.0,
+     485.5,
+     106.3,
+     126.3
+    ],
+    "new": 0.404,
+    "main": 0.434
+   },
+   {
+    "copy": "upload",
+    "region": [
+     783.4,
+     443.5,
+     95.7,
+     113.7
+    ],
+    "new": 0.0,
+    "main": 0.482
+   },
+   {
+    "copy": "upload",
+    "region": [
+     423.3,
+     501.1,
+     104.3,
+     123.9
+    ],
+    "new": 0.189,
+    "main": 0.189
+   },
+   {
+    "copy": "upload",
+    "region": [
+     685.0,
+     508.1,
+     92.7,
+     110.0
+    ],
+    "new": 0.016,
+    "main": 0.424
+   },
+   {
+    "copy": "upload",
+    "region": [
+     263.0,
+     507.6,
+     85.0,
+     100.9
+    ],
+    "new": 0.0,
+    "main": 0.644
+   },
+   {
+    "copy": "upload",
+    "region": [
+     59.6,
+     546.8,
+     91.4,
+     108.5
+    ],
+    "new": 0.128,
+    "main": 0.186
+   },
+   {
+    "copy": "upload",
+    "region": [
+     477.4,
+     3.6,
+     161.2,
+     198.4
+    ],
+    "new": 0.205,
+    "main": 0.205
+   },
+   {
+    "copy": "detail",
+    "region": [
+     451.0,
+     44.4,
+     117.9,
+     140.1
+    ],
+    "new": 0.178,
+    "main": 0.178
+   },
+   {
+    "copy": "detail",
+    "region": [
+     325.4,
+     451.2,
+     115.5,
+     137.1
+    ],
+    "new": 0.283,
+    "main": 0.315
+   },
+   {
+    "copy": "detail",
+    "region": [
+     900.2,
+     435.6,
+     121.5,
+     144.3
+    ],
+    "new": 0.007,
+    "main": 0.346
+   },
+   {
+    "copy": "detail",
+    "region": [
+     160.0,
+     485.5,
+     106.3,
+     126.3
+    ],
+    "new": 0.405,
+    "main": 0.435
+   },
+   {
+    "copy": "detail",
+    "region": [
+     783.4,
+     443.5,
+     95.7,
+     113.7
+    ],
+    "new": 0.0,
+    "main": 0.484
+   },
+   {
+    "copy": "detail",
+    "region": [
+     423.3,
+     501.1,
+     104.3,
+     123.9
+    ],
+    "new": 0.189,
+    "main": 0.189
+   },
+   {
+    "copy": "detail",
+    "region": [
+     685.0,
+     508.1,
+     92.7,
+     110.0
+    ],
+    "new": 0.015,
+    "main": 0.428
+   },
+   {
+    "copy": "detail",
+    "region": [
+     263.0,
+     507.6,
+     85.0,
+     100.9
+    ],
+    "new": 0.0,
+    "main": 0.644
+   },
+   {
+    "copy": "detail",
+    "region": [
+     59.6,
+     546.8,
+     91.4,
+     108.5
+    ],
+    "new": 0.128,
+    "main": 0.184
+   },
+   {
+    "copy": "detail",
+    "region": [
+     477.4,
+     3.6,
+     161.2,
+     198.4
+    ],
+    "new": 0.204,
+    "main": 0.204
+   }
+  ],
+  "zone": null
+ },
+ "S7": {
+  "photo": "inputs/fashionpedia/images/test/4f90696201ecfc4a4fe2ca9dfacc42c8.jpg",
+  "status": {
+   "new": "ok/None",
+   "before": "ok/None",
+   "main": "ok/None"
+  },
+  "joints": [
+   "lElbow",
+   "lShoulder",
+   "lWrist",
+   "neck",
+   "rElbow",
+   "rShoulder"
+  ],
+  "prints": [],
+  "face": [
+   {
+    "copy": "upload",
+    "v": "hidden",
+    "unchanged": 0.283,
+    "inside": 1.0,
+    "grey": 0.0
+   },
+   {
+    "copy": "detail",
+    "v": "hidden",
+    "unchanged": 0.282,
+    "inside": 1.0,
+    "grey": 0.0
+   }
+  ],
+  "regions": [
+   {
+    "copy": "upload",
+    "region": [
+     259.6,
+     96.1,
+     139.5,
+     165.6
+    ],
+    "new": 0.219,
+    "main": 0.224
+   },
+   {
+    "copy": "upload",
+    "region": [
+     65.7,
+     107.4,
+     122.6,
+     145.5
+    ],
+    "new": 0.108,
+    "main": 0.239
+   },
+   {
+    "copy": "upload",
+    "region": [
+     491.4,
+     103.4,
+     111.2,
+     132.1
+    ],
+    "new": 0.211,
+    "main": 0.23
+   },
+   {
+    "copy": "upload",
+    "region": [
+     337.7,
+     -19.4,
+     73.7,
+     87.5
+    ],
+    "new": 0.18,
+    "main": 0.23
+   },
+   {
+    "copy": "upload",
+    "region": [
+     -13.7,
+     53.7,
+     120.7,
+     143.4
+    ],
+    "new": 0.158,
+    "main": 0.209
+   },
+   {
+    "copy": "upload",
+    "region": [
+     446.3,
+     -32.9,
+     89.9,
+     106.8
+    ],
+    "new": 0.145,
+    "main": 0.25
+   },
+   {
+    "copy": "upload",
+    "region": [
+     614.6,
+     47.1,
+     72.2,
+     85.7
+    ],
+    "new": 0.129,
+    "main": 0.169
+   },
+   {
+    "copy": "upload",
+    "region": [
+     253.4,
+     78.4,
+     159.3,
+     196.1
+    ],
+    "new": 0.194,
+    "main": 0.2
+   },
+   {
+    "copy": "detail",
+    "region": [
+     259.6,
+     96.1,
+     139.5,
+     165.6
+    ],
+    "new": 0.218,
+    "main": 0.223
+   },
+   {
+    "copy": "detail",
+    "region": [
+     65.7,
+     107.4,
+     122.6,
+     145.5
+    ],
+    "new": 0.108,
+    "main": 0.238
+   },
+   {
+    "copy": "detail",
+    "region": [
+     491.4,
+     103.4,
+     111.2,
+     132.1
+    ],
+    "new": 0.211,
+    "main": 0.23
+   },
+   {
+    "copy": "detail",
+    "region": [
+     337.7,
+     -19.4,
+     73.7,
+     87.5
+    ],
+    "new": 0.179,
+    "main": 0.231
+   },
+   {
+    "copy": "detail",
+    "region": [
+     -13.7,
+     53.7,
+     120.7,
+     143.4
+    ],
+    "new": 0.158,
+    "main": 0.208
+   },
+   {
+    "copy": "detail",
+    "region": [
+     446.3,
+     -32.9,
+     89.9,
+     106.8
+    ],
+    "new": 0.145,
+    "main": 0.249
+   },
+   {
+    "copy": "detail",
+    "region": [
+     614.6,
+     47.1,
+     72.2,
+     85.7
+    ],
+    "new": 0.129,
+    "main": 0.168
+   },
+   {
+    "copy": "detail",
+    "region": [
+     253.4,
+     78.4,
+     159.3,
+     196.1
+    ],
+    "new": 0.193,
+    "main": 0.2
+   }
+  ],
+  "zone": null
+ },
+ "sheet": "no crops"
+}

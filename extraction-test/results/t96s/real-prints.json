@@ -1,0 +1,690 @@
+{
+ "mode": "full",
+ "planted": null,
+ "fails": [],
+ "seconds": 12,
+ "P4 pick": {
+  "locate": "multiplePeople",
+  "pick": [
+   0.32654319982849567,
+   0.16221217186907066,
+   0.3104938543564487,
+   0.6698190768794646
+  ],
+  "before": "ok",
+  "gated": true
+ },
+ "P1": {
+  "photo": "inputs/ig/Screenshot 2026-10-12 at 2.05.18\u202fPM.png",
+  "status": {
+   "new": "ok",
+   "before": "ok",
+   "main": "ok"
+  },
+  "reason": null,
+  "printsKept": 1,
+  "gated": true,
+  "boxes": [
+   {
+    "box": [
+     260,
+     261,
+     19,
+     21
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 0.148,
+      "newGrey": 0.95,
+      "grey": 0.95,
+      "ok": false
+     },
+     {
+      "copy": "detail",
+      "unchanged": 0.171,
+      "newGrey": 0.931,
+      "grey": 0.931,
+      "ok": false
+     },
+     {
+      "copy": "upper",
+      "unchanged": 0.175,
+      "newGrey": 0.931,
+      "grey": 0.931,
+      "ok": false
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   }
+  ],
+  "prints": [
+   [
+    390.6,
+    393.8,
+    19.1,
+    19.1
+   ]
+  ],
+  "head": [
+   {
+    "copy": "upload",
+    "region": [
+     312.8,
+     110.2,
+     168.2,
+     199.7
+    ],
+    "new": 0.106,
+    "main": 0.106
+   },
+   {
+    "copy": "upload",
+    "region": [
+     270.6,
+     47.1,
+     231.9,
+     285.4
+    ],
+    "new": 0.217,
+    "main": 0.217
+   },
+   {
+    "copy": "detail",
+    "region": [
+     312.8,
+     110.2,
+     168.2,
+     199.7
+    ],
+    "new": 0.104,
+    "main": 0.104
+   },
+   {
+    "copy": "detail",
+    "region": [
+     270.6,
+     47.1,
+     231.9,
+     285.4
+    ],
+    "new": 0.211,
+    "main": 0.211
+   }
+  ],
+  "fails": []
+ },
+ "P2": {
+  "photo": "inputs/ig/Screenshot 2026-10-12 at 1.44.56\u202fPM.png",
+  "status": {
+   "new": "ok",
+   "before": "ok",
+   "main": "ok"
+  },
+  "reason": null,
+  "printsKept": 1,
+  "gated": true,
+  "boxes": [
+   {
+    "box": [
+     246,
+     305,
+     20,
+     23
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 0.155,
+      "newGrey": 0.996,
+      "grey": 1.0,
+      "ok": false
+     },
+     {
+      "copy": "detail",
+      "unchanged": 0.15,
+      "newGrey": 0.997,
+      "grey": 1.0,
+      "ok": false
+     },
+     {
+      "copy": "upper",
+      "unchanged": 0.15,
+      "newGrey": 0.997,
+      "grey": 1.0,
+      "ok": false
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 0.996,
+      "newGrey": 0.0,
+      "grey": 0.004,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.001,
+      "grey": 0.004,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.002,
+      "ok": true
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   }
+  ],
+  "prints": [
+   [
+    361.6,
+    446.4,
+    32.9,
+    32.9
+   ]
+  ],
+  "head": [
+   {
+    "copy": "upload",
+    "region": [
+     308.6,
+     157.9,
+     171.3,
+     203.5
+    ],
+    "new": 0.073,
+    "main": 0.073
+   },
+   {
+    "copy": "upload",
+    "region": [
+     275.6,
+     71.4,
+     275.5,
+     339.0
+    ],
+    "new": 0.164,
+    "main": 0.164
+   },
+   {
+    "copy": "detail",
+    "region": [
+     308.6,
+     157.9,
+     171.3,
+     203.5
+    ],
+    "new": 0.073,
+    "main": 0.073
+   },
+   {
+    "copy": "detail",
+    "region": [
+     275.6,
+     71.4,
+     275.5,
+     339.0
+    ],
+    "new": 0.164,
+    "main": 0.164
+   }
+  ],
+  "fails": []
+ },
+ "P3": {
+  "photo": "inputs/fashionpedia/images/test/f6890fd9ddbb8cf2d17a332eb72e0ea2.jpg",
+  "status": {
+   "new": "ok",
+   "before": "ok",
+   "main": "ok"
+  },
+  "reason": null,
+  "printsKept": 1,
+  "gated": true,
+  "boxes": [
+   {
+    "box": [
+     319,
+     324,
+     40,
+     41
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 0.052,
+      "newGrey": 0.976,
+      "grey": 1.0,
+      "ok": false
+     },
+     {
+      "copy": "detail",
+      "unchanged": 0.052,
+      "newGrey": 0.976,
+      "grey": 1.0,
+      "ok": false
+     },
+     {
+      "copy": "upper",
+      "unchanged": 0.052,
+      "newGrey": 0.976,
+      "grey": 1.0,
+      "ok": false
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.001,
+      "grey": 0.024,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.002,
+      "grey": 0.026,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.005,
+      "grey": 0.026,
+      "ok": true
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   }
+  ],
+  "prints": [
+   [
+    318.0,
+    315.2,
+    50.7,
+    50.7
+   ]
+  ],
+  "head": [
+   {
+    "copy": "upload",
+    "region": [
+     277.0,
+     40.2,
+     136.3,
+     161.9
+    ],
+    "new": 0.349,
+    "main": 0.349
+   },
+   {
+    "copy": "upload",
+    "region": [
+     274.4,
+     39.7,
+     142.2,
+     175.0
+    ],
+    "new": 0.357,
+    "main": 0.357
+   },
+   {
+    "copy": "detail",
+    "region": [
+     277.0,
+     40.2,
+     136.3,
+     161.9
+    ],
+    "new": 0.349,
+    "main": 0.349
+   },
+   {
+    "copy": "detail",
+    "region": [
+     274.4,
+     39.7,
+     142.2,
+     175.0
+    ],
+    "new": 0.357,
+    "main": 0.357
+   }
+  ],
+  "fails": []
+ },
+ "P4": {
+  "photo": "inputs/fashionpedia/images/test/6c1cf70085fef21a41cb374e84bfd6c3.jpg",
+  "status": {
+   "new": "ok",
+   "before": "ok",
+   "main": "ok"
+  },
+  "reason": null,
+  "printsKept": 0,
+  "gated": true,
+  "boxes": [
+   {
+    "box": [
+     309,
+     344,
+     10,
+     15
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   },
+   {
+    "box": [
+     339,
+     345,
+     11,
+     14
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.019,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.019,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.013,
+      "ok": true
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.019,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.019,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.013,
+      "ok": true
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   },
+   {
+    "box": [
+     368,
+     343,
+     10,
+     15
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.007,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.007,
+      "ok": true
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.007,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.007,
+      "ok": true
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   },
+   {
+    "box": [
+     341,
+     394,
+     11,
+     15
+    ],
+    "before": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     }
+    ],
+    "new": [
+     {
+      "copy": "upload",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "detail",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     },
+     {
+      "copy": "upper",
+      "unchanged": 1.0,
+      "newGrey": 0.0,
+      "grey": 0.0,
+      "ok": true
+     }
+    ],
+    "mainWholePhotoFace": [],
+    "inMainHide": false
+   }
+  ],
+  "prints": [],
+  "head": [
+   {
+    "copy": "upload",
+    "region": [
+     282.2,
+     150.5,
+     113.6,
+     134.9
+    ],
+    "new": 0.378,
+    "main": 0.378
+   },
+   {
+    "copy": "upload",
+    "region": [
+     292.9,
+     158.1,
+     93.5,
+     115.1
+    ],
+    "new": 0.237,
+    "main": 0.237
+   },
+   {
+    "copy": "detail",
+    "region": [
+     282.2,
+     150.5,
+     113.6,
+     134.9
+    ],
+    "new": 0.379,
+    "main": 0.379
+   },
+   {
+    "copy": "detail",
+    "region": [
+     292.9,
+     158.1,
+     93.5,
+     115.1
+    ],
+    "new": 0.239,
+    "main": 0.239
+   }
+  ],
+  "fails": []
+ },
+ "pendant": {
+  "status": "ok",
+  "reason": null,
+  "printsKept": 1,
+  "prints": [
+   [
+    0.6129436552524566,
+    0.29831986608335775,
+    0.05432302951812744,
+    0.027644190341474938
+   ]
+  ],
+  "sweptFaces": 0
+ },
+ "P3 in main's found.hide": false,
+ "sheet": "no crops"
+}
