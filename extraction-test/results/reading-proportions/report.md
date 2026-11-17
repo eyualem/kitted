@@ -77,3 +77,25 @@ Bars written before any call (`tasks/T98/COST.md`). 252 calls, no errors: 5 pilo
 4. **Bulk:** no rule.
 5. **Shorts length:** the October narrow look (a second-look call on the lower close-up, ~0.16¢, only when the reading names shorts) can back an above-the-knee charge. It's not in the app yet: `secondLook.ts` has no shorts question.
 6. **The top over shorts:** the long-top read (the body ruler), nothing new.
+
+## Round 3: the phone's own cutout as the shape (Nov 17, $0)
+
+*The founder: "Can't an iPhone make cutouts of people?... If we take that cutout and then use that as the shape, what do you think about that?" Script `extraction-test/outline_test.py`, harness `vision/OutlineProbe.swift` (`kmeasure outline`), numbers in `outline.txt` and `outline.csv`.*
+
+**The short answer: it doesn't replace the reading's leg shape.** The cutout's leg taper agrees with the reading and with Claude's eye, but it measures fewer than half the photos, tracks his scores less well, flips too often to back a rule on its own, and leaks body size on exactly the pants a rule would charge. Top-against-legs, the waist break and the shorts hem carry no usable signal.
+
+**What was measured.** Apple's person segmentation (the cutout iOS makes), with Apple's body joints, on the face-hidden copy of every photo he rated blind (150 + his first 20). Widths across each leg at fixed shares of the bone, and across the torso, divided into **ratios only, never cm**: ankle against thigh, ankle against knee, knee against thigh, the torso against both thighs, where the torso outline steps in or out (the waist break), and the shorts hem as a step in the leg outline. Steadiness on two reframed copies: 1600 px with 3% cropped off, and a 4% off-center shift.
+
+| Measure | Measures | Agrees with | Tracks his scores | Steady | Body size | Verdict |
+|---|---|---|---|---|---|---|
+| **Leg taper** (ankle ÷ thigh) | 63 of 141 pants photos | the reading's leg shape, rank 0.60; narrow vs the rest 76% (leave-one-out); Claude's tight vs not-narrow 84% | 0.46 (the reading, same photos: 0.57; all photos: 0.69) | the narrow call flips 8–12% overall, **20–29% where it fires** | **leaks**: in skinny and slim pants it follows the leg's own girth (−0.54) and the build (−0.39) | **not a replacement**; at most a check |
+| Ankle ÷ knee, knee ÷ thigh | 63 | weaker (0.45, 0.55) | 0.26, 0.53 | similar | leak −0.38 to −0.48 in narrow pants | no |
+| **Top against legs** | 51 of 170 | nothing (bulky-labelled tops didn't stand out) | **0.01** | 90th-percentile change 0.15–0.30 | − | no |
+| **Waist break** (where the torso outline steps) | 86 of 101 with a torso profile | the step sits anywhere from the ribs to below the hips (mostly where the arms and hands meet the body); 1 long top measured | − | − | − | no |
+| **Shorts hem** (a step in the leg outline) | 11 of 25 | 9 of 11 right on above vs at-or-below | − | − | − | no; the narrow look gets 43 of 48 on all 24 |
+
+- **Why so few photos:** in the cutout, legs that touch, cross or walk merge into one shape, so neither leg's width can be read (48 skips). Another 19 had no knee or ankle joints, and the prep found no person in 9 face-hidden copies. Wide trousers touch most often, so the measured set leans toward narrow pants.
+- **Why it leaks:** a cutout includes the body under the clothes. In pants that hug the leg, the outline *is* the leg, so the ratio follows the person's own leg shape: a fuller thigh reads as more tapered. That's the case where a rule would charge points, so a rule built on it would mark down bodies, not trousers. In straight and wide pants the fabric hides the leg and the leak mostly disappears (+0.10 and −0.35 against build, small samples).
+- **What it adds:** inside the reading's own `straight`, the taper tracks his score at 0.35 (25 photos); inside `slim`, 0.17. A small hint that a cutout could split the reading's middle class, not enough for a rule.
+- **Phone vs Mac (not verified):** the phone makes the cutout from the original photo before faces are hidden, with full-confidence joints, so the 9 prep failures and some missing joints would likely go away. Touching legs and the body-size leak wouldn't: they come from what a cutout is, not from the face block.
+- **Recommendation:** keep the reading's `leg_shape` for the leg rules and the silhouette lift. The cutout can't back a rule; it could only ever be a tip-level cross-check on straight pants, and that isn't worth building.

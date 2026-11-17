@@ -1,0 +1,76 @@
+# The cutout test (T98 round 3, $0): 170 photos he rated (founder4 150 + his first 20)
+
+Cutout and joints found: {'couldNotFrame': 6, 'ok': 158, 'noPerson': 6}
+
+## Coverage (pass a)
+
+- leg ratios measured on 63/141 photos in pants
+  - skipped, legs merged (touching legs, crossed or walking, an arm or bag against them): 48
+  - skipped, knee or ankle joints missing: 19
+  - skipped, prep: noPerson: 5
+  - skipped, prep: couldNotFrame: 4
+  - skipped, off the outline:16: 1
+  - skipped, off the outline:12: 1
+- of the measured, a hand box sits on a measured leg point: 10
+- top/legs measured on 51/170
+
+## Leg taper against the reading's leg shape and Claude's eye labels
+
+- `ankle_thigh` median by reading: skinny 0.49 (n 8), slim 0.53 (n 17), straight 0.64 (n 25), relaxed 0.80 (n 5), flare_bootcut 0.91 (n 1), wide 0.82 (n 7)
+  Spearman with the reading's order (skinny 0 .. wide 4): 0.60, n 63
+  narrow (reading skinny/slim) vs the rest: AUC 0.80; leave-one-out right 76%
+  eye labels: tight 11, not narrow 26: AUC 0.93, leave-one-out 84%; medians tight 0.48, slim 0.59, not narrow 0.71
+- `ankle_knee` median by reading: skinny 0.65 (n 8), slim 0.74 (n 17), straight 0.83 (n 25), relaxed 0.92 (n 5), flare_bootcut 1.12 (n 1), wide 0.92 (n 7)
+  Spearman with the reading's order (skinny 0 .. wide 4): 0.45, n 63
+  narrow (reading skinny/slim) vs the rest: AUC 0.76; leave-one-out right 73%
+  eye labels: tight 11, not narrow 26: AUC 0.88, leave-one-out 81%; medians tight 0.62, slim 0.82, not narrow 0.85
+- `knee_thigh` median by reading: skinny 0.72 (n 8), slim 0.72 (n 17), straight 0.78 (n 25), relaxed 0.84 (n 5), flare_bootcut 0.82 (n 1), wide 0.89 (n 7)
+  Spearman with the reading's order (skinny 0 .. wide 4): 0.55, n 63
+  narrow (reading skinny/slim) vs the rest: AUC 0.76; leave-one-out right 70%
+  eye labels: tight 11, not narrow 26: AUC 0.90, leave-one-out 84%; medians tight 0.72, slim 0.73, not narrow 0.83
+
+## Against his blind ratings
+
+- `ankle_thigh`: Spearman 0.46 (n 63); on the same photos the reading's leg shape 0.57 and this ratio 0.46 (n 63)
+- `ankle_knee`: Spearman 0.26 (n 63); on the same photos the reading's leg shape 0.57 and this ratio 0.26 (n 63)
+- `knee_thigh`: Spearman 0.53 (n 63); on the same photos the reading's leg shape 0.57 and this ratio 0.53 (n 63)
+- the reading's leg shape on every pants photo with a reading: Spearman 0.69 (n 136)
+- inside the reading's `slim`: ankle/thigh vs his score Spearman 0.17 (n 17)
+- inside the reading's `straight`: ankle/thigh vs his score Spearman 0.35 (n 25)
+- top/legs (pants): Spearman with his score 0.01 (n 47)
+  top/legs median for bulky-labelled b: 1.03 (n 1)
+  top/legs median for bulky-labelled n: 1.22 (n 45)
+
+## Steadiness (the same photo always gives the same numbers; these are reframed copies)
+
+- `ankle_thigh` vs 1600 px + 3% crop: both measured 56; median change 0.016, 90th percentile 0.063
+- `ankle_thigh` vs 4% off-center shift: both measured 57; median change 0.021, 90th percentile 0.117
+- `ankle_knee` vs 1600 px + 3% crop: both measured 76; median change 0.013, 90th percentile 0.077
+- `ankle_knee` vs 4% off-center shift: both measured 75; median change 0.020, 90th percentile 0.109
+- `top_legs` vs 1600 px + 3% crop: both measured 37; median change 0.024, 90th percentile 0.298
+- `top_legs` vs 4% off-center shift: both measured 38; median change 0.022, 90th percentile 0.151
+- the narrow call at ankle/thigh < 0.537 (the best single cut against the reading):
+  vs 1600 px + 3% crop: flips 4/50 (8%); 4/20 where it fires; measured on a but not here: 13
+  vs 4% shift: flips 6/52 (12%); 6/21 where it fires; measured on a but not here: 11
+
+## Does it leak body size?
+
+Build proxies: `broad` = shoulder-joint spacing / shoulder-to-hip length (skeleton only); `girth` = thigh outline / thigh bone length, read only on pants the reading calls skinny or slim, where the outline is close to the leg itself.
+- `ankle_thigh` in skinny/slim: vs broad -0.39 (n 25); vs girth -0.54 (n 26)
+- `ankle_thigh` in straight: vs broad +0.10 (n 28)
+- `ankle_thigh` in wide/barrel/relaxed/flare_bootcut: vs broad -0.35 (n 14)
+- `ankle_knee` in skinny/slim: vs broad -0.32 (n 30); vs girth -0.38 (n 26)
+- `ankle_knee` in straight: vs broad +0.31 (n 33)
+- `ankle_knee` in wide/barrel/relaxed/flare_bootcut: vs broad +0.01 (n 24)
+- `knee_thigh` in skinny/slim: vs broad -0.25 (n 26); vs girth -0.48 (n 27)
+- `knee_thigh` in straight: vs broad -0.06 (n 30)
+- `knee_thigh` in wide/barrel/relaxed/flare_bootcut: vs broad -0.16 (n 17)
+- `top_legs` in skinny/slim: vs broad -0.15 (n 20)
+- `top_legs` in straight: vs broad -0.23 (n 23)
+- `top_legs` in wide/barrel/relaxed/flare_bootcut: vs broad +0.00 (n 8)
+- girth (skinny/slim pants) vs his score: Spearman +0.02 (n 27) (a check that the score doesn't follow build; not a measure to use)
+
+## Shorts: the hem as a step in the outline
+
+- a 25%+ step found on 11/25; above-the-knee call right 9/11
+- C007 above: step at +0.00 (26%); C020 below: no step; C025 above: step at -0.33 (33%); C026 knee: step at +0.00 (44%); C027 above: step at -0.33 (37%); C030 above: step at -0.17 (33%); C031 above: no step; C033 below: step at +0.20 (56%); C042 below: step at +0.40 (40%); C048 below: no step; C050 above: no step; C055 below: no step; C057 knee: no step; C060 knee: no step; C079 knee: no step; C080 below: no step; C085 below: step at +0.40 (53%); C095 above: step at -0.25 (29%); C097 above: step at +0.00 (52%); C102 below: no step; C103 knee: no step; C114 knee: no step; C131 knee: step at +0.00 (48%); C140 knee: no step; C142 below: no step
