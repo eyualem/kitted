@@ -777,3 +777,24 @@ His "Yes, free fix". The rules now treat as one the classes the reader swaps on 
   - the wide-shorts outfits stay 8, the chore coat 7.5, the suit 7.5;
   - **the light-blue oxford with wide trousers drops from 8 to 7.5**: an oxford now counts as a dress shirt, which earns the "one smart piece" lift, and that lift blocks the silhouette lift.
 - **The review page is refreshed:** 132/164 within a point, r 0.62 on these photos.
+
+## Approved (Nov 17)
+
+**The founder, verbatim: "Yes, approve"**, answering "Approve this table and count the leg check toward steadiness?" (Y44 and Y41's 15-outfit table). So:
+- the v16 engine as built in round 7 is the rescoring T69 ports;
+- B6 counts with each reading's own leg-width look attached (the app's case: **218/223, passes**);
+- `rubric/v5-styles.md` takes the proposed diff on this branch (applied; the app runs v15 until T69 ships).
+
+**Final state** (`extraction-test/results/v16/report.txt`; v15 alongside):
+
+| Bar | v16 | v15 |
+|---|---|---|
+| B1, held out | **82.0%** within a point, r 0.63 (raw); 81.1%, 0.62 (key). Within a point passes, r fails 0.69 | 76.1%, r 0.53 |
+| B2 | 6/6 | 5/6 |
+| B3 | 17/18 | 10/18 |
+| B4 | every row but H7 (a tip by his call) | |
+| B5, worst band gap, gold / his checks | 19.5 / 18.4: FAIL | 29.6 / 32.9 |
+| B6, with the leg look (counted, his call) | **218/223 PASS** (215 without) | 218 |
+| B7, v15 untouched | PASS | |
+
+**Spend over T68:** $0 on paper; $1.8424 (the gold set's second looks, round 2), $0.9013 (the 90 unread rated photos), $0.9652 (the leg-width look). **$3.7089 in all**, each with his OK.

@@ -3357,3 +3357,15 @@ Contradictions settled and decisions changed during the build. Newest last.
       - The oxford with wide trousers drops to 7.5 (it was 8).
     - **For his call:** whether B6 counts with the app's own looks attached (passes at 218) or only as written (215). The bar predates the look; it isn't loosened here.
     - **Lesson:** the direction of a merge matters. Reading an oxford as a dress shirt kept agreement (+0.3); the reverse cost 1.8 points for the same steadiness, because the two classes carry different weight in the rules.
+
+484. **The founder approves v16 for the app: "Yes, approve" (Nov 17), answering "Approve this table and count the leg check toward steadiness?" (Y44, and Y41's 15-outfit table).**
+    - The round-7 engine (`extraction-test/rubrics/parts_proto.py`, `engine="v16"`) is what T69 ports to `@kitted/core`: his taste rules keyed on `graded_look`, Tailored recognized, the silhouette lift, the steadiness fixes, the curve (1.1, 0.7, 7) on the 3–9.5 scale, and the leg-width second look in the app (`extraction-test/prompt_look_w.txt`, `schema_look_w.json`, about +0.21¢ on each check in pants).
+    - B6 counts with each reading's own leg look (218/223).
+    - `rubric/v5-styles.md` takes the T68 diff (applied on the T68 branch).
+    - **Known gaps carried to T69:**
+      - ranking agreement r 0.63 (bar 0.69);
+      - band shares off target (gold 19.5, his checks 18.4 points at the worst band);
+      - socks (the echo case) and a sweater draped on the shoulders aren't read;
+      - shorts length needs its own second look (not in the app yet);
+      - the long top's body ruler isn't on the phone.
+    - **T68 spend:** $3.7089 in all (rounds 2, 3 and 6), each with his OK.
