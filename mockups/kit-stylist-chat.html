@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kit Stylist Answers</title>
+<!-- Kit's answers as a stylist's: the answer types of specs/kit-stylist-chat.md (KC1–KC9), each in dark and light.
+     Nov 17, 2026. Tokens copied from mockups/kitted-mockups.html. Inside each phone 1 CSS px = 1 pt. The drawings here
+     are rough stand-ins for the app's own code-drawn pieces (features/closet/flats.ts); the layout and words are what's
+     being approved. Closet and questions are Thursday's (Nov 12). -->
+<style>
+:root{
+  --page:#E5E7EB; --page-ink:#131726; --page-ink-2:#565C6B; --page-line:#C8CCD4;
+  --ios:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --page:#0A0C11; --page-ink:#E8EAF0; --page-ink-2:#9198A7; --page-line:#252A37;
+}}
+:root[data-theme="dark"]{ --page:#0A0C11; --page-ink:#E8EAF0; --page-ink-2:#9198A7; --page-line:#252A37; }
+.t-light{
+  --bg:#F3F4F6; --surface:#FFFFFF; --surface-2:#ECEEF1; --ink:#121628; --ink-2:#585E70; --ink-3:#848A99;
+  --line:#E0E3E8; --accent:#9C5326; --primary:#121628; --on-primary:#FFFFFF; --me:#1B2340; --on-me:#F2F3F7;
+  --good:#2B7651; --shadow:0 1px 2px rgba(18,22,40,.05),0 6px 18px rgba(18,22,40,.06); --edge:rgba(18,22,40,.38);
+  --dash:#A9AEBA; color-scheme:light;
+}
+.t-dark{
+  --bg:#0C0E14; --surface:#171A23; --surface-2:#21252F; --ink:#ECEEF3; --ink-2:#A1A7B5; --ink-3:#6E7484;
+  --line:#2A2F3B; --accent:#DE9762; --primary:#ECEEF3; --on-primary:#0C0E14; --me:#2A3150; --on-me:#EEF0F6;
+  --good:#5DC08F; --shadow:0 0 0 1px rgba(255,255,255,.03); --edge:rgba(255,255,255,.30); --dash:#525868;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--page);color:var(--page-ink)}
+body{font-family:var(--ios);-webkit-font-smoothing:antialiased;padding:32px 16px 80px}
+header.top{max-width:1300px;margin:0 auto 12px}
+h1{font-family:var(--display);font-size:34px;line-height:1.05;margin:0;letter-spacing:-.02em}
+.lede{color:var(--page-ink-2);max-width:720px;font-size:15px;line-height:1.45;margin:10px 0 0}
+h2{font-family:var(--display);font-size:22px;margin:44px auto 6px;max-width:1300px}
+.sub{color:var(--page-ink-2);max-width:840px;margin:0 auto 18px;font-size:14px;line-height:1.45}
+.sub, h2{max-width:1300px}
+.ids{font:600 12px ui-monospace,Menlo,monospace;color:var(--page-ink-2)}
+.row{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;max-width:1300px;margin:0 auto}
+.col{width:min(390px,100%)}
+.col .mode{font:600 12px var(--ios);color:var(--page-ink-2);margin:0 0 8px 6px}
+
+/* the phone */
+.phone{background:var(--bg);border-radius:36px;padding:18px 16px 22px;box-shadow:0 0 0 8px #1B1D22, var(--shadow);
+  display:flex;flex-direction:column;gap:10px;font-size:17px;line-height:1.38;color:var(--ink)}
+.me{align-self:flex-end;max-width:82%;background:var(--me);color:var(--on-me);padding:10px 16px;border-radius:22px 22px 6px 22px;font-size:16px;line-height:1.35}
+.who{font-size:13.5px;font-weight:600;color:var(--ink-3);margin:4px 0 -4px 2px}
+.kit{align-self:flex-start;max-width:90%;background:var(--surface);border:1px solid var(--line);padding:12px 16px;border-radius:22px 22px 22px 6px;font-size:16px;line-height:1.38;color:var(--ink-2)}
+.kit b{display:block;color:var(--ink);font-weight:650;margin-bottom:2px}
+.kit .p{color:var(--ink);font-weight:600;white-space:nowrap}
+.kit .p i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin:0 4px 1px 0;box-shadow:0 0 0 1px var(--edge)}
+.stamp{text-align:center;font-size:12px;color:var(--ink-3);margin:6px 0 0}
+.note{font-size:12.5px;color:var(--ink-3);text-align:center;margin:-2px 0 2px}
+
+/* the card */
+.card{align-self:flex-start;max-width:100%;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+.tag{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--ink-3)}
+.tag .l{font-weight:600;color:var(--ink-2)}
+.tiles{display:flex;flex-wrap:wrap;gap:8px}
+.tile{width:76px;display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--ink-2);line-height:1.22;position:relative}
+.art{aspect-ratio:1;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;overflow:hidden}
+.art svg{width:78%;height:78%}
+.tile.need .art{background:transparent;border:1.5px dashed var(--dash)}
+.tile .n{color:var(--ink);font-weight:500}
+.tile .k{font-size:11.5px;color:var(--ink-3)}
+.tile .k.need{color:var(--accent);font-weight:600}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:600 14.5px var(--ios);padding:9px 16px;border-radius:99px;background:var(--surface-2);color:var(--ink);border:0}
+.btn.pr{background:var(--primary);color:var(--on-primary)}
+.follow{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.follow span{font-size:14.5px;padding:7px 14px;border-radius:99px;border:1px solid var(--line);color:var(--ink);background:transparent}
+.swatches{display:flex;gap:14px;flex-wrap:wrap}
+.sw{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12px;color:var(--ink-2);width:52px;text-align:center;line-height:1.2}
+.sw i{width:40px;height:40px;border-radius:50%;background:var(--c);box-shadow:0 0 0 1px var(--edge)}
+.addrow{display:flex;gap:12px;align-items:center}
+.addrow .art{width:72px;flex:none}
+.addrow .txt{display:flex;flex-direction:column;gap:2px;font-size:15px;color:var(--ink-2)}
+.addrow .txt .n{color:var(--ink);font-weight:600}
+.line{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-2)}
+.line .art{width:40px;border-radius:9px}
+.line .art svg{width:80%;height:80%}
+.line u{text-decoration:none;color:var(--accent);font-weight:600}
+.menu{position:absolute;left:-6px;top:calc(100% + 4px);z-index:2;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.18);min-width:150px;font-size:15px;color:var(--ink)}
+.menu div{padding:10px 14px}
+.menu div+div{border-top:1px solid var(--line)}
+.buy .row2{display:flex;gap:12px;align-items:center}
+.buy .art{width:84px;flex:none}
+.buy .txt{display:flex;flex-direction:column;gap:3px;font-size:14px;color:var(--ink-2)}
+.buy .txt .n{font-size:17px;color:var(--ink);font-weight:650}
+.legend{max-width:1300px;margin:40px auto 0;color:var(--page-ink-2);font-size:13.5px;line-height:1.5}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Kit's answers, as a stylist's</h1>
+  <p class="lede">One bold line, one short line, then one card that is the answer as a picture. Each card is only as wide as its content (tiles keep one size; six pieces wrap to a second row). Every answer type in <code>specs/kit-stylist-chat.md</code> is shown in dark (left) and light (right), on Thursday's closet: tan bomber, olive sweater, dark jeans, black work boots, cream striped button-up. Solid tiles are his pieces. Dashed tiles are pieces he'd need. The drawings are rough stand-ins for the app's own; the layout and words are what you're approving.</p>
+</header>
+
+<h2>1 · An outfit with a piece he'd need</h2>
+<p class="sub">His own pieces first, the missing shirt drawn on a dashed tile with "You'd need". Under the latest answer: 2–3 follow-up taps (each one counts as a question). Shown open: what tapping a "You'd need" tile gives him. <span class="ids">KC1.1–1.3, KC2.1–2.2, KC2.10</span></p>
+<div class="row" data-src>
+  <div class="phone">
+    <div class="me">How can I style this up for a nice dinner with my girlfriend?</div>
+    <div class="who">Kit</div>
+    <div class="kit"><b>Swap the olive sweater for an off-white collared shirt.</b>Keep the tan bomber, jeans and boots. The collar makes it dinner.</div>
+    <div class="card">
+      <div class="tag"><span class="l">Dinner</span><span>From your closet + 1</span></div>
+      <div class="tiles">
+        <div class="tile"><div class="art" data-k="bomber" data-c="#B98E62"></div><span class="n">Tan bomber</span></div>
+        <div class="tile need"><div class="art" data-k="shirt" data-c="#EDE6D6"></div><span class="n">Off-white collared shirt</span><span class="k need">You'd need</span>
+          <div class="menu"><div>I have one</div><div>Next buy</div></div></div>
+        <div class="tile"><div class="art" data-k="jeans" data-c="#26324F"></div><span class="n">Dark jeans</span></div>
+        <div class="tile"><div class="art" data-k="boots" data-c="#1E2026"></div><span class="n">Black work boots</span></div>
+      </div>
+      <div class="btns"><span class="btn pr">Wear this</span><span class="btn">Check it</span></div>
+    </div>
+    <div class="follow"><span>What color shirt?</span><span>Add a watch</span><span>Make it dressier</span></div>
+  </div>
+</div>
+
+<h2>2 · Options, when he asks for choices</h2>
+<p class="sub">"An alternative to the tan bomber" gets 2–3 jackets, never the bomber and never a shirt or sweater. His own matching pieces would come first, marked "Yours" (Thursday's closet has no other jacket). <span class="ids">KC2.4–2.5</span></p>
+<div class="row" data-src>
+  <div class="phone">
+    <div class="me">I want an alternative to the tan bomber. A jacket, not a sweater.</div>
+    <div class="who">Kit</div>
+    <div class="kit"><b>Try a jacket with a straighter cut and a collar.</b>Each one works over your olive sweater and dark jeans.</div>
+    <div class="card">
+      <div class="tag"><span class="l">Options</span><span>Instead of your tan bomber</span></div>
+      <div class="tiles three">
+        <div class="tile need"><div class="art" data-k="overshirt" data-c="#5B6440"></div><span class="n">Olive overshirt</span><span class="k need">You'd need</span></div>
+        <div class="tile need"><div class="art" data-k="chore" data-c="#4A4D55"></div><span class="n">Charcoal chore jacket</span><span class="k need">You'd need</span></div>
+        <div class="tile need"><div class="art" data-k="harrington" data-c="#2B3550"></div><span class="n">Navy harrington</span><span class="k need">You'd need</span></div>
+      </div>
+    </div>
+    <div class="follow"><span>Which is most versatile?</span><span>Show me one in an outfit</span></div>
+  </div>
+</div>
+
+<h2>3 · Colors, on the piece itself</h2>
+<p class="sub">About a piece: the piece drawn once per color, each named. In general: named round swatches. Colors only from the app's 25, picked from the ones the scoring rules allow in that outfit, never tied to skin or face. <span class="ids">KC3.1–3.5</span></p>
+<div class="row" data-src>
+  <div class="phone">
+    <div class="me">What color should the collared shirt be?</div>
+    <div class="who">Kit</div>
+    <div class="kit"><b>Off-white or light blue.</b>Both brighten the tan and olive without fighting the bomber.</div>
+    <div class="card">
+      <div class="tag"><span class="l">Colors for the collared shirt</span></div>
+      <div class="tiles two">
+        <div class="tile"><div class="art" data-k="shirt" data-c="#EDE6D6"></div><span class="n">Off-white</span></div>
+        <div class="tile"><div class="art" data-k="shirt" data-c="#AFC6DE"></div><span class="n">Light blue</span></div>
+      </div>
+    </div>
+    <div class="me">What goes with olive?</div>
+    <div class="who">Kit</div>
+    <div class="kit"><b>Earthy and dark colors, with one light one.</b>Your <span class="p" style="--c:#26324F"><i></i>dark jeans</span> already do the dark part.</div>
+    <div class="card">
+      <div class="tag"><span class="l">Goes with olive</span></div>
+      <div class="swatches">
+        <div class="sw"><i style="--c:#EDE6D6"></i>Off-white</div>
+        <div class="sw"><i style="--c:#B98E62"></i>Tan</div>
+        <div class="sw"><i style="--c:#5A3522"></i>Brown</div>
+        <div class="sw"><i style="--c:#4A4D55"></i>Charcoal</div>
+        <div class="sw"><i style="--c:#26324F"></i>Dark denim</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>4 · The add card</h2>
+<p class="sub">He mentions a piece that isn't in his closet. Kit's words don't talk about adding; the card asks. After Add: one line with Undo, and tapping the drawn piece opens it in Closet to fix the name or color. "Can you add it?" adds it at once and shows the second state. No thanks: "Not added", never offered again. <span class="ids">KC4.1–4.9</span></p>
+<div class="row" data-src>
+  <div class="phone">
+    <div class="me">I have a nice one with light brown stripes that's kind of off-white. Can I use that?</div>
+    <div class="who">Kit</div>
+    <div class="kit"><b>Yes, wear it: the stripes tie it to the tan bomber.</b>Keep the jeans and boots as they are.</div>
+    <div class="card">
+      <div class="addrow">
+        <div class="art" data-k="shirt" data-c="#EDE6D6" data-stripe="#B98E62"></div>
+        <div class="txt"><span class="n">Cream striped button-up</span><span>Want me to add this to your closet?</span></div>
+      </div>
+      <div class="btns"><span class="btn pr">Add</span><span class="btn">No thanks</span></div>
+    </div>
+    <div class="note">After Add</div>
+    <div class="line"><div class="art" data-k="shirt" data-c="#EDE6D6" data-stripe="#B98E62"></div><span>Added to Closet · <u>Undo</u></span></div>
+    <div class="note">After No thanks</div>
+    <div class="line"><div class="art" data-k="shirt" data-c="#EDE6D6" data-stripe="#B98E62"></div><span>Not added</span></div>
+  </div>
+</div>
+
+<h2>5 · Corrections and dislikes</h2>
+<p class="sub">The closet piece changes at once (color, name and drawing), with Undo, and a Re-score tap when it was in a scored check. Free: a message that fixes a piece doesn't use a question. A dislike keeps the piece out of Kit's ideas and the morning card. <span class="ids">KC5.1–5.7</span></p>
+<div class="row" data-src>
+  <div class="phone">
+    <div class="me">My boots are black</div>
+    <div class="who">Kit</div>
+    <div class="kit"><b>Got it: black work boots.</b>Black is right with the olive and dark denim.</div>
+    <div class="card">
+      <div class="line"><div class="art" data-k="boots" data-c="#1E2026"></div><span><span style="color:var(--ink);font-weight:600">Black work boots</span><br>Changed · <u>Undo</u></span></div>
+      <div class="btns"><span class="btn">Re-score Thursday's check</span></div>
+    </div>
+    <div class="me">I don't really like that jacket</div>
+    <div class="who">Kit</div>
+    <div class="kit"><b>Then I'll leave the tan bomber out of my ideas.</b>It stays in your closet.</div>
+    <div class="line"><span>Saved to what I know · <u>Undo</u></span></div>
+    <div class="follow"><span>Show me jackets</span><span>What can I wear instead?</span></div>
+  </div>
+</div>
+
+<h2>6 · Next buy, and where to buy</h2>
+<p class="sub">The buy card is drawn and is Next buy's home in the beta (a tap opens the Next buy sheet). Kit keeps refusing shops and brands, plainly, and says what to look for. It knows the app, so it never invents a screen. <span class="ids">KC6.1–6.4, KC8.1–8.2</span></p>
+<div class="row" data-src>
+  <div class="phone">
+    <div class="me">Can you direct me to some good overshirts?</div>
+    <div class="who">Kit</div>
+    <div class="kit"><b>I don't point to shops, but here's what to look for:</b>cotton or canvas, a straight hem, room for your olive sweater under it.</div>
+    <div class="card buy">
+      <div class="tag"><span class="l">Next buy</span><span>$50–70</span></div>
+      <div class="row2">
+        <div class="art" data-k="overshirt" data-c="#5B6440"></div>
+        <div class="txt"><span class="n">Olive overshirt</span><span>Does the bomber's job without its shape.</span></div>
+      </div>
+    </div>
+    <div class="me">Where can I find the next buy on my interface?</div>
+    <div class="who">Kit</div>
+    <div class="kit"><b>Right here in the chat.</b>Ask me what to buy next, and I'll show it here.</div>
+  </div>
+</div>
+
+<h2>7 · Accessories in an outfit</h2>
+<p class="sub">Watch, belt, cap and beanie are drawn like any piece and sit last in the card (up to 2). Rings, chains and bags stay words. <span class="ids">KC2.9, KC9.1–9.3</span></p>
+<div class="row" data-src>
+  <div class="phone">
+    <div class="me">How could I add accessories for my date?</div>
+    <div class="who">Kit</div>
+    <div class="kit"><b>Add a simple watch and a black belt.</b>Keep them quiet so the shirt's stripes stay the point.</div>
+    <div class="card">
+      <div class="tag"><span class="l">Dinner</span><span>From your closet + 2</span></div>
+      <div class="tiles three">
+        <div class="tile"><div class="art" data-k="bomber" data-c="#B98E62"></div><span class="n">Tan bomber</span></div>
+        <div class="tile"><div class="art" data-k="shirt" data-c="#EDE6D6" data-stripe="#B98E62"></div><span class="n">Cream striped button-up</span></div>
+        <div class="tile"><div class="art" data-k="jeans" data-c="#26324F"></div><span class="n">Dark jeans</span></div>
+        <div class="tile"><div class="art" data-k="boots" data-c="#1E2026"></div><span class="n">Black work boots</span></div>
+        <div class="tile need"><div class="art" data-k="watch" data-c="#1E2026" data-metal="#C5C9CF"></div><span class="n">Simple watch</span><span class="k need">You'd need</span></div>
+        <div class="tile need"><div class="art" data-k="belt" data-c="#1E2026" data-metal="#C5C9CF"></div><span class="n">Black belt</span><span class="k need">You'd need</span></div>
+      </div>
+      <div class="btns"><span class="btn pr">Wear this</span><span class="btn">Check it</span></div>
+    </div>
+  </div>
+</div>
+
+<h2>8 · An example, when his closet can't make it</h2>
+<p class="sub">A new user, or more than 2 pieces he'd need: the whole card is drawn and titled "Example". No tile says "Yours" or "You'd need", and Kit's words call it an example. <span class="ids">KC2.3</span></p>
+<div class="row" data-src>
+  <div class="phone">
+    <div class="me">What should I wear to class tomorrow?</div>
+    <div class="who">Kit</div>
+    <div class="kit"><b>Here's an easy everyday example to start from.</b>Check a fit you own and I'll build from your clothes.</div>
+    <div class="card">
+      <div class="tag"><span class="l">Example</span><span>Class</span></div>
+      <div class="tiles">
+        <div class="tile"><div class="art" data-k="sweater" data-c="#9CA0A6"></div><span class="n">Grey crewneck</span></div>
+        <div class="tile"><div class="art" data-k="jeans" data-c="#26324F"></div><span class="n">Dark jeans</span></div>
+        <div class="tile"><div class="art" data-k="sneaker" data-c="#F2F0EA"></div><span class="n">White sneakers</span></div>
+        <div class="tile"><div class="art" data-k="beanie" data-c="#4A4D55"></div><span class="n">Charcoal beanie</span></div>
+      </div>
+      <div class="btns"><span class="btn pr">Check my fit</span></div>
+    </div>
+    <div class="follow"><span>Make it warmer</span><span>What should I buy first?</span></div>
+  </div>
+</div>
+
+<p class="legend">Not shown: the "Which boots?" tap card when a correction could mean two pieces (the candidates drawn, nothing changes until he taps), and Past chats, where the same cards show read-only with their outcome ("Added", "Not added").</p>
+
+<script>
+// Rough stand-in drawings, viewBox 100. Fill is the piece's color; the outline follows the theme (--edge).
+function shade(hex, f){const n=parseInt(hex.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;
+  const m=v=>Math.max(0,Math.min(255,Math.round(f<0?v*(1+f):v+(255-v)*f)));return '#'+[m(r),m(g),m(b)].map(v=>v.toString(16).padStart(2,'0')).join('');}
+let uid=0;
+const TOP='M36 14 L44 12 Q50 17 56 12 L64 14 L80 22 L90 72 L80 75 L72 40 L72 90 L28 90 L28 40 L20 75 L10 72 L20 22 Z';
+function draw(k,c,o){
+  const d=shade(c,-.22), e='style="stroke:var(--edge);stroke-width:1.4;stroke-linejoin:round"';
+  let defs='', fill=c;
+  if(o.stripe){const id='s'+(uid++);defs=`<defs><pattern id="${id}" width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="${c}"/><rect x="2" width="1.6" height="7" fill="${o.stripe}"/></pattern></defs>`;fill=`url(#${id})`;}
+  const top=`<path d="${TOP}" fill="${fill}" ${e}/>`;
+  const S=x=>`<svg viewBox="0 0 100 100" aria-hidden="true">${defs}${x}</svg>`;
+  switch(k){
+    case 'shirt': return S(top+`<path d="M44 12 L50 24 L56 12 L53 9 L50 16 L47 9 Z" fill="${shade(c,.12)}" ${e}/><line x1="50" y1="24" x2="50" y2="90" ${e}/>`+[34,47,60,73].map(y=>`<circle cx="53" cy="${y}" r="1.6" fill="${d}"/>`).join(''));
+    case 'overshirt': return S(top+`<path d="M44 12 L50 24 L56 12 L53 9 L50 16 L47 9 Z" fill="${shade(c,.1)}" ${e}/><line x1="50" y1="24" x2="50" y2="90" ${e}/><rect x="32" y="32" width="12" height="12" rx="1.5" fill="${d}" ${e}/><rect x="56" y="32" width="12" height="12" rx="1.5" fill="${d}" ${e}/>`);
+    case 'chore': return S(top+`<path d="M42 12 L50 22 L58 12 L58 8 L42 8 Z" fill="${d}" ${e}/><line x1="50" y1="22" x2="50" y2="90" ${e}/><rect x="31" y="60" width="14" height="14" rx="1.5" fill="${d}" ${e}/><rect x="55" y="60" width="14" height="14" rx="1.5" fill="${d}" ${e}/><rect x="56" y="30" width="11" height="10" rx="1.5" fill="${d}" ${e}/>`);
+    case 'harrington': return S(top+`<path d="M42 13 Q50 20 58 13 L58 9 Q50 14 42 9 Z" fill="${d}" ${e}/><line x1="50" y1="17" x2="50" y2="90" ${e}/><rect x="28" y="84" width="44" height="6" fill="${d}" ${e}/>`);
+    case 'bomber': return S(top+`<path d="M42 13 Q50 20 58 13 L57 9 Q50 14 43 9 Z" fill="${d}" ${e}/><line x1="50" y1="17" x2="50" y2="84" ${e}/><rect x="28" y="82" width="44" height="8" fill="${d}" ${e}/><rect x="9" y="68" width="11" height="6" transform="rotate(8 14 71)" fill="${d}"/><rect x="80" y="68" width="11" height="6" transform="rotate(-8 86 71)" fill="${d}"/>`);
+    case 'sweater': return S(top+`<path d="M43 13 Q50 21 57 13" fill="none" stroke="${d}" stroke-width="4"/><rect x="28" y="84" width="44" height="6" fill="${d}"/>`);
+    case 'jeans': return S(`<path d="M30 10 L70 10 L74 92 L56 92 L50 36 L44 92 L26 92 Z" fill="${c}" ${e}/><line x1="30" y1="17" x2="70" y2="17" ${e}/><path d="M50 17 L50 34" ${e}/><path d="M34 17 Q36 26 44 25" fill="none" ${e}/><path d="M66 17 Q64 26 56 25" fill="none" ${e}/>`);
+    case 'boots': return S(`<path d="M20 26 L46 26 L48 60 Q70 60 84 68 Q90 72 88 80 L18 80 Z" fill="${c}" ${e}/><rect x="16" y="80" width="74" height="7" rx="2" fill="${shade(c,.35)}" ${e}/>`+[34,42,50].map(y=>`<line x1="40" y1="${y}" x2="48" y2="${y+2}" stroke="${shade(c,.4)}" stroke-width="1.6"/>`).join(''));
+    case 'sneaker': return S(`<path d="M12 58 Q28 52 42 48 L56 50 Q74 56 88 62 Q93 68 89 74 L12 74 Z" fill="${c}" ${e}/><rect x="10" y="74" width="81" height="7" rx="3" fill="${shade(c,-.08)}" ${e}/><path d="M44 50 L52 60" ${e}/>`);
+    case 'watch': return S(`<rect x="41" y="6" width="18" height="88" rx="4" fill="${c}" ${e}/><circle cx="50" cy="50" r="18" fill="${o.metal||'#C9A44C'}" ${e}/><circle cx="50" cy="50" r="13" fill="#F4F2EC"/><path d="M50 50 L50 41 M50 50 L56 53" stroke="#1E2026" stroke-width="1.8" stroke-linecap="round"/>`);
+    case 'belt': return S(`<rect x="4" y="42" width="92" height="16" rx="2" fill="${c}" ${e}/><rect x="18" y="38" width="16" height="24" rx="2" fill="none" stroke="${o.metal||'#C9A44C'}" stroke-width="3"/><line x1="26" y1="44" x2="26" y2="56" stroke="${o.metal||'#C9A44C'}" stroke-width="2.4"/>`+[50,60,70].map(x=>`<circle cx="${x}" cy="50" r="1.6" fill="${shade(c,.4)}"/>`).join(''));
+    case 'beanie': return S(`<path d="M24 64 Q24 24 50 22 Q76 24 76 64 Z" fill="${c}" ${e}/><rect x="21" y="56" width="58" height="18" rx="3" fill="${shade(c,-.12)}" ${e}/>`+[30,38,46,54,62,70].map(x=>`<line x1="${x}" y1="59" x2="${x}" y2="71" stroke="${shade(c,.2)}" stroke-width="1.4"/>`).join(''));
+    case 'cap': return S(`<path d="M22 62 Q22 30 50 28 Q76 30 78 62 Z" fill="${c}" ${e}/><path d="M50 62 Q80 58 94 68 Q80 72 50 68 Z" fill="${shade(c,-.15)}" ${e}/><circle cx="50" cy="28" r="2.6" fill="${d}"/>`);
+  }
+  return '';
+}
+// Each answer is written once; it's shown twice, dark then light.
+document.querySelectorAll('[data-src]').forEach(row=>{
+  const src=row.querySelector('.phone'); row.innerHTML='';
+  for(const [mode,cls] of [['Dark','t-dark'],['Light','t-light']]){
+    const col=document.createElement('div'); col.className='col';
+    col.innerHTML=`<p class="mode">${mode}</p>`; const ph=src.cloneNode(true); ph.classList.add(cls); col.appendChild(ph); row.appendChild(col);
+  }
+});
+document.querySelectorAll('.art[data-k]').forEach(a=>{ a.innerHTML=draw(a.dataset.k,a.dataset.c,{stripe:a.dataset.stripe,metal:a.dataset.metal}); });
+</script>
+</body>
+</html>
