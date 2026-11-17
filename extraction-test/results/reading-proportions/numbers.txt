@@ -1,0 +1,67 @@
+# Reading-proportions numbers (T98, $0). Labels: Claude's eye, Nov 16; long tops also Nov 14.
+
+His 150 blind scores: mean 6.95. Readings found for 144/150.
+
+## 1. Tight or skinny legs (pants only)
+
+- labelled tight: reading says {'slim': 9, 'skinny': 8}
+- labelled not narrow: reading says {'straight': 30, 'wide': 25, 'relaxed': 10, 'barrel': 3, 'flare_bootcut': 2, 'slim': 1}
+- labelled slim, not tights: reading says {'slim': 16, 'straight': 12, 'relaxed': 2}
+- his mean score by label: b 6.32 (n 30), n 7.49 (n 75), y 5.67 (n 18)
+- his mean score by the reading's leg_shape: barrel 8.67 (n 3), flare_bootcut 6.75 (n 2), relaxed 6.75 (n 12), skinny 5.44 (n 8), slim 6.19 (n 26), straight 6.78 (n 43), wide 8.33 (n 26)
+- leg_shape (skinny 0 ... wide 4) against his score: Spearman 0.69, n 120
+- steadiness, `skinny`: flips 1/225 (0%) of photos; 1/9 (11%) of photos where it fires
+- steadiness, `skinny or slim`: flips 4/225 (2%) of photos; 4/29 (14%) of photos where it fires
+- ruler `low_cm` (default gate): measured 28/88 tight-or-not photos; AUC 0.95; leave-one-out right 89%
+- ruler `shin_cm` (default gate): measured 27/88 tight-or-not photos; AUC 0.94; leave-one-out right 93%
+- ruler `low_over_thigh` (default gate): measured 17/88 tight-or-not photos; AUC 0.94; leave-one-out right 88%
+- ruler `low_cm` (gate 0.1): measured 46/88 tight-or-not photos; AUC 0.93; leave-one-out right 87%
+- ruler `shin_cm` (gate 0.1): measured 40/88 tight-or-not photos; AUC 0.93; leave-one-out right 90%
+- ruler `low_over_thigh` (gate 0.1): measured 25/88 tight-or-not photos; AUC 0.91; leave-one-out right 84%
+- ruler low_cm (gate 0.1) against his score: Spearman 0.30, n 68
+- inside the reading's `slim`, ruler low_cm for labelled y: [8.1, 8.2, 8.2, 8.9, 10.4, 10.5, 11.3, 12.1]
+- inside the reading's `slim`, ruler low_cm for labelled b: [7.7, 8.0, 8.3, 9.8, 10.4, 11.2, 11.5, 12.0, 12.5, 12.7, 14.1, 20.0]
+
+## 2. A top that's too long (past the crotch)
+
+- truth: {'n': 169, 'b': 21, 'y': 12, 'u': 8} (y long, b borderline, n not)
+- his mean score by label: b 6.07 (n 7), n 7.02 (n 138), y 6.00 (n 3)
+- his mean score by the reading's top length: at_belt 7.34 (n 45), below_crotch 6.07 (n 7), mid_fly 6.29 (n 38), na 7.23 (n 54)
+- untucked, no jacket: the reading's length against his score: Spearman -0.53, n 63
+- untucked, no jacket: the ruler's top end against his score: Spearman -0.28, n 39
+- steadiness, `below_crotch`: flips 1/225 (0%) of photos; 1/3 (33%) of photos where it fires
+- steadiness, `mid_fly or below_crotch`: flips 18/225 (8%) of photos; 18/73 (25%) of photos where it fires
+- reading below_crotch (no jacket, untucked): long caught 4/9 (not measured 0); borderline fired 1/13; false yes 4/154 (3%) (not measured 0)
+- reading mid_fly or lower (no jacket, untucked): long caught 9/9 (not measured 0); borderline fired 9/13; false yes 34/154 (22%) (not measured 0)
+- ruler at t 0.62 (no jacket, untucked): long caught 8/8 (not measured 1); borderline fired 4/12; false yes 10/122 (8%) (not measured 32); flips on the resized copy 2/83 (2%)
+- ruler + reading at t 0.6 (no jacket, untucked): long caught 8/8 (not measured 1); borderline fired 5/12; false yes 9/122 (7%) (not measured 32); flips on the resized copy 4/83 (5%)
+- ruler + reading at t 0.62 (no jacket, untucked): long caught 8/8 (not measured 1); borderline fired 4/12; false yes 8/122 (7%) (not measured 32); flips on the resized copy 1/83 (1%)
+- ruler + reading at t 0.64 (no jacket, untucked): long caught 6/8 (not measured 1); borderline fired 4/12; false yes 7/122 (6%) (not measured 32); flips on the resized copy 3/83 (4%)
+
+## 3. A bulky top
+
+- his mean score by label: b 7.55 (n 11), n 6.85 (n 129), y 7.75 (n 8)
+- labelled y: reading's largest upper-body volume {3: 2, 4: 4, 5: 1}
+- labelled n: reading's largest upper-body volume {0: 2, 1: 4, 2: 22, 3: 91, 4: 5}
+- labelled b: reading's largest upper-body volume {3: 5, 4: 6}
+- steadiness, `upper volume >= 4`: flips 8/225 (4%) of photos; 8/49 (16%) of photos where it fires
+- ruler `shoulder_cm` (gate 0.1): measured 85 (bulky 2); AUC 0.61
+- ruler `top_hem_cm` (gate 0.1): measured 66 (bulky 4); AUC 0.51
+
+## 4. Shorts
+
+- his mean score by length: above 6.19 (n 8), below 7.78 (n 9), knee 7.00 (n 8)
+- by fit: reg 6.55 (n 10), slim 6.00 (n 2), wide 7.54 (n 13); by the top over them: b 5.88 (n 4), off 5.83 (n 3), ok 7.47 (n 18)
+- named as shorts by the reading: 24/24; pants read as shorts: 0
+- labelled wide: reading (leg_shape, volume) {('wide', 4): 6, ('relaxed', 3): 4, ('wide', 5): 3}
+- labelled reg: reading (leg_shape, volume) {('straight', 3): 4, ('relaxed', 3): 3, ('na', 3): 1, ('slim', 2): 1}
+- labelled slim: reading (leg_shape, volume) {('straight', 3): 1, ('slim', 2): 1}
+- `leg_shape wide` as wide shorts: caught 9/13, false yes 0/11
+- steadiness, `leg_shape wide` on gold shorts: flips 2/24 (8%) of photos; 2/12 (17%) of photos where it fires
+- steadiness, `bottom volume >= 4` on gold shorts: flips 1/24 (4%) of photos; 1/11 (9%) of photos where it fires
+- shorts ruler, above the knee vs at or below: right 13/20 (65%); unsure 5/25; flips on the resized copy 3/20 (15%)
+
+## Coverage of the body ruler on face-hidden copies (founder4, the 6 the app can't prep left out)
+
+- pass a: {'shoulders': 57, 'ok': 39, 'top and pants look the same': 19, 'chest not on body': 8, 'pants not visible': 7, 'pants never start in the window (a long top or a coat)': 5, 'noPerson': 4, 'couldNotFrame': 2, 'hips': 2, 'torso hidden (arm, hand or bag)': 1}  (None = measured)
+- pass c: {'ok': 69, 'top and pants look the same': 27, 'shoulders': 23, 'chest not on body': 7, 'pants never start in the window (a long top or a coat)': 5, 'noPerson': 4, 'torso/thigh lengths': 3, 'couldNotFrame': 2, 'pants not visible': 2, 'torso hidden (arm, hand or bag)': 2}  (None = measured)

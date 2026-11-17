@@ -1,0 +1,3 @@
+{"type": "object", "properties": {
+  "pants_above_crotch": {"type": "string", "enum": ["pants_show", "top_covers", "cant_see"]}},
+ "required": ["pants_above_crotch"], "propertyOrdering": ["pants_above_crotch"]}

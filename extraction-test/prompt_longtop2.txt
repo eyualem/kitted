@@ -1,0 +1,9 @@
+This is a crop of one person's outfit, from about the belly button down to the knees. The face is not in it. Describe only the clothes, not the person.
+
+The top is the outermost tee, shirt, polo, hoodie, sweatshirt or sweater. A jacket, coat, blazer or vest is not the top: if one is worn, the top is the piece under it.
+
+Question: look at the front of the body, between the bottom edge of the top and the point where the legs split apart (the crotch). Can you see the pants there?
+- pants_show: some of the pants (the waistband, the belt, the fly, or the pants' front fabric) shows below the top's bottom edge and above the point where the legs split. A tucked-in top counts as pants_show.
+- top_covers: the top hangs down to the point where the legs split, or lower, so no pants show above it.
+- cant_see: it can't be judged here: arms, hands, a bag or a closed jacket cover that area, or it's out of the crop.
+Return only JSON that matches the schema.

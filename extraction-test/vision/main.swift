@@ -312,6 +312,34 @@ case "waist":
   }
   print(((wout["waist"] as? [String: Any])?["value"] as? String) ?? (wout["status"] as? String ?? "?"))
 
+case "outline":
+  // kmeasure outline <photo.jpg> <out.json> [--max px] [--crop share] [--shift share]
+  //   The outline probe (OutlineProbe.swift, T98): widths of his person cutout along the legs and torso, in px.
+  guard args.count >= 4 else { print("bad args"); exit(2) }
+  var omax = Prep.workPx, ocrop: CGFloat = 0, oshift: CGFloat = 0
+  var oi = 4
+  while oi < args.count {
+    switch args[oi] {
+    case "--max": omax = CGFloat(Double(args[oi + 1]) ?? 2048); oi += 2
+    case "--crop": ocrop = CGFloat(Double(args[oi + 1]) ?? 0); oi += 2
+    case "--shift": oshift = CGFloat(Double(args[oi + 1]) ?? 0); oi += 2
+    default: print("unknown option \(args[oi])"); exit(2)
+    }
+  }
+  guard let odata = FileManager.default.contents(atPath: args[2]), var oimg = Prep.decode(odata, maxPx: omax).image else { print("unreadable"); exit(1) }
+  if ocrop > 0 || oshift != 0 {
+    // crop share off every side; shift moves the window right and down by that share (an off-center reframe)
+    let W = CGFloat(oimg.width), H = CGFloat(oimg.height)
+    let m = max(ocrop, abs(oshift))
+    let rect = CGRect(x: W * (m + oshift), y: H * (m + oshift), width: W * (1 - 2 * m), height: H * (1 - 2 * m)).integral
+    guard let c = oimg.cropping(to: rect) else { exit(1) }
+    oimg = c
+  }
+  var oout = Outline.run(oimg)
+  oout["photo"] = args[2]; oout["max"] = Int(omax); oout["crop"] = Double(ocrop); oout["shift"] = Double(oshift)
+  try writeJSON(oout, args[3])
+  print(oout["status"] as? String ?? "?")
+
 case "people":
   // kmeasure people [--out dir] <photo.jpg>...: who's in each fit photo (Oct 14, "Which one is you?"). One JSON line per
   // photo: the old rule (any other box at least 25% of the biggest → multiplePeople) and today's Prep.locate. With --out,

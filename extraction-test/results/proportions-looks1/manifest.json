@@ -1,0 +1,518 @@
+{
+ "shorts": {
+  "C007": {
+   "truth": "above",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C007.body.jpg"
+  },
+  "C020": {
+   "truth": "below",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C020.body.jpg"
+  },
+  "C025": {
+   "truth": "above",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C025.lower.jpg"
+  },
+  "C026": {
+   "truth": "knee",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C026.lower.jpg"
+  },
+  "C027": {
+   "truth": "above",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C027.lower.jpg"
+  },
+  "C030": {
+   "truth": "above",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C030.lower.jpg"
+  },
+  "C031": {
+   "truth": "above",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/rd-005.lower.jpg"
+  },
+  "C033": {
+   "truth": "below",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C033.lower.jpg"
+  },
+  "C042": {
+   "truth": "below",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C042.lower.jpg"
+  },
+  "C048": {
+   "truth": "below",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-063.lower.jpg"
+  },
+  "C050": {
+   "truth": "above",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C050.lower.jpg"
+  },
+  "C055": {
+   "truth": "below",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C055.lower.jpg"
+  },
+  "C057": {
+   "truth": "knee",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-023.lower.jpg"
+  },
+  "C060": {
+   "truth": "knee",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-021.lower.jpg"
+  },
+  "C079": {
+   "truth": "knee",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-022.lower.jpg"
+  },
+  "C080": {
+   "truth": "below",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-030.lower.jpg"
+  },
+  "C085": {
+   "truth": "below",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C085.lower.jpg"
+  },
+  "C095": {
+   "truth": "above",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-022.lower.jpg"
+  },
+  "C097": {
+   "truth": "above",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C097.body.jpg"
+  },
+  "C102": {
+   "truth": "below",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-038.lower.jpg"
+  },
+  "C103": {
+   "truth": "knee",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-101.lower.jpg"
+  },
+  "C114": {
+   "truth": "knee",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C114.lower.jpg"
+  },
+  "C131": {
+   "truth": "knee",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C131.lower.jpg"
+  },
+  "C142": {
+   "truth": "below",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C142.lower.jpg"
+  }
+ },
+ "longtop": {
+  "pin-033": {
+   "truth": "yes",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-033.full.jpg"
+  },
+  "pin-038": {
+   "truth": "yes",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-038.full.jpg"
+  },
+  "pin-070": {
+   "truth": "yes",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-070.full.jpg"
+  },
+  "pin-071": {
+   "truth": "yes",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-071.full.jpg"
+  },
+  "pin-031": {
+   "truth": "yes",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-031.full.jpg"
+  },
+  "pin-074": {
+   "truth": "yes",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-074.full.jpg"
+  },
+  "stock-s02-before_studio": {
+   "truth": "yes",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/b1/images/stock-s02-before_studio.full.jpg"
+  },
+  "k6Gig6r7BSQ__before-longer-tee-10-47": {
+   "truth": "yes",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/creators1/images/k6Gig6r7BSQ__before-longer-tee-10-47.full.jpg"
+  },
+  "wIib9hzVUuw__o1-before-04-10": {
+   "truth": "yes",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/creators1/images/wIib9hzVUuw__o1-before-04-10.full.jpg"
+  },
+  "phone-5a9049": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/b1/images/phone-5a9049.full.jpg"
+  },
+  "phone-7f14a4": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/b1/images/phone-7f14a4.full.jpg"
+  },
+  "ig-025": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-025.full.jpg"
+  },
+  "ig-027": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-027.full.jpg"
+  },
+  "ig-090": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-090.full.jpg"
+  },
+  "rd-015": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/rd-015.full.jpg"
+  },
+  "stock-s11-before_street": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/b1/images/stock-s11-before_street.full.jpg"
+  },
+  "stock-s26-before_mirror": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/b1/images/stock-s26-before_mirror.full.jpg"
+  },
+  "pin-059": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-059.full.jpg"
+  },
+  "pin-052": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-052.full.jpg"
+  },
+  "-V2bE8nDsdo__outfit05-03-37": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/creators1/images/-V2bE8nDsdo__outfit05-03-37.full.jpg"
+  },
+  "wIib9hzVUuw__o4-before-09-30": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/creators1/images/wIib9hzVUuw__o4-before-09-30.full.jpg"
+  },
+  "wIib9hzVUuw__o3-before-07-26": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/creators1/images/wIib9hzVUuw__o3-before-07-26.full.jpg"
+  },
+  "rd-014": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/rd-014.full.jpg"
+  },
+  "ig-087": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-087.full.jpg"
+  },
+  "ig-023": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-023.full.jpg"
+  },
+  "ig-030": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-030.full.jpg"
+  },
+  "ig-127": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-127.full.jpg"
+  },
+  "ig-103": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-103.full.jpg"
+  },
+  "rd-001": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/rd-001.full.jpg"
+  },
+  "rd-018": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/rd-018.full.jpg"
+  },
+  "phone-8ad378": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/b1/images/phone-8ad378.full.jpg"
+  },
+  "phone-403ade": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/b1/images/phone-403ade.full.jpg"
+  },
+  "pin-022": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-022.full.jpg"
+  },
+  "pin-039": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-039.full.jpg"
+  },
+  "pin-040": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-040.full.jpg"
+  },
+  "mirror-m01": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/b1/images/mirror-m01.full.jpg"
+  },
+  "-V2bE8nDsdo__outfit01-02-44": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/creators1/images/-V2bE8nDsdo__outfit01-02-44.full.jpg"
+  },
+  "-V2bE8nDsdo__outfit06-04-04": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/creators1/images/-V2bE8nDsdo__outfit06-04-04.full.jpg"
+  },
+  "wIib9hzVUuw__o4-after-10-02": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/creators1/images/wIib9hzVUuw__o4-after-10-02.full.jpg"
+  },
+  "ig-062": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-062.full.jpg"
+  },
+  "ig-060": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-060.full.jpg"
+  },
+  "phone-0d39d6": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/b1/images/phone-0d39d6.full.jpg"
+  },
+  "phone-1f1997": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/b1/images/phone-1f1997.full.jpg"
+  },
+  "phone-6b14db": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/b1/images/phone-6b14db.full.jpg"
+  },
+  "ig-018": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-018.full.jpg"
+  },
+  "ig-034": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-034.full.jpg"
+  },
+  "ig-050": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-050.full.jpg"
+  },
+  "ig-111": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-111.full.jpg"
+  },
+  "pin-010": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-010.full.jpg"
+  },
+  "ig-013": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-013.full.jpg"
+  },
+  "ig-037": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-037.full.jpg"
+  },
+  "ig-064": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-064.full.jpg"
+  },
+  "C005": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C005.full.jpg"
+  },
+  "C006": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C006.full.jpg"
+  },
+  "C007": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C007.full.jpg"
+  },
+  "C010": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C010.full.jpg"
+  },
+  "C011": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C011.full.jpg"
+  },
+  "C014": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C014.full.jpg"
+  },
+  "C015": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C015.full.jpg"
+  },
+  "C025": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C025.full.jpg"
+  },
+  "C026": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C026.full.jpg"
+  },
+  "C030": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C030.full.jpg"
+  },
+  "C031": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/rd-005.full.jpg"
+  },
+  "C033": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C033.full.jpg"
+  },
+  "C035": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C035.full.jpg"
+  },
+  "C039": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-031.full.jpg"
+  },
+  "C040": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-012.full.jpg"
+  },
+  "C042": {
+   "truth": "yes",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C042.full.jpg"
+  },
+  "C048": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-063.full.jpg"
+  },
+  "C050": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C050.full.jpg"
+  },
+  "C054": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C054.full.jpg"
+  },
+  "C058": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-105.full.jpg"
+  },
+  "C060": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-021.full.jpg"
+  },
+  "C068": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C068.full.jpg"
+  },
+  "C070": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-099.full.jpg"
+  },
+  "C072": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C072.full.jpg"
+  },
+  "C075": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C075.full.jpg"
+  },
+  "C081": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-046.full.jpg"
+  },
+  "C083": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-043.full.jpg"
+  },
+  "C085": {
+   "truth": "borderline",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C085.full.jpg"
+  },
+  "C087": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-011.full.jpg"
+  },
+  "C090": {
+   "truth": "yes",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C090.full.jpg"
+  },
+  "C096": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C096.full.jpg"
+  },
+  "C097": {
+   "truth": "yes",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C097.full.jpg"
+  },
+  "C100": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C100.full.jpg"
+  },
+  "C103": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-101.full.jpg"
+  },
+  "C104": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C104.full.jpg"
+  },
+  "C105": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-015.full.jpg"
+  },
+  "C110": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-045.full.jpg"
+  },
+  "C112": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C112.full.jpg"
+  },
+  "C114": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C114.full.jpg"
+  },
+  "C118": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C118.full.jpg"
+  },
+  "C119": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C119.full.jpg"
+  },
+  "C120": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-071.full.jpg"
+  },
+  "C122": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C122.full.jpg"
+  },
+  "C126": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C126.full.jpg"
+  },
+  "C131": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C131.full.jpg"
+  },
+  "C135": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C135.full.jpg"
+  },
+  "C136": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/pin-006.full.jpg"
+  },
+  "C141": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/rd-019.full.jpg"
+  },
+  "C142": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/.claude/worktrees/rescoring-v16-58d34b/extraction-test/results/rated1/images/C142.full.jpg"
+  },
+  "C148": {
+   "truth": "no",
+   "source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/gold1/images/ig-048.full.jpg"
+  }
+ },
+ "skipped": {
+  "shorts:C140": "no face-hidden close-up (the prep found no head)",
+  "longtop:k6Gig6r7BSQ__after-shorter-tee-10-47": "no shoulders, or neither knees nor hips",
+  "longtop:rd-006": "no shoulders, or neither knees nor hips",
+  "longtop:C018": "no shoulders, or neither knees nor hips",
+  "longtop:C020": "no shoulders, or neither knees nor hips",
+  "longtop:C037": "no shoulders, or neither knees nor hips"
+ }
+}
