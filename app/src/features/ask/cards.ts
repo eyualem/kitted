@@ -470,6 +470,44 @@ const WORD_OK = new Set(['I', "I'd", "I'll", "I'm"]);
 const sayNorm = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim().replace(/\s+/g, ' ');
 
 /**
+ * An emoji or pictograph anywhere in a tap. Stricter than gate.ts's EMOJI pattern (which misses the watch, hourglass and
+ * alarm clock): explicit ranges, no \p{...} property escapes, so it behaves the same on Hermes. Covers technical symbols
+ * (U+2300-23FF), misc symbols and dingbats (U+2600-27BF), arrows and shapes (U+2B00-2BFF), the astral emoji planes
+ * (U+1F000-1FAFF), the variation selector (U+FE0F), the zero-width joiner (U+200D) and the keycap mark (U+20E3).
+ */
+const TAP_EMOJI = /[‍⃣←-⇿⌀-⏿①-⓿■-◿☀-➿⤀-⥿⬀-⯿〰〽㊗㊙️]|[\u{1F000}-\u{1FAFF}]/u;
+
+// A tap is sent as his own message, so a tap that talks about his body would invite a rating (hard line). `isBodyRating`
+// (guards.ts) is a deliberately narrow whole-message list for what he types; taps come only from the model and a dropped
+// tap costs little, so this check goes by meaning: first person together with a body part or a body word, or a "look
+// fat/thin/older" form. It leans strict.
+const FIRST_PERSON = new Set(['i', 'im', "i'm", "i'd", "i'll", "i've", 'me', 'my', 'mine', 'myself']);
+const BODY_PARTS = new Set([
+  'body', 'bodies', 'belly', 'bellies', 'stomach', 'stomachs', 'tummy', 'gut', 'guts', 'waist', 'chest', 'thigh', 'thighs', 'leg', 'legs',
+  'arm', 'arms', 'face', 'faces', 'weight', 'build', 'shape', 'figure', 'physique', 'frame', 'butt', 'hips', 'hip', 'shoulders', 'shoulder',
+  'neck', 'skin', 'abs', 'muscle', 'muscles', 'calves', 'calf', 'biceps', 'jaw', 'jawline', 'nose', 'height',
+]);
+const BODY_WORDS = new Set([
+  'tall', 'taller', 'short', 'shorter', 'thin', 'thinner', 'skinny', 'skinnier', 'fat', 'fatter', 'heavy', 'heavier', 'bulky', 'old', 'older',
+  'young', 'younger', 'big', 'bigger', 'small', 'smaller', 'slim', 'slimmer', 'chubby', 'wide', 'wider', 'narrow', 'broad', 'lanky', 'large',
+  'overweight', 'underweight', 'ugly', 'pretty', 'handsome', 'attractive', 'hot', 'fit', 'muscular', 'scrawny', 'stocky', 'tiny', 'huge',
+]);
+const LOOK_FORM = /\blook(?:s|ing|ed)?\s+(?:(?:too|so|a bit|a little|really|much|more|any|even)\s+)*(?:fat|fatter|thin|thinner|skinny|skinnier|bigger|smaller|heavy|heavier|bulky|old|older|slim|slimmer|chubby|overweight|lanky|scrawny|stocky|tiny|huge|wider|broader)\b/;
+
+/** True when a tap is about his own body, by meaning (see above). `fit` and `hot` count only beside "look" (see below). */
+function bodyTap(text: string): boolean {
+  const t = text.toLowerCase().replace(/[‘’]/g, "'");
+  if (LOOK_FORM.test(t)) return true;
+  const words = t.split(/[^a-z']+/).map((w) => w.replace(/^'+|'+$/g, '')).filter(Boolean);
+  if (!words.some((w) => FIRST_PERSON.has(w))) return false;
+  if (words.some((w) => BODY_PARTS.has(w))) return true;
+  // "fit" and "hot" are everyday clothes words ("Do these fit my style?", "Is this hot enough?"): they mark the body only
+  // as "do I look fit / hot".
+  const lookIdx = words.findIndex((w) => w === 'look' || w === 'looks' || w === 'looking');
+  return words.some((w, i) => BODY_WORDS.has(w) && (!['fit', 'hot'].includes(w) || (lookIdx >= 0 && i > lookIdx)));
+}
+
+/**
  * The model's follow-up taps, checked (KC1.3): at most 3, in order, each a string of 1 to 30 characters in sentence case
  * (no capital but the first word's and "I"), no all-capital word, through the sentence gate, not a repeat of his
  * question and not a duplicate. Anything that isn't an array gives none. There's no clothes-word list: the gate, the
@@ -490,6 +528,7 @@ export function checkFollowUps(raw: unknown, o: { question: string; gate: GateCo
     if (!/^\p{Lu}/u.test(text)) continue;
     if (words.slice(1).some((w) => /^\p{Lu}/u.test(w) && !WORD_OK.has(w.replace(/[^\p{L}']+$/u, '')))) continue;
     if (/(?:^|[^\p{L}])\p{Lu}{2,}(?![\p{L}])/u.test(text)) continue;
+    if (TAP_EMOJI.test(text) || bodyTap(text)) continue;
     if (checkSentence(text, o.gate) || isBodyRating(text)) continue;
     const n = sayNorm(text);
     if (!n || n === asked || seen.has(n)) continue;
