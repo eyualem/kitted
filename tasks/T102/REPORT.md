@@ -19,6 +19,7 @@ Files (all in `app/src/features/ask/`): `cards.ts` (new types, `KIND_SLOT`, `col
 ## Disputes (round 1; sent to the test writer to judge against the spec)
 1. `KC2.3 · example is true only on a card with none of his pieces, and itemIds is empty then`: the test builds `pieces: []` plus 3 needs on a closet that holds a white tee; by KC2.1 the tee meets the first need, so the card has 1 of his and 2 drawn, which KC2.3 says is not an Example.
 2. `KC2.3 · 3 drawn clothing pieces with 1 of his is an example, and his piece is not in it`: `expect(JSON.stringify(card)).not.toContain('jeans"')` fails because the Starter fallback example legitimately draws dark jeans; his own piece is not in it (`itemIds` is empty, asserted separately).
+- **Re-lock after verifier round 3 (test writer):** tests added only, at `7a624d47ee00da942b0582711ce34fe826ab381a`. The round 3 body check over-blocks clothes taps (verifier defect 1) and the `LOOK_FORM` mutant survived (defect 2), so `kitFollowUps.test.ts` gains 27 kept clothes taps with size, age or fit words (20 red today) and 14 dropped body taps (12 red today; `Does that look fat?` and `Looks too skinny?` bite via removing `LOOK_FORM`). `Does this look old?` is left untested (ambiguous; founder call). Nothing loosened or removed.
 
 ## Summary for the founder
 (written at the end)
