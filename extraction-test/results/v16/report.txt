@@ -1,6 +1,6 @@
-The curve, fitted only to the shares (anchor 7): (a 1.50, b 0.55), worst band gap 16.6 pts, but it breaks the steadiness bar
-The curve: the engine has (a 1.1, b 0.85, k 7); a refit on the gold set's first readings gives (a 1.00, b 0.45, k 7.000), worst band gap 29.6 pts: DIFFERS
-  refit shares: 3-4.5  0.0%  5-5.5  7.2%  6-6.5 14.8%  7-7.5 59.6%  8-8.5 18.4%  9-9.5  0.0%
+The curve, fitted only to the shares (anchor 7): (a 1.50, b 0.60), worst band gap 14.8 pts, but it breaks the steadiness bar
+The curve: the engine has (a 1.1, b 0.7, k 7); a refit on the gold set's first readings gives (a 1.00, b 0.45, k 7.000), worst band gap 33.2 pts: DIFFERS
+  refit shares: 3-4.5  0.0%  5-5.5  7.2%  6-6.5 14.8%  7-7.5 63.2%  8-8.5 14.8%  9-9.5  0.0%
 
 == B4 The dealbreaker examples (made-up clean readings, Everyday, no picks, cool day) ==
   S1   PASS  cap 5.5: v15 6.5 -> v16 5.5  a grey hoodie over black skinny jeans, white leather sneakers
@@ -21,9 +21,9 @@ The curve: the engine has (a 1.1, b 0.85, k 7); a refit on the gold set's first 
   S8   PASS  not capped: v15 6.5 -> v16 6.5  loafers with plain sweatpants (spared)
   S9   PASS  not capped: v15 6 -> v16 6  a stain on jeans ripped by design (spared)
   H7   PASS  not capped: v15 7 -> v16 8  wide jeans stacking on the sneakers (a soft stack, spared)
-  H3   PASS  not capped: v15 7 -> v16 7.5  a red tee over bright blue chinos with black sneakers and a navy jacket (calmed, spared)
+  H3   PASS  not capped: v15 7 -> v16 7  a red tee over bright blue chinos with black sneakers and a navy jacket (calmed, spared)
   H9   PASS  not capped: v15 7 -> v16 7.5  a roomy overshirt with long sleeves (cut long, spared)
-  H1   PASS  not capped: v15 7 -> v16 7.5  a fleece over slim cargos (outdoor, spared)
+  H1   PASS  not capped: v15 7 -> v16 7  a fleece over slim cargos (outdoor, spared)
   S5   PASS  depends: a blazer with gym shorts: v15 7 -> v16 7; with a loud print 5.5; with a quiet accent 6.5  (bar: all 5.5-7.0, loud below quiet)
   S7   PASS  depends: a leather jacket with gym shorts: v15 7.5 -> v16 7; with a loud print 5.5; with a quiet accent 7  (bar: all 5.5-7.0, loud below quiet)
   H6   PASS  depends: a blazer with plain shorts: v15 7.5 -> v16 7; with a loud print 5.5; with a quiet accent 7  (bar: all 5.5-7.0, loud below quiet)
@@ -33,7 +33,7 @@ The curve: the engine has (a 1.1, b 0.85, k 7); a refit on the gold set's first 
   12 gold photos that moved more than 0.5 in the first run; it stays v15's Fit charge (a hold needs a steady read).
 
 == B2 The creators' before/after pairs (stored readings, median of 3; cool day) ==
-  PASS  v15 5.5 -> 7.5   v16 4.5 -> 8.5   oversized tee + baggy denim jacket over skinny jeans -> relaxed jeans, cropped jacket
+  PASS  v15 5.5 -> 7.5   v16 4.5 -> 7.5   oversized tee + baggy denim jacket over skinny jeans -> relaxed jeans, cropped jacket
   PASS  v15 7 -> 7.5   v16 6 -> 7.5   knit on knit, slim dark jeans -> one knit, relaxed light jeans
   PASS  v15 7 -> 7   v16 7.5 -> 8   all-navy flannel + jeans -> black flannel, white tank, pleated trousers, loafers
   PASS  v15 6 -> 7   v16 6 -> 8   tight beige monochrome -> wider trousers, tucked tee, relaxed shirt, loafers
@@ -43,20 +43,20 @@ The curve: the engine has (a 1.1, b 0.85, k 7); a refit on the gold set's first 
 == B3 The creators' anchors with stored readings (median of 3; cool day; warm in brackets) ==
   a01 PASS  step 4.5: v15 5.5 -> v16 4.5 [4.5]   denim_jacket (black) + tee (white) + jeans (charcoal, skinny) + chelsea_boot (black)
         why: lifts L6 +0.125; faults -1.875 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit); taste: skinny legs -0.5
-  a27 FAIL  step 7.5: v15 7.5 -> v16 8.5 [7]   denim_jacket (charcoal) + tee (white) + trousers (black, straight) + dress_shoe (black)
-        why: lifts L2 +1, L7b +0.5
+  a27 PASS  step 7.5: v15 7.5 -> v16 7.5 [7]   denim_jacket (charcoal) + tee (white) + trousers (black, straight) + dress_shoe (black)
+        why: lifts L2 +0.5, L7b +0.5
   a02 PASS  step 5: v15 7 -> v16 6 [6]   cardigan (off_white_cream) + sweater (tan_camel) + jeans (denim_dark, slim) + low_profile_sneaker (white)
         why: faults -1 (X_knit_on_knit: the cardigan over the sweater: knit on knit blurs together; a smooth layer over the knit adds depth)
   a28 PASS  step 7.5: v15 7.5 -> v16 7.5 [7.5]   sweater (off_white_cream) + jeans (denim_light, wide) + retro_runner (white)
-        why: held by 0 lifts; lifts L1 +0.25; taste: wide legs +0.25
+        why: lifts L1 +0.25; taste: wide legs +0.375
   a17 PASS  step 6.5: v15 7 -> v16 7.5 [7]   flannel_shirt (brown) + tee (navy) + jeans (denim_dark, straight) + retro_runner (off_white_cream)
         why: lifts L3 +0.25
   a52 PASS  step 9: v15 7 -> v16 8 [7.5]   tank_top (white) + flannel_shirt (black) + trousers (black, wide) + dress_shoe (black)
-        why: lifts L3 +0.5, L7b +0.5; taste: wide legs +0.25
-  a03 PASS  step 5: v15 6 -> v16 6 [7]   overshirt (tan_camel) + tee (white) + chinos (khaki_beige, slim) + low_profile_sneaker (white)
-        why: lifts L3 +0.5, L6 +0.25; faults -0.5 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)
+        why: lifts L3 +0.25, L7b +0.5; taste: wide legs +0.375
+  a03 PASS  step 5: v15 6 -> v16 6 [6.5]   overshirt (tan_camel) + tee (white) + chinos (khaki_beige, slim) + low_profile_sneaker (white)
+        why: lifts L3 +0.25, L6 +0.25; faults -0.5 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)
   a29 PASS  step 8.5: v15 7 -> v16 8 [8]   camp_collar_shirt (tan_camel) + tee (white) + trousers (off_white_cream, wide) + dress_shoe (black)
-        why: lifts L3 +0.5, L7b +0.5; taste: wide legs +0.25
+        why: lifts L3 +0.25, L7b +0.5; taste: wide legs +0.375
   a04 FAIL  step 4: v15 6.5 -> v16 6.5 [6.5]   sweater (black) + joggers (black, skinny) + white_leather_sneaker (white)
         why: held by H4 (skinny joggers)
   a30 PASS  step 8: v15 7.5 -> v16 7.5 [7.5]   sweatshirt (black) + trousers (black, straight) + low_profile_sneaker (black)
@@ -66,64 +66,64 @@ The curve: the engine has (a 1.1, b 0.85, k 7); a refit on the gold set's first 
   a36 PASS  step 8: v15 6.5 -> v16 7.5 [7.5]   blazer (tan_camel) + tee (white) + jeans (denim_light, straight) + loafer (black)
         why: lifts L7b +0.25
   a38 PASS  step 7.5: v15 7 -> v16 7 [7]   flannel_shirt (black) + sweatpants (light_grey, relaxed) + loafer (black)
-        why: lifts L6 +0.125; taste: relaxed legs +0.25, the top ends low -0.5
+        why: lifts L6 +0.125; taste: relaxed legs +0.1875, the top ends low -0.5
   a37 PASS  step 8: v15 6.5 -> v16 7.5 [7.5]   blazer (brown) + tank_top (grey) + jeans (denim_light, straight) + loafer (black)
         why: lifts L7b +0.25
-  a51 PASS  step 9: v15 7 -> v16 8.5 [8.5]   blazer (brown) + tee (white) + trousers (black, straight) + dress_shoe (black)
-        why: lifts L1 +0.75, L7b +0.5
-  a26 FAIL  step 7.5: v15 7.5 -> v16 8.5 [7.5]   bomber (red) + sweater (tan_camel) + trousers (black, straight) + low_profile_sneaker (black)
-        why: lifts L2 +1, L5 +0.5, L7b +0.5
+  a51 PASS  step 9: v15 7 -> v16 8 [8]   blazer (brown) + tee (white) + trousers (black, straight) + dress_shoe (black)
+        why: lifts L1 +0.375, L7b +0.5
+  a26 PASS  step 7.5: v15 7.5 -> v16 8 [7.5]   bomber (red) + sweater (tan_camel) + trousers (black, straight) + low_profile_sneaker (black)
+        why: lifts L2 +0.5, L5 +0.5, L7b +0.5
   a25 PASS  step 8: v15 7.5 -> v16 7.5 [7.5]   bomber (black) + cardigan (purple) + chinos (green, straight)
         why: lifts L2 +0.5
   a59 PASS  step 9: v15 7 -> v16 7.5 [7.5]   suit_jacket (black) + trousers (black, wide) + dress_shoe (black)
-        why: taste: wide legs +0.25
-  (a51 base, not a bar) v15 7.5 -> v16 8.5: Tim's tucked white tee, wide black trousers, loafers, before the blazer; why: held by 2 lifts; lifts L1 +1, L7b +0.5; taste: wide legs +0.5
+        why: taste: wide legs +0.375
+  (a51 base, not a bar) v15 7.5 -> v16 8.5: Tim's tucked white tee, wide black trousers, loafers, before the blazer; why: lifts L1 +0.5, L7b +0.5; taste: wide legs +0.75
   (Wanhee, not a bar) v15 7 -> v16 7.5: good: a bright hoodie toned down by a dark jacket; why: lifts L5 +0.25
 
 == The gold set (225 photos, 223 scored; profile unknown, the test profile, Everyday) ==
   target           3-4.5  5.0%  5-5.5 15.0%  6-6.5 30.0%  7-7.5 30.0%  8-8.5 15.0%  9-9.5  5.0%
   v15              3-4.5  0.4%  5-5.5  4.9%  6-6.5 16.1%  7-7.5 59.6%  8-8.5 18.8%  9-9.5  0.0%   worst gap 29.6
-  v16 cool         3-4.5  0.4%  5-5.5  8.1%  6-6.5 15.2%  7-7.5 39.9%  8-8.5 35.9%  9-9.5  0.4%   worst gap 20.9
-  v16 warm         3-4.5  0.9%  5-5.5  4.9%  6-6.5 16.1%  7-7.5 46.6%  8-8.5 30.9%  9-9.5  0.4%   worst gap 16.6
+  v16 cool         3-4.5  0.4%  5-5.5  8.1%  6-6.5 15.2%  7-7.5 41.7%  8-8.5 34.5%  9-9.5  0.0%   worst gap 19.5
+  v16 warm         3-4.5  0.9%  5-5.5  4.9%  6-6.5 15.7%  7-7.5 50.7%  8-8.5 27.8%  9-9.5  0.0%   worst gap 20.7
 B5a gold band shares within 5 points (cool): FAIL
   v15       mean 7.16 sd 0.70  exactly 7.0 26%  range 4.5-8  r with the panel 0.562
-  v16 cool  mean 7.33 sd 0.95  exactly 7.0 16%  range 4.5-9  r with the panel 0.598
-  v16 warm  mean 7.30 sd 0.85  exactly 7.0 18%  range 4-9  r with the panel 0.525
+  v16 cool  mean 7.25 sd 0.87  exactly 7.0 17%  range 4.5-8.5  r with the panel 0.606
+  v16 warm  mean 7.23 sd 0.79  exactly 7.0 21%  range 4-8.5  r with the panel 0.526
   v15: the panel's worst (26, panel 5.5 or under) average 6.37, 10 at 7+; the panel's best (63, 8+) average 7.49
-  v16: the panel's worst (26, panel 5.5 or under) average 6.23, 8 at 7+; the panel's best (63, 8+) average 7.86
+  v16: the panel's worst (26, panel 5.5 or under) average 6.23, 8 at 7+; the panel's best (63, 8+) average 7.75
 
 == B1 His blind ratings (20 of 20 today; Y32's 60 not in yet) ==
   v15       within 1 point 17/20  within 0.5 12/20  r 0.457  mean 6.92 (his 6.60)
-  v16 cool  within 1 point 17/20  within 0.5 13/20  r 0.606  mean 6.80 (his 6.60)
-  v16 warm  within 1 point 18/20  within 0.5 13/20  r 0.677  mean 6.92 (his 6.60)
+  v16 cool  within 1 point 17/20  within 0.5 13/20  r 0.600  mean 6.80 (his 6.60)
+  v16 warm  within 1 point 18/20  within 0.5 13/20  r 0.662  mean 6.90 (his 6.60)
   the panel with him: r 0.694  within 1 point 16/20
-B1 within 1 on 8 in 10 (17/20) and r >= 0.69 (0.606): FAIL (20 of the 80 ratings)
+B1 within 1 on 8 in 10 (17/20) and r >= 0.69 (0.600): FAIL (20 of the 80 ratings)
      pin-058   his 5  panel 5  v15 7  v16 7  graphic_tee (pink) + shorts (denim_light, relaxed)
                why: lifts L5 +0.25
      pin-033   his 5.5  panel 5  v15 7.5  v16 7  camp_collar_shirt (blue) + jeans (denim_dark, straight) + loafer (black)
                why: lifts L5 +0.25; taste: the top ends low -0.5
      ig-116    his 7  panel 7.5  v15 8  v16 8  quarter_zip (black) + jeans (denim_mid, wide) + loafer (black)
-               why: held by 1 lift; lifts L1 +0.5, L6 +0.25; taste: wide legs +0.25
+               why: lifts L1 +0.25, L6 +0.25; taste: wide legs +0.375
      pin-007   his 6  panel 5.5  v15 7  v16 7  dress_shirt (light_blue) + trousers (khaki_beige, straight) + loafer (brown)
                why: lifts L1 +0.25
      rd-015    his 6  panel 6  v15 7  v16 7  oxford_shirt (multicolor) + chinos (charcoal, straight)
                why: nothing off, nothing chosen
-     ig-010    his 8  panel 8  v15 8  v16 8.5  cardigan (green) + tee (white) + trousers (black, relaxed) + low_profile_sneaker (white)
-               why: lifts L1 +0.5, L5 +0.5, L7b +0.5; taste: relaxed legs +0.25
      ig-020    his 7.5  panel 8  v15 7  v16 8  sweater (tan_camel) + tee (white) + shorts (khaki_beige, wide) + loafer (brown)
-               why: held by 1 lift; lifts SIL +1.25; taste: roomy shorts +0.25
+               why: held by 1 lift; lifts SIL +2; taste: roomy shorts +0.25
+     ig-032    his 7.5  panel 8  v15 7.5  v16 8  other (charcoal) + tank_top (white) + cargos (olive, wide) + retro_runner (tan_camel)
+               why: lifts L2 +0.375; taste: wide legs +0.75
      ig-098    his 6.5  panel 6  v15 7  v16 7  oxford_shirt (white) + jeans (denim_mid, straight)
                why: nothing off, nothing chosen
      ig-127    his 6.5  panel 6.5  v15 7  v16 7  tee (light_grey) + jeans (denim_mid, straight) + loafer (brown)
                why: nothing off, nothing chosen
      pin-021   his 6.5  panel 4.5  v15 6.5  v16 7  dress_shirt (blue) + shorts (khaki_beige, wide)
                why: lifts L7b +0.25; taste: roomy shorts +0.25
+     ig-010    his 8  panel 8  v15 8  v16 8  cardigan (green) + tee (white) + trousers (black, relaxed) + low_profile_sneaker (white)
+               why: lifts L1 +0.25, L5 +0.5, L7b +0.5; taste: relaxed legs +0.1875
      ig-117    his 7.5  panel 7.5  v15 8  v16 7.5  polo (white) + trousers (black, wide) + dress_shoe (black)
-               why: held by 0 lifts; lifts L1 +0.25; taste: wide legs +0.25
+               why: lifts L1 +0.25; taste: wide legs +0.375
      pin-002   his 5  panel 7  v15 6  v16 5  cardigan (tan_camel) + tee (light_blue) + jeans (denim_mid, skinny) + suede_chukka (brown)
                why: lifts L3 +0.25; faults -1.625 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit); taste: skinny legs -0.5
-     ig-032    his 7.5  panel 8  v15 7.5  v16 7.5  other (charcoal) + tank_top (white) + cargos (olive, wide) + retro_runner (tan_camel)
-               why: held by 0 lifts; lifts L2 +0.375; taste: wide legs +0.5
      pin-073   his 5.5  panel 5.5  v15 6.5  v16 5  bomber (black) + tee (multicolor) + jeans (blue, skinny) + canvas_sneaker (blue)
                why: lifts L5 +0.25; faults -1.438 (PN1_narrow_leg: the skinny jeans read dated; a straight leg balances the outfit); taste: skinny legs -0.5
      rd-001    his 7  panel 7  v15 6.5  v16 6.5  camp_collar_shirt (off_white_cream) + chinos (khaki_beige, straight) + loafer (brown)
@@ -131,71 +131,67 @@ B1 within 1 on 8 in 10 (17/20) and r >= 0.69 (0.606): FAIL (20 of the 80 ratings
      pin-013   his 5.5  panel 6  v15 5  v16 5  graphic_tee (black) + jeans (denim_dark, skinny) + basketball_sneaker (red)
                why: faults -1.812 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)
      ig-097    his 7  panel 5.5  v15 7  v16 6.5  tee (charcoal) + chinos (black, wide) + slides_sandals (black)
-               why: lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.25
+               why: lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.375
      rd-007    his 7.5  panel 8  v15 7  v16 7  overcoat (black) + sweater (black) + trousers (burgundy, slim) + derby (black)
                why: lifts L5 +0.25; faults -0.5 (PN1_narrow_leg: the slim trousers would balance better with a straight leg)
      ig-061    his 8  panel 8  v15 6.5  v16 7  sweatshirt (blue) + tee (white) + cargos (olive, wide) + derby (black)
-               why: taste: wide legs +0.25
+               why: taste: wide legs +0.375
      ig-065    his 7  panel 5.5  v15 6.5  v16 5.5  graphic_tee (purple) + shorts (brown, wide) + slides_sandals (black)
                why: faults -1.375 (SK1_slides_out: slides read as staying in); taste: roomy shorts +0.25
 
-B6 the two stored readings within 0.5: v15 218/223  v16 cool 209/223  v16 warm 210/223: FAIL
-     ig-004: 7.5 / 6.5   lifts L2 +0.75, L5 +0.5; faults -1 (X_knit_on_knit: the cardigan over the sweater: knit on knit blurs together; a smooth layer over the knit adds depth); taste: wide legs +0.25  ||  lifts L5 +0.25; faults -1 (X_knit_on_knit: the cardigan over the sweater: knit on knit blurs together; a smooth layer over the knit adds depth); taste: wide legs +0.25
-     ig-030: 7 / 8   lifts L7b +0.25; taste: roomy shorts +0.25  ||  held by 1 lift; lifts SIL +1.25; taste: roomy shorts +0.25
-     ig-051: 8.5 / 7.5   held by 2 lifts; lifts L1 +1, L7 +0.5; taste: relaxed legs +0.5  ||  nothing off, nothing chosen
-     ig-060: 8.5 / 7.5   lifts L1 +0.5, L5 +0.5; taste: wide legs +0.5  ||  held by 0 lifts; lifts L1 +0.25; taste: wide legs +0.5
-     ig-061: 7 / 8.5   taste: wide legs +0.25  ||  lifts L1 +0.5, L5 +0.5; taste: wide legs +0.5
-     ig-067: 7.5 / 8.5   held by 0 lifts; lifts L1 +0.25; taste: wide legs +0.25  ||  lifts L1 +0.5, L7b +0.5; taste: wide legs +0.25
-     ig-094: 7.5 / 8.5   held by 0 lifts; lifts L1 +0.25; taste: wide legs +0.25  ||  lifts L1 +0.5, L5 +0.5; taste: wide legs +0.25
-     ig-102: 5.5 / 6.5   faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.25  ||  lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.5
-     ig-113: 8.5 / 7.5   lifts L1 +0.5, L7 +0.5; taste: wide legs +0.5  ||  held by 0 lifts; lifts L7 +0.25; taste: wide legs +0.5
-     pin-023: 6.5 / 5.5   lifts L5 +0.5, L6 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in)  ||  faults -1.25 (SK1_slides_out: slides read as staying in)
+B6 the two stored readings within 0.5: v15 218/223  v16 cool 213/223  v16 warm 213/223: FAIL
+     ig-030: 7 / 8   lifts L7b +0.25; taste: roomy shorts +0.25  ||  held by 1 lift; lifts SIL +2; taste: roomy shorts +0.25
+     ig-051: 8 / 7   lifts L1 +0.5, L7 +0.5; taste: relaxed legs +0.375  ||  nothing off, nothing chosen
+     ig-061: 7 / 8   taste: wide legs +0.375  ||  lifts L1 +0.25, L5 +0.5; taste: wide legs +0.75
+     ig-102: 5.5 / 7   faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.375  ||  lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
+     ig-125: 7.5 / 8.5   lifts L1 +0.5; taste: relaxed legs +0.1875  ||  lifts L1 +0.5, L7 +0.5; taste: wide legs +0.75
+     pin-023: 6.5 / 5.5   lifts L5 +0.25, L6 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in)  ||  faults -1.25 (SK1_slides_out: slides read as staying in)
      pin-031: 6 / 5   faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)  ||  faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit); taste: the top ends low -0.5
-     pin-040: 8 / 7   held by 1 lift; lifts SIL +1.25; taste: relaxed legs +0.5  ||  nothing off, nothing chosen
-     pin-057: 5.5 / 7   faults -0.5 (SQ_worn: the shoes look worn)  ||  lifts SIL +1.25; faults -1 (CL1_loud_print: the big, loud floral on the camp collar shirt takes over the outfit); taste: relaxed legs +0.25
-     rd-018: 7 / 8   nothing off, nothing chosen  ||  held by 1 lift; lifts SIL +1.25; taste: wide legs +0.25
+     pin-040: 8 / 7   held by 1 lift; lifts SIL +1; taste: relaxed legs +0.375  ||  nothing off, nothing chosen
+     pin-057: 5.5 / 6.5   faults -0.5 (SQ_worn: the shoes look worn)  ||  lifts SIL +0.875; faults -1 (CL1_loud_print: the big, loud floral on the camp collar shirt takes over the outfit); taste: relaxed legs +0.1875
+     rd-018: 7 / 8   nothing off, nothing chosen  ||  held by 1 lift; lifts SIL +2; taste: wide legs +0.375
 
 == His saved checks (62 scored of 62; his profile, own occasion and second look) ==
   target           3-4.5  5.0%  5-5.5 15.0%  6-6.5 30.0%  7-7.5 30.0%  8-8.5 15.0%  9-9.5  5.0%
   v15              3-4.5  0.0%  5-5.5  6.5%  6-6.5 21.0%  7-7.5 62.9%  8-8.5  9.7%  9-9.5  0.0%   worst gap 32.9
-  v16 cool         3-4.5  0.0%  5-5.5  8.1%  6-6.5 17.7%  7-7.5 51.6%  8-8.5 21.0%  9-9.5  1.6%   worst gap 21.6
-  v16 warm         3-4.5  0.0%  5-5.5  6.5%  6-6.5  8.1%  7-7.5 64.5%  8-8.5 21.0%  9-9.5  0.0%   worst gap 34.5
+  v16 cool         3-4.5  0.0%  5-5.5  8.1%  6-6.5 17.7%  7-7.5 51.6%  8-8.5 22.6%  9-9.5  0.0%   worst gap 21.6
+  v16 warm         3-4.5  0.0%  5-5.5  6.5%  6-6.5  8.1%  7-7.5 58.1%  8-8.5 27.4%  9-9.5  0.0%   worst gap 28.1
 B5b his saved checks' band shares within 5 points (cool): FAIL
-  mean v15 7.03 -> v16 7.19; exactly 7.0 21 -> 9
+  mean v15 7.03 -> v16 7.16; exactly 7.0 21 -> 10
   phone-8bc29d class     v15 7 -> v16 7.5 [warm 7.5]  overshirt (off_white_cream) + hoodie (grey) + jeans (black, wide) + other (grey)
-        why: held by 0 lifts; taste: wide legs +0.5
+        why: held by 0 lifts; taste: wide legs +0.75
   phone-d6559a class     v15 7 -> v16 7 [warm 7]  hoodie (grey) + jeans (black, straight) + other (grey)
         why: nothing off, nothing chosen
-  phone-f07193 class     v15 6.5 -> v16 7.5 [warm 7]  tee (grey) + overshirt (tan_camel) + jeans (black, wide) + other (grey)
-        why: lifts L3 +0.25; taste: wide legs +0.25
-  phone-e026de class     v15 6.5 -> v16 6 [warm 7.5]  overshirt (tan_camel) + sweatshirt (grey) + jeans (black, wide) + slides_sandals (grey)
-        why: faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.5
+  phone-f07193 class     v15 6.5 -> v16 7.5 [warm 7.5]  tee (grey) + overshirt (tan_camel) + jeans (black, wide) + other (grey)
+        why: lifts L3 +0.25; taste: wide legs +0.375
+  phone-e026de class     v15 6.5 -> v16 6.5 [warm 7.5]  overshirt (tan_camel) + sweatshirt (grey) + jeans (black, wide) + slides_sandals (grey)
+        why: faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
   phone-1f1997 class     v15 7 -> v16 6.5 [warm 7.5]  hoodie (black) + jeans (black, wide) + slides_sandals (black)
-        why: faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.5
+        why: faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
   phone-d58b14 class     v15 6.5 -> v16 5.5 [warm 7]  hoodie (black) + jeans (black, straight) + slides_sandals (black)
         why: faults -1.25 (SK1_slides_out: slides read as staying in)
-  phone-d918c0 class     v15 7.5 -> v16 7.5 [warm 7]  fleece (olive) + flannel_shirt (orange) + jeans (black, wide) + suede_chukka (khaki_beige)
-        why: held by 0 lifts; lifts L5 +0.25; taste: wide legs +0.25
-  phone-968016 class     v15 7.5 -> v16 7.5 [warm 7.5]  sweatshirt (green) + jeans (black, wide) + white_leather_sneaker (white)
-        why: held by 0 lifts; lifts L5 +0.25; taste: wide legs +0.5
-  phone-fb0b17 class     v15 7 -> v16 8 [warm 7.5]  chore_coat (navy) + tee (white) + jeans (charcoal, straight) + low_profile_sneaker (navy)
-        why: lifts L3 +0.5, L6 +0.25
-  phone-f4870b class     v15 7 -> v16 8 [warm 7.5]  chore_coat (navy) + tee (white) + jeans (charcoal, straight) + low_profile_sneaker (navy)
-        why: lifts L3 +0.5, L6 +0.25
+  phone-d918c0 class     v15 7.5 -> v16 7.5 [warm 7.5]  fleece (olive) + flannel_shirt (orange) + jeans (black, wide) + suede_chukka (khaki_beige)
+        why: lifts L5 +0.25; taste: wide legs +0.375
+  phone-968016 class     v15 7.5 -> v16 8 [warm 8]  sweatshirt (green) + jeans (black, wide) + white_leather_sneaker (white)
+        why: lifts L5 +0.25; taste: wide legs +0.75
+  phone-fb0b17 class     v15 7 -> v16 7.5 [warm 7]  chore_coat (navy) + tee (white) + jeans (charcoal, straight) + low_profile_sneaker (navy)
+        why: lifts L3 +0.25, L6 +0.25
+  phone-f4870b class     v15 7 -> v16 7.5 [warm 7]  chore_coat (navy) + tee (white) + jeans (charcoal, straight) + low_profile_sneaker (navy)
+        why: lifts L3 +0.25, L6 +0.25
   phone-403ade class     v15 7 -> v16 8 [warm 8]  tee (black) + jeans (black, wide) + white_leather_sneaker (white)
-        why: held by 1 lift; lifts SIL +1.25; taste: wide legs +0.5
+        why: held by 1 lift; lifts SIL +2; taste: wide legs +0.75
   phone-8ad378 class     v15 7 -> v16 8 [warm 8]  tee (black) + jeans (black, wide) + white_leather_sneaker (white)
-        why: held by 1 lift; lifts SIL +1.25; taste: wide legs +0.5
+        why: held by 1 lift; lifts SIL +2; taste: wide legs +0.75
   phone-d1967f class     v15 7 -> v16 7.5 [warm 7.5]  suit_jacket (navy) + tee (black) + jeans (denim_mid, relaxed) + suede_chukka (grey)
-        why: held by 0 lifts; lifts L7b +0.25; taste: relaxed legs +0.25
-  phone-703a8b class     v15 7.5 -> v16 8 [warm 8]  polo (blue) + jeans (denim_mid, straight)
-        why: lifts L1 +0.5, L5 +0.5
+        why: lifts L7b +0.25; taste: relaxed legs +0.1875
+  phone-703a8b class     v15 7.5 -> v16 7.5 [warm 7.5]  polo (blue) + jeans (denim_mid, straight)
+        why: lifts L1 +0.25, L5 +0.5
   phone-ebe23f class     v15 7 -> v16 7 [warm 7]  other (black) + jeans (charcoal, straight) + white_leather_sneaker (white)
         why: nothing off, nothing chosen
-  phone-af7e93 class     v15 8 -> v16 9 [warm 8.5]  oxford_shirt (off_white_cream) + jeans (denim_mid, wide) + basketball_sneaker (black) + hoodie (green)
-        why: held by 3 lifts in one look; lifts L2 +0.75, L5 +0.5, L7 +0.5; taste: wide legs +0.5
-  phone-e438d4 class     v15 7 -> v16 8 [warm 7.5]  chore_coat (navy) + tee (white) + jeans (charcoal, straight) + low_profile_sneaker (navy)
-        why: lifts L3 +0.5, L6 +0.25
+  phone-af7e93 class     v15 8 -> v16 8.5 [warm 8.5]  oxford_shirt (off_white_cream) + jeans (denim_mid, wide) + basketball_sneaker (black) + hoodie (green)
+        why: lifts L2 +0.375, L5 +0.5, L7 +0.5; taste: wide legs +0.75
+  phone-e438d4 class     v15 7 -> v16 7.5 [warm 7]  chore_coat (navy) + tee (white) + jeans (charcoal, straight) + low_profile_sneaker (navy)
+        why: lifts L3 +0.25, L6 +0.25
   phone-9d3ef4 class     v15 6.5 -> v16 6 [warm 6]  sweatshirt (black) + jeans (denim_mid, slim)
         why: faults -0.75 (PN1_narrow_leg: the slim ripped jeans would balance better with a straight leg)
   phone-602c13 class     v15 6.5 -> v16 6 [warm 6]  polo (black) + jeans (denim_mid, slim)
@@ -215,121 +211,121 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
   phone-1f1b29 class     v15 6.5 -> v16 6 [warm 6]  graphic_tee (blue) + chinos (green, straight)
         why: faults -0.875 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)
   phone-6bf356 class     v15 8 -> v16 8.5 [warm 8.5]  hoodie (navy) + jeans (denim_mid, wide) + chunky_sneaker (white)
-        why: held by 2 lifts; lifts L1 +0.5, L7 +0.5; taste: wide legs +0.5
-  phone-b17b22 class     v15 7.5 -> v16 7.5 [warm 7.5]  tee (black) + jeans (denim_light, wide) + white_leather_sneaker (white)
-        why: held by 0 lifts; lifts L1 +0.25; taste: wide legs +0.5
-  phone-e16ac6 class     v15 7.5 -> v16 7 [warm 8.5]  graphic_tee (red) + jeans (black, wide) + slides_sandals (black)
-        why: lifts L1 +0.5, L5 +0.5; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.5
-  phone-6f1aee class     v15 7.5 -> v16 7.5 [warm 8.5]  graphic_tee (red) + jeans (black, wide) + slides_sandals (black)
-        why: lifts L1 +0.5, L5 +0.5; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.5
-  phone-fd52eb going_out v15 6.5 -> v16 6 [warm 7.5]  overshirt (brown) + sweatshirt (green) + jeans (denim_mid, wide) + slides_sandals (black)
-        why: lifts L5 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.5
-  phone-23999f going_out v15 7.5 -> v16 7.5 [warm 7.5]  sweatshirt (green) + jeans (denim_mid, wide) + retro_runner (white) + overshirt (brown)
-        why: held by 0 lifts; lifts L5 +0.25; taste: wide legs +0.5
-  phone-83ff37 going_out v15 7.5 -> v16 7.5 [warm 7.5]  tee (blue) + jeans (denim_light, wide) + white_leather_sneaker (white)
-        why: held by 0 lifts; lifts L5 +0.25; taste: wide legs +0.5
+        why: lifts L1 +0.25, L7 +0.5; taste: wide legs +0.75
+  phone-b17b22 class     v15 7.5 -> v16 8 [warm 8]  tee (black) + jeans (denim_light, wide) + white_leather_sneaker (white)
+        why: lifts L1 +0.25; taste: wide legs +0.75
+  phone-e16ac6 class     v15 7.5 -> v16 7 [warm 8]  graphic_tee (red) + jeans (black, wide) + slides_sandals (black)
+        why: lifts L1 +0.25, L5 +0.5; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
+  phone-6f1aee class     v15 7.5 -> v16 7.5 [warm 8]  graphic_tee (red) + jeans (black, wide) + slides_sandals (black)
+        why: lifts L1 +0.25, L5 +0.5; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
+  phone-fd52eb going_out v15 6.5 -> v16 6.5 [warm 7.5]  overshirt (brown) + sweatshirt (green) + jeans (denim_mid, wide) + slides_sandals (black)
+        why: lifts L5 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
+  phone-23999f going_out v15 7.5 -> v16 8 [warm 8]  sweatshirt (green) + jeans (denim_mid, wide) + retro_runner (white) + overshirt (brown)
+        why: lifts L5 +0.25; taste: wide legs +0.75
+  phone-83ff37 going_out v15 7.5 -> v16 8 [warm 8]  tee (blue) + jeans (denim_light, wide) + white_leather_sneaker (white)
+        why: lifts L5 +0.25; taste: wide legs +0.75
   phone-94df92 everyday  v15 7 -> v16 7.5 [warm 7.5]  overshirt (brown) + tee (navy) + jeans (denim_mid, relaxed) + retro_runner (white)
-        why: held by 0 lifts; lifts L3 +0.25; taste: relaxed legs +0.5
-  phone-b89ce4 everyday  v15 6.5 -> v16 6.5 [warm 7.5]  sweatshirt (green) + jeans (denim_mid, relaxed) + slides_sandals (black)
-        why: lifts L5 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in); taste: relaxed legs +0.5
+        why: lifts L3 +0.25; taste: relaxed legs +0.375
+  phone-b89ce4 everyday  v15 6.5 -> v16 6 [warm 7.5]  sweatshirt (green) + jeans (denim_mid, relaxed) + slides_sandals (black)
+        why: lifts L5 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in); taste: relaxed legs +0.375
   phone-5780bb everyday  v15 7.5 -> v16 8 [warm 8]  tee (navy) + overshirt (brown) + jeans (denim_light, relaxed) + chunky_sneaker (white)
-        why: held by 1 lift; lifts L1 +0.5; taste: relaxed legs +0.5
+        why: lifts L1 +0.5; taste: relaxed legs +0.375
   phone-aa20f9 everyday  v15 5.5 -> v16 5.5 [warm 5.5]  tee (charcoal) + jeans (denim_light, straight) + slides_sandals (black)
         why: held by S9 (a stain on the tee); faults -1.25 (SK1_slides_out: slides read as staying in)
-  phone-cf069a everyday  v15 7.5 -> v16 8 [warm 8]  hoodie (black) + jeans (denim_light, relaxed) + performance_runner (black)
-        why: held by 1 lift; lifts L1 +0.5, L6 +0.25; taste: relaxed legs +0.5
+  phone-cf069a everyday  v15 7.5 -> v16 7.5 [warm 7.5]  hoodie (black) + jeans (denim_light, relaxed) + performance_runner (black)
+        why: lifts L1 +0.25, L6 +0.25; taste: relaxed legs +0.375
   phone-68f3da everyday  v15 7 -> v16 7.5 [warm 7]  fleece (grey) + trousers (black, straight)
         why: lifts L7b +0.25
   phone-5c11a4 everyday  v15 6.5 -> v16 6.5 [warm 7.5]  overshirt (brown) + tee (black) + jeans (denim_mid, wide) + slides_sandals (black)
-        why: lifts L3 +0.5, L6 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.25
+        why: lifts L3 +0.25, L6 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.375
   phone-2a1a76 everyday  v15 7 -> v16 8 [warm 8]  sweatshirt (black) + jeans (black, relaxed) + suede_chukka (grey)
-        why: held by 1 lift; lifts SIL +1.25; taste: relaxed legs +0.5
-  phone-cc5817 everyday  v15 7.5 -> v16 7 [warm 8.5]  sweatshirt (green) + jeans (black, wide) + slides_sandals (black)
-        why: lifts L1 +0.5, L5 +0.5; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.5
+        why: held by 1 lift; lifts SIL +1; taste: relaxed legs +0.375
+  phone-cc5817 everyday  v15 7.5 -> v16 7 [warm 8]  sweatshirt (green) + jeans (black, wide) + slides_sandals (black)
+        why: lifts L1 +0.25, L5 +0.5; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
   phone-7f14a4 everyday  v15 7 -> v16 7.5 [warm 7.5]  flannel_shirt (brown) + jeans (charcoal, wide) + retro_runner (light_grey)
-        why: held by 0 lifts; taste: wide legs +0.5
-  phone-c994c2 everyday  v15 8 -> v16 8.5 [warm 8.5]  tee (blue) + jeans (denim_light, relaxed) + chunky_sneaker (white)
-        why: held by 2 lifts; lifts L1 +0.5, L5 +0.5; taste: relaxed legs +0.5
+        why: held by 0 lifts; taste: wide legs +0.75
+  phone-c994c2 everyday  v15 8 -> v16 8 [warm 8]  tee (blue) + jeans (denim_light, relaxed) + chunky_sneaker (white)
+        why: lifts L1 +0.25, L5 +0.5; taste: relaxed legs +0.375
   phone-a5ff95 everyday  v15 7.5 -> v16 7.5 [warm 7]  fleece (charcoal) + tee (black) + jeans (denim_light, wide) + suede_chukka (grey)
-        why: held by 0 lifts; lifts L2 +0.375; taste: wide legs +0.25
+        why: lifts L2 +0.375; taste: wide legs +0.375
   phone-a765e8 everyday  v15 5.5 -> v16 5.5 [warm 5.5]  hoodie (grey) + sweatpants (black, relaxed) + slides_sandals (black)
-        why: held by occasion; faults -1.25 (SK1_slides_out: slides read as staying in); taste: relaxed legs +0.25
+        why: held by occasion; faults -1.25 (SK1_slides_out: slides read as staying in); taste: relaxed legs +0.1875
   phone-b0f0c8 everyday  v15 7.5 -> v16 7.5 [warm 7.5]  hoodie (grey) + jeans (black, relaxed) + other (grey)
-        why: held by 0 lifts; lifts L1 +0.25; taste: relaxed legs +0.5
+        why: lifts L1 +0.25; taste: relaxed legs +0.375
   phone-680a61 everyday  v15 5.5 -> v16 5.5 [warm 5.5]  hoodie (grey) + sweatpants (black, wide) + slides_sandals (black)
-        why: held by occasion; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.25
+        why: held by occasion; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.375
   phone-a1d1e5 everyday  v15 7 -> v16 7 [warm 7]  dress_shirt (white) + suit_trousers (navy, slim)
         why: nothing off, nothing chosen
-  phone-cccd69 everyday  v15 7.5 -> v16 8 [warm 8]  sport_coat (light_blue) + dress_shirt (white) + trousers (navy, straight) + loafer (black)
-        why: lifts L1 +0.75, L7 +0.5
+  phone-cccd69 everyday  v15 7.5 -> v16 7.5 [warm 7.5]  sport_coat (light_blue) + dress_shirt (white) + trousers (navy, straight) + loafer (black)
+        why: lifts L1 +0.375, L7 +0.5
   phone-6b14db everyday  v15 5.5 -> v16 5.5 [warm 5.5]  hoodie (charcoal) + sweatpants (black, slim) + slides_sandals (black)
         why: held by occasion; faults -1.25 (SK1_slides_out: slides read as staying in)
   phone-5e2307 everyday  v15 7 -> v16 7 [warm 7]  field_jacket (brown) + tee (light_blue) + jeans (charcoal, straight)
         why: nothing off, nothing chosen
-  phone-0d39d6 everyday  v15 7 -> v16 6.5 [warm 7.5]  hoodie (grey) + jeans (black, wide) + slides_sandals (navy)
-        why: lifts L1 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.5
+  phone-0d39d6 everyday  v15 7 -> v16 6.5 [warm 8]  hoodie (grey) + jeans (black, wide) + slides_sandals (navy)
+        why: lifts L1 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
   phone-5a9049 everyday  v15 7 -> v16 7.5 [warm 7.5]  oxford_shirt (orange) + jeans (charcoal, wide) + low_profile_sneaker (grey)
-        why: held by 0 lifts; lifts L5 +0.25; taste: wide legs +0.25
+        why: lifts L5 +0.25; taste: wide legs +0.375
   phone-bee15a going_out v15 6.5 -> v16 7.5 [warm 7.5]  hoodie (black) + jeans (black, relaxed) + performance_runner (black)
-        why: taste: relaxed legs +0.5
+        why: taste: relaxed legs +0.375
   phone-00c9ab going_out v15 7.5 -> v16 7.5 [warm 7.5]  tee (black) + jeans (denim_light, relaxed) + work_boot (grey)
-        why: held by 0 lifts; lifts L1 +0.25; taste: relaxed legs +0.5
+        why: lifts L1 +0.25; taste: relaxed legs +0.375
   phone-70f0aa going_out v15 7.5 -> v16 7.5 [warm 7.5]  sweatshirt (green) + jeans (denim_light, relaxed) + suede_chukka (grey)
-        why: held by 0 lifts; lifts L5 +0.25; taste: relaxed legs +0.5
+        why: lifts L5 +0.25; taste: relaxed legs +0.375
   phone-d911e9 going_out v15 7.5 -> v16 7.5 [warm 7.5]  sweatshirt (green) + jeans (denim_light, relaxed) + suede_chukka (tan_camel)
-        why: held by 0 lifts; lifts L5 +0.25; taste: relaxed legs +0.5
-  phone-dcb1b2 everyday  v15 8 -> v16 7.5 [warm 7.5]  hoodie (charcoal) + jeans (denim_light, wide) + white_leather_sneaker (white)
-        why: held by 0 lifts; lifts L1 +0.25; taste: wide legs +0.5
-  phone-e992fd everyday  v15 8 -> v16 7.5 [warm 7.5]  hoodie (grey) + jeans (denim_mid, wide) + white_leather_sneaker (white)
-        why: held by 0 lifts; lifts L1 +0.25; taste: wide legs +0.5
-  phone-4c4bef everyday  v15 6.5 -> v16 7.5 [warm 7.5]  overshirt (off_white_cream) + hoodie (charcoal) + jeans (denim_mid, relaxed) + performance_runner (black)
-        why: faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: relaxed legs +0.5
-  phone-950979 everyday  v15 8 -> v16 8.5 [warm 7.5]  hoodie (charcoal) + jeans (denim_mid, relaxed) + chunky_sneaker (white) + overshirt (off_white_cream)
-        why: held by 2 lifts; lifts L2 +0.75, L7 +0.5; taste: relaxed legs +0.5
+        why: lifts L5 +0.25; taste: relaxed legs +0.375
+  phone-dcb1b2 everyday  v15 8 -> v16 8 [warm 8]  hoodie (charcoal) + jeans (denim_light, wide) + white_leather_sneaker (white)
+        why: lifts L1 +0.25; taste: wide legs +0.75
+  phone-e992fd everyday  v15 8 -> v16 8 [warm 8]  hoodie (grey) + jeans (denim_mid, wide) + white_leather_sneaker (white)
+        why: lifts L1 +0.25; taste: wide legs +0.75
+  phone-4c4bef everyday  v15 6.5 -> v16 7 [warm 7]  overshirt (off_white_cream) + hoodie (charcoal) + jeans (denim_mid, relaxed) + performance_runner (black)
+        why: faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: relaxed legs +0.375
+  phone-950979 everyday  v15 8 -> v16 8 [warm 7.5]  hoodie (charcoal) + jeans (denim_mid, relaxed) + chunky_sneaker (white) + overshirt (off_white_cream)
+        why: lifts L2 +0.375, L7 +0.5; taste: relaxed legs +0.375
 
 == 15 named outfits: v15 -> v16 (cool day; warm in brackets), his score, the graded look, and why ==
-     7 -> 6.5  [7.5]  His check: grey hoodie, black wide jeans, navy slides (Everyday)
-        graded as streetwear; lifts L1 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.5
-   6.5 -> 7.5  [7]  His check: grey tee under a tan overshirt, black wide jeans (Class)
-        graded as no look; lifts L3 +0.25; taste: wide legs +0.25
-     8 -> 8.5  [7.5]  His check: charcoal hoodie, cream overshirt over it, relaxed jeans, chunky sneakers
-        graded as streetwear; held by 2 lifts; lifts L2 +0.75, L7 +0.5; taste: relaxed legs +0.5
-     8 -> 7.5  [7.5]  His check: charcoal hoodie, light wide jeans, white leather sneakers
-        graded as streetwear; held by 0 lifts; lifts L1 +0.25; taste: wide legs +0.5
+     7 -> 6.5  [8]  His check: grey hoodie, black wide jeans, navy slides (Everyday)
+        graded as streetwear; lifts L1 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
+   6.5 -> 7.5  [7.5]  His check: grey tee under a tan overshirt, black wide jeans (Class)
+        graded as no look; lifts L3 +0.25; taste: wide legs +0.375
+     8 -> 8    [7.5]  His check: charcoal hoodie, cream overshirt over it, relaxed jeans, chunky sneakers
+        graded as streetwear; lifts L2 +0.375, L7 +0.5; taste: relaxed legs +0.375
+     8 -> 8    [8]  His check: charcoal hoodie, light wide jeans, white leather sneakers
+        graded as streetwear; lifts L1 +0.25; taste: wide legs +0.75
    5.5 -> 5.5  [5.5]  His check: charcoal tee with a clear stain, light jeans, slides
         graded as no look; held by S9 (a stain on the tee); faults -1.25 (SK1_slides_out: slides read as staying in)
    6.5 -> 6    [6]  His check: black sweatshirt, slim ripped jeans (Class)
         graded as no look; faults -0.75 (PN1_narrow_leg: the slim ripped jeans would balance better with a straight leg)
      5 -> 5    [5]  Gold, he rated 5.5: black graphic tee, skinny jeans, red basketball sneakers  (his 5.5)
         graded as no look; faults -1.812 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit)
-     8 -> 8.5  [8.5]  Gold, he rated 8: green cardigan over a white tee, relaxed black trousers, white sneakers  (his 8)
-        graded as classic prep, smart casual; lifts L1 +0.5, L5 +0.5, L7b +0.5; taste: relaxed legs +0.25
+     8 -> 8    [8]  Gold, he rated 8: green cardigan over a white tee, relaxed black trousers, white sneakers  (his 8)
+        graded as classic prep, smart casual; lifts L1 +0.25, L5 +0.5, L7b +0.5; taste: relaxed legs +0.1875
      7 -> 7    [7]  Gold, he rated 5: pink graphic tee, light denim shorts  (his 5)
         graded as no look; lifts L5 +0.25
    6.5 -> 6.5  [6.5]  Gold, he rated 8: blue sweatshirt over a tee, olive wide cargos, black derbies  (his 8)
-        graded as no look; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.25
+        graded as no look; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.375
    5.5 -> 4.5  [4.5]  Tim's before (a01, his 4.5): oversized tee, denim jacket, skinny jeans
         graded as no look; lifts L6 +0.125; faults -1.875 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit); taste: skinny legs -0.5
-     7 -> 8.5  [8.5]  Tim's favorite (a51, his 9): brown blazer, white tee, black trousers
-        graded as tailored; lifts L1 +0.75, L7b +0.5
-   7.5 -> 8.5  [7.5]  Wanhee's red bomber over dark trousers (a26, his 7.5)
-        graded as no look; lifts L2 +1, L7b +0.5
+     7 -> 8    [8]  Tim's favorite (a51, his 9): brown blazer, white tee, black trousers
+        graded as tailored; lifts L1 +0.375, L7b +0.5
+   7.5 -> 8    [7.5]  Wanhee's red bomber over dark trousers (a26, his 7.5)
+        graded as no look; lifts L2 +0.5, L5 +0.5, L7b +0.5
    6.5 -> 4.5  [4.5]  Made up: red tee, yellow chinos, purple sneakers (three brights)
         graded as no look; held by S4 (three bright colors at once: keep one, make the rest neutral)
-     8 -> 9    [8.5]  Made up: boxy white tee tucked into charcoal wide trousers, a burgundy cardigan, black loafers
-        graded as smart casual; lifts L2 +0.75, L5 +0.5, L7 +0.5; taste: wide legs +0.25
+     8 -> 8.5  [8]  Made up: boxy white tee tucked into charcoal wide trousers, a burgundy cardigan, black loafers
+        graded as smart casual; lifts L2 +0.375, L5 +0.5, L7 +0.5; taste: wide legs +0.375
 
 == What the season moves (cool -> warm, first reading) ==
-  gold: 21 up, 33 down of 223; loses L2 25, a charge waived (light on light, tank alone) 15, heavy layer 14, loses L3 6, gains SIL 6, gains L4s 5, loses SIL 2, gains L5 1
-  his checks: 11 up, 9 down of 62; a charge waived (light on light, tank alone) 11, loses L3 5, heavy layer 3, loses L2 3, gains L4s 1
+  gold: 20 up, 34 down of 223; loses L2 25, a charge waived (light on light, tank alone) 15, heavy layer 14, gains L4s 6, loses L3 4, gains SIL 4, loses SIL 2, loses L1 2, gains SL1 2, gains L5 1
+  his checks: 11 up, 6 down of 62; a charge waived (light on light, tank alone) 11, loses L3 4, heavy layer 2, loses L2 2, gains L4s 1
 
   8+ share by how dressy the clothes are (gold, first reading, cool):
     athletic   n   8  v15 8+   0%  v16 8+   0%  mean 6.38 -> 6.50
-    casual     n  96  v15 8+  12%  v16 8+  34%  mean 7.04 -> 7.21
-    in-between n  45  v15 8+   9%  v16 8+  27%  mean 7.16 -> 7.26
-    dressy     n  74  v15 8+  35%  v16 8+  49%  mean 7.39 -> 7.61
+    casual     n  96  v15 8+  12%  v16 8+  41%  mean 7.04 -> 7.20
+    in-between n  45  v15 8+   9%  v16 8+  24%  mean 7.16 -> 7.14
+    dressy     n  74  v15 8+  35%  v16 8+  36%  mean 7.39 -> 7.45
 
-  How often each v16 rule fires on the gold set (cool, first reading): cap H10 2, cap H8 2, held by 0 lifts 29, held by 1 lift 21, held by 2 lifts 14, held by H10 1, held by occasion 4, lift L1 81, lift L2 33, lift L3 8, lift L5 48, lift L6 24, lift L7 20, lift L7b 25, lift SIL 8
+  How often each v16 rule fires on the gold set (cool, first reading): cap H10 2, cap H8 2, held by 0 lifts 4, held by 1 lift 15, held by 2 lifts 1, held by H10 1, held by occasion 5, lift L1 81, lift L2 33, lift L3 8, lift L5 48, lift L6 24, lift L7 20, lift L7b 25, lift SIL 8
 
 == Round 2: with the fresh second looks (223 of 223 gold photos have them; 223 have both runs) ==
   steadiness of the looks across the two runs (223 photos): a peek (clearly) 6 flip; covers the shoe 29 differ (19 on 'mostly', the H7 cap's trigger)
@@ -337,126 +333,158 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
   target           3-4.5  5.0%  5-5.5 15.0%  6-6.5 30.0%  7-7.5 30.0%  8-8.5 15.0%  9-9.5  5.0%
   v15       stored 3-4.5  0.4%  5-5.5  4.9%  6-6.5 16.1%  7-7.5 59.6%  8-8.5 18.8%  9-9.5  0.0%   worst gap 29.6
   v15       looks  3-4.5  0.4%  5-5.5  4.9%  6-6.5 17.0%  7-7.5 59.6%  8-8.5 17.9%  9-9.5  0.0%   worst gap 29.6
-  v16 cool  stored 3-4.5  0.4%  5-5.5  8.1%  6-6.5 15.2%  7-7.5 39.9%  8-8.5 35.9%  9-9.5  0.4%   worst gap 20.9
-  v16 cool  looks  3-4.5  0.4%  5-5.5  8.1%  6-6.5 15.7%  7-7.5 42.6%  8-8.5 32.3%  9-9.5  0.9%   worst gap 17.3
-  v16 stored mean 7.33  r with the panel 0.598
-  v16 looks  mean 7.30  r with the panel 0.596
-  B1 again (his 20): within 1 point 16/20, r 0.567 (stored: 17/20, r 0.606)
-  B6 again: two readings, each with its own looks, within 0.5: 206/223 (stored, no looks: 209/223; bar: at most 5 off)
-     ig-011: 8.5 / 7.5   lifts L1 +0.5, L5 +0.5, L7 +0.5; taste: wide legs +0.25  ||  held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L5 +0.5, L7 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.25
-     ig-018: 7 / 8   faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.25, a full hem over the shoe +0.25  ||  lifts L2 +0.5; taste: wide legs +0.25, a full hem over the shoe +0.25
-     ig-030: 7 / 8   lifts L7b +0.25; taste: roomy shorts +0.25  ||  held by 1 lift; lifts SIL +1.25; taste: roomy shorts +0.25
-     ig-043: 7.5 / 8.5   held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L5 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.25, a full hem over the shoe +0.25  ||  lifts L1 +0.5, L5 +0.5; taste: wide legs +0.25, a full hem over the shoe +0.25
-     ig-051: 8.5 / 7.5   held by 2 lifts; lifts L1 +1, L7 +0.5; taste: relaxed legs +0.5  ||  nothing off, nothing chosen
-     ig-060: 8.5 / 7.5   lifts L1 +0.5, L5 +0.5; taste: wide legs +0.5  ||  held by 0 lifts; lifts L1 +0.25; taste: wide legs +0.5
-     ig-061: 6.5 / 7.5   faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.25  ||  held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L5 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.5
-     ig-067: 7.5 / 8.5   held by 0 lifts; lifts L1 +0.25; taste: wide legs +0.25, a full hem over the shoe +0.25  ||  lifts L1 +0.5, L7b +0.5; taste: wide legs +0.25, a full hem over the shoe +0.125
-     ig-094: 7.5 / 8.5   held by 0 lifts; lifts L1 +0.25; taste: wide legs +0.25, a full hem over the shoe +0.125  ||  lifts L1 +0.5, L5 +0.5; taste: wide legs +0.25
-     ig-097: 6.5 / 7.5   lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.25, a full hem over the shoe +0.25  ||  lifts L1 +0.5, L7b +0.5; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.25, a full hem over the shoe +0.25
-     ig-102: 5.5 / 6.5   faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.25  ||  lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.5
-     ig-113: 8.5 / 7.5   held by 2 lifts; lifts L1 +0.5, L7 +0.5; taste: wide legs +0.5, a full hem over the shoe +0.25  ||  held by 0 lifts; lifts L7 +0.25; taste: wide legs +0.5, a full hem over the shoe +0.25
-     pin-023: 6.5 / 5.5   lifts L5 +0.5, L6 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in)  ||  faults -1.25 (SK1_slides_out: slides read as staying in)
+  v16 cool  stored 3-4.5  0.4%  5-5.5  8.1%  6-6.5 15.2%  7-7.5 41.7%  8-8.5 34.5%  9-9.5  0.0%   worst gap 19.5
+  v16 cool  looks  3-4.5  0.9%  5-5.5  7.2%  6-6.5 15.7%  7-7.5 39.0%  8-8.5 37.2%  9-9.5  0.0%   worst gap 22.2
+  v16 stored mean 7.25  r with the panel 0.606
+  v16 looks  mean 7.28  r with the panel 0.609
+  B1 again (his 20): within 1 point 16/20, r 0.583 (stored: 17/20, r 0.600)
+  B6 again: two readings, each with its own looks, within 0.5: 212/223 (stored, no looks: 213/223; bar: at most 5 off)
+     ig-011: 8.5 / 7.5   lifts L1 +0.25, L5 +0.5, L7 +0.5; taste: wide legs +0.375  ||  held by a fit or shape fault: lifts can't cover it; lifts L1 +0.25, L5 +0.5, L7 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.375
+     ig-030: 7 / 8   lifts L7b +0.25; taste: roomy shorts +0.25  ||  held by 1 lift; lifts SIL +2; taste: roomy shorts +0.25
+     ig-051: 8 / 7   lifts L1 +0.5, L7 +0.5; taste: relaxed legs +0.375  ||  nothing off, nothing chosen
+     ig-061: 6.5 / 7.5   faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.375  ||  held by a fit or shape fault: lifts can't cover it; lifts L1 +0.25, L5 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.75
+     ig-102: 5.5 / 7   faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.375  ||  lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
+     ig-125: 7.5 / 8.5   lifts L1 +0.5; taste: relaxed legs +0.1875  ||  lifts L1 +0.5, L7 +0.5; taste: wide legs +0.75
+     pin-023: 6.5 / 5.5   lifts L5 +0.25, L6 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in)  ||  faults -1.25 (SK1_slides_out: slides read as staying in)
      pin-031: 6 / 5   faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)  ||  faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit); taste: the top ends low -0.5
-     pin-040: 8 / 7   held by 1 lift; lifts SIL +1.25; taste: relaxed legs +0.5  ||  nothing off, nothing chosen
-     pin-057: 5.5 / 7   faults -0.5 (SQ_worn: the shoes look worn)  ||  lifts SIL +1.25; faults -1 (CL1_loud_print: the big, loud floral on the camp collar shirt takes over the outfit); taste: relaxed legs +0.25
-     rd-018: 7 / 8   nothing off, nothing chosen  ||  held by 1 lift; lifts SIL +1.25; taste: wide legs +0.25
-  moved by the looks (v16, first reading): 17 (6 up, 11 down)
+     pin-040: 8 / 7   held by 1 lift; lifts SIL +1; taste: relaxed legs +0.375  ||  nothing off, nothing chosen
+     pin-057: 5.5 / 6.5   faults -0.5 (SQ_worn: the shoes look worn)  ||  lifts SIL +0.875; faults -1 (CL1_loud_print: the big, loud floral on the camp collar shirt takes over the outfit); taste: relaxed legs +0.1875
+     rd-018: 7 / 8   nothing off, nothing chosen  ||  held by 1 lift; lifts SIL +2; taste: wide legs +0.375
+  moved by the looks (v16, first reading): 36 (26 up, 10 down)
      ig-008    8.5 -> 7.5  panel 7.5  bomber (navy) + tee (white) + jeans (denim_dark, wide) + basketball_sneaker (white)
-               now: held by 0 lifts; lifts L7 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.5   was: held by 2 lifts; lifts L2 +1, L7 +0.5; taste: wide legs +0.5
+               now: held by a fit or shape fault: lifts can't cover it; lifts L7 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.75   was: lifts L2 +0.5, L7 +0.5; taste: wide legs +0.75
      ig-074    8.5 -> 7.5  panel 8  fleece (brown) + tee (white) + cargos (green, wide) + work_boot (tan_camel)
-               now: held by 0 lifts; lifts L5 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.5, a full hem over the shoe +0.25   was: held by 2 lifts; lifts L2 +0.75, L5 +0.5; taste: wide legs +0.5
-     ig-082    8.5 -> 7.5  panel 7  overshirt (red) + graphic_tee (white) + jeans (black, wide) + canvas_sneaker (black)
-               now: held by 0 lifts; lifts L5 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.5, a full hem over the shoe +0.25   was: lifts L3 +0.5, L5 +0.5; taste: wide legs +0.5
-     ig-085    8.5 -> 7.5  panel 7.5  hoodie (charcoal) + jeans (charcoal, wide) + basketball_sneaker (black)
-               now: held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L7 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.5   was: lifts L1 +0.5, L7 +0.5; taste: wide legs +0.5
-     ig-001    8 -> 7.5  panel 7.5  sweater (brown) + tee (white) + jeans (denim_mid, wide) + loafer (brown)
-               now: held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L6 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.25, a full hem over the shoe +0.25   was: lifts L1 +0.5, L6 +0.25; taste: wide legs +0.25
-     ig-018    7.5 -> 7  panel 8  denim_jacket (black) + tee (white) + jeans (black, wide) + other (tan_camel)
-               now: faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.25, a full hem over the shoe +0.25   was: lifts L2 +0.5; taste: wide legs +0.25
+               now: held by a fit or shape fault: lifts can't cover it; lifts L5 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.75, a full hem over the shoe +0.5   was: lifts L2 +0.375, L5 +0.5; taste: wide legs +0.75
+     ig-009    8 -> 7.5  panel 7.5  tee (white) + sweatshirt (navy) + cargos (denim_dark, wide) + work_boot (tan_camel)
+               now: held by 0 lifts; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.75   was: lifts L2 +0.375; taste: wide legs +0.75
      ig-043    8 -> 7.5  panel 8  sweater (purple) + tee (white) + jeans (denim_mid, wide) + dress_shoe (brown)
-               now: held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L5 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.25, a full hem over the shoe +0.25   was: lifts L1 +0.5, L5 +0.5; taste: wide legs +0.25
+               now: held by a fit or shape fault: lifts can't cover it; lifts L1 +0.25, L5 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.25, L5 +0.5; taste: wide legs +0.375
      ig-052    8 -> 7.5  panel 7.5  sweater (black) + tee (white) + jeans (denim_light, wide) + canvas_sneaker (black)
-               now: held by a fit or shape fault: lifts can't cover it; lifts L1 +0.5, L6 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.5   was: held by 1 lift; lifts L1 +0.5, L6 +0.25; taste: wide legs +0.5
+               now: held by a fit or shape fault: lifts can't cover it; lifts L1 +0.25, L6 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.75   was: lifts L1 +0.25, L6 +0.25; taste: wide legs +0.75
      ig-061    7 -> 6.5  panel 8  sweatshirt (blue) + tee (white) + cargos (olive, wide) + derby (black)
-               now: faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.25   was: taste: wide legs +0.25
+               now: faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.375   was: taste: wide legs +0.375
      ig-079    8 -> 7.5  panel 8  leather_jacket (black) + tee (white) + jeans (grey, wide) + chunky_sneaker (black)
-               now: held by 0 lifts; lifts L6 +0.125; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.5, a full hem over the shoe +0.25   was: held by 1 lift; lifts L2 +1, L6 +0.25; taste: wide legs +0.5
-     ig-091    7.5 -> 7  panel 8  sweater (charcoal) + dress_shirt (off_white_cream) + trousers (charcoal, wide) + loafer (black)
-               now: lifts L1 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.25, a full hem over the shoe +0.125   was: lifts L1 +0.25; taste: wide legs +0.25
-     ig-002    8 -> 8.5  panel 8  sweater (blue) + tee (white) + jeans (black, wide) + loafer (black)
-               now: lifts L1 +0.5, L5 +0.5; taste: wide legs +0.25, a full hem over the shoe +0.125   was: lifts L1 +0.5, L5 +0.5; taste: wide legs +0.25
+               now: held by 0 lifts; lifts L6 +0.125; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.75, a full hem over the shoe +0.5   was: held by 1 lift; lifts L2 +0.5, L6 +0.25; taste: wide legs +0.75
+     ig-082    8 -> 7.5  panel 7  overshirt (red) + graphic_tee (white) + jeans (black, wide) + canvas_sneaker (black)
+               now: held by a fit or shape fault: lifts can't cover it; lifts L5 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.75, a full hem over the shoe +0.5   was: lifts L3 +0.25, L5 +0.5; taste: wide legs +0.75
+     ig-085    8 -> 7.5  panel 7.5  hoodie (charcoal) + jeans (charcoal, wide) + basketball_sneaker (black)
+               now: held by a fit or shape fault: lifts can't cover it; lifts L1 +0.25, L7 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.75   was: lifts L1 +0.25, L7 +0.5; taste: wide legs +0.75
+     pin-001   5 -> 4.5  panel 7  leather_jacket (black) + sweater (red) + jeans (charcoal, skinny) + dress_shoe (black)
+               now: lifts L5 +0.25, L6 +0.25; faults -2.125 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit); taste: skinny legs -0.5   was: lifts L5 +0.25, L6 +0.25; faults -1.875 (PN1_narrow_leg: the skinny ripped jeans read dated; a straight leg balances the outfit); taste: skinny legs -0.5
+     ig-003    7.5 -> 8  panel 7  tee (black) + tee (light_grey) + jeans (denim_light, wide) + loafer (black)
+               now: held by 1 lift; lifts L1 +0.25, L6 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.25, L6 +0.25; taste: wide legs +0.375
+     ig-006    7.5 -> 8  panel 8  sweater (blue) + jeans (white, wide) + loafer (brown)
+               now: lifts L1 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.25; taste: wide legs +0.375
      ig-031    8 -> 8.5  panel 8.5  sweater (blue) + trousers (charcoal, wide) + derby (black)
-               now: lifts L1 +0.5, L5 +0.5; taste: wide legs +0.25, a full hem over the shoe +0.25   was: lifts L1 +0.5, L5 +0.5; taste: wide legs +0.25
+               now: lifts L1 +0.25, L5 +0.5; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.25, L5 +0.5; taste: wide legs +0.375
+     ig-038    8 -> 8.5  panel 8  fleece (burgundy) + chinos (off_white_cream, wide) + work_boot (tan_camel)
+               now: lifts L2 +0.375, L5 +0.5; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L2 +0.375, L5 +0.5; taste: wide legs +0.375
+     ig-039    7.5 -> 8  panel 8  tee (white) + jeans (denim_light, wide) + dress_shoe (brown)
+               now: lifts L1 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.25; taste: wide legs +0.375
+     ig-042    7.5 -> 8  panel 8  chore_coat (navy) + tee (white) + jeans (denim_dark, wide) + dress_shoe (brown)
+               now: lifts L3 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L3 +0.25; taste: wide legs +0.375
+     ig-044    8 -> 8.5  panel 8  bomber (black) + tee (white) + trousers (tan_camel, wide) + dress_shoe (brown)
+               now: lifts L2 +0.5, L7b +0.5; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L2 +0.5, L7b +0.5; taste: wide legs +0.375
+     ig-056    7.5 -> 8  panel 8  chore_coat (black) + tee (white) + jeans (black, wide) + derby (black)
+               now: lifts L3 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L3 +0.25; taste: wide legs +0.375
+     ig-057    7.5 -> 8  panel 7.5  knit_polo (olive) + tee (white) + trousers (black, wide) + dress_shoe (black)
+               now: lifts L7b +0.25; taste: wide legs +0.375, a full hem over the shoe +0.25   was: lifts L7b +0.25; taste: wide legs +0.375
+     ig-067    7.5 -> 8  panel 7.5  tee (black) + jeans (white, wide) + loafer (grey)
+               now: lifts L1 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.25; taste: wide legs +0.375
+     ig-071    7.5 -> 8  panel 8  oxford_shirt (light_blue) + trousers (black, wide) + dress_shoe (black)
+               now: lifts L1 +0.25; taste: wide legs +0.75, a full hem over the shoe +0.5   was: lifts L1 +0.25; taste: wide legs +0.75
      ig-072    7.5 -> 8  panel 8  sweater (burgundy) + trousers (black, wide) + retro_runner (light_grey)
-               now: lifts L1 +0.5, L5 +0.5; faults -0.375 (SD2_too_casual: the shoes are more casual than the clothes); taste: wide legs +0.25, a full hem over the shoe +0.25   was: lifts L1 +0.5, L5 +0.5; faults -0.375 (SD2_too_casual: the shoes are more casual than the clothes); taste: wide legs +0.25
-     ig-103    5 -> 5.5  panel 7  camp_collar_shirt (off_white_cream) + jeans (denim_light, wide) + slides_sandals (black)
-               now: faults -1.875 (SK1_slides_out: slides read as staying in); taste: wide legs +0.25, a full hem over the shoe +0.25   was: faults -1.875 (SK1_slides_out: slides read as staying in); taste: wide legs +0.25
-     ig-105    8.5 -> 9  panel 8  hoodie (blue) + trousers (black, wide) + dress_shoe (black)
-               now: lifts L1 +0.5, L5 +0.5, L7b +0.5; taste: wide legs +0.25, a full hem over the shoe +0.25   was: lifts L1 +0.5, L5 +0.5, L7b +0.5; taste: wide legs +0.25
+               now: lifts L1 +0.25, L5 +0.5; faults -0.375 (SD2_too_casual: the shoes are more casual than the clothes); taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.25, L5 +0.5; faults -0.375 (SD2_too_casual: the shoes are more casual than the clothes); taste: wide legs +0.375
+     ig-078    8 -> 8.5  panel 7.5  flannel_shirt (blue) + jeans (denim_dark, wide) + work_boot (tan_camel)
+               now: held by 2 lifts; lifts L1 +0.25, L5 +0.5; taste: wide legs +0.75, a full hem over the shoe +0.5   was: lifts L1 +0.25, L5 +0.5; taste: wide legs +0.75
+     ig-084    8 -> 8.5  panel 7  jersey (burgundy) + jeans (grey, wide) + work_boot (brown)
+               now: held by 2 lifts; lifts L1 +0.25, L5 +0.5; taste: wide legs +0.75, a full hem over the shoe +0.5   was: lifts L1 +0.25, L5 +0.5; taste: wide legs +0.75
+     ig-094    7.5 -> 8  panel 8  oxford_shirt (green) + trousers (grey, wide) + loafer (black)
+               now: lifts L1 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.25   was: lifts L1 +0.25; taste: wide legs +0.375
+     ig-096    7.5 -> 8  panel 8  polo (white) + trousers (charcoal, wide) + dress_shoe (black)
+               now: lifts L1 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.25   was: lifts L1 +0.25; taste: wide legs +0.375
+     ig-097    6.5 -> 7  panel 5.5  tee (charcoal) + chinos (black, wide) + slides_sandals (black)
+               now: lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.375
+     ig-103    5.5 -> 6  panel 7  camp_collar_shirt (off_white_cream) + jeans (denim_light, wide) + slides_sandals (black)
+               now: faults -1.875 (SK1_slides_out: slides read as staying in); taste: wide legs +0.375, a full hem over the shoe +0.5   was: faults -1.875 (SK1_slides_out: slides read as staying in); taste: wide legs +0.375
+     ig-104    8 -> 8.5  panel 8.5  tee (charcoal) + trousers (off_white_cream, wide) + dress_shoe (black)
+               now: lifts L1 +0.5, L7b +0.5; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.5, L7b +0.5; taste: wide legs +0.375
+     ig-105    8 -> 8.5  panel 8  hoodie (blue) + trousers (black, wide) + dress_shoe (black)
+               now: lifts L1 +0.25, L5 +0.5, L7b +0.5; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.25, L5 +0.5, L7b +0.5; taste: wide legs +0.375
+     ig-113    8 -> 8.5  panel 7.5  knit_polo (black) + trousers (black, wide) + loafer (burgundy)
+               now: held by 2 lifts; lifts L1 +0.25, L7 +0.5; taste: wide legs +0.75, a full hem over the shoe +0.5   was: lifts L1 +0.25, L7 +0.5; taste: wide legs +0.75
+     ig-117    7.5 -> 8  panel 7.5  polo (white) + trousers (black, wide) + dress_shoe (black)
+               now: lifts L1 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.25   was: lifts L1 +0.25; taste: wide legs +0.375
      ig-123    6 -> 6.5  panel 7.5  graphic_tee (off_white_cream) + chinos (khaki_beige, wide) + derby (black)
-               now: lifts L1 +0.5; faults -1.75 (SX1_another_look: the graphic tee and the dressier pieces with it come from different looks); taste: wide legs +0.25, a full hem over the shoe +0.25   was: lifts L1 +0.5; faults -1.75 (SX1_another_look: the graphic tee and the dressier pieces with it come from different looks); taste: wide legs +0.25
-  caps with the looks (cool, first reading): cap H10 2, cap H8 2, held by 0 lifts 36, held by 1 lift 20, held by 2 lifts 19, held by H10 1, held by a fit or shape fault: lifts can't cover it 4, held by occasion 4
+               now: lifts L1 +0.5; faults -1.75 (SX1_another_look: the graphic tee and the dressier pieces with it come from different looks); taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.5; faults -1.75 (SX1_another_look: the graphic tee and the dressier pieces with it come from different looks); taste: wide legs +0.375
+     pin-042   8 -> 8.5  panel 7.5  cardigan (burgundy) + graphic_tee (light_blue) + cargos (olive, wide) + low_profile_sneaker (white)
+               now: held by 2 lifts; lifts L3 +0.25, L5 +0.5; taste: wide legs +0.75, a full hem over the shoe +0.5   was: lifts L3 +0.25, L5 +0.5; taste: wide legs +0.75
+     pin-043   7.5 -> 8  panel 7.5  cardigan (brown) + sweatshirt (sage) + jeans (grey, wide) + low_profile_sneaker (green)
+               now: lifts L5 +0.25; faults -0.375 (SCol1_loud_vs_loud: a loud shoe competing with a loud piece); taste: wide legs +0.75, a full hem over the shoe +0.5   was: lifts L5 +0.25; faults -0.375 (SCol1_loud_vs_loud: a loud shoe competing with a loud piece); taste: wide legs +0.75
+     pin-047   7.5 -> 8  panel 6.5  flannel_shirt (tan_camel) + tee (light_grey) + jeans (denim_mid, relaxed) + work_boot (brown)
+               now: lifts L3 +0.25; taste: relaxed legs +0.375, a full hem over the shoe +0.5   was: lifts L3 +0.25; taste: relaxed legs +0.375
+  caps with the looks (cool, first reading): cap H10 2, cap H8 2, held by 0 lifts 8, held by 1 lift 20, held by 2 lifts 9, held by H10 1, held by a fit or shape fault: lifts can't cover it 8, held by occasion 5
   the panel where they fire: a clear peek (19) 7.32, the H7 pooling cap (0) none (0 at 5.5 or under); every gold photo 7.06
   two narrower versions, for his call (paper only):
-    as built                             steady 206/223  worst band gap 17.3  r with the panel 0.596  his 20: within 1 16/20, r 0.567
-    H7 only when the hem reads pooling   steady 207/223  worst band gap 17.3  r with the panel 0.589  his 20: within 1 16/20, r 0.567
-    no peek under a jacket or coat       steady 207/223  worst band gap 19.5  r with the panel 0.602  his 20: within 1 16/20, r 0.567
-    both                                 steady 207/223  worst band gap 19.1  r with the panel 0.593  his 20: within 1 16/20, r 0.567
-    H7 a 6.5 hold, not a 5.5 sink        steady 206/223  worst band gap 17.3  r with the panel 0.596  his 20: within 1 16/20, r 0.567
-    H7 a 6.5 hold + no peek under a jacket steady 207/223  worst band gap 19.5  r with the panel 0.602  his 20: within 1 16/20, r 0.567
+    as built                             steady 212/223  worst band gap 22.2  r with the panel 0.609  his 20: within 1 16/20, r 0.583
+    H7 only when the hem reads pooling   steady 212/223  worst band gap 17.7  r with the panel 0.588  his 20: within 1 16/20, r 0.583
+    no peek under a jacket or coat       steady 212/223  worst band gap 24.5  r with the panel 0.616  his 20: within 1 16/20, r 0.583
+    both                                 steady 212/223  worst band gap 19.5  r with the panel 0.596  his 20: within 1 16/20, r 0.583
+    H7 a 6.5 hold, not a 5.5 sink        steady 212/223  worst band gap 22.2  r with the panel 0.609  his 20: within 1 16/20, r 0.583
+    H7 a 6.5 hold + no peek under a jacket steady 212/223  worst band gap 24.5  r with the panel 0.616  his 20: within 1 16/20, r 0.583
 
 == B1 on the full set: his 150 (Nov 16): 144 with a reading (left out: C001, C013, C032, C064, C071, C140, heads already under a mosaic block, so the prep sends nothing), plus his first 20 ==
   his 150, by band  3-4.5  0.0%  5-5.5 14.7%  6-6.5 34.7%  7-7.5 20.0%  8-8.5 21.3%  9-9.5  9.3%   mean 6.95
   his first 20 (20):
     v15                                    within 1  17/20 ( 85%)  r 0.457  mean 6.92 (his 6.60)
-    v16 (no second looks)                  within 1  18/20 ( 90%)  r 0.672  mean 6.88 (his 6.60)
-    v16 with the looks (his marks)         within 1  17/20 ( 85%)  r 0.629  mean 6.85 (his 6.60)
-    v16 looks, H7 hold + jacket peek free  within 1  17/20 ( 85%)  r 0.629  mean 6.85 (his 6.60)
+    v16 (no second looks)                  within 1  18/20 ( 90%)  r 0.667  mean 6.88 (his 6.60)
+    v16 with the looks (his marks)         within 1  17/20 ( 85%)  r 0.647  mean 6.90 (his 6.60)
+    v16 looks, H7 hold + jacket peek free  within 1  17/20 ( 85%)  r 0.647  mean 6.90 (his 6.60)
     the AI panel                           within 1  16/20 ( 80%)  r 0.694  mean 6.50 (his 6.60)
   sheet 1 (gold photos) (54):
     v15                                    within 1  41/54 ( 76%)  r 0.619  mean 7.20 (his 7.43)
-    v16 (no second looks)                  within 1  46/54 ( 85%)  r 0.733  mean 7.50 (his 7.43)
-    v16 with the looks (his marks)         within 1  46/54 ( 85%)  r 0.742  mean 7.48 (his 7.43)
-    v16 looks, H7 hold + jacket peek free  within 1  46/54 ( 85%)  r 0.742  mean 7.48 (his 7.43)
+    v16 (no second looks)                  within 1  47/54 ( 87%)  r 0.761  mean 7.40 (his 7.43)
+    v16 with the looks (his marks)         within 1  47/54 ( 87%)  r 0.763  mean 7.41 (his 7.43)
+    v16 looks, H7 hold + jacket peek free  within 1  47/54 ( 87%)  r 0.763  mean 7.41 (his 7.43)
     the AI panel                           within 1  47/54 ( 87%)  r 0.812  mean 7.16 (his 7.43)
   sheet 2 (71):
     v15                                    within 1  53/71 ( 75%)  r 0.455  mean 6.90 (his 6.71)
-    v16 (no second looks)                  within 1  55/71 ( 77%)  r 0.516  mean 6.96 (his 6.71)
-    v16 with the looks (his marks)         within 1  58/71 ( 82%)  r 0.547  mean 6.91 (his 6.71)
-    v16 looks, H7 hold + jacket peek free  within 1  57/71 ( 80%)  r 0.548  mean 6.93 (his 6.71)
+    v16 (no second looks)                  within 1  55/71 ( 77%)  r 0.542  mean 6.94 (his 6.71)
+    v16 with the looks (his marks)         within 1  58/71 ( 82%)  r 0.574  mean 6.88 (his 6.71)
+    v16 looks, H7 hold + jacket peek free  within 1  57/71 ( 80%)  r 0.575  mean 6.90 (his 6.71)
   the 20 new (19):
     v15                                    within 1  13/19 ( 68%)  r 0.208  mean 7.32 (his 6.58)
-    v16 (no second looks)                  within 1  14/19 ( 74%)  r 0.314  mean 7.42 (his 6.58)
-    v16 with the looks (his marks)         within 1  14/19 ( 74%)  r 0.314  mean 7.42 (his 6.58)
-    v16 looks, H7 hold + jacket peek free  within 1  14/19 ( 74%)  r 0.314  mean 7.42 (his 6.58)
+    v16 (no second looks)                  within 1  13/19 ( 68%)  r 0.388  mean 7.29 (his 6.58)
+    v16 with the looks (his marks)         within 1  13/19 ( 68%)  r 0.468  mean 7.32 (his 6.58)
+    v16 looks, H7 hold + jacket peek free  within 1  13/19 ( 68%)  r 0.468  mean 7.32 (his 6.58)
   all 150 with a reading (144):
     v15                                    within 1 107/144 ( 74%)  r 0.517  mean 7.07 (his 6.96)
-    v16 (no second looks)                  within 1 115/144 ( 80%)  r 0.612  mean 7.23 (his 6.96)
-    v16 with the looks (his marks)         within 1 118/144 ( 82%)  r 0.629  mean 7.19 (his 6.96)
-    v16 looks, H7 hold + jacket peek free  within 1 117/144 ( 81%)  r 0.629  mean 7.20 (his 6.96)
+    v16 (no second looks)                  within 1 115/144 ( 80%)  r 0.638  mean 7.16 (his 6.96)
+    v16 with the looks (his marks)         within 1 118/144 ( 82%)  r 0.659  mean 7.14 (his 6.96)
+    v16 looks, H7 hold + jacket peek free  within 1 117/144 ( 81%)  r 0.658  mean 7.15 (his 6.96)
     the AI panel                           within 1  47/54 ( 87%)  r 0.812  mean 7.16 (his 7.43)
   everything he rated (164):
     v15                                    within 1 124/164 ( 76%)  r 0.513  mean 7.05 (his 6.92)
-    v16 (no second looks)                  within 1 133/164 ( 81%)  r 0.620  mean 7.18 (his 6.92)
-    v16 with the looks (his marks)         within 1 135/164 ( 82%)  r 0.632  mean 7.15 (his 6.92)
-    v16 looks, H7 hold + jacket peek free  within 1 134/164 ( 82%)  r 0.632  mean 7.16 (his 6.92)
+    v16 (no second looks)                  within 1 133/164 ( 81%)  r 0.641  mean 7.12 (his 6.92)
+    v16 with the looks (his marks)         within 1 135/164 ( 82%)  r 0.658  mean 7.11 (his 6.92)
+    v16 looks, H7 hold + jacket peek free  within 1 134/164 ( 82%)  r 0.657  mean 7.12 (his 6.92)
     the AI panel                           within 1  63/74 ( 85%)  r 0.795  mean 6.98 (his 7.20)
-B1 (all 164 rated photos with a reading, v16) within 1 on 8 in 10 (133/164) and r >= 0.69 (0.620): FAIL
-  v16's own shares on his 150 with a reading  3-4.5  0.7%  5-5.5  6.2%  6-6.5 20.8%  7-7.5 40.3%  8-8.5 31.2%  9-9.5  0.7%   (his: above)
+B1 (all 164 rated photos with a reading, v16) within 1 on 8 in 10 (133/164) and r >= 0.69 (0.641): FAIL
+  v16's own shares on his 150 with a reading  3-4.5  0.7%  5-5.5  6.2%  6-6.5 20.8%  7-7.5 45.1%  8-8.5 27.1%  9-9.5  0.0%   (his: above)
 
 == The Y34 taste calls against his ratings (164 rated photos with a reading; his mean 6.92) ==
-  1. nothing off, nothing chosen (v16 shows 7.0) (17): his mean 6.91 (6.5 or under 9, 7+ 8); v16 7.06; panel 6.50 (5)
+  1. nothing off, nothing chosen (v16 shows 7.0) (17): his mean 6.91 (6.5 or under 9, 7+ 8); v16 7.00; panel 6.50 (5)
   2. slides out of the house (SK1) (8): his mean 6.38 (6.5 or under 5, 7+ 3); v16 6.25; panel 5.38 (4)
   3. one accent (L5) the only lift (18): his mean 6.11 (6.5 or under 14, 7+ 4); v16 6.78; panel 6.31 (8)
-     L5 among other lifts (15): his mean 7.57 (6.5 or under 6, 7+ 9); v16 8.17; panel 7.78 (9)
-     no lift at all (45): his mean 6.43 (6.5 or under 30, 7+ 15); v16 6.42; panel 6.03 (16)
-     one lift, not L5 (63): his mean 7.03 (6.5 or under 27, 7+ 36); v16 7.24; panel 6.92 (25)
-     two or more lifts (38): his mean 7.68 (6.5 or under 10, 7+ 28); v16 8.18; panel 7.86 (25)
+     L5 among other lifts (15): his mean 7.57 (6.5 or under 6, 7+ 9); v16 7.87; panel 7.78 (9)
+     no lift at all (45): his mean 6.43 (6.5 or under 30, 7+ 15); v16 6.40; panel 6.03 (16)
+     one lift, not L5 (63): his mean 7.03 (6.5 or under 27, 7+ 36); v16 7.29; panel 6.92 (25)
+     two or more lifts (38): his mean 7.68 (6.5 or under 10, 7+ 28); v16 7.87; panel 7.86 (25)
   4. pants pile on the shoe (H7, with looks): none in his ratings
-     the look says the hem mostly covers the shoe (any leg) (26): his mean 7.96 (6.5 or under 4, 7+ 22); v16 7.67; panel 7.40 (21)
+     the look says the hem mostly covers the shoe (any leg) (26): his mean 7.96 (6.5 or under 4, 7+ 22); v16 7.75; panel 7.40 (21)
   5. a top clearly below the outer piece (with looks) (8): his mean 7.31 (6.5 or under 4, 7+ 4); v16 6.94; panel 7.10 (5)
      ... under a jacket or coat (4): his mean 6.88 (6.5 or under 3, 7+ 1); v16 6.88; panel 7.00 (1)
      ... under anything else (4): his mean 7.75 (6.5 or under 1, 7+ 3); v16 7.00; panel 7.12 (4)
      the top shows a little (costs nothing today) (16): his mean 7.66 (6.5 or under 3, 7+ 13); v16 7.62; panel 7.56 (8)
 
-8 BAR CHECK(S) FAIL (the bars are judged on the stored readings; round 2 above is reported beside them)
+6 BAR CHECK(S) FAIL (the bars are judged on the stored readings; round 2 above is reported beside them)

@@ -25,7 +25,7 @@ NOTED = [("C033", "white tee, wide jorts, Timbs", "8"), ("C142", "tee, black wid
          ("ig-065", "purple graphic tee, brown wide shorts, slides (summer)", "fine in summer")]
 NOV16 = dict(lift_off=[], h7_tip=True, long_top=0.5, long_top_read="reading", shorts=0, one_lift=0.5, leg_skinny=0,
              leg_slim=0, leg_wide=0.5, hem_plus=0.25 * 2, shorts_wide=0.5, shorts_above=0.25, color=0.5, accent_by_look=True)
-STEADY = dict(P.TUNE["v16"]["taste"], sil=0, sil_line=0, sil_tonal=0, accent_by_look=True, one_lift=1.0)
+STEADY = dict(P.TUNE["v16"]["taste"], sil=0, sil_line=0, sil_tonal=0, accent_by_look=True, one_lift=1.0, one_lift_mode=None)
 
 
 def main():

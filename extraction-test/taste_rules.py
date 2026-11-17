@@ -38,7 +38,10 @@ FIXED = {"lift_off": [], "h7_tip": True, "long_top": 0.5, "long_top_read": "read
          # Nov 17, card by card: one color is free (his "point"); slides fine on a warm casual day; runners fine with
          # casual pieces
          "color": 0, "sandals_warm": True, "runners_casual": True,
-         "sil_mode": "alone"}                                          # SIL lifts a great shape when nothing else does
+         "sil_mode": "alone",
+         # round 5 (Nov 17): steadier steps: the first lift counts half (not only a lone lift), a halved lift still
+         # counts for stacking, relaxed legs get half the wide-leg and silhouette credit
+         "one_lift_mode": "first", "stack_prehalf": True, "relaxed_factor": 0.5}                                          # SIL lifts a great shape when nothing else does
 GRID = {"sil": [0.5, 0.75, 1.0, 1.25, 1.5, 1.75], "sil_line": [0.5, 0.75, 1.0], "sil_tonal": [0, 0.25, 0.5],
         "leg_skinny": [0.5, 1.0, 1.5],                                # Nov 17: skinny costs in every look, tailored too
         "leg_wide": [0, 0.25, 0.5, 0.75],

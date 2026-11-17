@@ -502,7 +502,7 @@ TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
                    v16_alpha=0.5, v16_beta=0.25,
                    # the curve: shown = 7 + a(raw - 7) under 7, 7 + b(raw - 7) over it; fitted once on the gold set
                    # to the target shares by ../v16_paper.py --fit, then fixed here
-                   curve=(1.1, 0.85, 7.0),                          # refit Nov 16 with his taste rules on (was 1.0, 0.8)
+                   curve=(1.1, 0.7, 7.0),                           # Nov 17 round 5: flatter top for steadiness (was 1.1, 0.85)
                    # layer.5 / ix.33: knit over knit (a cardigan over a sweater) on Style
                    v16_knit=1.5,
                    # H9 as a cap: off, the sleeve read flips between readings (it stays v15's Fit charge)
@@ -514,7 +514,8 @@ TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
                    # casual day, runners fine with casual pieces, skinny costs in every look; refit on all 164
                    taste=dict(lift_off=[], h7_tip=True, long_top=0.5, long_top_read="reading", shorts=0, one_lift=0.5,
                               leg_slim=0, color=0, sandals_warm=True, runners_casual=True, sil_mode="alone",
-                              sil=1.25, sil_line=0.5, sil_tonal=0, leg_skinny=0.5, leg_wide=0.5, hem_plus=0.25,
+                              one_lift_mode="first", stack_prehalf=True, relaxed_factor=0.5,   # round 5: steadiness
+                              sil=1.75, sil_line=0.5, sil_tonal=0.25, leg_skinny=0.5, leg_wide=0.75, hem_plus=0.5,
                               shorts_wide=0.5, shorts_above=0.5))
 VERSIONS["v16"] = "parts-proto-16 (Nov 14, 2026, on paper)"
 HL_LAYERS = {"hoodie", "sweatshirt"}                             # v15 PRO-17: worn as the layer (outerwear) ...
@@ -1994,6 +1995,8 @@ def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
             cols = {g.get("color_family") for g in o["tops"] + o["outers"] + [B]}
             tonal = all(c in R.NEUTRALS or str(c).startswith("denim") for c in cols if c)
             size = T["sil"] * (1.0 if full else T.get("sil_line", 1.0)) + (T.get("sil_tonal", 0.0) if tonal else 0.0)
+            if full and legb == "relaxed" and sub_b not in SHORTS:     # round 5: relaxed sits between straight and wide
+                size *= T.get("relaxed_factor", 1.0)                  # (the read flips straight/relaxed), partial credit
             what = (f"{'roomy shorts' if sub_b in SHORTS else legb + ' ' + sub_b.replace('_', ' ')} over "
                     f"{ss.replace('_', ' ')}s" if full else f"a straight line down to the {ss.replace('_', ' ')}s")
             sil = ("SIL", round(size, 3), f"a strong silhouette: {what}" + (", all in neutrals" if tonal else ""), False)
@@ -2022,6 +2025,11 @@ def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
     for a, b, c, d in lifts:
         if a in off:
             continue
+        if a == "L5" and T.get("accent_agree"):                       # round 5: the accent lift only when the outfit
+            B0 = o["bottom"]                                          # has exactly one color beside the neutrals (a
+            cl = {g.get("color_family") for g in o["tops"] + o["outers"] + ([B0] if B0 else [])}   # steadier fact)
+            if len({c for c in cl if c and c not in R.NEUTRALS and not str(c).startswith("denim")}) != 1:
+                continue
         if a == "L5" and T.get("accent_by_look"):
             m = max(L5_BY_LOOK.get(lk, 1) for lk in looks)
             if not m:
@@ -2034,9 +2042,17 @@ def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
             b = round(b * m, 3)
         out.append((a, b, c, d))
     lifts = out
-    if len(lifts) == 1 and T.get("one_lift", 1.0) != 1.0 and lifts[0][0] != "SIL":   # a great shape alone still lifts
+    stack_n = sum(1 for x in lifts if x[1] >= 0.5)                   # lifts that count for stacking, before halving
+    if T.get("one_lift_mode") == "first" and T.get("one_lift", 1.0) != 1.0 and lifts:
+        # round 5: the first (largest) lift counts at one_lift, the rest in full: one lift against two is a smaller step
+        big = max(range(len(lifts)), key=lambda i: lifts[i][1])
+        if lifts[big][0] != "SIL":
+            a, b, c, d = lifts[big]
+            lifts = lifts[:big] + [(a, round(b * T["one_lift"], 3), c, d)] + lifts[big + 1:]
+    elif len(lifts) == 1 and T.get("one_lift", 1.0) != 1.0 and lifts[0][0] != "SIL":   # a great shape alone still lifts
         a, b, c, d = lifts[0]
         lifts = [(a, round(b * T["one_lift"], 3), c, d)]
+    o["stack_n"] = stack_n if T.get("stack_prehalf") else None
     if pending_sil is not None and T.get("sil_mode") == "single":
         if not lifts or lifts[0][1] < pending_sil[1]:
             lifts = [pending_sil]
@@ -2060,7 +2076,7 @@ def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
             items.append((-T["shorts_above"], "T_shorts_above", "shorts above the knee"))
     elif B is not None:
         if leg in ("relaxed", "wide"):
-            m = max(_look_val("leg_wide", looks))
+            m = max(_look_val("leg_wide", looks)) * (T.get("relaxed_factor", 1.0) if leg == "relaxed" else 1.0)
             if T.get("leg_wide") and m:
                 items.append((T["leg_wide"] * m, "T_leg", f"{leg} legs"))
             mh = max(_look_val("hem_plus", looks))
@@ -2147,6 +2163,8 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
     subs = {g.get("subcategory") for g in o["main"]}
     one_look = bool(o["det"]) or ("suit_jacket" in subs and "suit_trousers" in subs) or any(x[0] == "L7b" for x in lifts)
     n = sum(1 for x in lifts if x[1] >= 0.5)
+    if o.get("stack_n") is not None:                                  # round 5: a halved lift still counts as a lift
+        n = max(n, o["stack_n"])
     anything_off = (any(r["points"] < 0 and r["check"] not in waived for p in parts.values() for r in p.reasons)
                     or bool(cond["faults"]) or bool(caps))
     owned_lines = sorted(owned & {r["check"] for p in parts.values() for r in p.reasons})

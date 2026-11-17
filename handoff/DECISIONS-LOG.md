@@ -3309,3 +3309,20 @@ Contradictions settled and decisions changed during the build. Newest last.
       - That's his call. Recommended: keep his asks on paper and steady the leg read before T69.
     - **Not read, for later:** a sweater on the shoulders; socks (the echo case).
     - **Lesson:** the same fix can help or hurt depending on how it combines. SIL alone matched him (−0.16) and stacked it overshot (−1.1), so test interactions, not just single rules.
+
+481. **Steadier at no cost: 209 → 213 of 223, still short of 218; a leg-width look designed and quoted, not run (T68 round 5, Nov 17, $0).**
+    - **The founder:** "Yes, you can test them, and as you test them, explain how silhouettes are made... Plus, the test costs no money, right?"
+    - **Built** (`_v16_taste`), measured one at a time with `extraction-test/steadiness.py`:
+      - the first lift counts half (`one_lift_mode="first"`), a smaller step from one lift to two;
+      - a halved lift still counts for stacking (`stack_prehalf`);
+      - relaxed legs get half the wide-leg and silhouette credit (`relaxed_factor`);
+      - the curve's top flattened to 0.7.
+      - The sizes were refit on all 164 (SIL 1.75, wide 0.75, hem 0.5, tonal 0.25).
+      - "Accent only with exactly one color" changed nothing and is off.
+    - **Results:**
+      - Held out: 81.2% within a point, r 0.64 (raw); 80.3%, 0.63 (key).
+      - B3 17/18 (was 15); B5 gold 19.5; B6 213/223 FAIL.
+      - The suit drops to 7.5 under the flatter curve.
+    - **Why it stops at 213:** 8 of the 10 remaining flips are the scoring call reading the same leg as straight once and relaxed or wide the other time. v15's own shape lifts move with that read, so no rule can hide it.
+    - **The paid fix (his OK needed):** a narrow leg-width look asking what can be seen (`prompt_look_w.txt`). Stage 1 about 25¢, stage 2 about 74¢, about $0.99 in all, stop $1.10 (at look L's measured 0.209¢ with thinking).
+    - **Lesson:** a rule built on a read can't be steadier than the read. The free fixes shrink the steps a flip causes; only a steadier read removes the flip.

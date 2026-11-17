@@ -532,3 +532,102 @@ Only the steady version passes B6. Making the silhouette lift a top-up, or takin
 **His review page is regenerated** (port 8767, same address): 132/164 within a point, r 0.62 on these photos; 82% and 0.63 on unseen ones. Shorts photos are read as a warm day.
 
 **The rubric diff is updated** (not applied): [TST-SIL], [TST-sk], [TST-sd] and [TST-rn]; [TST-d] off; [LFT-5] in every look; the shorts-above-knee and hem sizes refit.
+
+## Round 5: steadier, at no cost (Nov 17, $0)
+
+His answer to Y41 was "Yes, you can test them... explain how silhouettes are made and stuff like how the silhouettes are checked. Plus, the test costs no money, right?" So his fixes stay; this round makes them steadier for free, and quotes the one paid step.
+
+### How a silhouette is made, and how the code checks it
+
+A silhouette is the outline the outfit makes from shoulder to shoe. The creators judge it before color ("shape comes before color", sil.1). It's built from five things:
+
+1. **The top: how big and how long.**
+   - **What the creators say:** a fitted or boxy top that ends at the belt makes the outfit look intentional. A top so long it hangs toward the thigh cuts the legs short; Tim calls that his biggest pet peeve (prop.6).
+   - **Example:** a white tee ending at the belt over wide jorts (good); the same tee hanging to mid-thigh (drags).
+   - **What the code reads:** the scoring call's `length` (at_belt, mid_fly, below_crotch) and `volume` (1–5) for each top. `below_crotch` turns on the long-top charge and blocks the silhouette lift. **How steady:** right on about half the long tops it sees, and rarely wrong when it says "long" (T98). The Mac's body ruler is better (8/8) but isn't on the phone yet.
+2. **The waist break: where the top half stops.**
+   - **What the creators say:** a tuck, a top at the belt, or a short jacket that stops where the trousers start (prop.3). It splits the body about a third over two thirds instead of in half.
+   - **Example:** a tucked tee into wide trousers; a bomber ending at the waist over straight jeans.
+   - **What the code reads:** `tucked` (none, half, full), the top's `length`, and the jacket type (a bomber, denim or leather jacket counts as short). These drive the shape lifts already in v16 (L1 a deliberate shape, L2 a short layer over a full leg).
+3. **The leg: how wide.**
+   - **What the creators say:** skinny is out for three of the four; straight works with everything; relaxed and wide are the current shape (sil.8). "One loose half, one fitted half" is the reliable great shape (sil.2); a big top over thin legs is the classic bad one (sil.3).
+   - **Example:** a fitted tee over wide trousers (great); an oversized hoodie over skinny jeans (drags: capped at 5.5).
+   - **What the code reads:** `leg_shape` (skinny, slim, straight, relaxed, wide) and `volume` for shorts.
+   - **How steady:** "skinny" is never wrong; "slim or skinny" flips about 1 in 7; straight against relaxed or wide is the read that flips most, and it causes 8 of the 11 score flips left today (below).
+4. **The hem and the shoe's weight.**
+   - **What the creators say:** the trouser should reach the shoe cleanly (prop.1). A heavy shoe wants a generous leg (prop.10); a slim low shoe under a full, long leg is a great contrast (prop.11); big shorts work with slim or bulky shoes (prop.15).
+   - **Example:** wide jorts over Timbs or Jordans; wide trousers over loafers.
+   - **What the code reads:** the shoe type from the scoring call (steady), and look L's `covers_shoe` on the shoe close-up (97% steady). A full hem over the shoe on a wide leg is a small plus.
+5. **The outline as a whole.**
+   - **What the creators say:** in one color or all neutrals "the outline is the whole outfit" (sil.7): a good shape looks better, a bad one worse.
+   - **Example:** black tee, black wide shorts, white sneakers.
+   - **What the code reads:** the color families of the top, jacket and bottoms. All neutrals add a quarter point to the silhouette lift.
+
+**The silhouette lift (SIL) puts these together.** It fires when:
+- nothing is off in fit or proportions, there's no dealbreaker, and the top doesn't hang past the crotch;
+- **and** the leg is full (wide or relaxed trousers, or roomy or wide shorts) over a real shoe, not slides or runners, **or** a matched suit runs a straight line to dressy shoes (at half size).
+
+How it counts:
+- **+1.75**, and +2.0 in all neutrals; a relaxed leg gets half, since the read wavers between straight and relaxed.
+- It lifts **only when nothing else does**: a tuck or short layer already credits the same shape.
+- It counts as a lift for stacking, so "nothing off and a great shape" reaches 8.
+
+**Shapes that drag**, and how they're charged:
+
+| Shape | Charge |
+|---|---|
+| A hoodie or oversized top over skinny legs | cap 5.5 |
+| An oversized top over slim legs | cap 6.5 |
+| Chunky sneakers under slim or skinny legs | cap 6.0 |
+| Skinny legs on their own | −0.5 in every look |
+| A long untucked top with no jacket | −0.5 (half in streetwear) |
+
+### The free fixes, one at a time
+
+Steadiness is gold photos within half a point across two readings; the bar is 218/223. Held out is 8 fresh splits on raw ratings.
+
+| Change | Steady | Held out |
+|---|---|---|
+| His asks (round 4) | 209 | 81.6%, r 0.63 |
+| + relaxed legs get half the wide-leg and silhouette credit | 208 | 82.0%, 0.64 |
+| + a lift halved by the one-lift rule still counts for stacking (alone) | 210 | 81.2%, 0.64 |
+| + the first lift counts half (not only a lone lift), a smaller step from one lift to two (alone) | 213 | 81.2%, 0.63 |
+| + the accent only with exactly one color (alone) | 209 | 81.6%, 0.63 |
+| The three that help, together | 212 | 81.4%, 0.64 |
+| + the curve's top flattened to 0.7 (was 0.85) | 214 | (refit) |
+| **Engine now** (all of the above, sizes refit on all 164) | **213** | **81.2%, r 0.64** (key 80.3%, 0.63) |
+
+**Every bar now:**
+
+| Bar | Result | Before |
+|---|---|---|
+| B1, held out | 81.2% (passes 80%), r 0.64 (fails 0.69) | |
+| B2, creators' pairs | 6/6 | |
+| B3, anchors | **17/18** | 15 |
+| B4, dealbreaker examples | all but H7 (his call) | |
+| B5, worst band gap | gold 19.5, his checks 21.6 | 20.9 / 21.6 |
+| **B6, steadiness** | **213/223: FAIL** (bar 218) | 209 |
+| B7, v15 untouched | 501/501, `graded_look_check.py` passes | |
+
+**What's left is the leg read.** 8 of the 10 remaining flips are a leg read straight on one reading and relaxed or wide on the other (`extraction-test/steadiness.py` lists each). When that read flips, v15's own shape lifts move with it, not only the new rules, so no rule can hide it.
+
+**His noted outfits now** (`results/taste1/noted_outfits.md`):
+- **Moved up:** the light-blue oxford with wide trousers is now 8.
+- **Hold at 8:** the three wide-shorts outfits.
+- **Moved down:** the black suit drops to 7.5 under the flatter curve (it was 8; his target is 9). That's the price of steadiness at the top of the scale.
+
+The review page is refreshed: 133/164 within a point, r 0.65, on these photos.
+
+### The one paid step: a leg-width second look (designed, not run; his OK needed)
+
+`extraction-test/prompt_look_w.txt`, `schema_look_w.json`, `leg_look.py`. It asks what can be seen, the way look L's `covers_shoe` does (97% steady), not a category:
+- does the fabric cling, skim or hang away at the knee;
+- is the leg opening narrower than the shoe, about the same, or wider.
+
+It runs on the lower close-up, only for photos in pants. It would replace `leg_shape` for the silhouette lift and the leg rules.
+
+**Cost, counting thinking tokens:** look L's measured 0.209¢ a call (1,376 in, 15 out, 267 thinking on 450 calls).
+- **Stage 1, about 25¢** (stop 30¢): the 9 gold photos whose leg read flips plus 51 at random, two runs each. It checks the look is steady (90% or better) and fixes the flips.
+- **Stage 2, about 74¢, only if stage 1 passes:** the other 140 gold photos twice and the 75 rated photos in pants once, for steadiness and his ratings in full.
+- **Total about $0.99, hard stop $1.10.**
+- **In the app** it would be a third look, about +0.21¢ on each check with pants.
