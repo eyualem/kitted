@@ -568,3 +568,160 @@ describe('KC2.2 · a piece he does not own is drawn in a named color', () => {
     expect(pieceArtSpec(closetRow(it) as unknown as ArtItem)).toEqual(artSpec(it));
   });
 });
+
+// ──────────────────────────────────────────────────────────────────────────────────────────────── round 2: gaps the verifier planted
+// Each test builds the flat itself and calls renderFlat, so it pins the drawing's own dispatch and branches (flats.ts),
+// not artSpec. Markers are structural: a path or element only that drawing has. Added, never loosening an earlier test.
+const acc = (type: 'watch' | 'belt' | 'cap' | 'beanie', color: string, extra: Record<string, unknown> = {}) =>
+  ({ kind: 'accessory', type, color, ...extra }) as unknown as FlatSpec;
+const COLORS: Record<string, string> = { black: BLACK, white: WHITE, navy: FAMILY_HEX.navy, tan: FAMILY_HEX.tan_camel, brown: FAMILY_HEX.brown };
+const count = (xml: string, needle: string) => xml.split(needle).length - 1;
+const CAP_BRIM = 'd="M142,98 C170,92 198,106 198,124 C190,138 160,140 122,140 Z"';
+const CAP_WRAP = '<g transform="translate(0,12)">';
+const CAP_BUTTON = '<circle cx="96" cy="33" r="6"';
+const BEANIE_CUFF = 'd="M26,106 Q26,100 34,100 L166,100';
+const BEANIE_CUFF_RIBS = 'M36,104 V164';
+const BEANIE_CROWN_RIBS = 'M94,32 C';
+const BELT_TURN = 'rotate(-8 100 100)';
+const WATCH_CROWN = '<rect x="134" y="92" width="11" height="16"';
+
+describe('KC9.1 · which drawing each accessory type gets (round 2, N12)', () => {
+  it('KC9.1 · a cap flat draws a cap (brim and button) and a beanie flat draws a beanie (rib and cuff), in every scheme and color', () => {
+    for (const scheme of SCHEMES) {
+      for (const [name, hex] of Object.entries(COLORS)) {
+        const cap = renderFlat(acc('cap', hex), { scheme, id: 'x' });
+        const beanie = renderFlat(acc('beanie', hex), { scheme, id: 'x' });
+        const label = `${name} ${scheme}`;
+        // cap: a brim, a button on the crown, panel seams, and no knit
+        expect([label, cap.includes(CAP_BRIM)]).toEqual([label, true]);
+        expect([label, cap.includes(CAP_WRAP)]).toEqual([label, true]);
+        expect([label, count(cap, CAP_BUTTON)]).toEqual([label, 1]);
+        expect([label, count(cap, '<circle')]).toEqual([label, 3]); // the button and two eyelets
+        expect([label, cap.includes(BEANIE_CUFF)]).toEqual([label, false]);
+        expect([label, cap.includes(BEANIE_CUFF_RIBS)]).toEqual([label, false]);
+        expect([label, cap.includes(BEANIE_CROWN_RIBS)]).toEqual([label, false]);
+        // beanie: knit ribs on the crown, a ribbed cuff, and no brim, button or circle at all
+        expect([label, beanie.includes(BEANIE_CUFF)]).toEqual([label, true]);
+        expect([label, beanie.includes(BEANIE_CUFF_RIBS)]).toEqual([label, true]);
+        expect([label, beanie.includes(BEANIE_CROWN_RIBS)]).toEqual([label, true]);
+        expect([label, count(beanie, '<circle')]).toEqual([label, 0]);
+        expect([label, beanie.includes(CAP_BRIM)]).toEqual([label, false]);
+        expect([label, beanie.includes(CAP_WRAP)]).toEqual([label, false]);
+        expect([label, beanie.includes(CAP_BUTTON)]).toEqual([label, false]);
+      }
+    }
+  });
+
+  it('KC9.1 · each drawn kind carries its own marker, so no type draws as another (watch, belt, cap, beanie)', () => {
+    const marks: Record<string, string> = { watch: WATCH_CROWN, belt: BELT_TURN, cap: CAP_BRIM, beanie: BEANIE_CUFF };
+    for (const scheme of SCHEMES) {
+      for (const hex of [BLACK, WHITE, COLORS.brown!]) {
+        for (const type of FOUR) {
+          const xml = renderFlat(acc(type, hex), { scheme, id: 'x' });
+          for (const [other, mark] of Object.entries(marks)) expect([scheme, hex, type, other, xml.includes(mark)]).toEqual([scheme, hex, type, other, other === type]);
+        }
+      }
+    }
+    // and the same through a drawn piece: the kind he names is the drawing he gets
+    for (const kind of FOUR) {
+      for (const scheme of SCHEMES) {
+        const xml = drawSpec({ kind, family: 'navy', name: 'x' }, scheme);
+        for (const [other, mark] of Object.entries(marks)) expect([kind, other, xml.includes(mark)]).toEqual([kind, other, other === kind]);
+      }
+    }
+  });
+});
+
+describe('KC9.2 · a digital face and a bracelet draw their own parts (round 2, N1, N10, N2)', () => {
+  const DISPLAY = '#0C0E11';
+  const LIT = '#B7F0D2';
+  const METALS = ['gold', 'silver', 'black'] as const;
+
+  it('KC9.2 · a digital watch draws the dark display and lit digits and no hands; an analog one draws hands and neither', () => {
+    for (const scheme of SCHEMES) {
+      for (const metal of METALS) {
+        for (const color of [BLACK, COLORS.brown!, WHITE]) {
+          const tag = `${scheme} ${metal} ${color}`;
+          const digital = renderFlat(acc('watch', color, { metal, face: 'digital' }), { scheme, id: 'x' });
+          const analog = renderFlat(acc('watch', color, { metal }), { scheme, id: 'x' });
+          // digital: the display panel, the lit-digit stroke (the ghost digits at .1 and the lit ones at full), the colon dots
+          expect([tag, digital.includes(DISPLAY)]).toEqual([tag, true]);
+          expect([tag, count(digital, `stroke="${LIT}"`)]).toEqual([tag, 2]);
+          expect([tag, count(digital, `fill="${LIT}"`)]).toEqual([tag, 2]);
+          expect([tag, count(digital, '<polygon')]).toEqual([tag, 0]);
+          expect([tag, digital.includes('#F6F5F1')]).toEqual([tag, false]); // no analog dial
+          expect([tag, digital.includes('#1A1C22')]).toEqual([tag, false]);
+          // analog: two hands, a dial, no display and no lit digits
+          expect([tag, count(analog, '<polygon')]).toEqual([tag, 2]);
+          expect([tag, analog.includes(DISPLAY)]).toEqual([tag, false]);
+          expect([tag, analog.includes(LIT)]).toEqual([tag, false]);
+          expect([tag, analog.includes(metal === 'black' ? '#1A1C22' : '#F6F5F1')]).toEqual([tag, true]);
+          expect([tag, analog.includes(metal === 'black' ? '#F6F5F1' : '#1A1C22')]).toEqual([tag, false]);
+        }
+      }
+      // an explicit 'analog' is the unset face
+      expect(renderFlat(acc('watch', BLACK, { metal: 'gold', face: 'analog' }), { scheme, id: 'x' })).toBe(renderFlat(acc('watch', BLACK, { metal: 'gold' }), { scheme, id: 'x' }));
+    }
+    // through a drawn piece, as the user adds one
+    for (const scheme of SCHEMES) {
+      const d = drawSpec({ kind: 'watch', family: 'black', name: 'x', metal: 'gold', face: 'digital' }, scheme);
+      const a = drawSpec({ kind: 'watch', family: 'black', name: 'x', metal: 'gold' }, scheme);
+      expect([d.includes(DISPLAY), d.includes(LIT), count(d, '<polygon')]).toEqual([true, true, 0]);
+      expect([a.includes(DISPLAY), a.includes(LIT), count(a, '<polygon')]).toEqual([false, false, 2]);
+    }
+  });
+
+  it('KC9.2 · a bracelet draws many links in the metal and no strap fill; a strap draws a keeper and holes and no links', () => {
+    for (const scheme of SCHEMES) {
+      for (const metal of METALS) {
+        for (const color of [COLORS.brown!, COLORS.navy!, WHITE]) {
+          const tag = `${scheme} ${metal} ${color}`;
+          const bracelet = renderFlat(acc('watch', color, { metal, bracelet: true }), { scheme, id: 'x' });
+          const strap = renderFlat(acc('watch', color, { metal }), { scheme, id: 'x' });
+          // bracelet: 6 links above and 6 below, each with a lit inset, the links filled with the metal; the crown is the one other rect
+          expect([tag, count(bracelet, '<rect x="77"')]).toEqual([tag, 12]);
+          expect([tag, count(bracelet, '<rect x="86"')]).toEqual([tag, 12]);
+          expect([tag, count(bracelet, '<rect')]).toEqual([tag, 25]);
+          expect([tag, count(bracelet, `<rect x="77" y=`) === count(bracelet, `width="46" height="8.2" rx="2.5" fill="${METAL_HEX[metal]}"`)]).toEqual([tag, true]);
+          expect([tag, count(bracelet, `fill="${METAL_HEX[metal]}" stroke=`) >= 12]).toEqual([tag, true]);
+          // no strap: nothing is filled or stroked with the strap's color, and no keeper loop or holes
+          expect([tag, bracelet.toLowerCase().includes(color.toLowerCase())]).toEqual([tag, false]);
+          expect([tag, bracelet.includes('M75,143 h50 v7 h-50 Z')]).toEqual([tag, false]);
+          expect([tag, count(bracelet, 'r="2.3"')]).toEqual([tag, 0]);
+          // strap: its color fills both straps, a keeper loop and three holes, and not one link
+          expect([tag, count(strap, 'fill="' + color + '" stroke=')]).toEqual([tag, 2]);
+          expect([tag, count(strap, '<rect x="77"')]).toEqual([tag, 0]);
+          expect([tag, count(strap, '<rect')]).toEqual([tag, 1]); // the crown
+          expect([tag, strap.includes('M75,143 h50 v7 h-50 Z')]).toEqual([tag, true]);
+          expect([tag, count(strap, 'r="2.3"')]).toEqual([tag, 3]);
+          expect([tag, bracelet === strap]).toEqual([tag, false]);
+        }
+      }
+    }
+    // a multicolor watch from a drawn piece is that bracelet, in its metal
+    for (const metal of METALS) {
+      const xml = drawSpec({ kind: 'watch', family: 'multicolor', name: 'x', metal });
+      expect([metal, count(xml, '<rect x="77"')]).toEqual([metal, 12]);
+      expect([metal, xml.includes(METAL_HEX[metal])]).toEqual([metal, true]);
+    }
+  });
+
+  it("KC9.2 · a bracelet's halo follows the metal, not the strap color", () => {
+    const HALO = '<g fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="5"';
+    for (const metal of ['gold', 'silver'] as const) {
+      // a black strap color in dark: the metal is bright, so a bracelet has no halo at all (a strap would)
+      const bracelet = renderFlat(acc('watch', BLACK, { metal, bracelet: true }), { scheme: 'dark', id: 'x' });
+      expect([metal, count(bracelet, HALO)]).toEqual([metal, 0]);
+      expect([metal, count(renderFlat(acc('watch', BLACK, { metal }), { scheme: 'dark', id: 'x' }), HALO)]).toEqual([metal, 1]); // the strap's; the bright case has none
+    }
+    // a black metal bracelet in dark: a halo for the links and one for the case, even when the strap color is bright
+    for (const color of [BLACK, WHITE, COLORS.tan!]) {
+      const dark = renderFlat(acc('watch', color, { metal: 'black', bracelet: true }), { scheme: 'dark', id: 'x' });
+      expect([color, count(dark, HALO)]).toEqual([color, 2]);
+    }
+    // a gold bracelet, strap color black, in light: no rim and no halo
+    const light = renderFlat(acc('watch', BLACK, { metal: 'gold', bracelet: true }), { scheme: 'light', id: 'x' });
+    expect(count(light, HALO)).toBe(0);
+    expect(count(light, 'stroke-opacity=".12" stroke-width="2.4"')).toBe(0);
+  });
+});
