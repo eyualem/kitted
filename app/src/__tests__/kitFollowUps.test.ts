@@ -77,6 +77,72 @@ describe('KC1.3 · the checker keeps at most 3 taps, in order', () => {
     expect(check(['Show me jackets', bad, 'Add a watch'])).toEqual(['Show me jackets', 'Add a watch']);
   });
 
+  // Round 2 (verifier): a one-word all-capitals tap is dropped by the all-caps rule alone (the capital-word check
+  // only sees words after the first one).
+  it.each([['WARMER'], ['DRESSIER'], ['OK']])('KC1.3 · dropped: a one-word tap in all capitals (%s)', (bad) => {
+    expect(check([bad])).toEqual([]);
+    expect(check([bad, 'What should I buy first?'])).toEqual(['What should I buy first?']);
+    expect(check(['Warmer'])).toEqual(['Warmer']); // control: the same word in sentence case stays
+  });
+
+  // Round 2 (verifier): emoji outside the common ranges (the watch and hourglass sit in U+2300 to 23FF). The gate's own
+  // EMOJI pattern misses them, so the follow-up check must be stricter than the gate.
+  it.each([
+    ['Add a watch \u231A', 'Add a watch'],
+    ['Add a watch \u231A\uFE0F', 'Add a watch'],
+    ['Hourglass \u23F3', 'Hourglass'],
+    ['Hourglass \u23F3\uFE0F', 'Hourglass'],
+    ['\u231A Add a watch', 'Add a watch'],
+    ['Alarm \u23F0 clock', 'Alarm clock'],
+  ])('KC1.3 · dropped: an emoji outside the common ranges (%s)', (bad, plain) => {
+    expect(check([bad])).toEqual([]);
+    expect(check([bad, 'What should I buy first?'])).toEqual(['What should I buy first?']);
+    expect(check(['Show me jackets', bad, 'Make it dressier'])).toEqual(['Show me jackets', 'Make it dressier']);
+    expect(check([plain])).toEqual([plain]); // control: the same words without the emoji stay
+  });
+
+  // Round 2 (verifier): first-person body taps beyond isBodyRating. The follow-up check is stricter than the typed-message
+  // guard, because taps come only from the model and a dropped tap costs little.
+  it.each([
+    ['Do I look old?'],
+    ['Is my stomach ok?'],
+    ['Do you like my face?'],
+    ['Am I too tall?'],
+    ['Am I too thin?'],
+    ['Is my belly big?'],
+    ['Do my legs look ok?'],
+    ['Do my arms look big?'],
+    ['Do my thighs look big?'],
+    ['Is my waist too big?'],
+    ['Is my chest flat?'],
+    ['Is my face round?'],
+    ['Do I look bulky?'],
+    ['Does my weight show?'],
+    ['How is my body?'],
+    ['Would this hide my belly?'],
+    ['Hide my stomach?'],
+    ['Cover my gut?'],
+    ['Make me look thinner'],
+    ['Does it make me look fat?'],
+  ])('KC1.3 · dropped: a wider first-person body tap (%s)', (bad) => {
+    expect(check([bad])).toEqual([]);
+    expect(check([bad, 'What should I buy first?'])).toEqual(['What should I buy first?']);
+    expect(check(['Show me jackets', bad, 'Add a watch'])).toEqual(['Show me jackets', 'Add a watch']);
+  });
+
+  it.each([
+    ['Make it dressier'],
+    ['Try a darker color'],
+    ['Which is most versatile?'],
+    ['What goes with my jeans?'],
+    ['Show me my boots'],
+    ['Do these fit my style?'],
+    ['Is this warm enough?'],
+  ])('KC1.3 · kept: a clothes tap the body check must not over-block (%s)', (good) => {
+    expect(check([good], 'Anything else?')).toEqual([good]);
+    expect(check(['Make it warmer', good], 'Anything else?')).toEqual(['Make it warmer', good]);
+  });
+
   it('KC1.3 · a one-word tap that is his one-word question is dropped, a different one-word tap stays', () => {
     expect(check(['Dressier'], 'Dressier?')).toEqual([]);
     expect(check(['Dressier', 'Warmer'], 'Dressier?')).toEqual(['Warmer']);
