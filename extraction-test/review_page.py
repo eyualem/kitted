@@ -169,7 +169,7 @@ fetch('data.json').then(r=>r.json()).then(d=>{D=d;const s=d.summary;
   document.getElementById('sum').innerHTML=`<span>${d.items.length} outfits · your average <b>${s.his_mean}</b></span>
   <span>Today: within a point of you <b>${s.old.within1}/${s.old.n}</b>, r <b>${s.old.r}</b></span>
   <span>New: within a point <b>${s.new.within1}/${s.new.n}</b>, r <b>${s.new.r}</b></span>
-  <span>(the new rules were tuned on these photos; on unseen photos: 81% within a point, r 0.63)</span>`;
+  <span>(the new rules were tuned on these photos; on unseen photos: 82% within a point, r 0.63)</span>`;
   document.getElementById('how').textContent=s.held_out+"\nYour score is your re-rate where you re-rated, else your first blind rating. Scores: first reading, Everyday, one test profile; a photo in shorts is read as a warm day, every other as cool.";
   render()});
 document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;document.querySelectorAll('[data-f]').forEach(x=>x.setAttribute('aria-pressed',x==b));render()});

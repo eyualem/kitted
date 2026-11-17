@@ -3337,3 +3337,23 @@ Contradictions settled and decisions changed during the build. Newest last.
       - The look stays out of the rest of the score; letting it in gave 214.
     - **What's left:** the 8 remaining flips come from other reads (the shoe type, the top's length, the pants type), not the leg.
     - **Lesson:** a steady read isn't the same as a right read. A classifier that puts everything in one bucket agrees with itself perfectly, so test it against labels and outcomes before letting it replace anything.
+
+483. **Shoe, top and top-length wobbles fixed for free: steadiness 218/223 with each reading's own leg look, agreement up to 82% (T68 round 7, Nov 17, $0; the founder: "Yes, free fix").**
+    - **Kept (from the swap counts, each measured for steadiness and held-out agreement):**
+      - oxford read as dress shirt;
+      - Chelsea boot read as dress shoe (one swap: thin evidence, but no cost);
+      - an unclear shoe counts as real for the silhouette lift;
+      - the long top at 0.25.
+    - **Dropped:**
+      - derby = dress shoe (−1.1 points) and dress shirt = oxford (−1.8);
+      - together with E and G they reached 219 at −3.5 points held out, so not used;
+      - camp collar = oxford was less steady;
+      - chinos = trousers (no gain, and it would touch Tailored's TL1).
+    - **H11's cap now owns `SD2_too_casual`** (the same fact), after the oxford merge pushed its example below the cap.
+    - **Results:**
+      - held out 82.0% and r 0.63 (raw), 81.1% and 0.62 (key);
+      - B6 218/223 with the leg look attached (as written, no looks: 215);
+      - B2 6/6, B3 17/18, B4 all but H7, B5 19.5 / 18.4.
+      - The oxford with wide trousers drops to 7.5 (it was 8).
+    - **For his call:** whether B6 counts with the app's own looks attached (passes at 218) or only as written (215). The bar predates the look; it isn't loosened here.
+    - **Lesson:** the direction of a merge matters. Reading an oxford as a dress shirt kept agreement (+0.3); the reverse cost 1.8 points for the same steadiness, because the two classes carry different weight in the rules.

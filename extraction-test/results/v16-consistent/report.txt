@@ -1,6 +1,6 @@
 The curve, fitted only to the shares (anchor 7): (a 1.50, b 0.60), worst band gap 14.8 pts, but it breaks the steadiness bar
-The curve: the engine has (a 1.1, b 0.7, k 7); a refit on the gold set's first readings gives (a 1.00, b 0.45, k 7.000), worst band gap 33.2 pts: DIFFERS
-  refit shares: 3-4.5  0.0%  5-5.5  7.2%  6-6.5 14.8%  7-7.5 63.2%  8-8.5 14.8%  9-9.5  0.0%
+The curve: the engine has (a 1.1, b 0.7, k 7); a refit on the gold set's first readings gives (a 1.00, b 0.50, k 7.000), worst band gap 28.7 pts: DIFFERS
+  refit shares: 3-4.5  0.0%  5-5.5  7.2%  6-6.5 14.8%  7-7.5 58.7%  8-8.5 19.3%  9-9.5  0.0%
 
 == B4 The dealbreaker examples (made-up clean readings, Everyday, no picks, cool day) ==
   S1   PASS  cap 5.5: v15 6.5 -> v16 5.5  a grey hoodie over black skinny jeans, white leather sneakers
@@ -38,7 +38,7 @@ The curve: the engine has (a 1.1, b 0.7, k 7); a refit on the gold set's first r
   PASS  v15 7 -> 7   v16 7.5 -> 8   all-navy flannel + jeans -> black flannel, white tank, pleated trousers, loafers
   PASS  v15 6 -> 7   v16 6 -> 8   tight beige monochrome -> wider trousers, tucked tee, relaxed shirt, loafers
   PASS  v15 6.5 -> 7.5   v16 6.5 -> 7.5   skinny joggers -> straight trousers, plain black sweater
-  PASS  v15 6.5 -> 7   v16 5.5 -> 7   Frugal: the same tee 4 in shorter
+  PASS  v15 6.5 -> 7   v16 6 -> 7   Frugal: the same tee 4 in shorter
 
 == B3 The creators' anchors with stored readings (median of 3; cool day; warm in brackets) ==
   a01 PASS  step 4.5: v15 5.5 -> v16 4.5 [4.5]   denim_jacket (black) + tee (white) + jeans (charcoal, skinny) + chelsea_boot (black)
@@ -66,7 +66,7 @@ The curve: the engine has (a 1.1, b 0.7, k 7); a refit on the gold set's first r
   a36 PASS  step 8: v15 6.5 -> v16 7.5 [7.5]   blazer (tan_camel) + tee (white) + jeans (denim_light, straight) + loafer (black)
         why: lifts L7b +0.25
   a38 PASS  step 7.5: v15 7 -> v16 7 [7]   flannel_shirt (black) + sweatpants (light_grey, relaxed) + loafer (black)
-        why: lifts L6 +0.125; taste: relaxed legs +0.1875, the top ends low -0.5
+        why: lifts L6 +0.125; taste: relaxed legs +0.1875, the top ends low -0.25
   a37 PASS  step 8: v15 6.5 -> v16 7.5 [7.5]   blazer (brown) + tank_top (grey) + jeans (denim_light, straight) + loafer (black)
         why: lifts L7b +0.25
   a51 PASS  step 9: v15 7 -> v16 8 [8]   blazer (brown) + tee (white) + trousers (black, straight) + dress_shoe (black)
@@ -83,12 +83,12 @@ The curve: the engine has (a 1.1, b 0.7, k 7); a refit on the gold set's first r
 == The gold set (225 photos, 223 scored; profile unknown, the test profile, Everyday) ==
   target           3-4.5  5.0%  5-5.5 15.0%  6-6.5 30.0%  7-7.5 30.0%  8-8.5 15.0%  9-9.5  5.0%
   v15              3-4.5  0.4%  5-5.5  4.9%  6-6.5 16.1%  7-7.5 59.6%  8-8.5 18.8%  9-9.5  0.0%   worst gap 29.6
-  v16 cool         3-4.5  0.4%  5-5.5  8.1%  6-6.5 15.2%  7-7.5 41.7%  8-8.5 34.5%  9-9.5  0.0%   worst gap 19.5
-  v16 warm         3-4.5  0.9%  5-5.5  4.9%  6-6.5 15.7%  7-7.5 50.7%  8-8.5 27.8%  9-9.5  0.0%   worst gap 20.7
+  v16 cool         3-4.5  0.4%  5-5.5  7.2%  6-6.5 16.1%  7-7.5 41.7%  8-8.5 34.5%  9-9.5  0.0%   worst gap 19.5
+  v16 warm         3-4.5  0.9%  5-5.5  4.0%  6-6.5 16.6%  7-7.5 50.2%  8-8.5 28.3%  9-9.5  0.0%   worst gap 20.2
 B5a gold band shares within 5 points (cool): FAIL
   v15       mean 7.16 sd 0.70  exactly 7.0 26%  range 4.5-8  r with the panel 0.562
-  v16 cool  mean 7.25 sd 0.87  exactly 7.0 17%  range 4.5-8.5  r with the panel 0.606
-  v16 warm  mean 7.23 sd 0.79  exactly 7.0 21%  range 4-8.5  r with the panel 0.526
+  v16 cool  mean 7.25 sd 0.86  exactly 7.0 17%  range 4.5-8.5  r with the panel 0.614
+  v16 warm  mean 7.24 sd 0.79  exactly 7.0 21%  range 4-8.5  r with the panel 0.536
   v15: the panel's worst (26, panel 5.5 or under) average 6.37, 10 at 7+; the panel's best (63, 8+) average 7.49
   v16: the panel's worst (26, panel 5.5 or under) average 6.23, 8 at 7+; the panel's best (63, 8+) average 7.75
 
@@ -101,7 +101,7 @@ B1 within 1 on 8 in 10 (17/20) and r >= 0.69 (0.600): FAIL (20 of the 80 ratings
      pin-058   his 5  panel 5  v15 7  v16 7  graphic_tee (pink) + shorts (denim_light, relaxed)
                why: lifts L5 +0.25
      pin-033   his 5.5  panel 5  v15 7.5  v16 7  camp_collar_shirt (blue) + jeans (denim_dark, straight) + loafer (black)
-               why: lifts L5 +0.25; taste: the top ends low -0.5
+               why: lifts L5 +0.25; taste: the top ends low -0.25
      ig-116    his 7  panel 7.5  v15 8  v16 8  quarter_zip (black) + jeans (denim_mid, wide) + loafer (black)
                why: lifts L1 +0.25, L6 +0.25; taste: wide legs +0.375
      pin-007   his 6  panel 5.5  v15 7  v16 7  dress_shirt (light_blue) + trousers (khaki_beige, straight) + loafer (brown)
@@ -113,7 +113,7 @@ B1 within 1 on 8 in 10 (17/20) and r >= 0.69 (0.600): FAIL (20 of the 80 ratings
      ig-032    his 7.5  panel 8  v15 7.5  v16 8  other (charcoal) + tank_top (white) + cargos (olive, wide) + retro_runner (tan_camel)
                why: lifts L2 +0.375; taste: wide legs +0.75
      ig-098    his 6.5  panel 6  v15 7  v16 7  oxford_shirt (white) + jeans (denim_mid, straight)
-               why: nothing off, nothing chosen
+               why: lifts L7b +0.25
      ig-127    his 6.5  panel 6.5  v15 7  v16 7  tee (light_grey) + jeans (denim_mid, straight) + loafer (brown)
                why: nothing off, nothing chosen
      pin-021   his 6.5  panel 4.5  v15 6.5  v16 7  dress_shirt (blue) + shorts (khaki_beige, wide)
@@ -139,28 +139,26 @@ B1 within 1 on 8 in 10 (17/20) and r >= 0.69 (0.600): FAIL (20 of the 80 ratings
      ig-065    his 7  panel 5.5  v15 6.5  v16 5.5  graphic_tee (purple) + shorts (brown, wide) + slides_sandals (black)
                why: faults -1.375 (SK1_slides_out: slides read as staying in); taste: roomy shorts +0.25
 
-B6 with each reading's own leg-width look (the app's case; reported, the bar is judged as written): v16 cool 215/223
-B6 the two stored readings within 0.5: v15 218/223  v16 cool 213/223  v16 warm 213/223: FAIL
-     ig-030: 7 / 8   lifts L7b +0.25; taste: roomy shorts +0.25  ||  held by 1 lift; lifts SIL +2; taste: roomy shorts +0.25
+B6 with each reading's own leg-width look (the app's case; reported, the bar is judged as written): v16 cool 218/223
+B6 the two stored readings within 0.5: v15 218/223  v16 cool 215/223  v16 warm 214/223: FAIL
      ig-051: 8 / 7   lifts L1 +0.5, L7 +0.5; taste: relaxed legs +0.375  ||  nothing off, nothing chosen
      ig-061: 7 / 8   taste: wide legs +0.375  ||  lifts L1 +0.25, L5 +0.5; taste: wide legs +0.75
+     ig-094: 7 / 8   lifts L1 +0.25; taste: wide legs +0.375  ||  lifts L1 +0.25, L5 +0.5; taste: wide legs +0.375
      ig-102: 5.5 / 7   faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.375  ||  lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
-     ig-125: 7.5 / 8.5   lifts L1 +0.5; taste: relaxed legs +0.1875  ||  lifts L1 +0.5, L7 +0.5; taste: wide legs +0.75
      pin-023: 6.5 / 5.5   lifts L5 +0.25, L6 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in)  ||  faults -1.25 (SK1_slides_out: slides read as staying in)
-     pin-031: 6 / 5   faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)  ||  faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit); taste: the top ends low -0.5
      pin-040: 8 / 7   held by 1 lift; lifts SIL +1; taste: relaxed legs +0.375  ||  nothing off, nothing chosen
      pin-057: 5.5 / 6.5   faults -0.5 (SQ_worn: the shoes look worn)  ||  lifts SIL +0.875; faults -1 (CL1_loud_print: the big, loud floral on the camp collar shirt takes over the outfit); taste: relaxed legs +0.1875
-     rd-018: 7 / 8   nothing off, nothing chosen  ||  held by 1 lift; lifts SIL +2; taste: wide legs +0.375
+     rd-018: 6.5 / 8   nothing off, nothing chosen  ||  held by 1 lift; lifts SIL +2; taste: wide legs +0.375
 
 == His saved checks (62 scored of 62; his profile, own occasion and second look) ==
   target           3-4.5  5.0%  5-5.5 15.0%  6-6.5 30.0%  7-7.5 30.0%  8-8.5 15.0%  9-9.5  5.0%
   v15              3-4.5  0.0%  5-5.5  6.5%  6-6.5 21.0%  7-7.5 62.9%  8-8.5  9.7%  9-9.5  0.0%   worst gap 32.9
-  v16 cool         3-4.5  0.0%  5-5.5  8.1%  6-6.5 17.7%  7-7.5 51.6%  8-8.5 22.6%  9-9.5  0.0%   worst gap 21.6
-  v16 warm         3-4.5  0.0%  5-5.5  6.5%  6-6.5  8.1%  7-7.5 58.1%  8-8.5 27.4%  9-9.5  0.0%   worst gap 28.1
+  v16 cool         3-4.5  0.0%  5-5.5  8.1%  6-6.5 17.7%  7-7.5 48.4%  8-8.5 25.8%  9-9.5  0.0%   worst gap 18.4
+  v16 warm         3-4.5  0.0%  5-5.5  6.5%  6-6.5  8.1%  7-7.5 54.8%  8-8.5 30.6%  9-9.5  0.0%   worst gap 24.8
 B5b his saved checks' band shares within 5 points (cool): FAIL
-  mean v15 7.03 -> v16 7.16; exactly 7.0 21 -> 10
-  phone-8bc29d class     v15 7 -> v16 7.5 [warm 7.5]  overshirt (off_white_cream) + hoodie (grey) + jeans (black, wide) + other (grey)
-        why: held by 0 lifts; taste: wide legs +0.75
+  mean v15 7.03 -> v16 7.19; exactly 7.0 21 -> 10
+  phone-8bc29d class     v15 7 -> v16 8 [warm 8]  overshirt (off_white_cream) + hoodie (grey) + jeans (black, wide) + other (grey)
+        why: held by 1 lift; lifts SIL +2; taste: wide legs +0.75
   phone-d6559a class     v15 7 -> v16 7 [warm 7]  hoodie (grey) + jeans (black, straight) + other (grey)
         why: nothing off, nothing chosen
   phone-f07193 class     v15 6.5 -> v16 7.5 [warm 7.5]  tee (grey) + overshirt (tan_camel) + jeans (black, wide) + other (grey)
@@ -189,8 +187,8 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
         why: lifts L1 +0.25, L5 +0.5
   phone-ebe23f class     v15 7 -> v16 7 [warm 7]  other (black) + jeans (charcoal, straight) + white_leather_sneaker (white)
         why: nothing off, nothing chosen
-  phone-af7e93 class     v15 8 -> v16 8.5 [warm 8.5]  oxford_shirt (off_white_cream) + jeans (denim_mid, wide) + basketball_sneaker (black) + hoodie (green)
-        why: lifts L2 +0.375, L5 +0.5, L7 +0.5; taste: wide legs +0.75
+  phone-af7e93 class     v15 8 -> v16 8.5 [warm 8]  oxford_shirt (off_white_cream) + jeans (denim_mid, wide) + basketball_sneaker (black) + hoodie (green)
+        why: lifts L2 +0.375, L5 +0.5, L7b +0.5; taste: wide legs +0.375
   phone-e438d4 class     v15 7 -> v16 7.5 [warm 7]  chore_coat (navy) + tee (white) + jeans (charcoal, straight) + low_profile_sneaker (navy)
         why: lifts L3 +0.25, L6 +0.25
   phone-9d3ef4 class     v15 6.5 -> v16 6 [warm 6]  sweatshirt (black) + jeans (denim_mid, slim)
@@ -203,8 +201,8 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
         why: nothing off, nothing chosen
   phone-4c21bb class     v15 7.5 -> v16 7.5 [warm 7.5]  oxford_shirt (multicolor) + jeans (denim_dark, straight) + white_leather_sneaker (white)
         why: lifts L1 +0.25
-  phone-7f3c60 class     v15 6.5 -> v16 6 [warm 6]  oxford_shirt (multicolor) + jeans (off_white_cream, straight)
-        why: faults -0.5 (PN1_narrow_leg: the slim jeans would balance better with a straight leg)
+  phone-7f3c60 class     v15 6.5 -> v16 6.5 [warm 6.5]  oxford_shirt (multicolor) + jeans (off_white_cream, straight)
+        why: lifts L7b +0.25; faults -0.5 (PN1_narrow_leg: the slim jeans would balance better with a straight leg)
   phone-0a864e class     v15 6 -> v16 6 [warm 6.5]  oxford_shirt (off_white_cream) + chinos (khaki_beige, slim)
         why: faults -0.75 (PN1_narrow_leg: the slim chinos would balance better with a straight leg)
   phone-729b22 class     v15 7 -> v16 7 [warm 7]  graphic_tee (navy) + jeans (off_white_cream, straight)
@@ -265,8 +263,8 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
         why: nothing off, nothing chosen
   phone-0d39d6 everyday  v15 7 -> v16 6.5 [warm 8]  hoodie (grey) + jeans (black, wide) + slides_sandals (navy)
         why: lifts L1 +0.25; faults -1.5 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
-  phone-5a9049 everyday  v15 7 -> v16 7.5 [warm 7.5]  oxford_shirt (orange) + jeans (charcoal, wide) + low_profile_sneaker (grey)
-        why: lifts L5 +0.25; taste: wide legs +0.375
+  phone-5a9049 everyday  v15 7 -> v16 8 [warm 8]  oxford_shirt (orange) + jeans (charcoal, wide) + low_profile_sneaker (grey)
+        why: lifts L5 +0.25, L7b +0.5; taste: wide legs +0.375
   phone-bee15a going_out v15 6.5 -> v16 7.5 [warm 7.5]  hoodie (black) + jeans (black, relaxed) + performance_runner (black)
         why: taste: relaxed legs +0.375
   phone-00c9ab going_out v15 7.5 -> v16 7.5 [warm 7.5]  tee (black) + jeans (denim_light, relaxed) + work_boot (grey)
@@ -317,16 +315,16 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
         graded as smart casual; lifts L2 +0.375, L5 +0.5, L7 +0.5; taste: wide legs +0.375
 
 == What the season moves (cool -> warm, first reading) ==
-  gold: 20 up, 34 down of 223; loses L2 25, a charge waived (light on light, tank alone) 15, heavy layer 14, gains L4s 6, loses L3 4, gains SIL 4, loses SIL 2, loses L1 2, gains SL1 2, gains L5 1
-  his checks: 11 up, 6 down of 62; a charge waived (light on light, tank alone) 11, loses L3 4, heavy layer 2, loses L2 2, gains L4s 1
+  gold: 21 up, 34 down of 223; loses L2 26, a charge waived (light on light, tank alone) 15, heavy layer 14, gains L4s 6, gains SIL 5, loses L3 4, loses SIL 2, loses L1 2, gains SL1 2, gains L5 1
+  his checks: 11 up, 7 down of 62; a charge waived (light on light, tank alone) 11, loses L3 4, loses L2 3, heavy layer 2, gains L4s 1
 
   8+ share by how dressy the clothes are (gold, first reading, cool):
-    athletic   n   8  v15 8+   0%  v16 8+   0%  mean 6.38 -> 6.50
-    casual     n  96  v15 8+  12%  v16 8+  41%  mean 7.04 -> 7.20
-    in-between n  45  v15 8+   9%  v16 8+  24%  mean 7.16 -> 7.14
-    dressy     n  74  v15 8+  35%  v16 8+  36%  mean 7.39 -> 7.45
+    athletic   n   8  v15 8+   0%  v16 8+   0%  mean 6.38 -> 6.56
+    casual     n  96  v15 8+  12%  v16 8+  42%  mean 7.04 -> 7.21
+    in-between n  45  v15 8+   9%  v16 8+  24%  mean 7.16 -> 7.18
+    dressy     n  74  v15 8+  35%  v16 8+  35%  mean 7.39 -> 7.43
 
-  How often each v16 rule fires on the gold set (cool, first reading): cap H10 2, cap H8 2, held by 0 lifts 4, held by 1 lift 15, held by 2 lifts 1, held by H10 1, held by occasion 5, lift L1 81, lift L2 33, lift L3 8, lift L5 48, lift L6 24, lift L7 20, lift L7b 25, lift SIL 8
+  How often each v16 rule fires on the gold set (cool, first reading): cap H10 2, cap H8 2, held by 0 lifts 4, held by 1 lift 16, held by 2 lifts 1, held by H10 1, held by occasion 5, lift L1 81, lift L2 33, lift L3 8, lift L5 48, lift L6 24, lift L7 19, lift L7b 31, lift SIL 9
 
 == Round 2: with the fresh second looks (223 of 223 gold photos have them; 223 have both runs) ==
   steadiness of the looks across the two runs (223 photos): a peek (clearly) 6 flip; covers the shoe 29 differ (19 on 'mostly', the H7 cap's trigger)
@@ -334,24 +332,21 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
   target           3-4.5  5.0%  5-5.5 15.0%  6-6.5 30.0%  7-7.5 30.0%  8-8.5 15.0%  9-9.5  5.0%
   v15       stored 3-4.5  0.4%  5-5.5  4.9%  6-6.5 16.1%  7-7.5 59.6%  8-8.5 18.8%  9-9.5  0.0%   worst gap 29.6
   v15       looks  3-4.5  0.4%  5-5.5  4.9%  6-6.5 17.0%  7-7.5 59.6%  8-8.5 17.9%  9-9.5  0.0%   worst gap 29.6
-  v16 cool  stored 3-4.5  0.4%  5-5.5  8.1%  6-6.5 15.2%  7-7.5 41.7%  8-8.5 34.5%  9-9.5  0.0%   worst gap 19.5
-  v16 cool  looks  3-4.5  0.9%  5-5.5  7.2%  6-6.5 15.7%  7-7.5 39.0%  8-8.5 37.2%  9-9.5  0.0%   worst gap 22.2
-  v16 stored mean 7.25  r with the panel 0.606
-  v16 looks  mean 7.28  r with the panel 0.609
+  v16 cool  stored 3-4.5  0.4%  5-5.5  7.2%  6-6.5 16.1%  7-7.5 41.7%  8-8.5 34.5%  9-9.5  0.0%   worst gap 19.5
+  v16 cool  looks  3-4.5  0.9%  5-5.5  6.3%  6-6.5 16.6%  7-7.5 39.9%  8-8.5 36.3%  9-9.5  0.0%   worst gap 21.3
+  v16 stored mean 7.25  r with the panel 0.614
+  v16 looks  mean 7.29  r with the panel 0.613
   B1 again (his 20): within 1 point 16/20, r 0.583 (stored: 17/20, r 0.600)
-  B6 again: two readings, each with its own looks, within 0.5: 212/223 (stored, no looks: 213/223; bar: at most 5 off)
+  B6 again: two readings, each with its own looks, within 0.5: 215/223 (stored, no looks: 215/223; bar: at most 5 off)
      ig-011: 8.5 / 7.5   lifts L1 +0.25, L5 +0.5, L7 +0.5; taste: wide legs +0.375  ||  held by a fit or shape fault: lifts can't cover it; lifts L1 +0.25, L5 +0.5, L7 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.375
-     ig-030: 7 / 8   lifts L7b +0.25; taste: roomy shorts +0.25  ||  held by 1 lift; lifts SIL +2; taste: roomy shorts +0.25
      ig-051: 8 / 7   lifts L1 +0.5, L7 +0.5; taste: relaxed legs +0.375  ||  nothing off, nothing chosen
      ig-061: 6.5 / 7.5   faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.375  ||  held by a fit or shape fault: lifts can't cover it; lifts L1 +0.25, L5 +0.5; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.75
      ig-102: 5.5 / 7   faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.375  ||  lifts L1 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in); taste: wide legs +0.75
-     ig-125: 7.5 / 8.5   lifts L1 +0.5; taste: relaxed legs +0.1875  ||  lifts L1 +0.5, L7 +0.5; taste: wide legs +0.75
      pin-023: 6.5 / 5.5   lifts L5 +0.25, L6 +0.25; faults -1.25 (SK1_slides_out: slides read as staying in)  ||  faults -1.25 (SK1_slides_out: slides read as staying in)
-     pin-031: 6 / 5   faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)  ||  faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit); taste: the top ends low -0.5
      pin-040: 8 / 7   held by 1 lift; lifts SIL +1; taste: relaxed legs +0.375  ||  nothing off, nothing chosen
      pin-057: 5.5 / 6.5   faults -0.5 (SQ_worn: the shoes look worn)  ||  lifts SIL +0.875; faults -1 (CL1_loud_print: the big, loud floral on the camp collar shirt takes over the outfit); taste: relaxed legs +0.1875
-     rd-018: 7 / 8   nothing off, nothing chosen  ||  held by 1 lift; lifts SIL +2; taste: wide legs +0.375
-  moved by the looks (v16, first reading): 36 (26 up, 10 down)
+     rd-018: 6.5 / 8   nothing off, nothing chosen  ||  held by 1 lift; lifts SIL +2; taste: wide legs +0.375
+  moved by the looks (v16, first reading): 37 (27 up, 10 down)
      ig-008    8.5 -> 7.5  panel 7.5  bomber (navy) + tee (white) + jeans (denim_dark, wide) + basketball_sneaker (white)
                now: held by a fit or shape fault: lifts can't cover it; lifts L7 +0.25; faults -0.25 (PF10_peek: the top underneath shows below the outer piece); taste: wide legs +0.75   was: lifts L2 +0.5, L7 +0.5; taste: wide legs +0.75
      ig-074    8.5 -> 7.5  panel 8  fleece (brown) + tee (white) + cargos (green, wide) + work_boot (tan_camel)
@@ -392,7 +387,7 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
                now: lifts L7b +0.25; taste: wide legs +0.375, a full hem over the shoe +0.25   was: lifts L7b +0.25; taste: wide legs +0.375
      ig-067    7.5 -> 8  panel 7.5  tee (black) + jeans (white, wide) + loafer (grey)
                now: lifts L1 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.25; taste: wide legs +0.375
-     ig-071    7.5 -> 8  panel 8  oxford_shirt (light_blue) + trousers (black, wide) + dress_shoe (black)
+     ig-071    7 -> 7.5  panel 8  oxford_shirt (light_blue) + trousers (black, wide) + dress_shoe (black)
                now: lifts L1 +0.25; taste: wide legs +0.75, a full hem over the shoe +0.5   was: lifts L1 +0.25; taste: wide legs +0.75
      ig-072    7.5 -> 8  panel 8  sweater (burgundy) + trousers (black, wide) + retro_runner (light_grey)
                now: lifts L1 +0.25, L5 +0.5; faults -0.375 (SD2_too_casual: the shoes are more casual than the clothes); taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.25, L5 +0.5; faults -0.375 (SD2_too_casual: the shoes are more casual than the clothes); taste: wide legs +0.375
@@ -400,8 +395,8 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
                now: held by 2 lifts; lifts L1 +0.25, L5 +0.5; taste: wide legs +0.75, a full hem over the shoe +0.5   was: lifts L1 +0.25, L5 +0.5; taste: wide legs +0.75
      ig-084    8 -> 8.5  panel 7  jersey (burgundy) + jeans (grey, wide) + work_boot (brown)
                now: held by 2 lifts; lifts L1 +0.25, L5 +0.5; taste: wide legs +0.75, a full hem over the shoe +0.5   was: lifts L1 +0.25, L5 +0.5; taste: wide legs +0.75
-     ig-094    7.5 -> 8  panel 8  oxford_shirt (green) + trousers (grey, wide) + loafer (black)
-               now: lifts L1 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.25   was: lifts L1 +0.25; taste: wide legs +0.375
+     ig-094    7 -> 7.5  panel 8  oxford_shirt (green) + trousers (grey, wide) + loafer (black)
+               now: lifts L1 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.5   was: lifts L1 +0.25; taste: wide legs +0.375
      ig-096    7.5 -> 8  panel 8  polo (white) + trousers (charcoal, wide) + dress_shoe (black)
                now: lifts L1 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.25   was: lifts L1 +0.25; taste: wide legs +0.375
      ig-097    6.5 -> 7  panel 5.5  tee (charcoal) + chinos (black, wide) + slides_sandals (black)
@@ -424,15 +419,17 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
                now: lifts L5 +0.25; faults -0.375 (SCol1_loud_vs_loud: a loud shoe competing with a loud piece); taste: wide legs +0.75, a full hem over the shoe +0.5   was: lifts L5 +0.25; faults -0.375 (SCol1_loud_vs_loud: a loud shoe competing with a loud piece); taste: wide legs +0.75
      pin-047   7.5 -> 8  panel 6.5  flannel_shirt (tan_camel) + tee (light_grey) + jeans (denim_mid, relaxed) + work_boot (brown)
                now: lifts L3 +0.25; taste: relaxed legs +0.375, a full hem over the shoe +0.5   was: lifts L3 +0.25; taste: relaxed legs +0.375
-  caps with the looks (cool, first reading): cap H10 2, cap H8 2, held by 0 lifts 8, held by 1 lift 20, held by 2 lifts 9, held by H10 1, held by a fit or shape fault: lifts can't cover it 8, held by occasion 5
+     pin-063   7 -> 7.5  panel 5  blazer (black) + oxford_shirt (khaki_beige) + jeans (denim_mid, relaxed) + dress_shoe (brown)
+               now: lifts L7b +0.25; taste: relaxed legs +0.1875, a full hem over the shoe +0.5   was: lifts L7b +0.25; taste: relaxed legs +0.1875
+  caps with the looks (cool, first reading): cap H10 2, cap H8 2, held by 0 lifts 8, held by 1 lift 21, held by 2 lifts 9, held by H10 1, held by a fit or shape fault: lifts can't cover it 8, held by occasion 5
   the panel where they fire: a clear peek (19) 7.32, the H7 pooling cap (0) none (0 at 5.5 or under); every gold photo 7.06
   two narrower versions, for his call (paper only):
-    as built                             steady 212/223  worst band gap 22.2  r with the panel 0.609  his 20: within 1 16/20, r 0.583
-    H7 only when the hem reads pooling   steady 212/223  worst band gap 17.7  r with the panel 0.588  his 20: within 1 16/20, r 0.583
-    no peek under a jacket or coat       steady 212/223  worst band gap 24.5  r with the panel 0.616  his 20: within 1 16/20, r 0.583
-    both                                 steady 212/223  worst band gap 19.5  r with the panel 0.596  his 20: within 1 16/20, r 0.583
-    H7 a 6.5 hold, not a 5.5 sink        steady 212/223  worst band gap 22.2  r with the panel 0.609  his 20: within 1 16/20, r 0.583
-    H7 a 6.5 hold + no peek under a jacket steady 212/223  worst band gap 24.5  r with the panel 0.616  his 20: within 1 16/20, r 0.583
+    as built                             steady 215/223  worst band gap 21.3  r with the panel 0.613  his 20: within 1 16/20, r 0.583
+    H7 only when the hem reads pooling   steady 214/223  worst band gap 17.7  r with the panel 0.596  his 20: within 1 16/20, r 0.583
+    no peek under a jacket or coat       steady 215/223  worst band gap 23.6  r with the panel 0.620  his 20: within 1 16/20, r 0.583
+    both                                 steady 214/223  worst band gap 19.5  r with the panel 0.603  his 20: within 1 16/20, r 0.583
+    H7 a 6.5 hold, not a 5.5 sink        steady 215/223  worst band gap 21.3  r with the panel 0.613  his 20: within 1 16/20, r 0.583
+    H7 a 6.5 hold + no peek under a jacket steady 215/223  worst band gap 23.6  r with the panel 0.620  his 20: within 1 16/20, r 0.583
 
   (his consistent key: his blind re-rate where he gave one, his original elsewhere)
 == B1 on the full set: his 150 (Nov 16): 144 with a reading (left out: C001, C013, C032, C064, C071, C140, heads already under a mosaic block, so the prep sends nothing), plus his first 20 ==
@@ -445,43 +442,43 @@ B5b his saved checks' band shares within 5 points (cool): FAIL
     the AI panel                           within 1  16/20 ( 80%)  r 0.722  mean 6.50 (his 6.67)
   sheet 1 (gold photos) (54):
     v15                                    within 1  41/54 ( 76%)  r 0.583  mean 7.20 (his 7.45)
-    v16 (no second looks)                  within 1  45/54 ( 83%)  r 0.734  mean 7.40 (his 7.45)
-    v16 with the looks (his marks)         within 1  45/54 ( 83%)  r 0.715  mean 7.45 (his 7.45)
-    v16 looks, H7 hold + jacket peek free  within 1  45/54 ( 83%)  r 0.715  mean 7.45 (his 7.45)
+    v16 (no second looks)                  within 1  46/54 ( 85%)  r 0.754  mean 7.39 (his 7.45)
+    v16 with the looks (his marks)         within 1  46/54 ( 85%)  r 0.730  mean 7.45 (his 7.45)
+    v16 looks, H7 hold + jacket peek free  within 1  46/54 ( 85%)  r 0.730  mean 7.45 (his 7.45)
     the AI panel                           within 1  45/54 ( 83%)  r 0.799  mean 7.16 (his 7.45)
   sheet 2 (71):
     v15                                    within 1  54/71 ( 76%)  r 0.451  mean 6.90 (his 6.70)
-    v16 (no second looks)                  within 1  55/71 ( 77%)  r 0.534  mean 6.94 (his 6.70)
-    v16 with the looks (his marks)         within 1  59/71 ( 83%)  r 0.589  mean 6.95 (his 6.70)
-    v16 looks, H7 hold + jacket peek free  within 1  58/71 ( 82%)  r 0.591  mean 6.97 (his 6.70)
+    v16 (no second looks)                  within 1  55/71 ( 77%)  r 0.517  mean 6.94 (his 6.70)
+    v16 with the looks (his marks)         within 1  58/71 ( 82%)  r 0.565  mean 6.94 (his 6.70)
+    v16 looks, H7 hold + jacket peek free  within 1  57/71 ( 80%)  r 0.567  mean 6.96 (his 6.70)
   the 20 new (19):
     v15                                    within 1  13/19 ( 68%)  r 0.199  mean 7.32 (his 6.55)
-    v16 (no second looks)                  within 1  13/19 ( 68%)  r 0.385  mean 7.29 (his 6.55)
-    v16 with the looks (his marks)         within 1  11/19 ( 58%)  r 0.351  mean 7.50 (his 6.55)
-    v16 looks, H7 hold + jacket peek free  within 1  11/19 ( 58%)  r 0.351  mean 7.50 (his 6.55)
+    v16 (no second looks)                  within 1  13/19 ( 68%)  r 0.399  mean 7.29 (his 6.55)
+    v16 with the looks (his marks)         within 1  12/19 ( 63%)  r 0.372  mean 7.45 (his 6.55)
+    v16 looks, H7 hold + jacket peek free  within 1  12/19 ( 63%)  r 0.372  mean 7.45 (his 6.55)
   all 150 with a reading (144):
     v15                                    within 1 108/144 ( 75%)  r 0.499  mean 7.07 (his 6.97)
-    v16 (no second looks)                  within 1 113/144 ( 78%)  r 0.623  mean 7.16 (his 6.97)
-    v16 with the looks (his marks)         within 1 115/144 ( 80%)  r 0.623  mean 7.21 (his 6.97)
-    v16 looks, H7 hold + jacket peek free  within 1 114/144 ( 79%)  r 0.623  mean 7.22 (his 6.97)
+    v16 (no second looks)                  within 1 114/144 ( 79%)  r 0.624  mean 7.16 (his 6.97)
+    v16 with the looks (his marks)         within 1 116/144 ( 81%)  r 0.623  mean 7.20 (his 6.97)
+    v16 looks, H7 hold + jacket peek free  within 1 115/144 ( 80%)  r 0.623  mean 7.21 (his 6.97)
     the AI panel                           within 1  45/54 ( 83%)  r 0.799  mean 7.16 (his 7.45)
   everything he rated (164):
     v15                                    within 1 125/164 ( 76%)  r 0.496  mean 7.05 (his 6.93)
-    v16 (no second looks)                  within 1 131/164 ( 80%)  r 0.630  mean 7.12 (his 6.93)
-    v16 with the looks (his marks)         within 1 131/164 ( 80%)  r 0.620  mean 7.19 (his 6.93)
-    v16 looks, H7 hold + jacket peek free  within 1 130/164 ( 79%)  r 0.620  mean 7.20 (his 6.93)
+    v16 (no second looks)                  within 1 132/164 ( 80%)  r 0.629  mean 7.12 (his 6.93)
+    v16 with the looks (his marks)         within 1 132/164 ( 80%)  r 0.619  mean 7.18 (his 6.93)
+    v16 looks, H7 hold + jacket peek free  within 1 131/164 ( 80%)  r 0.620  mean 7.19 (his 6.93)
     the AI panel                           within 1  61/74 ( 82%)  r 0.792  mean 6.98 (his 7.24)
-B1 (all 164 rated photos with a reading, v16) within 1 on 8 in 10 (131/164) and r >= 0.69 (0.630): FAIL
-  v16's own shares on his 150 with a reading  3-4.5  0.7%  5-5.5  6.2%  6-6.5 20.8%  7-7.5 45.1%  8-8.5 27.1%  9-9.5  0.0%   (his: above)
+B1 (all 164 rated photos with a reading, v16) within 1 on 8 in 10 (132/164) and r >= 0.69 (0.629): FAIL
+  v16's own shares on his 150 with a reading  3-4.5  0.7%  5-5.5  5.6%  6-6.5 22.2%  7-7.5 45.8%  8-8.5 25.7%  9-9.5  0.0%   (his: above)
 
 == The Y34 taste calls against his ratings (164 rated photos with a reading; his mean 6.93) ==
-  1. nothing off, nothing chosen (v16 shows 7.0) (17): his mean 6.91 (6.5 or under 9, 7+ 8); v16 7.00; panel 6.50 (5)
+  1. nothing off, nothing chosen (v16 shows 7.0) (14): his mean 6.86 (6.5 or under 7, 7+ 7); v16 7.00; panel 6.17 (3)
   2. slides out of the house (SK1) (8): his mean 6.38 (6.5 or under 5, 7+ 3); v16 6.25; panel 5.38 (4)
   3. one accent (L5) the only lift (18): his mean 6.14 (6.5 or under 14, 7+ 4); v16 6.78; panel 6.31 (8)
-     L5 among other lifts (15): his mean 7.57 (6.5 or under 6, 7+ 9); v16 7.87; panel 7.78 (9)
-     no lift at all (45): his mean 6.46 (6.5 or under 30, 7+ 15); v16 6.40; panel 6.03 (16)
-     one lift, not L5 (63): his mean 7.06 (6.5 or under 27, 7+ 36); v16 7.29; panel 6.92 (25)
-     two or more lifts (38): his mean 7.66 (6.5 or under 11, 7+ 27); v16 7.87; panel 7.86 (25)
+     L5 among other lifts (15): his mean 7.57 (6.5 or under 6, 7+ 9); v16 7.83; panel 7.78 (9)
+     no lift at all (42): his mean 6.40 (6.5 or under 28, 7+ 14); v16 6.39; panel 5.89 (14)
+     one lift, not L5 (67): his mean 7.08 (6.5 or under 29, 7+ 38); v16 7.27; panel 6.93 (27)
+     two or more lifts (37): his mean 7.64 (6.5 or under 11, 7+ 26); v16 7.85; panel 7.86 (25)
   4. pants pile on the shoe (H7, with looks): none in his ratings
      the look says the hem mostly covers the shoe (any leg) (26): his mean 7.96 (6.5 or under 4, 7+ 22); v16 7.87; panel 7.40 (21)
   5. a top clearly below the outer piece (with looks) (8): his mean 7.31 (6.5 or under 4, 7+ 4); v16 7.06; panel 7.10 (5)

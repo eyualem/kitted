@@ -469,7 +469,7 @@
     7.5
    ],
    "v16_warm": [
-    7.5,
+    8.0,
     7.5
    ],
    "panel": 8.0,
@@ -681,26 +681,26 @@
     7.0
    ],
    "v16_cool": [
-    7.0,
-    7.0
+    7.5,
+    7.5
    ],
    "v16_warm": [
-    7.0,
-    7.0
+    7.5,
+    7.5
    ],
    "panel": 8.0,
    "founder": null,
-   "why": "nothing off, nothing chosen",
+   "why": "lifts L7b +0.25",
    "pieces": "oxford_shirt (white) + jeans (denim_light, straight) + suede_chukka (brown)",
    "v15_looks": [
     7.5,
     7.0
    ],
    "v16_looks": [
-    7.0,
+    7.5,
     7.5
    ],
-   "why_looks": "nothing off, nothing chosen"
+   "why_looks": "lifts L7b +0.25"
   },
   "ig-028": {
    "v15": [
@@ -763,11 +763,11 @@
    ],
    "v16_cool": [
     7.0,
-    8.0
+    7.5
    ],
    "v16_warm": [
     7.0,
-    8.0
+    7.5
    ],
    "panel": 7.0,
    "founder": null,
@@ -779,7 +779,7 @@
    ],
    "v16_looks": [
     7.0,
-    8.0
+    7.5
    ],
    "why_looks": "lifts L7b +0.25; taste: roomy shorts +0.25"
   },
@@ -924,26 +924,26 @@
     6.5
    ],
    "v16_cool": [
-    6.5,
-    6.5
+    7.0,
+    7.0
    ],
    "v16_warm": [
-    6.5,
-    6.5
+    7.0,
+    7.0
    ],
    "panel": 8.0,
    "founder": null,
-   "why": "faults -0.75 (PB1_roomier_than_look: the roomy oxford shirt is roomier than the rest of the outfit calls for); taste: wide legs +0.375",
+   "why": "lifts L7b +0.25; faults -0.75 (PB1_roomier_than_look: the roomy dress shirt is roomier than the rest of the outfit calls for); taste: wide legs +0.375",
    "pieces": "oxford_shirt (off_white_cream) + jeans (denim_mid, barrel) + loafer (black)",
    "v15_looks": [
     6.5,
     6.5
    ],
    "v16_looks": [
-    6.5,
-    6.5
+    7.0,
+    7.0
    ],
-   "why_looks": "faults -0.75 (PB1_roomier_than_look: the roomy oxford shirt is roomier than the rest of the outfit calls for); taste: wide legs +0.375"
+   "why_looks": "lifts L7b +0.25; faults -0.75 (PB1_roomier_than_look: the roomy dress shirt is roomier than the rest of the outfit calls for); taste: wide legs +0.375"
   },
   "ig-037": {
    "v15": [
@@ -1788,26 +1788,26 @@
     7.0
    ],
    "v16_cool": [
-    7.0,
-    7.0
+    8.0,
+    8.0
    ],
    "v16_warm": [
-    7.0,
-    7.0
+    8.0,
+    8.0
    ],
    "panel": 7.5,
    "founder": null,
-   "why": "faults -0.25 (H5_too_many_statements: too many things compete for attention); taste: roomy shorts +0.25",
+   "why": "held by 1 lift; lifts SIL +2; faults -0.25 (H5_too_many_statements: too many things compete for attention); taste: roomy shorts +0.25",
    "pieces": "jersey (black) + shorts (olive, wide) + other (grey)",
    "v15_looks": [
     7.0,
     7.0
    ],
    "v16_looks": [
-    7.0,
-    7.0
+    8.0,
+    8.0
    ],
-   "why_looks": "faults -0.25 (H5_too_many_statements: too many things compete for attention); taste: roomy shorts +0.25"
+   "why_looks": "held by 1 lift; lifts SIL +2; faults -0.25 (H5_too_many_statements: too many things compete for attention); taste: roomy shorts +0.25"
   },
   "ig-069": {
    "v15": [
@@ -1869,12 +1869,12 @@
     7.5
    ],
    "v16_cool": [
-    7.5,
-    7.5
+    7.0,
+    7.0
    ],
    "v16_warm": [
-    7.5,
-    7.5
+    7.0,
+    7.0
    ],
    "panel": 8.0,
    "founder": null,
@@ -1885,8 +1885,8 @@
     7.5
    ],
    "v16_looks": [
-    8.0,
-    8.0
+    7.5,
+    7.5
    ],
    "why_looks": "lifts L1 +0.25; taste: wide legs +0.75, a full hem over the shoe +0.5"
   },
@@ -2437,11 +2437,11 @@
    ],
    "v16_cool": [
     8.0,
-    8.0
+    8.5
    ],
    "v16_warm": [
     8.0,
-    8.0
+    8.5
    ],
    "panel": 8.0,
    "founder": null,
@@ -2453,7 +2453,7 @@
    ],
    "v16_looks": [
     8.0,
-    8.0
+    8.5
    ],
    "why_looks": "lifts L1 +0.25; taste: wide legs +0.75"
   },
@@ -2490,11 +2490,11 @@
     8.0
    ],
    "v16_cool": [
-    7.5,
+    7.0,
     8.0
    ],
    "v16_warm": [
-    7.5,
+    7.0,
     8.0
    ],
    "panel": 8.0,
@@ -2506,10 +2506,10 @@
     8.0
    ],
    "v16_looks": [
-    8.0,
+    7.5,
     8.0
    ],
-   "why_looks": "lifts L1 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.25"
+   "why_looks": "lifts L1 +0.25; taste: wide legs +0.375, a full hem over the shoe +0.5"
   },
   "ig-095": {
    "v15": [
@@ -2607,7 +2607,7 @@
    ],
    "panel": 6.0,
    "founder": 6.5,
-   "why": "nothing off, nothing chosen",
+   "why": "lifts L7b +0.25",
    "pieces": "oxford_shirt (white) + jeans (denim_mid, straight)",
    "v15_looks": [
     7.0,
@@ -2617,7 +2617,7 @@
     7.0,
     7.0
    ],
-   "why_looks": "nothing off, nothing chosen"
+   "why_looks": "lifts L7b +0.25"
   },
   "ig-099": {
    "v15": [
@@ -2711,7 +2711,7 @@
    ],
    "v16_warm": [
     5.5,
-    8.0
+    7.0
    ],
    "panel": 8.0,
    "founder": null,
@@ -2738,7 +2738,7 @@
    ],
    "v16_warm": [
     6.5,
-    6.5
+    5.5
    ],
    "panel": 7.0,
    "founder": null,
@@ -3301,11 +3301,11 @@
    ],
    "v16_cool": [
     7.5,
-    8.5
+    8.0
    ],
    "v16_warm": [
     7.5,
-    8.5
+    8.0
    ],
    "panel": 7.5,
    "founder": null,
@@ -3317,7 +3317,7 @@
    ],
    "v16_looks": [
     7.5,
-    8.5
+    8.0
    ],
    "why_looks": "lifts L1 +0.5; taste: relaxed legs +0.1875"
   },
@@ -3705,26 +3705,26 @@
     7.5
    ],
    "v16_cool": [
-    8.0,
-    8.0
+    7.5,
+    7.5
    ],
    "v16_warm": [
-    8.0,
-    8.0
+    7.5,
+    7.5
    ],
    "panel": 6.5,
    "founder": null,
-   "why": "lifts L1 +0.25, L5 +0.5, L6 +0.25",
+   "why": "lifts L1 +0.25, L5 +0.5, L6 +0.25; faults -0.375 (SD2_too_casual: the shoes are more casual than the clothes)",
    "pieces": "oxford_shirt (blue) + chinos (khaki_beige, straight) + canvas_sneaker (blue)",
    "v15_looks": [
     7.5,
     7.5
    ],
    "v16_looks": [
-    8.0,
-    8.0
+    7.5,
+    7.5
    ],
-   "why_looks": "lifts L1 +0.25, L5 +0.5, L6 +0.25"
+   "why_looks": "lifts L1 +0.25, L5 +0.5, L6 +0.25; faults -0.375 (SD2_too_casual: the shoes are more casual than the clothes)"
   },
   "pin-009": {
    "v15": [
@@ -3732,26 +3732,26 @@
     6.5
    ],
    "v16_cool": [
-    5.5,
+    6.0,
     5.5
    ],
    "v16_warm": [
-    5.5,
+    6.0,
     5.5
    ],
    "panel": 6.5,
    "founder": null,
-   "why": "lifts L5 +0.25; faults -1 (PN1_narrow_leg: the skinny jeans read dated; a straight leg balances the outfit); taste: skinny legs -0.5",
+   "why": "lifts L5 +0.25, L7b +0.5; faults -1 (PN1_narrow_leg: the skinny jeans read dated; a straight leg balances the outfit); taste: skinny legs -0.5",
    "pieces": "oxford_shirt (blue) + jeans (navy, skinny) + dress_shoe (black)",
    "v15_looks": [
     6.5,
     6.5
    ],
    "v16_looks": [
-    5.5,
+    6.0,
     5.5
    ],
-   "why_looks": "lifts L5 +0.25; faults -1 (PN1_narrow_leg: the skinny jeans read dated; a straight leg balances the outfit); taste: skinny legs -0.5"
+   "why_looks": "lifts L5 +0.25, L7b +0.5; faults -1 (PN1_narrow_leg: the skinny jeans read dated; a straight leg balances the outfit); taste: skinny legs -0.5"
   },
   "pin-010": {
    "v15": [
@@ -4300,11 +4300,11 @@
    ],
    "v16_cool": [
     6.0,
-    5.0
+    5.5
    ],
    "v16_warm": [
     6.0,
-    5.0
+    5.5
    ],
    "panel": 5.0,
    "founder": null,
@@ -4316,7 +4316,7 @@
    ],
    "v16_looks": [
     6.0,
-    5.0
+    5.5
    ],
    "why_looks": "faults -1.125 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit)"
   },
@@ -4362,7 +4362,7 @@
    ],
    "panel": 5.0,
    "founder": 5.5,
-   "why": "lifts L5 +0.25; taste: the top ends low -0.5",
+   "why": "lifts L5 +0.25; taste: the top ends low -0.25",
    "pieces": "camp_collar_shirt (blue) + jeans (denim_dark, straight) + loafer (black)",
    "v15_looks": [
     7.5,
@@ -4372,7 +4372,7 @@
     7.0,
     7.0
    ],
-   "why_looks": "lifts L5 +0.25; taste: the top ends low -0.5"
+   "why_looks": "lifts L5 +0.25; taste: the top ends low -0.25"
   },
   "pin-034": {
    "v15": [
@@ -4488,26 +4488,26 @@
     6.0
    ],
    "v16_cool": [
-    5.5,
+    6.0,
     6.0
    ],
    "v16_warm": [
-    5.5,
+    6.0,
     6.0
    ],
    "panel": 5.0,
    "founder": null,
-   "why": "faults -1 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit); taste: roomy shorts +0.25, the top ends low -0.5",
+   "why": "faults -1 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit); taste: roomy shorts +0.25, the top ends low -0.25",
    "pieces": "graphic_tee (white) + athletic_shorts (blue, wide) + performance_runner (grey)",
    "v15_looks": [
     5.5,
     6.0
    ],
    "v16_looks": [
-    5.5,
+    6.0,
     6.0
    ],
-   "why_looks": "faults -1 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit); taste: roomy shorts +0.25, the top ends low -0.5"
+   "why_looks": "faults -1 (CL1_loud_print: the big, loud print on the graphic tee takes over the outfit); taste: roomy shorts +0.25, the top ends low -0.25"
   },
   "pin-039": {
    "v15": [
@@ -4840,15 +4840,15 @@
    ],
    "v16_cool": [
     7.5,
-    7.5
+    8.0
    ],
    "v16_warm": [
     7.0,
-    7.0
+    7.5
    ],
    "panel": 6.5,
    "founder": null,
-   "why": "lifts L2 +0.5",
+   "why": "lifts L2 +0.5, L7b +0.5",
    "pieces": "bomber (black) + oxford_shirt (light_blue) + jeans (denim_mid, straight) + suede_chukka (grey)",
    "v15_looks": [
     8.0,
@@ -4856,9 +4856,9 @@
    ],
    "v16_looks": [
     7.5,
-    7.5
+    8.0
    ],
-   "why_looks": "lifts L2 +0.5"
+   "why_looks": "lifts L2 +0.5, L7b +0.5"
   },
   "pin-053": {
    "v15": [
@@ -5136,11 +5136,11 @@
     6.5
    ],
    "v16_cool": [
-    7.5,
+    7.0,
     7.0
    ],
    "v16_warm": [
-    7.5,
+    7.0,
     7.0
    ],
    "panel": 5.0,
@@ -5298,26 +5298,26 @@
     7.0
    ],
    "v16_cool": [
-    7.0,
-    7.0
+    7.5,
+    7.5
    ],
    "v16_warm": [
-    7.0,
-    7.0
+    7.5,
+    7.5
    ],
    "panel": 6.5,
    "founder": null,
-   "why": "nothing off, nothing chosen",
+   "why": "lifts L7b +0.25",
    "pieces": "other (grey) + oxford_shirt (tan_camel) + jeans (black, straight) + work_boot (black)",
    "v15_looks": [
     7.0,
     7.0
    ],
    "v16_looks": [
-    7.0,
-    7.0
+    7.5,
+    7.5
    ],
-   "why_looks": "nothing off, nothing chosen"
+   "why_looks": "lifts L7b +0.25"
   },
   "pin-070": {
    "v15": [
@@ -5820,7 +5820,7 @@
    ],
    "panel": 6.5,
    "founder": null,
-   "why": "lifts L7 +0.25",
+   "why": "nothing off, nothing chosen",
    "pieces": "oxford_shirt (light_blue) + chinos (khaki_beige, straight) + loafer (brown)",
    "v15_looks": [
     7.0,
@@ -5830,7 +5830,7 @@
     7.0,
     6.5
    ],
-   "why_looks": "lifts L7 +0.25"
+   "why_looks": "nothing off, nothing chosen"
   },
   "rd-015": {
    "v15": [
@@ -5919,11 +5919,11 @@
     7.0
    ],
    "v16_cool": [
-    7.0,
+    6.5,
     8.0
    ],
    "v16_warm": [
-    7.0,
+    6.5,
     8.0
    ],
    "panel": 6.5,
@@ -5935,7 +5935,7 @@
     7.0
    ],
    "v16_looks": [
-    7.0,
+    6.5,
     8.0
    ],
    "why_looks": "nothing off, nothing chosen"
@@ -6026,9 +6026,9 @@
   "phone-8bc29d": {
    "occ": "class",
    "v15": 7.0,
-   "v16_cool": 7.5,
-   "v16_warm": 7.5,
-   "why": "held by 0 lifts; taste: wide legs +0.75",
+   "v16_cool": 8.0,
+   "v16_warm": 8.0,
+   "why": "held by 1 lift; lifts SIL +2; taste: wide legs +0.75",
    "pieces": "overshirt (off_white_cream) + hoodie (grey) + jeans (black, wide) + other (grey)"
   },
   "phone-d6559a": {
@@ -6147,8 +6147,8 @@
    "occ": "class",
    "v15": 8.0,
    "v16_cool": 8.5,
-   "v16_warm": 8.5,
-   "why": "lifts L2 +0.375, L5 +0.5, L7 +0.5; taste: wide legs +0.75",
+   "v16_warm": 8.0,
+   "why": "lifts L2 +0.375, L5 +0.5, L7b +0.5; taste: wide legs +0.375",
    "pieces": "oxford_shirt (off_white_cream) + jeans (denim_mid, wide) + basketball_sneaker (black) + hoodie (green)"
   },
   "phone-e438d4": {
@@ -6202,9 +6202,9 @@
   "phone-7f3c60": {
    "occ": "class",
    "v15": 6.5,
-   "v16_cool": 6.0,
-   "v16_warm": 6.0,
-   "why": "faults -0.5 (PN1_narrow_leg: the slim jeans would balance better with a straight leg)",
+   "v16_cool": 6.5,
+   "v16_warm": 6.5,
+   "why": "lifts L7b +0.25; faults -0.5 (PN1_narrow_leg: the slim jeans would balance better with a straight leg)",
    "pieces": "oxford_shirt (multicolor) + jeans (off_white_cream, straight)"
   },
   "phone-0a864e": {
@@ -6450,9 +6450,9 @@
   "phone-5a9049": {
    "occ": "everyday",
    "v15": 7.0,
-   "v16_cool": 7.5,
-   "v16_warm": 7.5,
-   "why": "lifts L5 +0.25; taste: wide legs +0.375",
+   "v16_cool": 8.0,
+   "v16_warm": 8.0,
+   "why": "lifts L5 +0.25, L7b +0.5; taste: wide legs +0.375",
    "pieces": "oxford_shirt (orange) + jeans (charcoal, wide) + low_profile_sneaker (grey)"
   },
   "phone-bee15a": {

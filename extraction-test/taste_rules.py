@@ -32,7 +32,7 @@ OUT = HERE / "results" / "taste1"
 SEED = 20261116
 # the founder's yes (Nov 16): the creators win clashes, so no lift is off (L3, L7b count; L5 by look) and the plain
 # shorts charge is 0 (no creator calls shorts a fault); parts_proto.TASTE_BY_LOOK scales each size by the graded look
-FIXED = {"lift_off": [], "h7_tip": True, "long_top": 0.5, "long_top_read": "reading", "shorts": 0,
+FIXED = {"lift_off": [], "h7_tip": True, "long_top": 0.25, "long_top_read": "reading", "shorts": 0,
          "one_lift": 0.5,                                              # the table: a single lift at half (rule i)
          "leg_slim": 0,                                                # row b: slim is v16's own charge (and free in tailored)
          # Nov 17, card by card: one color is free (his "point"); slides fine on a warm casual day; runners fine with
@@ -41,7 +41,9 @@ FIXED = {"lift_off": [], "h7_tip": True, "long_top": 0.5, "long_top_read": "read
          "sil_mode": "alone",
          # round 5 (Nov 17): steadier steps: the first lift counts half (not only a lone lift), a halved lift still
          # counts for stacking, relaxed legs get half the wide-leg and silhouette credit
-         "one_lift_mode": "first", "stack_prehalf": True, "relaxed_factor": 0.5}                                          # SIL lifts a great shape when nothing else does
+         "one_lift_mode": "first", "stack_prehalf": True, "relaxed_factor": 0.5,
+         # round 7 (Nov 17): steady classes, an unclear shoe real for SIL, the long top at 0.25
+         "steady_map": {"oxford_shirt": "dress_shirt", "chelsea_boot": "dress_shoe"}, "other_shoe_real": True}                                          # SIL lifts a great shape when nothing else does
 GRID = {"sil": [0.5, 0.75, 1.0, 1.25, 1.5, 1.75], "sil_line": [0.5, 0.75, 1.0], "sil_tonal": [0, 0.25, 0.5],
         "leg_skinny": [0.5, 1.0, 1.5],                                # Nov 17: skinny costs in every look, tailored too
         "leg_wide": [0, 0.25, 0.5, 0.75],

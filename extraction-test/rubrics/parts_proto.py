@@ -512,7 +512,11 @@ TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
                    # --key consistent), each scaled by TASTE_BY_LOOK for the graded look; the creators win clashes
                    # Nov 17 (card by card): + the silhouette lift (SIL, alone), one color free, slides fine on a warm
                    # casual day, runners fine with casual pieces, skinny costs in every look; refit on all 164
-                   taste=dict(leg_look_mode="tiebreak", lift_off=[], h7_tip=True, long_top=0.5, long_top_read="reading", shorts=0, one_lift=0.5,
+                   # round 7 (Nov 17, "Yes, free fix"): classes the reader swaps on one photo score as one where it
+                   # doesn't cost agreement (oxford -> dress shirt, Chelsea boot -> dress shoe), an unclear shoe is
+                   # real for the silhouette lift, and the long top costs 0.25 (its read flips at the borderline)
+                   taste=dict(leg_look_mode="tiebreak", steady_map={"oxford_shirt": "dress_shirt", "chelsea_boot": "dress_shoe"},
+                              other_shoe_real=True, lift_off=[], h7_tip=True, long_top=0.25, long_top_read="reading", shorts=0, one_lift=0.5,
                               leg_slim=0, color=0, sandals_warm=True, runners_casual=True, sil_mode="alone",
                               one_lift_mode="first", stack_prehalf=True, relaxed_factor=0.5,   # round 5: steadiness
                               sil=1.75, sil_line=0.5, sil_tonal=0.25, leg_skinny=0.5, leg_wide=0.75, hem_plus=0.5,
@@ -1771,7 +1775,8 @@ V16_OWNS = {
     "H8": {"FF6_strain"},
     "H9": {"FF1_sleeves_tailored", "FF1_sleeves_long", "FF5_too_big", "FF5_roomy_sleeves"},
     "H10": {"SW1_chunky_narrow"},
-    "H11": {"SK2_runners", "SD4_chunky_under_tailoring"},
+    "H11": {"SK2_runners", "SD4_chunky_under_tailoring", "SD2_too_casual"},   # round 7: the shoes-too-casual gap is
+                                                                      # the same fact (dressy clothes over chunky shoes)
 }
 V16_OWNS["S2"] = V16_OWNS["S1"]
 # Charges whose read flips between the two stored gold readings on half or more of the photos where they fire
@@ -1985,6 +1990,16 @@ def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
             o = dict(o, bottom=dict(o["bottom"], leg_shape=new_leg))
     items, waived = [], set()
     pending_sil = None
+    # round 7: the leg look (steady, never wrong about narrow) overrules v12's weak "a straight leg at roominess 2 or
+    # less is slim" when it sees no narrow leg; the shape charge it raised is waived and doesn't block SIL
+    lk_cls = None
+    if any(x and x != "not_visible" for x in lw):
+        lk_cls = ("wide" if "hangs_away" in lw or "wider" in lw else
+                  "slim" if lw[0] in ("clings", None, "not_visible") and lw[1] in ("narrower", None, "not_visible") else "straight")
+    pn1_waived = (T.get("pn1_look") and lk_cls in ("wide", "straight") and o0["bottom"] is not None
+                  and o0["bottom"].get("leg_shape") not in ("skinny", "slim"))
+    if pn1_waived:
+        waived |= {"PN1_narrow_leg"}
     # Nov 17 (the founder, card by card): "proportions are a very important thing that we have to nail".
     # SIL, a strong silhouette, as a lift of its own (sil.2, sil.7, sil.10, prop.3, prop.10, prop.11, prop.15): nothing
     # off in fit or proportions, no dealbreaker, the top not hanging long, and either
@@ -1996,7 +2011,7 @@ def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
         sub_b = B.get("subcategory") if B else None
         legb = B.get("leg_shape") if B else None
         ss = S.get("subcategory") if S else None
-        real = ss is not None and ss not in SLIDES | RUNNER | {"other"}
+        real = ss is not None and ss not in SLIDES | RUNNER | ({"other"} if not T.get("other_shoe_real") else set())
         if sub_b in SHORTS:
             full = (B.get("volume") or 3) >= 4 or legb in R.LOOSE
         else:
@@ -2010,7 +2025,8 @@ def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
                 and "suit_jacket" in subs)
         long_top = any(g.get("length") == "below_crotch" and g.get("tucked") not in ("full", "half")
                        for g in o["tops"] + o["outers"])
-        shape_fault = any(r["points"] < 0 for k in ("fit", "proportions") for r in parts[k].reasons)
+        shape_fault = any(r["points"] < 0 and not (pn1_waived and r["check"] == "PN1_narrow_leg")
+                          for k in ("fit", "proportions") for r in parts[k].reasons)
         dealbreaker = any(c[2] in ("sink", "hold") for c in caps)
         if ((full and real) or line) and not long_top and not shape_fault and not dealbreaker:
             cols = {g.get("color_family") for g in o["tops"] + o["outers"] + [B]}
@@ -2271,6 +2287,11 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
         return {"overall": None, "reason": "nothing_readable", "parts": {}, "na_parts": PART_ORDER[:]}
     garments = _refile(R._normalize(garments))
     Tt = t.get("taste") or {}
+    if t["v16"] and Tt.get("steady_map"):                             # round 7 (Nov 17): classes the reader swaps on one
+        sm = Tt["steady_map"]                                         # photo score as one, where the rules allow it
+        jacket = any(g.get("category") == "outerwear" and g.get("subcategory") in TAILORED for g in garments)
+        garments = [dict(g, subcategory=sm[g.get("subcategory")]) if g.get("subcategory") in sm
+                    and not (g.get("category") == "bottom" and jacket) else g for g in garments]
     if t["v16"] and Tt.get("leg_look_global") and second_look:         # round 5: the leg-width look settles the
         lw = second_look.get("knee"), second_look.get("opening")      # straight/relaxed zone for the whole v16 score
         if any(x and x != "not_visible" for x in lw):
