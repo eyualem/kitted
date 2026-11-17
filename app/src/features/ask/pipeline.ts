@@ -15,7 +15,7 @@ import { t } from '@/i18n/en';
 import type { Clock } from '@/services/clock';
 import { questionLimitText, type QuotaService } from '@/services/quota';
 import type { Scheduler } from '@/services/scheduler';
-import type { AskCard } from './cards';
+import { checkFollowUps, type AskCard } from './cards';
 import { createSentenceStream, type GateContext, type GateRule } from './gate';
 import { isBodyRating, isDistress, isUnderage } from './guards';
 import { liveAnswer as defaultLive } from './live';
@@ -127,15 +127,31 @@ export interface AskPayload {
   tapOf?: string;
   /** On an answer with an ask card: the option he tapped (the card's buttons are done). */
   askTapped?: string;
+  /** On an answer: 1 to 3 follow-up taps, checked by code (cards.ts). Shown under the newest answer only. */
+  followUps?: string[];
   /** On a refusal (the phone's or the model's). */
   askRefused?: true;
   /** On the limit line: show "Try Pro". */
   tryPro?: boolean;
 }
 
-/** T102: not built. The taps under the newest answer (0 to 3), or null. */
-export function latestFollowUps(_thread: readonly ChatMessage[]): { messageId: string; taps: string[] } | null {
-  throw new Error('T102: not built');
+/**
+ * The taps under the newest answer (KC1.3), or null. Only the rows after his last message count, and only the last
+ * answer among them (a row with `answerTo`): a new question hides the taps, and a limit line, a decline, the support
+ * card and a fail line have none. A refused answer shows none even if the row has them.
+ */
+export function latestFollowUps(thread: readonly ChatMessage[]): { messageId: string; taps: string[] } | null {
+  let from = thread.length;
+  while (from > 0 && thread[from - 1]!.role !== 'user') from--;
+  for (let i = thread.length - 1; i >= from; i--) {
+    const m = thread[i]!;
+    if (m.role !== 'stylist' || typeof m.payload.answerTo !== 'string') continue;
+    const taps = m.payload.followUps;
+    if (m.payload.askRefused || !Array.isArray(taps)) return null;
+    const list = taps.filter((x): x is string => typeof x === 'string' && x.length > 0);
+    return list.length ? { messageId: m.id, taps: list } : null;
+  }
+  return null;
 }
 
 function row(id: string, createdAt: number, role: ChatMessage['role'], text: string, extra: Partial<ChatMessage> = {}, payload: AskPayload = {}): ChatMessage {
@@ -302,12 +318,15 @@ export function createAsk(deps: AskDeps) {
       const clash = verdictClash(prep.verdict, done.verdict);
       if (clash) log('gate · verdict');
       const card = done.refused || clash || !prep.card ? null : await prep.card(done.card, gate).catch(() => null);
+      // 0 to 3 follow-up taps (KC1.3): never under a refusal, a clash, or a tap question (two rows of taps).
+      const followUps = done.refused || clash || card?.type === 'ask' ? [] : checkFollowUps(done.followUps, { question: question.text ?? '', gate });
       const saved = done.refused || !prep.remember ? null : await prep.remember(done.remember, at).catch(() => null);
       // The live row keeps showing the words until the thread has this row (live.ts).
       live.finish(id, answer, at, question.id);
       if (replaces) await store.chat.delete(replaces.id);
       await store.chat.put(row(id, at, 'stylist', answer, {}, {
         answerTo: question.id, ...(done.refused ? { askRefused: true as const } : {}), ...(card ? { askCard: card } : {}),
+        ...(followUps.length ? { followUps } : {}),
         ...(saved ? { savedFact: saved.factId, ...(saved.itemId ? { savedPiece: saved.itemId } : {}) } : {}),
       }));
       if (counted) {
