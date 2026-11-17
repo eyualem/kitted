@@ -2,7 +2,7 @@
 
 **Status: a design on paper, $0. Nothing in the scoring changed.** The rescoring session builds it into v16 (`extraction-test/rubrics/parts_proto.py`, `_v16_taste`) only after your yes. Log #478.
 
-**Your answer (Nov 16, relayed by the coordinating session):** "yea, i want to go the recommended way": **A** (the rules follow the outfit's look), **the four creators win clashes**, and **Tailored recognized in scoring now**. Log #480. Refinement in a separate spec interview: the user confirms the look after the photo, with the detected look preselected, so the look becomes an engine input that defaults to the detected one. The rescoring session builds the table that way.
+**Your answer (Nov 16, relayed by the coordinating session):** "yea, i want to go the recommended way": **A** (the rules follow the outfit's look), **the four creators win clashes**, and **Tailored recognized in scoring now** (`specs/tailored.md` TL3 changed with your yes, Nov 17). Log #480. Refinement in a separate spec interview: the user confirms the look after the photo, with the detected look preselected, so the look becomes an engine input that defaults to the detected one. The rescoring session builds the table that way.
 
 **Your ask (Nov 16):** "make sure u make the rules specific to what preferences the user has like streetwear or a combination like streetwear and formal."
 
