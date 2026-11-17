@@ -144,7 +144,7 @@ Lane files: `app/src/features/account`, `app/src/sync`, `app/src/features/privac
 Spec: `specs/kit-and-morning.md` (interview: T50); notifications: `specs/notifications.md` (interview: T56, approved Nov 9); for T58–T59, `specs/explain-rating.md` (approved Nov 10)  
 Lane files: `app/src/features/{stylist,ask,morning}`
 
-- [ ] **T50** · Write the Kit-and-morning spec with you: the decline line, greeting by name (notifications moved to T54) · *done: your yes · files: `specs/kit-and-morning.md`*
+- [ ] **T50** · Write the Kit-and-morning spec with you: the decline line, greeting by name (notifications moved to T54), and where he's headed: the card picks one outfit for an occasion guessed from his past checks' occasions, the day and the time ("For class:"), with a one-tap Class · Work · Out row that swaps the outfit; no question on opening, not three outfits (your direction, Nov 17: the card shouldn't shoot in the dark; to test in the interview, not yet approved) · *done: your yes · files: `specs/kit-and-morning.md`*
 - [ ] **T51** · The morning and evening card greets him by name · *after T31, T50 · checks: F6 greeting, F1.5 · files: morning/copy.ts, en.ts*
 - [ ] **T52** · Kit declines off-topic questions (haircuts, grooming, fitness, dating) with the spec's line, caught on the phone, never counted · *after T50 · checks: F5.2 · files: ask/*
 - [~] **T56** · PR #80 · *(beta)* Write the notifications spec with you: the daily nudge 15 minutes before he usually gets dressed, the ask (also at Later on the first-check card), the words, local only · *done: approved Nov 9 · files: `specs/notifications.md`*
@@ -251,6 +251,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-17 · radar-scoring-research: the scoring flow handed to the look-picker interview, widened to the whole flow (when the look and occasion are asked; card options that don't change the score go); the morning card's occasion guess added to T50 for its interview (your "Yes, add it")
 - 2026-11-17 · t103-allowed-colors: built the core function that lists the colors the scoring rules wouldn't mark down for a slot (24 colors, not 25: "multicolor" is a print label); no score moves, parity 100%; verifier READY after one test-strengthening round; log #479; PR open, waiting for your OK
 - 2026-11-17 · T96 + T96s face hiding (side session): merged (#125, your "Yes, merge it"): a face printed on your shirt is now left clear (3 of 3 real prints kept, 0 of 924 unseen photos wrongly kept) while your face stays blurred; strangers' faces are blurred when the app spots them (your Nov 16 rule); app checks green (853 scoring, 1,968 app tests); not yet seen on your phone or in a tee of yours (Y45); log #474–#478
 - 2026-11-17 · chat-app-improvements (control): you paused the friends' beta (Nov 16, log #462); Thursday's chat reviewed from your 14 screenshots (`inputs/2026-11-12-thursday-chat/`, git-ignored); child sessions wrote the visuals inventory and research (`reports/`), the audit of what the app reveals (branch `claude/competent-driscoll-931840`, waiting on your picks) and Kit's spec; merged #130 (spec) and #129 (boots drawn in the color he names), your "Yes, merge both"
@@ -265,4 +266,3 @@ The last 15 sessions, newest first.
 - 2026-11-11 · hoodie-layer-credit: setup's style screen merged (#109, your "Merge it"): "What's your style?", the own-words box rides the keyboard and gets the cursor, no Not sure (7 taps to the camera); log #447–#449; needs a new TestFlight build to reach phones
 - 2026-11-11 · hoodie-layer-credit: the style screen's new wording (you picked B from the mockup, `tasks/looks-wording/design.html`) added to PR #109 with the spec line, test and flows; log #449
 - 2026-11-11 · hoodie-layer-credit: tested setup's style screen on the Simulator: the keyboard covered the "Tell me in your words" field and Continue; fixed (PR #109, log #448); a first-tap miss seen on the Simulator only, not proven an app bug
-- 2026-11-11 · `/test-build` (you): one script checks the whole app before each TestFlight build (every check, the 5 core flows, one summary), then your OK, the build, one phone checklist, and `/test-build feedback` to sort testers' words; build 2 tagged `testflight/0.1.0-2`; the new flows not yet run on the Simulator
