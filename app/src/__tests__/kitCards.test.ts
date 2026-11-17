@@ -404,13 +404,15 @@ describe('KC2.3 · Example when his closet cannot make it', () => {
   });
 
   it('KC2.3 · 3 drawn clothing pieces with 1 of his is an example, and his piece is not in it', () => {
-    const k = kit(['jeans']);
-    const drawn = [{ kind: 'tee', color: 'white' }, { kind: 'white_leather_sneaker', color: 'white' }, { kind: 'overshirt', color: 'olive' }];
-    expect(valid(['jeans'], [G('top', 'tee', 'white'), G('footwear', 'white_leather_sneaker', 'white'), G('outerwear', 'overshirt', 'olive')])).toBe(true);
-    const card = outfit(buildCard({ type: 'outfit', pieces: [k.h('jeans')], needs: drawn }, k.input));
+    // His one piece is a navy sweater; the example the code picks (the Starter fallback) holds no sweater, so his piece has nowhere to hide.
+    const k = kit(['crew']);
+    const drawn = [{ kind: 'jeans', color: 'dark denim' }, { kind: 'white_leather_sneaker', color: 'white' }, { kind: 'overshirt', color: 'olive' }];
+    expect(valid(['crew'], [G('bottom', 'jeans', 'denim_dark', { leg_shape: 'straight' }), G('footwear', 'white_leather_sneaker', 'white'), G('outerwear', 'overshirt', 'olive')])).toBe(true);
+    const card = outfit(buildCard({ type: 'outfit', pieces: [k.h('crew')], needs: drawn }, k.input));
     expect(card.example).toBe(true);
     expect(card.itemIds).toEqual([]);
-    expect(JSON.stringify(card)).not.toContain('jeans"'); // none of his ids anywhere
+    expect(JSON.stringify(card)).not.toContain('crew'); // his id appears nowhere on the card
+    expect(card.needs.map((p) => p.kind)).not.toContain('sweater'); // nor a piece of his kind
     expect(card.needs.length).toBeGreaterThanOrEqual(3);
   });
 
@@ -428,7 +430,9 @@ describe('KC2.3 · Example when his closet cannot make it', () => {
     const all = outfit(buildCard({ type: 'outfit', pieces: ['olive', 'tee', 'jeans', 'sneakers'].map(k.h) }, k.input));
     expect(all.example).toBe(false);
     expect(all.itemIds.length).toBeGreaterThan(0);
-    const ex = outfit(buildCard({ type: 'outfit', pieces: [], needs: needs3 }, k.input));
+    // A closet that holds none of the needed kinds (his boots are black, the need is brown work boots: another color family, so still drawn, KC2.1).
+    const k2 = kit(['olive', 'crew', 'chinos', 'boots']);
+    const ex = outfit(buildCard({ type: 'outfit', pieces: [], needs: needs3 }, k2.input));
     expect(ex.example).toBe(true);
     expect(ex.itemIds).toHaveLength(0);
   });
