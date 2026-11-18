@@ -28,6 +28,9 @@ const { join } = jest.requireActual<{ join(...p: string[]): string }>('path');
 declare const __dirname: string;
 
 const row = (id: string): StarterEntry => catalogRow(id)!;
+/** T94 (founder 2): Tailored has no pack yet; the looks with a pack are the ones the lists below cover. */
+const PACKED: StyleKey[] = STYLES.filter((l) => PACKS[l] !== undefined);
+const pack = (look: StyleKey) => PACKS[look]!;
 const one = (look: StyleKey): Styles => [[look, 1]];
 const picks = (...looks: string[]): Styles => looks.map((l, i) => [l, i === 0 ? 0.5 : 0.25] as const);
 const ghost = (id: string) => ghostPiece(row(id))!;
@@ -35,7 +38,7 @@ const asItems = (rows: readonly ClosetItemRow[]) => rows as unknown as ClosetIte
 
 /** The look's anchor outfit with `id` swapped into its slot (an outer piece goes over the anchor's top). */
 function anchorWith(look: StyleKey, id?: string): ClosetItemRow[] {
-  const a = PACKS[look].anchor;
+  const a = pack(look).anchor;
   const slots: Record<string, string | undefined> = { top: a.top, bottom: a.bottom, shoes: a.shoes, outer: a.outer };
   if (id) {
     const slot = row(id).slot;
@@ -51,7 +54,7 @@ const wearable = (e: StarterEntry) => !!e.pick && !!e.slot;
 
 /** Every top + bottoms + shoes the look's own list makes, each alone and under each of its layers. */
 function packOutfits(look: StyleKey): ClosetItemRow[][] {
-  const rows = PACKS[look].ids.map(row).filter(wearable);
+  const rows = pack(look).ids.map(row).filter(wearable);
   const of = (slot: string) => rows.filter((e) => e.slot === slot).map((e) => ghost(e.id));
   const out: ClosetItemRow[][] = [];
   for (const t of of('top')) for (const b of of('bottom')) for (const s of of('shoes')) {
@@ -65,7 +68,7 @@ const counts = (items: readonly ClosetItemRow[]) => outfitValid(asItems(items), 
 const subOf = (x: Garment) => String(x.subcategory);
 
 // v5-styles' "never with" rules, as the pieces each one names (a plain outfit: no jacket over a top).
-const NEVER: Record<StyleKey, { rule: string; bad(x: Garment): boolean }[]> = {
+const NEVER: Partial<Record<StyleKey, { rule: string; bad(x: Garment): boolean }[]>> = {
   streetwear: [
     { rule: 'STR-3 tailoring', bad: (x) => ['blazer', 'sport_coat', 'unstructured_blazer', 'suit_jacket', 'suit_trousers', 'overcoat', 'trousers', 'dress_shirt'].includes(subOf(x)) },
     { rule: 'STR-3 dress shoes', bad: (x) => ['loafer', 'derby', 'dress_shoe'].includes(subOf(x)) },
@@ -107,16 +110,16 @@ const NEVER: Record<StyleKey, { rule: string; bad(x: Garment): boolean }[]> = {
 
 /** Every ordered blend of 2 and 3 different looks. */
 const BLENDS: StyleKey[][] = [];
-for (const a of STYLES) for (const b of STYLES) {
+for (const a of PACKED) for (const b of PACKED) {
   if (a === b) continue;
   BLENDS.push([a, b]);
-  for (const c of STYLES) if (c !== a && c !== b) BLENDS.push([a, b, c]);
+  for (const c of PACKED) if (c !== a && c !== b) BLENDS.push([a, b, c]);
 }
 
 describe('K1 · every list is 12 rows with the core', () => {
   it('each look and today\'s list', () => {
-    for (const look of STYLES) {
-      const ids = PACKS[look].ids;
+    for (const look of PACKED) {
+      const ids = pack(look).ids;
       expect(ids).toHaveLength(LIST_SIZE);
       expect(new Set(ids).size).toBe(LIST_SIZE);
       for (const c of CORE_IDS) expect(ids).toContain(c);
@@ -135,32 +138,32 @@ describe('K1 · every list is 12 rows with the core', () => {
 });
 
 describe('K2 · no piece breaks its look\'s "never with" rules', () => {
-  it.each(STYLES)('%s', (look) => {
+  it.each(PACKED)('%s', (look) => {
     const broken: string[] = [];
-    for (const id of PACKS[look].ids) {
+    for (const id of pack(look).ids) {
       const e = row(id);
       if (!e.pick) continue;
-      for (const r of NEVER[look]) if (r.bad(e.pick.garment)) broken.push(`${id} ${e.name}: ${r.rule}`);
+      for (const r of NEVER[look]!) if (r.bad(e.pick.garment)) broken.push(`${id} ${e.name}: ${r.rule}`);
     }
     expect(broken).toEqual([]);
   });
 });
 
 describe('K3 · each look\'s pieces make that look', () => {
-  it.each(STYLES)('%s: the anchor reads as the look, passes the closet\'s hard rules and is Put together', (look) => {
+  it.each(PACKED)('%s: the anchor reads as the look, passes the closet\'s hard rules and is Put together', (look) => {
     const items = anchorWith(look);
     expect(readsAs(items)).toContain(look);
     expect(outfitValid(asItems(items), [])).toBe(true);
     expect(everyday(items)).toBeGreaterThanOrEqual(7.0);
   });
-  it.each(STYLES)('%s: each of its own pieces is in an outfit from the list that reads as the look and counts', (look) => {
+  it.each(PACKED)('%s: each of its own pieces is in an outfit from the list that reads as the look and counts', (look) => {
     const outfits = packOutfits(look).filter(counts);
-    const off = PACKS[look].own.filter((id) => !outfits.some((o) => o.some((c) => c.starterId === id) && readsAs(o).includes(look)));
+    const off = pack(look).own.filter((id) => !outfits.some((o) => o.some((c) => c.starterId === id) && readsAs(o).includes(look)));
     expect(off).toEqual([]);
   });
-  it.each(STYLES)('%s: every wearable piece is in an outfit from the list that counts (no dead suggestion)', (look) => {
+  it.each(PACKED)('%s: every wearable piece is in an outfit from the list that counts (no dead suggestion)', (look) => {
     const outfits = packOutfits(look).filter(counts);
-    const dead = PACKS[look].ids.filter((id) => wearable(row(id)) && !outfits.some((o) => o.some((c) => c.starterId === id)));
+    const dead = pack(look).ids.filter((id) => wearable(row(id)) && !outfits.some((o) => o.some((c) => c.starterId === id)));
     expect(dead).toEqual([]);
   });
   it('the pick names the piece its row is for (each row fills its own pick)', () => {
@@ -175,7 +178,7 @@ describe('K4 · one piece never fills two rows of one list', () => {
     return out;
   };
   it('each look and today\'s list', () => {
-    for (const look of STYLES) expect(pairs(PACKS[look].ids.map(row))).toEqual([]);
+    for (const look of PACKED) expect(pairs(pack(look).ids.map(row))).toEqual([]);
     expect(pairs(COMMON_IDS.map(row))).toEqual([]);
   });
   it('every blend', () => {
@@ -184,28 +187,38 @@ describe('K4 · one piece never fills two rows of one list', () => {
 });
 
 describe('K5 · his picks blend in his order', () => {
-  const nonCore = (look: StyleKey) => PACKS[look].ids.filter((id) => !(CORE_IDS as readonly string[]).includes(id));
+  const nonCore = (look: StyleKey) => pack(look).ids.filter((id) => !(CORE_IDS as readonly string[]).includes(id));
   it('no picks, "Not sure" (no picks stored) or only unknown keys: today\'s 12 in today\'s order', () => {
     expect(starterList(null).map((e) => e.id)).toEqual(STARTER.map((e) => e.id));
     expect(starterList([]).map((e) => e.id)).toEqual(STARTER.map((e) => e.id));
     expect(starterList(picks('something_else')).map((e) => e.id)).toEqual(STARTER.map((e) => e.id));
   });
+  it('TL4 · a Tailored pick alone keeps today\'s 12 (founder 2: no Tailored list yet); with others, theirs', () => {
+    expect(STYLES).toContain('tailored');
+    expect(PACKED).not.toContain('tailored');
+    expect(PACKED).toHaveLength(7);
+    const tl = 'tailored' as StyleKey;
+    expect(starterList(one(tl)).map((e) => e.id)).toEqual(STARTER.map((e) => e.id));
+    expect(starterList(picks('tailored', 'streetwear')).map((e) => e.id)).toEqual([...pack('streetwear').ids]);
+    expect(starterList(picks('streetwear', 'tailored', 'minimalist')).map((e) => e.id))
+      .toEqual(starterList(picks('streetwear', 'minimalist')).map((e) => e.id));
+  });
   it('one pick: that look\'s 12 in its order; old keys map (preppy, old_money, gorpcore)', () => {
-    for (const look of STYLES) expect(starterList(one(look)).map((e) => e.id)).toEqual([...PACKS[look].ids]);
-    expect(starterList(picks('preppy')).map((e) => e.id)).toEqual([...PACKS.classic_prep.ids]);
-    expect(starterList(picks('gorpcore')).map((e) => e.id)).toEqual([...PACKS.outdoor.ids]);
+    for (const look of PACKED) expect(starterList(one(look)).map((e) => e.id)).toEqual([...pack(look).ids]);
+    expect(starterList(picks('preppy')).map((e) => e.id)).toEqual([...pack('classic_prep').ids]);
+    expect(starterList(picks('gorpcore')).map((e) => e.id)).toEqual([...pack('outdoor').ids]);
   });
   it('the first pick gets its full share, first, and leads the list', () => {
     for (const looks of BLENDS) {
       const ids = starterList(picks(...looks)).map((e) => e.id);
       const share = QUOTAS[looks.length as 2 | 3][0]!;
       for (const id of nonCore(looks[0]!).slice(0, share)) expect(ids).toContain(id);
-      expect(ids[0]).toBe(PACKS[looks[0]!].ids[0]);
+      expect(ids[0]).toBe(pack(looks[0]!).ids[0]);
     }
   });
   it('every row comes from one of his picks or the core; today\'s list only refills', () => {
     for (const looks of BLENDS) {
-      const mine = new Set([...CORE_IDS, ...looks.flatMap((l) => PACKS[l].ids)]);
+      const mine = new Set([...CORE_IDS, ...looks.flatMap((l) => pack(l).ids)]);
       const extra = starterList(picks(...looks)).filter((e) => !mine.has(e.id)).map((e) => e.id);
       for (const id of extra) expect(COMMON_IDS).toContain(id);
     }
@@ -243,7 +256,7 @@ describe('K6 · stored ids stay valid', () => {
 
 describe('K7 · the list never changes a score or a "+N" (#211, #309)', () => {
   it('each anchor outfit scores the same under every pick and none', () => {
-    for (const look of STYLES) {
+    for (const look of PACKED) {
       const items = anchorWith(look);
       const base = everyday(items);
       for (const p of STYLES) expect(everyday(items, one(p))).toBe(base);

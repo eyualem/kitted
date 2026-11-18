@@ -100,6 +100,9 @@ const addedInBuild = {
   'starter.item.36': 'Fleece',
   'starter.item.37': 'Shell jacket',
   'starter.item.38': 'Trail-style sneakers',
+  // Tailored, the 8th look (specs/tailored.md TL4, T94): its name and its setup line, the spec's words.
+  'style.tailored': 'Tailored',
+  'onb.looks.line.tailored': 'Suits, blazers, dress trousers, loafers',
   'pay.a11y.loading': 'Loading the plan',
   'pay.a11y.plan': '{plan}, {price} a month, {detail}.',
   'card.a11y.recheck': 'Re-check, {occasion}. Score went from {was} to {now}, up {delta}. {word}. Done: {fix}.',

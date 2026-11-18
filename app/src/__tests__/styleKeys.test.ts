@@ -11,8 +11,8 @@ jest.mock('@/features/fitcheck/session', () => ({ fitCheck: {} }));
 jest.mock('@/data/db', () => ({ store: {} }));
 
 describe('style keys (V5)', () => {
-  it('are exactly the rubric\'s detected styles', () => {
-    expect([...STYLES].sort()).toEqual([...RUBRIC_DATA.styles.order].sort());
+  it('are exactly the rubric\'s looks (T94: the 7 scoring looks and Tailored, RUBRIC_DATA.styles.lookOrder)', () => {
+    expect([...STYLES].sort()).toEqual([...((RUBRIC_DATA.styles as unknown as { lookOrder?: string[] }).lookOrder ?? [])].sort());
   });
 
   it('map the old keys and drop unknown ones', () => {
@@ -26,7 +26,7 @@ describe('style keys (V5)', () => {
   });
 
   it('every key has a name; the old names are gone', () => {
-    expect(STYLES.map((s) => styleLabel(s))).toEqual(['Streetwear', 'Smart casual', 'Minimal', 'Workwear', 'Classic prep', 'Vintage sport', 'Outdoor']);
+    expect(STYLES.map((s) => styleLabel(s))).toEqual(['Streetwear', 'Smart casual', 'Minimal', 'Workwear', 'Classic prep', 'Tailored', 'Vintage sport', 'Outdoor']);
     expect(styleLabel('old_money' as never)).toBe('Classic prep');
     for (const k of ['style.preppy', 'style.old_money', 'style.gorpcore']) expect(k in en).toBe(false);
   });
