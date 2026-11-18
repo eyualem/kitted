@@ -55,6 +55,16 @@ The planner's technical defaults 1–14 as written, plus:
   - `npm run check`, once, alone: tsc and core typecheck pass; lint 0 errors, 6 warnings (old test files); core vitest `Test Files 1 failed | 31 passed`, `Tests 19 failed | 893 passed`, all 19 in T94's tailored test file in core. The chain stops there, so the full app jest didn't run inside `check`, and I didn't run it separately (about 60 MB free).
 - **Not done:** no demo screen for the check (screen 314 would break the locked list of screens that run before onboarding); the verifier reaches it by playing three quick No's. Not seen on iOS: the lesson panel's look in light, dark and AX5, the lean after the tap, and the check card.
 
+## Fix round (verify round 3: C6, C7; tests re-locked at `478d2207`)
+- **C6** · `StyleGameScreen.tsx` `Lesson`: swiping across card 1's lesson no longer dismisses it. Only a tap does. The press records where it touched down (`onPressIn`), and a release that moved `TAP_SLOP` (6 pt) or more in any direction is ignored. That is the card's own `cardRelease(dx, dy) === 'peek'` rule. A press that carries no event or no coordinates still dismisses it, as the test kit's `fireEvent.press` sends none.
+- **C7** · `styleGameSession.ts` `back()`: Back on card 1 with nothing answered (the way out to Welcome) no longer rules out the fast-No check. Only a Back that undoes something during the cards does: an answer, or one still leaving. The timing is unchanged: card 1 is timed from the lesson's tap (#496).
+- **Results:**
+  - tsc clean; eslint clean on `src/features/onboarding`.
+  - T113 in band: **92 / 92 pass**.
+  - The neighbours in band (T39-setupScreens, T39-offerCard, T39-styleProfile, T39-noLeak, T39-aboutStep, looksOwnWords, syncSchema, privacyWipe, toast, scenarios): **10 suites, 89 / 89 pass**.
+  - `npm run check`, once, alone: tsc and core typecheck pass; lint 0 errors, 6 warnings (old test files); core vitest `Tests 19 failed | 893 passed`, all 19 in T94's tailored test file in core, so the chain stops before the app's jest.
+- Not seen on iOS: a real swipe across the lesson.
+
 ## Not seen on iOS
 Nothing has run on the Simulator: no Metro on 8082, no Maestro flows (`T113-style-game.yaml`, `T39-setup-fresh.yaml`), no screenshots (light, dark, AX5) and no VoiceOver pass. The lean, the swipe and drag feel, the haptics, the form sheet's detents, the keyboard padding on results, and the held toast on demo screens 306/307 are untested on a device. This is the verifier's step, then the founder's phone to-do (TESTING.md → Not testable yet).
 
