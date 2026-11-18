@@ -378,3 +378,9 @@ After today's deletes it also deletes kv `onboarding.styleGame` and calls `endSt
 - **T1 · T94's TL4.1 test and flow** render the grid T113 removes (Picking up T94 → 5). Recommended: T94's test writer points them at `LOOKS` and Style profile before T94 locks.
 - **T2 · The plan line has no "checks:".** This plan covers every acceptance criterion the spec lists (SG1.1–SG9.1, SG7.1–SG7.4, F1.1); add them to T113's line.
 - **T3 · SG1.1's sample size.** "Over 2,000 seeded deals every look is first 12.5% ± 1.5%" is about two standard errors, so a correct but differently seeded shuffle would fail it about 3 times in 10. With the mockup's generator ported exactly, seeds 1–2000 give 11.50–13.35% (checked Nov 18), so the test is stable *because* the port must be exact (the golden deals pin it). TESTING.md adds #486's stronger check (80,000 deals, every look at every position 12.5% ± 0.5) beside it.
+
+## Coordinator's answers (Nov 18, overnight; the founder is asleep)
+The founder told the coordinator to build tonight and show him in the morning (#489). His questions F1–F6 take the planner's recommended drafts, all marked `draft, founder to confirm (specs/style-game.md)` in `en.ts`, and listed for him in the PR:
+- **F1:** the planner's 16 descriptions, including the three rewritten for T94's redraws. **F2:** always `Outfit 3 of 8, view 1 of 2. …`. **F3:** `Here's your style` / `Add a look, or tell me in your words.`. **F4:** `{name}, now {n} of {total}` and `Added {name}`. **F5:** `Your style in your words`. **F6:** straight quotes.
+- **Technical defaults 1–14:** accepted as written (logged as #492).
+- **T1:** asked T94's session to point TL4.1's test and flow at `LOOKS` and Style profile before its tests lock, and to push its app-facing commit early. **T2:** checks added to the plan line. **T3:** keep the 80,000-deal check beside SG1.1 (golden deals pin the port).
