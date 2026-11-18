@@ -32,7 +32,7 @@
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--page); color: var(--text); font: 15px/1.5 var(--sans);
          padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 48px; }
-  .wrap { max-width: 1340px; margin: 0 auto; }
+  .wrap { max-width: 1760px; margin: 0 auto; }
   header.intro { padding-block: 32px 8px; display: grid; gap: 10px; }
   h1 { font: 700 28px/1.15 var(--display); margin: 0; text-wrap: balance; }
   h2.sec { font: 700 20px/1.25 var(--display); margin: 0 0 12px; text-wrap: balance; }
@@ -44,8 +44,9 @@
   .seg-ctl button[aria-pressed="true"] { background: var(--mark); color: var(--page); }
   .seg-ctl button:focus-visible, .restart:focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; }
   .tabs { display: none; }
+  .tabs .seg-ctl { max-width: 100%; overflow-x: auto; }
 
-  .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; padding-block: 20px 8px; align-items: start; }
+  .row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; padding-block: 20px 8px; align-items: start; }
   figure { margin: 0; min-width: 0; display: grid; gap: 12px; }
   .label { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; font: 700 18px/1.3 var(--display); }
   .tag { font: 600 12px/1 var(--sans); padding: 5px 9px; border-radius: 999px; border: 1px solid var(--rule); color: var(--muted); }
@@ -69,7 +70,8 @@
   .two > div { min-width: 0; }
   ol.plain, ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 68ch; }
 
-  @media (max-width: 1100px) {
+  @media (max-width: 1500px) { .row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 900px) {
     .row { grid-template-columns: minmax(0, 1fr); }
     .tabs { display: flex; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; padding-block: 10px; background: var(--page); }
     figure:not(.on) { display: none; }
@@ -157,19 +159,60 @@
   .rank.first { border-width: 2.5px; border-color: var(--a-ink); padding: 8.5px 12.5px 8.5px 8.5px; }
 
   /* The mockup's end (not an app screen) */
-  .end { margin: 8px 0; border: 1.5px dashed var(--a-line); border-radius: 14px; padding: 18px; display: grid; gap: 10px; }
-  .end .eyebrow { font: 600 13px/18px var(--sans); color: var(--a-ink3); }
-  .end .big { font: 700 22px/28px var(--display); }
-  .end .stat { display: flex; justify-content: space-between; gap: 12px; font: 400 15px/20px var(--sans); border-top: 1px solid var(--a-line); padding-top: 10px; }
-  .end .stat b { font-variant-numeric: tabular-nums; }
+  .end-bg { position: absolute; inset: 0; z-index: 30; background: rgba(0, 0, 0, .28); }
+  .endcard { position: absolute; left: 16px; right: 16px; bottom: 34px; z-index: 31; background: var(--a-primary); color: var(--a-on); border-radius: 20px; padding: 16px; display: grid; gap: 6px; }
+  .endcard .eyebrow { font: 600 13px/18px var(--sans); opacity: .75; }
+  .endcard .big { font: 700 20px/26px var(--display); }
+  .endcard .stat { font: 400 14px/19px var(--sans); opacity: .85; font-variant-numeric: tabular-nums; }
+  .endcard button { margin-top: 8px; height: 48px; border-radius: 24px; border: 0; background: var(--a-on); color: var(--a-primary); font: 600 16px/1 var(--sans); cursor: pointer; }
 
-  @media (prefers-reduced-motion: reduce) { .stage, .pick { transition: none; } .shake { animation: none; } }
+  /* D: one outfit at a time, Me / Not me */
+  .solo { width: 300px; margin: 0 auto; border: 1px solid var(--a-line); background: var(--a-surface); border-radius: 14px; padding: 10px; position: relative;
+          touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; transition: transform .22s ease, opacity .22s ease; }
+  .solo .art { background: var(--a-surface2); border-radius: 10px; padding: 24px 0 14px; display: flex; justify-content: center; }
+  .solo.drag { transition: none; cursor: grabbing; }
+  .solo.fly-r { transform: translateX(440px) rotate(14deg); opacity: 0; }
+  .solo.fly-l { transform: translateX(-440px) rotate(-14deg); opacity: 0; }
+  .stamp { position: absolute; top: 22px; font: 700 15px/1 var(--sans); padding: 7px 10px; border-radius: 8px; border: 2px solid var(--a-ink); color: var(--a-ink); background: var(--a-surface); opacity: 0; pointer-events: none; }
+  .stamp.me { right: 22px; } .stamp.no { left: 22px; }
+  .yn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn.sec { background: var(--a-surface2); color: var(--a-ink); }
+  /* D's results screen: it edits itself, so setup needs no grid */
+  .rank { transition: transform .18s ease; }
+  .rank.lift { transition: none; position: relative; z-index: 3; box-shadow: 0 12px 28px rgba(0,0,0,.2); }
+  .rank .art { position: relative; }
+  .rank .art .disc { position: absolute; top: 4px; left: 4px; }
+  .grip { width: 30px; height: 44px; border: 0; background: none; color: var(--a-ink3); display: grid; place-items: center; cursor: grab; touch-action: none; flex: none; padding: 0; }
+  .grip svg { width: 18px; height: 18px; }
+  .lift .grip { cursor: grabbing; }
+  .rank .x { width: 32px; height: 32px; border-radius: 16px; border: 0; background: var(--a-surface2); color: var(--a-ink2); display: grid; place-items: center; cursor: pointer; flex: none; }
+  .rank .x svg { width: 14px; height: 14px; }
+  .addrow { display: flex; align-items: center; justify-content: center; gap: 8px; height: 56px; width: 100%; border: 1.5px dashed var(--a-line); border-radius: 14px; background: none; color: var(--a-ink); font: 600 17px/1 var(--sans); cursor: pointer; }
+  .addrow svg { width: 18px; height: 18px; }
+  .words { display: grid; gap: 8px; padding-top: 18px; }
+  .linkbtn { border: 0; background: none; padding: 10px 0; font: 600 15px/20px var(--sans); color: var(--a-ink); text-align: left; cursor: pointer; justify-self: start; }
+  .wrow { display: flex; gap: 8px; }
+  .field { flex: 1; min-width: 0; height: 48px; border-radius: 12px; border: 1px solid var(--a-line); background: var(--a-surface); color: var(--a-ink); font: 400 17px/22px var(--sans); padding: 0 14px; }
+  .field::placeholder { color: var(--a-ink3); }
+  .field:focus-visible { outline: 2.5px solid var(--a-ink); outline-offset: 1px; }
+  .wdone { height: 48px; padding: 0 16px; border-radius: 24px; border: 0; background: var(--a-primary); color: var(--a-on); font: 600 15px/1 var(--sans); cursor: pointer; }
+  .saved { font: 400 15px/20px var(--sans); color: var(--a-ink2); }
+  .saved b { color: var(--a-ink); font-weight: 600; }
+  .sheet-bg { position: absolute; inset: 0; background: rgba(0, 0, 0, .38); z-index: 20; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; height: 80%; background: var(--a-bg); border-radius: 24px 24px 0 0; z-index: 21; display: flex; flex-direction: column; box-shadow: 0 -8px 24px rgba(0,0,0,.18); }
+  .sheet .grab { width: 36px; height: 5px; border-radius: 3px; background: var(--a-line); margin: 8px auto 0; flex: none; }
+  .sheet .hd { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px 12px; flex: none; }
+  .sheet .hd b { font: 700 22px/28px var(--display); }
+  .sheet-body { flex: 1; overflow-y: auto; padding: 0 16px 34px; scrollbar-width: none; }
+  .hint { text-align: center; font: 400 13px/18px var(--sans); color: var(--a-ink3); padding-top: 12px; }
+
+  @media (prefers-reduced-motion: reduce) { .stage, .pick, .solo, .rank { transition: none; } .shake { animation: none; } }
 </style>
 
 <div class="wrap">
   <header class="intro">
-    <h1>Picking a style: three ways to do it</h1>
-    <p>Testers stall on setup's style screen: some don't know what "Workwear" or "Vintage sport" means, others skip the tiles and type their own. Each direction below swaps style names for outfit comparisons in a different amount. You picked A; Tailored, the 8th look, is in A and C (two suits). <b>Every phone works: tap through it.</b> The drawings are the app's own (the same code as the tiles today). The words on these screens are drafts for your OK; nothing is built.</p>
+    <h1>Picking a style: four ways to try</h1>
+    <p>Testers stall on setup's style screen: some don't know what "Workwear" or "Vintage sport" means, others skip the tiles and type their own. Each direction below swaps style names for outfit comparisons in a different amount. You picked A on Nov 12; on Nov 17 you leaned to <b>D</b>, the swipe, with no grid after it. Tailored, the 8th look, is in A, C and D (two suits). <b>Every phone works: tap through it.</b> The drawings are the app's own (the same code as the tiles today). The words on these screens are drafts for your OK; nothing is built.</p>
     <p>Remember what the picks do today: they set the order of the fixes and break a tie on "Reads as". They never move a score. So the game has to be quick, and its result has to feel like him.</p>
     <div class="controls">
       <div class="seg-ctl" role="group" aria-label="Color scheme">
@@ -182,8 +225,9 @@
 
   <div class="tabs" role="tablist" aria-label="Directions">
     <div class="seg-ctl">
-      <button type="button" data-tab="a" aria-pressed="true">A · Two up</button>
-      <button type="button" data-tab="b" aria-pressed="false">B · Three up</button>
+      <button type="button" data-tab="a" aria-pressed="true">A · Pairs</button>
+      <button type="button" data-tab="d" aria-pressed="false">D · Me or not</button>
+      <button type="button" data-tab="b" aria-pressed="false">B · Threes</button>
       <button type="button" data-tab="c" aria-pressed="false">C · Grid</button>
     </div>
   </div>
@@ -194,11 +238,25 @@
       <div class="phone-wrap"><div class="phone" data-dir="a"></div></div>
       <button type="button" class="restart" data-restart="a">Start again</button>
       <div class="notes">
-        <p><span class="k">What happens.</span> Two outfits, no names. Tap the one that's more you, 6 times. The first 4 rounds show all 8 looks, Tailored included; rounds 5 and 6 put his winners against each other, so the top three come out in order. Then the reveal names them.</p>
+        <p><span class="k">What happens.</span> Two outfits, no names. Tap the one that's more you, up to 8 times: 4 first-round pairs (all 8 looks, Tailored included), 2 semifinals, a final and a match for 3rd. Every first-round winner plays again. Then the reveal names his top 3.</p>
         <ul>
-          <li>Taps on this step: <b>7</b> (6 picks + Continue). To the camera: <b>12</b> (today 7).</li>
+          <li>Taps on this step: <b>9</b> (8 picks + Continue). To the camera: <b>14</b> (today 7).</li>
           <li>Best for "I don't know the names". Most fun. The reveal is the moment people screenshot.</li>
           <li>Costs the most time for people who already know their style.</li>
+        </ul>
+      </div>
+    </figure>
+
+    <figure data-fig="d">
+      <div class="label">D · Me or not me, then rank <span class="tag rec">no grid, Nov 17</span></div>
+      <div class="phone-wrap"><div class="phone" data-dir="d"></div></div>
+      <button type="button" class="restart" data-restart="d">Start again</button>
+      <div class="notes">
+        <p><span class="k">What happens.</span> One outfit at a time, no names. Tap <b>Me</b> or <b>Not me</b> (or swipe right or left), 8 times, once per look. Then this-or-that between his Me's puts them in order, usually 2 to 4 taps. <b>No grid in setup:</b> the results screen does its jobs. He can drag a look by its handle to change the order, remove one (×), add one from a sheet ("Add a look"), say it in his own words, or play again. The full tile list stays in You → Style profile.</p>
+        <ul>
+          <li>Taps on this step: about <b>12</b>. To the camera: about <b>17</b> (today 7, A 14).</li>
+          <li>Every look is judged on its own, so two looks he loves can't knock each other out in round 1, and a look he dislikes rarely sneaks into his top 3.</li>
+          <li>About 3 more taps than A. If he says Not me to all 8: "Nothing clicked yet", with Play again and his own words; Continue waits for a look or his words (your Nov 11 rule).</li>
         </ul>
       </div>
     </figure>
@@ -224,7 +282,7 @@
       <div class="notes">
         <p><span class="k">What happens.</span> The tiles stay. A new row above them, "Not sure? Try this or that", opens A's game. The reveal's Continue moves on; "Change picks" lands back on the grid with his three filled in.</p>
         <ul>
-          <li>Taps if he knows his style: <b>2</b>, still 7 to the camera. If he plays: <b>8</b> (13 to the camera).</li>
+          <li>Taps if he knows his style: <b>2</b>, still 7 to the camera. If he plays: <b>10</b> (15 to the camera).</li>
           <li>The game goes only to people who were stuck. "Tell me in your words" stays.</li>
           <li>Risk: people who'd enjoy the game may not open it. Testers will show us whether the row gets noticed.</li>
         </ul>
@@ -237,15 +295,15 @@
       <h2 class="sec">Side by side</h2>
       <div class="tbl">
         <table>
-          <thead><tr><th></th><th>A · This or that</th><th>B · One of three</th><th>C · Grid + door</th></tr></thead>
+          <thead><tr><th></th><th>A · This or that</th><th>D · Me or not me</th><th>B · One of three</th><th>C · Grid + door</th></tr></thead>
           <tbody>
-            <tr><td>Taps to the camera (today 7)</td><td class="n">12</td><td class="n">9</td><td class="n">7, or 13 if he plays</td></tr>
-            <tr><td>Who plays</td><td>Everyone</td><td>Everyone</td><td>Only people who tap the row</td></tr>
-            <tr><td>Style names during the game</td><td>Hidden until the reveal</td><td>Hidden until the reveal</td><td>Hidden in the game, shown on tiles</td></tr>
-            <tr><td>How good the top three is</td><td>Good: winners meet again, so 1·2·3 come out in order</td><td>Rough: 1st is solid, 2nd and 3rd are guesses</td><td>Same as A when played, his own picks otherwise</td></tr>
-            <tr><td>Fixes "doesn't know the names"</td><td>Yes</td><td>Yes</td><td>If he opens it</td></tr>
-            <tr><td>Fixes "makes up his own"</td><td>Partly: the reveal's "Change picks" keeps the words box</td><td>Partly, same way</td><td>Partly: the words box stays on the grid</td></tr>
-            <tr><td>Size of the change</td><td>New game and reveal screens, grid kept for Change</td><td>Same, a three-across card</td><td>The same new screens plus one row on today's grid</td></tr>
+            <tr><td>Taps to the camera (today 7)</td><td class="n">14</td><td class="n">about 17</td><td class="n">9</td><td class="n">7, or 15 if he plays</td></tr>
+            <tr><td>Who plays</td><td>Everyone</td><td>Everyone</td><td>Everyone</td><td>Only people who tap the row</td></tr>
+            <tr><td>Style names during the game</td><td>Hidden until the reveal</td><td>Hidden until the reveal</td><td>Hidden until the reveal</td><td>Hidden in the game, shown on tiles</td></tr>
+            <tr><td>How good the top three is</td><td>Good: a bracket, so every first-round winner plays again</td><td>Good, and best when he loves two looks; a disliked look rarely makes his top 3</td><td>Rough: 1st is solid, 2nd and 3rd are guesses</td><td>Same as A when played, his own picks otherwise</td></tr>
+            <tr><td>Fixes "doesn't know the names"</td><td>Yes</td><td>Yes</td><td>Yes</td><td>If he opens it</td></tr>
+            <tr><td>Fixes "makes up his own"</td><td>Partly: the reveal's "Change picks" keeps the words box</td><td>Yes: "Tell me in your words" sits on the results screen; his Not me's also say what he isn't into</td><td>Partly, same way</td><td>Partly: the words box stays on the grid</td></tr>
+            <tr><td>Size of the change</td><td>New game and reveal screens, grid kept for Change</td><td>No grid in setup: a one-card screen, a this-or-that, and a results screen that edits itself</td><td>Same, a three-across card</td><td>The same new screens plus one row on today's grid</td></tr>
           </tbody>
         </table>
       </div>
@@ -254,20 +312,22 @@
     <div class="two">
       <div>
         <h2 class="sec">How to test it with 3–5 people</h2>
+        <p class="muted" style="margin:0 0 10px">Best test: each person plays both A and D (half start with A, half with D), then you ask "which result sounds more like you?"</p>
         <ol class="plain">
           <li>Open this page on your phone, pick a direction from the bar at the top, and hand it over with one line: "You're setting up a style app. Go."</li>
           <li>Say nothing else. Watch where they pause, where they tap twice, and whether they read the line under the title.</li>
           <li>At the reveal, ask: "Does that sound like you?" Then: "Would you change any of it?"</li>
-          <li>For C, note whether they open the row on their own. If most people skip it and then stall, A should be the default.</li>
+          <li>Note how long each takes and whether D's 8 cards start to feel like a chore.</li>
           <li>Write down each person's age band and the looks they ended with (your rule for testers), then tell me what you saw.</li>
         </ol>
       </div>
       <div>
         <h2 class="sec">Calls for you after testing</h2>
         <ul class="plain">
-          <li>Settled: A for everyone (Nov 12), and an 8th look, Tailored (spec approved Nov 13). The taps to the camera (about 12) change in the style game's spec.</li>
+          <li>Settled: A for everyone (Nov 12), and an 8th look, Tailored (spec approved Nov 13). The taps to the camera (about 14) change in the style game's spec. Nov 13: the first version's ranking buried round 1's winner (that's how Streetwear lost to Vintage sport); A is now a proper bracket.</li>
+          <li>A or D, after testers play both. In a simulation (made-up people, so for comparing only) both find the real favourite about 8 times in 10; D does better for a guy who loves two looks and keeps disliked looks out of the top 3, for about 3 more taps.</li>
           <li>Drawings or real outfit photos in the game. Drawings cost $0 and match the app; photos may judge taste better, but they need rights or friends' permission.</li>
-          <li>The words: "This or that?", "Tap the one that's more you.", "Here's your style", "Not sure? Try this or that".</li>
+          <li>The words: "Me or not me?", "Me", "Not me", "Now put them in order", "Here's your style", "Drag to change the order.", "Add a look", "Not quite you? Tell me in your words", "Play again", "Nothing clicked yet".</li>
           <li>Whether the game should also come back later on You's Style profile ("Retake").</li>
         </ul>
       </div>
@@ -287,6 +347,60 @@
     tailored: 'Suits, blazers, dress trousers, loafers',
   };
   const ORDER = ['streetwear', 'minimalist', 'smart_casual', 'classic_prep', 'tailored', 'workwear', 'outdoor', 'vintage_sport'];
+  // ---------- A's game: an 8-look bracket ----------
+  // Four first-round pairs, two semifinals, a final and a match for 3rd: every first-round winner plays again, so no
+  // early pick gets lost (the first mockup ranked tied winners by how recently they won, which buried round 1).
+  // "Neither" knocks both out; a match with one side missing passes the other through without a round.
+  const HEATS = [['streetwear', 'minimalist'], ['workwear', 'smart_casual'], ['outdoor', 'classic_prep'], ['tailored', 'vintage_sport']];
+  function bracket(g) {
+    let i = 0;
+    const play = (a, b) => {
+      if (!a || !b) return { win: a || b || null, lose: null };
+      if (i < g.rounds.length) { const x = g.rounds[i++]; return { win: x.win, lose: x.win ? (x.win === a ? b : a) : null }; }
+      throw { ask: [a, b] };
+    };
+    try {
+      const w = HEATS.map(([a, b]) => play(a, b).win);
+      const s1 = play(w[0], w[1]), s2 = play(w[2], w[3]);
+      const f = play(s1.win, s2.win), t = play(s1.lose, s2.lose);
+      return { done: true, result: [f.win, f.lose, t.win].filter(Boolean) };
+    } catch (e) { if (e && e.ask) return { done: false, pair: e.ask }; throw e; }
+  }
+
+  // ---------- B's game: three rounds of three ----------
+  function trioNext(g) {
+    const r = g.rounds.length;
+    if (r === 0) return ['streetwear', 'minimalist', 'workwear'];
+    if (r === 1) return ['smart_casual', 'outdoor', 'vintage_sport'];
+    return [g.rounds[0].win, g.rounds[1].win, 'classic_prep'].filter(Boolean);
+  }
+  function trioResult(g) {
+    const w = g.rounds.map((x) => x.win);
+    const fin = w[2];
+    const out = fin ? [fin] : [];
+    [w[1], w[0]].forEach((s) => { if (s && !out.includes(s)) out.push(s); });
+    return out.slice(0, 3);
+  }
+
+  // ---------- D's game: Me / Not me on each look, then rank the Me's ----------
+  // Each look once (its first drawing), mixed so look-alikes aren't side by side. Each Me is placed into a top 3 by
+  // binary insertion, this-or-that on second drawings (at most 2 taps per Me after the first). Replayed from the
+  // rounds so Back works. Simulated in tasks/style-quiz/quiz_sim.py ("D").
+  const D_ORDER = ['streetwear', 'classic_prep', 'workwear', 'minimalist', 'vintage_sport', 'tailored', 'outdoor', 'smart_casual'];
+  const yesList = (g) => g.swipes.filter((x) => x.yes).map((x) => x.look);
+  function ranker(g) {
+    let i = 0; const top = [];
+    const beats = (a, b) => { if (i < g.rounds.length) return g.rounds[i++].win === a; throw { ask: i % 2 ? [b, a] : [a, b] }; };
+    try {
+      for (const c of yesList(g)) {
+        let lo = 0, hi = top.length;
+        while (lo < hi) { const mid = (lo + hi) >> 1; if (beats(c, top[mid])) hi = mid; else lo = mid + 1; }
+        top.splice(lo, 0, c); top.length = Math.min(top.length, 3);
+      }
+      return { done: true, result: top.slice() };
+    } catch (e) { if (e && e.ask) return { done: false, pair: e.ask }; throw e; }
+  }
+
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ---------- theme ----------
@@ -309,67 +423,23 @@
   // The app's Outfit: top w·0.95 square; bottoms w·0.95 × w·1.08 tucked 0.14w up; shoes w·0.78 × w·0.51 tucked 0.10w up.
   function outfit(style, i, w) {
     const pieces = SVG[style][i % 2][isDark() ? 1 : 0];
-    const img = (svg, pw, ph, mt) => h('img', { src: uri(svg), width: pw, height: ph, alt: '', style: `width:${pw}px;height:${ph}px;margin-top:${mt}px` });
+    const img = (svg, pw, ph, mt) => h('img', { src: uri(svg), width: pw, height: ph, alt: '', draggable: 'false', style: `width:${pw}px;height:${ph}px;margin-top:${mt}px` });
     return h('div', { class: 'outfit', style: `width:${w}px`, 'aria-hidden': 'true' },
       img(pieces[0], w * 0.95, w * 0.95, 0), img(pieces[1], w * 0.95, w * 1.08, -w * 0.14), img(pieces[2], w * 0.78, w * 0.51, -w * 0.1));
   }
   const chevL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
   const chevR = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+  const xIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const gripIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 8h14M5 12h14M5 16h14"/></svg>';
+  const plusIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
   const cardsIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="8" height="14" rx="2"/><rect x="13" y="5" width="8" height="14" rx="2"/><path d="M7 9.5v5M17 9.5v5" stroke-linecap="round"/></svg>';
-
-  // ---------- A's game: six this-or-that rounds ----------
-  // Rounds 1–4 pair up all eight looks (Tailored and Classic prep never meet in round 1, they look alike);
-  // rounds 5–6 match the strongest pair that hasn't met. A win is +1, "Neither" is −0.5 to both.
-  function duelNext(g) {
-    const r = g.rounds.length;
-    if (r < 4) return [['streetwear', 'minimalist'], ['workwear', 'smart_casual'], ['outdoor', 'classic_prep'], ['tailored', 'vintage_sport']][r];
-    const rank = ranking(g);
-    // The strongest pair that hasn't met: the pair whose weaker look scores highest, then by the better rank.
-    const met = (a, b) => g.rounds.some((x) => x.pair.includes(a) && x.pair.includes(b));
-    const sc = scores(g);
-    const pairs = [];
-    for (let i = 0; i < rank.length; i++) for (let j = i + 1; j < rank.length; j++) if (!met(rank[i], rank[j])) pairs.push([rank[i], rank[j], Math.min(sc[rank[i]], sc[rank[j]]), i + j]);
-    pairs.sort((p, q) => q[2] - p[2] || p[3] - q[3]);
-    return pairs.length ? [pairs[0][0], pairs[0][1]] : [rank[0], rank[1]];
-  }
-  function scores(g) {
-    const score = Object.fromEntries(ORDER.map((s) => [s, 0]));
-    g.rounds.forEach((x) => { if (x.win) score[x.win] += 1; else x.pair.forEach((s) => (score[s] -= 0.5)); });
-    return score;
-  }
-  function ranking(g) {
-    const score = Object.fromEntries(ORDER.map((s) => [s, 0]));
-    const last = Object.fromEntries(ORDER.map((s) => [s, -1]));
-    g.rounds.forEach((x, i) => { if (x.win) { score[x.win] += 1; last[x.win] = i; } else x.pair.forEach((s) => (score[s] -= 0.5)); });
-    const h2h = (a, b) => { for (let i = g.rounds.length - 1; i >= 0; i--) { const x = g.rounds[i]; if (x.pair.includes(a) && x.pair.includes(b) && x.win) return x.win === a ? -1 : 1; } return 0; };
-    return ORDER.slice().sort((a, b) => score[b] - score[a] || h2h(a, b) || last[b] - last[a] || ORDER.indexOf(a) - ORDER.indexOf(b));
-  }
-  function duelResult(g) {
-    const wins = {}; g.rounds.forEach((x) => { if (x.win) wins[x.win] = (wins[x.win] || 0) + 1; });
-    return ranking(g).filter((s) => wins[s]).slice(0, 3);
-  }
-
-  // ---------- B's game: three rounds of three ----------
-  function trioNext(g) {
-    const r = g.rounds.length;
-    if (r === 0) return ['streetwear', 'minimalist', 'workwear'];
-    if (r === 1) return ['smart_casual', 'outdoor', 'vintage_sport'];
-    return [g.rounds[0].win, g.rounds[1].win, 'classic_prep'].filter(Boolean);
-  }
-  function trioResult(g) {
-    const w = g.rounds.map((x) => x.win);
-    const fin = w[2];
-    const out = fin ? [fin] : [];
-    [w[1], w[0]].forEach((s) => { if (s && !out.includes(s)) out.push(s); });
-    return out.slice(0, 3);
-  }
 
   // ---------- one phone ----------
   function Phone(root, dir) {
     let st, hist;
     const fresh = () => ({
-      view: dir === 'c' ? 'grid' : (dir === 'a' ? 'duel' : 'trio'),
-      picks: [], rounds: [], taps: 0, played: false, from: null, note: '', chosen: null, shake: null,
+      view: { a: 'duel', b: 'trio', c: 'grid', d: 'swipe' }[dir],
+      picks: [], rounds: [], swipes: [], words: '', editing: false, sheet: false, ended: false, taps: 0, played: false, from: null, note: '', chosen: null, shake: null,
     });
     const reset = () => { st = fresh(); hist = []; draw(); };
     const save = () => hist.push(JSON.stringify(st));
@@ -378,7 +448,6 @@
       if (!hist.length) { st.note = 'Back would go to Welcome'; draw(); setTimeout(() => { st.note = ''; draw(); }, 1400); return; }
       const taps = st.taps + 1; st = JSON.parse(hist.pop()); st.taps = taps; draw();
     };
-    const gameLen = dir === 'b' ? 3 : 6;
     const go = (fn) => { const stage = root.querySelector('.stage'); if (!stage || reduce) { fn(); draw(); return; } stage.classList.add('out'); setTimeout(() => { fn(); draw(); }, 160); };
 
     function choose(win, pair) {
@@ -388,8 +457,73 @@
       setTimeout(() => go(() => {
         st.chosen = null;
         st.rounds.push({ pair, win });
-        if (st.rounds.length >= gameLen) { st.picks = dir === 'b' ? trioResult(st) : duelResult(st); st.played = true; st.view = 'reveal'; }
+        const fin = dir === 'b' ? (st.rounds.length >= 3 ? trioResult(st) : null) : dir === 'd' ? (ranker(st).done ? ranker(st).result : null) : (bracket(st).done ? bracket(st).result : null);
+        if (fin) { st.picks = fin; st.played = true; st.view = dir === 'd' ? 'dresult' : 'reveal'; }
       }), win ? (reduce ? 120 : 260) : 0);
+    }
+
+    // D: decide on the current card (a tap on Me / Not me, or a swipe past 90 px).
+    function decide(yes) {
+      if (st.flying || st.swipes.length >= 8) return;
+      tap(); save();
+      st.flying = yes ? 'r' : 'l'; draw();
+      setTimeout(() => {
+        st.flying = null;
+        st.swipes.push({ look: D_ORDER[st.swipes.length], yes });
+        if (st.swipes.length < 8) { draw(); return; }
+        go(() => {
+          const r = ranker(st);
+          if (r.done) { st.picks = r.result; st.played = true; st.view = 'dresult'; } else st.view = 'order';
+        });
+      }, reduce ? 0 : 220);
+    }
+    function dragCard(card) {
+      let x0 = null, dx = 0;
+      const stamps = () => [card.querySelector('.stamp.me'), card.querySelector('.stamp.no')];
+      card.addEventListener('pointerdown', (e) => { x0 = e.clientX; dx = 0; card.classList.add('drag'); try { card.setPointerCapture(e.pointerId); } catch (err) { /* same */ } });
+      card.addEventListener('pointermove', (e) => {
+        if (x0 === null) return;
+        const sc = root.getBoundingClientRect().width / 402 || 1;
+        dx = (e.clientX - x0) / sc;
+        card.style.transform = `translateX(${dx}px) rotate(${dx / 22}deg)`;
+        const [me, no] = stamps(); me.style.opacity = Math.max(0, Math.min(1, dx / 90)); no.style.opacity = Math.max(0, Math.min(1, -dx / 90));
+      });
+      const end = () => {
+        if (x0 === null) return;
+        x0 = null; card.classList.remove('drag');
+        if (Math.abs(dx) > 90) { card.style.transform = ''; decide(dx > 0); }
+        else { card.style.transform = ''; stamps().forEach((s) => (s.style.opacity = 0)); }
+      };
+      card.addEventListener('pointerup', end); card.addEventListener('pointercancel', end);
+    }
+
+    // D's results: drag a row by its grip; the others slide to make room; dropping reorders his picks.
+    function dragRow(e, i, move) {
+      e.preventDefault();
+      const grip = e.currentTarget; try { grip.setPointerCapture(e.pointerId); } catch (err) { /* a pointer the browser can't capture; moves still reach the grip */ }
+      const els = [...root.querySelectorAll('.ranks .rank')];
+      const rects = els.map((r) => r.getBoundingClientRect());
+      const sc = root.getBoundingClientRect().width / 402 || 1;
+      const me = els[i]; const pitch = rects[i].height + 10 * sc; const y0 = e.clientY;
+      let target = i;
+      me.classList.add('lift');
+      const onMove = (ev) => {
+        const dy = ev.clientY - y0;
+        me.style.transform = `translateY(${dy / sc}px)`;
+        const c = rects[i].top + rects[i].height / 2 + dy;
+        target = els.filter((_, j) => j !== i && rects[j].top + rects[j].height / 2 < c).length;
+        els.forEach((el, j) => {
+          if (j === i) return;
+          const sh = i < target && j > i && j <= target ? -pitch : i > target && j < i && j >= target ? pitch : 0;
+          el.style.transform = sh ? `translateY(${sh / sc}px)` : '';
+        });
+      };
+      const onUp = () => {
+        grip.removeEventListener('pointermove', onMove); grip.removeEventListener('pointerup', onUp); grip.removeEventListener('pointercancel', onUp);
+        if (target !== i) move(i, target);
+        else { me.classList.remove('lift'); els.forEach((el) => (el.style.transform = '')); }
+      };
+      grip.addEventListener('pointermove', onMove); grip.addEventListener('pointerup', onUp); grip.addEventListener('pointercancel', onUp);
     }
 
     function frame(content, dock, step = 2) {
@@ -401,7 +535,19 @@
           h('div', { class: 'bar', 'aria-hidden': 'true' }, [1, 2, 3].map((n) => h('i', { class: n <= step ? 'on' : '' }))),
           h('span', { class: 'spacer' })),
         h('div', { class: 'scr' }, h('div', { class: 'scroll stage' }, content), dock ? h('div', { class: 'dock' }, dock) : null),
+        ...(st.ended ? endCard() : []),
       ];
+    }
+    // The mockup's end (not an app screen): what he saved and the taps, over the screen he left.
+    function endCard() {
+      const picks = st.picks.map((s, i) => `${i + 1} ${NAMES[s]}`).join(' \u00b7 ');
+      const said = [picks, st.words ? `\u201c${st.words}\u201d` : ''].filter(Boolean).join(' + ');
+      return [h('div', { class: 'end-bg' }), h('div', { class: 'endcard', role: 'status' },
+        h('div', { class: 'eyebrow' }, 'Saved. End of the mockup.'),
+        h('div', { class: 'big' }, said),
+        h('div', { class: 'stat' }, `${st.taps} taps on this step \u00b7 ${5 + st.taps} from a fresh install to the camera (today 7)`),
+        h('div', { class: 'stat' }, 'In the app, setup goes on to your age, then Stylist.'),
+        h('button', { onclick: reset }, 'Start again'))];
     }
     const title = (t, line) => h('div', { class: 'ttl' }, h('h3', {}, t), line ? h('p', {}, line) : null);
     const dots = (n, on) => h('div', { class: 'dots', 'aria-label': `Pick ${on + 1} of ${n}` }, Array.from({ length: n }, (_, i) => h('i', { class: i <= on ? 'on' : '' })));
@@ -427,19 +573,90 @@
         tiles.push(h('div', { class: 'tile other', title: 'Typing is left out of this mockup' }, h('div', { class: 't1' }, 'Something else?'), h('div', { class: 't2' }, 'Tell me in your words')));
         const door = dir === 'c' ? h('button', { class: 'door', onclick: () => { tap(); save(); go(() => { st.view = 'duel'; st.rounds = []; st.from = 'grid'; }); } },
           h('span', { class: 'ic', html: cardsIc }),
-          h('span', { class: 'tx' }, h('b', {}, st.played ? 'Play this or that again' : 'Not sure? Try this or that'), h('span', {}, '6 quick picks. We’ll suggest your top 3.')),
+          h('span', { class: 'tx' }, h('b', {}, st.played ? 'Play this or that again' : 'Not sure? Try this or that'), h('span', {}, '8 quick picks. We’ll suggest your top 3.')),
           h('span', { class: 'chev', html: chevR })) : null;
         const n = st.picks.length;
         return frame([title("What's your style?", "Pick up to 3 looks you like. Today's outfit comes next."), door, h('div', { class: 'grid' }, tiles)],
-          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'btn', disabled: !n, onclick: () => { tap(); save(); go(() => (st.view = 'done')); } }, n ? `Continue · ${n} of 3` : 'Continue')]);
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'btn', disabled: !n, onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, n ? `Continue · ${n} of 3` : 'Continue')]);
       },
       duel() {
         const r = st.rounds.length;
-        const pair = duelNext(st);
+        const pair = bracket(st).pair;
         const card = (s) => h('button', { class: 'pick' + (st.chosen === s ? ' chosen' : st.chosen ? ' faded' : ''), onclick: () => choose(s, pair), 'data-style': s, 'aria-label': `Outfit ${pair.indexOf(s) + 1}` },
           h('div', { class: 'art' }, outfit(s, seen(s), 136)));
-        return frame([title('This or that?', 'Tap the one that’s more you.'), h('div', { class: 'pair' }, pair.map(card)), dots(6, r)],
+        return frame([title('This or that?', 'Tap the one that’s more you.'), h('div', { class: 'pair' }, pair.map(card)), dots(8, r)],
           [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'txt', onclick: () => choose(null, pair) }, 'Neither')]);
+      },
+      swipe() {
+        const n = st.swipes.length;
+        const look = D_ORDER[Math.min(n, 7)];
+        const card = h('div', { class: 'solo' + (st.flying ? ' fly-' + st.flying : ''), 'data-style': look, role: 'img', 'aria-label': `Outfit ${n + 1} of 8` },
+          h('span', { class: 'stamp no' }, 'Not me'), h('span', { class: 'stamp me' }, 'Me'),
+          h('div', { class: 'art' }, outfit(look, 0, 170)));
+        dragCard(card);
+        return frame([title('Me or not me?', 'One outfit at a time. Would you wear something like this?'), card, dots(8, n), h('div', { class: 'hint' }, 'Tap below, or swipe the card.')],
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('div', { class: 'yn' },
+            h('button', { class: 'btn sec', onclick: () => decide(false) }, 'Not me'),
+            h('button', { class: 'btn', onclick: () => decide(true) }, 'Me'))]);
+      },
+      order() {
+        const pair = ranker(st).pair;
+        const card = (s) => h('button', { class: 'pick' + (st.chosen === s ? ' chosen' : st.chosen ? ' faded' : ''), onclick: () => choose(s, pair), 'data-style': s, 'aria-label': `Outfit ${pair.indexOf(s) + 1}` },
+          h('div', { class: 'art' }, outfit(s, 1, 136)));
+        return frame([title('Now put them in order', 'You said Me to these. Tap the one that’s more you.'), h('div', { class: 'pair' }, pair.map(card))],
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note)]);
+      },
+      // D's results: remove a look, add one from a sheet, say it in his own words, or play again. No grid in setup.
+      dresult() {
+        const p = st.picks;
+        const canGo = () => p.length > 0 || st.words.trim().length > 0;
+        const noneLiked = !yesList(st).length;
+        const move = (i, to, kbd = false) => { if (to === i || to < 0 || to >= p.length) return; tap(); save(); const [x] = st.picks.splice(i, 1); st.picks.splice(to, 0, x); draw(); if (kbd) root.querySelectorAll('.grip')[to]?.focus({ preventScroll: true }); };
+        const rows = p.map((s, i) => {
+          const grip = h('button', { class: 'grip', html: gripIc, 'aria-label': `Move ${NAMES[s]}, number ${i + 1}. Use the arrow keys.` });
+          grip.addEventListener('keydown', (e) => { if (e.key === 'ArrowUp') { e.preventDefault(); move(i, i - 1, true); } if (e.key === 'ArrowDown') { e.preventDefault(); move(i, i + 1, true); } });
+          grip.addEventListener('pointerdown', (e) => dragRow(e, i, move));
+          return h('div', { class: 'rank' + (i === 0 ? ' first' : ''), 'data-style': s },
+            h('div', { class: 'art' }, outfit(s, 0, 40), outfit(s, 1, 40), h('span', { class: 'disc' }, String(i + 1))),
+            h('div', { class: 'tx' }, h('b', {}, NAMES[s]), h('span', {}, LINES[s])),
+            h('button', { class: 'x', 'aria-label': `Remove ${NAMES[s]}`, html: xIc, onclick: () => { tap(); save(); st.picks.splice(i, 1); draw(); } }),
+            grip);
+        });
+        const add = p.length < 3 ? h('button', { class: 'addrow', onclick: () => { tap(); save(); st.sheet = true; draw(); } }, h('span', { html: plusIc, 'aria-hidden': 'true' }), 'Add a look') : null;
+        const finishWords = () => { tap(); save(); st.words = st.words.trim(); st.editing = false; draw(); };
+        let words;
+        if (st.editing) {
+          const input = h('input', { class: 'field', type: 'text', maxlength: '80', placeholder: 'Like skater, or all black', 'aria-label': 'Your style in your words', value: st.words });
+          input.addEventListener('input', (e) => { st.words = e.target.value; const c = root.querySelector('.dock .btn:not(.sec)'); if (c) c.disabled = !canGo(); });
+          input.addEventListener('keydown', (e) => { if (e.key === 'Enter') finishWords(); });
+          setTimeout(() => input.focus({ preventScroll: true }), 0);
+          words = h('div', { class: 'words' }, h('div', { class: 'wrow' }, input, h('button', { class: 'wdone', onclick: finishWords }, 'Done')));
+        } else if (st.words) {
+          words = h('div', { class: 'words' }, h('div', { class: 'saved' }, 'In your words: ', h('b', {}, `\u201c${st.words}\u201d`)),
+            h('button', { class: 'linkbtn', onclick: () => { tap(); st.editing = true; draw(); } }, 'Edit'));
+        } else {
+          words = h('div', { class: 'words' }, h('button', { class: 'linkbtn', onclick: () => { tap(); st.editing = true; draw(); } }, 'Not quite you? Tell me in your words'));
+        }
+        const head = p.length ? title('Here\u2019s your style', `From your ${st.rounds.length + st.swipes.length} picks.${p.length > 1 ? ' Drag to change the order.' : ''} You can change it anytime in You.`)
+          : noneLiked ? title('Nothing clicked yet', 'Play again, or tell me in your words.')
+          : title('Here\u2019s your style', 'Add a look, or tell me in your words.');
+        const f = frame([head, h('div', { class: 'ranks' }, rows, add), words],
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('div', { class: 'yn' },
+            h('button', { class: 'btn sec', onclick: () => { tap(); save(); go(() => { st.swipes = []; st.rounds = []; st.picks = []; st.view = 'swipe'; }); } }, 'Play again'),
+            h('button', { class: 'btn', disabled: !canGo(), onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, 'Continue'))]);
+        if (st.sheet) {
+          const close = () => { tap(); st.sheet = false; draw(); };
+          const left = ORDER.filter((s) => !p.includes(s));
+          const tiles = left.map((s) => h('button', { class: 'tile', onclick: () => { tap(); save(); st.picks.push(s); st.sheet = false; draw(); }, 'aria-label': `${NAMES[s]}: ${LINES[s]}` },
+            h('div', { class: 'art' }, outfit(s, 0, 73), outfit(s, 1, 73)),
+            h('div', { class: 'nm' }, h('span', {}, NAMES[s])),
+            h('div', { class: 'ln' }, LINES[s])));
+          f.push(h('div', { class: 'sheet-bg', onclick: close }),
+            h('div', { class: 'sheet', role: 'dialog', 'aria-label': 'Add a look' }, h('span', { class: 'grab' }),
+              h('div', { class: 'hd' }, h('b', {}, 'Add a look'), h('button', { class: 'txt', onclick: close }, 'Close')),
+              h('div', { class: 'sheet-body' }, h('div', { class: 'grid' }, tiles))));
+        }
+        return f;
       },
       trio() {
         const r = st.rounds.length;
@@ -459,20 +676,10 @@
           h('div', { class: 'art' }, outfit(s, 0, 40), outfit(s, 1, 40)),
           h('div', { class: 'tx' }, h('b', {}, NAMES[s]), h('span', {}, LINES[s])),
           h('span', { class: 'disc' }, String(i + 1))));
-        const nPicks = st.rounds.length;
+        const nPicks = st.rounds.length + st.swipes.length;
         return frame([title('Here’s your style', `From your ${nPicks} picks. You can change it anytime in You.`), h('div', { class: 'ranks' }, rows)],
           [h('button', { class: 'txt', onclick: () => { tap(); save(); go(() => (st.view = 'grid')); } }, 'Change picks'),
-           h('button', { class: 'btn', onclick: () => { tap(); save(); go(() => (st.view = 'done')); } }, 'Continue')]);
-      },
-      done() {
-        const toCam = 5 + st.taps;
-        return frame([title('About you', null), h('div', { class: 'end' },
-          h('div', { class: 'eyebrow' }, 'End of the mockup. About you comes next in the app.'),
-          h('div', { class: 'big' }, st.picks.map((s, i) => `${i + 1} ${NAMES[s]}`).join(' · ')),
-          h('div', { class: 'stat' }, h('span', {}, 'Taps on the style step'), h('b', {}, String(st.taps))),
-          h('div', { class: 'stat' }, h('span', {}, 'A fresh install to the camera'), h('b', {}, `${toCam} (today 7)`)),
-          h('div', { class: 'stat' }, h('span', {}, 'Played the game'), h('b', {}, st.played ? 'Yes' : 'No')))],
-          [h('button', { class: 'btn', onclick: reset }, 'Start again')], 3);
+           h('button', { class: 'btn', onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, 'Continue')]);
       },
     };
     function draw() {
@@ -512,12 +719,12 @@
     document.querySelectorAll('figure[data-fig]').forEach((f) => f.classList.toggle('on', f.dataset.fig === k));
     document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tab === k)));
     fit();
-    if (['a', 'b', 'c'].includes(k)) { try { history.replaceState(null, '', '#' + k); } catch (e) { /* fine */ } }
+    if (['a', 'b', 'c', 'd'].includes(k)) { try { history.replaceState(null, '', '#' + k); } catch (e) { /* fine */ } }
   };
   document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
   const fromHash = location.hash.slice(1);
-  showTab(['a', 'b', 'c'].includes(fromHash) ? fromHash : 'a');
-  window.addEventListener('hashchange', () => { const k = location.hash.slice(1); if (['a', 'b', 'c'].includes(k)) showTab(k); });
+  showTab(['a', 'b', 'c', 'd'].includes(fromHash) ? fromHash : 'a');
+  window.addEventListener('hashchange', () => { const k = location.hash.slice(1); if (['a', 'b', 'c', 'd'].includes(k)) showTab(k); });
 })();
 </script>
 
