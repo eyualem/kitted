@@ -347,39 +347,6 @@
     tailored: 'Suits, blazers, dress trousers, loafers',
   };
   const ORDER = ['streetwear', 'minimalist', 'smart_casual', 'classic_prep', 'tailored', 'workwear', 'outdoor', 'vintage_sport'];
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // ---------- theme ----------
-  const darkMq = matchMedia('(prefers-color-scheme: dark)');
-  let theme = 'system';
-  const isDark = () => theme === 'dark' || (theme === 'system' && darkMq.matches);
-  const uriCache = new Map();
-  const uri = (svg) => { let u = uriCache.get(svg); if (!u) { u = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); uriCache.set(svg, u); } return u; };
-
-  // ---------- drawing ----------
-  const h = (tag, attrs = {}, ...kids) => {
-    const el = document.createElement(tag);
-    for (const [k, v] of Object.entries(attrs)) {
-      if (v == null || v === false) continue;
-      if (k === 'class') el.className = v; else if (k.startsWith('on')) el.addEventListener(k.slice(2), v); else if (k === 'html') el.innerHTML = v; else el.setAttribute(k, v === true ? '' : v);
-    }
-    for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid);
-    return el;
-  };
-  // The app's Outfit: top w·0.95 square; bottoms w·0.95 × w·1.08 tucked 0.14w up; shoes w·0.78 × w·0.51 tucked 0.10w up.
-  function outfit(style, i, w) {
-    const pieces = SVG[style][i % 2][isDark() ? 1 : 0];
-    const img = (svg, pw, ph, mt) => h('img', { src: uri(svg), width: pw, height: ph, alt: '', draggable: 'false', style: `width:${pw}px;height:${ph}px;margin-top:${mt}px` });
-    return h('div', { class: 'outfit', style: `width:${w}px`, 'aria-hidden': 'true' },
-      img(pieces[0], w * 0.95, w * 0.95, 0), img(pieces[1], w * 0.95, w * 1.08, -w * 0.14), img(pieces[2], w * 0.78, w * 0.51, -w * 0.1));
-  }
-  const chevL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
-  const chevR = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
-  const xIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-  const gripIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 8h14M5 12h14M5 16h14"/></svg>';
-  const plusIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
-  const cardsIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="8" height="14" rx="2"/><rect x="13" y="5" width="8" height="14" rx="2"/><path d="M7 9.5v5M17 9.5v5" stroke-linecap="round"/></svg>';
-
   // ---------- A's game: an 8-look bracket ----------
   // Four first-round pairs, two semifinals, a final and a match for 3rd: every first-round winner plays again, so no
   // early pick gets lost (the first mockup ranked tied winners by how recently they won, which buried round 1).
@@ -433,6 +400,39 @@
       return { done: true, result: top.slice() };
     } catch (e) { if (e && e.ask) return { done: false, pair: e.ask }; throw e; }
   }
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- theme ----------
+  const darkMq = matchMedia('(prefers-color-scheme: dark)');
+  let theme = 'system';
+  const isDark = () => theme === 'dark' || (theme === 'system' && darkMq.matches);
+  const uriCache = new Map();
+  const uri = (svg) => { let u = uriCache.get(svg); if (!u) { u = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); uriCache.set(svg, u); } return u; };
+
+  // ---------- drawing ----------
+  const h = (tag, attrs = {}, ...kids) => {
+    const el = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v == null || v === false) continue;
+      if (k === 'class') el.className = v; else if (k.startsWith('on')) el.addEventListener(k.slice(2), v); else if (k === 'html') el.innerHTML = v; else el.setAttribute(k, v === true ? '' : v);
+    }
+    for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid);
+    return el;
+  };
+  // The app's Outfit: top w·0.95 square; bottoms w·0.95 × w·1.08 tucked 0.14w up; shoes w·0.78 × w·0.51 tucked 0.10w up.
+  function outfit(style, i, w) {
+    const pieces = SVG[style][i % 2][isDark() ? 1 : 0];
+    const img = (svg, pw, ph, mt) => h('img', { src: uri(svg), width: pw, height: ph, alt: '', draggable: 'false', style: `width:${pw}px;height:${ph}px;margin-top:${mt}px` });
+    return h('div', { class: 'outfit', style: `width:${w}px`, 'aria-hidden': 'true' },
+      img(pieces[0], w * 0.95, w * 0.95, 0), img(pieces[1], w * 0.95, w * 1.08, -w * 0.14), img(pieces[2], w * 0.78, w * 0.51, -w * 0.1));
+  }
+  const chevL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
+  const chevR = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+  const xIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const gripIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 8h14M5 12h14M5 16h14"/></svg>';
+  const plusIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+  const cardsIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="8" height="14" rx="2"/><rect x="13" y="5" width="8" height="14" rx="2"/><path d="M7 9.5v5M17 9.5v5" stroke-linecap="round"/></svg>';
 
   // ---------- one phone ----------
   function Phone(root, dir) {
