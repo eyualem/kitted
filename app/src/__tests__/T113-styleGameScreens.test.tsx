@@ -1250,9 +1250,9 @@ describe('SG9.1 · access', () => {
 });
 
 // ── F1.1 · setup to Stylist ───────────────────────────────────────────────────────────────────────────────────────
-describe('F1.1 · setup in 15 taps', () => {
+describe('F1.1 · setup in 16 taps', () => {
   // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
-  it('F1.1 · setup with 3 Me\'s is at most 15 taps to Stylist', async () => {
+  it('F1.1 · setup with 3 Me\'s is at most 16 taps to Stylist, the lesson\'s tap included', async () => {
     fixRandom(42);
     let presses = 0;
     let r = await mount(<WelcomeScreen />);
@@ -1261,9 +1261,11 @@ describe('F1.1 · setup in 15 taps', () => {
     presses++;
     await r.unmount();
     r = await mount(<StyleGameScreen />);
-    // playStyleGame counts the tap that dismisses card 1's overlay (SG1.4, #494). With it the walk is 16 presses
-    // on seed 42 (3 this-or-thats), one more than F1.1's 15 (17 with Check my fit and Agree): a conflict between
-    // SG1.4 and F1.1 for the founder (TESTING.md). The bound is not loosened here.
+    // F1.1 is 18 taps to the camera since Nov 18 (#495): the card-1 lesson (SG1.4) keeps its own tap. In-screen that
+    // is 16 (18 less Check my fit and Agree, as 15 came from 17): Get started, the lesson, 8 cards, up to 3
+    // this-or-thats, Continue, an age, Continue. Seed 42 deals 3 this-or-thats, so the walk is exactly 16: one extra
+    // tap anywhere fails it. A fresh install shows the lesson, so its tap is in this count, never skipped.
+    expect(teachShown()).toBe(true);
     presses += await playStyleGame({ me: 3 });
     expect(textAt('results-title')).toBe(RES_TITLE);
     expect(st().results?.picks).toHaveLength(3);
@@ -1279,7 +1281,7 @@ describe('F1.1 · setup in 15 taps', () => {
     presses++;
     await advance(5000);
     await r.unmount();
-    expect(presses).toBeLessThanOrEqual(15);
+    expect(presses).toBeLessThanOrEqual(16);
     expect(pushes()).toEqual(['/onboarding/looks', '/onboarding/basics']);
     expect(replaces()).toEqual(['/']);
     expect([...pushes(), ...replaces()].filter((p) => /camera|paywall|sign-in|consent/.test(p))).toEqual([]);
