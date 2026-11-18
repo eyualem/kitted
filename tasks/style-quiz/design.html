@@ -32,7 +32,7 @@
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--page); color: var(--text); font: 15px/1.5 var(--sans);
          padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 48px; }
-  .wrap { max-width: 1340px; margin: 0 auto; }
+  .wrap { max-width: 1760px; margin: 0 auto; }
   header.intro { padding-block: 32px 8px; display: grid; gap: 10px; }
   h1 { font: 700 28px/1.15 var(--display); margin: 0; text-wrap: balance; }
   h2.sec { font: 700 20px/1.25 var(--display); margin: 0 0 12px; text-wrap: balance; }
@@ -44,8 +44,9 @@
   .seg-ctl button[aria-pressed="true"] { background: var(--mark); color: var(--page); }
   .seg-ctl button:focus-visible, .restart:focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; }
   .tabs { display: none; }
+  .tabs .seg-ctl { max-width: 100%; overflow-x: auto; }
 
-  .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; padding-block: 20px 8px; align-items: start; }
+  .row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; padding-block: 20px 8px; align-items: start; }
   figure { margin: 0; min-width: 0; display: grid; gap: 12px; }
   .label { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; font: 700 18px/1.3 var(--display); }
   .tag { font: 600 12px/1 var(--sans); padding: 5px 9px; border-radius: 999px; border: 1px solid var(--rule); color: var(--muted); }
@@ -69,7 +70,8 @@
   .two > div { min-width: 0; }
   ol.plain, ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 68ch; }
 
-  @media (max-width: 1100px) {
+  @media (max-width: 1500px) { .row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 900px) {
     .row { grid-template-columns: minmax(0, 1fr); }
     .tabs { display: flex; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; padding-block: 10px; background: var(--page); }
     figure:not(.on) { display: none; }
@@ -163,13 +165,26 @@
   .end .stat { display: flex; justify-content: space-between; gap: 12px; font: 400 15px/20px var(--sans); border-top: 1px solid var(--a-line); padding-top: 10px; }
   .end .stat b { font-variant-numeric: tabular-nums; }
 
-  @media (prefers-reduced-motion: reduce) { .stage, .pick { transition: none; } .shake { animation: none; } }
+  /* D: one outfit at a time, Me / Not me */
+  .solo { width: 300px; margin: 0 auto; border: 1px solid var(--a-line); background: var(--a-surface); border-radius: 14px; padding: 10px; position: relative;
+          touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; transition: transform .22s ease, opacity .22s ease; }
+  .solo .art { background: var(--a-surface2); border-radius: 10px; padding: 24px 0 14px; display: flex; justify-content: center; }
+  .solo.drag { transition: none; cursor: grabbing; }
+  .solo.fly-r { transform: translateX(440px) rotate(14deg); opacity: 0; }
+  .solo.fly-l { transform: translateX(-440px) rotate(-14deg); opacity: 0; }
+  .stamp { position: absolute; top: 22px; font: 700 15px/1 var(--sans); padding: 7px 10px; border-radius: 8px; border: 2px solid var(--a-ink); color: var(--a-ink); background: var(--a-surface); opacity: 0; pointer-events: none; }
+  .stamp.me { right: 22px; } .stamp.no { left: 22px; }
+  .yn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn.sec { background: var(--a-surface2); color: var(--a-ink); }
+  .hint { text-align: center; font: 400 13px/18px var(--sans); color: var(--a-ink3); padding-top: 12px; }
+
+  @media (prefers-reduced-motion: reduce) { .stage, .pick, .solo { transition: none; } .shake { animation: none; } }
 </style>
 
 <div class="wrap">
   <header class="intro">
-    <h1>Picking a style: three ways to do it</h1>
-    <p>Testers stall on setup's style screen: some don't know what "Workwear" or "Vintage sport" means, others skip the tiles and type their own. Each direction below swaps style names for outfit comparisons in a different amount. You picked A; Tailored, the 8th look, is in A and C (two suits). <b>Every phone works: tap through it.</b> The drawings are the app's own (the same code as the tiles today). The words on these screens are drafts for your OK; nothing is built.</p>
+    <h1>Picking a style: four ways to try</h1>
+    <p>Testers stall on setup's style screen: some don't know what "Workwear" or "Vintage sport" means, others skip the tiles and type their own. Each direction below swaps style names for outfit comparisons in a different amount. You picked A; <b>D</b> (Nov 17) is a second version to test against it. Tailored, the 8th look, is in A, C and D (two suits). <b>Every phone works: tap through it.</b> The drawings are the app's own (the same code as the tiles today). The words on these screens are drafts for your OK; nothing is built.</p>
     <p>Remember what the picks do today: they set the order of the fixes and break a tie on "Reads as". They never move a score. So the game has to be quick, and its result has to feel like him.</p>
     <div class="controls">
       <div class="seg-ctl" role="group" aria-label="Color scheme">
@@ -182,8 +197,9 @@
 
   <div class="tabs" role="tablist" aria-label="Directions">
     <div class="seg-ctl">
-      <button type="button" data-tab="a" aria-pressed="true">A · Two up</button>
-      <button type="button" data-tab="b" aria-pressed="false">B · Three up</button>
+      <button type="button" data-tab="a" aria-pressed="true">A · Pairs</button>
+      <button type="button" data-tab="d" aria-pressed="false">D · Me or not</button>
+      <button type="button" data-tab="b" aria-pressed="false">B · Threes</button>
       <button type="button" data-tab="c" aria-pressed="false">C · Grid</button>
     </div>
   </div>
@@ -199,6 +215,20 @@
           <li>Taps on this step: <b>9</b> (8 picks + Continue). To the camera: <b>14</b> (today 7).</li>
           <li>Best for "I don't know the names". Most fun. The reveal is the moment people screenshot.</li>
           <li>Costs the most time for people who already know their style.</li>
+        </ul>
+      </div>
+    </figure>
+
+    <figure data-fig="d">
+      <div class="label">D · Me or not me, then rank <span class="tag">new, Nov 17 · test against A</span></div>
+      <div class="phone-wrap"><div class="phone" data-dir="d"></div></div>
+      <button type="button" class="restart" data-restart="d">Start again</button>
+      <div class="notes">
+        <p><span class="k">What happens.</span> One outfit at a time, no names. Tap <b>Me</b> or <b>Not me</b> (or swipe right or left), 8 times, once per look. Then this-or-that between his Me's puts them in order, usually 2 to 4 taps. Then the same reveal.</p>
+        <ul>
+          <li>Taps on this step: about <b>12</b>. To the camera: about <b>17</b> (today 7, A 14).</li>
+          <li>Every look is judged on its own, so two looks he loves can't knock each other out in round 1, and a look he dislikes rarely sneaks into his top 3.</li>
+          <li>About 3 more taps than A. If he says Not me to all 8, he lands on "Nothing clicked yet".</li>
         </ul>
       </div>
     </figure>
@@ -237,15 +267,15 @@
       <h2 class="sec">Side by side</h2>
       <div class="tbl">
         <table>
-          <thead><tr><th></th><th>A · This or that</th><th>B · One of three</th><th>C · Grid + door</th></tr></thead>
+          <thead><tr><th></th><th>A · This or that</th><th>D · Me or not me</th><th>B · One of three</th><th>C · Grid + door</th></tr></thead>
           <tbody>
-            <tr><td>Taps to the camera (today 7)</td><td class="n">14</td><td class="n">9</td><td class="n">7, or 15 if he plays</td></tr>
-            <tr><td>Who plays</td><td>Everyone</td><td>Everyone</td><td>Only people who tap the row</td></tr>
-            <tr><td>Style names during the game</td><td>Hidden until the reveal</td><td>Hidden until the reveal</td><td>Hidden in the game, shown on tiles</td></tr>
-            <tr><td>How good the top three is</td><td>Good: a bracket, so every first-round winner plays again</td><td>Rough: 1st is solid, 2nd and 3rd are guesses</td><td>Same as A when played, his own picks otherwise</td></tr>
-            <tr><td>Fixes "doesn't know the names"</td><td>Yes</td><td>Yes</td><td>If he opens it</td></tr>
-            <tr><td>Fixes "makes up his own"</td><td>Partly: the reveal's "Change picks" keeps the words box</td><td>Partly, same way</td><td>Partly: the words box stays on the grid</td></tr>
-            <tr><td>Size of the change</td><td>New game and reveal screens, grid kept for Change</td><td>Same, a three-across card</td><td>The same new screens plus one row on today's grid</td></tr>
+            <tr><td>Taps to the camera (today 7)</td><td class="n">14</td><td class="n">about 17</td><td class="n">9</td><td class="n">7, or 15 if he plays</td></tr>
+            <tr><td>Who plays</td><td>Everyone</td><td>Everyone</td><td>Everyone</td><td>Only people who tap the row</td></tr>
+            <tr><td>Style names during the game</td><td>Hidden until the reveal</td><td>Hidden until the reveal</td><td>Hidden until the reveal</td><td>Hidden in the game, shown on tiles</td></tr>
+            <tr><td>How good the top three is</td><td>Good: a bracket, so every first-round winner plays again</td><td>Good, and best when he loves two looks; a disliked look rarely makes his top 3</td><td>Rough: 1st is solid, 2nd and 3rd are guesses</td><td>Same as A when played, his own picks otherwise</td></tr>
+            <tr><td>Fixes "doesn't know the names"</td><td>Yes</td><td>Yes</td><td>Yes</td><td>If he opens it</td></tr>
+            <tr><td>Fixes "makes up his own"</td><td>Partly: the reveal's "Change picks" keeps the words box</td><td>Partly, same way; his Not me's also say what he isn't into</td><td>Partly, same way</td><td>Partly: the words box stays on the grid</td></tr>
+            <tr><td>Size of the change</td><td>New game and reveal screens, grid kept for Change</td><td>A one-card screen with Me / Not me, then A's this-or-that and reveal</td><td>Same, a three-across card</td><td>The same new screens plus one row on today's grid</td></tr>
           </tbody>
         </table>
       </div>
@@ -254,11 +284,12 @@
     <div class="two">
       <div>
         <h2 class="sec">How to test it with 3–5 people</h2>
+        <p class="muted" style="margin:0 0 10px">Best test: each person plays both A and D (half start with A, half with D), then you ask "which result sounds more like you?"</p>
         <ol class="plain">
           <li>Open this page on your phone, pick a direction from the bar at the top, and hand it over with one line: "You're setting up a style app. Go."</li>
           <li>Say nothing else. Watch where they pause, where they tap twice, and whether they read the line under the title.</li>
           <li>At the reveal, ask: "Does that sound like you?" Then: "Would you change any of it?"</li>
-          <li>For C, note whether they open the row on their own. If most people skip it and then stall, A should be the default.</li>
+          <li>Note how long each takes and whether D's 8 cards start to feel like a chore.</li>
           <li>Write down each person's age band and the looks they ended with (your rule for testers), then tell me what you saw.</li>
         </ol>
       </div>
@@ -266,8 +297,9 @@
         <h2 class="sec">Calls for you after testing</h2>
         <ul class="plain">
           <li>Settled: A for everyone (Nov 12), and an 8th look, Tailored (spec approved Nov 13). The taps to the camera (about 14) change in the style game's spec. Nov 13: the first version's ranking buried round 1's winner (that's how Streetwear lost to Vintage sport); A is now a proper bracket.</li>
+          <li>A or D, after testers play both. In a simulation (made-up people, so for comparing only) both find the real favourite about 8 times in 10; D does better for a guy who loves two looks and keeps disliked looks out of the top 3, for about 3 more taps.</li>
           <li>Drawings or real outfit photos in the game. Drawings cost $0 and match the app; photos may judge taste better, but they need rights or friends' permission.</li>
-          <li>The words: "This or that?", "Tap the one that's more you.", "Here's your style", "Not sure? Try this or that".</li>
+          <li>The words: "This or that?", "Tap the one that's more you.", "Me or not me?", "Me", "Not me", "Now put them in order", "Here's your style".</li>
           <li>Whether the game should also come back later on You's Style profile ("Retake").</li>
         </ul>
       </div>
@@ -309,7 +341,7 @@
   // The app's Outfit: top w·0.95 square; bottoms w·0.95 × w·1.08 tucked 0.14w up; shoes w·0.78 × w·0.51 tucked 0.10w up.
   function outfit(style, i, w) {
     const pieces = SVG[style][i % 2][isDark() ? 1 : 0];
-    const img = (svg, pw, ph, mt) => h('img', { src: uri(svg), width: pw, height: ph, alt: '', style: `width:${pw}px;height:${ph}px;margin-top:${mt}px` });
+    const img = (svg, pw, ph, mt) => h('img', { src: uri(svg), width: pw, height: ph, alt: '', draggable: 'false', style: `width:${pw}px;height:${ph}px;margin-top:${mt}px` });
     return h('div', { class: 'outfit', style: `width:${w}px`, 'aria-hidden': 'true' },
       img(pieces[0], w * 0.95, w * 0.95, 0), img(pieces[1], w * 0.95, w * 1.08, -w * 0.14), img(pieces[2], w * 0.78, w * 0.51, -w * 0.1));
   }
@@ -352,12 +384,31 @@
     return out.slice(0, 3);
   }
 
+  // ---------- D's game: Me / Not me on each look, then rank the Me's ----------
+  // Each look once (its first drawing), mixed so look-alikes aren't side by side. Each Me is placed into a top 3 by
+  // binary insertion, this-or-that on second drawings (at most 2 taps per Me after the first). Replayed from the
+  // rounds so Back works. Simulated in tasks/style-quiz/quiz_sim.py ("D").
+  const D_ORDER = ['streetwear', 'classic_prep', 'workwear', 'minimalist', 'vintage_sport', 'tailored', 'outdoor', 'smart_casual'];
+  const yesList = (g) => g.swipes.filter((x) => x.yes).map((x) => x.look);
+  function ranker(g) {
+    let i = 0; const top = [];
+    const beats = (a, b) => { if (i < g.rounds.length) return g.rounds[i++].win === a; throw { ask: i % 2 ? [b, a] : [a, b] }; };
+    try {
+      for (const c of yesList(g)) {
+        let lo = 0, hi = top.length;
+        while (lo < hi) { const mid = (lo + hi) >> 1; if (beats(c, top[mid])) hi = mid; else lo = mid + 1; }
+        top.splice(lo, 0, c); top.length = Math.min(top.length, 3);
+      }
+      return { done: true, result: top.slice() };
+    } catch (e) { if (e && e.ask) return { done: false, pair: e.ask }; throw e; }
+  }
+
   // ---------- one phone ----------
   function Phone(root, dir) {
     let st, hist;
     const fresh = () => ({
-      view: dir === 'c' ? 'grid' : (dir === 'a' ? 'duel' : 'trio'),
-      picks: [], rounds: [], taps: 0, played: false, from: null, note: '', chosen: null, shake: null,
+      view: { a: 'duel', b: 'trio', c: 'grid', d: 'swipe' }[dir],
+      picks: [], rounds: [], swipes: [], taps: 0, played: false, from: null, note: '', chosen: null, shake: null,
     });
     const reset = () => { st = fresh(); hist = []; draw(); };
     const save = () => hist.push(JSON.stringify(st));
@@ -375,9 +426,44 @@
       setTimeout(() => go(() => {
         st.chosen = null;
         st.rounds.push({ pair, win });
-        const fin = dir === 'b' ? (st.rounds.length >= 3 ? trioResult(st) : null) : (bracket(st).done ? bracket(st).result : null);
+        const fin = dir === 'b' ? (st.rounds.length >= 3 ? trioResult(st) : null) : dir === 'd' ? (ranker(st).done ? ranker(st).result : null) : (bracket(st).done ? bracket(st).result : null);
         if (fin) { st.picks = fin; st.played = true; st.view = 'reveal'; }
       }), win ? (reduce ? 120 : 260) : 0);
+    }
+
+    // D: decide on the current card (a tap on Me / Not me, or a swipe past 90 px).
+    function decide(yes) {
+      if (st.flying || st.swipes.length >= 8) return;
+      tap(); save();
+      st.flying = yes ? 'r' : 'l'; draw();
+      setTimeout(() => {
+        st.flying = null;
+        st.swipes.push({ look: D_ORDER[st.swipes.length], yes });
+        if (st.swipes.length < 8) { draw(); return; }
+        go(() => {
+          const r = ranker(st);
+          if (r.done) { st.picks = r.result; st.played = true; st.view = 'reveal'; } else st.view = 'order';
+        });
+      }, reduce ? 0 : 220);
+    }
+    function dragCard(card) {
+      let x0 = null, dx = 0;
+      const stamps = () => [card.querySelector('.stamp.me'), card.querySelector('.stamp.no')];
+      card.addEventListener('pointerdown', (e) => { x0 = e.clientX; dx = 0; card.classList.add('drag'); card.setPointerCapture(e.pointerId); });
+      card.addEventListener('pointermove', (e) => {
+        if (x0 === null) return;
+        const sc = root.getBoundingClientRect().width / 402 || 1;
+        dx = (e.clientX - x0) / sc;
+        card.style.transform = `translateX(${dx}px) rotate(${dx / 22}deg)`;
+        const [me, no] = stamps(); me.style.opacity = Math.max(0, Math.min(1, dx / 90)); no.style.opacity = Math.max(0, Math.min(1, -dx / 90));
+      });
+      const end = () => {
+        if (x0 === null) return;
+        x0 = null; card.classList.remove('drag');
+        if (Math.abs(dx) > 90) { card.style.transform = ''; decide(dx > 0); }
+        else { card.style.transform = ''; stamps().forEach((s) => (s.style.opacity = 0)); }
+      };
+      card.addEventListener('pointerup', end); card.addEventListener('pointercancel', end);
     }
 
     function frame(content, dock, step = 2) {
@@ -429,6 +515,25 @@
         return frame([title('This or that?', 'Tap the one that’s more you.'), h('div', { class: 'pair' }, pair.map(card)), dots(8, r)],
           [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'txt', onclick: () => choose(null, pair) }, 'Neither')]);
       },
+      swipe() {
+        const n = st.swipes.length;
+        const look = D_ORDER[Math.min(n, 7)];
+        const card = h('div', { class: 'solo' + (st.flying ? ' fly-' + st.flying : ''), 'data-style': look, role: 'img', 'aria-label': `Outfit ${n + 1} of 8` },
+          h('span', { class: 'stamp no' }, 'Not me'), h('span', { class: 'stamp me' }, 'Me'),
+          h('div', { class: 'art' }, outfit(look, 0, 170)));
+        dragCard(card);
+        return frame([title('Me or not me?', 'One outfit at a time. Would you wear something like this?'), card, dots(8, n), h('div', { class: 'hint' }, 'Tap below, or swipe the card.')],
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('div', { class: 'yn' },
+            h('button', { class: 'btn sec', onclick: () => decide(false) }, 'Not me'),
+            h('button', { class: 'btn', onclick: () => decide(true) }, 'Me'))]);
+      },
+      order() {
+        const pair = ranker(st).pair;
+        const card = (s) => h('button', { class: 'pick' + (st.chosen === s ? ' chosen' : st.chosen ? ' faded' : ''), onclick: () => choose(s, pair), 'data-style': s, 'aria-label': `Outfit ${pair.indexOf(s) + 1}` },
+          h('div', { class: 'art' }, outfit(s, 1, 136)));
+        return frame([title('Now put them in order', 'You said Me to these. Tap the one that’s more you.'), h('div', { class: 'pair' }, pair.map(card))],
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note)]);
+      },
       trio() {
         const r = st.rounds.length;
         const set = trioNext(st);
@@ -447,7 +552,7 @@
           h('div', { class: 'art' }, outfit(s, 0, 40), outfit(s, 1, 40)),
           h('div', { class: 'tx' }, h('b', {}, NAMES[s]), h('span', {}, LINES[s])),
           h('span', { class: 'disc' }, String(i + 1))));
-        const nPicks = st.rounds.length;
+        const nPicks = st.rounds.length + st.swipes.length;
         return frame([title('Here’s your style', `From your ${nPicks} picks. You can change it anytime in You.`), h('div', { class: 'ranks' }, rows)],
           [h('button', { class: 'txt', onclick: () => { tap(); save(); go(() => (st.view = 'grid')); } }, 'Change picks'),
            h('button', { class: 'btn', onclick: () => { tap(); save(); go(() => (st.view = 'done')); } }, 'Continue')]);
@@ -500,12 +605,12 @@
     document.querySelectorAll('figure[data-fig]').forEach((f) => f.classList.toggle('on', f.dataset.fig === k));
     document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tab === k)));
     fit();
-    if (['a', 'b', 'c'].includes(k)) { try { history.replaceState(null, '', '#' + k); } catch (e) { /* fine */ } }
+    if (['a', 'b', 'c', 'd'].includes(k)) { try { history.replaceState(null, '', '#' + k); } catch (e) { /* fine */ } }
   };
   document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
   const fromHash = location.hash.slice(1);
-  showTab(['a', 'b', 'c'].includes(fromHash) ? fromHash : 'a');
-  window.addEventListener('hashchange', () => { const k = location.hash.slice(1); if (['a', 'b', 'c'].includes(k)) showTab(k); });
+  showTab(['a', 'b', 'c', 'd'].includes(fromHash) ? fromHash : 'a');
+  window.addEventListener('hashchange', () => { const k = location.hash.slice(1); if (['a', 'b', 'c', 'd'].includes(k)) showTab(k); });
 })();
 </script>
 

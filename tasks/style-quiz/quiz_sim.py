@@ -98,7 +98,8 @@ def run_b(world, rng):
     return out[:3], 4
 
 
-# ---------- C: yes/no on one outfit per look, a second outfit for each yes, then this-or-that to order ----------
+# ---------- (dropped) yes/no, then order: it ranked only the first 3 yeses in LOOKS order, which favours looks early in
+# that list (streetwear first), so its Nov 13 numbers were flattered. Kept for the record; not in FORMATS. ----------
 def run_swipe(world, rng, second=True):
     taps, score = 0, {}
     for l in LOOKS:
@@ -124,12 +125,33 @@ def run_swipe(world, rng, second=True):
     return order[:3], taps + 1
 
 
+# ---------- D: the mockup's "Me / Not me" on each look, then this-or-that to rank the yeses ----------
+# Each look shown once (its first drawing), in the mockup's order; then each yes is placed into a top 3 by binary
+# insertion, comparing second drawings (at most 2 this-or-that taps per yes after the first).
+D_ORDER = ["streetwear", "classic_prep", "workwear", "minimalist", "vintage_sport", "tailored", "outdoor", "smart_casual"]
+
+
+def run_d(world, rng):
+    taps = 8
+    yes = [l for l in D_ORDER if feel(world, l, 0, rng) >= YES_AT]
+    top = []
+    for c in yes:
+        lo, hi = 0, len(top)
+        while lo < hi:
+            mid = (lo + hi) // 2
+            taps += 1
+            if feel(world, c, 1, rng) > feel(world, top[mid], 1, rng): hi = mid
+            else: lo = mid + 1
+        top.insert(lo, c)
+        del top[3:]
+    return top, taps + 1
+
+
 FORMATS = {
     "A  this-or-that, 6 rounds": run_a,
     "A2 this-or-that bracket, 8 rounds": run_a2,
     "B  one of three, 3 rounds": run_b,
-    "S1 yes/no x8, then order": lambda w, r: run_swipe(w, r, second=False),
-    "S2 yes/no x8, 2nd outfit for each yes, order": run_swipe,
+    "D  the mockup's Me / Not me, then rank": run_d,
 }
 
 if __name__ == "__main__":
