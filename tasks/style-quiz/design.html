@@ -288,7 +288,7 @@
 <div class="wrap">
   <header class="intro">
     <h1>Picking a style: four ways to try</h1>
-    <p>Testers stall on setup's style screen: some don't know what "Workwear" or "Vintage sport" means, others skip the tiles and type their own. Each direction below swaps style names for outfit comparisons in a different amount. You picked A on Nov 12; on Nov 17 you leaned to <b>D</b>, the swipe, with no grid after it. Tailored, the 8th look, is in A, C and D (two suits). <b>Every phone works: tap through it.</b> The drawings are the app's own (the same code as the tiles today). The words on these screens are drafts for your OK; nothing is built.</p>
+    <p>Testers stall on setup's style screen: some don't know what "Workwear" or "Vintage sport" means, others skip the tiles and type their own. Each direction below swaps style names for outfit comparisons in a different amount. You chose <b>D</b> on Nov 17, the swipe, with no grid after it; A stays here for the comparison test. Tailored, the 8th look, is in A, C and D (two suits). <b>Every phone works: tap through it.</b> The drawings are the app's own (the same code as the tiles today). The words on these screens are drafts for your OK; nothing is built.</p>
     <p>Remember what the picks do today: they set the order of the fixes and break a tie on "Reads as". They never move a score. So the game has to be quick, and its result has to feel like him.</p>
     <div class="controls">
       <div class="seg-ctl" role="group" aria-label="Color scheme">
@@ -311,16 +311,16 @@
 
   <div class="tabs" role="tablist" aria-label="Directions">
     <div class="seg-ctl">
-      <button type="button" data-tab="a" aria-pressed="true">A · Pairs</button>
-      <button type="button" data-tab="d" aria-pressed="false">D · Me or not</button>
+      <button type="button" data-tab="a" aria-pressed="false">A · Pairs</button>
+      <button type="button" data-tab="d" aria-pressed="true">D · Me or not</button>
       <button type="button" data-tab="b" aria-pressed="false">B · Threes</button>
       <button type="button" data-tab="c" aria-pressed="false">C · Grid</button>
     </div>
   </div>
 
   <main class="row">
-    <figure data-fig="a" class="on">
-      <div class="label">A · This or that <span class="tag rec">your pick, Nov 12</span></div>
+    <figure data-fig="a">
+      <div class="label">A · This or that <span class="tag">not chosen · for comparison</span></div>
       <div class="phone-wrap"><div class="phone" data-dir="a"></div></div>
       <div class="under"><button type="button" class="restart" data-restart="a">Start again</button><span class="taps" data-taps="a"></span></div>
       <div class="notes">
@@ -333,8 +333,8 @@
       </div>
     </figure>
 
-    <figure data-fig="d">
-      <div class="label">D · Me or not me, then rank <span class="tag rec">no grid, Nov 17</span></div>
+    <figure data-fig="d" class="on">
+      <div class="label">D · Me or not me, then rank <span class="tag rec">your pick, Nov 17</span></div>
       <div class="phone-wrap"><div class="phone" data-dir="d"></div></div>
       <div class="under"><button type="button" class="restart" data-restart="d">Start again</button><span class="taps" data-taps="d"></span></div>
       <div class="notes">
@@ -930,7 +930,7 @@
   };
   document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
   const fromHash = location.hash.slice(1);
-  showTab(['a', 'b', 'c', 'd'].includes(fromHash) ? fromHash : 'a');
+  showTab(['a', 'b', 'c', 'd'].includes(fromHash) ? fromHash : 'd');
   window.addEventListener('hashchange', () => { const k = location.hash.slice(1); if (['a', 'b', 'c', 'd'].includes(k)) showTab(k); });
 })();
 </script>

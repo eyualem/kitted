@@ -425,5 +425,5 @@
   };
   document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
   const fromHash = location.hash.slice(1);
-  showTab(['a', 'b', 'c', 'd'].includes(fromHash) ? fromHash : 'a');
+  showTab(['a', 'b', 'c', 'd'].includes(fromHash) ? fromHash : 'd');
   window.addEventListener('hashchange', () => { const k = location.hash.slice(1); if (['a', 'b', 'c', 'd'].includes(k)) showTab(k); });
