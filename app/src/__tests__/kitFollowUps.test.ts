@@ -208,6 +208,65 @@ describe('KC1.3 · the checker keeps at most 3 taps, in order', () => {
     expect(check(['Show me jackets', bad, 'Add a watch'])).toEqual(['Show me jackets', 'Add a watch']);
   });
 
+  // Round 4 (verifier, founder-approved design): a tap that mentions him (I, I'm, I'd, me, my, mine, myself) is about
+  // his clothes only when it names a garment and every "my" leads to one; "show me", "give me", "dress me", "for me",
+  // "on me" stay when no rating or appearance word is in the tap. These body, face, age and person-rating taps must be
+  // dropped (the controls carry no first-person word, so they do not depend on that rule).
+  it.each([
+    ['Is my head too big?'],
+    ['Do I have a big head?'],
+    ['Are my feet big?'],
+    ['Are my ears big?'],
+    ['How old do I look?'],
+    ['Does it slim me?'],
+    ['Does it match my eyes?'],
+    ['Does it match my hair?'],
+    ['Rate me'],
+    ['Rate how I look'],
+    ['Show my best side'],
+    ['Would girls like me?'],
+    ['Do I look masculine?'],
+    ['Do I look jacked?'],
+    ['Am I built?'],
+    ['Does it flatter me?'],
+    ['Is this flattering on me?'],
+    ['Should I shave?'],
+    ['Do I slouch?'],
+    ['Do I look tired?'],
+    ['Do I look my age?'],
+    ['Do I look 30?'],
+    ["I'm too fat for this?"],
+    ["I'm too skinny?"],
+    ['Make me taller'],
+    ['I feel fat in this'],
+    ['Make it dressier 😀'],
+    ['Try a cap 🧢'],
+    ['Do I look fat in these jeans?'],
+    ['Is my chest big in this shirt?'],
+  ])('KC1.3 · dropped: a tap about him, not his clothes (%s)', (bad) => {
+    expect(bad.length).toBeLessThanOrEqual(30); // dropped for what it says, not for its length
+    expect(check([bad], 'Anything else?')).toEqual([]);
+    expect(check([bad, 'Show me jackets'], 'Anything else?')).toEqual(['Show me jackets']);
+    expect(check(['Show me jackets', bad, 'Add a watch'], 'Anything else?')).toEqual(['Show me jackets', 'Add a watch']);
+  });
+
+  // Round 4: clothes taps the first-person rule must not over-block (a body-part word with no "I" or "my", a neutral
+  // "show me" or "for me", "my" followed by a garment within a few words, and the emoji control).
+  it.each([
+    ['Does the shoulder fit?'],
+    ['Try a straight leg cut'],
+    ['Show me a slim fit'],
+    ['Pair it with my old boots'],
+    ['Is it too big for me?'],
+    ['Show me lighter colors'],
+    ['Make it dressier'],
+  ])('KC1.3 · kept: a clothes tap the first-person rule must not over-block (%s)', (good) => {
+    expect(good.length).toBeLessThanOrEqual(30);
+    expect(check([good], 'Anything else?')).toEqual([good]);
+    expect(check(['Make it warmer', good], 'Anything else?')).toEqual(['Make it warmer', good]);
+    expect(check([good, 'Make it warmer', 'Add a watch', 'Show me jackets'], 'Anything else?')).toEqual([good, 'Make it warmer', 'Add a watch']);
+  });
+
   it('KC1.3 · a one-word tap that is his one-word question is dropped, a different one-word tap stays', () => {
     expect(check(['Dressier'], 'Dressier?')).toEqual([]);
     expect(check(['Dressier', 'Warmer'], 'Dressier?')).toEqual(['Warmer']);
