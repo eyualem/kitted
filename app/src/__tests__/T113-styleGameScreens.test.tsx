@@ -1601,6 +1601,28 @@ describe('SG7.5 · Just checking', () => {
     expect(label('game-card')).toBe(cardLabel(4, 1, 'minimalist'));
   }, 20000);
 
+  // Verify round 4, T7: the same on card 1. His first No, taken back by Back before card 1 has left, is an answer
+  // with a Back after it, so the three No's that follow have a Back among his answers.
+  it('SG7.5 · a No on card 1 cancelled by Back as it leaves, then three fast No\'s: no check', async () => {
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    await mount(<StyleGameScreen />);
+    // No on card 1, then Back 50 ms later, before the card has gone (the exit takes 240 ms on the phone).
+    await pressId('game-notme');
+    await advance(50);
+    await press(backButton());
+    await advance(SETTLE_MS);
+    expect(answers()).toEqual([]);
+    expect(label('game-card')).toBe(cardLabel(1, 1, 'workwear'));
+    expect((router.back as jest.Mock).mock.calls).toHaveLength(0);
+    expect(replaces()).toEqual([]);
+    await fastNo();
+    await fastNo();
+    await fastNo();
+    expect(answers()).toEqual(noes);
+    expect(checkShown()).toBe(false);
+    expect(label('game-card')).toBe(cardLabel(4, 1, 'minimalist'));
+  }, 20000);
+
   // Verify round 3, C7: FS4 rules out a Back between his answers. Back on card 1 before any answer (the exit to
   // Welcome) comes before them, not between them: coming back, three fast No's still show the check.
   it('SG7.5 · Back on card 1 before any answer, then back in: three fast No\'s still show the check', async () => {

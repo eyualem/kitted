@@ -330,6 +330,18 @@ I only added or strengthened tests: none was loosened or removed. Each change is
   - The spec says "after its card appeared". The build counts from when the card can be answered, after the lesson.
   - The spec doesn't settle it, so no test pins it.
 
+## Verify round 4: one test added (test writer, Nov 18)
+I only added a test: none was loosened or removed. All runs used Jest `--runInBand`, on `eb064f23`.
+- **T7 · SG7.5** › `a No on card 1 cancelled by Back as it leaves, then three fast No's: no check`. **New.**
+  - *Set-up:* a fresh game, seed 42, lesson taught.
+  - *Step 1:* No on card 1, then Back 50 ms later, before the card has gone. Expected: no answers, still card 1 (Workwear), no `router.back`, no `router.replace`.
+  - *Step 2:* three fast No's. Expected: answers are the 3 No's, no check, card 4 (Minimal).
+  - *Reading:* the No he took back is an answer, so the Back after it comes between his answers (as in T6 and "No, No, Back, No, No").
+  - *Green on the build* (the behaviour exists).
+  - *Bite:* dropping `inFlight ||` from `back()`'s FS4 condition fails it at the last `checkShown()` (the check shows). Reverted.
+- Whole file: 44/44 pass on the build.
+- **Log #496** (the check times card 1 from the lesson's tap) settles the question left open in round 3. No test for it was asked for, so none was written.
+
 ## Edges (from the spec and the setup's failure cases)
 - **Offline:** the game needs no network; the render tests run with `fetch` failing on any call.
 - **A failure mid-way:** a kv write that fails on Continue (SG3.2) or on Done (`saveWords` rejects: the field stays open with his text, Continue still on from memory).
