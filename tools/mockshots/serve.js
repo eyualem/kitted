@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
+const PORT = Number(process.argv[2]) || 8095; // a second session previews on another port (launch.json "mockups-alt")
 const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.ttf': 'font/ttf', '.json': 'application/json' };
 
 http.createServer((req, res) => {
@@ -15,4 +16,4 @@ http.createServer((req, res) => {
     if (err) { res.writeHead(404).end('Not found'); return; }
     res.writeHead(200, { 'Content-Type': TYPES[path.extname(file)] ?? 'application/octet-stream' }).end(data);
   });
-}).listen(8095, '127.0.0.1', () => console.log('mockups on http://127.0.0.1:8095/'));
+}).listen(PORT, '127.0.0.1', () => console.log(`mockups on http://127.0.0.1:${PORT}/`));

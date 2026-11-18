@@ -21,6 +21,15 @@
       "port": 8095
     },
     {
+      "name": "mockups-alt",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "tools/mockshots/serve.js",
+        "8096"
+      ],
+      "port": 8096
+    },
+    {
       "name": "kitted-web-8083",
       "runtimeExecutable": "sh",
       "runtimeArgs": [
