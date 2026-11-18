@@ -3336,3 +3336,24 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Why D:** every card is judged on its own, so "no" is built in; in the simulation (`quiz_sim.py`, made-up people) D lets a disliked look into his top 3 2–3% of the time against A's 5–6%, and keeps both of two loved looks far more often (A loses one for good when they meet in round 1). **The cost:** about 12 taps on the step against A's 9, about 17 from a fresh install to the camera (today 7).
     - **Still to prove with real people** (Y30): the founder said "maybe"; the test with friends checks that D's answer matches what each person picks from the named list. A stays in the mockup for comparison and can use D's results screen if testing goes against D.
     - **Changes what's written:** the style game's spec (to write after Y30) specifies D; `specs/onboarding-screens.md` OS3 (the tile grid) and `specs.md` F1.1 (7 taps) change there, with his yes. The mockup's labels move "your pick" from A to D (style-game-design, PR #142).
+
+## Nov 18 · Lean builds
+
+489. **Builds run lean: Sonnet for every agent, one fix round, tests for the spec's checks only, and the call budget is a stop (the founder, Nov 18: "the test takes way too long. we should make the test smaller and take less time. it should not consume as much tokens and time as it has been", then "Yes, write them").** T69 (the v16 port, strict) used up his usage window: about 1,400 steps over several hours, against the strict target of 250–400 calls.
+    - **Why it overran:**
+      - the session was started from an Opus session, so it inherited Opus at high effort; the project default (Sonnet) only applies to sessions he opens himself;
+      - the test writer ran on Opus;
+      - agents re-read files of several thousand lines and ran the whole suite repeatedly;
+      - the call budget was a guideline ("one line, then carry on"), so nothing stopped it.
+    - **The rules now** (CLAUDE.md rule 2, `/build-task`, the agents, WORKFLOW.md):
+      - every session and agent runs on Sonnet, the test writer included, and a session that starts another passes Sonnet explicitly. Spec interviews stay on Opus, and a task still failing after its fix round moves to Opus;
+      - one fix round at every size (strict had two);
+      - tests cover the checks in TESTING.md, with no extra edge-case sweeps;
+      - agents read the diff and slices of files, run only the related tests while working, and run one full `npm run check` at the end;
+      - screenshots are light only, with dark only when colors change;
+      - at the size's call target, a task stops and tells him what's left before going on.
+    - **What stays:** tests first by a separate writer, the lock, planted bugs (at most 3), and "never weaken a test".
+    - **Next (T114):** `npm run check` runs a fixed sample of the 12,000+ parity cases, and the full set runs before a merge and in `guard:release`, so every check is quicker while core still has to match Python exactly.
+    - **Trade-off:** a Sonnet test writer may miss a tricky case Opus would catch. The planted bugs are the guard: a bug the tests miss sends the test writer back, and a second miss moves the task to Opus.
+    - **Lesson:** a budget only works when hitting it stops the work. A started session inherits its parent's model, so the cost of a child session is set by whoever starts it.
+
