@@ -38,4 +38,12 @@ Q-T1 to Q-T10 accepted as IMPLEMENTATION.md defaults them. Q-T5: committing the 
   - `v15Unchanged` restores the switch with `setRescoreV16(true)`: `RESCORE_V16` is a live binding, so restoring to it after turning it off was a no-op.
   - Still red, a call needed: `closetOutfits` O2 (47 trios at 7.0+ under v14, 16 under v16), `closetNoOutfits` CB1.2/CB1.5, `askC3` R2/R3/R4 and `oneCount` G2/G8 (Next best buy's "+N"). Closet outfit counts and Next best buy move with v16 (Q-T9: they score with it), there is no Python twin to take the new numbers from, and whether "7.0+" should still be the outfit bar under v16 is a product call, so these stay unchanged for the coordinator.
 
+- **Closet counts moved to v16 (`3da1ae5c`, the coordinator's ruling: the 7.0 bar stays, Q-T9).** v16's honest scale puts fewer outfits at 7.0+; this is flagged for the founder as a follow-up, not decided here.
+  - `closetOutfits` O2: the Everyday trio count is now 16 (v15: 47).
+  - `closetNoOutfits` CB1.2: the work boots add 6 (v15: 18), and the next best buy is now dark straight jeans, +16 (v15: brown work boots, +18).
+  - `closetNoOutfits` CB1.5: the sheet now shows "Dark straight jeans" (v15: "Brown work boots").
+  - `askC3` R2/R3/R4: the navy polo adds +6 (v15: +12).
+  - `oneCount` G2: the next best buy and the evidence's first row are now s05, +16 (v15: s27, +18).
+  - `oneCount` G8 is unchanged and still red: the demo's canned answer card for "What should I buy next?" still names work boots, while the Closet now picks dark straight jeans. The test guards that the two agree, so the demo answer (content: implementer, words: founder) has to change, not the test.
+
 ## Review
