@@ -494,7 +494,15 @@ VERSIONS["v15"] = "parts-proto-15 (Oct 28, 2026)"
 # What changes is the step after the parts (see v16_finish): faults count at full strength instead of being averaged
 # away, lifts stack to a ceiling, dealbreakers cap, the season counts, a fixed curve maps raw to shown, 3.0-9.5.
 _OFF16 = dict(v16=False, v16_color=False, sty3_off=False, v16_alpha=0.5, v16_beta=0.25, curve=(1.0, 1.0, 7.0),
-              v16_knit=0.0, v16_h9_cap=False, v16_h7_cap=5.5, taste=None)
+              v16_knit=0.0, v16_h9_cap=False, v16_h7_cap=5.5, taste=None,
+              # T69 (Nov 17, the top of the scale; tasks/T69/top-of-scale.md): what-if knobs, off by default.
+              # raw_cap: the raw score's upper clamp before the curve (9.5 = v16 as approved; the shown score stays
+              #   clamped at 9.5 and every stacking ceiling still binds). curve_knee: None, or (raw knee, slope above
+              #   it): above the knee the curve's top slope changes, so only the very top moves.
+              #   stack_clean: None, or {"<n lifts>": ceiling, "<n lifts>c": ceiling} for an outfit with nothing off
+              #   at all ("c": and in one look), e.g. {"3c": 9.5}: three lifts in one look, nothing off, may reach
+              #   9.5 (n counts up to 4); it only ever raises a stacking ceiling.
+              raw_cap=9.5, curve_knee=None, stack_clean=None)
 for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15"):
     TUNE[_e].update(_OFF16)
 TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
@@ -521,6 +529,18 @@ TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
                               one_lift_mode="first", stack_prehalf=True, relaxed_factor=0.5,   # round 5: steadiness
                               sil=1.75, sil_line=0.5, sil_tonal=0.25, leg_skinny=0.5, leg_wide=0.75, hem_plus=0.5,
                               shorts_wide=0.5, shorts_above=0.5))
+# T69 (Nov 17): the top of the scale, as what-if tunes for the founder's pick (tasks/T69/top-of-scale.md, measured by
+# ../top_of_scale.py). Pass one as score_parts(..., engine="v16", tune=V16_TOP_WHATIF["BD"]); none is on by default.
+V16_TOP_WHATIF = {
+    "A": {"raw_cap": 10.6},                                          # raw may pass 9.5 (moves nothing: the ceilings bind)
+    "B": {"curve_knee": (8.5, 1.45)},                                # 0.7 up to raw 8.5, 1.45 above: raw 9.5 -> 9.5
+    "C": {"curve": (1.1, 0.85, 7.0)},                                # round 4's top slope
+    "C1": {"curve": (1.1, 1.0, 7.0)},                                # no flattening at the top
+    "BD": {"curve_knee": (8.5, 1.45), "stack_clean": {"3c": 9.5, "4c": 9.5}},   # recommended: B + three lifts in one
+                                                                     # look with nothing off may reach 9.5
+    "BE": {"curve_knee": (8.5, 1.45), "stack_clean": {"0": 8.0, "1": 8.5, "2": 9.0, "3": 9.0, "3c": 9.5, "4": 9.0,
+                                                      "4c": 9.5}},   # B + every ceiling half a step up with nothing off
+}
 VERSIONS["v16"] = "parts-proto-16 (Nov 14, 2026, on paper)"
 HL_LAYERS = {"hoodie", "sweatshirt"}                             # v15 PRO-17: worn as the layer (outerwear) ...
 HL_TOPS = {"tee", "graphic_tee"}                                 # ... over a tee
@@ -1741,7 +1761,8 @@ def _v16_lifts(o, parts, sl, t):
     if (len(clothes) >= 2 and max(f) >= SMART and casual and max(f) - min(f) <= 2.5 and not lounge and not suit
             and not cohesion_neg and "L7" not in best and all(_earns(g) for g in o["main"])):
         smart = max(clothes, key=R.formality)
-        put("L7b", 0.5, f"the {smart.get('subcategory').replace('_', ' ')} dresses up the casual pieces: one smart piece, done right")
+        verb = "dress up" if smart.get("category") == "bottom" else "dresses up"   # trousers, chinos, jeans: plural
+        put("L7b", 0.5, f"the {smart.get('subcategory').replace('_', ' ')} {verb} the casual pieces: one smart piece, done right")
     if warm:
         # SL1: a fitted tee or a tank over loose trousers (season.3, Frugal's "tight waist wide legs")
         if (not o["outers"] and T is not None and len(o["tops"]) == 1 and T.get("subcategory") in SUMMER_TOPS
@@ -1885,6 +1906,9 @@ def _v16_curve(raw, t):
     """shown = 7 + a(raw - k) under k, 7 + b(raw - k) over it: a fixed, monotone two-slope map, k the raw score shown
     as 7.0."""
     a, b, k = t["curve"]
+    knee = t.get("curve_knee")
+    if knee is not None and raw > knee[0] > k:                       # T69 what-if: a steeper (or flatter) top
+        return 7.0 + b * (knee[0] - k) + knee[1] * (raw - knee[0])
     return 7.0 + (a if raw < k else b) * (raw - k)
 
 
@@ -2194,7 +2218,7 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
     if any(c[2] in ("sink", "hold") for c in caps):              # a dealbreaker owns the taste charges, as it owns
         taste = [x for x in taste if x[0] > 0]                      # its part charges (the cap stands for them)
     raw += sum(x[0] for x in taste)
-    raw = clamp(raw, 3.0, 9.5)
+    raw = clamp(raw, 3.0, t["raw_cap"])                              # T69 what-if: raw_cap (9.5 as approved)
     shown = clamp(_v16_curve(raw, t), 3.0, 9.5)
     # the ceilings: the stacking rule, the occasion, the dealbreakers
     subs = {g.get("subcategory") for g in o["main"]}
@@ -2215,6 +2239,9 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
         stack = 9.0
     else:
         stack = 9.5
+    if t.get("stack_clean") and not anything_off:                    # T69 what-if: a clean outfit's top step
+        m, scl = min(n, 4), t["stack_clean"]
+        stack = max([stack, scl.get(str(m), stack)] + ([scl.get(f"{m}c", stack)] if one_look else []))
     ceilings = [(stack, f"{n} lift{'s' if n != 1 else ''}" + (" in one look" if one_look and n >= 3 else ""))]
     # fit is the floor (fit.1, ix.17): with a fit or shape fault, no lift makes it sharp
     if any(r["points"] < 0 and r["check"] not in owned for k in ("fit", "proportions") for r in parts[k].reasons):
