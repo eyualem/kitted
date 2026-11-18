@@ -70,3 +70,6 @@ The installed app is a Release build with an embedded bundle, so Metro never rea
 - A different deal after a relaunch on a device, and Delete all my data on a device (both proven in the session tests).
 - The software keyboard on results (the Simulator used a hardware keyboard).
 - Whether the game finds real people's style: plan.md Y30.
+
+## Disputes
+- **Re-lock after verify round 1 (test writer, Nov 18): `50a0f687`.** Test defects T1 and T2 are strengthened (each now bites the planted bug: `LEAN_AFTER_MS` 1500, and the dropped `v !== 1` check). T3 adds explicit 20 s timeouts on the long game walks; `T39-styleProfile` and `youSettingsHome` are listed in TESTING.md as an inherited flake, untouched. New tests for C1–C5 are red on `c18febfe` for the right reason. C3 takes "Back undoes the in-flight answer, and only it" (SG7: Back undoes exactly one answer), not "Back is ignored while leaving". C1 is checked as placement (dots before the drawing, or pinned to the card's top); its look stays screenshot-only. Details: TESTING.md → Verify round 1.
