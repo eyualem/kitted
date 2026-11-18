@@ -39,6 +39,15 @@ export function routedSource(
         l: gate.then((ok) => (ok ? look.arm('L', imgs.L, opts?.signal, tag) : refused)),
       };
     },
+    legLook(image, kind, opts) {
+      if (kind !== 'full' && kind !== 'recheck') return null;
+      if (image.photoId || !look || !image.uploadBase64 || !SEND_CLOSE_UPS) return mock.legLook?.(image, kind, opts) ?? null;
+      const imgs = lookImages(image.zoomBase64);
+      if (!imgs) return null;
+      const tag = opts?.checkId ? checkTag(opts.checkId, kind) : undefined;
+      // The same consent as U and L; only the lower close-up L already sends (T69).
+      return consent().catch(() => false).then((ok) => (ok ? look.arm('W', imgs.W, opts?.signal, tag) : { ok: false as const, fail: 'noConsent' as const, ms: 0 }));
+    },
     hedge: () => {
       mock.hedge?.();
       live?.hedge?.();

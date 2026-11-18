@@ -16,7 +16,7 @@
 // No number is shown for it. Pure; no picks reach a score here (every scoreParts call passes styles: []).
 
 import { garmentName } from "./names";
-import { defaultParts, type PartsEngine, type PartsScored, type SecondLookInput } from "./parts";
+import { defaultParts, type PartsEngine, type PartsScored, type Season, type SecondLookInput } from "./parts";
 import { applyPartsFix } from "./partsCheck";
 import { PARTS_FIXES_DATA } from "./partsFixesData";
 import type { PartsFixCandidate, PartsFixCatalog, PartsFixEdit } from "./partsFixes";
@@ -55,6 +55,8 @@ export interface GoingForOptions {
   closet?: readonly ClosetItem[];
   /** A warm day: no added layer and no boots (#162). */
   warm?: boolean;
+  /** v16: the card's season, so the move is scored as the card scores it. */
+  season?: Season;
 }
 
 export interface GoingForEngines {
@@ -82,7 +84,7 @@ export function goingForAdvice(reading: Reading, going: DetectedStyle | null, op
   const CAT = engines.catalog ?? PARTS_FIXES_DATA;
   const occasion = opts.occasion ?? "everyday";
   if (CAT.rules.loungeOccasions.includes(occasion)) return null;
-  const score = (r: Reading) => PE.scoreParts(r, { occasion, boldness: opts.boldness ?? "a_little", styles: [], secondLook: opts.secondLook ?? null });
+  const score = (r: Reading) => PE.scoreParts(r, { occasion, boldness: opts.boldness ?? "a_little", styles: [], secondLook: opts.secondLook ?? null, season: opts.season ?? null });
   const b = score(reading);
   if (b.overall === null) return null;
   const base = b as PartsScored;

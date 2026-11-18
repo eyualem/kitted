@@ -7,9 +7,9 @@
 // that is being changed: an answer, a correction, the occasion) use it.
 
 import {
-  goingForAdvice, PARTS_FIXES_DATA, PARTS_RUBRIC_VERSION, partialLabel as corePartialLabel, partsFixAsFix, RUBRIC_DATA, score, scoreParts, suggestFixes,
+  goingForAdvice, PARTS_FIXES_DATA, PARTS_RUBRIC_VERSION, partialLabel as corePartialLabel, partsEngineFor, partsFixAsFix, RESCORE_V16, RUBRIC_DATA, score, suggestFixes,
   suggestPartsFixes, type ClosetItem, type Fix, type FixSuggestions, type PartName, type PartsFixSuggestions, type PartsScored, type Reading,
-  type RubricResult, type ScoreOptions, type ScoredResult, type SecondLookInput, type Styles,
+  type RubricResult, type ScoreOptions, type ScoredResult, type SecondLookInput, type Season, type Styles,
 } from '@kitted/core';
 import { normStyleKey, type CheckDetails, type FitCheckRow, type FitCheckStatus, type OccasionKey, type StoredParts, type StyleKey } from '@/data/types';
 import { t } from '@/i18n/en';
@@ -38,8 +38,11 @@ export interface EvaluateInput {
   closet: readonly ClosetItem[];
   firstCheck: boolean;
   hiddenFixTargets?: readonly string[];
-  /** A warm day: no "add a layer" or boots fix (#160). Never changes the score. */
+  /** A warm day: no "add a layer" or boots fix (#160). v16: also the season the score uses ("warm" when true, cool
+   *  otherwise); the check's own, set at its first score. */
   warm?: boolean;
+  /** The row's rubricVersion: the parts engine (partsEngineFor) the score, fixes and tap use. Default: PARTS_RUBRIC_VERSION. */
+  partsVersion?: string;
   /** Closet pieces he tried on in an earlier check that day: a fix that uses one is labelled so (#360). Never the score. */
   triedEarlier?: ReadonlySet<string>;
   /** Default: the switch. */
@@ -53,7 +56,7 @@ export interface EvaluateInput {
 }
 
 /** The options a check is scored with: v4.1's, plus the second look for the parts engine (v4.1 never reads it). */
-export type CheckScoreOptions = ScoreOptions & { secondLook?: SecondLookInput };
+export type CheckScoreOptions = ScoreOptions & { secondLook?: SecondLookInput; season?: Season };
 
 export interface Evaluation {
   status: FitCheckStatus;
@@ -78,8 +81,11 @@ export interface Evaluation {
 
 /** The rubric options a check is scored with. The one place they're built, so the one quick tap's two scores
  *  (askQuestion) are exactly what the card then shows. */
-export function scoreOptions(input: Pick<EvaluateInput, 'occasion' | 'styles' | 'boldness' | 'secondLook'>): CheckScoreOptions {
-  return { occasion: input.occasion, styles: input.styles, boldness: input.boldness ?? 'a_little', ...(input.secondLook ? { secondLook: input.secondLook } : {}) };
+export function scoreOptions(input: Pick<EvaluateInput, 'occasion' | 'styles' | 'boldness' | 'secondLook' | 'warm'>): CheckScoreOptions {
+  return {
+    occasion: input.occasion, styles: input.styles, boldness: input.boldness ?? 'a_little', ...(input.secondLook ? { secondLook: input.secondLook } : {}),
+    ...(input.warm ? { season: 'warm' as const } : {}),
+  };
 }
 
 export function partialKind(notRated: readonly string[]): 'shoes' | 'topOnly' | null {
@@ -89,8 +95,8 @@ export function partialKind(notRated: readonly string[]): 'shoes' | 'topOnly' | 
 }
 
 /** The score the engine in use gives a reading (no fixes): the one quick tap's option scores. */
-export function overallFor(reading: Reading, opts: ScoreOptions, engine: ScoringEngine = engineNow): number | null {
-  return engine === 'parts' ? scoreParts(reading, opts).overall : score(reading, opts).overall;
+export function overallFor(reading: Reading, opts: ScoreOptions, engine: ScoringEngine = engineNow, partsVersion: string = PARTS_RUBRIC_VERSION): number | null {
+  return engine === 'parts' ? partsEngineFor(partsVersion).scoreParts(reading, opts).overall : score(reading, opts).overall;
 }
 
 export function evaluateCheck(input: EvaluateInput): Evaluation {
@@ -182,19 +188,23 @@ export function storedParts(res: PartsScored, fx: PartsFixSuggestions): StoredPa
   return {
     version: res.version, overall: res.overall, average: res.average, averageUnrounded: res.averageUnrounded, rawUnrounded: res.rawUnrounded,
     earnedBonus: res.earnedBonus, piledPenalty: res.piledPenalty, floored: res.floored, parts: res.parts, naParts: [...res.naParts], weightsUsed: { ...res.weightsUsed },
-    condition: res.condition, occasion: res.occasion, gainPart: gainPartOf(res, fx),
+    condition: res.condition, occasion: res.occasion, gainPart: gainPartOf(res, fx), ...(res.v16 ? { v16: res.v16 } : {}),
   };
 }
 
 /** The loungewear hold is what holds the score down ("Sweatpants read as loungewear outside the gym"). */
 export function loungeHolds(res: PartsScored): boolean {
   const o = res.occasion;
+  if (res.v16) return res.v16.heldBy === 'occasion' && o.status.startsWith('loungewear');
   return o.ceiling !== null && o.status.startsWith('loungewear') && res.overall < res.average + res.earnedBonus - res.piledPenalty - res.condition.deduction;
 }
 
 function evaluateParts(input: EvaluateInput): Evaluation {
   const opts = scoreOptions(input);
-  const r = scoreParts(input.reading, opts);
+  // The engine this row is scored with (#209: an old check keeps its engine when edited; [SCO-9]).
+  const engine = partsEngineFor(input.partsVersion ?? PARTS_RUBRIC_VERSION);
+  const version = input.partsVersion && RESCORE_V16 ? input.partsVersion : PARTS_RUBRIC_VERSION;
+  const r = engine.scoreParts(input.reading, opts);
   const hidden = input.hiddenFixTargets ? [...input.hiddenFixTargets] : [];
   if (r.overall === null) {
     const status: FitCheckStatus = r.reason === 'not_fully_clothed' ? 'notClothed' : 'unreadable';
@@ -202,14 +212,14 @@ function evaluateParts(input: EvaluateInput): Evaluation {
       status, engine: 'parts', result: null, scored: null, parts: null, fixes: { fixes: [], nextLevel: [], tips: [] }, partial: null, summary: null,
       row: {
         status, score: null, rawScore: null, subscores: {}, occasionAdj: 0, rulesFired: [], credits: [], advice: [], fixes: [],
-        isPartial: false, notRated: [], explanation: null, rubricVersion: PARTS_RUBRIC_VERSION, details: { readsAs: null, parts: undefined },
+        isPartial: false, notRated: [], explanation: null, rubricVersion: version, details: { readsAs: null, parts: undefined },
       },
     };
   }
   const res = r as PartsScored;
   const fx = suggestPartsFixes(input.reading, {
     ...opts, closet: input.closet, firstCheck: input.firstCheck, exclude: hidden, warm: input.warm ?? false,
-  });
+  }, { parts: engine });
   const fixes = fx.fixes.map(partsFixAsFix);
   // As in v4: `fixes` stays core's, the row gets the mid-sentence names.
   const shownFixes = fixesMidSentence(fixes, input.closet, input.triedEarlier);
@@ -224,7 +234,7 @@ function evaluateParts(input: EvaluateInput): Evaluation {
     row: {
       status: 'scored', score: res.overall, rawScore: res.rawScore, subscores, occasionAdj: -res.occasion.deduction,
       rulesFired: [], credits: [], advice: [], fixes: shownFixes, isPartial: res.partial, notRated: [...res.notRated], explanation: summary,
-      rubricVersion: PARTS_RUBRIC_VERSION,
+      rubricVersion: version,
       details: {
         nextLevel: shownTip ? [shownTip] : [], tips: [], dialedIn: fixes.length === 0, hiddenFixTargets: hidden, warm: input.warm ?? false,
         readsAs: normStyleKey(res.styleLabel), tipLead: fx.smallerStep ? 'smallerStep' : fx.nextLevel?.id.startsWith('tip_') ? 'tip' : 'nextLevel', parts: storedParts(res, fx),
@@ -232,7 +242,8 @@ function evaluateParts(input: EvaluateInput): Evaluation {
           ? {
               goingForAdvice: adviceMidSentence(goingForAdvice(input.reading, input.goingFor, {
                 occasion: input.occasion, boldness: opts.boldness, closet: input.closet, warm: input.warm ?? false, secondLook: input.secondLook ?? null,
-              }), input.closet),
+                ...(opts.season ? { season: opts.season } : {}),
+              }, { parts: engine }), input.closet),
             }
           : {}),
       },
