@@ -541,7 +541,7 @@ V16_TOP_WHATIF = {
     "BE": {"curve_knee": (8.5, 1.45), "stack_clean": {"0": 8.0, "1": 8.5, "2": 9.0, "3": 9.0, "3c": 9.5, "4": 9.0,
                                                       "4c": 9.5}},   # B + every ceiling half a step up with nothing off
 }
-VERSIONS["v16"] = "parts-proto-16 (Nov 14, 2026, on paper)"
+VERSIONS["v16"] = "parts-proto-16 (Nov 17, 2026)"
 HL_LAYERS = {"hoodie", "sweatshirt"}                             # v15 PRO-17: worn as the layer (outerwear) ...
 HL_TOPS = {"tee", "graphic_tee"}                                 # ... over a tee
 SPORT_SNEAKERS = {"basketball_sneaker", "chunky_sneaker", "retro_runner", "canvas_sneaker", "low_profile_sneaker",
@@ -2218,6 +2218,7 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
     if any(c[2] in ("sink", "hold") for c in caps):              # a dealbreaker owns the taste charges, as it owns
         taste = [x for x in taste if x[0] > 0]                      # its part charges (the cap stands for them)
     raw += sum(x[0] for x in taste)
+    raw_unclamped = raw                                              # T69 (output only): the raw before the clamp
     raw = clamp(raw, 3.0, t["raw_cap"])                              # T69 what-if: raw_cap (9.5 as approved)
     shown = clamp(_v16_curve(raw, t), 3.0, 9.5)
     # the ceilings: the stacking rule, the occasion, the dealbreakers
@@ -2268,6 +2269,7 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
                 "lift_sum": round(lift_sum, 3), "minor": round(minor, 3), "fault_drop": round(drop, 3),
                 "heavy_layer": heavy, "caps": [{"cap": c, "id": i, "kind": k, "line": l} for c, i, k, l in caps],
                 "stack_ceiling": stack, "one_look": one_look, "held_by": held_by, "raw": round(raw, 3),
+                "raw_unclamped": round(raw_unclamped, 3), "cond_deduction": round(cond_ded, 3),   # T69 (output only)
                 "curved": round(shown, 3), "owned": owned_lines, "ceiling": min(c for c, _ in ceilings), "depends": dep,
                 "unread": V16_UNREAD, "taste": [{"points": a, "id": b, "line": c} for a, b, c in taste],
                 "graded_look": sorted(o.get("graded") or [])},
@@ -2407,7 +2409,8 @@ def _v16_result(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune, not_
     neg = [r for r in lr["reasons"] if r["points"] < 0]
     line = neg[0]["line"] if neg else (lr["reasons"][0]["line"] if lr["reasons"] else "nothing off")
     return {
-        "overall": round_half(v["final"]), "raw_score": round(v["final"], 3), "average": v["raw"], "earned_bonus": 0.0,
+        "overall": round_half(v["final"]), "raw_score": round(v["final"], 3), "average": round(v["raw"], 3),
+        "average_unrounded": v["raw"], "raw_unrounded": v["final"], "earned_bonus": 0.0,   # T69 (output only)
         "piled_penalty": 0.0, "version": VERSIONS[engine], "engine": engine, "parts": res,
         "na_parts": [k for k in PART_ORDER if res[k]["score"] is None],
         "weights_used": {k: round((t["weights"] or WEIGHTS)[k] / v["wsum"], 3) for k in live},

@@ -14,5 +14,6 @@ Q-T1 to Q-T10 accepted as IMPLEMENTATION.md defaults them. Q-T5: committing the 
 ## Built
 
 ## Disputes
+- **Blocker (not a test dispute): the protect-tests hook vs IMPLEMENTATION.md → Files.** `.claude/hooks/protect-tests.sh` refuses any Edit/Write whose path is under the fixtures folder (`handoff/fixtures/`), and any Bash command that names that folder with a write verb. The plan lists five generator scripts in that folder as files the implementer changes: `make_parts_json.py` (VERSION 2.0.0, ENGINE v16, `rollback15`, the v16 tables), `make_parts_parity.py`, `make_parts_fixes.py`, `parts_fixes.py` (engine/season pass-through) and the new `make_parts_steadiness.py`. None can be edited, so Steps 2 and 4 are stopped, and everything that reads `parts.json` / `partsData.ts` (the whole core port) can't be tested. Not worked around. Needs the coordinator: allow edits to the generator scripts (they are not fixtures) or have them edited by someone the hook doesn't bind. The generated `*.json` stay hands-off either way. Done before the stop: Step 1 (Python output-only keys and the relabel in `parts_proto.py`; a v16 score still gives the same numbers, and the new keys are present).
 
 ## Review
