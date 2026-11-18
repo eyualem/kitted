@@ -31,11 +31,12 @@ round(x, 3), recomputed with parts_proto.combine). A reading Python can't score 
 {"error": "..."}: the TypeScript must throw on it too. Those are prototype bugs, reported, not fixed here.
 """
 import sys as _sys; _sys.dont_write_bytecode = True  # never write __pycache__ next to rubric.py
-import copy, glob, hashlib, json, os, sys
+import copy, glob, hashlib, json, os, re, sys
 from collections import Counter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 KEMPT = os.path.abspath(os.path.join(HERE, "../.."))
+DATA = os.environ.get("KITTED_DATA", "/Users/eyu/Desktop/files/Kitted")   # git-ignored phone pulls (main checkout)
 ET = os.path.join(KEMPT, "extraction-test")
 sys.path.insert(0, ET)
 sys.path.insert(0, os.path.join(ET, "rubrics"))
@@ -614,7 +615,18 @@ def parts_edges():
 
 # ---------------------------------------------------------------------------------------------------- main
 def newest_pull():
-    pulls = sorted(p for p in glob.glob(os.path.join(KEMPT, "screenshots/phone/*/SQLite/kitted.db")))
+    """The phone pull the real cases come from: the pull the committed fixtures already name (so a regeneration never
+    quietly moves to a newer pull, the "pinned pull" of #367 onward; T94), else the newest. KITTED_PULL=<folder> picks
+    one, KITTED_PULL=newest the newest."""
+    pulls = sorted(p for p in glob.glob(os.path.join(DATA, "screenshots/phone/*/SQLite/kitted.db")))
+    want = os.environ.get("KITTED_PULL")
+    if want is None and os.path.exists(os.path.join(HERE, "parts_parity.json")):
+        m = re.search(r'"pull": ?"screenshots/phone/([^/"]+)/', open(os.path.join(HERE, "parts_parity.json")).read())
+        want = m.group(1) if m else None
+    if want and want != "newest":
+        named = [p for p in pulls if os.path.basename(os.path.dirname(os.path.dirname(p))) == want]
+        assert named, f"no phone pull {want} under {DATA}/screenshots/phone"
+        return named[0]
     return pulls[-1] if pulls else None
 
 
@@ -873,7 +885,7 @@ def main():
         "parts_version": base["version"], "parts_proto_sha256": base["sourceSha256"],
         "rubric_sha256": hashlib.sha256(open(os.path.join(ET, "rubric.py"), "rb").read()).hexdigest(),
         "rubric_parity_sha256": rp["rubric_sha256"],
-        "pull": os.path.relpath(pull_path, KEMPT) if pull_path else None,
+        "pull": os.path.relpath(pull_path, DATA) if pull_path else None,
         "counts": {"rubric_parity_cases": n_rp, "real_cases": n_real, "real_readings": len(real), "run_cases": n_runs,
                    "edge_second_look_cases": len(edge_ids) * len(SLS), "parts_edge_cases": len(edges),
                    "tune_cases": n_before_picks - n_before_tunes, "picks_cases": n_picks, "cases": len(cases), "own_readings": len(readings),

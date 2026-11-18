@@ -301,7 +301,7 @@ def main():
         "catalog_version": F.CATALOG["version"],
         "parts_proto_sha256": hashlib.sha256(open(P.__file__, "rb").read()).hexdigest(),
         "parts_fixes_sha256": hashlib.sha256(open(F.__file__, "rb").read()).hexdigest(),
-        "pull": os.path.relpath(pull_path, KEMPT) if pull_path else None,
+        "pull": os.path.relpath(pull_path, MP.DATA) if pull_path else None,
         "profile": PROFILE, "boldness": BOLD, "occasions": OCCASIONS, "closet": CLOSET,
         "counts": {"real_readings": len(uniq), "real_cases": n_real, "edge_readings": len(edges), "edge_cases": n_edge,
                    "fix_edge_readings": len(fe), "picks_cases": n_picks, "cases": len(cases), "own_readings": len(readings), "pool": len(pool)},

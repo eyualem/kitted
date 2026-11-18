@@ -62,7 +62,7 @@ def main():
     sl = lambda s: sorted(s)
     out = {
         "version": "4.1.0", "engine": 5, "minAppBuild": 1, "source": "extraction-test/rubric.py",
-        "rubricSha256": __import__("hashlib").sha256(open(os.path.join(K.KEMPT, "extraction-test/rubric.py"), "rb").read()).hexdigest(),
+        "rubricSha256": __import__("hashlib").sha256(open(r.__file__, "rb").read()).hexdigest(),
         "config": {"minAge": 18, "freeChecksPerDay": 1, "freeRechecksPerCheck": 1, "freeQuestionsPerDay": 5, "proChecksPerDay": 10,
                    "proQuestionsPerDay": 50, "dayRollsOverAt": "04:00"},
         "scoring": {"baseline": r.BASELINE, "weights": {"fit": 0.40, "color": 0.30, "proportion": 0.30}, "mistakeMultiplier": 2.0,
