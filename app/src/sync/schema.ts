@@ -94,6 +94,8 @@ const keepLocalBirthYear = (remote: string, local: string | null): string => {
 export const KV_SYNCED: Readonly<Record<string, KvPolicy>> = {
   'onboarding.looks': {},
   'onboarding.otherStyle': {},
+  // The looks he said Not me to in the style game (T113, specs/style-game.md SG8): synced like his looks.
+  'looks.notMe': {},
   'onboarding.basics': { outgoing: withoutBirthYear, incoming: keepLocalBirthYear },
   [KV.onboardingDone]: {},
   [KV.appearance]: {},
@@ -128,6 +130,8 @@ export const KV_LOCAL: readonly string[] = [
   // About you's draft (his pick and the name as typed, T39), deleted when setup ends: it holds his age band and name,
   // which never leave the phone (OS4.7). And when he tapped Later on Kit's first-check offer (OS5.3): this phone's.
   'onboarding.about', 'firstCheckOffer.laterAt',
+  // The style game's results draft (T113, SG8): this phone's setup in progress, deleted when setup ends.
+  'onboarding.styleGame',
   // When Closet was last opened (its badge) and the first-visit mark (SY2, features/closet/arrivals.ts): this phone's,
   // never backed up; "Delete all my data" empties them with the rest of the kv table.
   'closet.lastOpened', 'closet.firstVisit',
