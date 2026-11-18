@@ -17,7 +17,7 @@
 
 | # | Style | Verdict | One line why |
 |---|---|---|---|
-| 1 | **Sportswear / athleisure** | **Widen Vintage sport into "Sportswear"** (recommended), plus two rule exceptions | The worst damage: a tee, joggers and retro sneakers is **8.4 raw, held to 6.5**; a runner under joggers or shorts costs 2.0 on Shoes. The track jacket and track pants aren't in the reader. |
+| 1 | **Sportswear / athleisure** | **DECIDED (founder, Nov 18): its own look, "Sportswear", next to Vintage sport (not a rename, not a widening)**; covers everything below | The worst damage: a tee, joggers and retro sneakers is **8.4 raw, held to 6.5**; a runner under joggers or shorts costs 2.0 on Shoes. The track jacket and track pants aren't in the reader. |
 | 2 | **Old money / quiet luxury** | **Fold in** (classic prep + smart casual + minimal); no new look, no rule exception | Its clothes are pieces the app already knows and it scores 7.0–8.5 today. What defines it (cashmere, drape, no logos) can't be seen in a photo. |
 | 3 | **Smart streetwear** (not on your list; the research raised it) | **Add as a mix the card can name**, already proposed in `rules-by-style.md` §5 (decision 3) | Frugal named it one of the two big forms of streetwear now (Aug 2025). A blazer over a hoodie or with wide jeans can't be detected today. |
 | 4 | Gorpcore / techwear | **Fold** into Outdoor (gorp) and Streetwear (all-dark tech) | Scores 7.5–8.0 today. Only vests and technical pants are unseen. |
@@ -38,11 +38,18 @@
 | Big top over skinny legs −3.5 ([PRO-2], [PRO-13]) | Grunge | band tee + flannel + black skinny jeans **5.5** | **Agrees** (rulebook A3, all four). Keep. Jaye relaxed on skinny jeans in 2026, so watch it. |
 | Smart + street veto (`ST_VETO`, tailored veto) | Smart streetwear | reads as no look | Frugal and Jaye both praise it (log #478 §4). |
 
+**Decided Nov 18 (founder, by voice): Sportswear is its own look.** His words: "We can do the scoring after that. We're going to split where, as a category, and everything." Read as: split out as its own category, not folded into Vintage sport. This supersedes the "widen Vintage sport" recommendation in §3.1. It covers:
+- **Its pieces:** signature: quarter_zip, retro_runner (Sambas and similar), low_profile_sneaker, joggers, sweatpants, athletic_shorts, track jacket, track pants, a matched sweat set. Home: tee, performance_runner, white_leather_sneaker, relaxed or straight pants. Against: dress shoes, loafers, tailoring.
+- **Two exceptions when the outfit reads as Sportswear:** the loungewear hold ([LNG-2]) counts the look as a sign of intent; the runner charge (`SK2_runners`, −2.0 on Shoes) is off.
+- **The reader adds "track jacket" and "track pants"**, after a reader test (T112 step 1, Y48).
+- **Telling it apart from Vintage sport:** a **hero piece** makes Vintage sport (a football or basketball jersey, or a rugby shirt with sweats, [VSP-1]); **track or jogger pieces** (track jacket, track pants, quarter-zip with sweats, a matched set, with retro or running shoes) make Sportswear, and a jersey with joggers stays Vintage sport. When both fit, the hero piece wins. How a tie shows on the card and where the look sits in the fixed order are for its spec.
+- **Timing:** the scoring work waits for T69 (the v16 port) to merge, and for its own spec, `specs/sportswear.md`, interviewed with him first (it adds a look name users see on the card and in setup).
+
 **What you'd see change in the app if you say yes to the recommendations:**
 - A tee, joggers and Sambas-type sneakers stops landing at "Getting there" 6.5 and lands near 7.0–7.5 when it's clean; a track jacket over track pants gets named, not ignored.
 - Running shoes with shorts or joggers stop costing 2.0 on Shoes in a sportswear outfit.
 - Nothing changes for old money, gorp, city boy, skater: they already score fairly; Kit's words for them stay the same.
-- One new name on the card ("Sportswear", for Vintage sport widened), and one possible new setup tile or a rename: **your call**.
+- A new look name on the card, "Sportswear" (decided), next to Vintage sport; whether it gets a setup tile is settled in its spec interview.
 
 **Costs and unknowns:** whether the reader can tell a track jacket from a bomber and track pants from joggers is untested (needs a reader run on 20–30 photos, a few cents; asks your OK first). The Reddit evidence is missing (Y47).
 
@@ -94,7 +101,7 @@
 
 **What it shows.** The matched set and the quarter-zip already pass. What fails is the plain version most guys actually wear (tee + joggers + good sneakers), and the runner charge. One more trap: the **reader's choice of "retro runner" versus "performance runner" moves the score by a full point** on the same-looking shoe (SP4 vs SP4b).
 
-**Recommendation: widen Vintage sport into "Sportswear" (fold, not a ninth look).**
+**Recommendation (superseded Nov 18: he chose a separate look, see §1): widen Vintage sport into "Sportswear" (fold, not a ninth look).** The reasons below still describe what Sportswear needs.
 - **Why fold:** Vintage sport already holds the machinery: sweats allowed with a hero piece ([VSP-6], [LNG-3]), retro and low-profile sneakers as its own shoe ([VSP-5]), a matched tracksuit credit that "can't fire on a real check yet" ([VSP-9]). It lacks only the new hero pieces (track jacket, track pants, quarter-zip with sweats) and the two exceptions below. A ninth look would split a tiny recognizer in two and make the look picker and the style game longer (it is built for 8, log #488).
 - **Two rule exceptions** (proposed, strict-task size, parity with the Python engine first): (a) in a Sportswear outfit, the [LNG-2] hold counts the look itself as one sign of intent (as [LNG-7] already does at half a point); (b) the runner charge ([SHO-3]) is off in a Sportswear outfit, as it already is in Outdoor ([OUT-3]).
 - **Cost in reader accuracy:** unknown until measured. The risk is real: a track jacket looks like a bomber or a windbreaker; track pants look like joggers. A wrong name changes which rules fire. Needs a test on 20–30 photos before building (T112, step 1).
@@ -223,7 +230,7 @@ No creator covers it; the reader can't name a cowboy boot (a shoe it can't place
 
 ## 5. The tasks and decisions
 
-- **T112 (new, strict):** build the Sportswear widening and its two exceptions: reader names (track jacket, track pants) tested first, Python engine first, then `@kitted/core`, parity tests green. Needs your yes on the **look's user-facing name** (and on any change to the setup tile) and on **any scoring change**.
+- **T112 (new, strict):** Sportswear as its own look: spec first, then reader names (track jacket, track pants) tested first, Python engine first, then `@kitted/core`, parity tests green. Needs your yes on the **look's user-facing name** (and on any change to the setup tile) and on **any scoring change**.
 - **Y47 (your to-do, P2):** say yes or change the three recommendations (widen Vintage sport; fold old money, gorp, city boy, skater; drop archive and western), and, if you want the Reddit half, paste five or six r/malefashionadvice, r/streetwear or r/OldMoney threads you trust, or OK a different browser for it (5 min plus the paste) → T112 and the evidence for how common each style is.
 - **Spend:** the reader test in T112 step 1 is a few cents on 20–30 photos; asking before running it.
 
