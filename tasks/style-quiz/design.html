@@ -176,6 +176,26 @@
   .stamp.me { right: 22px; } .stamp.no { left: 22px; }
   .yn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .btn.sec { background: var(--a-surface2); color: var(--a-ink); }
+  /* D's results screen: it edits itself, so setup needs no grid */
+  .rank .x { width: 32px; height: 32px; border-radius: 16px; border: 0; background: var(--a-surface2); color: var(--a-ink2); display: grid; place-items: center; cursor: pointer; flex: none; }
+  .rank .x svg { width: 14px; height: 14px; }
+  .addrow { display: flex; align-items: center; justify-content: center; gap: 8px; height: 56px; width: 100%; border: 1.5px dashed var(--a-line); border-radius: 14px; background: none; color: var(--a-ink); font: 600 17px/1 var(--sans); cursor: pointer; }
+  .addrow svg { width: 18px; height: 18px; }
+  .words { display: grid; gap: 8px; padding-top: 18px; }
+  .linkbtn { border: 0; background: none; padding: 10px 0; font: 600 15px/20px var(--sans); color: var(--a-ink); text-align: left; cursor: pointer; justify-self: start; }
+  .wrow { display: flex; gap: 8px; }
+  .field { flex: 1; min-width: 0; height: 48px; border-radius: 12px; border: 1px solid var(--a-line); background: var(--a-surface); color: var(--a-ink); font: 400 17px/22px var(--sans); padding: 0 14px; }
+  .field::placeholder { color: var(--a-ink3); }
+  .field:focus-visible { outline: 2.5px solid var(--a-ink); outline-offset: 1px; }
+  .wdone { height: 48px; padding: 0 16px; border-radius: 24px; border: 0; background: var(--a-primary); color: var(--a-on); font: 600 15px/1 var(--sans); cursor: pointer; }
+  .saved { font: 400 15px/20px var(--sans); color: var(--a-ink2); }
+  .saved b { color: var(--a-ink); font-weight: 600; }
+  .sheet-bg { position: absolute; inset: 0; background: rgba(0, 0, 0, .38); z-index: 20; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; height: 80%; background: var(--a-bg); border-radius: 24px 24px 0 0; z-index: 21; display: flex; flex-direction: column; box-shadow: 0 -8px 24px rgba(0,0,0,.18); }
+  .sheet .grab { width: 36px; height: 5px; border-radius: 3px; background: var(--a-line); margin: 8px auto 0; flex: none; }
+  .sheet .hd { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px 12px; flex: none; }
+  .sheet .hd b { font: 700 22px/28px var(--display); }
+  .sheet-body { flex: 1; overflow-y: auto; padding: 0 16px 34px; scrollbar-width: none; }
   .hint { text-align: center; font: 400 13px/18px var(--sans); color: var(--a-ink3); padding-top: 12px; }
 
   @media (prefers-reduced-motion: reduce) { .stage, .pick, .solo { transition: none; } .shake { animation: none; } }
@@ -184,7 +204,7 @@
 <div class="wrap">
   <header class="intro">
     <h1>Picking a style: four ways to try</h1>
-    <p>Testers stall on setup's style screen: some don't know what "Workwear" or "Vintage sport" means, others skip the tiles and type their own. Each direction below swaps style names for outfit comparisons in a different amount. You picked A; <b>D</b> (Nov 17) is a second version to test against it. Tailored, the 8th look, is in A, C and D (two suits). <b>Every phone works: tap through it.</b> The drawings are the app's own (the same code as the tiles today). The words on these screens are drafts for your OK; nothing is built.</p>
+    <p>Testers stall on setup's style screen: some don't know what "Workwear" or "Vintage sport" means, others skip the tiles and type their own. Each direction below swaps style names for outfit comparisons in a different amount. You picked A on Nov 12; on Nov 17 you leaned to <b>D</b>, the swipe, with no grid after it. Tailored, the 8th look, is in A, C and D (two suits). <b>Every phone works: tap through it.</b> The drawings are the app's own (the same code as the tiles today). The words on these screens are drafts for your OK; nothing is built.</p>
     <p>Remember what the picks do today: they set the order of the fixes and break a tie on "Reads as". They never move a score. So the game has to be quick, and its result has to feel like him.</p>
     <div class="controls">
       <div class="seg-ctl" role="group" aria-label="Color scheme">
@@ -220,15 +240,15 @@
     </figure>
 
     <figure data-fig="d">
-      <div class="label">D · Me or not me, then rank <span class="tag">new, Nov 17 · test against A</span></div>
+      <div class="label">D · Me or not me, then rank <span class="tag rec">no grid, Nov 17</span></div>
       <div class="phone-wrap"><div class="phone" data-dir="d"></div></div>
       <button type="button" class="restart" data-restart="d">Start again</button>
       <div class="notes">
-        <p><span class="k">What happens.</span> One outfit at a time, no names. Tap <b>Me</b> or <b>Not me</b> (or swipe right or left), 8 times, once per look. Then this-or-that between his Me's puts them in order, usually 2 to 4 taps. Then the same reveal.</p>
+        <p><span class="k">What happens.</span> One outfit at a time, no names. Tap <b>Me</b> or <b>Not me</b> (or swipe right or left), 8 times, once per look. Then this-or-that between his Me's puts them in order, usually 2 to 4 taps. <b>No grid in setup:</b> the results screen does its jobs. He can remove a look (×), add one from a sheet ("Add a look"), say it in his own words, or play again. The full tile list stays in You → Style profile.</p>
         <ul>
           <li>Taps on this step: about <b>12</b>. To the camera: about <b>17</b> (today 7, A 14).</li>
           <li>Every look is judged on its own, so two looks he loves can't knock each other out in round 1, and a look he dislikes rarely sneaks into his top 3.</li>
-          <li>About 3 more taps than A. If he says Not me to all 8, he lands on "Nothing clicked yet".</li>
+          <li>About 3 more taps than A. If he says Not me to all 8: "Nothing clicked yet", with Play again and his own words; Continue waits for a look or his words (your Nov 11 rule).</li>
         </ul>
       </div>
     </figure>
@@ -274,8 +294,8 @@
             <tr><td>Style names during the game</td><td>Hidden until the reveal</td><td>Hidden until the reveal</td><td>Hidden until the reveal</td><td>Hidden in the game, shown on tiles</td></tr>
             <tr><td>How good the top three is</td><td>Good: a bracket, so every first-round winner plays again</td><td>Good, and best when he loves two looks; a disliked look rarely makes his top 3</td><td>Rough: 1st is solid, 2nd and 3rd are guesses</td><td>Same as A when played, his own picks otherwise</td></tr>
             <tr><td>Fixes "doesn't know the names"</td><td>Yes</td><td>Yes</td><td>Yes</td><td>If he opens it</td></tr>
-            <tr><td>Fixes "makes up his own"</td><td>Partly: the reveal's "Change picks" keeps the words box</td><td>Partly, same way; his Not me's also say what he isn't into</td><td>Partly, same way</td><td>Partly: the words box stays on the grid</td></tr>
-            <tr><td>Size of the change</td><td>New game and reveal screens, grid kept for Change</td><td>A one-card screen with Me / Not me, then A's this-or-that and reveal</td><td>Same, a three-across card</td><td>The same new screens plus one row on today's grid</td></tr>
+            <tr><td>Fixes "makes up his own"</td><td>Partly: the reveal's "Change picks" keeps the words box</td><td>Yes: "Tell me in your words" sits on the results screen; his Not me's also say what he isn't into</td><td>Partly, same way</td><td>Partly: the words box stays on the grid</td></tr>
+            <tr><td>Size of the change</td><td>New game and reveal screens, grid kept for Change</td><td>No grid in setup: a one-card screen, a this-or-that, and a results screen that edits itself</td><td>Same, a three-across card</td><td>The same new screens plus one row on today's grid</td></tr>
           </tbody>
         </table>
       </div>
@@ -299,7 +319,7 @@
           <li>Settled: A for everyone (Nov 12), and an 8th look, Tailored (spec approved Nov 13). The taps to the camera (about 14) change in the style game's spec. Nov 13: the first version's ranking buried round 1's winner (that's how Streetwear lost to Vintage sport); A is now a proper bracket.</li>
           <li>A or D, after testers play both. In a simulation (made-up people, so for comparing only) both find the real favourite about 8 times in 10; D does better for a guy who loves two looks and keeps disliked looks out of the top 3, for about 3 more taps.</li>
           <li>Drawings or real outfit photos in the game. Drawings cost $0 and match the app; photos may judge taste better, but they need rights or friends' permission.</li>
-          <li>The words: "This or that?", "Tap the one that's more you.", "Me or not me?", "Me", "Not me", "Now put them in order", "Here's your style".</li>
+          <li>The words: "Me or not me?", "Me", "Not me", "Now put them in order", "Here's your style", "Add a look", "Not quite you? Tell me in your words", "Play again", "Nothing clicked yet".</li>
           <li>Whether the game should also come back later on You's Style profile ("Retake").</li>
         </ul>
       </div>
@@ -347,6 +367,8 @@
   }
   const chevL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
   const chevR = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+  const xIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const plusIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
   const cardsIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="8" height="14" rx="2"/><rect x="13" y="5" width="8" height="14" rx="2"/><path d="M7 9.5v5M17 9.5v5" stroke-linecap="round"/></svg>';
 
   // ---------- A's game: an 8-look bracket ----------
@@ -408,7 +430,7 @@
     let st, hist;
     const fresh = () => ({
       view: { a: 'duel', b: 'trio', c: 'grid', d: 'swipe' }[dir],
-      picks: [], rounds: [], swipes: [], taps: 0, played: false, from: null, note: '', chosen: null, shake: null,
+      picks: [], rounds: [], swipes: [], words: '', editing: false, sheet: false, taps: 0, played: false, from: null, note: '', chosen: null, shake: null,
     });
     const reset = () => { st = fresh(); hist = []; draw(); };
     const save = () => hist.push(JSON.stringify(st));
@@ -427,7 +449,7 @@
         st.chosen = null;
         st.rounds.push({ pair, win });
         const fin = dir === 'b' ? (st.rounds.length >= 3 ? trioResult(st) : null) : dir === 'd' ? (ranker(st).done ? ranker(st).result : null) : (bracket(st).done ? bracket(st).result : null);
-        if (fin) { st.picks = fin; st.played = true; st.view = 'reveal'; }
+        if (fin) { st.picks = fin; st.played = true; st.view = dir === 'd' ? 'dresult' : 'reveal'; }
       }), win ? (reduce ? 120 : 260) : 0);
     }
 
@@ -442,7 +464,7 @@
         if (st.swipes.length < 8) { draw(); return; }
         go(() => {
           const r = ranker(st);
-          if (r.done) { st.picks = r.result; st.played = true; st.view = 'reveal'; } else st.view = 'order';
+          if (r.done) { st.picks = r.result; st.played = true; st.view = 'dresult'; } else st.view = 'order';
         });
       }, reduce ? 0 : 220);
     }
@@ -534,6 +556,52 @@
         return frame([title('Now put them in order', 'You said Me to these. Tap the one that’s more you.'), h('div', { class: 'pair' }, pair.map(card))],
           [h('div', { class: 'note', 'aria-live': 'polite' }, st.note)]);
       },
+      // D's results: remove a look, add one from a sheet, say it in his own words, or play again. No grid in setup.
+      dresult() {
+        const p = st.picks;
+        const canGo = () => p.length > 0 || st.words.trim().length > 0;
+        const noneLiked = !yesList(st).length;
+        const rows = p.map((s, i) => h('div', { class: 'rank' + (i === 0 ? ' first' : '') },
+          h('div', { class: 'art' }, outfit(s, 0, 40), outfit(s, 1, 40)),
+          h('div', { class: 'tx' }, h('b', {}, NAMES[s]), h('span', {}, LINES[s])),
+          h('span', { class: 'disc' }, String(i + 1)),
+          h('button', { class: 'x', 'aria-label': `Remove ${NAMES[s]}`, html: xIc, onclick: () => { tap(); save(); st.picks.splice(i, 1); draw(); } })));
+        const add = p.length < 3 ? h('button', { class: 'addrow', onclick: () => { tap(); save(); st.sheet = true; draw(); } }, h('span', { html: plusIc, 'aria-hidden': 'true' }), 'Add a look') : null;
+        const finishWords = () => { tap(); save(); st.words = st.words.trim(); st.editing = false; draw(); };
+        let words;
+        if (st.editing) {
+          const input = h('input', { class: 'field', type: 'text', maxlength: '80', placeholder: 'Like skater, or all black', 'aria-label': 'Your style in your words', value: st.words });
+          input.addEventListener('input', (e) => { st.words = e.target.value; const c = root.querySelector('.dock .btn:not(.sec)'); if (c) c.disabled = !canGo(); });
+          input.addEventListener('keydown', (e) => { if (e.key === 'Enter') finishWords(); });
+          setTimeout(() => input.focus({ preventScroll: true }), 0);
+          words = h('div', { class: 'words' }, h('div', { class: 'wrow' }, input, h('button', { class: 'wdone', onclick: finishWords }, 'Done')));
+        } else if (st.words) {
+          words = h('div', { class: 'words' }, h('div', { class: 'saved' }, 'In your words: ', h('b', {}, `\u201c${st.words}\u201d`)),
+            h('button', { class: 'linkbtn', onclick: () => { tap(); st.editing = true; draw(); } }, 'Edit'));
+        } else {
+          words = h('div', { class: 'words' }, h('button', { class: 'linkbtn', onclick: () => { tap(); st.editing = true; draw(); } }, 'Not quite you? Tell me in your words'));
+        }
+        const head = p.length ? title('Here\u2019s your style', `From your ${st.rounds.length + st.swipes.length} picks. You can change it anytime in You.`)
+          : noneLiked ? title('Nothing clicked yet', 'Play again, or tell me in your words.')
+          : title('Here\u2019s your style', 'Add a look, or tell me in your words.');
+        const f = frame([head, h('div', { class: 'ranks' }, rows, add), words],
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('div', { class: 'yn' },
+            h('button', { class: 'btn sec', onclick: () => { tap(); save(); go(() => { st.swipes = []; st.rounds = []; st.picks = []; st.view = 'swipe'; }); } }, 'Play again'),
+            h('button', { class: 'btn', disabled: !canGo(), onclick: () => { tap(); save(); go(() => (st.view = 'done')); } }, 'Continue'))]);
+        if (st.sheet) {
+          const close = () => { tap(); st.sheet = false; draw(); };
+          const left = ORDER.filter((s) => !p.includes(s));
+          const tiles = left.map((s) => h('button', { class: 'tile', onclick: () => { tap(); save(); st.picks.push(s); st.sheet = false; draw(); }, 'aria-label': `${NAMES[s]}: ${LINES[s]}` },
+            h('div', { class: 'art' }, outfit(s, 0, 73), outfit(s, 1, 73)),
+            h('div', { class: 'nm' }, h('span', {}, NAMES[s])),
+            h('div', { class: 'ln' }, LINES[s])));
+          f.push(h('div', { class: 'sheet-bg', onclick: close }),
+            h('div', { class: 'sheet', role: 'dialog', 'aria-label': 'Add a look' }, h('span', { class: 'grab' }),
+              h('div', { class: 'hd' }, h('b', {}, 'Add a look'), h('button', { class: 'txt', onclick: close }, 'Close')),
+              h('div', { class: 'sheet-body' }, h('div', { class: 'grid' }, tiles))));
+        }
+        return f;
+      },
       trio() {
         const r = st.rounds.length;
         const set = trioNext(st);
@@ -561,7 +629,7 @@
         const toCam = 5 + st.taps;
         return frame([title('About you', null), h('div', { class: 'end' },
           h('div', { class: 'eyebrow' }, 'End of the mockup. About you comes next in the app.'),
-          h('div', { class: 'big' }, st.picks.map((s, i) => `${i + 1} ${NAMES[s]}`).join(' · ')),
+          h('div', { class: 'big' }, [st.picks.map((s, i) => `${i + 1} ${NAMES[s]}`).join(' · '), st.words ? `\u201c${st.words}\u201d` : ''].filter(Boolean).join(' + ')),
           h('div', { class: 'stat' }, h('span', {}, 'Taps on the style step'), h('b', {}, String(st.taps))),
           h('div', { class: 'stat' }, h('span', {}, 'A fresh install to the camera'), h('b', {}, `${toCam} (today 7)`)),
           h('div', { class: 'stat' }, h('span', {}, 'Played the game'), h('b', {}, st.played ? 'Yes' : 'No')))],
