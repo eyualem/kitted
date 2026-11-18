@@ -48,3 +48,15 @@ Q-T1 to Q-T10 accepted as IMPLEMENTATION.md defaults them. Q-T5: committing the 
   - `oneCount` G8 is unchanged and still red: the demo's canned answer card for "What should I buy next?" still names work boots, while the Closet now picks dark straight jeans. The test guards that the two agree, so the demo answer (content: implementer, words: founder) has to change, not the test.
 
 ## Review
+
+### Round 1 (reviewer, Nov 18) - verdict: ready, with one test weakness and one note
+- **Test lock:** the locked test files are unchanged since `3da1ae5c`; only TESTING.md's Lock line moved. The Disputes list checks out: every changed old test either pins v15 with `setRescoreV16(false)` or moves a number v16 replaces (closet counts, Next best buy, W's third look call); none deleted, no unrelated assertion loosened.
+- **Planted bugs (all reverted, tree clean):**
+  1. Scale floor 3.0 -> 3.5 at `v16Result`'s shown clamp: caught only by `parts.parity` "picks never move a number". No v16 parity, conformance or steadiness case sits near the floor. **Test defect (weak):** nothing pins the 3.0 floor directly.
+  2. Stacking ceiling (zero lifts 7.5 -> 8.5): caught by `parts.parity` (v16 cases, what-ifs), `partsFixes.parity` (5 failures).
+  3. Season (heavy-layer warm rule off): caught by `parts.parity`, `partsFixes.parity`, `rulesConformance` SCO-9 puffer cases, T69-G4 (8 failures).
+  4. Leg-width tie-break off (`leg_look_mode` default "off"): caught only by `parts.parity` "picks never move a number". **Test defect (weak):** no dedicated core test for the tie-break; `T69-legLook` covers only the app side.
+  5. Why rows (fault row sign flipped): caught by `T69-whyRows` "every v16 parity case: the rows add up".
+- **Screenshots:** the Simulator's installed dev build does not load this worktree's JS (it showed an old onboarding screen, not demo 300, even with Metro on 8082), so no Simulator screenshots. The web preview on Metro 8082 (layout and text only, not iOS) shows: 300 "3.5 Start fresh", 302 "7.0 Put together", 303 "8.5 Sharp", 304 "9.0 Dialed in"; Why 9.0 (screen 309) rows add up: 7.0 + 0.38 + 0.5 + 0.25 + 0.5 + 0.25 + 0 + 0.75 - 0.12 (top of scale 9.5) - 0.75 (scale) + 0 + 0.24 rounding = 9.0. No image files were saved.
+- **Defects:** code: none found. test: (1) no direct test of the 3.0 floor, (4) no core test of the leg tie-break (both caught only by one broad test).
+- **Notes (never block):** in the web preview at 430 px wide the Why amounts "+0.38", "+1" and "+0.5" in some rows are cut to "+..." (text ellipsis); check on a phone. Demo screens are the made-up readings, not real photos.
