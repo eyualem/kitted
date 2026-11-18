@@ -224,12 +224,17 @@ export interface LookAnswerL {
 
 export type LookArm = 'U' | 'L';
 
+/** T69 (stub, tasks/T69/IMPLEMENTATION.md → Interfaces): the leg-width look W's answer (extraction-test/schema_look_w.json). */
+export interface LookAnswerW { knee: 'clings' | 'skims' | 'hangs_away' | 'not_visible'; opening: 'narrower' | 'about_the_same' | 'wider' | 'not_visible' }
+
 /** The second look as a check stores it: the raw answers (the engine reads only under_present + under_shows and
  *  covers_shoe; the rest failed look1's bars and never scores). An arm that was late, failed or not asked is null. */
 export interface StoredSecondLook {
   version: string;
   u: LookAnswerU | null;
   l: LookAnswerL | null;
+  /** T69 (stub): the leg-width look; absent on checks from before it. */
+  w?: LookAnswerW | null;
   /** Taken from another check rather than read for this one: the same photo checked earlier ('samePhoto'), or a
    *  re-check arm that didn't come back carrying its first check's answer ('firstCheck'). */
   copied?: { from: string; why: 'samePhoto' | 'firstCheck'; arms: LookArm[] };

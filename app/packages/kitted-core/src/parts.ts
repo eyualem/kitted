@@ -311,6 +311,8 @@ export interface PartsData {
   rollback?: { engine: string; label: string; version: string; tune: PartsTune };
   /** v15: what the second switch (HOODIE_LAYER_V15) rolls back to: v14's engine, label, version and tune. */
   rollback14?: { engine: string; label: string; version: string; tune: PartsTune };
+  /** T69 (stub): what the third switch (RESCORE_V16) rolls back to: v15's engine, label, version and tune. */
+  rollback15?: { engine: string; label: string; version: string; tune: PartsTune };
 }
 
 /** A check that moved a part. `points` is Python's round(delta, 3). */
@@ -368,6 +370,37 @@ export interface PartsOptions {
   styles?: Styles | null;
   boldness?: string;
   secondLook?: SecondLookInput | null;
+  /** T69 (stub, tasks/T69/IMPLEMENTATION.md → Interfaces): v16 only. */
+  season?: Season;
+  /** T69 (stub): v16 only, the look(s) the taste rules follow. */
+  gradedLook?: string | readonly string[] | null;
+}
+
+/** T69 (stub): v16's temperature band: "warm", or cool as null/undefined. */
+export type Season = "warm" | null;
+
+/** T69 (stub): parts_proto's result["v16"], camelCased (tasks/T69/IMPLEMENTATION.md → Interfaces). */
+export interface PartsV16 {
+  season: "warm" | "cool";
+  lifts: { id: string; size: number; line: string; layer: boolean }[];
+  liftSum: number;
+  minor: number;
+  faultDrop: number;
+  heavyLayer: [number, string] | null;
+  caps: { cap: number; id: string; kind: "sink" | "hold" | "clash"; line: string }[];
+  stackCeiling: number;
+  oneLook: boolean;
+  heldBy: string | null;
+  raw: number;
+  rawUnclamped: number;
+  condDeduction: number;
+  curved: number;
+  owned: string[];
+  ceiling: number;
+  depends: [string, number, number] | null;
+  unread: Record<string, string>;
+  taste: { points: number; id: string; line: string }[];
+  gradedLook: string[];
 }
 
 export interface PartsLowest {
@@ -403,6 +436,8 @@ export interface PartsScored {
   styleLabel: DetectedStyle | null;
   notRated: NotRated[];
   partial: boolean;
+  /** T69 (stub): present only when the engine is v16. */
+  v16?: PartsV16;
 }
 
 export interface PartsUnscored {
@@ -1660,7 +1695,7 @@ export const CASUAL_FITS_V14 = true;
 export const HOODIE_LAYER_V15 = true;
 
 /** The bundled data as the switches want it: v15 as generated, v14's tune (HOODIE_LAYER_V15 off), or v13's (CASUAL_FITS_V14 off). */
-export function partsDataFor(v14: boolean, v15: boolean = HOODIE_LAYER_V15): PartsData {
+export function partsDataFor(v14: boolean, v15: boolean = HOODIE_LAYER_V15, _v16?: boolean): PartsData {
   const rb = !v14 ? PARTS_DATA.rollback : !v15 ? PARTS_DATA.rollback14 : undefined;
   if (!rb) return PARTS_DATA;
   return { ...PARTS_DATA, engine: rb.engine, label: rb.label, version: rb.version, tune: rb.tune };
@@ -1683,6 +1718,17 @@ export function setCasualFitsV14(on: boolean, v15: boolean = HOODIE_LAYER_V15): 
 }
 export function setHoodieLayerV15(on: boolean): void {
   currentParts = createParts(partsDataFor(CASUAL_FITS_V14, on));
+}
+
+/** T69 (stub): THE SWITCH for the rescoring (parts v16, #484). Not built yet. */
+export const RESCORE_V16: boolean = false;
+/** T69 (stub): tests only. */
+export function setRescoreV16(_on: boolean): void {
+  throw new Error("T69: not built");
+}
+/** T69 (stub): the engine a stored parts check is scored with. */
+export function partsEngineFor(_rubricVersion: string): PartsEngine {
+  throw new Error("T69: not built");
 }
 
 /** parts_proto.score_parts() (engine v11) with the bundled data. Never mutates `reading`. */

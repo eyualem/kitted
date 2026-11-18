@@ -35,6 +35,7 @@ export type { CreditReason, ScoreTrace, RubricHelpers, Outfit as StyleOutfit } f
 export { PARTS_DATA } from "./partsData";
 export {
   createParts, defaultParts, scoreParts, partsCardRow, CASUAL_FITS_V14, HOODIE_LAYER_V15, partsDataFor, setCasualFitsV14, setHoodieLayerV15,
+  RESCORE_V16, setRescoreV16, partsEngineFor, type Season, type PartsV16,
   type PartsEngine, type PartsData, type PartsTune, type PartsOptions, type PartsResult, type PartsScored, type PartsUnscored,
   type PartName, type PartResult, type PartReason, type PartTip, type PartsCondition, type PartsOccasion, type PartsLowest,
   type SecondLook, type SecondLookInput,

@@ -29,8 +29,12 @@ const ARMS: Record<LookArm, { prompt: string; schema: Schema }> = {
   L: { prompt: promptL.prompt, schema: schemaL as Schema },
 };
 
+/** T69 (stub): the bottoms the leg-width look W is asked for (leg_look.py PANTS). Not built: empty. */
+export const LOOK_W_PANTS: ReadonlySet<string> = new Set<string>();
+
 /** The request body for one arm (pure; tested against look_test.py's). */
 export function buildLookRequest(arm: LookArm, jpegBase64: string) {
+  if ((arm as string) === 'W') throw new Error('T69: not built');
   return {
     contents: [{ parts: [{ text: ARMS[arm].prompt }, { inline_data: { mime_type: 'image/jpeg', data: jpegBase64 } }] }],
     generationConfig: { temperature: 0, responseMimeType: 'application/json', responseSchema: ARMS[arm].schema, thinkingConfig: { thinkingBudget: 0 } },
@@ -48,6 +52,7 @@ export function lookImages(zoom: readonly string[] | undefined): Record<LookArm,
 export function validateLook(arm: 'U', x: unknown): LookAnswerU | null;
 export function validateLook(arm: 'L', x: unknown): LookAnswerL | null;
 export function validateLook(arm: LookArm, x: unknown): LookAnswerU | LookAnswerL | null {
+  if ((arm as string) === 'W') throw new Error('T69: not built');
   if (!x || typeof x !== 'object' || Array.isArray(x)) return null;
   const { properties, required } = ARMS[arm].schema;
   const out: Record<string, string> = {};
