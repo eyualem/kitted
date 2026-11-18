@@ -114,7 +114,7 @@ const addedInBuild = {
   'game.card.a11y': 'Outfit {n} of 8, view {view} of 2. {desc}',
   'game.anotherOutfit': 'Another outfit',
   'game.order.title': 'Now put them in order',
-  'game.order.line': "You said Me to {n}. Tap the one that's more you.",
+  'game.order.line': "Tap the one that's more you.", // the founder, Nov 18: drop "You said Me to {n}."
   'game.results.title': "Here's your style",
   'game.results.line': 'Your top looks, in order. Not quite right? Drag, remove or add one.',
   'game.results.lineOne': 'Your top look. Not quite right? Add one, or play again.',

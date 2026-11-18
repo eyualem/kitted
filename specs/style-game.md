@@ -26,7 +26,7 @@ After this, a new user finds his style by playing, not by reading style names: e
 - **Back** undoes the last card (or the last ranking pick); on card 1 it goes to Welcome.
 
 ## SG2. Now put them in order
-- Shown only when he said Me to 2 or more looks. Title `Now put them in order`, line `You said Me to {n}. Tap the one that's more you.`
+- Shown only when he said Me to 2 or more looks. Title `Now put them in order`, line `Tap the one that's more you.` (the founder, Nov 18: no "You said Me to {n}.", #493)
 - Two of his Me's side by side, each on its second drawing, mid-screen in thumb reach. He taps the one that's more him.
 - Each Me is placed into a top 3 by binary insertion: at most 2 taps per Me after the first. The first pair starts on a random side, then sides alternate, so neither side wins more often.
 - With 1 Me, this step is skipped; with 0, he lands on SG6.
