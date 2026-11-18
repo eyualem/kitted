@@ -68,7 +68,7 @@
       st.flying = yes ? 'r' : 'l'; draw();
       setTimeout(() => {
         st.flying = null;
-        st.swipes.push({ look: D_ORDER[st.swipes.length], yes });
+        st.swipes.push({ look: dOrder(st)[st.swipes.length], yes });
         if (st.swipes.length < 8) { draw(); return; }
         go(() => {
           const r = ranker(st);
@@ -188,7 +188,7 @@
       },
       swipe() {
         const n = st.swipes.length;
-        const look = D_ORDER[Math.min(n, 7)];
+        const look = dOrder(st)[Math.min(n, 7)];
         const card = h('div', { class: 'solo' + (st.flying ? ' fly-' + st.flying : ''), 'data-style': look, role: 'img', 'aria-label': `Outfit ${n + 1} of 8` },
           h('span', { class: 'stamp no' }, 'Not me'), h('span', { class: 'stamp me' }, 'Me'),
           h('div', { class: 'art' }, outfit(look, 0, 170)));
@@ -241,7 +241,7 @@
           : title('Here\u2019s your style', 'Add a look, or tell me in your words.');
         const f = frame([head, h('div', { class: 'ranks' }, rows, add), words],
           [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('div', { class: 'yn' },
-            h('button', { class: 'btn sec', onclick: () => { tap(); save(); go(() => { st.swipes = []; st.rounds = []; st.picks = []; st.view = 'swipe'; }); } }, 'Play again'),
+            h('button', { class: 'btn sec', onclick: () => { tap(); save(); go(() => { st.swipes = []; st.rounds = []; st.picks = []; st.dSeed = 0; st.view = 'swipe'; }); } }, 'Play again'),
             h('button', { class: 'btn', disabled: !canGo(), onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, 'Continue'))]);
         if (st.sheet) {
           const close = () => { tap(); st.sheet = false; draw(); };
