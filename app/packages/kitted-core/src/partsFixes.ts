@@ -270,7 +270,7 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
   const exclude = new Set(opts.exclude ?? []);
 
   const score = (r: Reading, sl: SecondLookInput | null | undefined) =>
-    PE.scoreParts(r, { occasion, styles, boldness, secondLook: sl ?? null });
+    PE.scoreParts(r, { occasion, styles, boldness, secondLook: sl ?? null, season: opts.season ?? null, gradedLook: opts.gradedLook ?? null });
 
   const out: PartsFixSuggestions = { baseOverall: null, baseRaw: null, fixes: [], smallerStep: null, nextLevel: null, noneLine: null };
   const b = score(reading, opts.secondLook);
