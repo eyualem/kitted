@@ -39,6 +39,22 @@ The planner's technical defaults 1–14 as written, plus:
 - Results after the fixes: tsc clean; eslint clean on `src/features/onboarding`, `src/demo`, `src/app/onboarding`, `src/sync/schema.ts`. The T113, T39-setupScreens, T39-offerCard, looksOwnWords, scenarios and toast suites: **8 suites, 136 / 136 pass** (two workers). T113 alone: 84 tests (26 + 23 + 35), all passing.
 - Still not seen on a device after these fixes: the dots' new place and the capped labels at AX5 (screenshots 300 and 308/310 again), and Back during an exit with a real finger.
 
+## Build round 3: Yes / No, card 1's lesson, the fast-No check (the founder's real-person test, #494, #495; tests locked at `ae83ebfa`)
+- **SG1, the words:** the cards ask `Is this your style?` / `One outfit at a time.`. The buttons are `No` (✕ `close` icon, left, secondary) and `Yes` (✓ `check` icon, right, primary), and the stamps read Yes and No. The hint is `Swipe right for Yes, left for No.`, with `Not sure? Tap it for another outfit.` under it. testIDs unchanged (`game-me`, `game-notme`). The new words are in `en.ts` (`game.teach`, `game.check.*`), marked drafts like the rest.
+- **SG1.4, card 1's lesson:** on a fresh install's first game an overlay is laid over card 1 (a see-through ink panel, left and right arrows, `Swipe right if it's your style, left if it's not.`). While it shows, Yes and No are disabled and the card takes no touch. One tap anywhere on it dismisses it, writes kv `onboarding.swipeTaught` (local, in `KV_LOCAL`), and card 1 leans right then left once, 0.5 s later. That lean is the only one per install: none after Back, Play again or a relaunch, and none under Reduce Motion. Session fields added: `teach`, `leanArmed`, `checking`; `finishTeach(store)` is new.
+- **FS4 / SG7.5, the fast-No check:** the card times each answer from when it could first be answered (its mount, or the lesson's tap on card 1) and passes `fast` (< 1.5 s) to `answer(store, me, fast)`. If the first 3 answers are fast No's with no Back in between, `Just checking: left means it's not your style.` shows in the card's place, with `Start over` (primary) and `Keep going`.
+  - Start over (`startOver()`) returns to card 1 of the same deal, with no answers, no history and no lesson.
+  - Keep going (`keepGoing()`) shows card 4 with the 3 No's kept.
+  - It shows at most once per game. Any Back in the cards ends the run for that game, and so does Start over.
+  - The test kit's programmatic answers carry no timing, so they never trigger it.
+- **F1.1:** 16 presses in the render walk with the lesson's tap (18 on the phone). The screen code didn't need a change for this.
+- **Results:**
+  - tsc clean; eslint clean on `src/features/onboarding` and `src/sync/schema.ts`.
+  - T113 in band: **89 / 89 pass** (3 suites).
+  - The neighbours in band (T39-setupScreens, T39-offerCard, T39-styleProfile, looksOwnWords, T39-noLeak, syncSchema, privacyWipe, T39-aboutStep, toast, scenarios): **10 suites, 89 / 89 pass**.
+  - `npm run check`, once, alone: tsc and core typecheck pass; lint 0 errors, 6 warnings (old test files); core vitest `Test Files 1 failed | 31 passed`, `Tests 19 failed | 893 passed`, all 19 in T94's tailored test file in core. The chain stops there, so the full app jest didn't run inside `check`, and I didn't run it separately (about 60 MB free).
+- **Not done:** no demo screen for the check (screen 314 would break the locked list of screens that run before onboarding); the verifier reaches it by playing three quick No's. Not seen on iOS: the lesson panel's look in light, dark and AX5, the lean after the tap, and the check card.
+
 ## Not seen on iOS
 Nothing has run on the Simulator: no Metro on 8082, no Maestro flows (`T113-style-game.yaml`, `T39-setup-fresh.yaml`), no screenshots (light, dark, AX5) and no VoiceOver pass. The lean, the swipe and drag feel, the haptics, the form sheet's detents, the keyboard padding on results, and the held toast on demo screens 306/307 are untested on a device. This is the verifier's step, then the founder's phone to-do (TESTING.md → Not testable yet).
 
