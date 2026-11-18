@@ -159,11 +159,12 @@
   .rank.first { border-width: 2.5px; border-color: var(--a-ink); padding: 8.5px 12.5px 8.5px 8.5px; }
 
   /* The mockup's end (not an app screen) */
-  .end { margin: 8px 0; border: 1.5px dashed var(--a-line); border-radius: 14px; padding: 18px; display: grid; gap: 10px; }
-  .end .eyebrow { font: 600 13px/18px var(--sans); color: var(--a-ink3); }
-  .end .big { font: 700 22px/28px var(--display); }
-  .end .stat { display: flex; justify-content: space-between; gap: 12px; font: 400 15px/20px var(--sans); border-top: 1px solid var(--a-line); padding-top: 10px; }
-  .end .stat b { font-variant-numeric: tabular-nums; }
+  .end-bg { position: absolute; inset: 0; z-index: 30; background: rgba(0, 0, 0, .28); }
+  .endcard { position: absolute; left: 16px; right: 16px; bottom: 34px; z-index: 31; background: var(--a-primary); color: var(--a-on); border-radius: 20px; padding: 16px; display: grid; gap: 6px; }
+  .endcard .eyebrow { font: 600 13px/18px var(--sans); opacity: .75; }
+  .endcard .big { font: 700 20px/26px var(--display); }
+  .endcard .stat { font: 400 14px/19px var(--sans); opacity: .85; font-variant-numeric: tabular-nums; }
+  .endcard button { margin-top: 8px; height: 48px; border-radius: 24px; border: 0; background: var(--a-on); color: var(--a-primary); font: 600 16px/1 var(--sans); cursor: pointer; }
 
   /* D: one outfit at a time, Me / Not me */
   .solo { width: 300px; margin: 0 auto; border: 1px solid var(--a-line); background: var(--a-surface); border-radius: 14px; padding: 10px; position: relative;
@@ -177,6 +178,13 @@
   .yn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .btn.sec { background: var(--a-surface2); color: var(--a-ink); }
   /* D's results screen: it edits itself, so setup needs no grid */
+  .rank { transition: transform .18s ease; }
+  .rank.lift { transition: none; position: relative; z-index: 3; box-shadow: 0 12px 28px rgba(0,0,0,.2); }
+  .rank .art { position: relative; }
+  .rank .art .disc { position: absolute; top: 4px; left: 4px; }
+  .grip { width: 30px; height: 44px; border: 0; background: none; color: var(--a-ink3); display: grid; place-items: center; cursor: grab; touch-action: none; flex: none; padding: 0; }
+  .grip svg { width: 18px; height: 18px; }
+  .lift .grip { cursor: grabbing; }
   .rank .x { width: 32px; height: 32px; border-radius: 16px; border: 0; background: var(--a-surface2); color: var(--a-ink2); display: grid; place-items: center; cursor: pointer; flex: none; }
   .rank .x svg { width: 14px; height: 14px; }
   .addrow { display: flex; align-items: center; justify-content: center; gap: 8px; height: 56px; width: 100%; border: 1.5px dashed var(--a-line); border-radius: 14px; background: none; color: var(--a-ink); font: 600 17px/1 var(--sans); cursor: pointer; }
@@ -198,7 +206,7 @@
   .sheet-body { flex: 1; overflow-y: auto; padding: 0 16px 34px; scrollbar-width: none; }
   .hint { text-align: center; font: 400 13px/18px var(--sans); color: var(--a-ink3); padding-top: 12px; }
 
-  @media (prefers-reduced-motion: reduce) { .stage, .pick, .solo { transition: none; } .shake { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .stage, .pick, .solo, .rank { transition: none; } .shake { animation: none; } }
 </style>
 
 <div class="wrap">
@@ -244,7 +252,7 @@
       <div class="phone-wrap"><div class="phone" data-dir="d"></div></div>
       <button type="button" class="restart" data-restart="d">Start again</button>
       <div class="notes">
-        <p><span class="k">What happens.</span> One outfit at a time, no names. Tap <b>Me</b> or <b>Not me</b> (or swipe right or left), 8 times, once per look. Then this-or-that between his Me's puts them in order, usually 2 to 4 taps. <b>No grid in setup:</b> the results screen does its jobs. He can remove a look (×), add one from a sheet ("Add a look"), say it in his own words, or play again. The full tile list stays in You → Style profile.</p>
+        <p><span class="k">What happens.</span> One outfit at a time, no names. Tap <b>Me</b> or <b>Not me</b> (or swipe right or left), 8 times, once per look. Then this-or-that between his Me's puts them in order, usually 2 to 4 taps. <b>No grid in setup:</b> the results screen does its jobs. He can drag a look by its handle to change the order, remove one (×), add one from a sheet ("Add a look"), say it in his own words, or play again. The full tile list stays in You → Style profile.</p>
         <ul>
           <li>Taps on this step: about <b>12</b>. To the camera: about <b>17</b> (today 7, A 14).</li>
           <li>Every look is judged on its own, so two looks he loves can't knock each other out in round 1, and a look he dislikes rarely sneaks into his top 3.</li>
@@ -319,7 +327,7 @@
           <li>Settled: A for everyone (Nov 12), and an 8th look, Tailored (spec approved Nov 13). The taps to the camera (about 14) change in the style game's spec. Nov 13: the first version's ranking buried round 1's winner (that's how Streetwear lost to Vintage sport); A is now a proper bracket.</li>
           <li>A or D, after testers play both. In a simulation (made-up people, so for comparing only) both find the real favourite about 8 times in 10; D does better for a guy who loves two looks and keeps disliked looks out of the top 3, for about 3 more taps.</li>
           <li>Drawings or real outfit photos in the game. Drawings cost $0 and match the app; photos may judge taste better, but they need rights or friends' permission.</li>
-          <li>The words: "Me or not me?", "Me", "Not me", "Now put them in order", "Here's your style", "Add a look", "Not quite you? Tell me in your words", "Play again", "Nothing clicked yet".</li>
+          <li>The words: "Me or not me?", "Me", "Not me", "Now put them in order", "Here's your style", "Drag to change the order.", "Add a look", "Not quite you? Tell me in your words", "Play again", "Nothing clicked yet".</li>
           <li>Whether the game should also come back later on You's Style profile ("Retake").</li>
         </ul>
       </div>
@@ -368,6 +376,7 @@
   const chevL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
   const chevR = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
   const xIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const gripIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 8h14M5 12h14M5 16h14"/></svg>';
   const plusIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
   const cardsIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="8" height="14" rx="2"/><rect x="13" y="5" width="8" height="14" rx="2"/><path d="M7 9.5v5M17 9.5v5" stroke-linecap="round"/></svg>';
 
@@ -430,7 +439,7 @@
     let st, hist;
     const fresh = () => ({
       view: { a: 'duel', b: 'trio', c: 'grid', d: 'swipe' }[dir],
-      picks: [], rounds: [], swipes: [], words: '', editing: false, sheet: false, taps: 0, played: false, from: null, note: '', chosen: null, shake: null,
+      picks: [], rounds: [], swipes: [], words: '', editing: false, sheet: false, ended: false, taps: 0, played: false, from: null, note: '', chosen: null, shake: null,
     });
     const reset = () => { st = fresh(); hist = []; draw(); };
     const save = () => hist.push(JSON.stringify(st));
@@ -471,7 +480,7 @@
     function dragCard(card) {
       let x0 = null, dx = 0;
       const stamps = () => [card.querySelector('.stamp.me'), card.querySelector('.stamp.no')];
-      card.addEventListener('pointerdown', (e) => { x0 = e.clientX; dx = 0; card.classList.add('drag'); card.setPointerCapture(e.pointerId); });
+      card.addEventListener('pointerdown', (e) => { x0 = e.clientX; dx = 0; card.classList.add('drag'); try { card.setPointerCapture(e.pointerId); } catch (err) { /* same */ } });
       card.addEventListener('pointermove', (e) => {
         if (x0 === null) return;
         const sc = root.getBoundingClientRect().width / 402 || 1;
@@ -488,6 +497,35 @@
       card.addEventListener('pointerup', end); card.addEventListener('pointercancel', end);
     }
 
+    // D's results: drag a row by its grip; the others slide to make room; dropping reorders his picks.
+    function dragRow(e, i, move) {
+      e.preventDefault();
+      const grip = e.currentTarget; try { grip.setPointerCapture(e.pointerId); } catch (err) { /* a pointer the browser can't capture; moves still reach the grip */ }
+      const els = [...root.querySelectorAll('.ranks .rank')];
+      const rects = els.map((r) => r.getBoundingClientRect());
+      const sc = root.getBoundingClientRect().width / 402 || 1;
+      const me = els[i]; const pitch = rects[i].height + 10 * sc; const y0 = e.clientY;
+      let target = i;
+      me.classList.add('lift');
+      const onMove = (ev) => {
+        const dy = ev.clientY - y0;
+        me.style.transform = `translateY(${dy / sc}px)`;
+        const c = rects[i].top + rects[i].height / 2 + dy;
+        target = els.filter((_, j) => j !== i && rects[j].top + rects[j].height / 2 < c).length;
+        els.forEach((el, j) => {
+          if (j === i) return;
+          const sh = i < target && j > i && j <= target ? -pitch : i > target && j < i && j >= target ? pitch : 0;
+          el.style.transform = sh ? `translateY(${sh / sc}px)` : '';
+        });
+      };
+      const onUp = () => {
+        grip.removeEventListener('pointermove', onMove); grip.removeEventListener('pointerup', onUp); grip.removeEventListener('pointercancel', onUp);
+        if (target !== i) move(i, target);
+        else { me.classList.remove('lift'); els.forEach((el) => (el.style.transform = '')); }
+      };
+      grip.addEventListener('pointermove', onMove); grip.addEventListener('pointerup', onUp); grip.addEventListener('pointercancel', onUp);
+    }
+
     function frame(content, dock, step = 2) {
       return [
         h('div', { class: 'sb' }, h('span', { class: 'time' }, '9:41'), h('span', { class: 'island' }),
@@ -497,7 +535,19 @@
           h('div', { class: 'bar', 'aria-hidden': 'true' }, [1, 2, 3].map((n) => h('i', { class: n <= step ? 'on' : '' }))),
           h('span', { class: 'spacer' })),
         h('div', { class: 'scr' }, h('div', { class: 'scroll stage' }, content), dock ? h('div', { class: 'dock' }, dock) : null),
+        ...(st.ended ? endCard() : []),
       ];
+    }
+    // The mockup's end (not an app screen): what he saved and the taps, over the screen he left.
+    function endCard() {
+      const picks = st.picks.map((s, i) => `${i + 1} ${NAMES[s]}`).join(' \u00b7 ');
+      const said = [picks, st.words ? `\u201c${st.words}\u201d` : ''].filter(Boolean).join(' + ');
+      return [h('div', { class: 'end-bg' }), h('div', { class: 'endcard', role: 'status' },
+        h('div', { class: 'eyebrow' }, 'Saved. End of the mockup.'),
+        h('div', { class: 'big' }, said),
+        h('div', { class: 'stat' }, `${st.taps} taps on this step \u00b7 ${5 + st.taps} from a fresh install to the camera (today 7)`),
+        h('div', { class: 'stat' }, 'In the app, setup goes on to your age, then Stylist.'),
+        h('button', { onclick: reset }, 'Start again'))];
     }
     const title = (t, line) => h('div', { class: 'ttl' }, h('h3', {}, t), line ? h('p', {}, line) : null);
     const dots = (n, on) => h('div', { class: 'dots', 'aria-label': `Pick ${on + 1} of ${n}` }, Array.from({ length: n }, (_, i) => h('i', { class: i <= on ? 'on' : '' })));
@@ -527,7 +577,7 @@
           h('span', { class: 'chev', html: chevR })) : null;
         const n = st.picks.length;
         return frame([title("What's your style?", "Pick up to 3 looks you like. Today's outfit comes next."), door, h('div', { class: 'grid' }, tiles)],
-          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'btn', disabled: !n, onclick: () => { tap(); save(); go(() => (st.view = 'done')); } }, n ? `Continue · ${n} of 3` : 'Continue')]);
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'btn', disabled: !n, onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, n ? `Continue · ${n} of 3` : 'Continue')]);
       },
       duel() {
         const r = st.rounds.length;
@@ -561,11 +611,17 @@
         const p = st.picks;
         const canGo = () => p.length > 0 || st.words.trim().length > 0;
         const noneLiked = !yesList(st).length;
-        const rows = p.map((s, i) => h('div', { class: 'rank' + (i === 0 ? ' first' : '') },
-          h('div', { class: 'art' }, outfit(s, 0, 40), outfit(s, 1, 40)),
-          h('div', { class: 'tx' }, h('b', {}, NAMES[s]), h('span', {}, LINES[s])),
-          h('span', { class: 'disc' }, String(i + 1)),
-          h('button', { class: 'x', 'aria-label': `Remove ${NAMES[s]}`, html: xIc, onclick: () => { tap(); save(); st.picks.splice(i, 1); draw(); } })));
+        const move = (i, to, kbd = false) => { if (to === i || to < 0 || to >= p.length) return; tap(); save(); const [x] = st.picks.splice(i, 1); st.picks.splice(to, 0, x); draw(); if (kbd) root.querySelectorAll('.grip')[to]?.focus({ preventScroll: true }); };
+        const rows = p.map((s, i) => {
+          const grip = h('button', { class: 'grip', html: gripIc, 'aria-label': `Move ${NAMES[s]}, number ${i + 1}. Use the arrow keys.` });
+          grip.addEventListener('keydown', (e) => { if (e.key === 'ArrowUp') { e.preventDefault(); move(i, i - 1, true); } if (e.key === 'ArrowDown') { e.preventDefault(); move(i, i + 1, true); } });
+          grip.addEventListener('pointerdown', (e) => dragRow(e, i, move));
+          return h('div', { class: 'rank' + (i === 0 ? ' first' : ''), 'data-style': s },
+            h('div', { class: 'art' }, outfit(s, 0, 40), outfit(s, 1, 40), h('span', { class: 'disc' }, String(i + 1))),
+            h('div', { class: 'tx' }, h('b', {}, NAMES[s]), h('span', {}, LINES[s])),
+            h('button', { class: 'x', 'aria-label': `Remove ${NAMES[s]}`, html: xIc, onclick: () => { tap(); save(); st.picks.splice(i, 1); draw(); } }),
+            grip);
+        });
         const add = p.length < 3 ? h('button', { class: 'addrow', onclick: () => { tap(); save(); st.sheet = true; draw(); } }, h('span', { html: plusIc, 'aria-hidden': 'true' }), 'Add a look') : null;
         const finishWords = () => { tap(); save(); st.words = st.words.trim(); st.editing = false; draw(); };
         let words;
@@ -581,13 +637,13 @@
         } else {
           words = h('div', { class: 'words' }, h('button', { class: 'linkbtn', onclick: () => { tap(); st.editing = true; draw(); } }, 'Not quite you? Tell me in your words'));
         }
-        const head = p.length ? title('Here\u2019s your style', `From your ${st.rounds.length + st.swipes.length} picks. You can change it anytime in You.`)
+        const head = p.length ? title('Here\u2019s your style', `From your ${st.rounds.length + st.swipes.length} picks.${p.length > 1 ? ' Drag to change the order.' : ''} You can change it anytime in You.`)
           : noneLiked ? title('Nothing clicked yet', 'Play again, or tell me in your words.')
           : title('Here\u2019s your style', 'Add a look, or tell me in your words.');
         const f = frame([head, h('div', { class: 'ranks' }, rows, add), words],
           [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('div', { class: 'yn' },
             h('button', { class: 'btn sec', onclick: () => { tap(); save(); go(() => { st.swipes = []; st.rounds = []; st.picks = []; st.view = 'swipe'; }); } }, 'Play again'),
-            h('button', { class: 'btn', disabled: !canGo(), onclick: () => { tap(); save(); go(() => (st.view = 'done')); } }, 'Continue'))]);
+            h('button', { class: 'btn', disabled: !canGo(), onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, 'Continue'))]);
         if (st.sheet) {
           const close = () => { tap(); st.sheet = false; draw(); };
           const left = ORDER.filter((s) => !p.includes(s));
@@ -623,17 +679,7 @@
         const nPicks = st.rounds.length + st.swipes.length;
         return frame([title('Here’s your style', `From your ${nPicks} picks. You can change it anytime in You.`), h('div', { class: 'ranks' }, rows)],
           [h('button', { class: 'txt', onclick: () => { tap(); save(); go(() => (st.view = 'grid')); } }, 'Change picks'),
-           h('button', { class: 'btn', onclick: () => { tap(); save(); go(() => (st.view = 'done')); } }, 'Continue')]);
-      },
-      done() {
-        const toCam = 5 + st.taps;
-        return frame([title('About you', null), h('div', { class: 'end' },
-          h('div', { class: 'eyebrow' }, 'End of the mockup. About you comes next in the app.'),
-          h('div', { class: 'big' }, [st.picks.map((s, i) => `${i + 1} ${NAMES[s]}`).join(' · '), st.words ? `\u201c${st.words}\u201d` : ''].filter(Boolean).join(' + ')),
-          h('div', { class: 'stat' }, h('span', {}, 'Taps on the style step'), h('b', {}, String(st.taps))),
-          h('div', { class: 'stat' }, h('span', {}, 'A fresh install to the camera'), h('b', {}, `${toCam} (today 7)`)),
-          h('div', { class: 'stat' }, h('span', {}, 'Played the game'), h('b', {}, st.played ? 'Yes' : 'No')))],
-          [h('button', { class: 'btn', onclick: reset }, 'Start again')], 3);
+           h('button', { class: 'btn', onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, 'Continue')]);
       },
     };
     function draw() {
