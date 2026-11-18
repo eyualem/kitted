@@ -64,7 +64,7 @@ const LINE = 'One outfit at a time. Would you wear something like this?';
 const HINT = 'Swipe right for Me, left for Not me.';
 const PEEK_HINT = 'Not sure? Tap it for another outfit.';
 const RANK_TITLE = 'Now put them in order';
-const rankLine = (n: number) => `You said Me to ${n}. Tap the one that's more you.`;
+const RANK_LINE = "Tap the one that's more you."; // the founder, Nov 18 (#493): no "You said Me to {n}."
 const RES_TITLE = "Here's your style";
 const RES_LINE = 'Your top looks, in order. Not quite right? Drag, remove or add one.';
 const RES_ONE = 'Your top look. Not quite right? Add one, or play again.';
@@ -512,7 +512,7 @@ describe('SG2.1 · the ranking', () => {
     await mount(<StyleGameScreen />);
     expect(textAt('rank-title')).toBe(RANK_TITLE);
     expect(getId('rank-title').props.accessibilityRole).toBe('header');
-    expect(textAt('rank-line')).toBe(rankLine(4));
+    expect(textAt('rank-line')).toBe(RANK_LINE);
     expect(label('rank-pick-left')).toBe(desc('workwear', 1));
     expect(label('rank-pick-right')).toBe(desc('streetwear', 1));
     expect(getId('rank-pick-left').props.accessibilityRole).toBe('button');

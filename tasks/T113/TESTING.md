@@ -68,7 +68,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - After 8 answers: 0 Me → `stageOf` `results`, `rankStep` `{ done: true, top: [] }`; 1 Me (Minimal) → `results`, top `['minimalist']`, no round; 2+ → `ranking`.
     - Seed 42, Me to Workwear, Streetwear, Outdoor, Vintage sport: the first pair is `['workwear', 'streetwear']` (flip 1: the newcomer Streetwear on the right).
     - Seeds 1–2000, the same four Me's, decided by the order Streetwear > Vintage sport > Outdoor > Workwear: the newcomer is on the left in round 0 in 47%–53% of games (the port gives 51.6%); within every game the newcomer's side alternates round to round (L, R, L… or R, L, R…), with no two rounds in a row on the same side.
-    - Render (screen 303's set-up): `rank-title` `Now put them in order` (header); `rank-line` `You said Me to 4. Tap the one that's more you.`; `rank-pick-left` and `rank-pick-right` labels are `t('game.desc.workwear.1')` and `t('game.desc.streetwear.1')`; each draws `LOOKS[look].outfits[1]` (the `Outfit` mock receives the second outfit); a tap → `Haptics.impactAsync('light')`, then after 260 ms the next pair.
+    - Render (screen 303's set-up): `rank-title` `Now put them in order` (header); `rank-line` `Tap the one that's more you.` (the founder, Nov 18, #493: no "You said Me to {n}."); `rank-pick-left` and `rank-pick-right` labels are `t('game.desc.workwear.1')` and `t('game.desc.streetwear.1')`; each draws `LOOKS[look].outfits[1]` (the `Outfit` mock receives the second outfit); a tap → `Haptics.impactAsync('light')`, then after 260 ms the next pair.
   - must not: a ranking step with 0 or 1 Me; a pair with a Not me look; a pair on first drawings; the newcomer always on the same side.
   - edges: Reduce Motion: the wait is 120 ms; a second tap during the wait is ignored (one round recorded).
   - red: 4 tests (pure 2, render 2). All fail on "T113: not built" (the stubs). Bite: the scratch ranker with the flip ignored (`i % 2`) failed both pure tests.
@@ -292,7 +292,7 @@ Every state, its words, VoiceOver and testID, and the demo screen. Each screen i
 | Card 3 · **300*** | as 2, dots 0–1 filled, 2 the pill | as 2 | `Outfit 3 of 8, view 1 of 2. …` | as 2 |
 | Other outfit · **301** | card on outfit 2, dot 1 lit | — | `Outfit 3 of 8, view 2 of 2. …` | `game-card-dot-1` |
 | Swiped past the line · **302** | card held at +120 pt, `Me` stamp shown, `Me` button lit | — | — | `game-stamp-me` |
-| Ranking · **303*** | title / line | `Now put them in order` / `You said Me to 4. Tap the one that's more you.` | header / read | `rank-title`, `rank-line` |
+| Ranking · **303*** | title / line | `Now put them in order` / `Tap the one that's more you.` (#493) | header / read | `rank-title`, `rank-line` |
 | | two cards, second outfits | — | buttons, each its description | `rank-pick-left`, `rank-pick-right` |
 | Results, three · **304*** | title / line | `Here's your style` / `Your top looks, in order. Not quite right? Drag, remove or add one.` | header / read | `results-title`, `results-line` |
 | | rows (drawing with `1` `2` `3`, name, line, ×, handle) | e.g. `Streetwear` / `Hoodies, graphic tees, baggy jeans or cargos, big sneakers` | `1 of 3, Streetwear. …`; actions `Move up`, `Move down`, `Remove` | `results-row-<i>`, `-number`, `-remove`, `-handle` |
