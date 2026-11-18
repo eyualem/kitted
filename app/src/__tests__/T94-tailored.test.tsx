@@ -267,17 +267,22 @@ describe('TL4.3 · Going for offers Tailored and changes no score', () => {
     // his first pick from setup is the pre-pick, and the suit reads as it
     expect([before.style, before.details.goingFor?.style, before.details.goingFor?.source, before.details.readsAs]).toEqual(['tailored', 'tailored', 'setup', 'tailored']);
     expect([before.details.goingForAdvice?.kind, before.details.goingForAdvice?.readsAs]).toEqual(['match', 'tailored']);
-    expect(adviceText(before.details.goingForAdvice!).lead).toBe('Reads as tailored.');
+    // a match says what it says for every look (Going for works as today; dispute 2, Nov 18)
+    expect(adviceText(before.details.goingForAdvice!)).toMatchObject({ kind: 'match', lead: 'It reads that way too.', move: null });
     const s09 = demoReadingById('s09') as Reading;
     expect(before.score).toBe(scoreParts(s09, { occasion: 'everyday' }).overall);
 
     const same = (r: typeof before) => [r.score, r.rawScore, r.subscores, r.occasion, r.details.parts?.parts, r.details.readsAs, r.fixes.map((f) => [f.target, f.to])];
     const other = (await svc.changeGoingFor(checkId, 'classic_prep'))!;
     expect(same(other)).toEqual(same(before));
-    expect([other.style, other.details.goingForAdvice?.kind, other.details.goingForAdvice?.readsAs]).toEqual(['classic_prep', 'mismatch', 'tailored']);
+    expect([other.style, other.details.goingForAdvice?.going, other.details.goingForAdvice?.kind, other.details.goingForAdvice?.readsAs])
+      .toEqual(['classic_prep', 'classic_prep', 'mismatch', 'tailored']);
+    // the mismatch names the look it reads as: "Reads as tailored."
+    expect(adviceText(other.details.goingForAdvice!)).toMatchObject({ kind: 'mismatch', lead: 'Reads as tailored.' });
     const back = (await svc.changeGoingFor(checkId, TAILORED))!;
     expect(same(back)).toEqual(same(before));
     expect([back.style, back.details.goingFor?.confirmed, back.details.goingForAdvice?.kind]).toEqual(['tailored', true, 'match']);
+    expect(adviceText(back.details.goingForAdvice!).lead).toBe('It reads that way too.');
   });
 });
 
