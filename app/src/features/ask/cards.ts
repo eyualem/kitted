@@ -479,32 +479,75 @@ const TAP_EMOJI = /[‍⃣←-⇿⌀-⏿①-⓿■-◿☀-➿⤀-⥿⬀-⯿〰�
 
 // A tap is sent as his own message, so a tap that talks about his body would invite a rating (hard line). `isBodyRating`
 // (guards.ts) is a deliberately narrow whole-message list for what he types; taps come only from the model and a dropped
-// tap costs little, so this check goes by meaning: first person together with a body part or a body word, or a "look
-// fat/thin/older" form. It leans strict.
+// tap costs little, so this check goes by meaning, with four word lists and three rules (see `bodyTap`).
 const FIRST_PERSON = new Set(['i', 'im', "i'm", "i'd", "i'll", "i've", 'me', 'my', 'mine', 'myself']);
+/** Parts of him. A body word whenever he is in the tap, unless a garment noun follows it ("face mask", "chest bag"). */
 const BODY_PARTS = new Set([
-  'body', 'bodies', 'belly', 'bellies', 'stomach', 'stomachs', 'tummy', 'gut', 'guts', 'waist', 'chest', 'thigh', 'thighs', 'leg', 'legs',
-  'arm', 'arms', 'face', 'faces', 'weight', 'build', 'shape', 'figure', 'physique', 'frame', 'butt', 'hips', 'hip', 'shoulders', 'shoulder',
-  'neck', 'skin', 'abs', 'muscle', 'muscles', 'calves', 'calf', 'biceps', 'jaw', 'jawline', 'nose', 'height',
+  'body', 'bodies', 'belly', 'bellies', 'stomach', 'stomachs', 'tummy', 'gut', 'guts', 'waist', 'waistline', 'chest', 'thigh', 'thighs',
+  'leg', 'legs', 'arm', 'arms', 'face', 'faces', 'figure', 'physique', 'butt', 'hips', 'hip', 'shoulders', 'shoulder', 'neck', 'skin',
+  'abs', 'muscle', 'muscles', 'calves', 'calf', 'biceps', 'pecs', 'jaw', 'jawline', 'chin', 'cheeks', 'nose', 'torso', 'hairline',
+  'complexion',
 ]);
-const BODY_WORDS = new Set([
+/** Words that measure him or a garment (his weight, a hat's shape). A body word only when no garment is in the tap. */
+const BODY_TRAITS = new Set(['weight', 'build', 'shape', 'frame', 'height']);
+/** Two-word body phrases, a body word whenever he is in the tap. */
+const BODY_PHRASES = ['love handles', 'pear shaped', 'apple shaped', 'body type', 'dad bod', 'beer belly', 'baby face'];
+/** Words that describe a body, a size or an age. A body word only when they describe him (see `bodyTap`). */
+const BODY_ADJ = new Set([
   'tall', 'taller', 'short', 'shorter', 'thin', 'thinner', 'skinny', 'skinnier', 'fat', 'fatter', 'heavy', 'heavier', 'bulky', 'old', 'older',
-  'young', 'younger', 'big', 'bigger', 'small', 'smaller', 'slim', 'slimmer', 'chubby', 'wide', 'wider', 'narrow', 'broad', 'lanky', 'large',
-  'overweight', 'underweight', 'ugly', 'pretty', 'handsome', 'attractive', 'hot', 'fit', 'muscular', 'scrawny', 'stocky', 'tiny', 'huge',
+  'young', 'younger', 'big', 'bigger', 'small', 'smaller', 'slim', 'slimmer', 'chubby', 'wide', 'wider', 'narrow', 'broad', 'broader',
+  'lanky', 'large', 'overweight', 'underweight', 'ugly', 'pretty', 'handsome', 'attractive', 'hot', 'fit', 'muscular', 'scrawny', 'stocky',
+  'tiny', 'huge', 'lean', 'leaner', 'pale', 'paler', 'hairy', 'pudgy', 'sexy', 'weak', 'gaunt', 'shaped', 'flabby', 'bony', 'buff',
+  'ripped', 'cute', 'tan', 'tanned', 'bald', 'balding', 'kid', 'child', 'teen', 'teenager', 'boy',
 ]);
-const LOOK_FORM = /\blook(?:s|ing|ed)?\s+(?:(?:too|so|a bit|a little|really|much|more|any|even)\s+)*(?:fat|fatter|thin|thinner|skinny|skinnier|bigger|smaller|heavy|heavier|bulky|old|older|slim|slimmer|chubby|overweight|lanky|scrawny|stocky|tiny|huge|wider|broader)\b/;
+/** Words that sit between a subject and its body word ("am I a bit pudgy", "do I look like a kid"). */
+const MODIFIERS = new Set([
+  'too', 'so', 'a', 'an', 'the', 'bit', 'little', 'lot', 'really', 'very', 'kind', 'kinda', 'sort', 'of', 'more', 'less', 'much', 'even',
+  'any', 'way', 'quite', 'like', 'getting', 'somewhat', 'rather', 'overly', 'super',
+]);
+/** Garment nouns: a garment as the subject, or right after a part, makes it a clothes tap. */
+const GARMENTS = new Set([
+  'shirt', 'shirts', 'tee', 'tees', 'top', 'tops', 'polo', 'henley', 'flannel', 'overshirt', 'jacket', 'jackets', 'coat', 'coats',
+  'hoodie', 'hoodies', 'sweater', 'sweaters', 'sweatshirt', 'cardigan', 'vest', 'blazer', 'jeans', 'pants', 'trousers', 'chinos',
+  'shorts', 'joggers', 'sweatpants', 'slacks', 'boots', 'boot', 'sneakers', 'sneaker', 'shoes', 'shoe', 'loafers', 'sandals', 'socks',
+  'hat', 'hats', 'cap', 'caps', 'beanie', 'scarf', 'tie', 'belt', 'watch', 'ring', 'chain', 'bracelet', 'bag', 'mask', 'glasses',
+  'sunglasses', 'sleeve', 'sleeves', 'collar', 'hem', 'gloves', 'warmers', 'gaiter', 'outfit', 'clothes', 'layers',
+]);
+const SELF = new Set(['i', 'me']);
+const LINK = new Set(['look', 'looks', 'looking', 'looked', 'seem', 'seems']);
+const MAKE = new Set(['make', 'makes', 'making', 'made']);
 
-/** True when a tap is about his own body, by meaning (see above). `fit` and `hot` count only beside "look" (see below). */
+/**
+ * True when a tap is about his own body. Three rules:
+ * 1. A body part, a body phrase, or (with no garment in the tap) a body trait, in a tap about him (I, me, my): dropped,
+ *    except a part with a garment noun right after it ("Is my face mask ok?").
+ * 2. A word from BODY_ADJ (size, age, body) describing him: after "am I", "I am", "I'm", "make me", or "I/me look",
+ *    "I feel". "Show me", "give me", "for me", "my" are neutral: "Show me tall boots", "Is my hoodie too big?" stay.
+ * 3. "look/seem <BODY_ADJ>" with no garment before it ("Does that look fat?"): dropped; "Do my sneakers look fat?" stays.
+ */
 function bodyTap(text: string): boolean {
   const t = text.toLowerCase().replace(/[‘’]/g, "'");
-  if (LOOK_FORM.test(t)) return true;
-  const words = t.split(/[^a-z']+/).map((w) => w.replace(/^'+|'+$/g, '')).filter(Boolean);
-  if (!words.some((w) => FIRST_PERSON.has(w))) return false;
-  if (words.some((w) => BODY_PARTS.has(w))) return true;
-  // "fit" and "hot" are everyday clothes words ("Do these fit my style?", "Is this hot enough?"): they mark the body only
-  // as "do I look fit / hot".
-  const lookIdx = words.findIndex((w) => w === 'look' || w === 'looks' || w === 'looking');
-  return words.some((w, i) => BODY_WORDS.has(w) && (!['fit', 'hot'].includes(w) || (lookIdx >= 0 && i > lookIdx)));
+  const w = t.split(/[^a-z']+/).map((x) => x.replace(/^'+|'+$/g, '')).filter(Boolean);
+  const garmentBefore = (k: number) => w.slice(0, k).some((x) => GARMENTS.has(x));
+  // Rules 2 and 3: find each body word, step back over modifiers to the word that governs it.
+  for (let i = 0; i < w.length; i++) {
+    if (!BODY_ADJ.has(w[i]!)) continue;
+    let k = i - 1;
+    while (k >= 0 && MODIFIERS.has(w[k]!)) k--;
+    const head = w[k];
+    const prev = w[k - 1];
+    if (head === "i'm" || head === 'im') return true;
+    if ((head === 'i' && prev === 'am') || (head === 'am' && prev === 'i')) return true;
+    if (head === 'me' && prev && MAKE.has(prev)) return true;
+    if ((head === 'feel' || head === 'feels') && prev && SELF.has(prev)) return true;
+    if (head && LINK.has(head) && ((prev && SELF.has(prev)) || !garmentBefore(k))) return true;
+  }
+  // Rule 1: needs him in the tap.
+  if (!w.some((x) => FIRST_PERSON.has(x))) return false;
+  const joined = ` ${w.join(' ')} `;
+  if (BODY_PHRASES.some((p) => joined.includes(` ${p} `))) return true;
+  if (w.some((x, i) => BODY_PARTS.has(x) && !GARMENTS.has(w[i + 1] ?? ''))) return true;
+  return w.some((x) => BODY_TRAITS.has(x)) && !w.some((x) => GARMENTS.has(x));
 }
 
 /**
