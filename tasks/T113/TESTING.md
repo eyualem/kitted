@@ -255,6 +255,43 @@ Made by the test writer after the build (Nov 18): the protect-tests hook blocks 
 - `play-style-game.yaml` (env `ME`, default 1): `ME` × `game-me`, `Not me` while `game-notme` is visible, the ranking's left card while visible (at most 3), `Here's your style` visible, `Continue`.
 - No test mounts `PickLooksScreen` any more. Deleting it is the implementer's (TASK.md → Deviations).
 
+## Nov 18 round: Yes / No, card 1 teaches the swipe, the fast-No check (#494; spec `486b188a`)
+The founder's test with a real person: a tester thought swiping meant "next outfit". I retargeted every check of the old words, none loosened, and wrote new tests for SG1.4 and SG7.5. On today's build (`486b188a`): 14 red for the right reason (listed below), the rest green; `syncSchema` and `T39-styleProfile` still pass.
+- **Words (SG1.1, SG1.2, SG9.1).** The title is `Is this your style?`, the line `One outfit at a time.`, the hint `Swipe right for Yes, left for No.`. The buttons read `No` (left, ✕ icon: `close` or `xmark`) and `Yes` (right, ✓ icon: `check` or `checkmark`), each label exactly those words. The stamps read `Yes` and `No`. At AX sizes Yes is on top. The testIDs `game-me` and `game-notme` are kept. The T39 mock's KButton now draws its `icon` as `mock-button-icon` with `name`, so the icon can be checked.
+  - Retargeted: `SG1.1 · Get started opens Is this your style? on card 1 of 8` (also: a fresh install shows the overlay). Red: title received "Me or not me?".
+  - Retargeted: `SG1.2 · Yes and No buttons answer the card`. Red: label "Me", no icon.
+  - Retargeted: `SG7.1 · a tap shows the other outfit…`. Red: hint received the old line.
+  - Retargeted: `SG9.1 · the card reads Outfit n of 8 with Yes and No as its buttons`. Red: stamp received "Me".
+  - Renamed: `SG9.1 · at accessibility sizes Yes and No stack, Yes on top`. Its checks are by testID and already hold.
+  - Retargeted in `T39-setupScreens`: OS3.1 (`Is this your style?`, plus card 1 with its overlay checked for no bubble) and OS4.5 (no "18" on card 1 with its overlay). Both red: no overlay.
+  - Flows: `T113-style-game.yaml`, `T39-screens.yaml`, `T39-setup-fresh.yaml`, `T39-setup-later.yaml`, `T39-setup-not-now.yaml`, `T39-under-18.yaml` and `common/play-style-game.yaml` now use the new words, and assert that "Me or not me?" and "Not me" are gone where they used to appear. Not run: the Simulator was not free. They are red by construction: the new words aren't in the app.
+- **SG1.4 (new): card 1 teaches the swipe.**
+  - *The flag:* the swipe is taught once kv `onboarding.swipeTaught` holds any value. Dismissing the overlay writes it; it is kept on this phone (`kvPolicy` = `'local'`). `setUpGame` sets it unless `taught: false` (a fresh install).
+  - *The tap:* `dismissTeach()` presses the overlay's words. If the words carry no press of their own, it does a press and release with no movement on the card. It must be one tap.
+  - `SG1.4 · on a fresh install card 1 shows the overlay; Yes, No and a swipe do nothing until a tap dismisses it`. Expected:
+    - `Swipe right if it's your style, left if it's not.` shows exactly once.
+    - Yes and No are disabled (dimmed); presses and ±120 pt swipes add no answer and no haptic. A swipe counts as ignored if the overlay covers the card and takes the touch first.
+    - One tap removes the overlay, writes the flag, isn't a peek (`workwear.0` still drawn), and Yes then works.
+    - Red: the overlay isn't found.
+  - `SG1.4 · the overlay shows on the first game only: not after Play again or a relaunch`. Red: no overlay on the fresh install.
+  - The lean, retargeted: `SG1.3 · card 1 leans once, after its overlay is tapped away, never under Reduce Motion`.
+    - No lean while the overlay shows (5 s).
+    - The lean starts within 1.45 s of the tap (keeps T1), right then left, once.
+    - No second lean after Back, after Play again or after a relaunch: the spec's "never again" read as once per install, since the lean follows the overlay.
+    - None under Reduce Motion.
+    - Red: no overlay.
+    - Dropped from the old test: "touching the card before 1.4 s cancels it" and "after Play again, card 1 leans again". The spec no longer has the 1.4 s beat, and now says "never again". **Reading to confirm with the founder:** "never again" taken as per install, not per game.
+- **SG7.5 (new): FS4, the fast-No check.**
+  - *The clock:* "less than 1.5 s after its card appeared" is read on the screen's clock (`Date.now`, which jest's fake timers move). The T39 mocks fix `sessionClock`, so a check timed on it would never see a slow answer here.
+  - `SG7.5 · three fast No's show the check before card 4; Keep going goes on to card 4`. After three No's, about 0.6 s each: `Just checking: left means it's not your style.` with buttons `Start over` and `Keep going`, and the 3 No's kept. Keep going shows card 4 (Minimal) with the 3 No's. Red: the check isn't found.
+  - `SG7.5 · Start over goes back to card 1 of the same deal, and the check never shows twice`. Start over leaves seed 42, no answers, card 1 (Workwear) and no overlay. Three fast No's again bring no check, and card 4 shows. Red: no check.
+  - `SG7.5 · no check when one No took 2 s, when Back came between, or with a Yes`. A control first: three fast No's do show it. Then no check in three cases, each ending on card 4: one No about 2.6 s after its card; No, No, Back, No, No; and Yes, No, No. Red: the control.
+- **The walks:** `playStyleGame` taps the overlay away first and counts that tap. Retargeted: `T39-offerCard` OS5.7 and `T39-setupScreens` OS3.2 expect 9 presses for `me: 1` (the tap, then 8 cards). Red today: 8.
+- **Conflict for the founder: SG1.4 against F1.1.** F1.1 says a fresh install reaches the camera in 17 taps or fewer with 3 Yes's: Get started, 8 cards, up to 3 this-or-thats, Continue, an age, Continue, Check my fit, Agree. SG1.4's tap makes it 18 at most, and 18 exactly on seed 42.
+  - The bound is not loosened. `T113-styleGameScreens` › `F1.1 · setup with 3 Me's is at most 15 taps to Stylist` still requires 15 or fewer presses before Check my fit, with the overlay's tap counted. It passes today (no overlay yet) and will be red, 16 presses, once SG1.4 is built, until the founder rules.
+  - `T39-setup-fresh.yaml` now walks 18 taps and says so in its header.
+  - Options for him: F1.1 becomes 18; or the overlay goes with the first answer rather than its own tap. The second would need SG1.4 to change: today it says "while it shows, Yes and No are dimmed".
+
 ## Verify round 1: tests added and strengthened (test writer, Nov 18)
 Add or strengthen only: no test was loosened or removed. Each change was proven red on today's build (`c18febfe`) for the right reason, or, where the build already behaves, shown to bite on the planted bug the verifier found uncaught (reverted each time).
 - **T1 · SG1.3** › `card 1 leans once after 1.4 s, never under Reduce Motion`: the lean must have started by 1450 ms (one positive lean move after `advance(1390)` then `advance(60)`). Bite: `LEAN_AFTER_MS` 1400 → 1500 fails it ("expected ≥ 1, received 0" at 1450 ms).

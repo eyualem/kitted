@@ -272,7 +272,7 @@ describe('OS5.7 · nothing leaves the phone before Agree', () => {
     endStyleGame();
     const random = jest.spyOn(Math, 'random').mockReturnValue(seedRandom(42)());
     let r = await mount(<StyleGameScreen />);
-    expect(await playStyleGame({ me: 1 })).toBe(8);
+    expect(await playStyleGame({ me: 1 })).toBe(9); // the overlay's tap (SG1.4), then 8 cards
     expect(textAt('results-title')).toBe("Here's your style");
     await pressId('results-continue');
     await r.unmount();

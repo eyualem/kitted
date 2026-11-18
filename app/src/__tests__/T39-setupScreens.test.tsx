@@ -23,7 +23,7 @@ import { picksToStyles } from '@/features/onboarding/looks';
 import { ONBOARDING_STEPS, OnboardingNav } from '@/features/onboarding/OnboardingNav';
 import { StyleGameScreen } from '@/features/onboarding/StyleGameScreen';
 import { endStyleGame } from '@/features/onboarding/styleGameSession';
-import { playStyleGame, pressId, seedRandom, setUpGame } from '@/testing/styleGameTestKit';
+import { playStyleGame, pressId, seedRandom, setUpGame, TEACH } from '@/testing/styleGameTestKit';
 import { WelcomeScreen } from '@/features/onboarding/WelcomeScreen';
 import { getGate } from '@/state/appGate';
 
@@ -32,7 +32,7 @@ const life = setUpT39Tests();
 // ── The words (TESTING.md, exact) ─────────────────────────────────────────────────────────────────────────────────
 const OLD_LOOKS_PROMPT = 'Which of these would you actually wear? Tap up to 3.';
 // T113: Looks is the style game (specs/style-game.md SG1); the grid's "What's your style?" is gone.
-const GAME_TITLE = 'Me or not me?';
+const GAME_TITLE = 'Is this your style?'; // #494 (was "Me or not me?")
 const RESULTS_TITLE = "Here's your style";
 /** Seed 42; he says Me to Streetwear, Vintage sport, Outdoor and Workwear and prefers them in that order. */
 const SV = ['streetwear', 'vintage_sport', 'outdoor', 'workwear'];
@@ -103,8 +103,10 @@ describe('OS3.1 · setup screens are plain', () => {
         // Looks (the style game): card 1, then Here's your style.
         jest.clearAllMocks();
         endStyleGame();
-        await setUpGame(mockT39.store, { seed: 42, me: [], cards: 0 });
+        // A fresh install: card 1 with its teaching overlay (SG1.4) must be plain too.
+        await setUpGame(mockT39.store, { seed: 42, me: [], cards: 0, taught: false });
         let r = await mount(<StyleGameScreen />);
+        expect(screen.getAllByText(TEACH)).toHaveLength(1);
         expect([tag, 'looks', bubbles()]).toEqual([tag, 'looks', [0, 0, 0, 0]]);
         expectNoBubbleWords({ looksScreen: true });
         expect(textAt('game-title')).toBe(GAME_TITLE);
@@ -181,7 +183,7 @@ describe('OS3.2 · three steps, no agreement', () => {
     endStyleGame();
     const random = jest.spyOn(Math, 'random').mockReturnValue(seedRandom(42)());
     let r = await mount(<StyleGameScreen />);
-    expect(await playStyleGame({ me: 1 })).toBe(8);
+    expect(await playStyleGame({ me: 1 })).toBe(9); // the overlay's tap (SG1.4), then 8 cards
     expect(textAt('results-title')).toBe(RESULTS_TITLE);
     expect(router.push).not.toHaveBeenCalled();
     await pressId('results-continue');
@@ -523,8 +525,9 @@ describe('OS4.5 · the only 18s before a pick', () => {
       }
       // Looks (the style game, T113): card 1, the this-or-that and Here's your style.
       endStyleGame();
-      await setUpGame(mockT39.store, { seed: 42, me: [], cards: 0 });
+      await setUpGame(mockT39.store, { seed: 42, me: [], cards: 0, taught: false });
       let r = await mount(<StyleGameScreen />);
+      expect(screen.getAllByText(TEACH)).toHaveLength(1);
       expect([ax, 'looks', with18()]).toEqual([ax, 'looks', []]);
       await r.unmount();
       endStyleGame();

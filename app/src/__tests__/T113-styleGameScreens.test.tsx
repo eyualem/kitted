@@ -19,7 +19,7 @@
 import {
   advance, allNodes, byId, flat, flush, getId, idsInOrder, mockT39, mount, press, setUpT39Tests, textAt, textOf, themeFor, typeIn, type Node,
 } from '@/testing/t39ScreenMocks';
-import { buttonIn, playStyleGame, pressId, seedRandom, setUpGame, SETTLE_MS } from '@/testing/styleGameTestKit';
+import { buttonIn, dismissTeach, playStyleGame, pressId, seedRandom, setUpGame, SETTLE_MS, TAUGHT_KEY, TEACH, teachShown } from '@/testing/styleGameTestKit';
 import { act, fireEvent, isHiddenFromAccessibility, render, screen } from '@testing-library/react-native';
 import { AccessibilityInfo, Animated, TextInput } from 'react-native';
 import { CONTROL_TEXT_MAX_SCALE } from '@/design-system/tokens';
@@ -32,7 +32,8 @@ import { BasicsScreen } from '@/features/onboarding/BasicsScreen';
 import { WelcomeScreen } from '@/features/onboarding/WelcomeScreen';
 import { AddLookSheet } from '@/features/onboarding/AddLookSheet';
 import { StyleGameScreen } from '@/features/onboarding/StyleGameScreen';
-import { addToResults, endStyleGame, getStyleGame, playAgain } from '@/features/onboarding/styleGameSession';
+import { addToResults, endStyleGame, getStyleGame, playAgain, startOrResumeStyleGame } from '@/features/onboarding/styleGameSession';
+import { kvPolicy } from '@/sync/schema';
 import { showToast, toastWindowMs } from '@/features/toast/toast';
 import { ToastHost } from '@/features/toast/ToastHost';
 
@@ -59,9 +60,16 @@ jest.mock('@/features/toast/toast', () => {
 const life = setUpT39Tests();
 
 // ── The words (TESTING.md, exact) ─────────────────────────────────────────────────────────────────────────────────
-const TITLE = 'Me or not me?';
-const LINE = 'One outfit at a time. Would you wear something like this?';
-const HINT = 'Swipe right for Me, left for Not me.';
+// The card's words changed on Nov 18 after a real tester (#494): "Is this your style?" with Yes / No.
+const TITLE = 'Is this your style?';
+const LINE = 'One outfit at a time.';
+const HINT = 'Swipe right for Yes, left for No.';
+const YES = 'Yes';
+const NO = 'No';
+/** SG7 FS4: the check after three fast No's. */
+const CHECK = "Just checking: left means it's not your style.";
+const START_OVER = 'Start over';
+const KEEP_GOING = 'Keep going';
 const PEEK_HINT = 'Not sure? Tap it for another outfit.';
 const RANK_TITLE = 'Now put them in order';
 const RANK_LINE = "Tap the one that's more you."; // the founder, Nov 18 (#493): no "You said Me to {n}."
@@ -326,8 +334,8 @@ afterEach(() => {
 });
 
 // ── SG1.1 · after Welcome ─────────────────────────────────────────────────────────────────────────────────────────
-describe('SG1.1 · Me or not me? after Welcome', () => {
-  it('SG1.1 · Get started opens Me or not me? on card 1 of 8', async () => {
+describe('SG1.1 · Is this your style? after Welcome', () => {
+  it('SG1.1 · Get started opens Is this your style? on card 1 of 8', async () => {
     let r = await mount(<WelcomeScreen />);
     await advance(5000);
     await press(screen.getByText('Get started'));
@@ -348,16 +356,28 @@ describe('SG1.1 · Me or not me? after Welcome', () => {
     expect(label('onb-progress')).toBe('Step 2 of 3');
     expect(textAt('game-hint')).toBe(HINT);
     expect(textAt('game-peek-hint')).toBe(PEEK_HINT);
+    // A fresh install: card 1 teaches the swipe first (SG1.4).
+    expect(screen.getAllByText(TEACH)).toHaveLength(1);
     await r.unmount();
   });
 });
 
 // ── SG1.2 · tap and swipe ─────────────────────────────────────────────────────────────────────────────────────────
 describe('SG1.2 · answering', () => {
-  it('SG1.2 · Me and Not me buttons answer the card', async () => {
+  it('SG1.2 · Yes and No buttons answer the card', async () => {
     await setUpGame(store(), { seed: 42, me: [], cards: 0 });
     await mount(<StyleGameScreen />);
     expect(label('game-card')).toBe(cardLabel(1, 1, 'workwear'));
+    // The words (#494): Yes on the right with a check icon, No on the left with a cross; drawn icons, never emoji.
+    expect([buttonIn('game-me').props.accessibilityLabel, textOf(buttonIn('game-me'))]).toEqual([YES, YES]);
+    expect([buttonIn('game-notme').props.accessibilityLabel, textOf(buttonIn('game-notme'))]).toEqual([NO, NO]);
+    const icons = (id: string) => getId(id).queryAll((n) => typeof n.props.name === 'string').map((n) => n.props.name as string);
+    expect(icons('game-me').filter((x) => x === 'check' || x === 'checkmark')).toHaveLength(1);
+    expect(icons('game-notme').filter((x) => x === 'close' || x === 'xmark')).toHaveLength(1);
+    expect(icons('game-me').filter((x) => x === 'close' || x === 'xmark')).toEqual([]);
+    const ids = idsInOrder();
+    expect(ids.indexOf('game-notme')).toBeLessThan(ids.indexOf('game-me'));
+    expect(textAt('game-hint')).toBe(HINT);
     await pressId('game-me');
     await advance(SETTLE_MS);
     expect(answers()).toEqual(['workwear Me']);
@@ -423,16 +443,21 @@ describe('SG1.2 · answering', () => {
 
 // ── SG1.3 · the lean and the dots ─────────────────────────────────────────────────────────────────────────────────
 describe('SG1.3 · the lean and the dots', () => {
+  // SG1 (Nov 18, #494): "After it's dismissed, card 1 leans right then left once to show the swipe (never under Reduce
+  // Motion, never again)." The lean follows the overlay's tap, so it plays once per install: not before the tap, not
+  // after Play again, not after a relaunch. (Until Nov 18 it ran 1.4 s after card 1 appeared, in every game.)
   // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
-  it('SG1.3 · card 1 leans once after 1.4 s, never under Reduce Motion', async () => {
-    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+  it('SG1.3 · card 1 leans once, after its overlay is tapped away, never under Reduce Motion', async () => {
+    await setUpGame(store(), { seed: 42, me: [], cards: 0, taught: false });
     let r = await mount(<StyleGameScreen />);
-    await advance(1390);
-    expect(leanMoves(timing, spring)).toEqual([]);
-    // It has started by 1.45 s (1.4 s after the card appears; verify round 1, T1).
-    await advance(60);
+    expect(teachShown()).toBe(true);
+    await advance(5000);
+    expect(leanMoves(timing, spring)).toEqual([]); // not while the overlay shows
+    await dismissTeach();
+    // It has started within 1.45 s of the tap (verify round 1, T1).
+    await advance(1450);
     expect(leanMoves(timing, spring).filter((v) => v > 0).length).toBeGreaterThanOrEqual(1);
-    await advance(2950);
+    await advance(3000);
     const one = leanMoves(timing, spring);
     expect(one.filter((v) => v > 0)).toHaveLength(1); // one lean: right …
     expect(one.filter((v) => v < 0)).toHaveLength(1); // … then left
@@ -448,36 +473,37 @@ describe('SG1.3 · the lean and the dots', () => {
     expect(label('game-card')).toBe(cardLabel(1, 1, 'workwear'));
     await advance(5000);
     expect(leanMoves(timing, spring)).toHaveLength(one.length);
-    // Play again: a new game, card 1 leans again.
+    // Play again: a new game, but the swipe was taught: no overlay and no lean.
     await act(async () => {
       await playAgain(store(), seedRandom(7));
     });
     await flush();
-    await advance(1500);
-    await advance(3000);
-    expect(leanMoves(timing, spring).filter((v) => v > 0)).toHaveLength(2);
-    await r.unmount();
-
-    // Touching the card before 1.4 s cancels it.
-    timing.mockClear();
-    spring.mockClear();
-    endStyleGame();
-    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
-    r = await mount(<StyleGameScreen />);
-    await advance(500);
-    await tapCard();
+    expect(st().game.seed).toBe(7);
+    expect(teachShown()).toBe(false);
     await advance(5000);
-    expect(leanMoves(timing, spring)).toEqual([]);
-    expect(st().leaned).toBe(true);
+    expect(leanMoves(timing, spring)).toHaveLength(one.length);
+    await r.unmount();
+    // A relaunch (the game gone from memory, kv kept): no overlay, no lean.
+    endStyleGame();
+    await act(async () => {
+      await startOrResumeStyleGame(store(), seedRandom(9));
+    });
+    r = await mount(<StyleGameScreen />);
+    expect(label('game-card')!.startsWith('Outfit 1 of 8, view 1 of 2. ')).toBe(true);
+    expect(teachShown()).toBe(false);
+    await advance(5000);
+    expect(leanMoves(timing, spring)).toHaveLength(one.length);
     await r.unmount();
 
-    // Reduce Motion: never.
+    // Reduce Motion, fresh install: the overlay, then no lean at any time.
     timing.mockClear();
     spring.mockClear();
     endStyleGame();
     reduceMotion();
-    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    await setUpGame(store(), { seed: 42, me: [], cards: 0, taught: false });
     r = await mount(<StyleGameScreen />);
+    expect(teachShown()).toBe(true);
+    await dismissTeach();
     await advance(10_000);
     expect(leanMoves(timing, spring)).toEqual([]);
     await r.unmount();
@@ -1063,7 +1089,7 @@ describe('SG7.4 · Back', () => {
 
 // ── SG9.1 · VoiceOver, the largest text, Reduce Motion ────────────────────────────────────────────────────────────
 describe('SG9.1 · access', () => {
-  it('SG9.1 · the card reads Outfit n of 8 with Me and Not me as its buttons', async () => {
+  it('SG9.1 · the card reads Outfit n of 8 with Yes and No as its buttons', async () => {
     await setUpGame(store(), { seed: 42, me: ['workwear'], cards: 2 }); // 300: card 3, Streetwear
     const r = await mount(<StyleGameScreen />);
     const c = getId('game-card');
@@ -1072,14 +1098,14 @@ describe('SG9.1 · access', () => {
     for (const id of ['game-card-dot-0', 'game-card-dot-1', 'game-stamp-me', 'game-stamp-notme']) {
       expect([id, isHiddenFromAccessibility(getId(id) as never)]).toEqual([id, true]);
     }
-    expect(textOf(getId('game-stamp-me'))).toBe('Me');
-    expect(textOf(getId('game-stamp-notme'))).toBe('Not me');
+    expect(textOf(getId('game-stamp-me'))).toBe(YES);
+    expect(textOf(getId('game-stamp-notme'))).toBe(NO);
     // The drawing is inside the one card element (or hidden).
     const drawing = c.queryAll((n) => n.props.testID === 'mock-outfit' && typeof n.type === 'string')[0]!;
     expect(drawing).toBeDefined();
     expect(isHiddenFromAccessibility(drawing as never) || ancestors(drawing).some((a) => a.props.accessible === true)).toBe(true);
-    expect(buttonIn('game-me').props.accessibilityLabel).toBe('Me');
-    expect(buttonIn('game-notme').props.accessibilityLabel).toBe('Not me');
+    expect(buttonIn('game-me').props.accessibilityLabel).toBe(YES);
+    expect(buttonIn('game-notme').props.accessibilityLabel).toBe(NO);
     // No unlabeled button on the screen.
     const unlabeled = allNodes().filter((n) => typeof n.type === 'string' && n.props.accessibilityRole === 'button' && !n.props.accessibilityLabel && !textOf(n));
     expect(unlabeled.map((n) => String(n.props.testID))).toEqual([]);
@@ -1125,7 +1151,7 @@ describe('SG9.1 · access', () => {
   });
 
   // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
-  it('SG9.1 · at accessibility sizes Me and Not me stack, Me on top', async () => {
+  it('SG9.1 · at accessibility sizes Yes and No stack, Yes on top', async () => {
     // Default size: side by side, Not me on the left.
     await setUpGame(store(), { seed: 42, me: [], cards: 0 });
     let r = await mount(<StyleGameScreen />);
@@ -1235,6 +1261,9 @@ describe('F1.1 · setup in 15 taps', () => {
     presses++;
     await r.unmount();
     r = await mount(<StyleGameScreen />);
+    // playStyleGame counts the tap that dismisses card 1's overlay (SG1.4, #494). With it the walk is 16 presses
+    // on seed 42 (3 this-or-thats), one more than F1.1's 15 (17 with Check my fit and Agree): a conflict between
+    // SG1.4 and F1.1 for the founder (TESTING.md). The bound is not loosened here.
     presses += await playStyleGame({ me: 3 });
     expect(textAt('results-title')).toBe(RES_TITLE);
     expect(st().results?.picks).toHaveLength(3);
@@ -1255,5 +1284,178 @@ describe('F1.1 · setup in 15 taps', () => {
     expect(replaces()).toEqual(['/']);
     expect([...pushes(), ...replaces()].filter((p) => /camera|paywall|sign-in|consent/.test(p))).toEqual([]);
     expect(life.fetchMock).toHaveBeenCalledTimes(0);
+  }, 20000);
+});
+
+// ── SG1.4 · card 1 teaches the swipe (Nov 18, #494) ──────────────────────────────────────────────────────────────
+// The flag: the swipe is taught once kv `onboarding.swipeTaught` holds any value (kept on this phone); dismissing the
+// overlay writes it. setUpGame sets it unless `taught: false` (a fresh install).
+describe('SG1.4 · card 1 teaches the swipe', () => {
+  it('SG1.4 · on a fresh install card 1 shows the overlay; Yes, No and a swipe do nothing until a tap dismisses it', async () => {
+    await setUpGame(store(), { seed: 42, me: [], cards: 0, taught: false });
+    await mount(<StyleGameScreen />);
+    expect(screen.getAllByText(TEACH)).toHaveLength(1);
+    expect(label('game-card')).toBe(cardLabel(1, 1, 'workwear'));
+    // Yes and No are dimmed and do nothing; a swipe is ignored.
+    expect([isDisabled(buttonIn('game-me')), isDisabled(buttonIn('game-notme'))]).toEqual([true, true]);
+    await pressId('game-me');
+    await advance(SETTLE_MS);
+    await pressId('game-notme');
+    await advance(SETTLE_MS);
+    // A swipe: an overlay laid over the card (inside it, or pinned over it) takes the touch first, so the card never
+    // sees it; otherwise the card's own handlers must ignore it.
+    const words = screen.getAllByText(TEACH)[0] as unknown as Node;
+    const claimer = [words, ...ancestors(words)].find((n) => typeof n.props.onStartShouldSetResponder === 'function');
+    const inCard = !!claimer && (claimer === getId('game-card') ? false : ancestors(claimer).includes(getId('game-card')));
+    const pinned = !!claimer && [claimer, ...ancestors(claimer)].some((n) => flat(n).position === 'absolute');
+    if (!(inCard || pinned)) {
+      await swipeCard(120);
+      await swipeCard(-120);
+    }
+    expect(st().game.answers).toEqual([]);
+    expect(impacts()).toEqual([]);
+    expect(label('game-card')).toBe(cardLabel(1, 1, 'workwear'));
+    expect(teachShown()).toBe(true);
+    expect(await store().getKv(TAUGHT_KEY)).toBeNull();
+    // One tap dismisses it (and isn't a peek): the flag is written, Yes and No work.
+    expect(await dismissTeach()).toBe(1);
+    expect(teachShown()).toBe(false);
+    expect(await store().getKv(TAUGHT_KEY)).not.toBeNull();
+    expect(drawnIn('game-card')).toEqual(['workwear.0']);
+    expect(st().game.answers).toEqual([]);
+    expect([isDisabled(buttonIn('game-me')), isDisabled(buttonIn('game-notme'))]).toEqual([false, false]);
+    await pressId('game-me');
+    await advance(SETTLE_MS);
+    expect(answers()).toEqual(['workwear Me']);
+  });
+
+  it('SG1.4 · the overlay shows on the first game only: not after Play again or a relaunch', async () => {
+    await setUpGame(store(), { seed: 42, me: [], cards: 0, taught: false });
+    let r = await mount(<StyleGameScreen />);
+    expect(teachShown()).toBe(true);
+    await dismissTeach();
+    await act(async () => {
+      await playAgain(store(), seedRandom(7));
+    });
+    await flush();
+    expect(label('game-card')).toBe(cardLabel(1, 1, 'smart_casual'));
+    expect(teachShown()).toBe(false);
+    await r.unmount();
+    // A relaunch: memory gone, the flag kept.
+    endStyleGame();
+    await act(async () => {
+      await startOrResumeStyleGame(store(), seedRandom(9));
+    });
+    r = await mount(<StyleGameScreen />);
+    expect(label('game-card')!.startsWith('Outfit 1 of 8, view 1 of 2. ')).toBe(true);
+    expect(teachShown()).toBe(false);
+    await pressId('game-notme');
+    await advance(SETTLE_MS);
+    expect(st().game.answers).toHaveLength(1);
+    await r.unmount();
+    // The flag is this phone's (a fresh install teaches again).
+    expect(kvPolicy(TAUGHT_KEY)).toBe('local');
+  });
+});
+
+// ── SG7.5 · FS4, the check on three fast No's (Nov 18, #494) ─────────────────────────────────────────────────────
+// "Less than 1.5 s after its card appeared" is read on the screen's clock (Date.now, which jest's fake timers move
+// with advance()); the T39 mocks fix sessionClock, so a timing read from it can't be told apart here.
+describe('SG7.5 · Just checking', () => {
+  const checkShown = () => screen.queryAllByText(CHECK).length > 0;
+  /** No on the card in front of him, then the next card comes up (well under 1.5 s from card to card). */
+  async function fastNo() {
+    await pressId('game-notme');
+    await advance(SETTLE_MS);
+  }
+  const noes = ['workwear Not me', 'classic_prep Not me', 'streetwear Not me'];
+
+  it('SG7.5 · three fast No\'s show the check before card 4; Keep going goes on to card 4', async () => {
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    await mount(<StyleGameScreen />);
+    await fastNo();
+    await fastNo();
+    expect(checkShown()).toBe(false);
+    await fastNo();
+    expect(screen.getAllByText(CHECK)).toHaveLength(1);
+    expect(screen.getByRole('button', { name: START_OVER })).toBeTruthy();
+    expect(screen.getByRole('button', { name: KEEP_GOING })).toBeTruthy();
+    expect(answers()).toEqual(noes);
+    await press(screen.getByRole('button', { name: KEEP_GOING }));
+    await advance(SETTLE_MS);
+    expect(checkShown()).toBe(false);
+    expect(label('game-card')).toBe(cardLabel(4, 1, 'minimalist'));
+    expect(answers()).toEqual(noes);
+  });
+
+  it('SG7.5 · Start over goes back to card 1 of the same deal, and the check never shows twice', async () => {
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    await mount(<StyleGameScreen />);
+    await fastNo();
+    await fastNo();
+    await fastNo();
+    expect(checkShown()).toBe(true);
+    await press(screen.getByRole('button', { name: START_OVER }));
+    await advance(SETTLE_MS);
+    expect(checkShown()).toBe(false);
+    expect(st().game).toEqual({ seed: 42, answers: [], rounds: [] });
+    expect(label('game-card')).toBe(cardLabel(1, 1, 'workwear'));
+    expect(teachShown()).toBe(false);
+    // Three fast No's again: no second check.
+    await fastNo();
+    await fastNo();
+    await fastNo();
+    expect(checkShown()).toBe(false);
+    expect(label('game-card')).toBe(cardLabel(4, 1, 'minimalist'));
+    expect(answers()).toEqual(noes);
+  });
+
+  it('SG7.5 · no check when one No took 2 s, when Back came between, or with a Yes', async () => {
+    // The control: the same screen does show it for three fast No's (so each "no check" below is the rule, not a
+    // screen that never checks).
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    let r = await mount(<StyleGameScreen />);
+    await fastNo();
+    await fastNo();
+    await fastNo();
+    expect(checkShown()).toBe(true);
+    await r.unmount();
+    // One slow No (card 2 up for about 2.6 s).
+    endStyleGame();
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    r = await mount(<StyleGameScreen />);
+    await fastNo();
+    await advance(2000);
+    await fastNo();
+    await fastNo();
+    expect(checkShown()).toBe(false);
+    expect(label('game-card')).toBe(cardLabel(4, 1, 'minimalist'));
+    await r.unmount();
+    // Back between: No, No, Back, No, No (three No's, all fast, a Back among them).
+    endStyleGame();
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    r = await mount(<StyleGameScreen />);
+    await fastNo();
+    await fastNo();
+    await press(backButton());
+    await advance(SETTLE_MS);
+    expect(answers()).toEqual(['workwear Not me']);
+    await fastNo();
+    await fastNo();
+    expect(answers()).toEqual(noes);
+    expect(checkShown()).toBe(false);
+    expect(label('game-card')).toBe(cardLabel(4, 1, 'minimalist'));
+    await r.unmount();
+    // A Yes among the first three.
+    endStyleGame();
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    r = await mount(<StyleGameScreen />);
+    await pressId('game-me');
+    await advance(SETTLE_MS);
+    await fastNo();
+    await fastNo();
+    expect(checkShown()).toBe(false);
+    expect(label('game-card')).toBe(cardLabel(4, 1, 'minimalist'));
+    await r.unmount();
   }, 20000);
 });

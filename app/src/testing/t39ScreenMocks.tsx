@@ -56,7 +56,7 @@ jest.mock('@/design-system', () => {
   const { t } = jest.requireActual('@/i18n/en');
   const TextPass = (p: Record<string, unknown>) => <Text {...p} />;
   const ViewPass = (p: Record<string, unknown>) => <View {...p} />;
-  const Press = ({ title, label, onPress, accessibilityLabel, accessibilityHint, disabled, testID, maxFontSizeMultiplier }: Record<string, never>) => (
+  const Press = ({ title, label, onPress, accessibilityLabel, accessibilityHint, disabled, testID, maxFontSizeMultiplier, icon }: Record<string, never>) => (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? label ?? title}
@@ -65,6 +65,7 @@ jest.mock('@/design-system', () => {
       disabled={disabled}
       testID={testID}
     >
+      {icon ? <View testID="mock-button-icon" name={icon} /> : null}
       {title ? <Text maxFontSizeMultiplier={maxFontSizeMultiplier}>{title}</Text> : null}
     </Pressable>
   );

@@ -1,6 +1,6 @@
 # T113 · The style game on the Simulator (specs/style-game.md; tasks/T113/TESTING.md): SG6.1 (screen 310), SG7.1
 # (screen 2: a tap shows the other outfit, an answer opens card 2 on its first), SG7.4 (screen 300: Back undoes one
-# card), Here's your style (screen 304), then SG8.1 on a fresh install: a close mid-game reopens Looks at card 1, a
+# card), Here's your style (screen 304), then SG1.4 and SG8.1 on a fresh install: the teaching overlay; a close mid-game reopens Looks at card 1, a
 # close on Nothing clicked yet reopens it.
 # Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test -e PORT=8082 app/e2e/flows/T113-style-game.yaml
 # (this worktree's Metro on 8082). Matching: Maestro matches an element's WHOLE text or label; the card is one
@@ -14,22 +14,30 @@ name: T113 · the style game
     env:
       SCREEN: "2"
 - extendedWaitUntil:
-    visible: "Me or not me\\?"
+    visible: "Is this your style\\?"
     timeout: 90000
-- assertVisible: "One outfit at a time\\. Would you wear something like this\\?"
+# The demo store may not have taught the swipe yet (SG1.4): tap the overlay away if it shows.
+- runFlow:
+    when:
+      visible: "Swipe right if it's your style, left if it's not\\."
+    commands:
+      - tapOn: "Swipe right if it's your style, left if it's not\\."
+- assertVisible: "One outfit at a time\\."
 - assertVisible: "Step 2 of 3"
 - assertVisible: "Outfit 1 of 8, view 1 of 2\\. .*"
-- assertVisible: "Swipe right for Me, left for Not me\\."
+- assertVisible: "Swipe right for Yes, left for No\\."
 - assertVisible: "Not sure\\? Tap it for another outfit\\."
-- assertVisible: "Me"
-- assertVisible: "Not me"
+- assertVisible: "Yes"
+- assertVisible: "No"
+- assertNotVisible: "Me or not me\\?"
+- assertNotVisible: "Not me"
 - assertNotVisible: "What's your style\\?"
 # SG7.1: a tap shows the look's other outfit; it is not an answer.
 - tapOn:
     id: "game-card"
 - assertVisible: "Outfit 1 of 8, view 2 of 2\\. .*"
 - assertNotVisible: "Outfit 2 of 8.*"
-# Me: card 2, on its first outfit.
+# Yes: card 2, on its first outfit.
 - tapOn:
     id: "game-me"
 - extendedWaitUntil:
@@ -54,7 +62,7 @@ name: T113 · the style game
     visible: "Outfit 3 of 8, view 1 of 2\\. .*"
     timeout: 5000
 - assertNotVisible: "Outfit 2 of 8.*"
-- assertVisible: "Me or not me\\?"
+- assertVisible: "Is this your style\\?"
 
 # ── Screen 304: Here's your style, three looks ──────────────────────────────────────────────────────────────────────
 - runFlow:
@@ -107,8 +115,16 @@ name: T113 · the style game
     timeout: 90000
 - tapOn: "Get started"
 - extendedWaitUntil:
-    visible: "Me or not me\\?"
+    visible: "Is this your style\\?"
     timeout: 10000
+# SG1.4: card 1 teaches the swipe; Yes does nothing until one tap dismisses it.
+- assertVisible: "Swipe right if it's your style, left if it's not\\."
+- tapOn:
+    id: "game-me"
+- assertVisible: "Outfit 1 of 8, view 1 of 2\\. .*"
+- assertVisible: "Swipe right if it's your style, left if it's not\\."
+- tapOn: "Swipe right if it's your style, left if it's not\\."
+- assertNotVisible: "Swipe right if it's your style, left if it's not\\."
 - repeat:
     times: 3
     commands:
@@ -126,11 +142,13 @@ name: T113 · the style game
     commands:
       - tapOn: "http://.*:${PORT || '8081'}"
 - extendedWaitUntil:
-    visible: "Me or not me\\?"
+    visible: "Is this your style\\?"
     timeout: 90000
 - assertVisible: "Outfit 1 of 8, view 1 of 2\\. .*"
 - assertNotVisible: "Outfit 4 of 8.*"
-# Not me to all 8: Nothing clicked yet. Close there: it reopens as he left it.
+# Taught once per install: no overlay after the relaunch (SG1.4).
+- assertNotVisible: "Swipe right if it's your style, left if it's not\\."
+# No to all 8 (Keep going if the fast-No check shows, SG7 FS4): Nothing clicked yet. Close there: it reopens as he left it.
 - repeat:
     while:
       visible:
@@ -140,6 +158,11 @@ name: T113 · the style game
           id: "game-notme"
       - waitForAnimationToEnd:
           timeout: 3000
+      - runFlow:
+          when:
+            visible: "Just checking: left means it's not your style\\."
+          commands:
+            - tapOn: "Keep going"
 - extendedWaitUntil:
     visible: "Nothing clicked yet"
     timeout: 10000

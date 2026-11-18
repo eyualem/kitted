@@ -1,7 +1,8 @@
 # T39 · OS3.1, OS3.2, OS5.1, OS5.2 (Agree), OS5.5, F1.1, SY4.1 (tasks/T39/TESTING.md), retargeted by T113 (the style
 # game, specs/style-game.md; F1.1 is now "17 taps or fewer with 3 Me's", #488): a fresh install reaches a live camera in
-# at most 17 taps: Get started (1), Me on 3 cards (2–4), Not me on 5 (5–9), the ranking's left card while it shows (at
-# most 3: 10–12), Continue (13), 22–25 (14), Continue (15), the card's Check my fit (16), Agree (17). No bubble on
+# at most 18 taps since card 1 teaches the swipe (SG1.4, #494): Get started (1), the overlay (2), Yes on 3 cards (3–5),
+# No on 5 (6–10), the ranking's left card while it shows (at most 3: 11–13), Continue (14), 22–25 (15), Continue (16),
+# the card's Check my fit (17), Agree (18). F1.1 says 17: the overlay's tap is a conflict for the founder (TESTING.md). No bubble on
 # Looks or About you, no agreement screen in setup, no sign-in and no paywall on the way, and the camera never opens on
 # its own. The name is never typed (it's optional). Taps on the game are by testID: the deal is random on a fresh
 # install, so nothing here depends on which look is on a card.
@@ -11,7 +12,7 @@
 # Matching: Maestro matches an element's WHOLE text or label. A Kit line is one element "Kit: <text>"; the offer's title
 # and body are one VoiceOver element.
 appId: com.trykitted.kitted
-name: T39 · fresh install to a live camera in 17 taps or fewer (3 Me's)
+name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most with the overlay)
 ---
 - launchApp:
     clearState: true
@@ -32,9 +33,10 @@ name: T39 · fresh install to a live camera in 17 taps or fewer (3 Me's)
 # Tap 1.
 - tapOn: "Get started"
 - extendedWaitUntil:
-    visible: "Me or not me\\?"
+    visible: "Is this your style\\?"
     timeout: 10000
-- assertVisible: "One outfit at a time\\. Would you wear something like this\\?"
+- assertVisible: "One outfit at a time\\."
+- assertNotVisible: "Me or not me\\?"
 - assertNotVisible: "What's your style\\?"
 - assertNotVisible: "Kit: .*"
 - assertNotVisible: ".*Good pick.*"
@@ -45,7 +47,11 @@ name: T39 · fresh install to a live camera in 17 taps or fewer (3 Me's)
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
 - assertVisible: "Step 2 of 3"
 
-# Taps 2–4: Me on three cards.
+# Tap 2: card 1's overlay (SG1.4).
+- assertVisible: "Swipe right if it's your style, left if it's not\\."
+- tapOn: "Swipe right if it's your style, left if it's not\\."
+- assertNotVisible: "Swipe right if it's your style, left if it's not\\."
+# Taps 3–5: Yes on three cards.
 - repeat:
     times: 3
     commands:
@@ -53,7 +59,7 @@ name: T39 · fresh install to a live camera in 17 taps or fewer (3 Me's)
           id: "game-me"
       - waitForAnimationToEnd:
           timeout: 3000
-# Taps 5–9: Not me on the other five.
+# Taps 6–10: No on the other five.
 - repeat:
     times: 5
     commands:
@@ -63,7 +69,7 @@ name: T39 · fresh install to a live camera in 17 taps or fewer (3 Me's)
           timeout: 3000
 - assertNotVisible:
     id: "game-me"
-# Taps 10–12 at most: the ranking's left card while it shows.
+# Taps 11–13 at most: the ranking's left card while it shows.
 - repeat:
     times: 3
     while:
@@ -81,7 +87,7 @@ name: T39 · fresh install to a live camera in 17 taps or fewer (3 Me's)
     id: "rank-pick-left"
 - assertNotVisible: "Take photo"
 - assertNotVisible: "Continue free"
-# Tap 13.
+# Tap 14.
 - tapOn: "Continue"
 - extendedWaitUntil:
     visible: "About you"
@@ -98,13 +104,13 @@ name: T39 · fresh install to a live camera in 17 taps or fewer (3 Me's)
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
 - assertNotVisible: "Skip"
 
-# Tap 14.
+# Tap 15.
 - tapOn: "22–25"
 - assertNotVisible: "Take photo"
 - assertNotVisible: "Continue free"
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
 
-# Tap 15.
+# Tap 16.
 - tapOn: "Continue"
 - extendedWaitUntil:
     visible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
@@ -125,7 +131,7 @@ name: T39 · fresh install to a live camera in 17 taps or fewer (3 Me's)
 - assertNotVisible: "Take photo"
 - assertNotVisible: "Before I score a photo, here's what happens to it\\."
 
-# Tap 16: the card's Check my fit (the first of the two "Check my fit" buttons; the accessory's is below it).
+# Tap 17: the card's Check my fit (the first of the two "Check my fit" buttons; the accessory's is below it).
 - tapOn:
     text: "Check my fit\\. Opens the camera\\."
     below: "Want to check a fit now\\?.*"
@@ -141,7 +147,7 @@ name: T39 · fresh install to a live camera in 17 taps or fewer (3 Me's)
 - assertNotVisible: "Continue free"
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
 
-# Tap 17.
+# Tap 18.
 - tapOn: "Agree"
 - extendedWaitUntil:
     visible: "Take photo"

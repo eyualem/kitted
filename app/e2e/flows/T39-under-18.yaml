@@ -20,9 +20,9 @@ name: T39 · Under 18 stops the app
     timeout: 90000
 - tapOn: "Get started"
 - extendedWaitUntil:
-    visible: "Me or not me\\?"
+    visible: "Is this your style\\?"
     timeout: 10000
-# T113: Looks is the style game. Me on card 1, Not me on the rest, Continue (10 taps).
+# T113: Looks is the style game. The overlay's tap (SG1.4), Yes on card 1, No on the rest, Continue (11 taps).
 - runFlow: ../common/play-style-game.yaml
 - extendedWaitUntil:
     visible: "About you"

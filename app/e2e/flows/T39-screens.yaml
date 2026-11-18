@@ -12,10 +12,11 @@ name: T39 · setup, offer and Style profile screens
     env:
       SCREEN: "2"
 - extendedWaitUntil:
-    visible: "Me or not me\\?"
+    visible: "Is this your style\\?"
     timeout: 90000
 # T113: screen 2 is the style game's card 1 (seed 42); the grid's title and line are gone.
-- assertVisible: "One outfit at a time\\. Would you wear something like this\\?"
+- assertVisible: "One outfit at a time\\."
+- assertNotVisible: "Me or not me\\?"
 - assertVisible: "Outfit 1 of 8, view 1 of 2\\. .*"
 - assertNotVisible: "What's your style\\?"
 - assertNotVisible: "Kit: .*"
