@@ -6,7 +6,7 @@
 // Profile (CLAUDE.md rule 6): no photo is used here. The age band is the one he taps (never estimated); the looks are
 // the ones tapped in the test (or the stated drafts), the occasion everyday.
 import {
-  advance, allNodes, allTexts, byId, everyString, flat, flush, getId, idsInOrder, mockT39, mount, press, setUpT39Tests, T0, textAt, textOf, themeFor, typeIn, type Node,
+  advance, allTexts, byId, everyString, flat, flush, getId, idsInOrder, mockT39, mount, press, setUpT39Tests, T0, textAt, textOf, themeFor, typeIn, type Node,
 } from '@/testing/t39ScreenMocks';
 import { isHiddenFromAccessibility, screen, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
@@ -19,22 +19,23 @@ import { looksReply } from '@/features/onboarding/basics';
 import { BasicsScreen } from '@/features/onboarding/BasicsScreen';
 import { ConsentScreen } from '@/features/onboarding/ConsentScreen';
 import { ExampleCheckScreen } from '@/features/onboarding/ExampleCheckScreen';
-import { LOOKS, picksToStyles } from '@/features/onboarding/looks';
+import { picksToStyles } from '@/features/onboarding/looks';
 import { ONBOARDING_STEPS, OnboardingNav } from '@/features/onboarding/OnboardingNav';
-import { PickLooksScreen } from '@/features/onboarding/PickLooksScreen';
 import { StyleGameScreen } from '@/features/onboarding/StyleGameScreen';
 import { endStyleGame } from '@/features/onboarding/styleGameSession';
-import { playStyleGame, pressId, seedRandom } from '@/testing/styleGameTestKit';
+import { playStyleGame, pressId, seedRandom, setUpGame } from '@/testing/styleGameTestKit';
 import { WelcomeScreen } from '@/features/onboarding/WelcomeScreen';
-import { styleLabel } from '@/features/morning/copy';
 import { getGate } from '@/state/appGate';
 
 const life = setUpT39Tests();
 
 // ── The words (TESTING.md, exact) ─────────────────────────────────────────────────────────────────────────────────
 const OLD_LOOKS_PROMPT = 'Which of these would you actually wear? Tap up to 3.';
-const LOOKS_TITLE = "What's your style?"; // founder, Nov 11 (#448)
-const LOOKS_LINE = "Pick up to 3 looks you like. Today's outfit comes next.";
+// T113: Looks is the style game (specs/style-game.md SG1); the grid's "What's your style?" is gone.
+const GAME_TITLE = 'Me or not me?';
+const RESULTS_TITLE = "Here's your style";
+/** Seed 42; he says Me to Streetwear, Vintage sport, Outdoor and Workwear and prefers them in that order. */
+const SV = ['streetwear', 'vintage_sport', 'outdoor', 'workwear'];
 const ABOUT_TITLE = 'About you';
 const NAME_Q = 'What should Kit call you?';
 const NAME_PLACEHOLDER = 'First name (optional)';
@@ -71,7 +72,6 @@ const kvJson = async (k: string) => {
   return v === null ? null : (JSON.parse(v) as unknown);
 };
 const profile = async () => (await mockT39.store.profile.get('me')) as ProfileRow | null;
-const tile = (i: number) => screen.getAllByLabelText(new RegExp(`^${styleLabel(LOOKS[i]!.style)}`))[0]!;
 
 /** About you's drafts: his looks from Looks, and an About you draft when given. */
 async function drafts(o: { looks?: string[]; about?: { age: string | null; name: string } | string; basics?: object } = {}) {
@@ -100,13 +100,25 @@ describe('OS3.1 · setup screens are plain', () => {
         mockT39.theme = themeFor(look);
         mockT39.accounts = accounts;
 
-        // Looks.
+        // Looks (the style game): card 1, then Here's your style.
         jest.clearAllMocks();
-        let r = await mount(<PickLooksScreen />);
+        endStyleGame();
+        await setUpGame(mockT39.store, { seed: 42, me: [], cards: 0 });
+        let r = await mount(<StyleGameScreen />);
         expect([tag, 'looks', bubbles()]).toEqual([tag, 'looks', [0, 0, 0, 0]]);
         expectNoBubbleWords({ looksScreen: true });
-        expect(textAt('looks-title')).toBe(LOOKS_TITLE);
+        expect(textAt('game-title')).toBe(GAME_TITLE);
         await r.unmount();
+        jest.clearAllMocks();
+        endStyleGame();
+        await setUpGame(mockT39.store, { seed: 42, me: SV, prefer: SV });
+        r = await mount(<StyleGameScreen />);
+        expect([tag, 'looks results', bubbles()]).toEqual([tag, 'looks results', [0, 0, 0, 0]]);
+        expectNoBubbleWords({ looksScreen: true });
+        expect(textAt('results-title')).toBe(RESULTS_TITLE);
+        await r.unmount();
+        endStyleGame();
+        await mockT39.store.wipe();
 
         // About you on open (no drafts at all).
         jest.clearAllMocks();
@@ -146,7 +158,7 @@ describe('OS3.1 · setup screens are plain', () => {
         await r.unmount();
       }
     }
-    // 4 looks × 2 account states × 4 screens: 32 mounts, past jest's 5 s default when the suite runs in parallel.
+    // 4 looks × 2 account states × 5 screens: 40 mounts, past jest's 5 s default when the suite runs in parallel.
   }, 30_000);
 
   it("OS3.1 · the agreement's intro is plain text (camera and sheet)", async () => {
@@ -164,13 +176,20 @@ describe('OS3.1 · setup screens are plain', () => {
 // ── OS3.2 · Welcome → Looks → About you → Stylist ─────────────────────────────────────────────────────────────────
 describe('OS3.2 · three steps, no agreement', () => {
   it('OS3.2 · each step goes to the next and About you ends in Stylist', async () => {
-    // Looks: one tile, Continue · 1 of 3.
-    let r = await mount(<PickLooksScreen />);
-    await press(tile(0));
-    await press(screen.getByText('Continue · 1 of 3'));
+    // Looks (the style game, T113): Me on card 1 (seed 42: Workwear), Not me on the rest, Continue.
+    endStyleGame();
+    const random = jest.spyOn(Math, 'random').mockReturnValue(seedRandom(42)());
+    let r = await mount(<StyleGameScreen />);
+    expect(await playStyleGame({ me: 1 })).toBe(8);
+    expect(textAt('results-title')).toBe(RESULTS_TITLE);
+    expect(router.push).not.toHaveBeenCalled();
+    await pressId('results-continue');
     expect(await mockT39.store.getKv('onboarding.step')).toBe('basics');
+    expect(await kvJson('onboarding.looks')).toEqual(['workwear']);
     expect(router.push).toHaveBeenCalledWith('/onboarding/basics');
+    expect(pushes()).toEqual(['/onboarding/basics']);
     await r.unmount();
+    random.mockRestore();
 
     // About you: 22–25, Continue → onboarded, to "/" (Stylist), never the agreement or the camera.
     jest.clearAllMocks();
@@ -184,6 +203,7 @@ describe('OS3.2 · three steps, no agreement', () => {
     expect(pushes().filter((p) => p === '/onboarding/consent' || p.startsWith('/camera'))).toEqual([]);
     expect(pushes()).toEqual([]);
     await r.unmount();
+    endStyleGame();
   });
 
   it('OS3.2 · the bar has 3 segments', async () => {
@@ -225,59 +245,12 @@ describe('OS3.2 · three steps, no agreement', () => {
   });
 });
 
-// ── OS3.3 · Looks ─────────────────────────────────────────────────────────────────────────────────────────────────
-describe('OS3.3 · Looks has a title and a line', () => {
-  it('OS3.3 · the title and the line', async () => {
-    for (const look of LOOKS_AX) {
-      mockT39.theme = themeFor(look);
-      const r = await mount(<PickLooksScreen />);
-      const title = getId('looks-title');
-      expect(textOf(title)).toBe(LOOKS_TITLE);
-      expect(title.props.accessibilityRole).toBe('header');
-      expect(textAt('looks-line')).toBe(LOOKS_LINE);
-      // Directly after the title, in reading order.
-      const texts = allNodes().filter((n) => n.type === 'Text' && typeof n.props.testID === 'string').map((n) => n.props.testID as string);
-      expect(texts.indexOf('looks-line')).toBe(texts.indexOf('looks-title') + 1);
-      expect(allTexts().filter((x) => x.includes(OLD_LOOKS_PROMPT))).toEqual([]);
-      await r.unmount();
-    }
-  });
-
-  it('OS3.3 · the tiles, Something else? and Continue behave as before, and there is no Not sure (#449)', async () => {
-    let r = await mount(<PickLooksScreen />);
-    // Nothing picked, no words: Continue is off.
-    const cont = () => screen.getByRole('button', { name: /^Continue/ }) as unknown as Node;
-    expect(isDisabled(cont())).toBe(true);
-    expect(screen.queryByText('Pick by name instead')).toBeNull();
-    // No way past Looks without a pick or his words (founder, Nov 11; setup is 7 taps to the camera).
-    expect(screen.queryByText('Not sure')).toBeNull();
-    expect(bubbles()).toEqual([0, 0, 0, 0]);
-
-    await press(tile(0));
-    await press(tile(1));
-    expect(Haptics.selectionAsync).toHaveBeenCalledTimes(2);
-    expect(screen.getByText('Continue · 2 of 3')).toBeTruthy();
-    await press(tile(2));
-    expect(screen.getByText('Continue · 3 of 3')).toBeTruthy();
-    // A 4th: the warning buzz once, "Up to 3.", picks unchanged.
-    await press(tile(3));
-    expect(Haptics.notificationAsync).toHaveBeenCalledTimes(1);
-    expect(Haptics.notificationAsync).toHaveBeenCalledWith('warning');
-    expect(Haptics.selectionAsync).toHaveBeenCalledTimes(3);
-    expect(screen.getByText('Up to 3.')).toBeTruthy();
-    expect(screen.getByText('Continue · 3 of 3')).toBeTruthy();
-    await press(screen.getByText('Continue · 3 of 3'));
-    expect(await kvJson('onboarding.looks')).toEqual([LOOKS[0]!.style, LOOKS[1]!.style, LOOKS[2]!.style]);
-    await r.unmount();
-
-    // Something else? opens the field.
-    await mockT39.store.wipe();
-    r = await mount(<PickLooksScreen />);
-    await press(screen.getByLabelText('Something else. Describe your style in your own words.'));
-    expect(screen.getByPlaceholderText('Like skater, or all black')).toBeTruthy();
-    await r.unmount();
-  });
-});
+// ── OS3.3 · Looks: retired by T113 ────────────────────────────────────────────────────────────────────────────────
+// `OS3.3 · the title and the line` and `OS3.3 · the tiles, Something else? and Continue behave as before` tested the
+// tile grid ("What's your style?", the tiles, "Continue · n of 3", "Something else?"). specs/style-game.md replaces that
+// grid ("Changes to other specs": OS3's Looks bullet gives way to the game), so they are retired, not rewritten. What
+// they guarded is now SG1–SG7 in T113-styleGameScreens.test.tsx: the title as a header (SG1.1), Continue off with no
+// look and no words (SG3.2), no way past Looks without one (SG3.2, SG6.1), his own words (SG5.1), and the haptics.
 
 // ── OS4.1 · About you on open ─────────────────────────────────────────────────────────────────────────────────────
 describe('OS4.1 · About you', () => {
@@ -546,9 +519,25 @@ describe('OS4.5 · the only 18s before a pick', () => {
         expect([ax, mode, with18()]).toEqual([ax, mode, []]);
         await r.unmount();
       }
-      let r = await mount(<PickLooksScreen />);
+      // Looks (the style game, T113): card 1, the this-or-that and Here's your style.
+      endStyleGame();
+      await setUpGame(mockT39.store, { seed: 42, me: [], cards: 0 });
+      let r = await mount(<StyleGameScreen />);
       expect([ax, 'looks', with18()]).toEqual([ax, 'looks', []]);
       await r.unmount();
+      endStyleGame();
+      await setUpGame(mockT39.store, { seed: 42, me: SV, rounds: 0 });
+      r = await mount(<StyleGameScreen />);
+      expect(byId('rank-title')).not.toBeNull();
+      expect([ax, 'looks ranking', with18()]).toEqual([ax, 'looks ranking', []]);
+      await r.unmount();
+      endStyleGame();
+      await setUpGame(mockT39.store, { seed: 42, me: SV, prefer: SV });
+      r = await mount(<StyleGameScreen />);
+      expect(textAt('results-title')).toBe(RESULTS_TITLE);
+      expect([ax, 'looks results', with18()]).toEqual([ax, 'looks results', []]);
+      await r.unmount();
+      endStyleGame();
 
       await mockT39.store.wipe();
       r = await mount(<BasicsScreen />);

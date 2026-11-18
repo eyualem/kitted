@@ -1,7 +1,7 @@
 # T39 · OS4.4, F1.2 (tasks/T39/TESTING.md): Under 18 on About you asks once; Change changes nothing; That's right shows
 # the age stop with no way to the camera, and it stays after a relaunch. The flow ends by clearing the app and the
 # Keychain, so the Simulator is never left on the stop screen.
-# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T39-under-18.yaml (Metro running)
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T39-under-18.yaml (Metro running; another worktree's Metro: -e PORT=8082)
 appId: com.trykitted.kitted
 name: T39 · Under 18 stops the app
 ---
@@ -14,17 +14,16 @@ name: T39 · Under 18 stops the app
     when:
       visible: "DEVELOPMENT SERVERS"
     commands:
-      - tapOn: "http://.*:8081"
+      - tapOn: "http://.*:${PORT || '8081'}"
 - extendedWaitUntil:
     visible: "Get started"
     timeout: 90000
 - tapOn: "Get started"
 - extendedWaitUntil:
-    visible: "What's your style\\?"
+    visible: "Me or not me\\?"
     timeout: 10000
-- tapOn: "Streetwear: .*"
-- assertVisible: "Continue · 1 of 3"
-- tapOn: "Continue · 1 of 3"
+# T113: Looks is the style game. Me on card 1, Not me on the rest, Continue (10 taps).
+- runFlow: ../common/play-style-game.yaml
 - extendedWaitUntil:
     visible: "About you"
     timeout: 10000
@@ -61,7 +60,7 @@ name: T39 · Under 18 stops the app
     when:
       visible: "DEVELOPMENT SERVERS"
     commands:
-      - tapOn: "http://.*:8081"
+      - tapOn: "http://.*:${PORT || '8081'}"
 - extendedWaitUntil:
     visible: "Thanks for checking it out\\. You can delete the app from your Home Screen\\."
     timeout: 90000

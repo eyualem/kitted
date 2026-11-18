@@ -1,7 +1,7 @@
 # T39 · OS5.2 (Not now) (tasks/T39/TESTING.md): from a fresh install, Check my fit on Kit's offer shows the agreement in
 # the camera; Not now returns to Stylist with "Turn on fit checks" posted once and the offer's buttons gone; opening the
 # camera again from the accessory and saying Not now again posts nothing more.
-# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T39-setup-not-now.yaml (Metro running)
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T39-setup-not-now.yaml (Metro running; another worktree's Metro: -e PORT=8082)
 appId: com.trykitted.kitted
 name: T39 · Not now on the agreement after the offer
 ---
@@ -14,17 +14,16 @@ name: T39 · Not now on the agreement after the offer
     when:
       visible: "DEVELOPMENT SERVERS"
     commands:
-      - tapOn: "http://.*:8081"
+      - tapOn: "http://.*:${PORT || '8081'}"
 - extendedWaitUntil:
     visible: "Get started"
     timeout: 90000
 - tapOn: "Get started"
 - extendedWaitUntil:
-    visible: "What's your style\\?"
+    visible: "Me or not me\\?"
     timeout: 10000
-- tapOn: "Streetwear: .*"
-- assertVisible: "Continue · 1 of 3"
-- tapOn: "Continue · 1 of 3"
+# T113: Looks is the style game. Me on card 1, Not me on the rest, Continue (10 taps).
+- runFlow: ../common/play-style-game.yaml
 - extendedWaitUntil:
     visible: "About you"
     timeout: 10000

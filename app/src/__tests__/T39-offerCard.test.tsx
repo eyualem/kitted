@@ -16,11 +16,11 @@ import { textMessage } from '@/data/seedLoader';
 import type { ChatMessage, FitCheckRow, ProfileRow } from '@/data/types';
 import { BasicsScreen } from '@/features/onboarding/BasicsScreen';
 import { FirstCheckOfferCard } from '@/features/onboarding/FirstCheckOfferCard';
-import { LOOKS } from '@/features/onboarding/looks';
-import { PickLooksScreen } from '@/features/onboarding/PickLooksScreen';
+import { StyleGameScreen } from '@/features/onboarding/StyleGameScreen';
+import { endStyleGame } from '@/features/onboarding/styleGameSession';
+import { playStyleGame, pressId, seedRandom } from '@/testing/styleGameTestKit';
 import { mayUpload } from '@/features/privacy/wipe';
 import { ThreadRow } from '@/features/stylist/MessageView';
-import { styleLabel } from '@/features/morning/copy';
 import { dropAfterConsent, resumeAfterConsent, startCheck } from '@/features/camera/startCheck';
 import { discardTempPhoto } from '@/services/tempPhoto';
 
@@ -266,13 +266,18 @@ describe('OS5.4 · a scored check', () => {
 
 // ── OS5.7 · nothing sent before Agree ─────────────────────────────────────────────────────────────────────────────
 describe('OS5.7 · nothing leaves the phone before Agree', () => {
-  const tile = (i: number) => screen.getAllByLabelText(new RegExp(`^${styleLabel(LOOKS[i]!.style)}`))[0]!;
-
+  // T113: Looks is the style game (specs/style-game.md). A fixed deal (seed 42, card 1 Workwear); Me on card 1, Not me
+  // on the rest, so his one look is Workwear and there is no this-or-that.
   async function walkToCard(): Promise<ChatMessage> {
-    let r = await mount(<PickLooksScreen />);
-    await press(tile(0));
-    await press(screen.getByText('Continue · 1 of 3'));
+    endStyleGame();
+    const random = jest.spyOn(Math, 'random').mockReturnValue(seedRandom(42)());
+    let r = await mount(<StyleGameScreen />);
+    expect(await playStyleGame({ me: 1 })).toBe(8);
+    expect(textAt('results-title')).toBe("Here's your style");
+    await pressId('results-continue');
     await r.unmount();
+    random.mockRestore();
+    expect(await mockT39.store.getKv('onboarding.looks')).toBe('["workwear"]');
     r = await mount(<BasicsScreen />);
     await typeIn(getId('about-name-input'), 'Alex');
     await press(getId('age-22-25'));
@@ -280,6 +285,7 @@ describe('OS5.7 · nothing leaves the phone before Agree', () => {
     await r.unmount();
     const offer = (await chat()).find((m) => m.cardType === 'firstCheckOffer');
     expect(offer).toBeDefined();
+    endStyleGame();
     return offer!;
   }
 

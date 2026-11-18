@@ -234,13 +234,26 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
   - red: 2 tests (render 1; T39-setupScreens.test.tsx's retargeted `F1.1 · nothing opens the camera before Check my fit`) + flow `T39-setup-fresh.yaml` (rewritten to the 17 taps, every assertion that still applies kept). Both fail on "T113: not built" (the stubs) and stay red until T94 (the walk draws card 5 of seed 42, Tailored). Flow not run (as SG1.1).
 
 ## The tests that change
-- `T39-setupScreens.test.tsx`: OS3.1, OS3.2 and F1.1 mount `StyleGameScreen` and play through `playStyleGame`; OS3.1 asserts `game-title` `Me or not me?` in place of `What's your style?`. **Retired:** `OS3.3 · the title and the line` and `OS3.3 · the tiles, Something else? and Continue behave as before` (the grid is gone; superseded by SG1–SG7, reason in TASK.md).
-- `T39-offerCard.test.tsx` › OS5.7: `walkToCard` plays the game; every "nothing sent" assertion stays.
-- `looksOwnWords.test.tsx`: its three lessons run on the results words field (`results-words-link`, `results-words-input`) and stay as they are otherwise.
-- `scenarios.test.ts`: the before-onboarding list gains 300–313.
-- `syncSchema.test.ts`, `privacyWipe.test.ts`, `onboardingLooks.test.ts`, `T39-noLeak.test.ts`: unchanged, must pass.
-- Flows: `T39-setup-later.yaml`, `T39-setup-not-now.yaml`, `T39-under-18.yaml` replace the tile and `Continue · 1 of 3` with `runFlow: ../common/play-style-game.yaml` (Me on card 1, Not me on the rest, Continue: 10 taps); `T39-screens.yaml`'s screen 2 block asserts `Me or not me\?`.
+Made by the test writer after the build (Nov 18): the protect-tests hook blocks the implementer from `app/src/__tests__/` and `app/e2e/`, so the coordinator sent them back here. Each was retargeted to the spec's new behaviour, with every check that still applies kept and none loosened. Each then passed against the build (`d2b0e13e` + these edits) and failed against the old grid (`StyleGameScreen` pointed at `PickLooksScreen`) or a planted bug, reverted.
+- **`T39-setupScreens.test.tsx`**, retargeted:
+  - OS3.1 mounts `StyleGameScreen` on card 1 (`game-title` = `Me or not me?` in place of `What's your style?`) and, new, on Here's your style. Both stages are checked for no bubble and no Kit words, in the same 4 looks × 2 account states.
+  - OS3.2 plays the game (seed 42, Me on card 1) and checks, as before, `onboarding.step` = `basics` and the push to `/onboarding/basics`. It also checks that the push comes only after Continue, and that `onboarding.looks` = `["workwear"]`.
+  - OS4.5 checks for no "18" on card 1, the this-or-that and Here's your style (it used to check the grid).
+  - F1.1 was already retargeted in the lock.
+  - Against the grid: OS3.1 failed (no `game-title`), OS3.2 failed (no `game-me`), OS4.5 failed (no `rank-title`). Planted bug: "18 and up" in `game.order.line` failed OS4.5 at `looks ranking`.
+  - **Retired:** `OS3.3 · the title and the line` and `OS3.3 · the tiles, Something else? and Continue behave as before`. They tested the tile grid, which the spec replaces ("Changes to other specs": OS3's Looks bullet gives way to the game). What they guarded is now SG1.1 (the title as a header), SG3.2 and SG6.1 (Continue off with no look and no words, no way past Looks without one) and SG5.1 (his own words). A comment in the file says so.
+- **`T39-offerCard.test.tsx`** › OS5.7: `walkToCard` plays the game (seed 42, Me on card 1, 8 presses) and Continues. It now also checks `onboarding.looks` = `["workwear"]`; every "nothing sent" assertion stays. Against the grid: failed (no `game-me`).
+- **`looksOwnWords.test.tsx`**: its three lessons (a blur doesn't close the field; the field is focused once open, and not by autoFocus; his words are trimmed, shown and saved with Continue) run on Here's your style (`Not quite you? Tell me in your words` → `results-words-input`). The words now show once saved (`In your words: "old money"`, SG5), not while typing. Against the grid: all 3 failed (no words link).
+- **`scenarios.test.ts`**: the before-onboarding list gains 300–313. Against the old `scenarios.ts` (at `934af708`): failed.
+- **`toast.test.ts`** › U3 (missing from this list before): the EXPECTED table gains the game's three Undo toasts, all 5 s (`false`, technical default 11): `features/onboarding/GameResults.tsx · game.results.removed`, `features/onboarding/AddLookSheet.tsx · game.results.swapped` and `features/onboarding/styleGameSession.ts · last.text` (demo screens 306/307). Planted bug: the removal toast given `{ ms: TOAST_MS_REMOVAL }` failed it (`…removed: true`).
+- `syncSchema.test.ts`, `privacyWipe.test.ts`, `onboardingLooks.test.ts`, `T39-noLeak.test.ts`: unchanged, and they pass.
+- **Flows:**
+  - `T39-setup-later.yaml`, `T39-setup-not-now.yaml` and `T39-under-18.yaml` wait for `Me or not me\?` and then `runFlow: ../common/play-style-game.yaml` (Me on card 1, Not me on the rest, Continue: 10 taps). This replaces the tile and `Continue · 1 of 3`.
+  - Their server tap is now `${PORT || '8081'}`.
+  - `T39-screens.yaml`'s screen 2 block asserts `Me or not me\?`, the line and `Outfit 1 of 8, view 1 of 2\. .*`, and that `What's your style\?` is gone.
+  - **Not run:** T94's verifier holds the Simulator. They are the verifier's to run with `-e PORT=8082`.
 - `play-style-game.yaml` (env `ME`, default 1): `ME` × `game-me`, `Not me` while `game-notme` is visible, the ranking's left card while visible (at most 3), `Here's your style` visible, `Continue`.
+- No test mounts `PickLooksScreen` any more. Deleting it is the implementer's (TASK.md → Deviations).
 
 ## Edges (from the spec and the setup's failure cases)
 - **Offline:** the game needs no network; the render tests run with `fetch` failing on any call.
