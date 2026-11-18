@@ -1,0 +1,106 @@
+# The style game (setup's Looks step)
+
+**Written for the founder's review:** 2026-11-18, from his decisions #459–#488 and his Nov 18 instruction to build it overnight ("build the whole onboarding … the one that we picked, which is D"). Not yet approved: the approval line goes here only after his yes in chat.
+
+After this, a new user finds his style by playing, not by reading style names: eight "Me or not me?" cards, one drawn outfit each, then a few this-or-thats to put his Me's in order, then "Here's your style", which he can fix in place. His picks still never move a score.
+
+**Part of:** `specs.md` → F1 (Onboarding), step 2. Replaces the tile grid in `specs/onboarding-screens.md` OS3's Looks bullet (see "Changes to other specs"). Works with `specs/tailored.md` (Tailored is one of the 8 looks; T94 ships with this) and `specs/setup-and-you.md` SY1 (You → Style profile keeps its tiles for later changes). The clickable source of truth is the mockup `tasks/style-quiz/design.html` (tab D), built from `tasks/style-quiz/src/`; where this spec and the mockup disagree, this spec wins and the mockup gets fixed.
+
+## Why
+- Testers stalled on the tile grid: some didn't know what "Workwear" or "Vintage sport" means, others skipped the tiles and typed their own (founder, Nov 12).
+- Of four directions drawn, the founder chose D on Nov 17 (#488) after playing A, the this-or-that bracket: when neither outfit was him he picked one anyway and had to replay. D asks about each look on its own.
+- In a $0 simulation of made-up people (`tasks/style-quiz/quiz_sim.py`, #482–#487), D puts every look in its fan's top 3 at least 91% of the time and lets a disliked look into the top 3 2–3% of the time (A: 5–6%). Not yet proven with real people (plan.md Y30).
+
+## Scope
+- **In:** the cards (SG1), the ranking (SG2), the results screen (SG3), Add a look (SG4), his own words (SG5), Nothing clicked (SG6), the fail-safes the flow test kept (SG7), what's saved (SG8), access and motion (SG9).
+- **Out (non-goals):** the tile grid anywhere in setup; A, B and C; real photos in the game (drawings only); Kit using his Not me's (they're saved, not used yet); a retake button on Style profile; any change to scoring, the camera, About you or Stylist.
+- **For the beta:** all of it, in the same build as Tailored (T94). The friends' beta is paused (#462); this ships in the next TestFlight build.
+
+## SG1. Me or not me?
+- Large title `Me or not me?`, line `One outfit at a time. Would you wear something like this?`
+- One card at a time, 8 in all, one per look: Streetwear, Minimal, Smart casual, Classic prep, Tailored, Workwear, Outdoor, Vintage sport. The card shows the look's first drawing (the app's own drawing code, never a person) and no name.
+- **Order:** a fresh shuffle each game, with no look-alikes side by side, counting the last card as next to the first (Classic prep–Tailored, Minimal–Smart casual, Workwear–Outdoor, Streetwear–Vintage sport, Smart casual–Classic prep). Each look is equally likely at each position. The game's seed is kept with the game, so Back keeps the order and Play again deals a new one.
+- **Answering:** `Me` (primary) and `Not me` (secondary) buttons side by side under the card, 50 pt tall; or swipe the card right for Me, left for Not me. Past the swipe line the matching button lights up and a stamp shows (`Me` on the left, filled; `Not me` on the right, outlined). An answered card slides off from where it is, also after a tap.
+- **Progress:** 8 dots; answered ones filled, the current one a longer pill. Under the card: `Swipe right for Me, left for Not me.`
+- **First card only:** it leans right then left once, 1.4 s after it appears, to show the swipe (never under Reduce Motion, never again in that game).
+- **Back** undoes the last card (or the last ranking pick); on card 1 it goes to Welcome.
+
+## SG2. Now put them in order
+- Shown only when he said Me to 2 or more looks. Title `Now put them in order`, line `You said Me to {n}. Tap the one that's more you.`
+- Two of his Me's side by side, each on its second drawing, mid-screen in thumb reach. He taps the one that's more him.
+- Each Me is placed into a top 3 by binary insertion: at most 2 taps per Me after the first. The first pair starts on a random side, then sides alternate, so neither side wins more often.
+- With 1 Me, this step is skipped; with 0, he lands on SG6.
+
+## SG3. Here's your style
+- Title `Here's your style`, line `Your top looks, in order. Drag to change it. You can change it anytime in You.` (with one look, without "Drag to change it.").
+- Up to 3 rows in order: the drawing he said Me to with its number (1, 2, 3) on its corner, the look's name and line, a × (44 × 44 pt), and a drag handle (44 × 44 pt).
+- **Drag** a row by its handle: the row lifts, the others slide to make room, dropping past a row's middle takes its place, and the numbers follow.
+- **×** removes the row and shows `Removed {name}` with Undo for 5 seconds.
+- Under the rows: `Add a look` while he has fewer than 3 (SG4), then `Not quite you? Tell me in your words` (SG5).
+- **Buttons:** `Continue` (full width, primary) and `Play again` (a text button under it). Continue needs at least one look or his words (#449); it saves (SG8) and goes to About you. Play again clears this game and deals a new one; his words stay.
+
+## SG4. Add a look
+- The iOS 26 inset sheet with a grabber and an X: title `Add a look`, the looks he doesn't have, each as today's setup tile (two drawings, name, line). One tap adds it last and closes the sheet.
+
+## SG5. His own words
+- `Not quite you? Tell me in your words` opens a field on the same screen: placeholder `Like skater, or all black`, 80 characters, Done. Saved, it reads `In your words: "…"` with Edit. Typing turns Continue on at once.
+
+## SG6. Nothing clicked yet
+- When he says Not me to all 8: title `Nothing clicked yet`, line `Add a look you like, play again, or tell me in your words.`, then `Add a look`, the words link, Continue (off until he adds one) and Play again.
+
+## SG7. Fail-safes
+**To be filled in from the flow test (T111):** at most about 3 small ones, each kept only because it measurably helps people make it to the style they want. The flow test's table (persona × mistake, before and after) goes in its DECISIONS-LOG entry; this section names each kept fail-safe, its words and its trigger.
+
+## SG8. What's saved
+- On Continue: his looks in order (as today, `LOOKS_KEY`), his words if any (as today, `OTHER_STYLE_KEY`), and, new, the looks he said Not me to (`looks.notMe`, the look keys, kept with his style profile; wiped by "Delete all my data"; synced like his looks when sign-in exists). Not me's are saved but not used yet (Later).
+- Nothing is sent anywhere by the game itself; Kit gets his looks and words as today.
+- **Closing the app mid-game** reopens the Looks step at card 1 with a new deal. Closing on Here's your style reopens it with his looks and words as he left them.
+
+## SG9. Access, motion and haptics
+- **VoiceOver:** each drawing has a description (`Grey hoodie, washed wide jeans, chunky white sneakers`; drafts in the mockup's `DESC`, written from `looks.ts`); a card reads `Outfit 3 of 8. {description}` with Me and Not me as its buttons; results rows read `1 of 3, Classic prep. {line}` with Move up, Move down and Remove actions; moves and removals are announced.
+- **Largest text:** Me and Not me stack (Me on top); rows put the name and line under the drawing; the sheet is one column; button labels stop at 2× (`CONTROL_TEXT_MAX_SCALE`).
+- **Reduce Motion:** cards fade instead of flying; no lean on the first card.
+- **Haptics** (expo-haptics): a selection tick when a dragged card crosses the swipe line and when a dragged row passes another; a light impact when a card is answered, a ranking card tapped and a row dropped.
+
+## Rules
+- Never a person in the drawings; never rate a body. No emoji, no all-caps. Picks never move a score (F9.2).
+- The words on these screens are the design pass's recommended options (#487); the founder confirms or changes them.
+
+## Changes to other specs (on the founder's Nov 18 instruction; confirm in his review)
+- `specs/onboarding-screens.md` OS3, the Looks bullet: the title, line, tiles, `Something else?` and `Continue · {n} of 3` give way to this spec ("Looks is the style game, `specs/style-game.md`").
+- `specs.md` F1 step 2: "Play the style game (8 Me or not me cards, then a few this-or-thats), then keep, reorder or fix his top looks, or describe his style in his own words."
+- `specs.md` F1.1: "A fresh install reaches the camera in 17 taps or fewer when he says Me to 3 looks or fewer (7 until Nov 18; #488) …" (Get started · 8 cards · up to 3 this-or-thats · Continue · an age · Continue · Check my fit · Agree).
+
+## Acceptance criteria
+**SG1**
+- SG1.1 A fresh install shows `Me or not me?` after Welcome, with 8 cards in a fresh order; over 2,000 seeded deals every look is first 12.5% ± 1.5%, and no deal puts look-alikes side by side (first and last count).
+- SG1.2 Me and Not me answer by tap and by swipe past the line; Back undoes the last card and keeps the order.
+- SG1.3 The first card leans once (not under Reduce Motion); the dots show progress.
+**SG2**
+- SG2.1 With 2+ Me's the ranking shows two Me's on second drawings; with a seeded game, the sides start random and alternate; with 1 Me it's skipped; with 0, SG6.
+- SG2.2 Binary insertion places each Me with at most 2 taps after the first; a player who prefers Streetwear > Vintage sport > Outdoor > Workwear and says Me to those four ends with Streetwear, Vintage sport, Outdoor.
+**SG3–SG6**
+- SG3.1 Drag reorders and the numbers follow; × removes with Undo for 5 s; Back restores each change.
+- SG3.2 Continue is off with no looks and no words, on with either; it saves looks in order, words and Not me's, and goes to About you.
+- SG4.1 Add a look lists only looks he doesn't have; a tap adds it last and closes the sheet; hidden at 3.
+- SG5.1 His words save and turn Continue on; 80 characters max.
+- SG6.1 Not me to all 8 shows Nothing clicked yet with Continue off.
+**SG7–SG9**
+- SG7.x One criterion per kept fail-safe (from T111).
+- SG8.1 Closing mid-game reopens at card 1 with a new deal; closing on results reopens them as left; Delete all my data wipes `looks.notMe`.
+- SG9.1 VoiceOver labels and actions as SG9; light, dark and the largest text show nothing clipped (Simulator screenshots); Reduce Motion fades.
+- F1.1 (new) A fresh install reaches the camera in 17 taps or fewer with 3 Me's (a Maestro flow).
+
+## Touches
+`app/src/features/onboarding/` (a new game screen, ranking and results, replacing `PickLooksScreen.tsx`'s grid; the shuffle and ranking ported from `tasks/style-quiz/src/logic.js` as a pure, tested module), `app/src/app/onboarding/`, `resume.ts`, `basics.ts` (the Not me key), `privacy/wipe.ts` (one key), `en.ts`, the T39 tests and the Maestro setup flows (new taps), `specs/onboarding-screens.md` OS3, `specs.md` F1. Not touched: `features/you/` (Style profile keeps its tiles), scoring.
+
+## Assumptions (Claude's defaults; the founder confirms)
+- Not me's are saved but not used by Kit yet (he was asked; he went to sleep before answering).
+- The words are the design pass's recommended options.
+- Mid-game close restarts the game; results are kept.
+- The fairness redraws (Outdoor's shell and fleece, Streetwear's black sneakers) apply to the app's tiles too (T94 carries them).
+
+## Later
+- Kit using his Not me's as a soft signal, shown in Privacy → What Kit knows.
+- A "Play the style game again" row on Style profile.
+- Real outfit photos in the game, with the people's written OK.
