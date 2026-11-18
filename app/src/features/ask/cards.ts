@@ -568,48 +568,57 @@ const I_FORMS = new Set(['i', 'im', "i'm", "i'd", "i'll", "i've"]);
 const MY_CLOTHES = new Set(['style', 'look', 'outfit', 'outfits', 'fit', 'fits', 'closet', 'wardrobe', 'colors', 'color', 'clothes', 'size']);
 /** The words before "me" that keep it about clothes: "show me", "give me", "dress me", "for me", "on me". */
 const NEUTRAL_ME = new Set(['show', 'give', 'dress', 'for', 'on']);
-/** Rating him, not the clothes ("I rate outfits, never people"): a tap about him with one of these is always dropped. */
+/** Rating him, not the clothes ("I rate outfits, never people"), or others judging him ("Do people like my look?",
+ *  "Would she like my outfit?"): a tap about him with one of these is always dropped. */
 const RATES_HIM = new Set([
   'rate', 'rates', 'rating', 'rated', 'score', 'flatter', 'flatters', 'flattering', 'attractive', 'sexy', 'masculine', 'feminine',
   'jacked', 'handsome', 'cute', 'ugly', 'pretty', 'girls', 'girl', 'guys', 'women', 'woman', 'tired',
+  'people', 'she', 'he', 'someone', 'everyone', 'others',
 ]);
 /** Appearance words that are fine on a garment ("my old boots", "chunky sneakers") but not in a tap with no garment. */
-const LOOKS_OF_HIM = new Set(['hot', 'chunky', 'built', 'old', 'older', 'young', 'younger', 'age']);
-/** Face, hair and body words the body lists don't hold. With no garment in the tap, any of them drops an "I" tap. */
+const LOOKS_OF_HIM = new Set(['hot', 'chunky', 'built', 'old', 'older', 'young', 'younger', 'age', 'childish', 'boyish']);
+/** Face, hair and body words the body lists don't hold. In a tap about him, any of them drops it, even next to a garment
+ *  word ("Should I get a lip ring?"). */
 const FACE_HAIR = new Set([
-  'head', 'feet', 'foot', 'ears', 'ear', 'eyes', 'eye', 'teeth', 'smile', 'hair', 'haircut', 'beard', 'mustache', 'moustache',
-  'shave', 'acne', 'posture', 'slouch',
+  'head', 'feet', 'foot', 'ears', 'ear', 'eyes', 'eye', 'teeth', 'tooth', 'smile', 'lip', 'lips', 'tongue', 'eyebrow', 'eyebrows',
+  'nails', 'hair', 'haircut', 'beard', 'mustache', 'moustache', 'shave', 'acne', 'posture', 'slouch',
 ]);
-/** Shopping and clothes-choice verbs: with one, an "I" tap with no garment stays ("What should I buy first?"). */
-const CHOOSE = new Set(['buy', 'wear', 'get', 'pick', 'choose', 'try', 'add', 'layer', 'swap', 'pair', 'match', 'pack', 'bring', 'order', 'need', 'style', 'switch', 'tuck', 'cuff', 'size']);
+/** Things done to his body, not worn, and the garment words that are really a hairstyle or piercing there. */
+const BODY_MOD = /\b(?:tattoos?|piercings?|pierced|top knot|(?:nose|belly|navel|nipple) rings?)\b/;
 /** "go <direction>": "I'd go darker". */
-const DIRECTIONS = new Set([
-  'lighter', 'darker', 'dressier', 'casual', 'more', 'less', 'bolder', 'simpler', 'warmer', 'cooler', 'brighter', 'smarter', 'sharper',
-  'louder', 'quieter', 'neutral', 'tonal', 'monochrome', 'classic', 'minimal', 'up', 'down',
-]);
+const DIRECTIONS = [
+  'lighter', 'darker', 'dressier', 'casual', 'bolder', 'simpler', 'warmer', 'cooler', 'brighter', 'smarter', 'sharper', 'louder',
+  'quieter', 'neutral', 'tonal', 'monochrome', 'classic', 'minimal', 'formal',
+].join('|');
+/** The only "I" taps with no garment noun that stay (founder, Nov 18): clothes-shopping and choice phrasings, whole. */
+const I_ALLOWED: readonly RegExp[] = [
+  /^(?:what|which(?: one)?) (?:should|do|would) i (?:buy|wear|get|try|add|pick)(?: (?:first|next|instead|with (?:this|it|these|that)|tonight|today|tomorrow))?$/,
+  new RegExp(`^i'?d go (?:(?:a bit|a little|more|less) )*(?:${DIRECTIONS})$`),
+  /^(?:should|can) i (?:buy|get|wear) (?:it|this|that|them|these|those|one)$/,
+  /^should i size (?:up|down)$/,
+];
 
 /**
- * True when a tap that mentions him (I, I'm, I'd, me, my, mine, myself) is about him rather than his clothes. Such a tap
- * is kept only when:
- * 1. it rates him in no word (RATES_HIM, "best side"), and every "my" leads to a garment within three words ("my old
- *    boots", "my face mask") or is followed by a MY_CLOTHES word ("my style"); and then either
- * 2. it names a garment (or "my <clothes word>"), or
- * 3. it names none, has no appearance word (LOOKS_OF_HIM, a number after "look"), and every "me" is neutral ("show me"...);
- *    an "I" tap also needs a choice verb or "go <direction>" and no body, face or size word ("I'd go darker").
+ * True when a tap that mentions him (I, I'm, I'd, me, my, mine, myself) is about him rather than his clothes. Dropped
+ * when it rates him or has others judge him (RATES_HIM, "best side"), names his face, hair or a body mod (FACE_HAIR,
+ * BODY_MOD), has a "me" that isn't neutral ("is it me or", unlike "show me", "on me") or "mine"/"myself", or has a "my"
+ * with no garment within three words and no MY_CLOTHES word right after it. Otherwise kept when it names a garment (or
+ * "my <clothes word>"). With none: dropped on an appearance word (LOOKS_OF_HIM, a number after "look"); a "me" tap is
+ * kept; an "I" tap is kept only when it is one of the I_ALLOWED phrasings ("What should I buy first?", "I'd go darker").
  */
 function aboutHim(text: string): boolean {
   const t = text.toLowerCase().replace(/[‘’]/g, "'");
   const w = t.split(/[^a-z']+/).map((x) => x.replace(/^'+|'+$/g, '')).filter(Boolean);
   if (!w.some((x) => FIRST_PERSON.has(x))) return false;
-  if (w.some((x) => RATES_HIM.has(x)) || ` ${w.join(' ')} `.includes(' best side ')) return true;
+  const phrase = w.join(' ');
+  if (w.some((x) => RATES_HIM.has(x) || FACE_HAIR.has(x)) || / best side /.test(` ${phrase} `) || BODY_MOD.test(phrase)) return true;
+  if (!w.every((x, i) => (x !== 'me' || NEUTRAL_ME.has(w[i - 1] ?? '')) && x !== 'mine' && x !== 'myself')) return true;
   const ahead = (i: number) => MY_CLOTHES.has(w[i + 1] ?? '') || w.slice(i + 1, i + 4).some((x) => GARMENTS.has(x));
   if (!w.every((x, i) => x !== 'my' || ahead(i))) return true;
   if (w.some((x) => GARMENTS.has(x) || x === 'my')) return false;
   if (w.some((x) => LOOKS_OF_HIM.has(x)) || /\blook(?:s|ing)?\s+(?:like\s+)?(?:about\s+)?\d/.test(t)) return true;
-  if (!w.every((x, i) => (x !== 'me' || NEUTRAL_ME.has(w[i - 1] ?? '')) && x !== 'mine' && x !== 'myself')) return true;
   if (!w.some((x) => I_FORMS.has(x))) return false;
-  if (w.some((x) => BODY_ADJ.has(x) || BODY_PARTS.has(x) || BODY_TRAITS.has(x) || FACE_HAIR.has(x))) return true;
-  return !w.some((x, i) => CHOOSE.has(x) || (x === 'go' && DIRECTIONS.has(w[i + 1] ?? '')));
+  return !I_ALLOWED.some((re) => re.test(phrase));
 }
 
 /**
