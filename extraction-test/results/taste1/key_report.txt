@@ -1,0 +1,22 @@
+Consistent key: 19 of 19 re-rated; 164 photos in all (his raw elsewhere)
+His own noise (the 10 repeats): average move 0.40, within 0.5 8/10, within 1 10/10
+  toward the middle on a second look? his high repeats 8.50 -> 8.62, his low ones 5.50 -> 5.83
+The flagged (9): average move 0.22
+  C121: 6 -> 6   
+  ig-021: 8.5 -> 9   
+  ig-059: 9.5 -> 9.5   
+  C082: 7.5 -> 7   
+  pin-051: 5.5 -> 5.5   
+  C054: 5.5 -> 5.5   
+  ig-027: 8.5 -> 8.5   
+  C116: 7.5 -> 7   
+  rd-011: 7 -> 6.5   
+Band shares, his raw vs the consistent key:
+  3-4.5  raw   0.0%   key   0.0%   (+0.0)
+  5-5.5  raw  15.9%   key  15.2%   (-0.6)
+  6-6.5  raw  33.5%   key  34.8%   (+1.2)
+  7-7.5  raw  22.6%   key  21.3%   (-1.2)
+  8-8.5  raw  19.5%   key  18.9%   (-0.6)
+  9-9.5  raw   8.5%   key   9.8%   (+1.2)
+Range kept (every band within 3 points of raw): YES
+  raw: mean 6.92, sd 1.17, range 5-9.5;  key: mean 6.93, sd 1.18, range 5-9.5

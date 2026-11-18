@@ -1,0 +1,800 @@
+# T68 · Rescoring v16 on paper
+
+*Session rescoring-v16, Nov 14, 2026. Budget $0: stored readings and made-up readings only, no API calls. Plan: DECISIONS-LOG #464; rules: #462, #465, #466 and the founder's marks on the sheet (L1–L8 marked Yes there, L9 the stacking rule left blank, so #464's default stands). Yardstick: the creators' rulebook (PR #123, not merged).*
+
+## What gets built
+
+Engine `v16` in `extraction-test/rubrics/parts_proto.py`, beside v15 (v15 and every older engine score exactly as before). Script `extraction-test/v16_paper.py`, results in `extraction-test/results/v16/`. Nothing in `@kitted/core` or the app (that is T69, after his yes).
+
+1. **The scale:** no 5.0 floor; the score is clamped to 3.0–9.5; 10 is never given.
+2. **Faults stop averaging away:** each part's charges count at half their size on the score for the worst part and a quarter for the rest (v15 multiplied them by 15–30%).
+3. **Dealbreaker caps** from #466 (sinks 5.5, three or more brights 4.5, holds 6.5, chunky sneakers under narrow legs 6.0; two sinks make a redo at 4.5), on reliable reads only. The "depends" rows (a blazer or leather jacket with gym shorts, a blazer with plain shorts) are a Style charge that grows with a weak color or shape and shrinks with a strong one.
+4. **Lifts and stacking** (L1–L7, the creators' versions): with nothing else, the best an outfit can reach is 7.5 with no lift, 8 with one, 8.5 with two, 9 with three in one look, and 9.5 with four in one look and nothing off. L4 (tonal range) and L8 (texture) need reads the scoring call doesn't have: listed, not faked.
+5. **The season:** a temperature band input (`warm`, or `cool` for mild and cold days, the default). Layering lifts count on cool days; on warm days only a light open shirt counts, summer has its own lifts (a fitted top over loose trousers, a light tonal outfit) and a heavy layer costs. Every photo is scored for both.
+6. **Nuance (rulebook §5):** two brights are charged only with no dark or neutral piece beside them, a loud print or a third color, and a strong shape halves the charge; a blazer with loose or washed jeans is no longer charged (suit.9, "cool professor").
+7. **A curve:** a fixed, monotone two-slope map from the raw score to the shown score, anchored so plain basics stay 7, fitted once on the gold set to the target shares, then checked on his saved checks.
+
+## The bars (written Nov 14 before the first v16 run; never loosened)
+
+| # | Bar | Pass when |
+|---|---|---|
+| B1 | His blind ratings | v16 within 1 point of his score on at least 8 in 10 photos, and r with him at least 0.69 (the panel's r with him), or a plain reason why not. Today: his 20. When his 60 (Y32) arrive as `~/Downloads/ratings.csv`, the same bar on all 80; until then this bar is only partly checked. |
+| B2 | The creators' pairs | All 6 stored before/after pairs (`results/creators1`, median of the 3 readings): the after scores higher than the before. |
+| B3 | The creators' anchors with stored readings | Each lands on the right side of the creator's step (median of its readings): step 5.5 or lower → v16 6.0 or lower; step 6–7.5 → v16 6.0–8.0; step 8 or higher → v16 7.5 or higher. Every one passes. |
+| B4 | The dealbreaker examples | Each sheet row with a reliable read, on a made-up clean example (Everyday, no picks, as `rules_conformance.py`), lands exactly at its cap; the "depends" rows land between 5.5 and 7.0, and lower with a weak color than with a strong one. Rows that can't fire are listed, with the read they need. |
+| B5 | Band shares | On the gold set (all photos, first reading, cool day) and on his 62 saved checks (his profile, their own occasion, cool day), every band within 5 points of its target: 3–4.5 5%, 5–5.5 15%, 6–6.5 30%, 7–7.5 30%, 8–8.5 15%, 9–9.5 5%. |
+| B6 | Steadiness | At least 218 of 223 gold photos within 0.5 between their two stored readings (cool day). If the set holds a different count, the same share: at most 5 photos off. |
+| B7 | v15 untouched | `rules_conformance.py` and `hoodie_layer_paper.py` still pass, and v15 scores every gold photo exactly as before. |
+
+The curve (point 7) is fitted on the gold set, so B5 on gold is partly by construction; his saved checks are the honest test of it.
+
+## Results (Nov 14; `extraction-test/results/v16/report.txt`, $0, no API calls)
+
+Run: `KITTED_DATA=/Users/eyu/Desktop/files/Kitted /usr/bin/python3 extraction-test/v16_paper.py` (exits 1: bars fail).
+
+| # | Bar | Result |
+|---|---|---|
+| B1 | His blind ratings | **FAIL.** His 20: within 1 point 15/20 (v15 17/20), r 0.33 (v15 0.46; the panel 0.69). Y32's 60 aren't in yet, so this is 20 of 80. |
+| B2 | Creators' pairs | **PASS**, 6/6 (v15: 5/6 and a tie). |
+| B3 | Anchors | **FAIL**, 13/18 (v15 passes 10/18 on the same bar). |
+| B4 | Dealbreaker examples | **PASS**, every capped row at its cap, every spared case uncapped, the three "depends" rows 5.5–7.0 and lower with a loud print. |
+| B5 | Band shares | **FAIL** on both. Gold: worst band 17.7 points off (v15 29.6). His 62 checks: 26.5 off (v15 32.9). |
+| B6 | Steadiness | **PASS**, 218/223 (cool), 219/223 (warm); v15 218/223. |
+| B7 | v15 untouched | **PASS**: `rules_conformance.py` 501/501, `hoodie_layer_paper.py` all pass, and v15, v14, v8, v1 give identical full results to the pre-T68 engine on all 2,048 gold and saved-check scorings. |
+
+**Band shares** (first reading, cool day):
+
+| | 3–4.5 | 5–5.5 | 6–6.5 | 7–7.5 | 8–8.5 | 9–9.5 |
+|---|---|---|---|---|---|---|
+| Target | 5% | 15% | 30% | 30% | 15% | 5% |
+| Gold, v15 | 0.4 | 4.9 | 16.1 | 59.6 | 18.8 | 0 |
+| Gold, v16 | 0 | 6.7 | 15.2 | 45.3 | 32.7 | 0 |
+| Gold, v16 warm | 0 | 7.6 | 13.9 | 57.0 | 21.5 | 0 |
+| His checks, v15 | 0 | 6.5 | 21.0 | 62.9 | 9.7 | 0 |
+| His checks, v16 | 0 | 8.1 | 24.2 | 56.5 | 11.3 | 0 |
+| The AI panel on gold | 1.8 | 10.2 | 21.8 | 38.2 | 27.6 | 0.4 |
+
+### Why the bars that fail fail
+
+- **B5, the shares.** 46% of the gold set (a curated set) has nothing the reader can fault or strongly credit, so it lands at 7–7.5 under any curve that keeps "nothing off, nothing chosen" at 7. The panel itself puts only 34% of gold at 6.5 or under. Reaching 30% at 6–6.5 needs either faults the reader can't see yet (fabric, light vs dark, top length, the hem) or plain basics shown at 6.5. The curve that hits the gold shares (anchor at 7.78) puts a plain tee and jeans at 6.5, which contradicts his own #462 example (a hoodie with straight jeans "7.0"), breaks 3 dealbreaker examples and 6 anchors, and still misses his checks by 14 points. Fitted only to the shares with the anchor at 7, the curve (1.5, 0.7) closes gold to 16.2 points but drops steadiness to 211/223. So the curve in the engine, (1.0, 0.8), is the closest to the shares that keeps B6. His saved checks are mostly plain basics at home in slides, so they stay bunched at 7.
+- **B1, his ratings.** The rules see the clothes, not what he sees: a pink graphic tee with jorts (he gave 5), a blue camp shirt with dark jeans and loafers (5.5) read as fine with an accent. He rated both slides outfits 7, while v16 charges slides out of the house at full strength. And a blue sweatshirt over a tee with wide cargos and derbies (he gave 8) earns no lift, because the reader files the sweatshirt as a second top, not a layer. With 20 photos r is very noisy (roughly ±0.4); his 60 more will say more.
+- **B3, the anchors that fail:** a04 skinny joggers (Tim's "abomination", step 4) stays at 6.5 because his H4 mark holds it at 6.5; a02 knit on knit (step 5) lands 6.5; a03 tight beige (step 5) 6.5, since "pulling at the thighs" isn't read; a26 Wanhee's red bomber (step 7.5) 8.5, two lifts; a59 Jaye's all-black (step 9) 7.0, since the reader sees a plain black suit with dress shoes, not flares and boots.
+
+### What else the run showed
+- **Lifts line up with the AI panel:** no lift 6.5 on average, one 7.1, two 7.6, three 7.9. One accent on a calm base (L5) is the exception: the panel rates those photos at the average (7.04).
+- **Faults are rare but strong:** a loud print averages 5.5 with the panel, too many statements 5.8, running shoes 5.9.
+- **Unsteady reads:** sleeves past the hands flip between readings on 67–71% of the photos where they fire, and the main read's pooling hem on 50%. In v16 they move no points (and H9 isn't a cap).
+- **The season** (cool to warm): gold 12 up, 47 down; his checks 1 up, 8 down. Warm days lose the layer lifts (33 photos) and charge a heavy layer (16); they gain the light tonal lift (6) and summer's shape (4), and drop the light-on-light and tank-alone charges (7).
+- **Nothing real reaches 9.** 9 needs three lifts in one look, and with the lifts compressed by the curve the best stored reading is 8.5; the panel puts 1 of 225 at 9+.
+- **Can't fire for lack of a read:** S3 and H2 (top length, #465), H7 without the shoe close-up (all of gold), L4 tonal range, L8 texture, bare ankles in winter, summer fabric.
+
+### Proposed rubric change
+`tasks/T68/v5-styles-v16.diff` (not applied): [SCO-2], [SCO-3] and [SCO-7] rewritten, [SCO-8]–[SCO-10] new, the dealbreakers and lifts sections, [COL-2]'s nuance, [STY-3] removed, [STY-9] and [COL-12] off on warm days, [STY-13] knit on knit.
+
+## Round 2: fresh second looks on the gold set (founder's OK for a small spend, cap $2.00, Nov 14)
+
+The gold set's stored readings (Oct 12) carry no second looks, so v16's pooling cap (look L, "covers the shoe mostly") and the peek rule (look U) can't fire on gold. This round runs the app's two second looks on the gold set, nothing else: the same prompts and schemas the app ships (`app/assets/gemini/prompt-look-u.json`, `prompt-look-l.json`, identical to `extraction-test/prompt_look_*.txt`), gemini-3.8-flash, thinking off, temperature 0, on the face-hidden close-ups the gold set's reading used (upper for U, lower for L; the body crop where there's no split). The main readings stay the stored ones, so the before/after compares like with like.
+
+**Estimate, written before any paid call.** From the 450 stored look1 calls' token counts, billing thinking tokens at the output price ($0.75 in, $3.75 out per million; #465): look U about 1,427 in + 50 out + 171 thinking = **0.19¢**, look L about 1,374 in + 17 out + 241 thinking = **0.20¢**; **0.39¢ a photo**. Gold set: 225 photos × 2 runs (one per stored reading, so steadiness compares two independent looks) = 900 calls ≈ **$1.76**, plus a 2-photo pilot ≈ 1¢. The script counts thinking tokens and stops before $1.85 in total, under the $2.00 cap. No other calls this round.
+
+**Status:** run Nov 15, after the founder's own OK in this session. **Spent: $1.8424 in all** (thinking tokens counted), under the $1.85 stop and the $2.00 cap: a 4-call pilot $0.0185, the full run $1.6245 (100 calls lost to network errors, no answer and no charge), the 100 retried $0.1994. All 900 looks answered (225 photos × 2 runs × U and L); 223 photos have stored readings to pair with. Thinking ran 207 tokens a call on average (the estimate's 206), with one call at 2,666. Answers: `extraction-test/results/gold-looks1/raw.json`.
+
+### Round 2 results (`results/v16/report.txt`, section "Round 2"; the bars above stay on the stored readings)
+
+| | Stored readings | With the fresh looks |
+|---|---|---|
+| Gold shares, worst band gap | 17.7 | **15.7** (5–5.5 rises 6.7 → 10.3%) |
+| r with the AI panel | 0.569 | 0.538 |
+| B1, his 20: within 1 point, r | 15/20, 0.33 | **16/20, 0.45** |
+| B6, steadiness (each reading with its own looks) | 218/223 PASS | **212/223, would FAIL** |
+
+- **19 photos move, all down.** Two rules start firing: the pooling cap H7 (8 photos to 5.5) and the peek (a top clearly showing below the outer piece, 19 photos), which in v16 also cancels the layer lift L2.
+- **The panel disagrees with both at their current size.** On the 8 H7 photos the panel averages 6.69, and only 1 is 5.5 or under. On the 19 peek photos it averages 7.32, above the gold average of 7.06. Most peeks are a white tee under an open bomber, denim or leather jacket.
+- **H7 still helps with him.** It catches outfits he marked down: the blue camp shirt with loafers he gave 5.5 now lands 5.5. That is where B1's gain comes from.
+- **Why steadiness drops.** Look L's "mostly covers the shoe" (H7's trigger) differs between the two runs on 19 of the 82 photos where either run says it, about 23%. A 5.5 sink on an answer that flips swings the score 1.5 to 2 points. The peek flips on 6 photos, and losing L2 swings the score 1.25.
+- **Narrower versions, for his call** (paper only, $0):
+
+| Version | Steady | Gold gap | r panel | His 20 |
+|---|---|---|---|---|
+| As built (his #466 marks) | 212 | 15.7 | 0.538 | 16/20, r 0.45 |
+| H7 only when the hem reads "pooling" | 216 | 18.0 | 0.548 | 15/20, r 0.33 |
+| No peek under a jacket or coat | 213 | 16.4 | 0.549 | 16/20, r 0.45 |
+| Both | 217 | 16.4 | 0.559 | 15/20, r 0.33 |
+| H7 a 6.5 hold, not a 5.5 sink | 215 | 15.7 | 0.557 | 16/20, r 0.40 |
+| **H7 a 6.5 hold + no peek under a jacket** | **216** | 16.4 | **0.568** | 16/20, r 0.40 |
+
+  - Recommendation: the last row, the best balance. It keeps most of the gain with him, matches the panel best, and comes 2 photos short of the steadiness bar (the bar is not loosened).
+  - It reverses two of his marks, so it is his call (Y34): H7 as a 5.5 sink (#466), and the "clearly hangs below costs 0.5" peek (#367, which was about a zipped fleece, not an open jacket).
+  - The engine keeps his marks (`v16_h7_cap=5.5`, a knob for the test only).
+
+## His 150 blind ratings (Nov 16; `results/v16/report.txt`, "B1 on the full set" and "The Y34 taste calls"; $0)
+
+He rated all 150 photos on the combined sheet (`inputs/gold-judge/founder4/`). The key was opened only after he finished. In his words, the ratings are taste and "may fluctuate", so they are used for direction (order, r, the big gaps), never to tune single photos, and the bar is not loosened. His spread across the bands (3–4.5 / 5–5.5 / 6–6.5 / 7–7.5 / 8–8.5 / 9–9.5) is 0 / 15 / 35 / 20 / 21 / 9%, with a mean of 6.95.
+
+**Which photos can be checked:** 54 of the 150 are gold photos with stored readings (sheet 1). With his first 20, that makes 74. Sheet 2 (76) and the 20 new photos have no reading yet.
+
+**B1 on all 74: FAIL** (bar: within 1 point on 8 in 10, and r 0.69 or more).
+
+| | His first 20 | Sheet 1's 54 | All 74 |
+|---|---|---|---|
+| v15 | 17/20, r 0.46 | 41/54, r 0.62 | 58/74 (78%), r 0.60 |
+| **v16** (stored readings) | 15/20, r 0.33 | 42/54, r 0.64 | **57/74 (77%), r 0.61** |
+| v16 with the looks (his marks) | 16/20, r 0.45 | 41/54, r 0.58 | 57/74, r 0.58 |
+| v16 with the looks, H7 a hold + peek under a jacket free | 16/20, r 0.40 | 41/54, r 0.62 | 57/74, r 0.60 |
+| The AI panel | 16/20, r 0.69 | 47/54, r 0.81 | 63/74 (85%), r 0.80 |
+
+- **v16 is as close to him as v15 overall, and closer on the new 54.** Both fall short of the bar: 3 photos short of 8 in 10, and r 0.61 against 0.69.
+- **The AI panel reads his taste better than the rules do** (r 0.80). The gap is what the rules can't see. His notes name it: "tights for jeans", "shirt way too long", "pants too tight and high on the ankle", "shirt too bulky", "shorts are not it". Top length, tightness and bulk are exactly the reads the scoring call doesn't have (#465).
+- **The looks don't help on the bigger set** (r 0.58). The first-20 gain came mostly from one photo, the camp shirt with loafers.
+
+**The five Y34 calls against his ratings** (74 photos; small groups, so direction only):
+
+1. **Plain basics 7 or 6.5:** on the 9 photos where v16 sees nothing off and nothing chosen, he averages **7.39**, with 5 at 7 or more. *Keep 7* (unchanged).
+2. **Slides out of the house:** his 4 with readings average **6.12**, and v16 gives 5.88. The 2 slides outfits on sheet 2 (by description) both got 6. *Keep the charge*: his two 7s in the first 20 were the exception (changed: this was open).
+3. **One accent (L5) as a lift:** his 8 photos where L5 is the only lift average **6.12**, *lower* than his photos with no lift (6.60); v16 gives them 6.88 and the panel 6.31. *Drop L5 as a lift* (changed: the data now says no).
+4. **Pants pile on the shoe:** his 3 average **6.83**, and v16 with the looks puts them at 5.5. *A 6.5 hold, not a 5.5 sink* (unchanged; 3 photos is thin).
+5. **A top clearly showing below the outer piece:** his 5 average **7.50**, above his mean of 7.20, so it isn't a fault to him on these. But his C013 note, "the inner layer sitting higher would have given it a better rating", says a long inner layer can cost. *Keep his Oct 21 rule's 0.5, but don't let the peek also cancel the layer lift.* That double hit is what swings scores and breaks steadiness (changed: was "free under a jacket"; the one jacket case has n = 1).
+
+**The 96 photos with no reading, for his OK (not run; the earlier $2 is spent).** The estimate counts thinking tokens:
+- **The scoring call:** 4,030 in, 788 out and about 300 thinking (#465) = **0.71¢**.
+- **The two looks:** **0.41¢**, measured Nov 15 ($1.8424 over 450 photo-runs).
+- **One run:** 96 × 1.12¢ ≈ **$1.08**; stop at $1.25.
+- **Two runs:** ≈ $2.15; this only adds steadiness, which 223 gold photos already measure.
+- **Recommendation: one run.** B1 uses the first reading.
+- **Prep comes first:** face-hidden copies and close-ups made on the Mac with the app's own prep, $0. Photos the prep refuses are not read.
+
+**The read of the unread rated photos (Nov 16; script `extraction-test/rated_read.py`).** The app's own prep ran on his sheet's face-hidden copies, since the originals were deleted after face hiding: 90 of the 96 are ready, about $1.01 for one run (stop at $1.25). **Six are left out of the read and of B1: C001, C013, C032, C064, C071, C140.** Each head is already covered by a big mosaic block (likely from when the rating sheet was built), so the app finds no head and sends nothing. That is the privacy rule working as intended, not a print on the clothes fooling it; the face-hiding session checked each by eye and with main's prep. B1's full set is therefore at most 144 of his 150 (74 checked so far). **Status:** not run, $0 spent. The paid call was blocked by this session's permission check (the OK reached this session through the coordinating session); it waits on the founder's OK typed here.
+
+**Done (Nov 16): the read ran in the coordinating session after the founder's OK there ("you have my okay").** **Spent: $0.9013** (thinking tokens counted), under the $1.25 stop: a 2-photo pilot of 2.06¢, then the rest. All 270 calls answered (90 photos × the scoring call + two looks), 0 errors. Answers: `extraction-test/results/rated1/raw.json`. Thinking averaged 5 tokens on the scoring call and 253–272 on the looks.
+
+## B1 and the Y34 calls on everything he rated (Nov 16; `results/v16/report.txt`; $0 beyond the read)
+
+Ratings checked: 144 of the 150 with a reading (the six with covered heads left out), plus his first 20, **164 in all**. Gold photos use their stored Oct 12 readings; sheet 2 and the new photos use the Nov 16 reading. Each photo is read once, on a cool day, at Everyday, with the test profile.
+
+**B1: FAIL.**
+
+| Group | v15 | **v16** | v16 + the looks | The AI panel |
+|---|---|---|---|---|
+| His first 20 | 17/20, r 0.46 | 15/20, r 0.33 | 16/20, r 0.45 | 16/20, r 0.69 |
+| Sheet 1 (gold, 54) | 41/54, r 0.62 | 42/54, r 0.64 | 41/54, r 0.58 | 47/54, r 0.81 |
+| Sheet 2 (71) | 53/71, r 0.46 | 50/71, r 0.31 | 50/71, r 0.21 | n/a |
+| The new 20 (19 read) | 13/19, r 0.21 | 13/19, r 0.23 | 13/19, r 0.23 | n/a |
+| **All 164** | 124/164 (76%), r 0.51 | **120/164 (73%), r 0.48** | 120/164, r 0.42 | 63/74, r 0.80 |
+
+- **On the full set, v16 is slightly further from him than v15** (73% vs 76% within a point, r 0.48 vs 0.51). It is ahead only on the gold photos.
+- **v16 runs high on the photos read Nov 16.** On the new 20 it averages 7.45 against his 6.58.
+- **Adding the second looks makes it worse** (r 0.42).
+- **The AI panel is still the closest to him** (r 0.80 on the 74 it judged).
+- His notes point at what neither engine reads: tight legs, long or bulky tops, shorts. That missing information is the gap, not the curve or the caps.
+
+**The five Y34 calls, on all 164** (his mean 6.92):
+
+1. **Plain basics:** 27 photos where v16 sees nothing off and nothing chosen. He averages **7.46**, with 19 of 27 at 7 or more. *Keep 7* (holds; if anything he rates these a bit higher).
+2. **Slides out of the house:** 8 photos. He averages **6.38**, and v16 gives 5.94. *Keep a charge, about half a point smaller* (changed: v16 is a little harsher than him).
+3. **One accent (L5) as the only lift:** 18 photos. He averages **6.11**, *below* his no-lift photos (6.77); v16 gives them 7.00. *Drop L5 as a lift* (holds, more strongly).
+   - A single lift of any other kind (6.79) also scores no higher with him than no lift.
+   - Only two or more lifts track him (7.68).
+4. **Pants pile on the shoe:** H7 fires on 5 photos. He averages **7.40**, and v16 caps them at 5.5. On all 26 photos where the look says the hem mostly covers the shoe, he averages **7.96**. *Make H7 a tip with no points until a steadier read exists* (changed: was "a 6.5 hold"; his ratings don't support any cost).
+5. **A top below the outer piece:**
+   - **Clearly:** 8 photos, he averages **7.31**, above his mean.
+   - **Under a jacket:** 4 photos, 6.88.
+   - **Showing a little** (free today): 16 photos, 7.66.
+   - *Make the peek a tip, no points, and never cancel the layering lift* (changed: was "keep your 0.5"). His C013 note ("the inner layer sitting higher would have given it a better rating") was on a photo the prep couldn't read, so it is a single word against 8 photos.
+
+All five stay his calls; the engine keeps his marks until he answers.
+
+## Round 3: his taste patterns and his own consistency (Nov 16, $0; `extraction-test/taste_patterns.py`, `results/taste1/patterns.txt`)
+
+The founder (Nov 16): "Fix my scores... Detect patterns and refactor my scores. Let them stay consistent with my taste... Add those new rules to the [rater], and then we can run the test again."
+
+The data: 164 rated photos with a reading, his 13 notes, and the reading's facts (pieces, fits, colors, shoes, the second looks). For each pattern: how many photos, his average with and without it, and a confidence (Welch's t: high is |t| ≥ 3 with 10+ photos, medium is |t| ≥ 2 with 5+). Many patterns travel together (wide legs come with trousers, longer hems and dressier shoes), so each was also checked **within one leg shape**. Only what survives that is listed as his.
+
+**What drives his scores, strongest first:**
+
+1. **How wide the legs are, by far the biggest thing.**
+   - Average by leg: slim or skinny 6.00 (40 photos), straight 6.69 (54), wide or relaxed 7.63 (64). That is a 1.6-point spread. *High confidence.*
+   - Today's rules miss half of it: v16 under-scores wide legs and over-scores straight ones by about 0.3–0.7.
+   - Skinny alone: 5.41 (11).
+2. **Pants that pull** (the reading's "strain" on the pants): 5.62 (17) vs 7.07.
+   - Even among slim legs, pulling costs more: 5.62 vs 6.28.
+   - His notes say it in words: "tights for jeans", "too tight and high on the ankle". *High.*
+3. **A long hem that covers the shoe is a plus to him, not a fault.**
+   - Wide legs: 8.10 with the hem over the shoe (21) vs 7.41 without. Straight legs: 7.62 (4) vs 6.61.
+   - This is the opposite of the pooling cap (H7). *High.*
+4. **Dressy shoes** (loafers, derbies, dress shoes): higher at every leg shape (+0.5 to +0.9). Today's rules already give most of it. *High.*
+5. **Trousers over jeans:** +0.4 to +0.7 at every leg shape. *Medium.*
+6. **Two or more lifts**: 7.68 vs 6.69. *High.*
+   - **A single lift isn't worth anything to him.** One lift scores *lower* than none on straight and wide legs.
+   - By lift, measured against his average for that leg shape:
+
+   | Lift | Photos | Against his leg average |
+   |---|---|---|
+   | One look top to toe (L7) | 16 | +0.75 |
+   | A deliberate shape (L1) | 40 | +0.49 |
+   | A short layer over a full leg (L2) | 17 | +0.27 |
+   | A color picked up (L6) | 10 | +0.11 |
+   | One smart piece with casual ones (L7b) | 27 | +0.04 |
+   | One accent (L5) | 33 | −0.18 |
+   | **An open layer over a tee (L3)** | 8 | **−0.76** |
+
+7. **Neutral palettes:** all neutrals (and denim) score +0.5 to +0.8 over outfits with a color, on straight and wide legs. A second color isn't common enough to measure. His C006 note: "maybe a bit too many colors". *Medium.*
+8. **A long top** (the reading says below the crotch): 6.00 (8) vs 6.96; on wide legs 6.50 (3) vs 7.69. His C042 note: "shirt way too long". *Medium; the read is unproven (#465).*
+9. **Layering is not a plus to him:** with wide legs, layered 7.26 (19) vs 7.79 (45). v16 over-credits it by about 0.6. *Medium.*
+10. **Shorts cost a little:** with wide legs, 7.30 (20) vs 7.78. Twice in his notes: "shorts are not it". *Low to medium.*
+11. **Low clean sneakers:** 6.48 (21) vs 6.98, but within each leg shape there is no difference. *Not a pattern of its own; the leg shape explains it.*
+12. **Big, roomy tops are fine on wide legs** (8.07, 7 photos). "Too bulky" in his notes is about a specific boxy shirt or hoodie, not volume in general. *Low; not a rule.*
+13. **Not about the outfit:** mirror selfies score +0.4 to +0.7 at every leg shape. That is a bias in how he rates photos, so no rule. Streetwear-plus-minimal shows up only in one note (C032, which the prep refused), so there's too little to test.
+
+**What this means for the rules (proposed; built only after he confirms):**
+- leg width as a main driver (wide up, slim down, skinny and pulling further down);
+- no cost for a long hem over the shoe; H7 becomes a tip;
+- lifts reweighted: L7, L1 and L2 count; L5 and L7b don't; L3 doesn't count;
+- a single lift adds little, two or more add the real step;
+- layering on its own no longer lifts;
+- a small charge for shorts and for a second color;
+- a long top costs, waiting on a steady read;
+- tightness from "strain" (a read to verify).
+
+### His own consistency: the re-rate sheet
+
+- **Near-identical outfits he scored 1.5+ apart: 4 pairs, 6 photos.**
+  - A white oxford, straight light jeans and brown chukkas at 8.5 vs a light-blue oxford, straight dark jeans and brown chukkas at 6.
+  - A black suit, white shirt and black shoes at 9.5 vs three near-identical black suits at 7, 7.5 and 7.5.
+- **Scores 2+ points from his 6 most similar outfits: 4 photos**, including a graphic tee, relaxed shorts and loafers at 8.5 (his similar outfits average 6.2), and a tee, slim chinos and dress shoes at 5.5 (similar: 7.5).
+- **The sheet** (`inputs/gold-judge/founder5/`, built by `extraction-test/rerate_sheet.py`, seed 20261116) has **19 photos**:
+  - the 9 flagged;
+  - 10 unflagged repeats, 2 from each score band, to measure his own noise.
+  - Shuffled so no two from one flag sit side by side. He isn't told which is which.
+  - Same server as founder4: every tap saves to `founder5/ratings.csv`, port 8766. Tested: a rating saved to disk, a wrong id refused, the key not served; the test rating was deleted.
+- **The consistent key** = his re-rated score where he re-rated, his original elsewhere. His earlier `ratings.csv` files are never written, and nothing is smoothed toward any engine.
+
+**Next, once he has rated and confirmed the patterns:** the new rules in v16, fitted on a random half of the photos and tested on the other half (the held-out half is the honest number). Then every bar re-run on the raw ratings and on the consistent key, with v15 alongside. Rules that need a read the AI doesn't give yet (tight legs, top length, bulk) go in as waiting on a read.
+
+**His clarification (Nov 16):** "When I say "fix my scores," by the way, the low ones should still stay low, and the high ones should still stay high. I just want consistency."
+
+How the pass keeps that:
+- **Flags come from disagreement, never extremeness.** A pair is flagged because two near-identical outfits disagree, and a single photo because it sits 2+ points from his own most similar outfits. The 9 flagged span his range (5.5, 5.5, 6, 7, 7.5, 7.5, 8.5, 8.5, 9.5), high and low alike.
+- **A flag only puts a photo on the sheet.** His blind re-rate decides the score; nothing is averaged or pulled toward the middle.
+- **The check** (`extraction-test/consistent_key.py`, results `results/taste1/key_report.txt`): the key's band shares sit beside his raw ones. Every band must stay within 3 points, or the key isn't used until he has seen it. Today his raw shares (164 photos) are 0 / 15.9 / 33.5 / 22.6 / 19.5 / 8.5%, range 5–9.5.
+- **His 10 repeats measure his own drift on a second look.** That includes whether high and low scores drift toward the middle, so a move inside his noise isn't called a fix.
+
+### The taste rules, wired and switched off (Nov 16, $0; a dry run, not his confirmed rules)
+
+**Built so the re-run is ready the moment he confirms:**
+- **The engine:** `_v16_taste` in `extraction-test/rubrics/parts_proto.py`, switched on by `tune={"taste": {...}}`. Off by default, so v16 and every older engine score exactly as before: `results/v16/` is unchanged and conformance passes 501/501. The rules:
+  - leg width, graded (skinny, slim, wide);
+  - shorts, with roomy shorts (volume 4–5) winning some back;
+  - each color beyond neutrals, up to two;
+  - a hem over the shoe as a plus (look L);
+  - the long top, from the Mac's body ruler (T98, PR #126, read from its branch until it merges) and else the reading; half a point at most, never a cap;
+  - lifts L3, L5 and L7b off;
+  - a single lift at a fraction;
+  - the pooling cap as a tip.
+  - A dealbreaker cap owns the taste charges, as it owns its part charges, so a capped outfit lands at its cap.
+- **The harness:** `extraction-test/taste_rules.py` (`--key consistent` once his re-rate is in; `--seed` for other splits). It fits the sizes on a random half of the 164 (seed 20261116), tests on the other half, and drops each rule in turn on the held-out half. The sizes and the split go to `results/taste1/fitted_taste_raw.json`.
+- **Every bar with the rules on:** `v16_paper.py --taste results/taste1/fitted_taste_raw.json`, which writes `results/v16-taste/`.
+
+**Dry run on his raw ratings.** Fitted: wide legs +0.5, a single lift at half, a hem over the shoe +0.5, roomy shorts +0.5, colors −0.5 each. Skinny, slim and shorts came out 0, since v16's existing charges and caps already carry them.
+
+| | Within 1 point | r |
+|---|---|---|
+| Held-out half, the main split | 69/82 (84%) | 0.665 (v16 with the looks 79%, 0.585; v15 80%, 0.569) |
+| Held-out half, 8 other splits | **78% on average** (73–85%) | **0.62** (0.57–0.68) |
+| Same halves, v15 | about 76% | 0.53 |
+| Same halves, v16 | about 73% | 0.45 |
+
+- **The honest number is the 8-split average.** It beats both engines but stays short of the bar (80%, r 0.69). The main split's 84% is on the lucky end.
+- **I changed the engine after seeing the main held-out half.** The cap now owns the taste charges, a fix driven by the dealbreaker bar, but it moved the held-out number from 78% to 84%. That's why the 8 other splits are the number to trust.
+
+**Every bar with the dry-run rules** (`results/v16-taste/report.txt`):
+
+| Bar | With the dry-run rules | v16 without them |
+|---|---|---|
+| B1, all 164 | 136/164 (83%), r 0.62: FAIL on r. Half the photos tuned it, so this is not the honest number | 120/164 (73%), r 0.48 |
+| B2, the creators' pairs | 6/6 | 6/6 |
+| B3, the anchors | 12/18 | 13/18 |
+| B4, the dealbreaker examples | 2 miss | all pass |
+| B5, band shares, worst gap | gold 21.1, his checks 28.1 | gold 17.7, his checks 26.5 |
+| B6, steadiness | 219/223 | 218/223 |
+
+- **The two B4 misses:**
+  - H7, by design: the pooling cap becomes a tip, which is his call. If he says yes, the H7 example row goes with his own rule change, not because a bar was loosened.
+  - S5 (a blazer with gym shorts), where the color charge drops the quiet-accent case to 5.5.
+
+**Waiting on:** his re-rate (Y38) and his yes on the patterns. Then the fit runs again on the raw ratings and on the consistent key, and every bar re-runs with v15 alongside. The shorts-length look (T98's 56¢ round) is not in.
+
+**Update from the reading test's paid round** (T98, PR #126, commit 449b8e7a, $0.4137 spent there; $0 here):
+- **Shorts above the knee: a new charge, `shorts_above`.** It reads the October narrow look's `shorts_end` on the lower close-up, which got 43/48 right and 23/24 steady, with every above-the-knee answer right. It's a charge, never a cap, since its misses sit at knee length. His 24 shorts photos carry the answer.
+  - **Needs a new second look:** the app's `secondLook.ts` has no shorts question yet (about 0.16¢ a check, only when the reading names shorts).
+- **The long top reads the reading's `below_crotch` by default** (`long_top_read: "reading"`), since that's what the phone has. It catches about half and is rarely wrong. The body ruler stays an option (`"ruler"`) until it's on the phone. The AI's long-top question failed a third time.
+- **Unchanged:** leg width stays a graded charge, not a cap; roomy shorts (volume 4–5) keep their rule; bulk gets no rule.
+
+**Dry run again, raw ratings:**
+- **Fitted:** wide legs +0.5, a single lift at half, a hem over the shoe +0.5, roomy shorts +0.5, shorts above the knee −0.75, colors −0.5 each. Skinny, slim and plain shorts came out 0.
+- **Held-out half, 8 fresh splits:** **80.5% within a point** on average (78–84%), **r 0.62** (0.59–0.68); before the shorts look, 78% and 0.62. Within-a-point now just meets its bar; r is still short of 0.69.
+- **Every bar with these sizes** (`results/v16-taste/`): B2 6/6, B3 12/18, B4 misses H7 (by design) and S5, B5 gold 21.1 and his checks 28.1, B6 219/223, B1 on all 164 136/164 with r 0.62 (half of it tuned).
+- v16 with the switch off is still identical, and conformance passes 501/501.
+
+**Correction (Nov 16), found by the rules-by-style session (PR #127).** `taste_patterns.py` used look names the detector doesn't produce: `minimal` and `prep` instead of `minimalist` and `classic_prep`, and `tailored`, which isn't built yet. So "reads minimal" and the prep half of "smart casual or tailored" never fired. Every look now gets its own row, named from `rubric.STYLE_ORDER`. What changes:
+- **Minimal is a real plus to him, partly:** 26 photos, 7.77 vs 6.76 overall (high confidence), and v16 under-scores it. Within leg shape: +1.0 on straight legs (8 photos), +0.2 on wide (14). Most of his minimal outfits are wide and neutral (23 of 26 all neutrals), so some of the +1.0 overall is the legs and colors. *Medium.* Add to the patterns: **a minimal look is a plus, mostly on straight legs.**
+- **Classic prep makes no difference to him** (20 photos, 6.92 both ways), but v16 over-scores it by about 0.7. *Low.*
+- **"No look at all"** (78 photos, −0.45 overall) is a passenger of leg shape: within each leg it's −0.1 to −0.2. Not a pattern.
+- **Streetwear with minimal** fires on 1 photo. Too few to test; his C032 note stays the only evidence.
+- **Nothing else moved.** The flags and the re-rate sheet are unchanged, and the taste rules don't use look names, so the dry run is unchanged.
+- **The same kind of bug in the shoe names**, found by listing the patterns with too few photos.
+  - **What was wrong:** slides are `slides_sandals` in the reading (the rows used slide/sandal), `white_leather_sneaker` (12 photos) was missing from the low clean sneakers, `retro_runner` (13) had no row, and `drawstring_trousers` (7) wasn't counted with trousers. Now every group uses the reading's own names.
+  - **Slides** now fire: 8 photos, his 6.38 vs 6.95. v16 charges them a little harder than he does, which matches the slides call (keep a charge, about half a point smaller).
+  - **Trousers or chinos:** +0.59, 71 photos, now *high* confidence.
+  - **Low clean sneakers:** 33 photos, −0.45; still a passenger of leg shape.
+  - **Chunky or running shoes under slim legs:** 5 photos, 5.70 vs 6.96, *medium*.
+  - **Retro runners:** no difference.
+  - The flags, the sheet and the taste rules are unchanged. The taste rules use the engine's own checks, not these rows.
+
+## Round 3 results: his re-rate, the consistent key, and every bar (Nov 16, $0)
+
+He re-rated all 19 blind (`inputs/gold-judge/founder5/ratings.csv`; his export matches).
+
+**How consistent he is** (`results/taste1/key_report.txt`):
+- **Very consistent.** The 10 unflagged repeats moved 0.40 points on average: 8 of 10 within half a point, all 10 within a point.
+- **No pull toward the middle at the top:** his high repeats went 8.50 → 8.62. His low ones went 5.50 → 5.83 (two photos up half a point each), which is inside his noise.
+- **The 9 flagged photos moved even less (0.22).** He kept his own distinctions:
+  - the white oxford and light jeans stayed 8.5 while the light-blue oxford and dark jeans stayed 6;
+  - the 9.5 black suit stayed 9.5 while its three near-identical suits each went *down* half a point (7.5 → 7, 7.5 → 7, 7 → 6.5);
+  - the graphic tee, shorts and loafers rose to 9;
+  - both 5.5s stayed 5.5.
+- **So the "inconsistent" pairs weren't noise.** They are differences he sees and the reading doesn't (colors, fit, finish). The reading calls those outfits near-identical; he doesn't.
+
+**The consistent key** (`results/taste1/consistent_key.json`) is his re-rate on the 19 and his original elsewhere. It keeps his range: every band within 1.2 points of raw (bar 3), the mean 6.93 against 6.92, still 5–9.5, and 9–9.5 a little wider (8.5 → 9.8%). His rule holds: lows stay low, highs stay high.
+
+**The taste rules on held-out halves**, averaged over 8 fresh splits (`results/taste1/splits_summary.txt`; still switched off in the engine):
+
+| | Raw ratings | Consistent key |
+|---|---|---|
+| v15 (today) | 76.1% within a point, r 0.53 | 77.0%, r 0.52 |
+| v16 (with the looks) | 73.2%, r 0.45 | 72.4%, r 0.43 |
+| **v16 + his taste rules** | **81.1%** (78–84), **r 0.62** (0.59–0.68) | **79.6%** (77–82), **r 0.60** (0.57–0.66) |
+
+- The earlier "80.5%" was my arithmetic slip: the same 8 splits average 81.1%.
+- The consistent key is slightly harder: he widened the gaps between outfits the reading calls the same, and no rule can see those gaps.
+- **B1 on the honest number:** within a point **passes on raw** (81%, bar 80%) and is just under on the key (79.6%). **r fails on both** (0.62 and 0.60, bar 0.69). The AI panel reaches 0.79 on the 74 it judged.
+
+**Every bar** (`results/v16/`, `v16-consistent/`, `v16-taste/`, `v16-taste-consistent/`):
+
+| Bar | v16 (rules off), raw | v16, key | v16 + taste rules (dry run), raw | v16 + taste rules, key |
+|---|---|---|---|---|
+| B1, all 164 (half of it tuned the rules) | 120/164, r 0.48 FAIL | 118/164, r 0.46 FAIL | 139/164 (85%), r 0.64, with the looks: FAIL on r | 136/164 (83%), r 0.63: FAIL on r |
+| B1, held out (the honest one) | 73%, r 0.45 | 72%, r 0.43 | **81%, r 0.62**: FAIL on r | 80%, r 0.60: FAIL |
+| B2, creators' pairs | 6/6 PASS | 6/6 | 6/6 PASS | 6/6 |
+| B3, anchors | 13/18 FAIL | 13/18 | 12/18 FAIL | 12/18 |
+| B4, dealbreaker examples | all PASS | all PASS | misses H7 (by design: it becomes a tip) and S5 (blazer with gym shorts and a quiet accent: 5.5) | same |
+| B5, worst band gap, gold / his checks | 17.7 / 26.5 FAIL | same | 21.1 / 28.1 FAIL | same |
+| B6, steadiness | 218/223 PASS | same | 219/223 PASS | same |
+
+v15 alongside: B1 on all 164 is 124/164 (76%), r 0.51 raw and 125/164, r 0.50 on the key; B6 218/223.
+
+**What it means:**
+- The taste rules are the first version to beat today's scoring on photos it wasn't tuned on, on both keys.
+- They are still short on ranking (r), and they cost B3 one anchor, B4 two rows (one by his own call) and some band shares.
+- The r gap is what the reading can't see (fit, finish, exact colors); his re-rate confirmed that this is taste, not noise.
+- **Not switched on.** That waits on his yes on the patterns and his A/B call on rules by style (PR #127).
+
+## Round 3 built: his taste rules on, keyed by the outfit's look (Nov 16, $0)
+
+**His yes (Nov 16):** "yea, i want to go the recommended way", answering "Accept my recommendations: patterns yes, style rules A, creators win clashes, tailored recognized?"
+
+**What's built** (`extraction-test/rubrics/parts_proto.py`; v15 and every older engine untouched; conformance 501/501):
+- **His taste rules are on in v16.** The base sizes were fitted on all 164 photos against his consistent key: wide or relaxed legs +0.5, a hem over the shoe on a wide leg +0.5, roomy shorts +0.5, shorts above the knee −0.25, each color −0.5, a long top −0.5, a single lift at half. Each is scaled by look from `TASTE_BY_LOOK`, which is `rubric/research/rules-by-style.md` §3 (PR #127). Fixed by the table rather than fitted:
+  - one lift at half (row i);
+  - skinny and slim add 0 (row b: v16's own charges carry them);
+  - plain shorts 0;
+  - L3 and L7b lift everywhere, and L5 by look (the creators win);
+  - the pooling cap is a tip.
+- **`score_parts(..., graded_look=None)`.** The look the rules follow. The default is the outfit's own pick-free detected looks, plus Tailored by TL1. His profile picks are never read for it (checked: three pick sets, same score).
+  - **My call:** TL2's look-alike rule applies to grading too, so Tailored stands in for the smart casual or prep it also passes. Otherwise the mix rule would always hand a suit smart casual's friendlier sizes, and Tailored's column would never apply.
+  - A mix takes the friendliest value per rule.
+  - Same photo + same graded look = same score (checked).
+- **Tailored is recognized in scoring:** `is_tailored`, TL1's jacket + dress trousers + "never" list. `extraction-test/graded_look_check.py` passes TL1.1–TL1.6 from the approved spec.
+- **The curve refit** with the rules on, under the steadiness bar: (1.1, 0.85), was (1.0, 0.8).
+- **Two corrections against the table, made before the final numbers:**
+  - the first all-photos fit set one lift to 0 and skinny/slim to 0.5, against rows i and b; they are now fixed by the table;
+  - the slim charge had made two photos flip and broke steadiness (217/223).
+
+**The honest numbers: held-out halves, 8 fresh splits** (`results/taste1/splits_summary.txt`):
+
+| | Raw ratings | Consistent key |
+|---|---|---|
+| v15 (today) | 76.1% within a point, r 0.53 | 77.0%, r 0.52 |
+| v16 rules off | 74.2%, r 0.45 | 73.5%, r 0.44 |
+| **v16 with his rules** | **78.2%** (74–82), **r 0.60** (0.54–0.64) | **76.7%** (73–79), **r 0.58** (0.53–0.62) |
+
+- It ranks his photos more like he does than v15 (+0.06 r), and is about even on "within a point".
+- Letting the creators win the four clashes cost about 2 points against the dry run (81%), which was pure his-taste.
+- **B1 still fails** (80% and r 0.69).
+
+**Every bar, v16 with his rules** (`results/v16/report.txt`; `results/v16-consistent/` on the key):
+
+| Bar | v16 with his rules | v16 before (rules off) | v15 |
+|---|---|---|---|
+| B1, his ratings | held out 78% / r 0.60 (raw), 77% / 0.58 (key); on all 164 130/164, r 0.59 (the sizes saw these): **FAIL** | 73% / 0.45 held out | 76% / 0.53 |
+| B2, creators' pairs | **6/6 PASS** | 6/6 | 5/6 |
+| B3, anchors | **15/18** FAIL (3 miss) | 13/18 | 10/18 |
+| B4, dealbreaker examples | every row but H7 PASS; H7 is now a tip by his call | all | – |
+| B5, worst band gap | gold **16.6**, his checks **23.2**: FAIL | 17.7 / 26.5 | 29.6 / 32.9 |
+| B6, steadiness | **218/223 PASS** | 218/223 | 218/223 |
+| B7, v15 untouched | PASS (501/501, hoodie paper, `graded_look_check.py`) | | |
+
+Gold shares (cool, first reading): 1.3 / 10.8 / 17.0 / 46.6 / 24.2 / 0%, against the target 5 / 15 / 30 / 30 / 15 / 5.
+
+**The 15 named outfits** (`results/v16/named.md`, for his yes; his blind score where he rated it):
+
+| Outfit | Today | New | His | Graded as | What moved it |
+|---|---|---|---|---|---|
+| His check: grey hoodie, black wide jeans, navy slides | 7 | **6.5** | | streetwear | slides out of the house −1.5; wide legs +0.5 |
+| His check: grey tee under a tan overshirt, black wide jeans (Class) | 6.5 | **7.5** | | no look | an open layer +0.25 (one lift, half); wide legs +0.25 |
+| His check: charcoal hoodie, cream overshirt, relaxed jeans, chunky sneakers | 8 | **8.5** | | streetwear | a short layer, one look top to toe; relaxed legs +0.5 |
+| His check: charcoal hoodie, light wide jeans, white leather sneakers | 8 | **7.5** | | streetwear | one lift counts half, so no step past 7.5; wide legs +0.5 |
+| His check: charcoal tee with a clear stain, light jeans, slides | 5.5 | **5.5** | | no look | the stain caps it at 5.5 |
+| His check: black sweatshirt, slim ripped jeans (Class) | 6.5 | **6** | | no look | the slim leg (v16's own charge) |
+| Gold: black graphic tee, skinny jeans, red basketball sneakers | 5 | **5** | 5.5 | no look | skinny ripped jeans |
+| Gold: green cardigan over a white tee, relaxed black trousers, white sneakers | 8 | **8.5** | 8 | classic prep, smart casual | a shape, an accent (half), a smart piece; relaxed legs +0.25 |
+| Gold: pink graphic tee, light denim shorts | 7 | **6.5** | 5 | no look | a color −0.25 |
+| Gold: blue sweatshirt over a tee, olive wide cargos, black derbies | 6.5 | **6.5** | 8 | no look | the peek −0.25; wide legs +0.25, a color −0.25 |
+| Tim's before: oversized tee, denim jacket, skinny jeans (his 4.5) | 5.5 | **5** | | no look | skinny ripped jeans |
+| Tim's favorite: brown blazer, white tee, black trousers (his 9) | 7 | **8.5** | | tailored | a tailored line, one smart piece |
+| Wanhee's red bomber over dark trousers (his 7.5) | 7.5 | **8** | | no look | a short layer, a smart piece; a color −0.25 |
+| Made up: red tee, yellow chinos, purple sneakers | 6.5 | **4.5** | | no look | three brights cap it at 4.5 |
+| Made up: boxy white tee tucked into wide charcoal trousers, burgundy cardigan, loafers | 8 | **8.5** | | smart casual | a short layer, an accent, top to toe; wide legs +0.25, a color −0.5 |
+
+**The proposed rubric change** (`tasks/T68/v5-styles-v16.diff`, not applied):
+- a new [TST] section with the table by look and the graded look;
+- [DB-H7] as a tip;
+- [LFT-5] by look, and [LFT-S] (one lift at half);
+- [SCO-10]'s refit curve;
+- the order of a score.
+
+**Nothing goes into `@kitted/core` or the app until he approves the 15-outfit table** (Y41).
+
+**His review page (Nov 16, $0):** every outfit he rated blind (164: his first 20 + 144 of the 150), each with:
+- the face-hidden photo his sheet showed him;
+- his blind score and his re-rate;
+- today's score (v15) and the new one (v16 with his rules and the second looks);
+- the graded look and why it lands there.
+
+Sort by biggest change or biggest gap from him; filter moved up, moved down, or more than a point from him. The generator is `extraction-test/review_page.py`. The page, data and photos (neutral ids) go to `inputs/gold-judge/review-v16/`, which is git-ignored and served on port 8767 by its own `serve.py`. Header on these 164: today within a point 125/164, r 0.50; new 130/164, r 0.60. The rules were tuned on these photos; on unseen ones it's 78% and r 0.60.
+
+## Round 4: his card-by-card fixes (Nov 17, $0; still on paper)
+
+His words: "proportions are a very important thing that we have to nail... I would put a bit more energy into that one"; sandals "with streetwear... make an outfit look good sometimes", but not with a tailored or professional piece; "If it costs more, we don't have to check wrinkles" (no wrinkle read).
+
+**Built in v16** (`_v16_taste`; v15 untouched, conformance 501/501, `graded_look_check.py` passes):
+1. **A silhouette lift, SIL (+1.25), from reads that already pass.**
+   - **When it fires:** a full leg (wide or relaxed trousers, or roomy or wide shorts) over a real shoe; or a clean matched suit's straight line to dressy shoes (half size). Nothing may be off in fit or proportions, no dealbreaker, and the top must not hang past the crotch.
+   - **How it counts:** it lifts a great shape **when nothing else lifts**, counts as a lift for stacking, and isn't halved as a single lift, so "nothing off and a great shape" reaches 8.
+   - **Why "only when nothing else lifts":** with other lifts it double-counted the shape (his 48 such photos ran 1.1 points under it).
+   - **The straight line on its own isn't a lift:** his 19 straight-leg outfits with dressy shoes average 6.8, against 8.1 with it. It stays only for a matched suit.
+   - **The shape charges he named already exist:** a big top over skinny or slim legs (S1/S2/H1 caps), the long-top charge, and now skinny legs (fix 5).
+2. **Color:** the one-color charge is gone, and one accent on a neutral base is a lift in every look. A second accent echoing the first (the orange socks) can't be read, since socks aren't. Three or more colors and real clashes keep their own charges.
+3. **Slides:** no charge on a warm day with nothing tailored or professional; they still cost with one, and on a cool day. **The test photos have no weather:** a photo in shorts is read as a warm day, every other as cool (`v16_paper.season_for`). The gold bars stay on a cool day as written.
+4. **Runners:** no charge unless a tailored or professional piece is in the outfit.
+5. **Skinny legs:** −0.5 in every look, tailored included. Slim stays free in tailored.
+- **Not read, noted for later ($0):** a sweater draped on the shoulders; socks.
+
+**Held out, 8 fresh splits** (`results/taste1/nov17_versions.md`):
+
+| Version | Raw | Key | Steadiness (bar 218) |
+|---|---|---|---|
+| Nov 16 build | 78.2%, r 0.60 | 76.7%, r 0.58 | 218 |
+| **His asks (the engine now)** | **81.6%, r 0.63** | **80.2%, r 0.62** | **209: FAIL** |
+| His asks, but SIL takes the larger of one other lift | 79.6%, 0.62 | 78.2%, 0.61 | 211: FAIL |
+| Shape lift, accent by look, one lift at full | 78.7%, 0.61 | 77.4%, 0.60 | 214: FAIL |
+| Steady: no shape lift, accent by look, one lift at full | 77.1%, 0.59 | 75.8%, 0.58 | **218: PASS** |
+| v15 | 76.1%, 0.53 | 77.0%, 0.52 | 218 |
+
+- **Within a point now passes B1's 80% on both keys** for the first time. r is still under 0.69.
+- **Each fix alone, on raw ratings:**
+  - the shape lift stacked on other lifts was the one that hurt (74.8%, against 79.4% without it); only "when nothing else lifts" turned it into a gain;
+  - slides +1.2 points, skinny +1.0, warm shorts +0.9, runners +0.4;
+  - dropping the one-color charge costs about 1 point against his ratings, but it's his explicit call.
+- **Honesty:** I chose "when nothing else lifts" out of three modes on these same splits, so its held-out number is slightly flattered.
+
+**Steadiness fails** (209/223; v15 218). The flips are in the reading, not the rules:
+- the leg read relaxed on one reading and straight on the other;
+- an accent found on one reading only;
+- one lift against two, which the one-lift-at-half rule turns into a step.
+
+Only the steady version passes B6. Making the silhouette lift a top-up, or taking the larger lift, didn't fix it. **This is his call:** his asks match him best (82% held out) but wobble more between two photos of the same outfit (94% within half a point, against 98% today). Or take the steady version (77%). **Recommended:** keep his asks on paper and fix the wobble at the read (a steadier leg-width read is the main lever) before any of it goes into the app.
+
+**Other bars** (his asks): B2 6/6; B3 15/18; B4 every row but H7 (his call); B5 gold 20.9 (8–8.5 now 36% against a 15% target) and his checks 21.6 (was 23.2); B7 v15 untouched.
+
+**His noted outfits** (`results/taste1/noted_outfits.md`; reported, never tuned to alone):
+
+| Outfit | His | His target | Today | Nov 16 | **Now** | Steady |
+|---|---|---|---|---|---|---|
+| White tee, wide jorts, Timbs | 8.5 | 8 | 7 | 7.5 | **8** | 7.5 |
+| Tee, black wide jorts, Jordans | 9 | 8+ | 7 | 7.5 | **8** | 7.5 |
+| Black graphic tee, oversized olive cargo shorts, brown boots | 9 | 9 | 7 | 7.5 | **8** | 7.5 |
+| Light-blue oxford, khaki wide shorts, loafers | 8 (re-rate 9) | 8+ | 6.5 | 7 | **7** | 7.5 |
+| Light-blue oxford, wide black trousers, black shoes | 8.5 | 8+ | 7 | 7.5 | **7.5** | 8 |
+| Tan chore coat, black straight chinos, derbies | 8.5 | above 8 | 7.5 | 7 | **7** | 7 |
+| Black suit, white shirt, black shoes | 9.5 | 9 | 7.5 | 8 | **8** | 8 |
+| Navy overshirt, light-blue tee, charcoal chinos | 5.5 | 6.5 | 7 | 7.5 | **7.5** | 7.5 |
+| Blazer over very skinny jeans | 5.5 | well below 7 | 6.5 | 7 | **6.5** | 7 |
+| White tee, blue athletic shorts, grey runners | 6 | no runner charge | 5.5 | 4.5 | **5.5** | 5.5 |
+| Orange tee and shorts (the socks case) | 6 | – | 7.5 | 6.5 | **7** | 6.5 |
+| Purple graphic tee, brown wide shorts, slides (summer) | 7 | fine in summer | 6.5 | 5.5 | **7** | 7 |
+
+- **Hits:** the three wide-shorts outfits, runners and slides.
+- **The two oxford outfits:** a small other lift (a quarter-point smart piece, or a quarter-point shape) blocks the silhouette lift. "Take the larger" would lift both to 8, but it costs 2 points held out, so it isn't used.
+- **The suit stays 8.** His own near-identical matched suits sit at 6.5–7.5 even on re-rate, so a blanket 9 for a clean suit isn't supported by his ratings: the reading can't see what separates them.
+- **The chore coat:** the straight line isn't a lift for him on 19 photos.
+- **The navy overshirt:** the reading calls the chinos straight, not slim, so fix 5 can't reach it.
+
+**His review page is regenerated** (port 8767, same address): 132/164 within a point, r 0.62 on these photos; 82% and 0.63 on unseen ones. Shorts photos are read as a warm day.
+
+**The rubric diff is updated** (not applied): [TST-SIL], [TST-sk], [TST-sd] and [TST-rn]; [TST-d] off; [LFT-5] in every look; the shorts-above-knee and hem sizes refit.
+
+## Round 5: steadier, at no cost (Nov 17, $0)
+
+His answer to Y41 was "Yes, you can test them... explain how silhouettes are made and stuff like how the silhouettes are checked. Plus, the test costs no money, right?" So his fixes stay; this round makes them steadier for free, and quotes the one paid step.
+
+### How a silhouette is made, and how the code checks it
+
+A silhouette is the outline the outfit makes from shoulder to shoe. The creators judge it before color ("shape comes before color", sil.1). It's built from five things:
+
+1. **The top: how big and how long.**
+   - **What the creators say:** a fitted or boxy top that ends at the belt makes the outfit look intentional. A top so long it hangs toward the thigh cuts the legs short; Tim calls that his biggest pet peeve (prop.6).
+   - **Example:** a white tee ending at the belt over wide jorts (good); the same tee hanging to mid-thigh (drags).
+   - **What the code reads:** the scoring call's `length` (at_belt, mid_fly, below_crotch) and `volume` (1–5) for each top. `below_crotch` turns on the long-top charge and blocks the silhouette lift. **How steady:** right on about half the long tops it sees, and rarely wrong when it says "long" (T98). The Mac's body ruler is better (8/8) but isn't on the phone yet.
+2. **The waist break: where the top half stops.**
+   - **What the creators say:** a tuck, a top at the belt, or a short jacket that stops where the trousers start (prop.3). It splits the body about a third over two thirds instead of in half.
+   - **Example:** a tucked tee into wide trousers; a bomber ending at the waist over straight jeans.
+   - **What the code reads:** `tucked` (none, half, full), the top's `length`, and the jacket type (a bomber, denim or leather jacket counts as short). These drive the shape lifts already in v16 (L1 a deliberate shape, L2 a short layer over a full leg).
+3. **The leg: how wide.**
+   - **What the creators say:** skinny is out for three of the four; straight works with everything; relaxed and wide are the current shape (sil.8). "One loose half, one fitted half" is the reliable great shape (sil.2); a big top over thin legs is the classic bad one (sil.3).
+   - **Example:** a fitted tee over wide trousers (great); an oversized hoodie over skinny jeans (drags: capped at 5.5).
+   - **What the code reads:** `leg_shape` (skinny, slim, straight, relaxed, wide) and `volume` for shorts.
+   - **How steady:** "skinny" is never wrong; "slim or skinny" flips about 1 in 7; straight against relaxed or wide is the read that flips most, and it causes 8 of the 11 score flips left today (below).
+4. **The hem and the shoe's weight.**
+   - **What the creators say:** the trouser should reach the shoe cleanly (prop.1). A heavy shoe wants a generous leg (prop.10); a slim low shoe under a full, long leg is a great contrast (prop.11); big shorts work with slim or bulky shoes (prop.15).
+   - **Example:** wide jorts over Timbs or Jordans; wide trousers over loafers.
+   - **What the code reads:** the shoe type from the scoring call (steady), and look L's `covers_shoe` on the shoe close-up (97% steady). A full hem over the shoe on a wide leg is a small plus.
+5. **The outline as a whole.**
+   - **What the creators say:** in one color or all neutrals "the outline is the whole outfit" (sil.7): a good shape looks better, a bad one worse.
+   - **Example:** black tee, black wide shorts, white sneakers.
+   - **What the code reads:** the color families of the top, jacket and bottoms. All neutrals add a quarter point to the silhouette lift.
+
+**The silhouette lift (SIL) puts these together.** It fires when:
+- nothing is off in fit or proportions, there's no dealbreaker, and the top doesn't hang past the crotch;
+- **and** the leg is full (wide or relaxed trousers, or roomy or wide shorts) over a real shoe, not slides or runners, **or** a matched suit runs a straight line to dressy shoes (at half size).
+
+How it counts:
+- **+1.75**, and +2.0 in all neutrals; a relaxed leg gets half, since the read wavers between straight and relaxed.
+- It lifts **only when nothing else does**: a tuck or short layer already credits the same shape.
+- It counts as a lift for stacking, so "nothing off and a great shape" reaches 8.
+
+**Shapes that drag**, and how they're charged:
+
+| Shape | Charge |
+|---|---|
+| A hoodie or oversized top over skinny legs | cap 5.5 |
+| An oversized top over slim legs | cap 6.5 |
+| Chunky sneakers under slim or skinny legs | cap 6.0 |
+| Skinny legs on their own | −0.5 in every look |
+| A long untucked top with no jacket | −0.5 (half in streetwear) |
+
+### The free fixes, one at a time
+
+Steadiness is gold photos within half a point across two readings; the bar is 218/223. Held out is 8 fresh splits on raw ratings.
+
+| Change | Steady | Held out |
+|---|---|---|
+| His asks (round 4) | 209 | 81.6%, r 0.63 |
+| + relaxed legs get half the wide-leg and silhouette credit | 208 | 82.0%, 0.64 |
+| + a lift halved by the one-lift rule still counts for stacking (alone) | 210 | 81.2%, 0.64 |
+| + the first lift counts half (not only a lone lift), a smaller step from one lift to two (alone) | 213 | 81.2%, 0.63 |
+| + the accent only with exactly one color (alone) | 209 | 81.6%, 0.63 |
+| The three that help, together | 212 | 81.4%, 0.64 |
+| + the curve's top flattened to 0.7 (was 0.85) | 214 | (refit) |
+| **Engine now** (all of the above, sizes refit on all 164) | **213** | **81.2%, r 0.64** (key 80.3%, 0.63) |
+
+**Every bar now:**
+
+| Bar | Result | Before |
+|---|---|---|
+| B1, held out | 81.2% (passes 80%), r 0.64 (fails 0.69) | |
+| B2, creators' pairs | 6/6 | |
+| B3, anchors | **17/18** | 15 |
+| B4, dealbreaker examples | all but H7 (his call) | |
+| B5, worst band gap | gold 19.5, his checks 21.6 | 20.9 / 21.6 |
+| **B6, steadiness** | **213/223: FAIL** (bar 218) | 209 |
+| B7, v15 untouched | 501/501, `graded_look_check.py` passes | |
+
+**What's left is the leg read.** 8 of the 10 remaining flips are a leg read straight on one reading and relaxed or wide on the other (`extraction-test/steadiness.py` lists each). When that read flips, v15's own shape lifts move with it, not only the new rules, so no rule can hide it.
+
+**His noted outfits now** (`results/taste1/noted_outfits.md`):
+- **Moved up:** the light-blue oxford with wide trousers is now 8.
+- **Hold at 8:** the three wide-shorts outfits.
+- **Moved down:** the black suit drops to 7.5 under the flatter curve (it was 8; his target is 9). That's the price of steadiness at the top of the scale.
+
+The review page is refreshed: 133/164 within a point, r 0.65, on these photos.
+
+### The one paid step: a leg-width second look (designed, not run; his OK needed)
+
+`extraction-test/prompt_look_w.txt`, `schema_look_w.json`, `leg_look.py`. It asks what can be seen, the way look L's `covers_shoe` does (97% steady), not a category:
+- does the fabric cling, skim or hang away at the knee;
+- is the leg opening narrower than the shoe, about the same, or wider.
+
+It runs on the lower close-up, only for photos in pants. It would replace `leg_shape` for the silhouette lift and the leg rules.
+
+**Cost, counting thinking tokens:** look L's measured 0.209¢ a call (1,376 in, 15 out, 267 thinking on 450 calls).
+- **Stage 1, about 25¢** (stop 30¢): the 9 gold photos whose leg read flips plus 51 at random, two runs each. It checks the look is steady (90% or better) and fixes the flips.
+- **Stage 2, about 74¢, only if stage 1 passes:** the other 140 gold photos twice and the 75 rated photos in pants once, for steadiness and his ratings in full.
+- **Total about $0.99, hard stop $1.10.**
+- **In the app** it would be a third look, about +0.21¢ on each check with pants.
+
+**The leg-width look: ready to run (Nov 17).** The founder: "Run the free test, and then let me know how it goes. Then you can run the paid test with my permission." It runs in the coordinating session under his OK, after the reading-test session's free cutout-outline test. Not run here; $0 spent here.
+- **Stage 1** is now the **31** gold photos in pants whose stored leg read differs between readings, plus 29 steady ones (seed 20261117). Still 60 photos, twice each.
+- **Commands,** from `extraction-test/`, with `KITTED_DATA=/Users/eyu/Desktop/files/Kitted` and the key in `GEMINI_API_KEY`, never printed. Add `--dry` to count with no key and no calls.
+  - pilot, 4 calls, about 1¢: `/usr/bin/python3 leg_look.py --set gold --runs 2 --only ig-051,pin-040 --budget 0.02`
+  - stage 1, 120 calls, about 25¢: `/usr/bin/python3 leg_look.py --set gold --stage 1 --runs 2 --budget 0.30`
+  - then, $0: `/usr/bin/python3 leg_look_report.py`. Stage 1 passes when the two runs agree on the leg class on 90% or more, and the score flips from the leg read go away.
+  - stage 2a, only if stage 1 passes, 280 calls, about 58¢: `/usr/bin/python3 leg_look.py --set gold --stage 2 --runs 2 --budget 0.95`
+  - stage 2b, 75 calls, about 16¢: `/usr/bin/python3 leg_look.py --set rated --runs 1 --budget 1.10`
+- **About $1.00 in all.** Budgets are running totals over every stored call. Each call in flight holds 0.6¢ until its real cost is known, so a rare long-thinking call can't overshoot a stop by more than about 2¢.
+- **The engine reads the look when it's in the second look:**
+  - knee hangs away, or the opening is wider than the shoe → a full leg;
+  - knee clings and the opening is narrower → slim;
+  - otherwise → straight;
+  - a stored "skinny" is kept, since it's never wrong.
+  - It feeds only the taste rules and the silhouette lift. Without it nothing changes (`results/v16/` is the same).
+
+## Round 6: the leg-width look, run and wired in (Nov 17)
+
+**Ran in the coordinating session** under the founder's "Yes, run it". **Spent: $0.9652** (thinking tokens counted), under the $1.10 stop. Answers in `extraction-test/results/leg-look1/` (`run.log` has every stage).
+
+| Stage | Calls | Running total |
+|---|---|---|
+| Pilot | 3 of 4 (the 2¢ stop caught the 4th) | $0.0058 |
+| Stage 1 | 120 | $0.2479 |
+| Stage 2a | 400 stored in all | $0.8065 |
+| Stage 2b | 475 stored in all, all answered | **$0.9652** |
+
+**The look is steady:**
+- its two runs agree on the leg class on 60/60 photos in stage 1, and 192/200 (96%) over the gold set;
+- the reading's `leg_shape` flips on 31 of the same 200.
+
+**But its "wide" means "not tight":**
+- **Eye labels (T98):** it calls 14 of 17 tight pants narrow, and never calls loose pants narrow (0 of 71). But it calls 66 of 71 untight pants wide, including 37 the reading calls straight.
+- **His ratings tell them apart:**
+
+| Reading says | Look says | Photos | His average |
+|---|---|---|---|
+| wide | wide | 31 | **8.21** |
+| straight | wide | 37 | **6.86** |
+| straight | straight | 10 | 6.20 |
+
+- So as a **replacement** it hands straight pants the wide-leg credit: held out it drops to 79.4% within a point (r 0.61), against 81.2% without it.
+
+**Wired in as a tie-break** (`leg_look_mode="tiebreak"`, the default; taste rules and the silhouette lift only, never v15):
+- where the reading says straight or relaxed, the look settles it: look wide → relaxed (partial credit), look straight → straight, look narrow → slim;
+- a stored wide, slim or skinny is kept;
+- his ratings back it: straight pants the look calls wide average 6.86, between his straight (6.20) and his wide (8.21).
+- Letting it reach the whole v16 score didn't help (214).
+
+**Results** (each reading with its own look, as the app would have):
+
+| Bar | With the look | Before |
+|---|---|---|
+| Held out, 8 splits | **81.4%, r 0.63** (raw); **80.6%, r 0.62** (key) | 81.2%, 0.64 / 80.3%, 0.63 |
+| B6 with each reading's own leg look (the app's case) | **215/223** | 213 |
+| B6 as written (stored readings, no looks) | 213/223: FAIL (bar 218) | |
+| B2 / B3 / B4 | 6/6 / 17/18 / all but H7 | |
+| B5 worst gap, gold / his checks | 19.5 / 21.6 | |
+
+- **The sizes stay at round 5's:** silhouette 1.75, wide 0.75, neutrals +0.25. A refit with the look preferred smaller sizes, but those dropped B2 to 5/6 and his checks' band gap to 31.3, so they weren't used.
+- **The 8 flips left aren't the leg** (`steadiness.py '{}' leg`):
+  - the shoe read (a derby on one reading, a work boot on the other);
+  - the top's length read;
+  - the pants type (trousers vs chinos);
+  - the silhouette lift blocked by one small other lift on one reading;
+  - shorts colors.
+  - Neither the larger-lift mode nor a flatter curve moves it past 215.
+- **His noted outfits:** the tan chore coat rises to 7.5 (it was 7; the look reads its chinos as relaxed). The rest are as in round 5: the oxford with wide trousers 8, the three wide-shorts outfits 8, the suit 7.5.
+- **The review page is refreshed:** 131/164 within a point, r 0.62 on these photos.
+
+**In the app** this look would add about 0.21¢ to each check in pants, as a third second look. It needs the founder's yes before T69.
+
+## Round 7: shoe, top and top-length wobbles, at no cost (Nov 17, $0)
+
+His "Yes, free fix". The rules now treat as one the classes the reader swaps on the same photo, where that doesn't cost agreement with him. Each grouping came from the flip analysis (`extraction-test/steadiness.py`), not a guess.
+
+**What the reader swaps between two readings of one gold photo** (223 pairs):
+
+| | Swaps |
+|---|---|
+| Shoes | derby / dress shoe 6; derby / work boot 2; derby / suede chukka 2; low-profile sneaker / retro runner 2; Chelsea boot / dress shoe 1 |
+| Tops | dress shirt / oxford 5; camp collar / oxford 5 |
+| Bottoms | chinos / trousers 6 |
+| Top length | at the belt / mid-fly 17; mid-fly / below the crotch 1 (the long-top read) |
+
+**Each change on its own** (steadiness with each reading's own leg look, held out on raw):
+
+| Change | Steady | Held out |
+|---|---|---|
+| Engine before (round 6) | 215 | 81.4%, r 0.63 |
+| A: dress shoe = derby | 216 | **80.3%** (costs 1.1 points) |
+| B: dress shirt = oxford | 216 | **79.6%** (costs 1.8) |
+| **B2: oxford = dress shirt** | 216 | 81.7% |
+| C: camp collar = oxford | **213** (worse) | |
+| D: chinos = trousers (only with no tailored jacket, so TL1's blazer-with-chinos-is-prep stays) | 215 | |
+| **E: an unclear shoe ("other") counts as a real shoe for the silhouette lift** | 216 | 81.4% |
+| F: the leg look overrules v12's weak "a straight leg at roominess 2 or less is slim" | 215 | |
+| **G: the long top costs 0.25, not 0.5** (its read flips at the borderline) | 216 | 81.7% |
+| A+B+E+G | **219** | **77.9%** (costs 3.5: not used) |
+| **B2+E+G + Chelsea boot = dress shoe (the engine now)** | **218** | **82.0%, r 0.63** (key 81.1%, 0.62) |
+
+**Kept:** oxford = dress shirt, Chelsea boot = dress shoe, an unclear shoe is real, the long top at 0.25. **Not kept:** derby = dress shoe and dress shirt = oxford, which each cost agreement with him; camp collar = oxford (less steady); chinos = trousers, the slim overrule and the larger-lift mode (no gain).
+- **Chelsea = dress shoe rests on one swap** (ig-125). It's the step that reaches the bar, and it costs no agreement, but it's thin evidence.
+- **One knock-on fix:** with oxford read as a dress shirt, dealbreaker example H11 (a white oxford, grey trousers, chunky sneakers) fell below its 6.5 cap, because the "shoes more casual than the clothes" charge grew. That charge is the same fact as H11, so the H11 cap now owns it, as v16's caps own their other part charges. B4 is back to every row but H7.
+
+**Every bar now:**
+
+| Bar | Now | Round 6 | v15 |
+|---|---|---|---|
+| B1, held out | **82.0%** (passes 80%), r 0.63 (fails 0.69); key 81.1%, 0.62 | 81.4%, 0.63 | 76.1%, 0.53 |
+| B2 | 6/6 | 6/6 | 5/6 |
+| B3 | 17/18 | 17/18 | 10/18 |
+| B4 | all but H7 (his call) | | |
+| B5, worst gap, gold / his checks | 19.5 / **18.4** | 19.5 / 21.6 | 29.6 / 32.9 |
+| **B6 with each reading's own leg look** (the app's case) | **218/223** | 215 | 218 (v15 has no looks) |
+| B6 as written (stored readings, no looks) | 215/223: FAIL | 213 | 218 |
+| B7 v15 untouched | 501/501; `graded_look_check.py` all pass (TL1.1–1.6) | | |
+
+**Plainly:** B6 passes at exactly 218 only with the leg look attached, which is how the app would score. B6 as written (no looks at all) is 215. Which reading of the bar counts is his call, because the bar predates the look; I haven't loosened it.
+
+**The 15 named outfits** (`results/v16/named.md`; Y44, for his yes):
+
+| Outfit | Today | **New** | Warm day | His | Graded as |
+|---|---|---|---|---|---|
+| His check: grey hoodie, black wide jeans, navy slides (Everyday) | 7 | **6.5** | 8 | | streetwear |
+| His check: grey tee under a tan overshirt, black wide jeans (Class) | 6.5 | **7.5** | 7.5 | | no look |
+| His check: charcoal hoodie, cream overshirt, relaxed jeans, chunky sneakers | 8 | **8** | 7.5 | | streetwear |
+| His check: charcoal hoodie, light wide jeans, white leather sneakers | 8 | **8** | 8 | | streetwear |
+| His check: charcoal tee with a clear stain, light jeans, slides | 5.5 | **5.5** | 5.5 | | no look |
+| His check: black sweatshirt, slim ripped jeans (Class) | 6.5 | **6** | 6 | | no look |
+| Gold: black graphic tee, skinny jeans, red basketball sneakers | 5 | **5** | 5 | 5.5 | no look |
+| Gold: green cardigan over a white tee, relaxed black trousers, white sneakers | 8 | **8** | 8 | 8 | classic prep, smart casual |
+| Gold: pink graphic tee, light denim shorts | 7 | **7** | 7 | 5 | no look |
+| Gold: blue sweatshirt over a tee, olive wide cargos, black derbies | 6.5 | **6.5** | 6.5 | 8 | no look |
+| Tim's before: oversized tee, denim jacket, skinny jeans (his 4.5) | 5.5 | **4.5** | 4.5 | | no look |
+| Tim's favorite: brown blazer, white tee, black trousers (his 9) | 7 | **8** | 8 | | tailored |
+| Wanhee's red bomber over dark trousers (his 7.5) | 7.5 | **8** | 7.5 | | no look |
+| Made up: red tee, yellow chinos, purple sneakers (three brights) | 6.5 | **4.5** | 4.5 | | no look |
+| Made up: boxy white tee tucked into wide charcoal trousers, burgundy cardigan, loafers | 8 | **8.5** | 8 | | smart casual |
+
+- **His noted outfits** (`results/taste1/noted_outfits.md`):
+  - the runners outfit is now 6, his own score;
+  - the wide-shorts outfits stay 8, the chore coat 7.5, the suit 7.5;
+  - **the light-blue oxford with wide trousers drops from 8 to 7.5**: an oxford now counts as a dress shirt, which earns the "one smart piece" lift, and that lift blocks the silhouette lift.
+- **The review page is refreshed:** 132/164 within a point, r 0.62 on these photos.
+
+## Approved (Nov 17)
+
+**The founder, verbatim: "Yes, approve"**, answering "Approve this table and count the leg check toward steadiness?" (Y44 and Y41's 15-outfit table). So:
+- the v16 engine as built in round 7 is the rescoring T69 ports;
+- B6 counts with each reading's own leg-width look attached (the app's case: **218/223, passes**);
+- `rubric/v5-styles.md` takes the proposed diff on this branch (applied; the app runs v15 until T69 ships).
+
+**Final state** (`extraction-test/results/v16/report.txt`; v15 alongside):
+
+| Bar | v16 | v15 |
+|---|---|---|
+| B1, held out | **82.0%** within a point, r 0.63 (raw); 81.1%, 0.62 (key). Within a point passes, r fails 0.69 | 76.1%, r 0.53 |
+| B2 | 6/6 | 5/6 |
+| B3 | 17/18 | 10/18 |
+| B4 | every row but H7 (a tip by his call) | |
+| B5, worst band gap, gold / his checks | 19.5 / 18.4: FAIL | 29.6 / 32.9 |
+| B6, with the leg look (counted, his call) | **218/223 PASS** (215 without) | 218 |
+| B7, v15 untouched | PASS | |
+
+**Spend over T68:** $0 on paper; $1.8424 (the gold set's second looks, round 2), $0.9013 (the 90 unread rated photos), $0.9652 (the leg-width look). **$3.7089 in all**, each with his OK.

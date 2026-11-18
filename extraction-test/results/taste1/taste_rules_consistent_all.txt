@@ -1,0 +1,24 @@
+His taste rules, fitted on half A, tested on the held-out half B (his consistent key; 164 photos: A 164, B 164; seed 20261116)
+Fitted sizes: sil 1.5, sil_line 0.5, sil_tonal 0, leg_skinny 0.5, leg_wide 0.5, hem_plus 0.5, shorts_wide 0.5, shorts_above 0.5; fixed: lifts off none, plain shorts 0, a single lift at 0.5, slim 0 (row b), one color free, slides fine warm and casual, runners fine casual, the pooling cap a tip, the long top 0.5 (read: reading)
+  half A (fitted on it):
+    v15                      within 1 125/164 ( 76%)  r 0.496  mean 7.05 (his 6.93)
+    v16 rules off (looks)    within 1 120/164 ( 73%)  r 0.419  mean 7.01 (his 6.93)
+    v16 + his taste rules    within 1 134/164 ( 82%)  r 0.631  mean 7.13 (his 6.93)
+  half B (held out: the honest number):
+    v15                      within 1 125/164 ( 76%)  r 0.496  mean 7.05 (his 6.93)
+    v16 rules off (looks)    within 1 120/164 ( 73%)  r 0.419  mean 7.01 (his 6.93)
+    v16 + his taste rules    within 1 134/164 ( 82%)  r 0.631  mean 7.13 (his 6.93)
+  half all:
+    v15                      within 1 125/164 ( 76%)  r 0.496  mean 7.05 (his 6.93)
+    v16 rules off (looks)    within 1 120/164 ( 73%)  r 0.419  mean 7.01 (his 6.93)
+    v16 + his taste rules    within 1 134/164 ( 82%)  r 0.631  mean 7.13 (his 6.93)
+  each rule's share on half B (r with it on; then with only that rule off):
+    without sil          r 0.611 (with 0.631), within 1 133/164 (with 134)
+    without sil_line     r 0.631 (with 0.631), within 1 134/164 (with 134)
+    without sil_tonal    r 0.631 (with 0.631), within 1 134/164 (with 134)
+    without leg_skinny   r 0.630 (with 0.631), within 1 133/164 (with 134)
+    without leg_wide     r 0.613 (with 0.631), within 1 131/164 (with 134)
+    without hem_plus     r 0.616 (with 0.631), within 1 132/164 (with 134)
+    without shorts_wide  r 0.630 (with 0.631), within 1 134/164 (with 134)
+    without shorts_above r 0.619 (with 0.631), within 1 132/164 (with 134)
+    without long_top     r 0.628 (with 0.631), within 1 134/164 (with 134)

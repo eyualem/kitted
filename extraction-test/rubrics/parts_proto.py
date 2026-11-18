@@ -484,6 +484,44 @@ for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "
     TUNE[_e].update(_OFF15)
 TUNE["v15"] = dict(TUNE["v14"], hl=1.5, cp8=0.5)
 VERSIONS["v15"] = "parts-proto-15 (Oct 28, 2026)"
+# v16 (Nov 14, ON PAPER ONLY, T68; DECISIONS-LOG #464-#466; test ../v16_paper.py, results ../results/v16/). Not the
+# default: v15 stays the default until the founder says yes and T69 ports it. The parts are v15's, with three
+# changes inside them (each a knob, off in v1-v15):
+#   v16_color (H3, the rulebook's "When a risky color works"): two brights are charged only with no neutral piece
+#     beside them, a loud print or a third color; a strong shape halves the charge (after the parts, below).
+#   sty3_off (suit.9): a blazer with loose or washed jeans is no longer charged; the formality-spread rule stays.
+#   on a warm day: no light-on-light charge (color.11) and no tank-alone charge (season.3).
+# What changes is the step after the parts (see v16_finish): faults count at full strength instead of being averaged
+# away, lifts stack to a ceiling, dealbreakers cap, the season counts, a fixed curve maps raw to shown, 3.0-9.5.
+_OFF16 = dict(v16=False, v16_color=False, sty3_off=False, v16_alpha=0.5, v16_beta=0.25, curve=(1.0, 1.0, 7.0),
+              v16_knit=0.0, v16_h9_cap=False, v16_h7_cap=5.5, taste=None)
+for _e in ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15"):
+    TUNE[_e].update(_OFF16)
+TUNE["v16"] = dict(TUNE["v15"], v16=True, v16_color=True, sty3_off=True,
+                   # the worst part's charges count at alpha, every other part's at beta (v15: 15-30% each)
+                   v16_alpha=0.5, v16_beta=0.25,
+                   # the curve: shown = 7 + a(raw - 7) under 7, 7 + b(raw - 7) over it; fitted once on the gold set
+                   # to the target shares by ../v16_paper.py --fit, then fixed here
+                   curve=(1.1, 0.7, 7.0),                           # Nov 17 round 5: flatter top for steadiness (was 1.1, 0.85)
+                   # layer.5 / ix.33: knit over knit (a cardigan over a sweater) on Style
+                   v16_knit=1.5,
+                   # H9 as a cap: off, the sleeve read flips between readings (it stays v15's Fit charge)
+                   v16_h9_cap=False, v16_h7_cap=5.5,
+                   # round 3 (Nov 16): his taste rules, on since his yes ("yea, i want to go the recommended way"):
+                   # the base sizes fitted on all 164 rated photos against his consistent key (taste_rules.py --all
+                   # --key consistent), each scaled by TASTE_BY_LOOK for the graded look; the creators win clashes
+                   # Nov 17 (card by card): + the silhouette lift (SIL, alone), one color free, slides fine on a warm
+                   # casual day, runners fine with casual pieces, skinny costs in every look; refit on all 164
+                   # round 7 (Nov 17, "Yes, free fix"): classes the reader swaps on one photo score as one where it
+                   # doesn't cost agreement (oxford -> dress shirt, Chelsea boot -> dress shoe), an unclear shoe is
+                   # real for the silhouette lift, and the long top costs 0.25 (its read flips at the borderline)
+                   taste=dict(leg_look_mode="tiebreak", steady_map={"oxford_shirt": "dress_shirt", "chelsea_boot": "dress_shoe"},
+                              other_shoe_real=True, lift_off=[], h7_tip=True, long_top=0.25, long_top_read="reading", shorts=0, one_lift=0.5,
+                              leg_slim=0, color=0, sandals_warm=True, runners_casual=True, sil_mode="alone",
+                              one_lift_mode="first", stack_prehalf=True, relaxed_factor=0.5,   # round 5: steadiness
+                              sil=1.75, sil_line=0.5, sil_tonal=0.25, leg_skinny=0.5, leg_wide=0.75, hem_plus=0.5,
+                              shorts_wide=0.5, shorts_above=0.5))
+VERSIONS["v16"] = "parts-proto-16 (Nov 14, 2026, on paper)"
 HL_LAYERS = {"hoodie", "sweatshirt"}                             # v15 PRO-17: worn as the layer (outerwear) ...
 HL_TOPS = {"tee", "graphic_tee"}                                 # ... over a tee
 SPORT_SNEAKERS = {"basketball_sneaker", "chunky_sneaker", "retro_runner", "canvas_sneaker", "low_profile_sneaker",
@@ -986,7 +1024,17 @@ def _color(o, boldness, t):
         p.add(-1.0, "a few too many colors", "CC1_busy")
     bright = [g for g in main if R.is_bright(g)]
     if len({_fam(g) for g in bright}) >= 2:
-        p.add(-1.0 if (boldness == "bold" or street) else -2.0, "two bright colors fighting", "CC2_bright_clash")
+        amt = -1.0 if (boldness == "bold" or street) else -2.0
+        if t["v16_color"]:                                            # v16 (H3, rulebook "When a risky color works")
+            bf = {_fam(g) for g in bright}
+            calm = any(not R.is_bright(g) and g.get("color_family") in R.NEUTRALS for g in o["main"])
+            loud = any(_loud_print(g, t) for g in main)
+            third = bool({_fam(g) for g in colored if g["color_family"] not in R.NEUTRALS} - bf)
+            if calm and not loud and not third:
+                p.tip("two bright colors, calmed by the neutral pieces around them", "CC2_calmed")
+                amt = 0.0
+        if amt:
+            p.add(amt, "two bright colors fighting", "CC2_bright_clash")
     jacket = next((x for x in o["outers"] if x.get("subcategory") in R.SEPARATE_JACKETS), None)
     B = o["bottom"]
     if (jacket and B and B.get("subcategory") in ("trousers", "chinos") and jacket.get("color_family") in R.DARK_SUITING
@@ -1022,7 +1070,7 @@ def _color(o, boldness, t):
             what = (loud.get("subcategory") or "piece").replace("_", " ")
             kind = "print" if loud.get("pattern") == "graphic" else (loud.get("pattern") or "pattern").replace("_", " ").replace("checks plaid", "check")
             p.add(-t["cl1"], f"the big, loud {kind} on the {what} takes over the outfit", "CL1_loud_print")
-    if t["ll1"]:                                                      # v12 COL-12: light on light (0 in v1-v11)
+    if t["ll1"] and not (t["v16"] and o.get("season") == "warm"):    # v12 COL-12 (v16: not on a warm day, color.11)
         up = o["outers"][0] if o["outers"] else o["top"]
         if (up is not None and B is not None and up.get("color_family") in LIGHT_NEUTRALS
                 and B.get("color_family") in LIGHT_NEUTRALS and B.get("subcategory") != "suit_trousers"   # a suit is one colour
@@ -1293,7 +1341,7 @@ def _cohesion(o, boldness, t):
     # H3: a piece from another world (the larger of the jacket rule and the spread rule, never both)
     B = o["bottom"]
     h3, h3_line = 0.0, None
-    if any(x.get("subcategory") in TAILORED for x in o["outers"]) and B and B.get("subcategory") == "jeans" and (
+    if not t["sty3_off"] and any(x.get("subcategory") in TAILORED for x in o["outers"]) and B and B.get("subcategory") == "jeans" and (
             B.get("leg_shape") in R.LOOSE or B.get("color_family") in ("denim_light", "denim_mid")
             or B.get("distressed_by_design")):
         h3, h3_line = 1.5, "the tailored jacket and the loose or washed jeans come from different worlds"
@@ -1323,7 +1371,8 @@ def _cohesion(o, boldness, t):
               "GT1_graphic_under_tailoring")
     # v8 candidate: a tank top as the only top, out of the house (0 in v1-v7; under a collared shirt it's refiled a vest)
     if (t["tk1"] and not o["outers"] and len(o["tops"]) == 1 and o["tops"][0].get("subcategory") == "tank_top"
-            and o.get("occasion") not in LOUNGE_OK):
+            and o.get("occasion") not in LOUNGE_OK
+            and not (t["v16"] and o.get("season") == "warm")):          # v16: a tank is summer's own top (season.3)
         p.add(-t["tk1"], "a tank top on its own reads gym or undershirt", "TK1_tank_alone")
     # H5: too many statements (v4 B1's focal count, his boldness allowance)
     focal = 0.0
@@ -1592,6 +1641,613 @@ def combine(part_scores, cond, occ, occasion, care_or_strain, engine="v15", tune
 
 
 # =====================================================================================================
+# v16 (ON PAPER, T68): the step after the parts. DECISIONS-LOG #464 (the plan), #466 (his marks), the creators'
+# rulebook (PR #123). Every piece below reads only fields the live reading has, plus the season band he gives.
+# =====================================================================================================
+# A part credit that is one of the founder's lifts (L1-L7), with its size on the shown score. "layer" lifts count on
+# cool days only (a warm day expects no layer, season.8). One lift per id: the largest wins.
+V16_LIFTS = {
+    "PR1_waist_break": ("L1", None, False),          # size from the part points: 1.0 over a loose leg, else 0.5
+    "PR1b_half_tuck": ("L1", 0.5, False),
+    "PR4_street_shape": ("L1", 1.0, False),
+    "PR3_tailored_line": ("L1", 0.75, False),
+    "PS1_shorts_shape": ("L1", 0.75, False),
+    "PR7_sweatsuit_shape": ("L1", 0.5, False),
+    "PR2_short_layer": ("L2", 1.0, True),
+    "PR2b_short_layer_read": ("L2", 0.75, True),
+    "PR2h_hoodie_layer": ("L2", 0.75, True),
+    "PR5_workwear_shape": ("L2", 1.0, True),
+    "PR6_outdoor_shape": ("L2", 0.5, True),
+    "PS1_shorts_layer": ("L2", 0.75, True),
+    "CP1_standout_color": ("L5", 0.5, False),
+    "CP1_toned_down": ("L5", 0.5, False),
+    "CP2_quiet_accent": ("L5", 0.5, False),
+    "CP5_tie_in": ("L6", 0.25, False),
+    "CP8_layer_tie_in": ("L6", 0.25, False),
+    "H2_clear_top_to_toe": ("L7", 0.5, False),
+    "H2_suit": ("L7", 0.5, False),
+}
+PRO_PIECES = {"suit_jacket", "blazer", "sport_coat", "unstructured_blazer", "dress_shirt", "suit_trousers", "trousers"}
+V16_LIFT_NAMES = {"SIL": "a strong silhouette (a full leg over a real shoe, or a straight line to a dressy shoe)",
+                  "L1": "a deliberate shape (a waist, a tuck, the look's own silhouette)", "L2": "a short layer over a full leg",
+                  "L3": "an open layer over a tee", "L4s": "a light tonal summer outfit", "L5": "one accent on a calm base",
+                  "L6": "a color picked up", "L7": "one look top to toe", "L7b": "one smart piece with casual ones",
+                  "SL1": "a fitted top over loose trousers, summer's shape"}
+OPEN_LAYERS = {"overshirt", "chore_coat", "cardigan", "flannel_shirt", "denim_shirt", "camp_collar_shirt", "oxford_shirt"}
+LIGHT_SHIRTS = {"camp_collar_shirt", "oxford_shirt", "denim_shirt", "dress_shirt"}   # a warm day's light open layer
+UNDER_TEES = {"tee", "graphic_tee", "tank_top"}
+KNIT_LAYERS = {"sweater", "cardigan", "quarter_zip"}                                # layer.5: knit over knit blurs
+HEAVY_LAYERS = {"puffer", "overcoat", "fleece", "leather_jacket"}                    # season.8: wrong in heat
+SUMMER_TOPS = {"tee", "tank_top", "polo", "knit_polo"}
+SUMMER_BOTTOMS = {"trousers", "chinos", "drawstring_trousers", "jeans", "cargos", "suit_trousers"}
+SMART = 4.0                                     # contrast.3 / world.5: a smart garment (trousers, blazer, dress shirt, coat)
+# What v16 can't see yet: the rules it would run, and the read each needs (reported on every result)
+V16_UNREAD = {
+    "S3": "a top hanging past the crotch: the top-length read fails (#465); a tip only",
+    "H2": "a tee long in the body over baggy pants: the same top-length read",
+    "H7_no_closeup": "pooling: needs the shoe close-up (look L); the main read's hem isn't trusted",
+    "L4": "tonal range (one color, light to dark): needs a light/mid/dark read per piece",
+    "L8": "two or three textures: needs a fabric read",
+    "season.9": "bare ankles in winter: socks aren't read",
+    "season.5": "linen and summer fabric: fabric isn't read",
+}
+
+
+def _v16_lifts(o, parts, sl, t):
+    """The lifts that fire, after the season: [(id, size, line, layer?)]. One per id, the largest."""
+    warm = o.get("season") == "warm"
+    best = {}
+
+    def put(lid, size, line, layer=False):
+        if size > best.get(lid, (0,))[0]:
+            best[lid] = (size, line, layer)
+    for k, p in parts.items():
+        for r in p.reasons:
+            m = V16_LIFTS.get(r["check"])
+            if m is None or r["points"] <= 0:
+                continue
+            lid, size, layer = m
+            if size is None:                                          # a tuck over a loose leg is big; "at the belt"
+                tucked = any(g.get("tucked") == "full" for g in o["tops"] + o["outers"])   # is a weak read: 0.5
+                size = 1.0 if (r["points"] >= 1.5 and tucked) else 0.5
+            put(lid, size, r["line"], layer)
+    T, O, B, S = o["top"], o["outer"], o["bottom"], o["shoes"]
+    leg = B.get("leg_shape") if B else None
+    prop_fault = any(r["points"] < 0 for r in parts["proportions"].reasons)
+    color_fault = any(r["points"] < 0 for r in parts["color"].reasons)
+    # L3: an open layer over a tee (sheet L3 + creators: the inner layer shows, in a contrasting color)
+    if (len(o["outers"]) == 1 and O.get("subcategory") in OPEN_LAYERS and _earns(O) and O.get("tucked") != "full"
+            and o["tops"] and all(g.get("subcategory") in UNDER_TEES for g in o["tops"])
+            and all(_fam(g) != _fam(O) for g in o["tops"]) and not sl["peek"] and "L2" not in best):
+        light = O.get("subcategory") in LIGHT_SHIRTS
+        put("L3", 0.5, f"the open {O.get('subcategory').replace('_', ' ')} over the "
+            f"{o['tops'][0].get('subcategory').replace('_', ' ')} adds a layer", layer=not light)
+    # L6: black or navy picked up subtly by the shoes (the creators' change): one upper piece, not the bottoms
+    if S is not None and S.get("color_family") in ("black", "navy") and _earns(S) and "L6" not in best and not color_fault:
+        c = S.get("color_family")
+        up = [g for g in o["tops"] + o["outers"] if g.get("color_family") == c]
+        if len(up) == 1 and B is not None and B.get("color_family") != c and len(o["tops"] + o["outers"]) >= 1:
+            put("L6", 0.25, f"the {c} shoes pick up the {c} {up[0].get('subcategory').replace('_', ' ')}")
+    # L7b: one smart piece with casual ones, two levels of dressiness, never three (contrast.1-3, world.5)
+    cohesion_neg = [r["check"] for r in parts["cohesion"].reasons if r["points"] < 0]
+    covered = bool(o["outers"]) or any(g.get("subcategory") in COVER_TOPS for g in o["tops"])
+    clothes = [g for g in o["main"] if g.get("category") != "footwear"
+               and not (covered and g.get("category") == "top" and g.get("subcategory") in BASE_TOPS)]
+    f = [R.formality(g) for g in clothes]
+    lounge = B is not None and B.get("subcategory") in R.LOUNGE_BOTTOMS
+    subs = {g.get("subcategory") for g in o["main"]}
+    suit = "suit_jacket" in subs and "suit_trousers" in subs
+    casual = [g for g in o["main"] if g.get("category") != "footwear" and R.formality(g) <= 2]
+    if (len(clothes) >= 2 and max(f) >= SMART and casual and max(f) - min(f) <= 2.5 and not lounge and not suit
+            and not cohesion_neg and "L7" not in best and all(_earns(g) for g in o["main"])):
+        smart = max(clothes, key=R.formality)
+        put("L7b", 0.5, f"the {smart.get('subcategory').replace('_', ' ')} dresses up the casual pieces: one smart piece, done right")
+    if warm:
+        # SL1: a fitted tee or a tank over loose trousers (season.3, Frugal's "tight waist wide legs")
+        if (not o["outers"] and T is not None and len(o["tops"]) == 1 and T.get("subcategory") in SUMMER_TOPS
+                and ((T.get("volume") or 3) <= 2 or T.get("subcategory") == "tank_top") and leg in R.LOOSE
+                and B.get("subcategory") in SUMMER_BOTTOMS and not prop_fault and _earns(T)
+                and best.get("L1", (0,))[0] < 0.75):
+            best.pop("L1", None)                                      # one top, one shape credit: the larger one
+            put("SL1", 0.75, "a fitted top over loose trousers: summer's shape")
+        # L4s: a light tonal outfit (color.11): the top half and the bottoms in light neutrals, nothing dark
+        up = o["outers"][0] if o["outers"] else T
+        if (up is not None and B is not None and up.get("color_family") in LIGHT_NEUTRALS | {"light_grey"}
+                and B.get("color_family") in LIGHT_NEUTRALS | {"light_grey"} and not color_fault
+                and not any(g.get("color_family") in LL_DARK for g in o["main"] if g.get("category") != "footwear")):
+            put("L4s", 0.5, "light, tonal and clean: a summer look")
+        best = {k: v for k, v in best.items() if not v[2]}           # layer lifts count on cool days only
+    return [(k, v[0], v[1], v[2]) for k, v in sorted(best.items())]
+
+
+# The part charges each dealbreaker owns: when the cap fires it replaces them (one fact, one charge), so the cap is
+# where the score lands when the rest is fine, and only other faults take it lower.
+V16_OWNS = {
+    "S1": {"PF5_big_top_skinny_leg", "PF6_layer_over_skinny", "PN1_narrow_leg", "PB1_roomier_than_look"},
+    "S4": {"CC1_too_many_accents", "CC1_busy", "CC2_bright_clash", "H5_too_many_statements", "SCol1_loud_vs_loud"},
+    "S6": {"H3_another_world", "SD3_too_dressy"},
+    "S8": {"H3_another_world", "SD3_too_dressy"},
+    "S9": set(),                                                      # the stain's Condition charge (below)
+    "H7": {"FF7_pooling"},
+    "H1": {"PB1_roomier_than_look", "PN1_narrow_leg"},
+    "H3": {"CC2_bright_clash"},
+    "H4": {"PN1_narrow_leg"},
+    "H8": {"FF6_strain"},
+    "H9": {"FF1_sleeves_tailored", "FF1_sleeves_long", "FF5_too_big", "FF5_roomy_sleeves"},
+    "H10": {"SW1_chunky_narrow"},
+    "H11": {"SK2_runners", "SD4_chunky_under_tailoring", "SD2_too_casual"},   # round 7: the shoes-too-casual gap is
+                                                                      # the same fact (dressy clothes over chunky shoes)
+}
+V16_OWNS["S2"] = V16_OWNS["S1"]
+# Charges whose read flips between the two stored gold readings on half or more of the photos where they fire
+# (v16_paper.py's steadiness table: sleeves past the hands 67-71%, the main read's pooling hem 50%). Under v15's
+# averaging they moved a score by 0.1-0.3; at full strength they would swing it, so in v16 they stay on the card and
+# move no points (the design rule since #198). Pooling moves points through the shoe close-up instead (H7).
+V16_UNSTEADY = {"FF1_sleeves_tailored", "FF1_sleeves_long", "FF1_cuffs_ribbed", "FF5_too_big", "FF5_roomy_sleeves",
+                "FF7_pooling"}
+for _r in ("S5", "S7", "H6", "H5"):
+    V16_OWNS[_r] = {"X_" + _r}                                         # only when it sinks (a second fault)
+
+
+def _v16_caps(o, parts, sl_raw, occasion, t):
+    """Dealbreaker caps (#466), on reliable reads only: [(cap, id, kind, line)], kind 'sink' or 'hold'."""
+    out = []
+    T, O, B, S = o["top"], o["outer"], o["bottom"], o["shoes"]
+    bsub = B.get("subcategory") if B else None
+    leg = B.get("leg_shape") if B else None                          # the reading's own leg: no fitted-straight guess
+    s_sub = S.get("subcategory") if S else None
+    uppers = o["tops"] + o["outers"]
+    lounge = bsub in R.LOUNGE_BOTTOMS
+    # S1 / S2: a hoodie or sweatshirt, or an oversized top, over skinny legs (one fact: one sink)
+    if B is not None and leg == "skinny" and not lounge and bsub not in SHORTS:
+        hood = next((g for g in uppers if g.get("subcategory") in HOODIES), None)
+        big = next((g for g in uppers if (g.get("volume") or 3) >= 4), None)
+        if hood is not None:
+            out.append((5.5, "S1", "sink", f"the {hood.get('subcategory')} over skinny {bsub}: a straight leg fixes it"))
+        elif big is not None:
+            out.append((5.5, "S2", "sink", f"the oversized {big.get('subcategory').replace('_', ' ')} over skinny {bsub}: "
+                        "a straight or wider leg fixes it"))
+    # S4: three or more bright colors (clothes and shoes)
+    br = {_fam(g) for g in o["main"] if R.is_bright(g)}
+    if len(br) >= 3:
+        out.append((4.5, "S4", "sink", "three bright colors at once: keep one, make the rest neutral"))
+    # S6: a blazer or sport coat with sweatpants or joggers (an overcoat or a shirt over plain sweats is spared)
+    if bsub in ("sweatpants", "joggers") and any(g.get("subcategory") in R.SEPARATE_JACKETS for g in o["outers"]):
+        out.append((5.5, "S6", "sink", f"a blazer with {bsub}: two worlds that don't meet"))
+    # S8: dress shoes with gym shorts or sweats (minimal loafers with plain sweats spared)
+    if lounge and (s_sub in ("dress_shoe", "derby") or (s_sub == "loafer" and bsub == "athletic_shorts")):
+        out.append((5.5, "S8", "sink", f"{s_sub.replace('_', ' ')}s with {bsub.replace('_', ' ')}"))
+    # S9: a visible stain, read clear, not on a piece distressed by design
+    st = next((g for g in o["main"] if g.get("category") != "footwear" and g.get("condition") == "stained"
+               and g.get("certainty") == "clear" and not g.get("distressed_by_design")), None)
+    if st is not None:
+        out.append((5.5, "S9", "sink", f"a stain on the {st.get('subcategory').replace('_', ' ')}"))
+    # H7: pooling over the shoe, from the shoe close-up (look L "mostly"); a soft stack on a loose leg is free
+    if sl_raw and sl_raw.get("covers_shoe") == "mostly" and B is not None and leg not in R.LOOSE and bsub not in SHORTS:
+        h7 = t.get("v16_h7_cap", 5.5)
+        out.append((h7, "H7", "sink" if h7 <= 5.5 else "hold", f"the {bsub} pile up over the shoes: a shorter hem fixes it"))
+    # H1: an oversized top over slim legs (outdoor's fleece over slim cargos is spared)
+    big = next((g for g in uppers if (g.get("volume") or 3) >= 4), None)
+    if (big is not None and leg == "slim" and not lounge and bsub not in SHORTS
+            and not any(s in t["pb_roomy_narrow"] for s in o["det"])):
+        out.append((6.5, "H1", "hold", f"the oversized {big.get('subcategory').replace('_', ' ')} over slim {bsub}"))
+    # H3: two brights that clash (after the v16 color nuance), unless a strong shape softened it
+    if any(r["check"] == "CC2_bright_clash" for r in parts["color"].reasons) and not any(
+            r["check"] == "CC2s_shape_softens" for r in parts["color"].reasons):
+        out.append((6.5, "H3", "hold", "two bright colors fighting"))
+    # H4: skinny joggers or sweatpants out of the house
+    if bsub in ("joggers", "sweatpants") and leg == "skinny" and occasion not in LOUNGE_OK:
+        out.append((6.5, "H4", "hold", f"skinny {bsub}"))
+    # H8: a top that clearly pulls
+    tight = next((g for g in uppers if g.get("strain") == "clear"), None)
+    if tight is not None:
+        out.append((6.5, "H8", "hold", f"the {tight.get('subcategory').replace('_', ' ')} pulls: a size up"))
+    # H9: sleeves over the hands (roomy pieces cut long, ribbed knits and a relaxed blazer spared), read clear
+    sl_g = next((g for g in uppers if g.get("sleeve_end") == "covers_hand" and g.get("certainty") == "clear"
+                 and g.get("subcategory") not in SHORT_SLEEVE_TYPES | RIBBED | {"unstructured_blazer"}
+                 and (g.get("volume") or 3) <= 3), None)
+    if sl_g is not None and t["v16_h9_cap"]:     # off: the read flips between readings (3 of the 12 unsteady gold photos)
+        out.append((6.5, "H9", "hold", f"the {sl_g.get('subcategory').replace('_', ' ')}'s sleeves cover the hands"))
+    # H10: chunky sneakers under slim or skinny legs (6.0, his "maybe even a lesser rating")
+    if s_sub in BULKY and leg in NARROW:
+        out.append((6.0, "H10", "hold", "chunky sneakers under narrow legs"))
+    # H11: suit or dress trousers with chunky or running shoes
+    if bsub in ("suit_trousers", "trousers") and (s_sub in BULKY or s_sub in RUNNER):
+        out.append((6.5, "H11", "hold", f"{s_sub.replace('_', ' ')}s with {bsub.replace('_', ' ')}"))
+    return out
+
+
+def _v16_depends(o, parts, t):
+    """S5, S7, H6, H5 (#466 "it should also depend on other factors"): a clash charge on Style that grows when color
+    or shape is also weak and shrinks when both are strong. Returns (id, base, factor) or None."""
+    B, S = o["bottom"], o["shoes"]
+    if B is None or B.get("subcategory") not in SHORTS:
+        return None
+    gym = B.get("subcategory") == "athletic_shorts"
+    blazer = any(g.get("subcategory") in R.SEPARATE_JACKETS for g in o["outers"])
+    leather = any(g.get("subcategory") == "leather_jacket" for g in o["outers"])
+    if blazer:
+        rid, base = ("S5", 2.0) if gym else ("H6", 1.0)
+    elif leather:
+        rid, base = ("S7", 1.5) if gym else ("H5", 0.75)
+        if not gym and B.get("color_family") in ("black", "charcoal") and S is not None and S.get("subcategory") in R.FOOT_KIND["boots"]:
+            return None                                               # black tailored shorts and boots: the sheet's "not when"
+    else:
+        return None
+    neg = lambda k: any(r["points"] < 0 for r in parts[k].reasons)   # noqa: E731
+    pos = lambda k: any(r["points"] > 0 for r in parts[k].reasons)   # noqa: E731
+    weak = neg("color") or neg("proportions") or neg("fit")
+    strong = pos("color") and pos("proportions") and not weak
+    return rid, base, 1.5 if weak else 0.5 if strong else 1.0
+
+
+def _v16_curve(raw, t):
+    """shown = 7 + a(raw - k) under k, 7 + b(raw - k) over it: a fixed, monotone two-slope map, k the raw score shown
+    as 7.0."""
+    a, b, k = t["curve"]
+    return 7.0 + (a if raw < k else b) * (raw - k)
+
+
+# ---- Round 3: his taste rules, keyed by the look the outfit is graded as (T68, Nov 16; the founder's yes:
+# "yea, i want to go the recommended way" = patterns yes, rules follow the outfit's own look (A), the creators win
+# where his ratings and theirs clash, Tailored recognized in scoring). The table is rubric/research/rules-by-style.md
+# §3 (PR #127): 1 = the rule's size, 0.5 = half, 0 = off, "2nd" = the first color is free. A mix takes, rule by rule,
+# the friendliest value over its looks (the largest plus, the gentlest charge). A look missing from a row = 1.
+TL_JACKET = {"suit_jacket", "blazer", "sport_coat", "unstructured_blazer"}
+TL_NEVER = {"jeans", "chinos", "cargos", "sweatpants", "joggers", "shorts", "athletic_shorts", "track_pants",
+            "chunky_sneaker", "performance_runner", "basketball_sneaker", "slides_sandals", "work_boot", "hoodie",
+            "sweatshirt", "graphic_tee", "tank_top", "jersey", "fleece"}
+TASTE_BY_LOOK = {
+    # a. wide or relaxed legs: full where the look is built on volume; off in tailored (sil.8, suit.5)
+    "leg_wide": {"vintage_sport": 0.5, "outdoor": 0.5, "workwear": 0.5, "streetwear": 1, "tailored": 0,
+                 "classic_prep": 0.5, "minimalist": 1, "smart_casual": 0.5, "none": 0.5},
+    # c. roomy shorts follow the wide-leg column (tailored never has shorts)
+    "shorts_wide": {"vintage_sport": 0.5, "outdoor": 0.5, "workwear": 0.5, "streetwear": 1, "tailored": 0,
+                    "classic_prep": 0.5, "minimalist": 1, "smart_casual": 0.5, "none": 0.5},
+    # d. colors beside the neutrals: off in the loud looks, the first free in prep and workwear (world.15, color.12)
+    "color": {"vintage_sport": 0, "outdoor": 0, "workwear": "2nd", "streetwear": 0, "tailored": 1,
+              "classic_prep": "2nd", "minimalist": 0.5, "smart_casual": 1, "none": 0.5},
+    # e. a hem covering the shoe, wide legs only (prop.9; off in tailored, suit.3; half where prop.14 asks more)
+    "hem_plus": {"vintage_sport": 1, "outdoor": 1, "workwear": 1, "streetwear": 1, "tailored": 0,
+                 "classic_prep": 0.5, "minimalist": 1, "smart_casual": 0.5, "none": 1},
+    # g. one accent (L5): a lift in every look since Nov 17 (the founder: one accent on a neutral base is Wanhee's
+    # "point", color.2), so it has no row here
+    # j. a long top: half where a long street proportion can work (prop.16)
+    "long_top": {"vintage_sport": 0.5, "streetwear": 0.5},
+}
+
+
+# the Nov 16 accent row (minimal and tailored full, smart casual half, the rest off); used when taste["accent_by_look"]
+L5_BY_LOOK = {"vintage_sport": 0, "outdoor": 0, "workwear": 0, "streetwear": 0, "tailored": 1, "classic_prep": 0,
+              "minimalist": 1, "smart_casual": 0.5, "none": 0}
+
+
+def is_tailored(main):
+    """specs/tailored.md TL1: a tailored jacket and dress trousers, nothing from the 'never' list, nothing at
+    roominess 5 (with a jacket and dress trousers in view, TL1's points rule always passes)."""
+    subs = {g.get("subcategory") for g in main}
+    return (bool(subs & TL_JACKET) and bool(subs & {"suit_trousers", "trousers"}) and not subs & TL_NEVER
+            and all((g.get("volume") or 3) < 5 for g in main))
+
+
+def graded_looks(o, graded_look=None):
+    """The look(s) the taste rules follow. graded_look: a look key or a list of them (his pick after the photo, when
+    that step exists); None = the outfit's own looks: the pick-free detected set, plus Tailored by TL1. Never his
+    profile picks. An empty set grades as "none"."""
+    if graded_look:
+        g = {graded_look} if isinstance(graded_look, str) else set(graded_look)
+    else:
+        g = set(o["det"])
+        if is_tailored(o["main"]):                                   # TL2's look-alike rule: Tailored stands for the
+            g = (g - {"smart_casual", "classic_prep"}) | {"tailored"}  # smart casual or prep it also passes
+    return g or {"none"}
+
+
+def _look_val(rule, looks):
+    row = TASTE_BY_LOOK.get(rule)
+    return [1 if row is None else row.get(lk, 1) for lk in looks]
+
+
+def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
+    """Round 3 (T68, Nov 16): the founder's taste patterns as rules, all base sizes in t["taste"] (None = off), each
+    scaled by TASTE_BY_LOOK for the look(s) the outfit is graded as (o["graded"]). Returns (lifts, caps, items):
+    lifts and caps after the taste rules, and the raw-score adjustments [(points, id, line)].
+      lift_off   lifts that never count (empty since the creators won the clash: L3 and L7b count everywhere, L5 by look)
+      one_lift   a single remaining lift counts at this fraction (his taste in every look: one lift isn't a step)
+      h7_tip     the pooling cap becomes a tip
+      hem_plus   a hem that covers most of the shoe (look L) on a wide or relaxed leg (never on a straight one: prop.1)
+      leg_skinny, leg_slim, leg_wide   leg width, graded
+      shorts, shorts_wide   a shorts charge (0: no creator calls shorts a fault) and roomy shorts (volume 4-5)
+      shorts_above  shorts that end above the knee (the October narrow look, second_look["shorts_end"]; not in the
+                 app's second looks yet): a charge, never a cap
+      color      each color beyond neutrals and denim, up to two
+      long_top   an untucked top with no jacket that ends low, half a point at most, never a cap; long_top_read
+                 "reading" (default: the reading's below_crotch) or "ruler" (the Mac's body ruler, second_look["long_top"])"""
+    T = t.get("taste")
+    if not T:
+        return lifts, caps, [], set()
+    looks = o.get("graded") or {"none"}
+    o0 = o                                                            # the outfit itself (o may become a copy below)
+    # round 5: the leg-width look (prompt_look_w.txt), when the second look carries it: knee hangs away or the opening is
+    # wider than the shoe = a full leg; the knee clings and the opening is narrower = narrow; else straight. It stands in
+    # for the scoring call's leg_shape in these taste rules only (a copy of the bottom; the reading isn't changed).
+    lw = (sl_raw or {}).get("knee"), (sl_raw or {}).get("opening")
+    mode = T.get("leg_look_mode", "tiebreak")
+    if (mode != "off" and o["bottom"] is not None and o["bottom"].get("subcategory") not in SHORTS
+            and any(x and x != "not_visible" for x in lw)):
+        cls = ("wide" if "hangs_away" in lw or "wider" in lw else
+               "slim" if lw[0] in ("clings", None, "not_visible") and lw[1] in ("narrower", None, "not_visible") else "straight")
+        stored = o["bottom"].get("leg_shape")
+        if mode == "replace":
+            new_leg = stored if (cls == "slim" and stored == "skinny") else cls   # "skinny" is never wrong (T98): kept
+        else:
+            # tie-break (Nov 17, measured): the look's "wide" means "not tight" (66 of 71 untight pants), so it only
+            # settles the zone the scoring call flips in: straight or relaxed. Look wide -> relaxed (partial credit),
+            # look straight -> straight, look narrow (never wrong: 0 of 71) -> slim. A stored wide, slim or skinny stays.
+            new_leg = ({"wide": "relaxed", "straight": "straight", "slim": "slim"}[cls]
+                       if stored in ("straight", "relaxed") else stored)
+        if new_leg != stored:
+            o = dict(o, bottom=dict(o["bottom"], leg_shape=new_leg))
+    items, waived = [], set()
+    pending_sil = None
+    # round 7: the leg look (steady, never wrong about narrow) overrules v12's weak "a straight leg at roominess 2 or
+    # less is slim" when it sees no narrow leg; the shape charge it raised is waived and doesn't block SIL
+    lk_cls = None
+    if any(x and x != "not_visible" for x in lw):
+        lk_cls = ("wide" if "hangs_away" in lw or "wider" in lw else
+                  "slim" if lw[0] in ("clings", None, "not_visible") and lw[1] in ("narrower", None, "not_visible") else "straight")
+    pn1_waived = (T.get("pn1_look") and lk_cls in ("wide", "straight") and o0["bottom"] is not None
+                  and o0["bottom"].get("leg_shape") not in ("skinny", "slim"))
+    if pn1_waived:
+        waived |= {"PN1_narrow_leg"}
+    # Nov 17 (the founder, card by card): "proportions are a very important thing that we have to nail".
+    # SIL, a strong silhouette, as a lift of its own (sil.2, sil.7, sil.10, prop.3, prop.10, prop.11, prop.15): nothing
+    # off in fit or proportions, no dealbreaker, the top not hanging long, and either
+    #   a full leg (wide or relaxed trousers, or roomy or wide shorts) over a real shoe (any but slides and runners), or
+    #   a straight line: straight trousers (slim too in tailored) over loafers, derbies, dress shoes or boots.
+    # All neutrals (and denim) add sil_tonal: "in one color the outline is the whole outfit" (sil.7).
+    if T.get("sil") and parts is not None:
+        B, S = o["bottom"], o["shoes"]
+        sub_b = B.get("subcategory") if B else None
+        legb = B.get("leg_shape") if B else None
+        ss = S.get("subcategory") if S else None
+        real = ss is not None and ss not in SLIDES | RUNNER | ({"other"} if not T.get("other_shoe_real") else set())
+        if sub_b in SHORTS:
+            full = (B.get("volume") or 3) >= 4 or legb in R.LOOSE
+        else:
+            full = legb in R.LOOSE
+        subs = {g.get("subcategory") for g in o["main"]}
+        jk = next((g for g in o["outers"] if g.get("subcategory") == "suit_jacket"), None)
+        suit_matched = (jk is not None and sub_b == "suit_trousers" and jk.get("color_family") == B.get("color_family"))
+        # the straight line counts only for a clean matched suit (Nov 17: "a clean, matched suit can reach 9"); his
+        # ratings don't lift other straight-leg outfits (19 photos: his 6.8 against 8.1 with it)
+        line = (suit_matched and (legb in ("straight", "slim")) and ss in {"loafer", "derby", "dress_shoe", "chelsea_boot"}
+                and "suit_jacket" in subs)
+        long_top = any(g.get("length") == "below_crotch" and g.get("tucked") not in ("full", "half")
+                       for g in o["tops"] + o["outers"])
+        shape_fault = any(r["points"] < 0 and not (pn1_waived and r["check"] == "PN1_narrow_leg")
+                          for k in ("fit", "proportions") for r in parts[k].reasons)
+        dealbreaker = any(c[2] in ("sink", "hold") for c in caps)
+        if ((full and real) or line) and not long_top and not shape_fault and not dealbreaker:
+            cols = {g.get("color_family") for g in o["tops"] + o["outers"] + [B]}
+            tonal = all(c in R.NEUTRALS or str(c).startswith("denim") for c in cols if c)
+            size = T["sil"] * (1.0 if full else T.get("sil_line", 1.0)) + (T.get("sil_tonal", 0.0) if tonal else 0.0)
+            if full and legb == "relaxed" and sub_b not in SHORTS:     # round 5: relaxed sits between straight and wide
+                size *= T.get("relaxed_factor", 1.0)                  # (the read flips straight/relaxed), partial credit
+            what = (f"{'roomy shorts' if sub_b in SHORTS else legb + ' ' + sub_b.replace('_', ' ')} over "
+                    f"{ss.replace('_', ' ')}s" if full else f"a straight line down to the {ss.replace('_', ' ')}s")
+            sil = ("SIL", round(size, 3), f"a strong silhouette: {what}" + (", all in neutrals" if tonal else ""), False)
+            mode = T.get("sil_mode", "alone")
+            if mode == "alone":                                       # only when nothing else lifts
+                if not lifts:
+                    lifts = [sil]
+            elif mode == "single":                                    # with at most one other lift: the larger of the
+                pending_sil = sil                                     # two (after the one-lift rule, below); two or
+                pending_sil = sil if len(lifts) <= 1 else None        # more lifts already stack past it
+            elif mode == "top_up":                                    # applied after the one-lift rule (below)
+                pending_sil = sil
+            else:                                                     # one shape credit: the larger of SIL and L1/SL1
+                shape = [x for x in lifts if x[0] in ("L1", "SL1")]
+                if not shape or max(x[1] for x in shape) < sil[1]:
+                    lifts = [x for x in lifts if x[0] not in ("L1", "SL1")] + [sil]
+    # sandals and slides (Nov 17): fine on a warm day with streetwear or casual pieces; they still cost with a tailored
+    # or professional piece, and on a cool day. Runners: no charge with athletic or casual pieces, only with dressy ones.
+    pro = any(g.get("subcategory") in PRO_PIECES for g in o["main"])
+    if T.get("sandals_warm") and o.get("season") == "warm" and not pro:
+        waived |= {"SK1_slides_out", "SK1b_hem_drags"}
+    if T.get("runners_casual") and not pro:
+        waived |= {"SK2_runners"}
+    off = set(T.get("lift_off") or ())
+    out = []
+    for a, b, c, d in lifts:
+        if a in off:
+            continue
+        if a == "L5" and T.get("accent_agree"):                       # round 5: the accent lift only when the outfit
+            B0 = o["bottom"]                                          # has exactly one color beside the neutrals (a
+            cl = {g.get("color_family") for g in o["tops"] + o["outers"] + ([B0] if B0 else [])}   # steadier fact)
+            if len({c for c in cl if c and c not in R.NEUTRALS and not str(c).startswith("denim")}) != 1:
+                continue
+        if a == "L5" and T.get("accent_by_look"):
+            m = max(L5_BY_LOOK.get(lk, 1) for lk in looks)
+            if not m:
+                continue
+            b = round(b * m, 3)
+        elif a in TASTE_BY_LOOK:
+            m = max(_look_val(a, looks))
+            if not m:
+                continue
+            b = round(b * m, 3)
+        out.append((a, b, c, d))
+    lifts = out
+    stack_n = sum(1 for x in lifts if x[1] >= 0.5)                   # lifts that count for stacking, before halving
+    if T.get("one_lift_mode") == "first" and T.get("one_lift", 1.0) != 1.0 and lifts:
+        # round 5: the first (largest) lift counts at one_lift, the rest in full: one lift against two is a smaller step
+        big = max(range(len(lifts)), key=lambda i: lifts[i][1])
+        if lifts[big][0] != "SIL":
+            a, b, c, d = lifts[big]
+            lifts = lifts[:big] + [(a, round(b * T["one_lift"], 3), c, d)] + lifts[big + 1:]
+    elif len(lifts) == 1 and T.get("one_lift", 1.0) != 1.0 and lifts[0][0] != "SIL":   # a great shape alone still lifts
+        a, b, c, d = lifts[0]
+        lifts = [(a, round(b * T["one_lift"], 3), c, d)]
+    o0["stack_n"] = stack_n if T.get("stack_prehalf") else None
+    if pending_sil is not None and T.get("sil_mode") == "single":
+        if not lifts or lifts[0][1] < pending_sil[1]:
+            lifts = [pending_sil]
+    elif pending_sil is not None:                                     # top-up: with a great shape the lifts come to at
+        have = sum(x[1] for x in lifts)                               # least SIL's size; steady when a small lift flips
+        if pending_sil[1] > have:
+            lifts = lifts + [(pending_sil[0], round(pending_sil[1] - have, 3), pending_sil[2], False)]
+    if T.get("h7_tip"):
+        caps = [c for c in caps if c[1] != "H7"]
+    B = o["bottom"]
+    sub = B.get("subcategory") if B else None
+    leg = B.get("leg_shape") if B else None
+    if B is not None and sub in SHORTS:
+        if T.get("shorts"):
+            items.append((-T["shorts"], "T_shorts", "shorts"))
+        if T.get("shorts_wide") and (B.get("volume") or 3) >= 4:
+            m = max(_look_val("shorts_wide", looks))
+            if m:
+                items.append((T["shorts_wide"] * m, "T_shorts_wide", "roomy shorts"))
+        if T.get("shorts_above") and (sl_raw or {}).get("shorts_end") == "above_knee":
+            items.append((-T["shorts_above"], "T_shorts_above", "shorts above the knee"))
+    elif B is not None:
+        if leg in ("relaxed", "wide"):
+            m = max(_look_val("leg_wide", looks)) * (T.get("relaxed_factor", 1.0) if leg == "relaxed" else 1.0)
+            if T.get("leg_wide") and m:
+                items.append((T["leg_wide"] * m, "T_leg", f"{leg} legs"))
+            mh = max(_look_val("hem_plus", looks))
+            if T.get("hem_plus") and mh and sl_raw and sl_raw.get("covers_shoe") == "mostly":
+                items.append((T["hem_plus"] * mh, "T_hem", "a full hem over the shoe"))
+        elif leg in ("skinny", "slim") and T.get(f"leg_{leg}"):
+            items.append((-T[f"leg_{leg}"], "T_leg", f"{leg} legs"))
+    if T.get("color"):
+        cols = {g.get("color_family") for g in o["tops"] + o["outers"] + ([B] if B else [])}
+        n = min(2, len({c for c in cols if c and c not in R.NEUTRALS and not str(c).startswith("denim")}))
+        if n:
+            charged = min((max(n - 1, 0) if m == "2nd" else n * m) for m in _look_val("color", looks))
+            if charged:
+                items.append((-T["color"] * charged, "T_color", f"{n} color{'s' if n > 1 else ''} beside the neutrals"))
+    if T.get("long_top") and not o["outers"] and o["tops"]:
+        top = o["tops"][0]
+        if top.get("tucked") not in ("full", "half"):
+            ruler = (sl_raw or {}).get("long_top") if T.get("long_top_read") == "ruler" else None
+            long_ = ruler if ruler is not None else top.get("length") == "below_crotch"
+            m = min(_look_val("long_top", looks))
+            if long_ and m:
+                items.append((-T["long_top"] * m, "T_long_top", "the top ends low"))
+    return lifts, caps, items, waived
+
+
+def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
+    """v16's step after the parts. Returns the pieces score_parts puts in the result."""
+    warm = o.get("season") == "warm"
+    # a strong shape softens a bright clash (ix.2): halve CC2 when Proportions earned a credit and nothing is off in it
+    cc2 = next((r for r in parts["color"].reasons if r["check"] == "CC2_bright_clash"), None)
+    prop = parts["proportions"].reasons
+    if cc2 is not None and any(r["points"] > 0 for r in prop) and not any(r["points"] < 0 for r in prop):
+        parts["color"].add(-cc2["points"] / 2, "the strong shape carries the two brights", "CC2s_shape_softens")
+    knits = [g for g in o["tops"] + o["outers"] if g.get("subcategory") in KNIT_LAYERS]
+    if len(knits) >= 2 and t["v16_knit"]:
+        parts["cohesion"].add(-t["v16_knit"], f"the {knits[-1].get('subcategory')} over the {knits[0].get('subcategory')}: "
+                              "knit on knit blurs together; a smooth layer over the knit adds depth", "X_knit_on_knit")
+    dep = _v16_depends(o, parts, t)
+    if dep:
+        rid, base, k = dep
+        what = {"S5": "a blazer with gym shorts", "S7": "a leather jacket with gym shorts", "H6": "a blazer with shorts",
+                "H5": "a leather jacket with shorts"}[rid]
+        parts["cohesion"].add(-base * k, f"{what}: the two halves come from different worlds", "X_" + rid)
+    res = {k: (v.result(lo=1.0) if k == "cohesion" else v.result()) for k, v in parts.items()}
+    live = {k: r for k, r in res.items() if r["score"] is not None}
+    Wt = t["weights"] or WEIGHTS
+    wsum = sum(Wt[k] for k in live)
+    lifts = _v16_lifts(o, parts, sl, t)
+    lift_checks = {c for c, m in V16_LIFTS.items()}
+    caps = _v16_caps(o, parts, sl_raw, occasion, t)
+    lifts, caps, taste, waived = _v16_taste(o, sl_raw, lifts, caps, t, parts)   # round 3: off unless t["taste"] is set
+    if dep:                                                            # a clash never reads sharp: held at 7.0; with a
+        if dep[2] == 1.5:                                              # second fault it sinks, and the cap owns the charge
+            caps.append((5.5 if dep[0] != "H5" else 6.5, dep[0], "sink" if dep[0] != "H5" else "hold",
+                         "the clash, with a second fault"))
+        else:
+            caps.append((7.0, dep[0], "clash", "the two halves come from different worlds"))
+    owned = set().union(*[V16_OWNS.get(c[1], set()) for c in caps if c[2] != "clash"]) if caps else set()
+    owned |= V16_UNSTEADY | waived
+    # faults: the worst part's charges at alpha, every other part's at beta (they no longer average away); a charge a
+    # dealbreaker owns is left out, since the cap stands for it
+    negs = sorted((-sum(r["points"] for r in parts[k].reasons if r["points"] < 0 and r["check"] not in owned)
+                   for k in live), reverse=True)
+    cond_ded = cond["deduction"] - (min(1.2, cond["deduction"]) if any(c[1] == "S9" for c in caps) else 0.0)
+    drop = (t["v16_alpha"] * negs[0] + t["v16_beta"] * sum(negs[1:])) if negs else 0.0
+    # small credits that aren't lifts keep v15's weight (a shoe that suits the look, reads as a style ...)
+    minor = sum(Wt[k] / wsum * r["points"] for k in live for r in parts[k].reasons
+                if r["points"] > 0 and r["check"] not in lift_checks and r["check"] != "CC2s_shape_softens")
+    lift_sum = sum(x[1] for x in lifts)
+    heavy = None
+    if warm:
+        hv = next((g for g in o["outers"] if g.get("subcategory") in HEAVY_LAYERS), None)
+        if hv is None and len(o["outers"]) >= 2:
+            hv = o["outers"][0]
+        if hv is not None:
+            heavy = (0.5, f"the {hv.get('subcategory').replace('_', ' ')} is a lot of layer for a warm day")
+    raw = 7.0 + lift_sum + minor - drop - cond_ded - occ["deduction"] - (heavy[0] if heavy else 0.0)
+    if any(c[2] in ("sink", "hold") for c in caps):              # a dealbreaker owns the taste charges, as it owns
+        taste = [x for x in taste if x[0] > 0]                      # its part charges (the cap stands for them)
+    raw += sum(x[0] for x in taste)
+    raw = clamp(raw, 3.0, 9.5)
+    shown = clamp(_v16_curve(raw, t), 3.0, 9.5)
+    # the ceilings: the stacking rule, the occasion, the dealbreakers
+    subs = {g.get("subcategory") for g in o["main"]}
+    one_look = bool(o["det"]) or ("suit_jacket" in subs and "suit_trousers" in subs) or any(x[0] == "L7b" for x in lifts)
+    n = sum(1 for x in lifts if x[1] >= 0.5)
+    if o.get("stack_n") is not None:                                  # round 5: a halved lift still counts as a lift
+        n = max(n, o["stack_n"])
+    anything_off = (any(r["points"] < 0 and r["check"] not in waived for p in parts.values() for r in p.reasons)
+                    or bool(cond["faults"]) or bool(caps))
+    owned_lines = sorted(owned & {r["check"] for p in parts.values() for r in p.reasons})
+    if n == 0:
+        stack = 7.5
+    elif n == 1:
+        stack = 8.0
+    elif n == 2 or not one_look:
+        stack = 8.5
+    elif n == 3 or anything_off:
+        stack = 9.0
+    else:
+        stack = 9.5
+    ceilings = [(stack, f"{n} lift{'s' if n != 1 else ''}" + (" in one look" if one_look and n >= 3 else ""))]
+    # fit is the floor (fit.1, ix.17): with a fit or shape fault, no lift makes it sharp
+    if any(r["points"] < 0 and r["check"] not in owned for k in ("fit", "proportions") for r in parts[k].reasons):
+        ceilings.append((7.5, "a fit or shape fault: lifts can't cover it"))
+    if occ["ceiling"] is not None:
+        ceilings.append((occ["ceiling"], "occasion"))
+    sinks = [c for c in caps if c[2] == "sink"]
+    holds = [c for c in caps if c[2] == "hold"]                      # (a "clash" 7.0 hold isn't counted)
+    for c in caps:
+        ceilings.append((c[0], c[1]))
+    if len(sinks) >= 2:
+        ceilings.append((4.5, "two sinking faults: a redo"))
+    elif len(holds) >= 2:
+        ceilings.append((6.0, "two holding faults"))
+    final = shown
+    held_by = None
+    for c, why in ceilings:
+        if c < final:
+            final, held_by = c, why
+    final = clamp(final, 3.0, 9.5)
+    return {
+        "res": res, "live": live, "wsum": wsum, "raw": raw, "shown_before_caps": shown, "final": final,
+        "v16": {"season": o.get("season") or "cool", "lifts": [{"id": a, "size": b, "line": c, "layer": d} for a, b, c, d in lifts],
+                "lift_sum": round(lift_sum, 3), "minor": round(minor, 3), "fault_drop": round(drop, 3),
+                "heavy_layer": heavy, "caps": [{"cap": c, "id": i, "kind": k, "line": l} for c, i, k, l in caps],
+                "stack_ceiling": stack, "one_look": one_look, "held_by": held_by, "raw": round(raw, 3),
+                "curved": round(shown, 3), "owned": owned_lines, "ceiling": min(c for c, _ in ceilings), "depends": dep,
+                "unread": V16_UNREAD, "taste": [{"points": a, "id": b, "line": c} for a, b, c in taste],
+                "graded_look": sorted(o.get("graded") or [])},
+    }
+
+
+# =====================================================================================================
 # THE ENTRY POINT
 # =====================================================================================================
 def _outfit(garments, styles):
@@ -1611,7 +2267,8 @@ def _outfit(garments, styles):
             "color_fault": False, "mirror": False}
 
 
-def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v15", tune=None):
+def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v15", tune=None,
+                season=None, graded_look=None):
     """reading: the live v3 reading. occasion: the app key. styles: his picks ({style: weight}); like v4.1 they only
     pick the "Reads as" label on a tie and never change a number. second_look: optional look1 answers (see
     _second_look). engine: "v15" (v14 + a hoodie or sweatshirt layered over a tee, PRO-17; default), "v14" (the casual and athletic
@@ -1629,12 +2286,29 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     if not garments:
         return {"overall": None, "reason": "nothing_readable", "parts": {}, "na_parts": PART_ORDER[:]}
     garments = _refile(R._normalize(garments))
+    Tt = t.get("taste") or {}
+    if t["v16"] and Tt.get("steady_map"):                             # round 7 (Nov 17): classes the reader swaps on one
+        sm = Tt["steady_map"]                                         # photo score as one, where the rules allow it
+        jacket = any(g.get("category") == "outerwear" and g.get("subcategory") in TAILORED for g in garments)
+        garments = [dict(g, subcategory=sm[g.get("subcategory")]) if g.get("subcategory") in sm
+                    and not (g.get("category") == "bottom" and jacket) else g for g in garments]
+    if t["v16"] and Tt.get("leg_look_global") and second_look:         # round 5: the leg-width look settles the
+        lw = second_look.get("knee"), second_look.get("opening")      # straight/relaxed zone for the whole v16 score
+        if any(x and x != "not_visible" for x in lw):
+            cls = ("relaxed" if "hangs_away" in lw or "wider" in lw else
+                   "slim" if lw[0] in ("clings", None, "not_visible") and lw[1] in ("narrower", None, "not_visible")
+                   else "straight")
+            garments = [dict(g, leg_shape=cls) if (g.get("category") == "bottom" and g.get("subcategory") not in SHORTS
+                                                   and g.get("leg_shape") in ("straight", "relaxed")) else g
+                        for g in garments]
     care_tips = _unsure_care(garments, t)                            # v7: condition reads count only when "clear"
     o = _outfit(garments, styles)
     o["mirror"] = bool(scene.get("mirror_selfie"))
     o["sx"] = _style_clash(o, t)                                      # v5's SX1, read by Style and (v6) Proportions
     o["t"] = t
     o["occasion"] = occasion
+    o["season"] = season if t["v16"] else None                     # v16: "warm", or "cool" (mild and cold; the default)
+    o["graded"] = graded_looks(o, graded_look)                       # round 3: the look(s) the taste rules follow
 
     color = _color(o, boldness, t)
     o["color_fault"] = bool(color.reasons) and any(r["points"] < 0 for r in color.reasons)
@@ -1667,6 +2341,8 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
             occ["ceiling"] = round(t["kit_cap"] - cut, 3)
             occ["lines"][-1] = f"a full kit out of the game, and it doesn't fit cleanly: held to {round_half(occ['ceiling'])}"
             occ["status"] = occ["lines"][-1]
+    if t["v16"]:
+        return _v16_result(o, parts, sl, second_look, cond, occ, occasion, t, engine, tune, not_rated, care_or_strain)
     avg, x, floored, wsum = combine(ps, cond, occ, occasion, care_or_strain, engine, tune)
     bonus = earned_bonus(ps, engine, tune)
     penalty = piled_penalty(ps, engine, tune)                        # v8 (0 in v1-v7): problems in several parts add up
@@ -1693,6 +2369,25 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
         "lowest": lowest,
         "second_look": sl, "detected_styles": o["det"], "style_label": o["label"], "not_rated": not_rated,
         "partial": bool(not_rated),
+    }
+
+
+def _v16_result(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune, not_rated, care_or_strain):
+    v = v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune)
+    res, live = v["res"], v["live"]
+    low_k = min(live, key=lambda k: (live[k]["score"], -(t["weights"] or WEIGHTS)[k]))
+    lr = live[low_k]
+    neg = [r for r in lr["reasons"] if r["points"] < 0]
+    line = neg[0]["line"] if neg else (lr["reasons"][0]["line"] if lr["reasons"] else "nothing off")
+    return {
+        "overall": round_half(v["final"]), "raw_score": round(v["final"], 3), "average": v["raw"], "earned_bonus": 0.0,
+        "piled_penalty": 0.0, "version": VERSIONS[engine], "engine": engine, "parts": res,
+        "na_parts": [k for k in PART_ORDER if res[k]["score"] is None],
+        "weights_used": {k: round((t["weights"] or WEIGHTS)[k] / v["wsum"], 3) for k in live},
+        "condition": cond, "occasion": occ, "floored": False, "care_or_strain": care_or_strain,
+        "lowest": {"part": low_k, "score": lr["display"], "line": f"{PART_NAMES[low_k]} {lr['display']:g}: {line}"},
+        "second_look": sl, "detected_styles": o["det"], "style_label": o["label"], "not_rated": not_rated,
+        "partial": bool(not_rated), "v16": v["v16"],
     }
 
 
