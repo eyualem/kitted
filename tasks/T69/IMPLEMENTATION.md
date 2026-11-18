@@ -297,6 +297,13 @@ The coordinator asked for 9.5; it can't be reached (Q-F1), so 304 shows the real
 - Why's rows add up on v15 checks exactly as today.
 - No new npm package, no live AI call, no spend.
 
+## The founder's answers (Nov 17, in chat)
+- **Q-W1:** the 3–4.5 word is **"Start fresh"** (`score.word.redo` = "Start fresh").
+- **Q-W2 and Q-W3:** "Yes, use them": the Why labels as recommended below, and the L7b verb fixed ("the trousers dress up…"), text only.
+- **Q-F1: changed.** His words: "the max should be around 9.5 and not capped at 9". The engine's top is re-tuned on paper first ($0, stored readings), shown to him, and only then ported; see TASK.md → Plan. Until then every number at the top (TOP9's 9.0, screen 304) is not final.
+- **Q-F2 and Q-F3:** "Yes, fix both": done by the coordinator ([SCO-7]'s example now 5.5; `specs/tailored.md` notes the taste rules follow the graded look).
+- **Q-F4, Q-F5, Q-W4:** the defaults stand (the same photo keeps its first season; no card line; part groups kept), each a reading of the spec as written, not a change.
+
 ## Open questions
 **For the founder (taste, words, money):**
 - **Q-F1 · The top of the scale.** The approved curve makes 9.0 the highest score a real check can get; 9.5 needs a raw above the clamp, which the clamp forbids. *Recommended:* ship v16 exactly as approved (9.0 is the top for now; "Dialed in" still shows at 9.0), and decide in a later engine round whether the curve's top should reach 9.5. Changing it now would move every high score and redo T68's steadiness count.
