@@ -12,7 +12,7 @@
     /* The app's own light tokens (design-system/tokens.ts) */
     --a-bg: #F3F4F6; --a-surface: #FFFFFF; --a-surface2: #ECEEF1; --a-ink: #121628; --a-ink2: #585E70; --a-ink3: #646A7A;
     --a-line: #E0E3E8; --a-primary: #1A2448; --a-on: #FFFFFF; --a-off: #9CA1B0; --a-seg-off: #E0E3E8; --bezel: #111;
-    --a-faint: #848A99; --a-dim: rgba(10, 12, 20, .42); --a-shadow: 0 1px 2px rgba(18,22,40,.05), 0 6px 18px rgba(18,22,40,.06);
+    --a-good: #2B7651; --a-faint: #848A99; --a-dim: rgba(10, 12, 20, .42); --a-shadow: 0 1px 2px rgba(18,22,40,.05), 0 6px 18px rgba(18,22,40,.06);
     --sans: -apple-system, "SF Pro Text", system-ui, "Segoe UI", Roboto, sans-serif;
     --display: -apple-system, "SF Pro Display", system-ui, "Segoe UI", Roboto, sans-serif;
   }
@@ -21,7 +21,7 @@
       --page: #07080C; --card: #171A23; --text: #ECEEF3; --muted: #A1A7B5; --rule: #2A2F3B; --mark: #ECEEF3;
       --a-bg: #0C0E14; --a-surface: #171A23; --a-surface2: #21252F; --a-ink: #ECEEF3; --a-ink2: #A1A7B5; --a-ink3: #9096A5;
       --a-line: #2A2F3B; --a-primary: #ECEEF3; --a-on: #0C0E14; --a-off: #3A3F4C; --a-seg-off: #2A2F3B; --bezel: #2b2e36;
-      --a-faint: #6E7484; --a-dim: rgba(0, 0, 0, .55); --a-shadow: none;
+      --a-good: #5DC08F; --a-faint: #6E7484; --a-dim: rgba(0, 0, 0, .55); --a-shadow: none;
       color-scheme: dark;
     }
   }
@@ -29,7 +29,7 @@
     --page: #07080C; --card: #171A23; --text: #ECEEF3; --muted: #A1A7B5; --rule: #2A2F3B; --mark: #ECEEF3;
     --a-bg: #0C0E14; --a-surface: #171A23; --a-surface2: #21252F; --a-ink: #ECEEF3; --a-ink2: #A1A7B5; --a-ink3: #9096A5;
     --a-line: #2A2F3B; --a-primary: #ECEEF3; --a-on: #0C0E14; --a-off: #3A3F4C; --a-seg-off: #2A2F3B; --bezel: #2b2e36;
-      --a-faint: #6E7484; --a-dim: rgba(0, 0, 0, .55); --a-shadow: none;
+      --a-good: #5DC08F; --a-faint: #6E7484; --a-dim: rgba(0, 0, 0, .55); --a-shadow: none;
     color-scheme: dark;
   }
   * { box-sizing: border-box; }
@@ -60,6 +60,8 @@
   .notes .k { font-weight: 700; }
   .notes ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
   .muted { color: var(--muted); }
+  .under { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 12px; }
+  .taps { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
   .restart { justify-self: center; font: 600 14px/1 var(--sans); color: var(--text); background: var(--card); border: 1px solid var(--rule); border-radius: 999px; padding: 10px 16px; cursor: pointer; }
 
   details.more summary { font-weight: 700; cursor: pointer; min-height: 32px; display: flex; align-items: center; }
@@ -188,13 +190,10 @@
   .rank.old .tx span { font: 400 var(--f-foot)/var(--l-foot) var(--sans); color: var(--a-ink3); }
   .rank.old.first { border-width: 2.5px; border-color: var(--a-ink); padding: 8.5px 12.5px 8.5px 8.5px; }
 
-  /* The mockup's end (not an app screen) */
-  .end-bg { position: absolute; inset: 0; z-index: 30; background: var(--a-dim); }
-  .endcard { position: absolute; left: 16px; right: 16px; bottom: 34px; z-index: 31; background: var(--a-primary); color: var(--a-on); border-radius: 26px; padding: 20px; display: grid; gap: 6px; }
-  .endcard .eyebrow { font: 600 13px/18px var(--sans); opacity: .75; }
-  .endcard .big { font: 700 20px/26px var(--display); }
-  .endcard .stat { font: 400 14px/19px var(--sans); opacity: .85; font-variant-numeric: tabular-nums; }
-  .endcard button { margin-top: 8px; min-height: 50px; border-radius: 25px; border: 0; background: var(--a-on); color: var(--a-primary); font: 600 17px/1 var(--sans); cursor: pointer; }
+  /* The mockup's end: a one-line Saved note (the app's ok pill: a check, then the word) */
+  .toast.saved { justify-content: center; gap: 8px; padding: 4px 18px; left: 50%; right: auto; transform: translateX(-50%); min-height: 44px; font-weight: 600; }
+  .toast.saved .ok { flex: none; width: 18px; height: 18px; color: var(--a-good); display: grid; }
+  .toast.saved .ok svg { width: 18px; height: 18px; }
 
   /* ---------- D, step 1: one outfit at a time, Me / Not me ---------- */
   .solo { width: 300px; margin: 0 auto; border: 1px solid var(--a-line); background: var(--a-surface); border-radius: 18px; padding: 10px; position: relative; box-shadow: var(--a-shadow);
@@ -323,9 +322,9 @@
     <figure data-fig="a" class="on">
       <div class="label">A · This or that <span class="tag rec">your pick, Nov 12</span></div>
       <div class="phone-wrap"><div class="phone" data-dir="a"></div></div>
-      <button type="button" class="restart" data-restart="a">Start again</button>
+      <div class="under"><button type="button" class="restart" data-restart="a">Start again</button><span class="taps" data-taps="a"></span></div>
       <div class="notes">
-        <p><span class="k">What happens.</span> Two outfits, no names. Tap the one that's more you, up to 8 times: 4 first-round pairs (all 8 looks, Tailored included), 2 semifinals, a final and a match for 3rd. Every first-round winner plays again. Then the reveal names his top 3.</p>
+        <p><span class="k">What happens.</span> Two outfits, no names. Tap the one that's more you, or Neither when both miss, up to 8 times: 4 first-round pairs (all 8 looks, Tailored included), 2 semifinals, a final and a match for 3rd. Every first-round winner plays again. Then the reveal names his top 3.</p>
         <ul>
           <li>Taps on this step: <b>9</b> (8 picks + Continue). To the camera: <b>14</b> (today 7).</li>
           <li>Best for "I don't know the names". Most fun. The reveal is the moment people screenshot.</li>
@@ -337,10 +336,10 @@
     <figure data-fig="d">
       <div class="label">D · Me or not me, then rank <span class="tag rec">no grid, Nov 17</span></div>
       <div class="phone-wrap"><div class="phone" data-dir="d"></div></div>
-      <button type="button" class="restart" data-restart="d">Start again</button>
+      <div class="under"><button type="button" class="restart" data-restart="d">Start again</button><span class="taps" data-taps="d"></span></div>
       <div class="notes">
         <p><span class="k">What happens.</span> One outfit at a time, no names. Tap <b>Me</b> or <b>Not me</b> (or swipe right or left), 8 times, once per look. Then this-or-that between his Me's puts them in order, usually 2 to 4 taps. <b>No grid in setup:</b> the results screen does its jobs. He can drag a look by its handle to change the order, remove one (×), add one from a sheet ("Add a look"), say it in his own words, or play again. The full tile list stays in You → Style profile.</p>
-        <p><span class="k">Design pass, Nov 17.</span> The tap targets reach 44 pt, the Me stamp stays on screen as the card leaves, the first card leans to show the swipe once, Continue is the one big button with Play again under it, the sheet closes with an X like the app's sheets, and every screen works at the largest text and with Reduce Motion (try the controls at the top). <b>The words are today's</b> until you pick below.</p>
+        <p><span class="k">Design pass, Nov 17.</span> The tap targets reach 44 pt, the Me stamp stays on screen as the card leaves, the first card leans to show the swipe once, Continue is the one big button with Play again under it, the sheet closes with an X like the app's sheets, and every screen works at the largest text and with Reduce Motion (try the controls at the top). On every phone, Continue now ends with a one-line Saved note instead of a summary card (he just saw his result), and the tap counts sit under the phone for you. A's and C's Neither is a full-width button under the pair, since you had to replay A when a pair had nothing you liked. <b>The words are today's</b> until you pick below.</p>
         <ul>
           <li>Taps on this step: about <b>12</b>. To the camera: about <b>17</b> (today 7, A 14).</li>
           <li>Every look is judged on its own, so two looks he loves can't knock each other out in round 1, and a look he dislikes rarely sneaks into his top 3.</li>
@@ -348,7 +347,7 @@
         </ul>
       </div>
       <details class="notes more">
-        <summary>Words for you to pick (D)</summary>
+        <summary>Words for you to pick (A, C and D)</summary>
         <p class="muted">Each choice changes the phone above right away. "today" is what the screen says now; "recommended" is the design pass's pick. Nothing changes in the app until you say which.</p>
         <div id="copy-d"></div>
       </details>
@@ -369,7 +368,7 @@
     <figure data-fig="b">
       <div class="label">B · One of three <span class="tag">not chosen · 7 looks</span></div>
       <div class="phone-wrap"><div class="phone" data-dir="b"></div></div>
-      <button type="button" class="restart" data-restart="b">Start again</button>
+      <div class="under"><button type="button" class="restart" data-restart="b">Start again</button><span class="taps" data-taps="b"></span></div>
       <div class="notes">
         <p><span class="k">What happens.</span> Three outfits, no names, 3 rounds. Rounds 1 and 2 cover six looks; round 3 puts both winners against Classic prep. His last pick leads. Drawn before Tailored, so it shows only the first 7 looks.</p>
         <ul>
@@ -383,7 +382,7 @@
     <figure data-fig="c">
       <div class="label">C · Today's grid, plus a door into A <span class="tag">not chosen</span></div>
       <div class="phone-wrap"><div class="phone" data-dir="c"></div></div>
-      <button type="button" class="restart" data-restart="c">Start again</button>
+      <div class="under"><button type="button" class="restart" data-restart="c">Start again</button><span class="taps" data-taps="c"></span></div>
       <div class="notes">
         <p><span class="k">What happens.</span> The tiles stay. A new row above them, "Not sure? Try this or that", opens A's game. The reveal's Continue moves on; "Change picks" lands back on the grid with his three filled in.</p>
         <ul>
@@ -530,6 +529,8 @@
       why: '"10 picks" counts the ranking taps too, which reads oddly after 8 cards.' },
     none: { label: 'Nothing clicked yet', opts: ['Play again, or tell me in your words.', 'Add a look you like, play again, or tell me in your words.', 'No problem. Add a look, or tell me in your words.'], pick: 1,
       why: 'The screen’s first button is Add a look, and the line didn’t mention it.' },
+    neither: { label: 'A and C: the skip button under the pair', opts: ['Neither', 'Neither is me', 'Not these'], pick: 1,
+      why: 'Now a full-width button, so he sees he can skip a pair he doesn’t like; "Neither is me" echoes D’s Not me.' },
     removed: { label: 'After he taps ×', opts: [null, 'Removed {name}', '{name} removed'], pick: 1,
       why: 'An Undo note like the app’s "Added 4 to Closet · Undo": one tap on × shouldn’t lose a look for good.' },
   };
@@ -570,6 +571,7 @@
   const chevR = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
   const xIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   const gripIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 8h14M5 12h14M5 16h14"/></svg>';
+  const checkIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   const plusIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
   const cardsIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="8" height="14" rx="2"/><rect x="13" y="5" width="8" height="14" rx="2"/><path d="M7 9.5v5M17 9.5v5" stroke-linecap="round"/></svg>';
 
@@ -587,7 +589,7 @@
     });
     const reset = () => { st = fresh(); hist = []; draw(); };
     const save = () => hist.push(JSON.stringify({ ...st, toast: null }));
-    const tap = () => { st.taps += 1; };
+    const tap = () => { st.taps += 1; st.ended = false; }; // any tap after Continue leaves the Saved state
     const back = () => {
       if (!hist.length) { st.note = 'Back would go to Welcome'; draw(); setTimeout(() => { st.note = ''; draw(); }, 1400); return; }
       const taps = st.taps + 1; st = JSON.parse(hist.pop()); st.taps = taps; draw();
@@ -692,20 +694,14 @@
           h('div', { class: 'bar', role: 'progressbar', 'aria-label': `Setup, step ${step} of 3` }, [1, 2, 3].map((n) => h('i', { class: n <= step ? 'on' : '' }))),
           h('span', { class: 'spacer' })),
         h('div', { class: 'scr' }, h('div', { class: 'scroll stage ' + cls }, content), dock ? h('div', { class: 'dock' }, dock) : null),
-        ...(st.ended ? endCard() : []),
+        ...(st.ended ? [h('div', { class: 'toast saved', role: 'status' }, h('span', { class: 'ok', html: checkIc, 'aria-hidden': 'true' }), h('span', {}, 'Saved'))] : []),
       ];
     }
-    // The mockup's end (not an app screen): what he saved and the taps, over the screen he left.
-    function endCard() {
-      const picks = st.picks.map((s, i) => `${i + 1} ${NAMES[s]}`).join(' · ');
-      const said = [picks, st.words ? `“${st.words}”` : ''].filter(Boolean).join(' + ');
-      return [h('div', { class: 'end-bg' }), h('div', { class: 'endcard', role: 'status' },
-        h('div', { class: 'eyebrow' }, 'Saved. End of the mockup.'),
-        h('div', { class: 'big' }, said),
-        h('div', { class: 'stat' }, `${st.taps} taps on this step · ${5 + st.taps} from a fresh install to the camera (today 7)`),
-        h('div', { class: 'stat' }, 'In the app, setup goes on to your age, then Stylist.'),
-        h('button', { onclick: reset }, 'Start again'))];
-    }
+    // The tap counts sit under the phone, for the founder's comparison (testers look at the phone, not this line).
+    const tapsLine = document.querySelector(`[data-taps="${dir}"]`);
+    const showTaps = () => { if (tapsLine) tapsLine.textContent = st.ended ? `${st.taps} taps on this step · ${5 + st.taps} from a fresh install to the camera (today 7)` : `${st.taps} taps so far`; };
+    // Continue ends the mockup with a one-line Saved note over the screen he's on (in the app, setup goes on to his age).
+    const finish = () => { tap(); save(); st.toast = null; st.ended = true; draw(); };
     const title = (t, line) => h('div', { class: 'ttl' }, h('h3', {}, t), line ? h('p', {}, line) : null);
     const dots = (n, on) => h('div', { class: 'dots', 'aria-label': `Pick ${on + 1} of ${n}` }, Array.from({ length: n }, (_, i) => h('i', { class: i <= on ? 'on' : '' })));
     const seen = (style) => st.rounds.filter((x) => x.pair.includes(style)).length;
@@ -734,7 +730,7 @@
           h('span', { class: 'chev', html: chevR })) : null;
         const n = st.picks.length;
         return frame([title("What's your style?", "Pick up to 3 looks you like. Today's outfit comes next."), door, h('div', { class: 'grid' }, tiles)],
-          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'btn', disabled: !n, onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, n ? `Continue · ${n} of 3` : 'Continue')]);
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'btn', disabled: !n, onclick: finish }, n ? `Continue · ${n} of 3` : 'Continue')]);
       },
       duel() {
         const r = st.rounds.length;
@@ -742,7 +738,7 @@
         const card = (s) => h('button', { class: 'pick' + (st.chosen === s ? ' chosen' : st.chosen ? ' faded' : ''), onclick: () => choose(s, pair), 'data-style': s, 'aria-label': `Outfit ${pair.indexOf(s) + 1}` },
           h('div', { class: 'art' }, outfit(s, seen(s), 136)));
         return frame([title('This or that?', 'Tap the one that’s more you.'), h('div', { class: 'pair' }, pair.map(card)), dots(8, r)],
-          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'txt', onclick: () => choose(null, pair) }, 'Neither')]);
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'btn sec', onclick: () => choose(null, pair) }, w('neither'))]);
       },
       // D, step 1: one card at a time. The buttons are the main way; the swipe is a shortcut that mirrors them.
       swipe() {
@@ -826,7 +822,7 @@
         // One primary action (Continue) in the thumb zone; Play again is a quieter text button under it, as on Welcome.
         const f = frame([head, h('ol', { class: 'ranks' }, rows), add, words],
           [h('div', { class: 'note', 'aria-live': 'polite' }, st.note),
-            h('button', { class: 'btn', disabled: !canGo(), onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, 'Continue'),
+            h('button', { class: 'btn', disabled: !canGo(), onclick: finish }, 'Continue'),
             h('button', { class: 'txt', onclick: () => { tap(); save(); go(() => { st.swipes = []; st.rounds = []; st.picks = []; st.dSeed = 0; st.toast = null; st.view = 'swipe'; }); } }, 'Play again')]);
         if (st.toast) {
           f.push(h('div', { class: 'toast', role: 'status' }, h('span', {}, st.toast.text),
@@ -853,7 +849,7 @@
         const card = (s) => h('button', { class: 'pick' + (st.chosen === s ? ' chosen' : st.chosen ? ' faded' : ''), onclick: () => choose(s, set), 'data-style': s, 'aria-label': `Outfit ${set.indexOf(s) + 1}` },
           h('div', { class: 'art' }, outfit(s, r === 2 && s !== 'classic_prep' ? 1 : 0, 92)));
         return frame([title('Which is more you?', 'Tap one. 3 quick picks.'), h('div', { class: 'trio' }, set.map(card)), dots(3, r)],
-          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'txt', onclick: () => choose(null, set) }, 'None of these')]);
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'btn sec', onclick: () => choose(null, set) }, 'None of these')]);
       },
       reveal() {
         const p = st.picks;
@@ -868,7 +864,7 @@
         const nPicks = st.rounds.length + st.swipes.length;
         return frame([title('Here’s your style', `From your ${nPicks} picks. You can change it anytime in You.`), h('div', { class: 'ranks' }, rows)],
           [h('button', { class: 'txt', onclick: () => { tap(); save(); go(() => (st.view = 'grid')); } }, 'Change picks'),
-           h('button', { class: 'btn', onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, 'Continue')]);
+           h('button', { class: 'btn', onclick: finish }, 'Continue')]);
       },
     };
     function draw() {
@@ -876,6 +872,7 @@
       root.replaceChildren(...views[st.view]());
       root.dataset.view = st.view;
       const sc2 = root.querySelector('.scroll'); if (sc2) sc2.scrollTop = y;
+      showTaps();
     }
     reset();
     return { reset, draw };
@@ -905,7 +902,7 @@
   darkMq.addEventListener('change', () => theme === 'system' && redrawAll());
   motionMq.addEventListener('change', () => { applyMotion(); redrawAll(); });
 
-  // D's word options: today's words are on until the founder picks; "Recommended" marks the design pass's pick.
+  // The word options (D, plus A and C's skip button): today's words are on until the founder picks; "Recommended" marks the design pass's pick.
   const copyBox = document.getElementById('copy-d');
   if (copyBox) {
     const sample = { n: 3, name: 'Minimal' };
@@ -913,11 +910,11 @@
     const render = () => {
       copyBox.replaceChildren(
         h('div', { class: 'copy-actions' },
-          h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = 0)); render(); phones.d?.draw(); } }, 'Today’s words'),
-          h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = COPY[k].pick)); render(); phones.d?.draw(); } }, 'All recommended')),
+          h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = 0)); render(); redrawAll(); } }, 'Today’s words'),
+          h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = COPY[k].pick)); render(); redrawAll(); } }, 'All recommended')),
         ...Object.entries(COPY).map(([k, c]) => h('fieldset', { class: 'copyset' }, h('legend', {}, c.label),
           ...c.opts.map((o, i) => h('label', { class: 'opt' },
-            h('input', { type: 'radio', name: `copy-${k}`, checked: copySel[k] === i, onchange: () => { copySel[k] = i; phones.d?.draw(); } }),
+            h('input', { type: 'radio', name: `copy-${k}`, checked: copySel[k] === i, onchange: () => { copySel[k] = i; redrawAll(); } }),
             h('span', {}, show(o), i === 0 ? h('span', { class: 'tag' }, 'today') : null, i === c.pick ? h('span', { class: 'tag rec' }, 'recommended') : null))),
           h('p', { class: 'why' }, c.why))));
     };

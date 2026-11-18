@@ -24,6 +24,8 @@
       why: '"10 picks" counts the ranking taps too, which reads oddly after 8 cards.' },
     none: { label: 'Nothing clicked yet', opts: ['Play again, or tell me in your words.', 'Add a look you like, play again, or tell me in your words.', 'No problem. Add a look, or tell me in your words.'], pick: 1,
       why: 'The screen’s first button is Add a look, and the line didn’t mention it.' },
+    neither: { label: 'A and C: the skip button under the pair', opts: ['Neither', 'Neither is me', 'Not these'], pick: 1,
+      why: 'Now a full-width button, so he sees he can skip a pair he doesn’t like; "Neither is me" echoes D’s Not me.' },
     removed: { label: 'After he taps ×', opts: [null, 'Removed {name}', '{name} removed'], pick: 1,
       why: 'An Undo note like the app’s "Added 4 to Closet · Undo": one tap on × shouldn’t lose a look for good.' },
   };
@@ -64,6 +66,7 @@
   const chevR = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
   const xIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   const gripIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 8h14M5 12h14M5 16h14"/></svg>';
+  const checkIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   const plusIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
   const cardsIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="8" height="14" rx="2"/><rect x="13" y="5" width="8" height="14" rx="2"/><path d="M7 9.5v5M17 9.5v5" stroke-linecap="round"/></svg>';
 
@@ -81,7 +84,7 @@
     });
     const reset = () => { st = fresh(); hist = []; draw(); };
     const save = () => hist.push(JSON.stringify({ ...st, toast: null }));
-    const tap = () => { st.taps += 1; };
+    const tap = () => { st.taps += 1; st.ended = false; }; // any tap after Continue leaves the Saved state
     const back = () => {
       if (!hist.length) { st.note = 'Back would go to Welcome'; draw(); setTimeout(() => { st.note = ''; draw(); }, 1400); return; }
       const taps = st.taps + 1; st = JSON.parse(hist.pop()); st.taps = taps; draw();
@@ -186,20 +189,14 @@
           h('div', { class: 'bar', role: 'progressbar', 'aria-label': `Setup, step ${step} of 3` }, [1, 2, 3].map((n) => h('i', { class: n <= step ? 'on' : '' }))),
           h('span', { class: 'spacer' })),
         h('div', { class: 'scr' }, h('div', { class: 'scroll stage ' + cls }, content), dock ? h('div', { class: 'dock' }, dock) : null),
-        ...(st.ended ? endCard() : []),
+        ...(st.ended ? [h('div', { class: 'toast saved', role: 'status' }, h('span', { class: 'ok', html: checkIc, 'aria-hidden': 'true' }), h('span', {}, 'Saved'))] : []),
       ];
     }
-    // The mockup's end (not an app screen): what he saved and the taps, over the screen he left.
-    function endCard() {
-      const picks = st.picks.map((s, i) => `${i + 1} ${NAMES[s]}`).join(' · ');
-      const said = [picks, st.words ? `“${st.words}”` : ''].filter(Boolean).join(' + ');
-      return [h('div', { class: 'end-bg' }), h('div', { class: 'endcard', role: 'status' },
-        h('div', { class: 'eyebrow' }, 'Saved. End of the mockup.'),
-        h('div', { class: 'big' }, said),
-        h('div', { class: 'stat' }, `${st.taps} taps on this step · ${5 + st.taps} from a fresh install to the camera (today 7)`),
-        h('div', { class: 'stat' }, 'In the app, setup goes on to your age, then Stylist.'),
-        h('button', { onclick: reset }, 'Start again'))];
-    }
+    // The tap counts sit under the phone, for the founder's comparison (testers look at the phone, not this line).
+    const tapsLine = document.querySelector(`[data-taps="${dir}"]`);
+    const showTaps = () => { if (tapsLine) tapsLine.textContent = st.ended ? `${st.taps} taps on this step · ${5 + st.taps} from a fresh install to the camera (today 7)` : `${st.taps} taps so far`; };
+    // Continue ends the mockup with a one-line Saved note over the screen he's on (in the app, setup goes on to his age).
+    const finish = () => { tap(); save(); st.toast = null; st.ended = true; draw(); };
     const title = (t, line) => h('div', { class: 'ttl' }, h('h3', {}, t), line ? h('p', {}, line) : null);
     const dots = (n, on) => h('div', { class: 'dots', 'aria-label': `Pick ${on + 1} of ${n}` }, Array.from({ length: n }, (_, i) => h('i', { class: i <= on ? 'on' : '' })));
     const seen = (style) => st.rounds.filter((x) => x.pair.includes(style)).length;
@@ -228,7 +225,7 @@
           h('span', { class: 'chev', html: chevR })) : null;
         const n = st.picks.length;
         return frame([title("What's your style?", "Pick up to 3 looks you like. Today's outfit comes next."), door, h('div', { class: 'grid' }, tiles)],
-          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'btn', disabled: !n, onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, n ? `Continue · ${n} of 3` : 'Continue')]);
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'btn', disabled: !n, onclick: finish }, n ? `Continue · ${n} of 3` : 'Continue')]);
       },
       duel() {
         const r = st.rounds.length;
@@ -236,7 +233,7 @@
         const card = (s) => h('button', { class: 'pick' + (st.chosen === s ? ' chosen' : st.chosen ? ' faded' : ''), onclick: () => choose(s, pair), 'data-style': s, 'aria-label': `Outfit ${pair.indexOf(s) + 1}` },
           h('div', { class: 'art' }, outfit(s, seen(s), 136)));
         return frame([title('This or that?', 'Tap the one that’s more you.'), h('div', { class: 'pair' }, pair.map(card)), dots(8, r)],
-          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'txt', onclick: () => choose(null, pair) }, 'Neither')]);
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'btn sec', onclick: () => choose(null, pair) }, w('neither'))]);
       },
       // D, step 1: one card at a time. The buttons are the main way; the swipe is a shortcut that mirrors them.
       swipe() {
@@ -320,7 +317,7 @@
         // One primary action (Continue) in the thumb zone; Play again is a quieter text button under it, as on Welcome.
         const f = frame([head, h('ol', { class: 'ranks' }, rows), add, words],
           [h('div', { class: 'note', 'aria-live': 'polite' }, st.note),
-            h('button', { class: 'btn', disabled: !canGo(), onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, 'Continue'),
+            h('button', { class: 'btn', disabled: !canGo(), onclick: finish }, 'Continue'),
             h('button', { class: 'txt', onclick: () => { tap(); save(); go(() => { st.swipes = []; st.rounds = []; st.picks = []; st.dSeed = 0; st.toast = null; st.view = 'swipe'; }); } }, 'Play again')]);
         if (st.toast) {
           f.push(h('div', { class: 'toast', role: 'status' }, h('span', {}, st.toast.text),
@@ -347,7 +344,7 @@
         const card = (s) => h('button', { class: 'pick' + (st.chosen === s ? ' chosen' : st.chosen ? ' faded' : ''), onclick: () => choose(s, set), 'data-style': s, 'aria-label': `Outfit ${set.indexOf(s) + 1}` },
           h('div', { class: 'art' }, outfit(s, r === 2 && s !== 'classic_prep' ? 1 : 0, 92)));
         return frame([title('Which is more you?', 'Tap one. 3 quick picks.'), h('div', { class: 'trio' }, set.map(card)), dots(3, r)],
-          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'txt', onclick: () => choose(null, set) }, 'None of these')]);
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'btn sec', onclick: () => choose(null, set) }, 'None of these')]);
       },
       reveal() {
         const p = st.picks;
@@ -362,7 +359,7 @@
         const nPicks = st.rounds.length + st.swipes.length;
         return frame([title('Here’s your style', `From your ${nPicks} picks. You can change it anytime in You.`), h('div', { class: 'ranks' }, rows)],
           [h('button', { class: 'txt', onclick: () => { tap(); save(); go(() => (st.view = 'grid')); } }, 'Change picks'),
-           h('button', { class: 'btn', onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, 'Continue')]);
+           h('button', { class: 'btn', onclick: finish }, 'Continue')]);
       },
     };
     function draw() {
@@ -370,6 +367,7 @@
       root.replaceChildren(...views[st.view]());
       root.dataset.view = st.view;
       const sc2 = root.querySelector('.scroll'); if (sc2) sc2.scrollTop = y;
+      showTaps();
     }
     reset();
     return { reset, draw };
@@ -399,7 +397,7 @@
   darkMq.addEventListener('change', () => theme === 'system' && redrawAll());
   motionMq.addEventListener('change', () => { applyMotion(); redrawAll(); });
 
-  // D's word options: today's words are on until the founder picks; "Recommended" marks the design pass's pick.
+  // The word options (D, plus A and C's skip button): today's words are on until the founder picks; "Recommended" marks the design pass's pick.
   const copyBox = document.getElementById('copy-d');
   if (copyBox) {
     const sample = { n: 3, name: 'Minimal' };
@@ -407,11 +405,11 @@
     const render = () => {
       copyBox.replaceChildren(
         h('div', { class: 'copy-actions' },
-          h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = 0)); render(); phones.d?.draw(); } }, 'Today’s words'),
-          h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = COPY[k].pick)); render(); phones.d?.draw(); } }, 'All recommended')),
+          h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = 0)); render(); redrawAll(); } }, 'Today’s words'),
+          h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = COPY[k].pick)); render(); redrawAll(); } }, 'All recommended')),
         ...Object.entries(COPY).map(([k, c]) => h('fieldset', { class: 'copyset' }, h('legend', {}, c.label),
           ...c.opts.map((o, i) => h('label', { class: 'opt' },
-            h('input', { type: 'radio', name: `copy-${k}`, checked: copySel[k] === i, onchange: () => { copySel[k] = i; phones.d?.draw(); } }),
+            h('input', { type: 'radio', name: `copy-${k}`, checked: copySel[k] === i, onchange: () => { copySel[k] = i; redrawAll(); } }),
             h('span', {}, show(o), i === 0 ? h('span', { class: 'tag' }, 'today') : null, i === c.pick ? h('span', { class: 'tag rec' }, 'recommended') : null))),
           h('p', { class: 'why' }, c.why))));
     };
