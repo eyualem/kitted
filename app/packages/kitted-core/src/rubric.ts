@@ -475,7 +475,8 @@ export function createRubric(data: RubricData): RubricEngine {
   const gateSc: Gate = (c, slots, total) =>
     ((slots.get("upper") ?? 0) > 0 || (slots.get("bottom") ?? 0) === 2) && total >= (c.shoes ? 4 : 3);
 
-  const STYLES: Record<DetectedStyle, { role: Role; veto: Veto; gate?: Gate; bonus?: (c: Outfit) => readonly [number, boolean] }> = {
+  // T94 (interim): Tailored's role, veto and gate land with the engine port.
+  const STYLES: Partial<Record<DetectedStyle, { role: Role; veto: Veto; gate?: Gate; bonus?: (c: Outfit) => readonly [number, boolean] }>> = {
     streetwear: { role: roleStreet, veto: vetoStreet, gate: gateStreet },
     workwear: { role: roleWork, veto: vetoWork },
     vintage_sport: { role: roleVintage, veto: vetoVintage, gate: gateVintage },
@@ -1152,7 +1153,7 @@ export function createRubric(data: RubricData): RubricEngine {
       return p;
     },
     outfit: outfitOf,
-    role: (style, g, c) => STYLES[style].role(g, c),
+    role: (style, g, c) => STYLES[style]!.role(g, c),
     tapDoubt: (reading, g, a, b) => doubtOf(reading, (truthy(reading.scene) ? reading.scene : {}) as Scene, g, a, b),
     kindPick,
     legExcused,

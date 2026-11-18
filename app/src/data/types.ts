@@ -38,10 +38,10 @@ export type CardOccasion = Exclude<OccasionKey, 'gym' | 'home'> | 'staying_in';
 export const DAY_CARD_OCCASIONS: readonly CardOccasion[] = ['everyday', 'class', 'date', 'going_out', 'interview', 'event'];
 export const EVENING_CARD_OCCASIONS: readonly CardOccasion[] = ['going_out', 'date', 'event', 'everyday', 'staying_in'];
 
-/** One style per check or idea (DECISIONS-LOG #61): the 7 styles rubric v4 detects. Renamed in V5 (#85):
- *  preppy and old money became classic prep, gorpcore became outdoor. */
+/** One style per check or idea (DECISIONS-LOG #61): the 8 looks (rubric v4's 7 plus Tailored, T94: a name only,
+ *  never a score input). Renamed in V5 (#85): preppy and old money became classic prep, gorpcore became outdoor. */
 export type StyleKey = DetectedStyle;
-export const STYLES: readonly StyleKey[] = ['streetwear', 'smart_casual', 'minimalist', 'workwear', 'classic_prep', 'vintage_sport', 'outdoor'];
+export const STYLES: readonly StyleKey[] = ['streetwear', 'smart_casual', 'minimalist', 'workwear', 'classic_prep', 'tailored', 'vintage_sport', 'outdoor'];
 
 /** Old keys (onboarding before V5, seed.json, kv) to today's: preppy / old_money -> classic_prep,
  *  gorpcore -> outdoor; anything unknown -> null. Use it wherever a style is read from storage or a route. */
