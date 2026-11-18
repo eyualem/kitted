@@ -72,6 +72,7 @@ export const CLOSING_FORMAT = [
   '  {"type":"link","to":"check:FC1"} or {"type":"link","to":"piece:P7"}  a check or piece you talked about',
   'The app, not you, writes the cards that add a piece to his closet or show a changed piece: never write those. You never name a drawn piece or write its words: only the kind and the color, and the app names and draws it.',
   'followUps (a list of 0 to 3 taps he might want next, or []): each is a short clothes question or request of 30 characters or fewer, in sentence case, no emoji, not his own question again, for example "Make it dressier" or "Show me jackets". Empty when you decline or ask a question.',
+  'Follow-up taps are about the clothes, never about him: no I, me or my (except "Show me ..."), and nothing about his body, face, age or looks.',
   'occasion is one of: everyday, class, date, going_out, interview, event, gym, home (a wedding is an event; work is everyday).',
   'remember (or null): {"key":"waist_size","value":"32"} when he told you a lasting fact about his clothes or plans. Keys: waist_size, inseam, top_size, shoe_size, budget, work_dress_code, school_or_work, occasions_coming, color_avoid, color_like, fit_like, fit_avoid, look_now, owns_unphotographed. Never anything about his body, health, age, money beyond a clothes budget, or other people.',
   'verdict (or null): for "can I wear X with Y" or "does this work", "yes", "no" or "depends", and it must match <evidence>\'s verdict when it has one.',

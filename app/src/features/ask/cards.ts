@@ -505,14 +505,24 @@ const MODIFIERS = new Set([
   'too', 'so', 'a', 'an', 'the', 'bit', 'little', 'lot', 'really', 'very', 'kind', 'kinda', 'sort', 'of', 'more', 'less', 'much', 'even',
   'any', 'way', 'quite', 'like', 'getting', 'somewhat', 'rather', 'overly', 'super',
 ]);
-/** Garment nouns: a garment as the subject, or right after a part, makes it a clothes tap. */
-const GARMENTS = new Set([
-  'shirt', 'shirts', 'tee', 'tees', 'top', 'tops', 'polo', 'henley', 'flannel', 'overshirt', 'jacket', 'jackets', 'coat', 'coats',
-  'hoodie', 'hoodies', 'sweater', 'sweaters', 'sweatshirt', 'cardigan', 'vest', 'blazer', 'jeans', 'pants', 'trousers', 'chinos',
-  'shorts', 'joggers', 'sweatpants', 'slacks', 'boots', 'boot', 'sneakers', 'sneaker', 'shoes', 'shoe', 'loafers', 'sandals', 'socks',
-  'hat', 'hats', 'cap', 'caps', 'beanie', 'scarf', 'tie', 'belt', 'watch', 'ring', 'chain', 'bracelet', 'bag', 'mask', 'glasses',
-  'sunglasses', 'sleeve', 'sleeves', 'collar', 'hem', 'gloves', 'warmers', 'gaiter', 'outfit', 'clothes', 'layers',
-]);
+/** Garment nouns: a garment as the subject, or right after a part, makes it a clothes tap. Built from the closet's own
+ *  tables (the last word of each kind key and of its closet name, "work boots" → boots), singular and plural, so it can't
+ *  lag the closet, plus the words the closet doesn't draw (pants, scarf, glasses, sleeve...). "short" is left out: it is
+ *  the singular of "shorts" but also a size word. */
+const GARMENTS: ReadonlySet<string> = (() => {
+  const s = new Set([
+    'shirt', 'tee', 'top', 'polo', 'henley', 'flannel', 'overshirt', 'jacket', 'coat', 'hoodie', 'sweater', 'sweatshirt', 'cardigan',
+    'vest', 'blazer', 'jeans', 'pants', 'trousers', 'chinos', 'shorts', 'joggers', 'sweatpants', 'slacks', 'boot', 'sneaker', 'shoe',
+    'loafer', 'sandals', 'socks', 'hat', 'cap', 'beanie', 'scarf', 'tie', 'belt', 'watch', 'ring', 'chain', 'bracelet', 'bag', 'mask',
+    'glasses', 'sunglasses', 'sleeve', 'collar', 'hem', 'gloves', 'warmers', 'gaiter', 'outfit', 'clothes', 'layers', 'parka', 'trench',
+    'jean', 'pant', 'suit', 'tux', 'tuxedo', 'windbreaker', 'anorak', 'gilet', 'peacoat',
+    ...Object.keys(KIND_SLOT).flatMap((k) => [k.split('_').pop()!, kindNoun(k).split(/[^a-z]+/).filter(Boolean).pop()!]),
+  ]);
+  // The other number of each word ("boots" → "boot", "watch" → "watches"); a stray form like "glasse" matches nothing.
+  for (const x of [...s]) s.add(x.endsWith('s') ? x.slice(0, -1) : /(?:ch|sh)$/.test(x) ? `${x}es` : `${x}s`);
+  for (const x of ['short', 'piece', 'pieces']) s.delete(x);
+  return s;
+})();
 const SELF = new Set(['i', 'me']);
 const LINK = new Set(['look', 'looks', 'looking', 'looked', 'seem', 'seems']);
 const MAKE = new Set(['make', 'makes', 'making', 'made']);
@@ -550,11 +560,64 @@ function bodyTap(text: string): boolean {
   return w.some((x) => BODY_TRAITS.has(x)) && !w.some((x) => GARMENTS.has(x));
 }
 
+// The first-person layer (founder's design, Nov 17), checked before `bodyTap`: a tap that mentions him is kept only when
+// it is plainly about his clothes. Taps with no I, me or my skip it.
+const I_FORMS = new Set(['i', 'im', "i'm", "i'd", "i'll", "i've"]);
+/** Words that count like a garment right after "my": "Do these fit my style?", "What's missing from my closet?". Only
+ *  right after it, since "look" and "fit" are verbs too ("Do my teeth look ok?"). */
+const MY_CLOTHES = new Set(['style', 'look', 'outfit', 'outfits', 'fit', 'fits', 'closet', 'wardrobe', 'colors', 'color', 'clothes', 'size']);
+/** The words before "me" that keep it about clothes: "show me", "give me", "dress me", "for me", "on me". */
+const NEUTRAL_ME = new Set(['show', 'give', 'dress', 'for', 'on']);
+/** Rating him, not the clothes ("I rate outfits, never people"): a tap about him with one of these is always dropped. */
+const RATES_HIM = new Set([
+  'rate', 'rates', 'rating', 'rated', 'score', 'flatter', 'flatters', 'flattering', 'attractive', 'sexy', 'masculine', 'feminine',
+  'jacked', 'handsome', 'cute', 'ugly', 'pretty', 'girls', 'girl', 'guys', 'women', 'woman', 'tired',
+]);
+/** Appearance words that are fine on a garment ("my old boots", "chunky sneakers") but not in a tap with no garment. */
+const LOOKS_OF_HIM = new Set(['hot', 'chunky', 'built', 'old', 'older', 'young', 'younger', 'age']);
+/** Face, hair and body words the body lists don't hold. With no garment in the tap, any of them drops an "I" tap. */
+const FACE_HAIR = new Set([
+  'head', 'feet', 'foot', 'ears', 'ear', 'eyes', 'eye', 'teeth', 'smile', 'hair', 'haircut', 'beard', 'mustache', 'moustache',
+  'shave', 'acne', 'posture', 'slouch',
+]);
+/** Shopping and clothes-choice verbs: with one, an "I" tap with no garment stays ("What should I buy first?"). */
+const CHOOSE = new Set(['buy', 'wear', 'get', 'pick', 'choose', 'try', 'add', 'layer', 'swap', 'pair', 'match', 'pack', 'bring', 'order', 'need', 'style', 'switch', 'tuck', 'cuff', 'size']);
+/** "go <direction>": "I'd go darker". */
+const DIRECTIONS = new Set([
+  'lighter', 'darker', 'dressier', 'casual', 'more', 'less', 'bolder', 'simpler', 'warmer', 'cooler', 'brighter', 'smarter', 'sharper',
+  'louder', 'quieter', 'neutral', 'tonal', 'monochrome', 'classic', 'minimal', 'up', 'down',
+]);
+
+/**
+ * True when a tap that mentions him (I, I'm, I'd, me, my, mine, myself) is about him rather than his clothes. Such a tap
+ * is kept only when:
+ * 1. it rates him in no word (RATES_HIM, "best side"), and every "my" leads to a garment within three words ("my old
+ *    boots", "my face mask") or is followed by a MY_CLOTHES word ("my style"); and then either
+ * 2. it names a garment (or "my <clothes word>"), or
+ * 3. it names none, has no appearance word (LOOKS_OF_HIM, a number after "look"), and every "me" is neutral ("show me"...);
+ *    an "I" tap also needs a choice verb or "go <direction>" and no body, face or size word ("I'd go darker").
+ */
+function aboutHim(text: string): boolean {
+  const t = text.toLowerCase().replace(/[‘’]/g, "'");
+  const w = t.split(/[^a-z']+/).map((x) => x.replace(/^'+|'+$/g, '')).filter(Boolean);
+  if (!w.some((x) => FIRST_PERSON.has(x))) return false;
+  if (w.some((x) => RATES_HIM.has(x)) || ` ${w.join(' ')} `.includes(' best side ')) return true;
+  const ahead = (i: number) => MY_CLOTHES.has(w[i + 1] ?? '') || w.slice(i + 1, i + 4).some((x) => GARMENTS.has(x));
+  if (!w.every((x, i) => x !== 'my' || ahead(i))) return true;
+  if (w.some((x) => GARMENTS.has(x) || x === 'my')) return false;
+  if (w.some((x) => LOOKS_OF_HIM.has(x)) || /\blook(?:s|ing)?\s+(?:like\s+)?(?:about\s+)?\d/.test(t)) return true;
+  if (!w.every((x, i) => (x !== 'me' || NEUTRAL_ME.has(w[i - 1] ?? '')) && x !== 'mine' && x !== 'myself')) return true;
+  if (!w.some((x) => I_FORMS.has(x))) return false;
+  if (w.some((x) => BODY_ADJ.has(x) || BODY_PARTS.has(x) || BODY_TRAITS.has(x) || FACE_HAIR.has(x))) return true;
+  return !w.some((x, i) => CHOOSE.has(x) || (x === 'go' && DIRECTIONS.has(w[i + 1] ?? '')));
+}
+
 /**
  * The model's follow-up taps, checked (KC1.3): at most 3, in order, each a string of 1 to 30 characters in sentence case
  * (no capital but the first word's and "I"), no all-capital word, through the sentence gate, not a repeat of his
- * question and not a duplicate. Anything that isn't an array gives none. There's no clothes-word list: the gate, the
- * prompt and never showing them under a refusal hold that.
+ * question and not a duplicate, no emoji, and not about him (`aboutHim`, then `bodyTap`). Anything that isn't an array
+ * gives none. A tap with no I, me or my needs no clothes word: the gate, the prompt and never showing them under a
+ * refusal hold that.
  */
 export function checkFollowUps(raw: unknown, o: { question: string; gate: GateContext }): string[] {
   if (!Array.isArray(raw)) return [];
@@ -571,7 +634,7 @@ export function checkFollowUps(raw: unknown, o: { question: string; gate: GateCo
     if (!/^\p{Lu}/u.test(text)) continue;
     if (words.slice(1).some((w) => /^\p{Lu}/u.test(w) && !WORD_OK.has(w.replace(/[^\p{L}']+$/u, '')))) continue;
     if (/(?:^|[^\p{L}])\p{Lu}{2,}(?![\p{L}])/u.test(text)) continue;
-    if (TAP_EMOJI.test(text) || bodyTap(text)) continue;
+    if (TAP_EMOJI.test(text) || aboutHim(text) || bodyTap(text)) continue;
     if (checkSentence(text, o.gate) || isBodyRating(text)) continue;
     const n = sayNorm(text);
     if (!n || n === asked || seen.has(n)) continue;
