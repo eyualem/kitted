@@ -23,7 +23,7 @@ You build one strict Kitted task. The tests are already written and locked; your
 ## Build
 - Touch only the files in TASK.md → Files. If you truly need another, use it and say why in TASK.md → Built.
 - Make every locked test pass. You write no tests: the hook refuses test files, and the test writer covers the task's logic.
-- `npm run check` in `app/` (memory first: `top -l 1 | grep PhysMem`). The server tests (`npm --prefix tests run emulate` in `firebase/`) if you touched `firebase/`, the parity tests if you touched `@kitted/core`.
+- While building, run only the locked tests and the related ones (`npx jest --findRelatedTests <files>`, or the one Vitest file), and read big files (the engine, fixtures) in slices by grep and line range, never whole (the founder, Nov 18: keep builds lean). Then `npm run check` in `app/` once at the end (memory first: `top -l 1 | grep PhysMem`). The server tests (`npm --prefix tests run emulate` in `firebase/`) if you touched `firebase/`, the parity tests if you touched `@kitted/core`.
 - Add the demo screens a changed state needs, so it can be screenshotted.
 
 ## Never

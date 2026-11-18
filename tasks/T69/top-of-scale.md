@@ -1,6 +1,6 @@
 # T69 · The top of the scale on paper ($0)
 
-*Nov 17, 2026. Stored readings only, no AI calls, $0. Why: the founder (#488) said "the max should be around 9.5 and not capped at 9". Script: `extraction-test/top_of_scale.py`. Results: `extraction-test/results/top-of-scale/report.txt` and `table.json`. v16 as approved (#484) is unchanged. Every option below is a what-if knob that is off by default.*
+*Nov 17, 2026. Stored readings only, no AI calls, $0. Why: the founder (#491) said "the max should be around 9.5 and not capped at 9". Script: `extraction-test/top_of_scale.py`. Results: `extraction-test/results/top-of-scale/report.txt` and `table.json`. v16 as approved (#484) is unchanged. Every option below is a what-if knob that is off by default.*
 
 ## In plain words
 

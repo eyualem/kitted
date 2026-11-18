@@ -1,6 +1,6 @@
 # T69 · The rescoring in the app (parts engine v16)
 
-**Size:** strict (scoring) · **Branch:** `claude/t69-v16-port` (stacked on PR #124, main merged in) · **Plan:** `IMPLEMENTATION.md` (it is this task's "What changes") · **Tests:** `TESTING.md` · **Decisions:** #484 (v16 approved), #487 (Y47: v16 exactly as approved)
+**Size:** strict (scoring) · **Branch:** `claude/t69-v16-port` (stacked on PR #124, main merged in) · **Plan:** `IMPLEMENTATION.md` (it is this task's "What changes") · **Tests:** `TESTING.md` · **Decisions:** #484 (v16 approved), #490 (Y47: v16 exactly as approved)
 
 ## Plan (short)
 1. Python, output-only keys (no number moves), then `make_parts_json.py` → `gen-rubric-data.mjs` → `partsData.ts`.
@@ -64,3 +64,4 @@ Q-T1 to Q-T10 accepted as IMPLEMENTATION.md defaults them. Q-T5: committing the 
 - **Screenshots:** the Simulator's installed dev build does not load this worktree's JS (it showed an old onboarding screen, not demo 300, even with Metro on 8082), so no Simulator screenshots. The web preview on Metro 8082 (layout and text only, not iOS) shows: 300 "3.5 Start fresh", 302 "7.0 Put together", 303 "8.5 Sharp", 304 "9.0 Dialed in"; Why 9.0 (screen 309) rows add up: 7.0 + 0.38 + 0.5 + 0.25 + 0.5 + 0.25 + 0 + 0.75 - 0.12 (top of scale 9.5) - 0.75 (scale) + 0 + 0.24 rounding = 9.0. No image files were saved.
 - **Defects:** code: none found. test: (1) no direct test of the 3.0 floor, (4) no core test of the leg tie-break (both caught only by one broad test).
 - **Notes (never block):** in the web preview at 430 px wide the Why amounts "+0.38", "+1" and "+0.5" in some rows are cut to "+..." (text ellipsis); check on a phone. Demo screens are the made-up readings, not real photos.
+- Log numbers: this branch's entries were #487–#489 and became #490–#492 at the main merge (TESTING.md, locked, still says #487 on its line 44).

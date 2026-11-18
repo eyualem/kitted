@@ -1,6 +1,6 @@
 # T69 · The rescoring in the app (parts engine v16)
 
-**Size:** strict (scoring) · **From:** `plan.md` → T69 (lane "Fit check and scoring") · **Spec:** `rubric/v5-styles.md` with the T68 diff applied (title line: "parts engine v16: approved Nov 17, DECISIONS-LOG #484"); checks from `specs.md`: **F2.1** and the launch bar **"The score is fair"** (line 19) · **Source of truth for every number:** `extraction-test/rubrics/parts_proto.py`, `engine="v16"` (CLAUDE.md: the Python engine wins on scoring) · **After:** T68 (PR #124; this branch is stacked on it) · **The founder's calls:** #484 ("Yes, approve": the round-7 engine, B6 counted with each reading's own leg look); #487 ("Yes, build v16", Y47: port exactly, no outline or coat rules; B6 stays T68's count, 218/223; PR #140's stricter count with looks U and L, 217, is information only).
+**Size:** strict (scoring) · **From:** `plan.md` → T69 (lane "Fit check and scoring") · **Spec:** `rubric/v5-styles.md` with the T68 diff applied (title line: "parts engine v16: approved Nov 17, DECISIONS-LOG #484"); checks from `specs.md`: **F2.1** and the launch bar **"The score is fair"** (line 19) · **Source of truth for every number:** `extraction-test/rubrics/parts_proto.py`, `engine="v16"` (CLAUDE.md: the Python engine wins on scoring) · **After:** T68 (PR #124; this branch is stacked on it) · **The founder's calls:** #484 ("Yes, approve": the round-7 engine, B6 counted with each reading's own leg look); #490 ("Yes, build v16", Y47: port exactly, no outline or coat rules; B6 stays T68's count, 218/223; PR #140's stricter count with looks U and L, 217, is information only).
 
 This file is the plan the test writer and the implementer work from (it stands in for TASK.md → What changes; TASK.md still gets Built, Disputes and Review). The test writer reads **Interfaces** and `TESTING.md` only, so Interfaces is complete on its own.
 
@@ -342,4 +342,4 @@ The coordinator asked for 9.5; it can't be reached (Q-F1), so 304 shows the real
 - **Parity size and run time:** `parts_parity.json` is 22 MB with 28,096 cases; the v16 configs add a few thousand. The parity test stops at 20 mismatches; keep it that way.
 - **Memory:** the Mac had 160 MB free during planning. The Python fixture runs and `npm run check` must not overlap each other or a Simulator.
 - **Worktree core:** `app/node_modules` here is a folder of symlinks with `@kitted/core` → this worktree's core; never commit either. Typecheck HEAD alone with `npx tsc --noEmit -p app/packages/kitted-core` (build notes #127, #358).
-- **DECISIONS-LOG numbering:** #487 on this branch is already marked "renumber at merge".
+- **DECISIONS-LOG numbering:** #490 on this branch is already marked "renumber at merge".
