@@ -1,0 +1,33 @@
+{
+ "mode": "full",
+ "fails": [],
+ "seconds": 13932,
+ "held-out": {
+  "photos": 400,
+  "statuses": {
+   "ok": 368,
+   "multiplePeople/None": 28,
+   "couldNotFrame/faceRemains": 2,
+   "couldNotFrame/None": 2
+  },
+  "suspects": 110,
+  "sheet": "110 crops in extraction-test/results/t96/held-out-held-out"
+ },
+ "baseline": {
+  "photos": 1513,
+  "statuses": {
+   "ok": 1089,
+   "multiplePeople/None": 278,
+   "couldNotFrame/faceRemains": 12,
+   "noPerson/None": 105,
+   "couldNotFrame/None": 29
+  },
+  "suspects": 363,
+  "sheet": "363 crops in extraction-test/results/t96/held-out-baseline"
+ },
+ "gate_185": {
+  "not_hidden": 0,
+  "list": []
+ },
+ "eye": "every suspect on the sheets needs the reviewer's verdict (print, poster, screen, already pixelated, real) in TASK.md \u2192 Review"
+}

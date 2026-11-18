@@ -1,0 +1,440 @@
+{
+ "mode": "full",
+ "planted": null,
+ "fails": [],
+ "seconds": 41,
+ "photos": [
+  {
+   "file": "self-0.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261021-012550/photos/c994c2b8c10158b5060e98ed0698a8caa907124cb58488146f8823e1d72a929f-photo.jpg",
+   "scale": 0.522,
+   "px": 25.1,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-1.jpg",
+   "set": "self",
+   "host": "inputs/mirror-fit-check-1/m12/before_mirror.jpg",
+   "scale": 0.428,
+   "px": 14.4,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-2.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261008-162946/photos/0d39d642c5a03b6cd903be1edb18895e73ab1b174c36eda81b637efcaf99208c-photo.jpg",
+   "scale": 0.449,
+   "px": 24.2,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-3.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261017-212744/photos/23999fefa3d440ed4ba2124da1d8a810263110d3984d9721605afd9ecb014ed9-photo.jpg",
+   "scale": 0.465,
+   "px": 21.7,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-4.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261017-212744/photos/fd52eb43e6c418d7e3939899ad190adc97afa276be9d4fbe3277654deecf54eb-photo.jpg",
+   "scale": 0.375,
+   "px": 15.7,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-5.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261008-162946/photos/b0f0c8d84b93df08ba318706eda5ce27837a693f63d947f681930c153f813e97-photo.jpg",
+   "scale": 0.384,
+   "px": 23.5,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-6.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261014-180424/photos/8bc29df510c347b567670a567760d10e41dfa164486c4adf2e002eef95caf790-photo.jpg",
+   "scale": 0.484,
+   "px": 28.7,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-7.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261014-180424/photos/f0719366cc759dd076a1b37af72d6f3ba0342c7855378680609c5cf17b86ee56-photo.jpg",
+   "scale": 0.533,
+   "px": 36.6,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": false
+  },
+  {
+   "file": "self-8.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261014-180424/photos/3239a68d1618a0b69aaec9cc9555ed0a0fafd78227da58f93cef49ee707e27c6-photo.jpg",
+   "scale": 0.384,
+   "px": 27.6,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": false
+  },
+  {
+   "file": "self-9.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261023-221517/photos/a5ff951fbe7c7707a2789714761a70aede8cf1e193acb4582990c2cb935a8d19-photo.jpg",
+   "scale": 0.429,
+   "px": 21.8,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-10.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261014-180424/photos/d918c0325d8593bd45ce8cae8b5977a5286bbc31c94647a5ac1515d4145fe762-photo.jpg",
+   "scale": 0.384,
+   "px": 23.8,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "self-11.jpg",
+   "set": "self",
+   "host": "screenshots/phone/20261024-153001/photos/4c4beff6d694de51a5111d3521f494d776d2646f343dc07d112b7dd24030652e-photo.jpg",
+   "scale": 0.438,
+   "px": 15.3,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-0.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261021-012550/photos/c994c2b8c10158b5060e98ed0698a8caa907124cb58488146f8823e1d72a929f-photo.jpg",
+   "scale": 0.457,
+   "px": 7.7,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-1.jpg",
+   "set": "other",
+   "host": "inputs/mirror-fit-check-1/m12/before_mirror.jpg",
+   "scale": 0.456,
+   "px": 49.2,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": false
+  },
+  {
+   "file": "other-2.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261008-162946/photos/0d39d642c5a03b6cd903be1edb18895e73ab1b174c36eda81b637efcaf99208c-photo.jpg",
+   "scale": 0.492,
+   "px": 23.0,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-3.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261017-212744/photos/23999fefa3d440ed4ba2124da1d8a810263110d3984d9721605afd9ecb014ed9-photo.jpg",
+   "scale": 0.563,
+   "px": 23.6,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-4.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261017-212744/photos/fd52eb43e6c418d7e3939899ad190adc97afa276be9d4fbe3277654deecf54eb-photo.jpg",
+   "scale": 0.431,
+   "px": 26.3,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-5.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261008-162946/photos/b0f0c8d84b93df08ba318706eda5ce27837a693f63d947f681930c153f813e97-photo.jpg",
+   "scale": 0.403,
+   "px": 23.9,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-6.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261014-180424/photos/8bc29df510c347b567670a567760d10e41dfa164486c4adf2e002eef95caf790-photo.jpg",
+   "scale": 0.485,
+   "px": 33.3,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": false
+  },
+  {
+   "file": "other-7.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261014-180424/photos/f0719366cc759dd076a1b37af72d6f3ba0342c7855378680609c5cf17b86ee56-photo.jpg",
+   "scale": 0.489,
+   "px": 35.2,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": false
+  },
+  {
+   "file": "other-8.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261014-180424/photos/3239a68d1618a0b69aaec9cc9555ed0a0fafd78227da58f93cef49ee707e27c6-photo.jpg",
+   "scale": 0.586,
+   "px": 29.9,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": false
+  },
+  {
+   "file": "other-9.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261023-221517/photos/a5ff951fbe7c7707a2789714761a70aede8cf1e193acb4582990c2cb935a8d19-photo.jpg",
+   "scale": 0.578,
+   "px": 35.8,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": false,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-10.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261014-180424/photos/d918c0325d8593bd45ce8cae8b5977a5286bbc31c94647a5ac1515d4145fe762-photo.jpg",
+   "scale": 0.567,
+   "px": 19.9,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  },
+  {
+   "file": "other-11.jpg",
+   "set": "other",
+   "host": "screenshots/phone/20261024-153001/photos/4c4beff6d694de51a5111d3521f494d776d2646f343dc07d112b7dd24030652e-photo.jpg",
+   "scale": 0.451,
+   "px": 12.7,
+   "otherLabelShare": 0,
+   "status": {
+    "new": "ok/None",
+    "before": "ok/None",
+    "main": "ok/None"
+   },
+   "new left alone": true,
+   "before left alone": false,
+   "main left alone": true
+  }
+ ],
+ "pinned instance-mask cases": [
+  {
+   "photo": "inputs/ig/Screenshot 2026-10-12 at 1.45.52\u202fPM.png",
+   "box": [
+    302.4,
+    667.1,
+    92.3,
+    92.3
+   ],
+   "otherLabelShare": 0.241,
+   "new": "ok/None",
+   "before": "ok/None",
+   "prints": [],
+   "verdicts": [
+    {
+     "copy": "upload",
+     "v": "covered",
+     "unchanged": null,
+     "inside": null
+    },
+    {
+     "copy": "detail",
+     "v": "covered",
+     "unchanged": null,
+     "inside": null
+    }
+   ]
+  }
+ ],
+ "claimed by another label (gated)": 0,
+ "left alone (reported)": {
+  "new": "15 of 24",
+  "before": "0 of 24",
+  "main": "18 of 24"
+ },
+ "left alone by set (reported)": {
+  "self": {
+   "new": 8,
+   "before": 0,
+   "main": 10
+  },
+  "other": {
+   "new": 7,
+   "before": 0,
+   "main": 8
+  }
+ },
+ "note": "none of the 24 built faces over his chest is claimed by another instance label (the mask gives the pasted figure his own label), so only the pinned real case reaches the instance-mask behaviour"
+}
