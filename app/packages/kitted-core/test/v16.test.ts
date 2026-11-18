@@ -68,7 +68,10 @@ describe("v16: same photo, same score (F2.1)", () => {
     const eng = v16Engine();
     const PICKS: Styles[] = [[], [["streetwear", 1]], [["classic_prep", 1]], [["minimalist", 0.5], ["smart_casual", 0.5]]];
     // every number and the whole v16 block (lifts, taste, caps, gradedLook, heldBy); only the label may follow his picks
-    const sig = (r: PartsScored) => JSON.stringify([r.overall, r.rawScore, r.rawUnrounded, r.average, r.averageUnrounded, r.parts,
+    // every part's numbers and the checks that moved them (picks may only change the "reads as" wording of a line, [SCO-4])
+    const partNums = (r: PartsScored) => Object.entries(r.parts).map(([k, p]) => [k, p.score, p.display, p.na,
+      p.reasons.map((x) => [x.check, x.points]), p.tips.map((x) => [x.check, x.wouldCost])]);
+    const sig = (r: PartsScored) => JSON.stringify([r.overall, r.rawScore, r.rawUnrounded, r.average, r.averageUnrounded, partNums(r),
       r.condition, r.occasion, r.v16]);
     const inputs = [...madeUp(), ...v16Inputs()];
     let n = 0;

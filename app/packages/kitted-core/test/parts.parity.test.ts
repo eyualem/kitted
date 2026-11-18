@@ -149,7 +149,8 @@ describe("parts engine parity (parts_proto.py v15)", () => {
     expect(v16.length).toBeGreaterThan(1000);
     const bad: string[] = [];
     for (const c of v16) {
-      if (!("error" in c.expected) && !("v16" in c.expected)) bad.push(`${c.src}: the fixture has no v16 block`);
+      // a scored v16 case carries the v16 block (Python, like the TS, has none when the photo isn't scored)
+      if (!("error" in c.expected) && c.expected["overall"] !== null && !("v16" in c.expected)) bad.push(`${c.src}: the fixture has no v16 block`);
       const m = mismatch(c);
       if (m) bad.push(m);
       if (bad.length > 20) break;

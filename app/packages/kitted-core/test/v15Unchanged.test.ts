@@ -77,7 +77,7 @@ describe("v15 byte-identical (T69-G2)", () => {
   });
 
   describe("the switch", () => {
-    afterEach(() => setRescoreV16(RESCORE_V16));
+    afterEach(() => setRescoreV16(true)); // RESCORE_V16 is the live switch: restore the shipped value
 
     it("T69-G2 · with RESCORE_V16 off every default path is v15", () => {
       expect(RESCORE_V16).toBe(true);

@@ -5,6 +5,11 @@ import { askWithClosetParts, knownMatches, scoreParts, type Garment, type PartsS
 import type { ClosetItemRow, ClosetObservationRow } from '@/data/types';
 import { knownPieces } from '@/features/closet/profile';
 import { whyParts } from '@/features/why/partsRows';
+import { setRescoreV16 as setRescoreV16T69 } from '@kitted/core';
+// T69 (#484, #487): this file tests v15's unsure-wrinkle Condition row and its 8.0. v15 still scores every check stored before T69 (and is the third
+// switch's rollback), so the file is pinned to it; v16's card, rows and numbers are in the T69-*.test.ts files.
+beforeAll(() => setRescoreV16T69(false));
+afterAll(() => setRescoreV16T69(true));
 
 const tee = { category: 'top', subcategory: 'tee', color_family: 'white', pattern: 'solid', certainty: 'clear' } as Garment;
 const whiteTee = {
