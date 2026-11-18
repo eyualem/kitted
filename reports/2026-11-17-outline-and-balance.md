@@ -8,13 +8,13 @@ You asked whether the scoring is balanced in how it reads outfits, how the silho
 
 - **One part does almost all the work, and it's the right one.** Silhouette and proportions moves the score on 70% of your photos and carries nearly all of v16's agreement with you: take it out and the match with your ratings falls from r 0.63 to 0.33. Fit, color, shoes and style each move a score on a fifth to a quarter of photos or less, and none of them tracks your taste on its own (r 0.09–0.13). Fit is nearly silent (it moves 2% of scores), because its least steady reads were muted on purpose in v16.
 - **Coats and jackets are where v16 is weakest.** On the 69 photos with a layer, v16 is within a point of you 77% of the time (r 0.54); on the 95 without, 85% (r 0.69). Your instinct was right: the coat isn't in the outline today.
-- **The fix is one read the app already pays for.** Look U, the upper close-up the app asks on every check, already answers where the outermost layer ends (waistband, hip, crotch, thigh, knee). The app throws that answer away today. It repeats itself 90% of the time on the three bands that matter (short, mid, long), against 75% for the main reading's own jacket length.
-- **The rule that works, in plain words:** the outline is the outermost layer plus the legs. A jacket or open shirt that stops at the waistband over full or straight legs makes a clean break and lifts; a long coat over anything but skinny legs makes one long line and lifts; a casual layer that stops at the hip or crotch splits the outfit in half and costs, and it doesn't earn the short-layer or open-layer credits. Blazers and suit jackets are spared (the creators say a tailored jacket has no fixed length), and so is a plain untucked tee with nothing over it (they say untucked is never a fault on a casual outfit).
-- **What it buys, honestly:** on photos the fit never saw, within a point of you 83.2% of the time and r 0.677, against approved v16's 82.2% and 0.651 by the same test. The ranking gain shows on all 8 splits; the within-a-point gain is small (better on 5, worse on 1). Steadiness is unchanged (217 of 223 with every look, 218 by your Y44 count). It still misses the r 0.69 bar.
-- **A stronger version exists, and it's a taste call.** If every top and jacket that stops at the hip pays, blazers and plain tees included, it reaches 87.2% and r 0.711 (past the bar), but it breaks two creator rules and costs 2 photos of steadiness (215). Your rule is that the creators win a clash, so it's not the recommendation; it's there if you want to overrule.
+- **The read that would fix it is already paid for.** Look U, the upper close-up the app asks on every check, already answers where the outermost layer ends (waistband, hip, crotch, thigh, knee). The app throws that answer away today. It repeats itself 90% of the time on the three bands that matter (short, mid, long), against 75% for the main reading's own jacket length.
+- **The rule, in plain words:** the outline is the outermost layer plus the legs. A jacket or open shirt that stops at the waistband over full or straight legs makes a clean break and lifts; a long coat over anything but skinny legs makes one long line and lifts; a casual layer that stops at the hip or crotch splits the outfit in half and costs, and it doesn't earn the short-layer or open-layer credits. Blazers and suit jackets are spared (the creators say a tailored jacket has no fixed length), and so is a plain untucked tee with nothing over it (they say untucked is never a fault on a casual outfit).
+- **What it buys, honestly: not enough to prove.** Measured the fair way (every size refit on each random half, T68's method, the same 8 splits), the creators' version is 83.1% within a point of you and r 0.648, against v16's 82.0% and 0.631. That's better on 6 of 8 splits and worse on 2, and the ranking is better on only 5 of 8: inside the noise. Steadiness is the same as v16's.
+- **Only the stricter version clearly helps, and it fails a bar.** If every top and jacket that stops at the hip pays, blazers and plain tees included, it reaches 85.7% and r 0.687, better on all 8 splits. But it breaks two creator rules (suit.6, prop.7) and drops steadiness to 215 of 223 in the app's case (bar 218). Your rule is that the creators win a clash, and the steadiness bar is yours too, so it can't ship as is.
 - **The colors of the layers didn't help.** Dark inside light and a tonal stack with a light-to-dark step gave nothing on unseen photos, so they don't ship.
 - **Rise isn't worth paying for yet.** Where the waistband shows, you score high-rise outfits higher, but the engine already does (they're mostly tucked outfits that earn the waist break). A rise rule at its best would fix none of the misses. The read is designed and quoted below; it waits.
-- **Recommendation:** port v16 plus the outline (creators' version). Ranked options at the end.
+- **Recommendation:** port v16 as is for T69, and keep the outline on paper behind its switch. What's real: layered outfits are v16's weak spot, and where the outer layer ends is what you react to. What isn't there yet: a version that fixes it within the creators' rules and the steadiness bar. Ranked options at the end.
 
 ## 1. The balance audit: what each part moves
 
@@ -107,21 +107,25 @@ You do like high rise more, but the engine already scores those outfits right, b
 
 All on your 164 blind ratings, refit on each random half and tested on the other, over the same 8 splits as T68 and PR #137. v16 refit this way reproduces T68's 82.0% and r 0.63 exactly. Scripts `extraction-test/outline_paper.py` (results `results/outline1/paper.txt`), `outline_bars.py` (`bars.txt`), `outline_variants.py` (`variants.txt`). Engine changes are in `parts_proto.py`'s `_outline`, off unless `taste["outline"]` is set; v16 and v15 give identical results with it off (4,912 results compared, `outline_parity.py`).
 
-| | Approved v16 | **v16 + outline, creators' version (recommended)** | v16 + outline, your-taste version |
+| Measured the fair way: every size refit on each half A, tested on half B, 8 splits | v16 | **v16 + outline, creators' version, with the edge defaults** | v16 + outline, stricter (blazers and plain tees at the hip cost too) |
 | --- | --- | --- | --- |
-| Within a point of you, held out (approved sizes held; see below) | 82.2% (80–84) | **83.2% (80–85)** | 87.2% (83–89) |
-| r with you, held out (bar 0.69) | 0.651 | **0.677**, better on 8/8 splits | 0.711, better on 8/8 |
+| Within a point of you | 82.0% (79–84) | **83.1% (80–87)**: better on 6/8 splits, worse on 2 | 85.7% (83–89): better on 8/8 |
+| r with you (bar 0.69) | 0.631 | **0.648**: better on 5/8 | 0.687: better on 8/8 |
 | Steadiness, every look (the app's case, stricter than T68's; bar 218) | 217/223 | **217/223** | 215/223 |
 | Steadiness, your Y44 count (T68's 218, as measured then) | 218/223 | **218/223** | 218/223 |
 | Dealbreakers, creators' pairs and anchors (B2–B4) | as T68 | **unchanged** (no look U on those frames, so the outline can't fire there: not tested by it) | unchanged |
 | Band shares, your checks (worst gap) | 18.4 points | **16.8** | 21.6 |
 | Breaks a creator rule | | **no** | yes: suit.6 and prop.7 |
 
-**Why v16 shows 82.2%, r 0.651 here, not T68's 82.0%, r 0.631.** Same 164 photos and the same 8 splits; the difference is what gets refit. T68 and PR #137 refit all of v16's taste sizes on each half A. This table holds approved v16's sizes fixed (they were fitted on all 164, so they have already seen half B, which flatters both columns a little and equally) and refits only the new outline sizes. Run T68's way, refitting everything, v16 is 82.0%, r 0.631 again, and the creators' version without the edge defaults is 84.0%, r 0.658 (`paper.txt`). The edge defaults weren't run that way. Either way the gain is measured like for like.
+Steadiness, the band shares and what moved are scored with the version that would ship: approved v16's sizes plus the outline sizes fitted on all 164.
+
+**Note: the same three with approved v16's sizes held fixed** (only the outline sizes refit per half). This flatters every column a little, because the approved sizes were fitted on all 164 and have seen half B: v16 82.2%, r 0.651; creators' version 83.2%, 0.677; stricter 87.2%, 0.711. The first version of this report led with these numbers.
+
+**v16's baseline is T68's.** Refit this way, v16 is 82.0%, r 0.631, exactly as T68 and PR #137 measured it. The creators' version without the edge defaults is 84.0%, r 0.658 (better on 6/8, r on 7/8): the edge defaults cost about a point, mostly by switching off the photos where the shoes aren't read.
 
 **Why steadiness shows 217 and 218.** T68's 218/223, the bar you counted in Y44, scores each gold reading with its own leg-width look. That count is the "Y44 count" row: 218 for both, so v16 still passes its own bar. The "every look" row is a different, stricter measurement: each reading also gets its own looks U and L, which is the app's real case once look U's hem is read. There v16 itself is 217, one under 218, and the outline version is 217 too. That's worth knowing for T69: once look U's answers count in the score, the steadiness test should use every look.
 
-Held-out sizes for the creators' version (fitted per split; approved v16's sizes held exactly): the halfway charge over full legs 0.25–0.5; the short outline 0.25 on every split; the long coat 0.25 on 7 of 8. Each ships at its all-164 value.
+Sizes the creators' version fitted per split: the halfway charge over full legs 0.25–0.5 on every split; over slim legs 0 on every split; the short outline and the long coat about 0.25. The stricter version's sizes: the halfway charge 0.5–1.0, the short outline 0.25, the long coat 0–0.5.
 
 **What moved** (in sample, the creators' version: 17 of 164 photos; 13 closer to you, 3 further, 1 the same distance):
 
@@ -144,9 +148,11 @@ The full list is in `results/outline1/bars.txt`.
 
 ## 5. Ranked recommendation
 
-1. **Port v16 plus the outline, creators' version (recommended).** A small, consistent gain where v16 is weakest (layers), no steadiness cost, no creator rule broken, and $0 a check, because look U already runs. T69 would also pass look U's `outer_hem_at`, `outer_kind`, `under_hem_at` and `under_shows` into core (today `lookInput` passes two fields) and port `_outline` with its parity fixtures. It adds about a day to T69.
-2. **The your-taste version**, if you want to overrule the creators on two points: a blazer that ends at the seat and a plain untucked tee to the hip both cost. It's the only version past the r 0.69 bar, but it costs 2 photos of steadiness (under the bar) and contradicts suit.6 and prop.7.
-3. **Port v16 as is.** Safe and already approved. It keeps the layer blind spot: 77% within a point on layered outfits.
+1. **Port v16 as is (recommended).** Already approved, passes its own bars, and the honest test can't tell the creators' outline apart from it. T69 doesn't wait. Nothing is lost: the app already stores look U's answers with every check, so the outline can be switched on later and scored on your real checks without a new read.
+2. **v16 plus the outline, creators' version.** No bar broken and $0 a check, but its gain (about a point, better on 5–6 of 8 splits) is inside the noise, and it adds about a day to T69 (passing look U's `outer_hem_at`, `outer_kind`, `under_hem_at` and `under_shows` into core, porting `_outline` and its parity fixtures).
+3. **The stricter version**, only if you overrule the creators on two points (a blazer that ends at the seat and a plain untucked tee to the hip both cost). It's the only version that clearly helps, but it fails the steadiness bar in the app's case (215, bar 218) and still misses r 0.69. To ship, it would need a steadier read at the waistband/hip border first.
+
+What would settle the outline: more of your blind ratings of layered outfits (69 today), or look U asked twice at the waistband/hip border.
 
 Not recommended now: the layer color rules (no help), the rise read (nothing to fix), a re-read of the main reading's jacket length (look U's is better and free).
 

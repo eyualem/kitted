@@ -60,6 +60,9 @@ ARMS = [
     ("mid, tops only", {"ol.only": "top"}, {"ol.mid": [0, 0.25, 0.5, 0.75, 1.0], "ol.mid_full": [0, 0.25, 0.5]}),
     ("+outline, creators", {"ol.mid_block": True, "ol.tailored_ok": True, "ol.mid_layers_only": True},
      {"ol.mid": [0, 0.25, 0.5, 0.75, 1.0], "ol.mid_full": [0, 0.25, 0.5], "ol.short": [0, 0.25, 0.5], "ol.long": [0, 0.25, 0.5]}),
+    ("+outline, creators, edges", {"ol.mid_block": True, "ol.tailored_ok": True, "ol.mid_layers_only": True,
+                                   "ol.edges": True},
+     {"ol.mid": [0, 0.25, 0.5, 0.75, 1.0], "ol.mid_full": [0, 0.25, 0.5], "ol.short": [0, 0.25, 0.5], "ol.long": [0, 0.25, 0.5]}),
     ("+short +long, layers", {"ol.mid_block": True, "ol.only": "outer"}, {"ol.mid": [0, 0.25, 0.5, 0.75, 1.0],
                               "ol.mid_full": [0, 0.25, 0.5], "ol.short": [0, 0.25, 0.5], "ol.long": [0, 0.25, 0.5]}),
     # the approved v16 sizes held exactly (TUNE["v16"]); only the outline sizes are fitted on half A

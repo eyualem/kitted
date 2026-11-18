@@ -8,6 +8,7 @@ The outline rules on paper: 164 rated photos, refit on each half A, tested on ha
   mid, layers only   within 1 84.6% (82-88)  r 0.667 (0.63-0.71)   sizes per split: mid 0.5/0.75/1.0/1.0/0.5/0.5/0.5/0.5; mid_full 0.25/0.5/0.25/0.5/0.5/0.25/0.5/0.5
   mid, tops only     within 1 81.1% (78-84)  r 0.636 (0.59-0.70)   sizes per split: mid 1.0/1.0/1.0/0.5/1.0/0.5/1.0/0.75; mid_full 0.5/0/0.5/0.5/0.25/0.5/0/0.5
   +outline, creators within 1 84.0% (82-87)  r 0.658 (0.63-0.69)   sizes per split: mid 0/0/0.5/0/0/0/0.5/0.5; mid_full 0.5/0.5/0.25/0.5/0.5/0.25/0.25/0.5; short 0.5/0.25/0.25/0.25/0.5/0.5/0.25/0.5; long 0.25/0.25/0.25/0/0.5/0.25/0.25/0.25
+  +outline, creators, edges within 1 83.1% (80-87)  r 0.648 (0.63-0.68)   sizes per split: mid 0/0/0/0/0/0/0/0; mid_full 0.5/0.5/0.25/0.5/0.5/0.25/0.25/0.5; short 0.5/0.25/0.25/0.25/0.5/0.5/0.25/0.5; long 0.25/0.25/0.25/0/0.5/0.25/0.25/0.25
   +short +long, layers within 1 84.6% (82-88)  r 0.665 (0.62-0.71)   sizes per split: mid 0.5/0.75/1.0/1.0/0.5/0.5/0.5/0.5; mid_full 0.25/0.5/0.25/0.5/0.5/0.25/0.5/0.5; short 0/0/0/0/0/0/0/0.25; long 0.25/0.25/0.25/0/0.5/0.25/0.25/0.25
   approved v16       within 1 82.2% (80-84)  r 0.651 (0.59-0.71)
   approved +outline  within 1 87.2% (83-89)  r 0.711 (0.65-0.75)   sizes per split: mid 0.5/0.75/1.0/0.5/0.5/0.5/0.5/0.5; mid_full 0.5/0.5/0.5/0.5/0.5/0.5/0.5/0.5; short 0.25/0.25/0.25/0.25/0.25/0.25/0.25/0.25; long 0.25/0.25/0.25/0/0.5/0.25/0.25/0.25
@@ -24,6 +25,7 @@ The outline rules on paper: 164 rated photos, refit on each half A, tested on ha
     mid, layers only   within 1  +2.6 (better on 6/8, worse on 0/8)  r +0.036 (better on 7/8)
     mid, tops only     within 1  -0.9 (better on 1/8, worse on 6/8)  r +0.005 (better on 6/8)
     +outline, creators within 1  +2.0 (better on 6/8, worse on 0/8)  r +0.027 (better on 7/8)
+    +outline, creators, edges within 1  +1.1 (better on 6/8, worse on 2/8)  r +0.018 (better on 5/8)
     +short +long, layers within 1  +2.6 (better on 6/8, worse on 0/8)  r +0.034 (better on 6/8)
     approved v16       within 1  +0.2 (better on 3/8, worse on 4/8)  r +0.021 (better on 6/8)
     approved +outline  within 1  +5.2 (better on 8/8, worse on 0/8)  r +0.080 (better on 8/8)
@@ -40,6 +42,7 @@ The outline rules on paper: 164 rated photos, refit on each half A, tested on ha
   mid, layers only   fitted on all 164: within 1 141/164, r 0.684, mean 7.04 (his 6.92), sd 0.91 (his 1.17); sil 1.0, sil_line 0.5, sil_tonal 0, leg_skinny 0.5, leg_wide 0.75, hem_plus 0.5, shorts_wide 0.5, shorts_above 0.75, ol.mid 0.5, ol.mid_full 0.5
   mid, tops only     fitted on all 164: within 1 137/164, r 0.652, mean 7.09 (his 6.92), sd 0.91 (his 1.17); sil 0.75, sil_line 0.5, sil_tonal 0, leg_skinny 0.5, leg_wide 0.75, hem_plus 0.5, shorts_wide 0.5, shorts_above 0.5, ol.mid 0.5, ol.mid_full 0.5
   +outline, creators fitted on all 164: within 1 139/164, r 0.675, mean 7.10 (his 6.92), sd 0.89 (his 1.17); sil 1.25, sil_line 0.5, sil_tonal 0, leg_skinny 0.5, leg_wide 0.75, hem_plus 0.5, shorts_wide 0.5, shorts_above 0.75, ol.mid 0.5, ol.mid_full 0.5, ol.short 0.25, ol.long 0.25
+  +outline, creators, edges fitted on all 164: within 1 137/164, r 0.670, mean 7.12 (his 6.92), sd 0.87 (his 1.17); sil 1.25, sil_line 0.5, sil_tonal 0, leg_skinny 0.5, leg_wide 0.75, hem_plus 0.5, shorts_wide 0.5, shorts_above 0.75, ol.mid 0, ol.mid_full 0.5, ol.short 0.25, ol.long 0.25
   +short +long, layers fitted on all 164: within 1 141/164, r 0.686, mean 7.05 (his 6.92), sd 0.91 (his 1.17); sil 1.0, sil_line 0.5, sil_tonal 0, leg_skinny 0.5, leg_wide 0.75, hem_plus 0.5, shorts_wide 0.5, shorts_above 0.75, ol.mid 0.5, ol.mid_full 0.5, ol.short 0, ol.long 0.25
   approved v16       fitted on all 164: within 1 134/164, r 0.630, mean 7.18 (his 6.92), sd 0.88 (his 1.17); sil 1.75, sil_line 0.5, sil_tonal 0.25, leg_skinny 0.5, leg_wide 0.75, hem_plus 0.5, shorts_wide 0.5, shorts_above 0.5
   approved +outline  fitted on all 164: within 1 143/164, r 0.697, mean 7.03 (his 6.92), sd 0.96 (his 1.17); sil 1.75, sil_line 0.5, sil_tonal 0.25, leg_skinny 0.5, leg_wide 0.75, hem_plus 0.5, shorts_wide 0.5, shorts_above 0.5, ol.mid 0.5, ol.mid_full 0.5, ol.short 0.25, ol.long 0.25
