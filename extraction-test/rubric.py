@@ -239,9 +239,25 @@ SC_VETO = {"hoodie", "sweatshirt", "graphic_tee", "jersey", "rugby_shirt", "flan
            "rain_jacket", "sweatpants", "joggers", "athletic_shorts", "cargos", "slides_sandals", "track_jacket", "track_pants",
            "technical_pants", "trail_shoe"}
 
+# --- tailored (T94, specs/tailored.md TL1): the 8th look, a NAME only. It is never in STYLE_ORDER, so no band, credit,
+# charge or fix gate (all read detect_styles) can see it; detect_looks adds it for the card's name, Going for and the
+# fix order for a Tailored pick (TL5). TL_NEVER is T69's never-list exactly.
+TL_JACKET = set(TAILORED_OUTER)
+TL_TROUSERS = {"suit_trousers", "trousers"}
+TL_NEVER = {"jeans", "chinos", "cargos", "sweatpants", "joggers", "shorts", "athletic_shorts", "track_pants",
+            "chunky_sneaker", "performance_runner", "basketball_sneaker", "slides_sandals", "work_boot", "hoodie",
+            "sweatshirt", "graphic_tee", "tank_top", "jersey", "fleece"}
+TL_SIGNATURE_UP = TL_JACKET
+TL_HOME_UP = {"dress_shirt", "oxford_shirt", "sweater", "knit_polo", "tee", "overcoat"}
+TL_SIGNATURE_SHOES = {"loafer", "derby", "dress_shoe", "chelsea_boot"}
+TL_HOME_SHOES = {"white_leather_sneaker", "low_profile_sneaker"}
+
 STYLE_ORDER = ["vintage_sport", "outdoor", "workwear", "streetwear", "classic_prep", "minimalist", "smart_casual"]
+# The 8 looks' fixed order (TL2): Tailored after streetwear, ahead of classic prep, minimal and smart casual. The 7 keep
+# their relative order, so for an outfit that isn't Tailored the label is exactly detect_styles' label.
+LOOK_ORDER = ["vintage_sport", "outdoor", "workwear", "streetwear", "tailored", "classic_prep", "minimalist", "smart_casual"]
 STYLE_NAMES = {"vintage_sport": "vintage sport", "outdoor": "outdoor", "workwear": "workwear", "streetwear": "streetwear",
-               "classic_prep": "classic prep", "minimalist": "minimal", "smart_casual": "smart casual"}
+               "tailored": "tailored", "classic_prep": "classic prep", "minimalist": "minimal", "smart_casual": "smart casual"}
 
 
 class Outfit:
@@ -476,6 +492,28 @@ def _gate_sc(c, slots, total):
     return (slots.get("upper", 0) > 0 or slots.get("bottom", 0) == 2) and total >= (4 if c.shoes else 3)
 
 
+def _role_tailored(g, c):
+    """TL1's points: the jacket and dress trousers are signature (2), a shirt or knit and the plain low sneakers home (1).
+    No "against" pieces: TL1's never-list is a veto."""
+    s, cat = g.get("subcategory"), g.get("category")
+    if cat in ("top", "outerwear"):
+        return (2 if s in TL_SIGNATURE_UP else 1 if s in TL_HOME_UP else 0), 0
+    if cat == "bottom":
+        return (2 if s in TL_TROUSERS else 0), 0
+    return (2 if s in TL_SIGNATURE_SHOES else 1 if s in TL_HOME_SHOES else 0), 0
+
+
+def _veto_tailored(c):
+    if c.subs & TL_NEVER: return "a piece Tailored never takes"
+    if any((g.get("volume") or 3) >= 5 for g in c.main): return "roominess 5"
+    return None
+
+
+def _gate_tailored(c, slots, total):
+    """TL1's extra condition: a tailored jacket and dress trousers."""
+    return any(g.get("subcategory") in TL_JACKET for g in c.tops + c.outer) and c.bsub in TL_TROUSERS
+
+
 STYLES = {   # role, veto, gate, bonus
     "streetwear": (_role_street, _veto_street, _gate_street, None),
     "workwear": (_role_work, _veto_work, None, None),
@@ -484,7 +522,17 @@ STYLES = {   # role, veto, gate, bonus
     "minimalist": (_role_min, _veto_min, None, _bonus_min),
     "classic_prep": (_role_prep, _veto_prep, None, None),
     "smart_casual": (_role_sc, _veto_sc, _gate_sc, None),
+    "tailored": (_role_tailored, _veto_tailored, _gate_tailored, None),   # a name only: never in STYLE_ORDER (T94)
 }
+
+
+def is_tailored(garments):
+    """TL1 on the scored garments (no unsure pieces, no accessories): a tailored jacket among the tops and layers, the
+    bottom dress trousers, nothing on the never-list, no main piece at roominess 5. Written out on its own; it always
+    equals the framework's _evaluate("tailored", Outfit(garments)) (jacket 2 + trousers 2 pass TL1's points rule)."""
+    c = Outfit(garments)
+    return (any(g.get("subcategory") in TL_JACKET for g in c.tops + c.outer) and c.bsub in TL_TROUSERS
+            and not (c.subs & TL_NEVER) and not any((g.get("volume") or 3) >= 5 for g in c.main))
 
 
 def _evaluate(style, c):
@@ -520,9 +568,12 @@ def _prep_marker(c):
     return False
 
 
-def _label(detected, c, picks):
-    """Card label: pairwise look-alike rules first (the more specific evidence wins), then his picks, then the fixed order."""
+def _label(detected, c, picks, order=STYLE_ORDER):
+    """Card label: pairwise look-alike rules first (the more specific evidence wins), then his picks, then the fixed order.
+    With the 8 looks (order=LOOK_ORDER): Tailored drops smart casual and classic prep first, before anything else (TL2)."""
     cs = set(detected)
+    if "tailored" in cs:                                # TL2: Tailored wins over smart casual and prep, whatever his picks
+        cs -= {"smart_casual", "classic_prep"}
 
     def drop(loser, winner):
         if loser in cs and winner in cs: cs.discard(loser)
@@ -542,14 +593,14 @@ def _label(detected, c, picks):
         else: drop("classic_prep", "smart_casual")
     if "minimalist" in cs and "classic_prep" in cs and len(_families(c.main)) <= 2 and c.leg in LOOSE:
         drop("classic_prep", "minimalist")
-    ranked = [s for s in STYLE_ORDER if s in cs]
+    ranked = [s for s in order if s in cs]
     if len(ranked) > 1 and picks:
         pw = {}
         for k, v in picks.items():
             k = PICK_ALIAS.get(k, k); pw[k] = pw.get(k, 0) + v
         picked = [s for s in ranked if pw.get(s, 0) > 0]
         if picked:
-            return max(picked, key=lambda s: (pw[s], -STYLE_ORDER.index(s)))
+            return max(picked, key=lambda s: (pw[s], -order.index(s)))
     return ranked[0] if ranked else None
 
 
@@ -559,6 +610,15 @@ def detect_styles(garments, picks=None):
     c = Outfit(garments)
     det = [s for s in STYLE_ORDER if _evaluate(s, c)]
     return {"detected": det, "label": _label(det, c, picks or {})}
+
+
+def detect_looks(garments, picks=None):
+    """The 8 looks (T94): the 7 exactly as detect_styles evaluates them, plus Tailored, in LOOK_ORDER. The label: Tailored
+    drops smart casual and prep first (TL2), then today's pairwise rules, then his picks among what's left, then
+    LOOK_ORDER. Names only (the card's look, Going for, the fix order for a Tailored pick): no number reads it."""
+    c = Outfit(garments)
+    det = [s for s in LOOK_ORDER if _evaluate(s, c)]
+    return {"detected": det, "label": _label(det, c, picks or {}, LOOK_ORDER)}
 
 
 def _prepare(ext):
@@ -917,10 +977,11 @@ def score(ext: dict, occasion: str = "everyday", styles: dict = None, boldness: 
     if occasion in FLOOR_OCCASIONS and "F7_care" not in fired and "F10_visible_strain" not in fired and raw < FLOOR:
         raw = FLOOR                               # a misread or a style choice never produces a 3 on an ordinary day
     display = round_half(raw)
+    looks = detect_looks(garments, styles)     # T94: the outputs name the 8 looks; every number above read detect_styles
     return {"overall": display, "raw_score": round(raw, 3), "subscores": {k: round_half(v) for k, v in sub.items()}, "occasion_adj": -occ_adj,
             "credits": list(earned), "credit_points": round(credit, 2), "mistake_points": round(mistakes, 2),
             "rules_fired": fired, "advice": advice, "partial": bool(not_rated), "not_rated": not_rated,
-            "detected_styles": det, "style_label": label}
+            "detected_styles": looks["detected"], "style_label": looks["label"]}
 
 
 def style_label_text(style):

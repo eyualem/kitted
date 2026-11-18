@@ -25,8 +25,8 @@
   ]
  ],
  "counts": {
-  "cases": 501,
-  "rules": 152
+  "cases": 527,
+  "rules": 158
  },
  "rules": [
   "COL-1",
@@ -162,6 +162,12 @@
   "STY-7",
   "STY-8",
   "STY-9",
+  "TLR-1",
+  "TLR-2",
+  "TLR-3",
+  "TLR-4",
+  "TLR-5",
+  "TLR-6",
   "VSP-1",
   "VSP-2",
   "VSP-3",
@@ -4430,11 +4436,21 @@
       "check": "PR3_tailored_line",
       "part": "proportions",
       "points": 1.0
+     },
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
      }
     ],
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
     ]
    },
    "vs": null,
@@ -4451,10 +4467,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -4566,6 +4583,18 @@
     "band_in": [
      "Getting there",
      "Put together"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -4582,10 +4611,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -5828,6 +5858,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -5844,10 +5886,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -9201,9 +9244,19 @@
       "check": "PR3_tailored_line",
       "part": "proportions",
       "points": 1.0
+     },
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
      }
     ],
-    "band": "Sharp"
+    "band": "Sharp",
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ]
    },
    "vs": null,
    "future": [],
@@ -9219,10 +9272,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -9556,9 +9610,19 @@
       "check": "PR3_tailored_line",
       "part": "proportions",
       "points": 1.0
+     },
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
      }
     ],
-    "band": "Sharp"
+    "band": "Sharp",
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ]
    },
    "vs": null,
    "future": [],
@@ -9574,10 +9638,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -11099,6 +11164,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -11115,10 +11192,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -13736,6 +13814,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -13752,10 +13842,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -13864,11 +13955,21 @@
       "check": "FF1_sleeves_tailored",
       "part": "fit",
       "points": -2.0
+     },
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
      }
     ],
     "band_in": [
      "Getting there",
      "Put together"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
     ]
    },
    "vs": null,
@@ -13885,10 +13986,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -15679,6 +15781,18 @@
     "band_in": [
      "Getting there",
      "Put together"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -15695,10 +15809,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -16691,11 +16806,21 @@
       "check": "CC4_near_match",
       "part": "color",
       "points": -1.5
+     },
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
      }
     ],
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
     ]
    },
    "vs": null,
@@ -16712,10 +16837,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -23520,6 +23646,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -23535,8 +23673,10 @@
      "shoes": 8.0,
      "cohesion": 8.0
     },
-    "detected_styles": [],
-    "style_label": null
+    "detected_styles": [
+     "tailored"
+    ],
+    "style_label": "tailored"
    }
   },
   {
@@ -25450,6 +25590,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -25466,10 +25618,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -27100,11 +27253,21 @@
       "check": "SD2_too_casual",
       "part": "shoes",
       "points": -1.5
+     },
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
      }
     ],
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
     ]
    },
    "vs": null,
@@ -27121,10 +27284,11 @@
      "cohesion": 7.5
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -27568,11 +27732,21 @@
       "check": "SC_chosen_for_look",
       "part": "shoes",
       "points": 0.5
+     },
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
      }
     ],
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
     ]
    },
    "vs": null,
@@ -27588,8 +27762,10 @@
      "shoes": 8.0,
      "cohesion": 8.0
     },
-    "detected_styles": [],
-    "style_label": null
+    "detected_styles": [
+     "tailored"
+    ],
+    "style_label": "tailored"
    }
   },
   {
@@ -29937,6 +30113,12 @@
       "check": "H2_suit",
       "part": "cohesion",
       "points": 0.5
+     },
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
      }
     ],
     "part": {
@@ -29947,6 +30129,10 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
     ]
    },
    "vs": null,
@@ -29962,8 +30148,10 @@
      "shoes": 8.0,
      "cohesion": 8.0
     },
-    "detected_styles": [],
-    "style_label": null
+    "detected_styles": [
+     "tailored"
+    ],
+    "style_label": "tailored"
    }
   },
   {
@@ -31222,6 +31410,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -31237,8 +31437,10 @@
      "shoes": 8.0,
      "cohesion": 8.0
     },
-    "detected_styles": [],
-    "style_label": null
+    "detected_styles": [
+     "tailored"
+    ],
+    "style_label": "tailored"
    }
   },
   {
@@ -32187,6 +32389,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -32203,10 +32417,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -34411,6 +34626,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -34427,9 +34654,10 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -38757,6 +38985,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -38773,10 +39013,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -40793,6 +41034,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -40808,8 +41061,10 @@
      "shoes": 8.0,
      "cohesion": 8.0
     },
-    "detected_styles": [],
-    "style_label": null
+    "detected_styles": [
+     "tailored"
+    ],
+    "style_label": "tailored"
    }
   },
   {
@@ -40920,6 +41175,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -40935,8 +41202,10 @@
      "shoes": 8.0,
      "cohesion": 8.0
     },
-    "detected_styles": [],
-    "style_label": null
+    "detected_styles": [
+     "tailored"
+    ],
+    "style_label": "tailored"
    }
   },
   {
@@ -41167,6 +41436,18 @@
     "band_in": [
      "Getting there",
      "Put together"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -41183,10 +41464,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -41294,6 +41576,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -41310,10 +41604,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -42346,6 +42641,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -42362,10 +42669,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -42474,7 +42782,19 @@
      "an interview wants"
     ],
     "ceiling": null,
-    "band": "Put together"
+    "band": "Put together",
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
+    ]
    },
    "vs": null,
    "future": [],
@@ -42489,8 +42809,10 @@
      "shoes": 8.0,
      "cohesion": 8.0
     },
-    "detected_styles": [],
-    "style_label": null
+    "detected_styles": [
+     "tailored"
+    ],
+    "style_label": "tailored"
    }
   },
   {
@@ -54605,6 +54927,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -54621,10 +54955,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -56312,11 +56647,21 @@
       "check": "PR3_tailored_line",
       "part": "proportions",
       "points": 1.0
+     },
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
      }
     ],
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
     ]
    },
    "vs": null,
@@ -56333,10 +56678,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -57507,6 +57853,18 @@
     "band_in": [
      "Put together",
      "Sharp"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -57522,8 +57880,10 @@
      "shoes": 8.0,
      "cohesion": 8.0
     },
-    "detected_styles": [],
-    "style_label": null
+    "detected_styles": [
+     "tailored"
+    ],
+    "style_label": "tailored"
    }
   },
   {
@@ -58072,6 +58432,18 @@
     "band_in": [
      "Getting there",
      "Put together"
+    ],
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
     ]
    },
    "vs": null,
@@ -58088,10 +58460,11 @@
      "cohesion": 8.0
     },
     "detected_styles": [
+     "tailored",
      "classic_prep",
      "smart_casual"
     ],
-    "style_label": "smart_casual"
+    "style_label": "tailored"
    }
   },
   {
@@ -58907,6 +59280,3482 @@
     },
     "detected_styles": [],
     "style_label": null
+   }
+  },
+  {
+   "id": "TLR-1-blazer",
+   "rule": "TLR-1",
+   "what": "a navy blazer over a tucked white dress shirt, grey trousers and brown loafers: Tailored",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_has": [
+     "tailored",
+     "classic_prep",
+     "smart_casual"
+    ],
+    "label": "tailored",
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
+    ],
+    "band": "Sharp"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 8.0,
+    "raw_score": 7.9,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "tailored",
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "tailored"
+   }
+  },
+  {
+   "id": "TLR-1-clean-sneakers",
+   "rule": "TLR-1",
+   "what": "the same with white leather sneakers (a home piece): still Tailored",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "white_leather_sneaker",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_has": [
+     "tailored"
+    ],
+    "label": "tailored",
+    "band": "Sharp"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 8.0,
+    "raw_score": 7.875,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 7.833,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "tailored",
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "tailored"
+   }
+  },
+  {
+   "id": "TLR-1-two-slots",
+   "rule": "TLR-1",
+   "what": "a charcoal suit with the shoes out of the photo: jacket and trousers are enough",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": false,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "suit_jacket",
+      "color_family": "charcoal",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "suit_trousers",
+      "color_family": "charcoal",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "no_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "derby",
+      "color_family": "black",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_has": [
+     "tailored"
+    ],
+    "label": "tailored",
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.671,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "tailored"
+    ],
+    "style_label": "tailored"
+   }
+  },
+  {
+   "id": "TLR-2-suit",
+   "rule": "TLR-2",
+   "what": "a charcoal suit over a white dress shirt with black derbies: a matching suit always meets it",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "suit_jacket",
+      "color_family": "charcoal",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "suit_trousers",
+      "color_family": "charcoal",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "no_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "derby",
+      "color_family": "black",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_has": [
+     "tailored"
+    ],
+    "label": "tailored",
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
+    ],
+    "band": "Sharp"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 8.0,
+    "raw_score": 7.9,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "tailored"
+    ],
+    "style_label": "tailored"
+   }
+  },
+  {
+   "id": "TLR-2-no-jacket",
+   "rule": "TLR-2",
+   "what": "a grey sweater, grey trousers and loafers: no tailored jacket, so minimal as before",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "sweater",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_lacks": [
+     "tailored"
+    ],
+    "label": "minimalist",
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.25,
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "minimalist",
+     "smart_casual"
+    ],
+    "style_label": "minimalist"
+   }
+  },
+  {
+   "id": "TLR-2-overcoat",
+   "rule": "TLR-2",
+   "what": "the same under a camel overcoat: an overcoat isn't a tailored jacket",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "sweater",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "overcoat",
+      "color_family": "tan_camel",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_lacks": [
+     "tailored"
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.25,
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "minimalist",
+     "smart_casual"
+    ],
+    "style_label": "minimalist"
+   }
+  },
+  {
+   "id": "TLR-2-top-half",
+   "rule": "TLR-2",
+   "what": "the suit with only the top half in the photo: no trousers in view, not Tailored",
+   "reading": {
+    "scene": {
+     "framing": "upper_only",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "suit_jacket",
+      "color_family": "charcoal",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "suit_trousers",
+      "color_family": "charcoal",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "no_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "derby",
+      "color_family": "black",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_lacks": [
+     "tailored"
+    ],
+    "label": null,
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.0,
+    "raw_score": 7.0,
+    "parts": {
+     "proportions": null,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": null,
+     "cohesion": null
+    },
+    "detected_styles": [],
+    "style_label": null
+   }
+  },
+  {
+   "id": "TLR-3-chinos",
+   "rule": "TLR-3",
+   "what": "a navy blazer over a white oxford with khaki chinos and loafers: classic prep, never Tailored",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "oxford_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "chinos",
+      "color_family": "khaki_beige",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_lacks": [
+     "tailored"
+    ],
+    "label": "classic_prep",
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as classic prep"
+     }
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.6,
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "classic_prep"
+   }
+  },
+  {
+   "id": "TLR-3-jeans",
+   "rule": "TLR-3",
+   "what": "a navy blazer over a white tee with dark straight jeans and loafers: never Tailored",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "tee",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "jeans",
+      "color_family": "denim_dark",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_lacks": [
+     "tailored"
+    ],
+    "label": "classic_prep",
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.25,
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "classic_prep"
+   }
+  },
+  {
+   "id": "TLR-3-chunky",
+   "rule": "TLR-3",
+   "what": "the Tailored blazer outfit with chunky sneakers: never Tailored, smart casual as before",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "chunky_sneaker",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_lacks": [
+     "tailored"
+    ],
+    "label": "smart_casual",
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as smart casual"
+     }
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.0,
+    "raw_score": 6.875,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 3.5,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "smart_casual"
+    ],
+    "style_label": "smart_casual"
+   }
+  },
+  {
+   "id": "TLR-3-hoodie",
+   "rule": "TLR-3",
+   "what": "a hoodie under a navy blazer with grey trousers and loafers: never Tailored",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "hoodie",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_lacks": [
+     "tailored"
+    ],
+    "label": "classic_prep",
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.25,
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "classic_prep"
+    ],
+    "style_label": "classic_prep"
+   }
+  },
+  {
+   "id": "TLR-3-roomy",
+   "rule": "TLR-3",
+   "what": "the Tailored blazer outfit with the trousers at roominess 5: never Tailored",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 5,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_lacks": [
+     "tailored"
+    ],
+    "label_in": [
+     "classic_prep",
+     "smart_casual",
+     null
+    ],
+    "band_in": [
+     "Getting there",
+     "Put together",
+     "Sharp"
+    ]
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 8.0,
+    "raw_score": 7.8,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "classic_prep"
+    ],
+    "style_label": "classic_prep"
+   }
+  },
+  {
+   "id": "TLR-4-picks",
+   "rule": "TLR-4",
+   "what": "the blazer outfit with smart casual as his pick: Tailored wins before his picks",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [
+    [
+     "smart_casual",
+     1.0
+    ]
+   ],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "label": "tailored",
+    "detected_has": [
+     "tailored",
+     "smart_casual"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
+    ],
+    "band": "Sharp"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 8.0,
+    "raw_score": 7.9,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "tailored",
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "tailored"
+   }
+  },
+  {
+   "id": "TLR-4-prep-marker",
+   "rule": "TLR-4",
+   "what": "a pink oxford under a navy blazer with grey trousers and loafers, classic prep picked: still Tailored",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "oxford_shirt",
+      "color_family": "pink",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [
+    [
+     "classic_prep",
+     1.0
+    ]
+   ],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "label": "tailored",
+    "detected_has": [
+     "tailored",
+     "classic_prep"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.5,
+    "raw_score": 7.7,
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 7.5,
+     "shoes": 8.0,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "tailored",
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "tailored"
+   }
+  },
+  {
+   "id": "TLR-4-minimal-pick",
+   "rule": "TLR-4",
+   "what": "a tee under an unstructured blazer with black trousers and loafers reads minimal and Tailored: his minimal pick names it",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "tee",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "unstructured_blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "black",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "black",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [
+    [
+     "minimalist",
+     1.0
+    ]
+   ],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_has": [
+     "tailored",
+     "minimalist"
+    ],
+    "label": "minimalist",
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.0,
+    "raw_score": 7.05,
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 5.5,
+     "shoes": 8.0,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "tailored",
+     "classic_prep",
+     "minimalist",
+     "smart_casual"
+    ],
+    "style_label": "minimalist"
+   }
+  },
+  {
+   "id": "TLR-4-order",
+   "rule": "TLR-4",
+   "what": "the same with no picks: the fixed order puts Tailored before minimal",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "tee",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "unstructured_blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "black",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "black",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "detected_has": [
+     "tailored",
+     "minimalist"
+    ],
+    "label": "tailored",
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.0,
+    "raw_score": 7.05,
+    "parts": {
+     "proportions": 7.0,
+     "fit": 7.0,
+     "color": 5.5,
+     "shoes": 8.0,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "tailored",
+     "classic_prep",
+     "minimalist",
+     "smart_casual"
+    ],
+    "style_label": "tailored"
+   }
+  },
+  {
+   "id": "TLR-5-suit",
+   "rule": "TLR-5",
+   "what": "the charcoal suit keeps what it earned as a suit: +0.5 reads as, +0.5 worn properly, nothing more",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "suit_jacket",
+      "color_family": "charcoal",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "suit_trousers",
+      "color_family": "charcoal",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "no_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "derby",
+      "color_family": "black",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "overall": 8.0,
+    "part": {
+     "cohesion": {
+      "score": 8.0
+     }
+    },
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     },
+     {
+      "check": "H2_suit",
+      "part": "cohesion",
+      "points": 0.5
+     }
+    ],
+    "label": "tailored",
+    "band": "Sharp"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 8.0,
+    "raw_score": 7.9,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "tailored"
+    ],
+    "style_label": "tailored"
+   }
+  },
+  {
+   "id": "TLR-5-blazer",
+   "rule": "TLR-5",
+   "what": "the blazer outfit keeps what it earned as smart casual: the same +0.5 and +0.5, renamed",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "overall": 8.0,
+    "part": {
+     "cohesion": {
+      "score": 8.0
+     }
+    },
+    "label": "tailored",
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     },
+     {
+      "check": "H2_clear_top_to_toe",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "clearly tailored top to toe"
+     }
+    ],
+    "band": "Sharp"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 8.0,
+    "raw_score": 7.9,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "tailored",
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "tailored"
+   }
+  },
+  {
+   "id": "TLR-5-picks",
+   "rule": "TLR-5",
+   "what": "the same with Tailored picked: no number moves",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [
+    [
+     "tailored",
+     1.0
+    ]
+   ],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "label": "tailored",
+    "band": "Sharp"
+   },
+   "vs": {
+    "case": "TLR-5-blazer",
+    "parts": {
+     "proportions": 0.0,
+     "fit": 0.0,
+     "color": 0.0,
+     "shoes": 0.0,
+     "cohesion": 0.0
+    },
+    "overall": 0.0
+   },
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 8.0,
+    "raw_score": 7.9,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "tailored",
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "tailored"
+   }
+  },
+  {
+   "id": "TLR-5-no-look",
+   "rule": "TLR-5",
+   "what": "a blazer, dress shirt and trousers with trail shoes read as no look before: now Tailored, with no new credit",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "trail_shoe",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "label": "tailored",
+    "not_fired": [
+     {
+      "check": "H1_reads_as_style"
+     },
+     {
+      "check": "H2_clear_top_to_toe"
+     }
+    ],
+    "overall": 7.0,
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [
+    "trail_shoe"
+   ],
+   "kd": null,
+   "python": {
+    "overall": 7.0,
+    "raw_score": 7.075,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 5.5,
+     "cohesion": 7.0
+    },
+    "detected_styles": [
+     "tailored"
+    ],
+    "style_label": "tailored"
+   }
+  },
+  {
+   "id": "TLR-5-suit-not-tailored",
+   "rule": "TLR-5",
+   "what": "a charcoal suit with chunky sneakers isn't Tailored: it keeps +0.5 as a matching suit (founder, option 1)",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "suit_jacket",
+      "color_family": "charcoal",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "suit_trousers",
+      "color_family": "charcoal",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "no_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "chunky_sneaker",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "label": null,
+    "detected_lacks": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "a matching suit"
+     }
+    ],
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.0,
+    "raw_score": 6.875,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 7.0,
+     "color": 7.0,
+     "shoes": 2.833,
+     "cohesion": 8.0
+    },
+    "detected_styles": [],
+    "style_label": null
+   }
+  },
+  {
+   "id": "TLR-6-lead",
+   "rule": "TLR-6",
+   "what": "blazer sleeves over the hands with red canvas sneakers, Tailored picked: the sleeve fix leads",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "covers_hand",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "no_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "canvas_sneaker",
+      "color_family": "red",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [
+    [
+     "tailored",
+     1.0
+    ]
+   ],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "fix_order": [
+     "fit_better",
+     "shoes_loafers"
+    ],
+    "label": "tailored",
+    "overall": 6.5,
+    "band": "Getting there"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 6.5,
+    "raw_score": 6.375,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 5.5,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "tailored",
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "tailored",
+    "fix_order": [
+     "fit_better",
+     "shoes_loafers"
+    ]
+   }
+  },
+  {
+   "id": "TLR-6-no-pick",
+   "rule": "TLR-6",
+   "what": "the same with no picks: the bigger gain first, as before",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "covers_hand",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "no_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "canvas_sneaker",
+      "color_family": "red",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "fix_order": [
+     "shoes_loafers",
+     "fit_better"
+    ],
+    "label": "tailored",
+    "overall": 6.5,
+    "band": "Getting there"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 6.5,
+    "raw_score": 6.375,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 5.5,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "tailored",
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "tailored",
+    "fix_order": [
+     "shoes_loafers",
+     "fit_better"
+    ]
+   }
+  },
+  {
+   "id": "TLR-6-second-pick",
+   "rule": "TLR-6",
+   "what": "Tailored as his second pick behind streetwear: the sleeve fix still leads",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "covers_hand",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "no_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "canvas_sneaker",
+      "color_family": "red",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [
+    [
+     "streetwear",
+     0.5
+    ],
+    [
+     "tailored",
+     0.5
+    ]
+   ],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "fix_order": [
+     "fit_better",
+     "shoes_loafers"
+    ],
+    "label": "tailored",
+    "overall": 6.5,
+    "band": "Getting there"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 6.5,
+    "raw_score": 6.375,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 5.5,
+     "cohesion": 7.5
+    },
+    "detected_styles": [
+     "tailored",
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "tailored",
+    "fix_order": [
+     "fit_better",
+     "shoes_loafers"
+    ]
+   }
+  },
+  {
+   "id": "TLR-6-class",
+   "rule": "TLR-6",
+   "what": "a wrinkled shirt too: the free steam stays ahead of the sleeve fix (the lead is within a class)",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "dress_shirt",
+      "color_family": "white",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "full",
+      "condition": "wrinkled",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "blazer",
+      "color_family": "navy",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "covers_hand",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "loafer",
+      "color_family": "brown",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [
+    [
+     "tailored",
+     1.0
+    ]
+   ],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "fix_order": [
+     "steam",
+     "fit_better"
+    ],
+    "label": "tailored",
+    "band": "Put together"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 7.0,
+    "raw_score": 6.95,
+    "parts": {
+     "proportions": 8.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 8.0,
+     "cohesion": 8.0
+    },
+    "detected_styles": [
+     "tailored",
+     "classic_prep",
+     "smart_casual"
+    ],
+    "style_label": "tailored",
+    "fix_order": [
+     "steam",
+     "fit_better"
+    ]
+   }
+  },
+  {
+   "id": "TLR-6-no-jacket",
+   "rule": "TLR-6",
+   "what": "overcoat sleeves over the hands: not a tailored jacket, so no lead",
+   "reading": {
+    "scene": {
+     "framing": "full_body",
+     "shoes_visible": true,
+     "people_count": 1,
+     "mirror_selfie": false,
+     "lighting": "good",
+     "clothed": "fully"
+    },
+    "garments": [
+     {
+      "category": "top",
+      "subcategory": "sweater",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "none",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "mid_fly",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "at_wrist",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "outerwear",
+      "subcategory": "overcoat",
+      "color_family": "tan_camel",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "at_belt",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "covers_hand",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "bottom",
+      "subcategory": "trousers",
+      "color_family": "grey",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "straight",
+      "hem": "slight_break",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     },
+     {
+      "category": "footwear",
+      "subcategory": "canvas_sneaker",
+      "color_family": "red",
+      "pattern": "solid",
+      "logo": "none",
+      "volume": 3,
+      "leg_shape": "na",
+      "hem": "na",
+      "tucked": "na",
+      "condition": "clean",
+      "certainty": "clear",
+      "length": "na",
+      "pattern_scale": "na",
+      "saturation": "na",
+      "sleeve_end": "na",
+      "strain": "none",
+      "distressed_by_design": false,
+      "shows_below_outer": false
+     }
+    ]
+   },
+   "occasion": "everyday",
+   "styles": [
+    [
+     "tailored",
+     1.0
+    ]
+   ],
+   "boldness": "a_little",
+   "second_look": null,
+   "expect": {
+    "fix_order": [
+     "shoes_loafers",
+     "fit_better"
+    ],
+    "band": "Getting there"
+   },
+   "vs": null,
+   "future": [],
+   "kd": null,
+   "python": {
+    "overall": 6.5,
+    "raw_score": 6.3,
+    "parts": {
+     "proportions": 7.0,
+     "fit": 5.0,
+     "color": 7.0,
+     "shoes": 6.0,
+     "cohesion": 7.0
+    },
+    "detected_styles": [],
+    "style_label": null,
+    "fix_order": [
+     "shoes_loafers",
+     "fit_better"
+    ]
    }
   }
  ]

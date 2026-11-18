@@ -405,6 +405,27 @@ def _swapped(w, r):
     return out
 
 
+# T94 (TL5, [TLR-6]): with Tailored among his picks, a fix that clears a tailoring fault leads within its class.
+TAILORING_CHECKS = ("FF1_sleeves_tailored", "FF1_sleeves_long", "FF1_cuffs_ribbed", "FF7_pooling",
+                    "FF7b_full_break_narrow", "H3_another_world", "GT1_graphic_under_tailoring", "SX1_another_look")
+HEM_CHECKS = ("FF7_pooling", "FF7b_full_break_narrow")      # a tailoring fault only over dress trousers
+
+
+def _reason_checks(res):
+    return {x["check"] for part in res["parts"].values() for x in (part.get("reasons") or [])}
+
+
+def _tailoring_fix(base, res, w):
+    """The working outfit w has a tailored jacket (a top or layer), and the fixed card `res` no longer carries a
+    tailoring check that `base` carried (as a reason on any part). The hem checks count only over dress trousers."""
+    if not any(g.get("category") in ("top", "outerwear") and g.get("subcategory") in R.TL_JACKET for g in w["garments"]):
+        return False
+    b = _first(w, "bottom")
+    trousers = b is not None and b.get("subcategory") in R.TL_TROUSERS
+    cleared = _reason_checks(base) - _reason_checks(res)
+    return any(k in cleared and (k not in HEM_CHECKS or trousers) for k in TAILORING_CHECKS)
+
+
 def _picks(styles):
     """His picks in order (the 1st pick first), from [name, weight] pairs or a dict; weight 0 is not a pick."""
     return [k for k, wt in styles.items() if wt and wt > 0]
@@ -423,6 +444,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
         styles = {k: wt for k, wt in styles}
     styles = dict(styles or {})
     picks = _picks(styles)
+    tailored_pick = "tailored" in picks                  # TL5: any position, weight > 0
     c = CATALOG["copy"]
     classes = CATALOG["classes"]
     base = _score(reading, occasion, styles, second_look, boldness)
@@ -452,7 +474,8 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
         x = {"id": cand["id"], "group": cand["group"], "class": cand["class"], "rank": cl["rank"], "effort": cand["effort"],
              "free": cl["free"], "to": res["overall"], "to_raw": round(res["raw_unrounded"], 6),
              "gain": res["overall"] - base["overall"], "raw_gain": round(res["raw_unrounded"] - base["raw_unrounded"], 6),
-             "item_id": info.get("item_id"), "order": order, "shift": _shift(w, r), "pick_rank": _pick_rank(res, picks)}
+             "item_id": info.get("item_id"), "order": order, "shift": _shift(w, r), "pick_rank": _pick_rank(res, picks),
+             "tailor_lead": 0 if tailored_pick and _tailoring_fix(base, res, w) else 1}
         x["copy"] = _fill(cand["copy"], info)
         x["tag"] = cl["tag"] + (f" · {cand['detail']}" if cand.get("detail") else "")
         x["raises"] = _raises(base, res)
@@ -465,7 +488,8 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
         x["anchors"] = _light_on_light(base) and not _light_on_light(res)   # v1.9: the fix clears light on light
         cands.append(x)
 
-    key = lambda x: (x["rank"], -x["gain"], x["pick_rank"], -x["raw_gain"], x["effort"], x["shift"], x["order"])  # noqa: E731
+    # TL5: tailor_lead after the class, before the gain; with no Tailored pick it is 1 everywhere (today's order)
+    key = lambda x: (x["rank"], x["tailor_lead"], -x["gain"], x["pick_rank"], -x["raw_gain"], x["effort"], x["shift"], x["order"])  # noqa: E731
 
     def pick(allowed_classes):
         fixes = [x for x in cands if x["gain"] >= 0.5 and x["class"] in allowed_classes]
@@ -561,7 +585,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
                 break
 
     for x in picked:
-        for k in ("order", "rank", "step", "drops", "lifts_display", "shift", "pick_rank", "tucks", "swaps", "anchors"):
+        for k in ("order", "rank", "step", "drops", "lifts_display", "shift", "pick_rank", "tailor_lead", "tucks", "swaps", "anchors"):
             x.pop(k, None)
     out["fixes"] = picked
     if not picked:

@@ -78,7 +78,8 @@ WHATIF14 = {"sh_shape": 1.5, "sh_layer": 0.5, "sh_cap": 1.0, "sh_fitted": 0.5, "
 # v15's what-if (#385): a smaller hoodie layer credit
 WHATIF15 = {"hl": 1.0, "cp8": 1.0}
 PICKS_VARIANTS = {"none": [], "one": [["workwear", 1.0]],
-                  "three": [["streetwear", 0.5], ["vintage_sport", 0.25], ["smart_casual", 0.25]]}
+                  "three": [["streetwear", 0.5], ["vintage_sport", 0.25], ["smart_casual", 0.25]],
+                  "tailored": [["tailored", 1.0], ["smart_casual", 0.5]]}   # T94: a Tailored pick moves no number either
 
 
 def canon(r):

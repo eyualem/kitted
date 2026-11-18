@@ -7,7 +7,7 @@ export const PARTS_DATA: PartsData = {
  "engine": "v15",
  "label": "parts-proto-15 (Oct 28, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "116451ed0f2be241c81c4dab20d1175167f759a18200c69eb4bea5dbf4f7f605",
+ "sourceSha256": "42712d3c8af7e7b3bd1ea2e332d5e147385851d3b4db87062786f97a79653bca",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
