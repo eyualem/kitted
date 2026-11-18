@@ -41,7 +41,7 @@ Guys who aren't into fashion don't know if an outfit works or what one change wo
 3. **The code** (`@kitted/core`, matching the Python engine in `extraction-test/` exactly) computes every score and number. Same photo, same score. The rules in plain words: `rubric/v5-styles.md`.
 4. **The text model** puts the result into words. Every number it says is checked against the computed one.
 
-**Score words**, always with the number, never color alone: 5.5 and under Needs a fix · 6–6.5 Getting there · 7–7.5 Put together · 8–8.5 Sharp · 9+ Dialed in.
+**Score words**, always with the number, never color alone: 3–4.5 its own word (to be picked; the card advises a redo, not one fix) · 5–5.5 Needs a fix · 6–6.5 Getting there · 7–7.5 Put together · 8–8.5 Sharp · 9–9.5 Dialed in. Scores run from 3 to 9.5; 10 is never given. (Founder, Nov 13–14, #464.)
 
 ## Core flows
 

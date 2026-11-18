@@ -1,0 +1,40 @@
+{
+ "taste": {
+  "lift_off": [],
+  "h7_tip": true,
+  "long_top": 0.25,
+  "long_top_read": "reading",
+  "shorts": 0,
+  "one_lift": 0.5,
+  "leg_slim": 0,
+  "color": 0,
+  "sandals_warm": true,
+  "runners_casual": true,
+  "sil_mode": "alone",
+  "one_lift_mode": "first",
+  "stack_prehalf": true,
+  "relaxed_factor": 0.5,
+  "steady_map": {
+   "oxford_shirt": "dress_shirt",
+   "chelsea_boot": "dress_shoe"
+  },
+  "other_shoe_real": true,
+  "sil": 1.0,
+  "sil_line": 0.5,
+  "sil_tonal": 0,
+  "leg_skinny": 0.5,
+  "leg_wide": 0.75,
+  "hem_plus": 0.5,
+  "shorts_wide": 0.5,
+  "shorts_above": 0.75,
+  "outline": {
+   "mid_block": true,
+   "only": "outer",
+   "mid": 0.5,
+   "mid_full": 0.5,
+   "short": 0,
+   "long": 0.25
+  }
+ },
+ "arm": "+short +long, layers"
+}

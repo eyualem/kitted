@@ -1,0 +1,14 @@
+This is a cut from an outfit photo. The face is hidden on purpose. Describe only the pants (trousers, jeans, chinos or shorts), not the person or their body.
+
+waistband_shows: can you see the pants' own top edge (the waistband)?
+- yes: the top is tucked in, ends above the waistband, or an open jacket shows it
+- partly: a belt or the waistband shows only at one side or through a gap
+- no: a top or jacket covers it
+
+rise: how high the pants are cut, judged on the pants themselves (the length of the zipper fly and the front seam from the crotch up to the waistband):
+- high: a long fly and front seam; the pants are cut high-waisted, as classic pleated trousers or high-rise jeans are
+- mid: an ordinary rise for jeans, chinos or trousers
+- low: a short fly and front seam; the pants are cut to sit low
+- not_visible: the waistband or the fly can't be seen well enough to tell
+
+Return only JSON that matches the schema.

@@ -1,0 +1,32 @@
+Gold photos with two runs of look U and two stored readings: 225; with an outer layer in either reading: 79
+  look U outer_hem_at, 8 classes (layered photos)                 67/ 79 the same ( 85%)
+  look U outer_hem_at, 3 bands short/mid/long (layered)           71/ 79 the same ( 90%)
+  look U outer short (cropped/waistband) yes/no (layered)         74/ 79 the same ( 94%)
+  look U outer long (thigh/knee) yes/no (layered)                 76/ 79 the same ( 96%)
+  look U outer mid (hip/crotch) yes/no (layered)                  72/ 79 the same ( 91%)
+  look U outer_kind (layered)                                     77/ 79 the same ( 97%)
+  look U under_shows (layered)                                    76/ 79 the same ( 96%)
+  look U under_present (layered)                                  79/ 79 the same (100%)
+  look U outer_hem_at, 3 bands (every photo: the top's own end)  207/225 the same ( 92%)
+  reading: an outer layer present in both (layered)               76/ 79 the same ( 96%)
+  reading: outer subcategory (both have one)                      70/ 76 the same ( 92%)
+  reading: outer length (both have one)                           57/ 76 the same ( 75%)
+  reading: outer color_family (both)                              70/ 76 the same ( 92%)
+  reading: inner top color_family (both, layered)                 65/ 67 the same ( 97%)
+  reading: outer volume (both)                                    71/ 76 the same ( 93%)
+
+  look U outer_hem_at, run 1 against run 2 (layered photos):
+    waistband    waistband    22
+    hip          hip          15
+    crotch       crotch       14
+    cropped      cropped      9
+    waistband    hip          3
+    not_visible  not_visible  3
+    hip          waistband    2
+    cropped      waistband    2
+    knee         knee         2
+    thigh        crotch       2
+    thigh        thigh        2
+    thigh        not_visible  1
+    crotch       hip          1
+    hip          crotch       1
