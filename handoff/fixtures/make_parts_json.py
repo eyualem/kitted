@@ -21,10 +21,11 @@ sys.path.insert(0, os.path.join(KEMPT, "extraction-test/rubrics"))
 import parts_proto as P  # noqa: E402
 R = P.R
 
-VERSION = "1.14.0"   # 1.14.0 (#385): v15, a hoodie or sweatshirt layered over a tee earns the short jacket's credit (hl)
+VERSION = "2.0.0"    # 2.0.0 (T69, #484/#487): v16, the rescoring (no floor, 3.0-9.5, lifts, caps, taste, season, curve)
+# 1.14.0 (#385): 1.14.0 (#385): v15, a hoodie or sweatshirt layered over a tee earns the short jacket's credit (hl)
 # 1.13.0 (#367): v14 counts only a top that clearly shows below the outer piece as a peek (peek_clearly_only)
 # 1.12.0 (#336): v14 also lets a tucked open button-up set the waist (pr1_tucked_layer)
-ENGINE = "v15"
+ENGINE = "v16"
 
 
 def sl(s):
@@ -58,6 +59,18 @@ def data(engine=ENGINE):
         "rollback": {"engine": "v13", "label": P.VERSIONS["v13"], "version": "1.10.0", "tune": tune_json(P.TUNE["v13"])},
         # v15: the second switch (core HOODIE_LAYER_V15) rolls back to v14's numbers (parts data 1.13.0)
         "rollback14": {"engine": "v14", "label": P.VERSIONS["v14"], "version": "1.13.0", "tune": tune_json(P.TUNE["v14"])},
+        # v16 (T69): the third switch (core RESCORE_V16) rolls back to v15's numbers (parts data 1.14.0)
+        "rollback15": {"engine": "v15", "label": P.VERSIONS["v15"], "version": "1.14.0", "tune": tune_json(P.TUNE["v15"])},
+        # v16's own tables (parts_proto.py, read by v16_finish and _v16_taste)
+        "v16": {
+            "lifts": {k: list(v) for k, v in P.V16_LIFTS.items()}, "liftNames": P.V16_LIFT_NAMES,
+            "owns": {k: sl(v) for k, v in P.V16_OWNS.items()}, "unsteady": sl(P.V16_UNSTEADY), "unread": P.V16_UNREAD,
+            "tasteByLook": P.TASTE_BY_LOOK, "l5ByLook": P.L5_BY_LOOK,
+            "tlJacket": sl(P.TL_JACKET), "tlNever": sl(P.TL_NEVER), "proPieces": sl(P.PRO_PIECES),
+            "sets": {k: sl(getattr(P, k)) for k in ("OPEN_LAYERS", "LIGHT_SHIRTS", "UNDER_TEES", "KNIT_LAYERS", "HEAVY_LAYERS",
+                                                     "SUMMER_TOPS", "SUMMER_BOTTOMS")},
+            "smart": P.SMART,
+        },
         "sets": {
             "TAILORED": sl(P.TAILORED), "TAILORED_FIT": sl(P.TAILORED_FIT), "RIBBED": sl(P.RIBBED),
             "SHORT_SLEEVE_TYPES": sl(P.SHORT_SLEEVE_TYPES), "PRESSED": sl(P.PRESSED), "NARROW": sl(P.NARROW),
