@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useTheme } from '@/design-system/theme';
 import type { ClosetArt, ClosetItemRow } from '@/data/types';
-import { artSpec, type ArtSpec } from './artSpec';
+import { pieceArtSpec, type ArtSpec, type DrawnPieceSpec, type PieceSlot } from './artSpec';
 import { renderFlat } from './flats';
 
 export function GarmentArt({ spec, size }: { spec: ArtSpec; size: number }) {
@@ -21,7 +21,10 @@ export function GarmentArt({ spec, size }: { spec: ArtSpec; size: number }) {
   );
 }
 
-/** A closet piece (or a reading's garment) drawn at `size`: the morning card, outfit tiles, Which shoes?. */
-export function PieceArt({ item, size }: { item: Pick<ClosetItemRow, 'garment' | 'hex'> & { art?: ClosetArt | null; name?: string }; size: number }) {
-  return <GarmentArt spec={artSpec({ garment: item.garment, hex: item.hex, art: item.art ?? null, name: item.name ?? '' })} size={size} />;
+/** A closet piece, a reading's garment, or a drawn piece (no closet row), at `size`. A drawn piece that can't be drawn
+ *  renders an empty size x size box: it never throws and never draws something else. */
+export function PieceArt({ item, size, slot }: { item: (Pick<ClosetItemRow, 'garment' | 'hex'> & { art?: ClosetArt | null; name?: string }) | DrawnPieceSpec; size: number; slot?: PieceSlot }) {
+  const spec = pieceArtSpec('kind' in item && 'family' in item ? item : { garment: item.garment, hex: item.hex, art: item.art ?? null, name: item.name ?? '' }, slot);
+  if (!spec) return <View style={{ width: size, height: size }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" pointerEvents="none" />;
+  return <GarmentArt spec={spec} size={size} />;
 }

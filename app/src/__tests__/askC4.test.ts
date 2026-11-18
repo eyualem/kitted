@@ -1,6 +1,6 @@
 // What the stylist learns from the chat, C4 (07 §13 M1–M4): only the fixed keys, saved with "Saved · Undo", a
 // deleted fact never comes back, budget sets the profile, a mentioned piece becomes a closet piece from chat.
-import { US_EASTERN } from '@kitted/core';
+import { G, nearestFamily, US_EASTERN } from '@kitted/core';
 import seed from '../../assets/seed.json';
 import { createMemoryStore } from '@/data/memoryStore';
 import { loadScenario } from '@/data/seedLoader';
@@ -15,6 +15,8 @@ import { createDemoSource, seededAnswers } from '@/features/ask/source';
 import { starterGain } from '@/features/finish/gains';
 import { STARTER } from '@/features/finish/starter';
 import { liveFacts, sourceLine } from '@/features/you/facts';
+import { artSpec } from '@/features/closet/artSpec';
+import { artOf, hexOfArt } from '@/features/closet/profile';
 import { createClosetService } from '@/features/closet/service';
 import { createFitCheckService, DEFAULT_TIMERS } from '@/features/fitcheck/service';
 import { manualClock } from '@/services/clock';
@@ -135,6 +137,22 @@ describe('M4 · a piece he mentions', () => {
     // Undo takes the piece out of the closet too.
     await undoRemember(r!.factId, r!.itemId!, { store });
     expect((await store.closet.get(it.id))!.isDeleted).toBe(true);
+  });
+
+  it('a color he names is the piece\'s color for good: a photo that reads it differently never repaints it', async () => {
+    // Nov 12: he told Kit "my boots are black"; the piece was named "Black work boots" but a later brown reading of his
+    // photos redrew it brown, so the name and the drawing disagreed.
+    const { store, clock, ids } = await setup();
+    const r = await applyRemember({ key: 'owns_unphotographed', value: 'black work boots' }, NOW, { store, clock, ids });
+    const it = (await store.closet.get(r!.itemId!))!;
+    expect(it.name).toBe('Black work boots');
+    const brownSighting = { ...G('footwear', 'work_boot', 'brown'), shade: 'dark brown' };
+    const art = artOf(it, [brownSighting]);
+    expect(art.family).toBe('black');
+    const hex = hexOfArt(art, it.hex);
+    expect(nearestFamily(hex)).toBe('black');
+    expect(artSpec({ garment: it.garment, hex, art, name: it.name }).flat.color).toBe(hex);
+    expect(it.confirmedFields).toContain('color_family');
   });
 
   it('nothing that isn\'t a piece of clothing becomes one', async () => {

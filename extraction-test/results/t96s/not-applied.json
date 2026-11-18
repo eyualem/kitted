@@ -1,0 +1,20 @@
+{
+ "mode": "full",
+ "planted": null,
+ "fails": [],
+ "seconds": 7,
+ "(1)  at 2.05.18\u202fPM snap": "ok/None",
+ "(1)  at 1.44.56\u202fPM snap": "ok/None",
+ "(1) 7a332eb72e0ea2 snap": "ok/None",
+ "(1)  at 2.05.18\u202fPM items": "ok/None",
+ "(1)  at 1.44.56\u202fPM items": "ok/None",
+ "(1) 7a332eb72e0ea2 items": "ok/None",
+ "(2) P1 cropped at y 336": {
+  "new": "ok/None",
+  "before": "ok/None"
+ },
+ "(2) P2 cropped at y 381": {
+  "new": "ok/None",
+  "before": "ok/None"
+ }
+}

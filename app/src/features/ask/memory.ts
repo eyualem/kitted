@@ -120,11 +120,15 @@ export async function applyRemember(raw: unknown, at: number, deps: MemoryDeps):
     const slot = g ? SLOT[String(g.category)] : undefined;
     if (!g || !slot) return null;
     itemId = deps.ids('C');
+    // A color in his words ("black work boots") is "he said so", like a color he picks on the piece's page: a later photo
+    // that reads the piece differently never repaints it, so its name and its drawing stay one color (Nov 12: named
+    // "Black work boots", drawn brown from the photos' read).
+    const said = typeof g.color_family === 'string' && g.color_family !== 'unknown' ? g.color_family : null;
     const item: ClosetItemRow = {
-      id: itemId, name: pieceName(r.value, g), slot, garment: g, confirmedFields: [], hex: displayHex(g.color_family), photoFile: null, demoPhotoId: null,
+      id: itemId, name: pieceName(r.value, g), slot, garment: g, confirmedFields: said ? ['color_family'] : [], hex: displayHex(g.color_family), photoFile: null, demoPhotoId: null,
       isPhotographed: false, source: 'chat', starterId: null, wornCount: 0, lastWornAt: null, addedAt: now, isDeleted: false,
       mergedInto: null, maybeSameAs: null, cropFile: null, cropScore: null, updatedAt: now,
-      profile: { aliases: [], distinctFrom: [], confirmed: {}, autoName: false },
+      profile: { aliases: [], distinctFrom: [], confirmed: said ? { color_family: said } : {}, autoName: false },
     };
     await deps.store.closet.put(item);
   }

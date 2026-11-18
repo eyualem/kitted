@@ -179,7 +179,7 @@ About 15 named events to PostHog (e.g. first check, re-check went up, free check
 | Fit checks | reading, score, fixes, occasion, look | the phone; Firestore if signed in | until deleted |
 | Closet pieces | kind, color, fit, cut-out, wears | the phone; Firestore if signed in | until deleted |
 | Style profile, what Kit knows | name (optional), looks, fit, facts with sources; the name is never sent to the AI | the phone; Firestore if signed in | until deleted |
-| Questions to Kit | text + closet as words; for Explain rating, that check's two rules as words | OpenAI | up to 30 days (abuse checks; no training); never by us |
+| Questions to Kit | text + closet as words, and a 7-day recap of Kit's own suggestions as piece names (`specs/kit-stylist-chat.md` KC7.2); for Explain rating, that check's two rules as words | OpenAI | up to 30 days (abuse checks; no training); never by us |
 | Usage counts | free checks used, today's checks and questions, Pro status | our server, by device ID (+ account) | while the app is used |
 | Spend | today's AI spend | our server | rolling |
 | Events | named events, random ID | PostHog | PostHog's retention |
