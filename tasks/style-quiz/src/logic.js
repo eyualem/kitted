@@ -85,3 +85,14 @@
       return { done: true, result: top.slice() };
     } catch (e) { if (e && e.ask) return { done: false, pair: e.ask }; throw e; }
   }
+
+  // ---------- D's results: the small fail-safes (style-flow-test, T111; tasks/style-quiz/flow_sim.py) ----------
+  // Add a look stays on a full list: the look he adds takes #3's place (the screen shows an Undo note). Before, the
+  // Add row disappeared at 3 looks, so a guy whose favourite was missing had to find x first.
+  function addLook(picks, s) {
+    const out = picks.slice();
+    if (out.includes(s)) return { picks: out, replaced: null };
+    const replaced = out.length >= 3 ? out.pop() : null;
+    out.push(s);
+    return { picks: out, replaced };
+  }
