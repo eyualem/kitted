@@ -236,8 +236,9 @@ export function holdAnswer(cancel: () => void): () => void {
 
 /** Back (the nav's circle): undoes exactly one thing, or says 'exit' when there's nothing to undo. */
 export async function back(store: KittedStore): Promise<'undone' | 'exit'> {
-  // FS4: a Back among his first answers means he's looking, not browsing.
-  if (state && state.stage === 'cards') fastCheckSpent = true;
+  // FS4: a Back between his answers means he's looking, not browsing. A Back on card 1 before any answer (the way
+  // out to Welcome) comes before them, so it doesn't count (verify round 3, C7).
+  if (state && state.stage === 'cards' && (inFlight || state.game.answers.length > 0)) fastCheckSpent = true;
   if (inFlight) {
     const cancel = inFlight;
     inFlight = null;

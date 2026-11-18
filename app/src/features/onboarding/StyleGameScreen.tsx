@@ -2,8 +2,8 @@
 // "Now put them in order" between his Me's, then "Here's your style". The game lives in the session (styleGameSession):
 // this screen draws its stage and sends the taps there. Back undoes one step; on card 1 it goes to Welcome.
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, useWindowDimensions, View, type GestureResponderEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon, KButton, KText, space, useTheme } from '@/design-system';
 import { CONTROL_TEXT_MAX_SCALE } from '@/design-system/tokens';
@@ -13,7 +13,7 @@ import { cardLabel, GameCard } from './GameCard';
 import { GameRanking } from './GameRanking';
 import { GameResults } from './GameResults';
 import { OnboardingNav } from './OnboardingNav';
-import { CARD_COUNT, currentCard, mesOf, rankStep, swipeFeedback } from './styleGame';
+import { CARD_COUNT, cardRelease, currentCard, mesOf, rankStep, swipeFeedback } from './styleGame';
 import {
   answer, back, demoDragDx, finishTeach, getStyleGame, keepGoing, markLeaned, startOrResumeStyleGame, startOver, togglePeek, useStyleGame, type SessionState,
 } from './styleGameSession';
@@ -152,14 +152,34 @@ function CardsStage({ session, width }: { session: SessionState; width: number }
 }
 
 /** SG1.4: card 1's lesson, laid over the card. One tap anywhere on it takes it away. */
+/** Where a press touched down or let go, when the event says (a test's press may carry none). */
+function pointOf(e: GestureResponderEvent | undefined): { x: number; y: number } | null {
+  const n = e?.nativeEvent;
+  return n && typeof n.pageX === 'number' && typeof n.pageY === 'number' ? { x: n.pageX, y: n.pageY } : null;
+}
+
 function Lesson({ width }: { width: number }) {
   const { colors } = useTheme();
+  // A tap takes it away; a swipe across it doesn't (SG1.4: "a swipe does nothing"; verify round 3, C6). A Pressable
+  // still calls onPress for a press that moved but let go inside it, so the release is held to the card's own tap
+  // rule (under TAP_SLOP in any direction). A press with no coordinates counts as a tap.
+  const down = useRef<{ x: number; y: number } | null>(null);
+  const release = (e?: GestureResponderEvent) => {
+    const from = down.current;
+    down.current = null;
+    const to = pointOf(e);
+    if (from && to && cardRelease(to.x - from.x, to.y - from.y) !== 'peek') return;
+    void finishTeach(store);
+  };
   // The ink colour, a little see-through, so the outfit shows faintly under the words (light and dark alike).
   const scrim = /^#[0-9a-f]{6}$/i.test(colors.ink) ? `${colors.ink}E0` : colors.ink;
   return (
     <View style={styles.lessonWrap} pointerEvents="box-none">
       <Pressable
-        onPress={() => void finishTeach(store)}
+        onPressIn={(e) => {
+          down.current = pointOf(e);
+        }}
+        onPress={release}
         accessibilityRole="button"
         accessibilityLabel={t('game.teach')}
         style={[styles.lesson, { width, backgroundColor: scrim }]}
