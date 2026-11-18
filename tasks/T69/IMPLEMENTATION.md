@@ -300,7 +300,7 @@ The coordinator asked for 9.5; it can't be reached (Q-F1), so 304 shows the real
 ## The founder's answers (Nov 17, in chat)
 - **Q-W1:** the 3–4.5 word is **"Start fresh"** (`score.word.redo` = "Start fresh").
 - **Q-W2 and Q-W3:** "Yes, use them": the Why labels as recommended below, and the L7b verb fixed ("the trousers dress up…"), text only.
-- **Q-F1: changed.** His words: "the max should be around 9.5 and not capped at 9". The engine's top is re-tuned on paper first ($0, stored readings), shown to him, and only then ported; see TASK.md → Plan. Until then every number at the top (TOP9's 9.0, screen 304) is not final.
+- **Q-F1: 9.0 stays the top for now.** First he asked for "the max should be around 9.5 and not capped at 9"; the $0 paper study (`tasks/T69/top-of-scale.md`) found the curve alone gets no outfit to 9.5 (the stacking rule holds the top) and only a stacking change (B+D) opens it, rarely. His answer: "if we can only get fits to 9.5 artificially, then lets stay at 9. we will update that in the future". So v16 ports exactly as approved; screen 304 shows 9.0. The study's knobs (`raw_cap`, `curve_knee`, `stack_clean`, in `_OFF16`, off) are what-if knobs like the others: ported and proven by parity per Q-T7, never on by default.
 - **Q-F2 and Q-F3:** "Yes, fix both": done by the coordinator ([SCO-7]'s example now 5.5; `specs/tailored.md` notes the taste rules follow the graded look).
 - **Q-F4, Q-F5, Q-W4:** the defaults stand (the same photo keeps its first season; no card line; part groups kept), each a reading of the spec as written, not a change.
 
