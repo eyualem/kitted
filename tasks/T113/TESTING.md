@@ -2,7 +2,7 @@
 
 Written by the planner. T113 is a **normal** task: the implementer writes these tests with the code, and one reviewer checks them against this file. A test is never weakened to pass; if one here looks wrong, the implementer writes it as a dispute in TASK.md and the coordinator settles it. Results go in TASK.md, never here.
 
-**Lock:** pending (the next commit records the SHA of `T113: tests (red)`).
+**Lock:** locked at `f5e230e8` (`T113: tests (red)`), 2026-11-18, on the coordinator's instruction (the test writer wrote them before the code). Files: `app/src/__tests__/T113-styleGame.test.ts`, `app/src/__tests__/T113-styleGameSession.test.ts`, `app/src/__tests__/T113-styleGameScreens.test.tsx`, `app/src/__tests__/T39-setupScreens.test.tsx` (its F1.1 test only), `app/src/testing/styleGameTestKit.ts`, `app/e2e/flows/T113-style-game.yaml`, `app/e2e/common/play-style-game.yaml`, `app/e2e/flows/T39-setup-fresh.yaml`. The implementer doesn't change them; a test that looks wrong is a dispute in TASK.md. The stubs in that commit (`styleGame.ts`, `styleGameSession.ts`, `StyleGameScreen.tsx`, `AddLookSheet.tsx`) are the implementer's to replace. The other T39 retargets under "The tests that change" are still the implementer's.
 
 **Criteria covered:** the spec's acceptance criteria, all of them (the plan line names no "checks:"; IMPLEMENTATION.md → T2): **SG1.1, SG1.2, SG1.3, SG2.1, SG2.2, SG3.1, SG3.2, SG4.1, SG5.1, SG6.1, SG7.1, SG7.2, SG7.3, SG7.4, SG8.1, SG9.1, F1.1** (17). All 17 are below. Plus the T39 criteria whose tests T113 retargets (OS3.1, OS3.2, OS5.7, F1.1's no-camera half), which must still pass.
 
