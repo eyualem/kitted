@@ -109,13 +109,17 @@ All on your 164 blind ratings, refit on each random half and tested on the other
 
 | | Approved v16 | **v16 + outline, creators' version (recommended)** | v16 + outline, your-taste version |
 | --- | --- | --- | --- |
-| Within a point of you, held out | 82.2% (80–84) | **83.2% (80–85)** | 87.2% (83–89) |
+| Within a point of you, held out (approved sizes held; see below) | 82.2% (80–84) | **83.2% (80–85)** | 87.2% (83–89) |
 | r with you, held out (bar 0.69) | 0.651 | **0.677**, better on 8/8 splits | 0.711, better on 8/8 |
-| Steadiness, every look (the app's case; bar 218) | 217/223 | **217/223** | 215/223 |
-| Steadiness, your Y44 count (leg look) | 218/223 | **218/223** | 218/223 |
+| Steadiness, every look (the app's case, stricter than T68's; bar 218) | 217/223 | **217/223** | 215/223 |
+| Steadiness, your Y44 count (T68's 218, as measured then) | 218/223 | **218/223** | 218/223 |
 | Dealbreakers, creators' pairs and anchors (B2–B4) | as T68 | **unchanged** (no look U on those frames, so the outline can't fire there: not tested by it) | unchanged |
 | Band shares, your checks (worst gap) | 18.4 points | **16.8** | 21.6 |
 | Breaks a creator rule | | **no** | yes: suit.6 and prop.7 |
+
+**Why v16 shows 82.2%, r 0.651 here, not T68's 82.0%, r 0.631.** Same 164 photos and the same 8 splits; the difference is what gets refit. T68 and PR #137 refit all of v16's taste sizes on each half A. This table holds approved v16's sizes fixed (they were fitted on all 164, so they have already seen half B, which flatters both columns a little and equally) and refits only the new outline sizes. Run T68's way, refitting everything, v16 is 82.0%, r 0.631 again, and the creators' version without the edge defaults is 84.0%, r 0.658 (`paper.txt`). The edge defaults weren't run that way. Either way the gain is measured like for like.
+
+**Why steadiness shows 217 and 218.** T68's 218/223, the bar you counted in Y44, scores each gold reading with its own leg-width look. That count is the "Y44 count" row: 218 for both, so v16 still passes its own bar. The "every look" row is a different, stricter measurement: each reading also gets its own looks U and L, which is the app's real case once look U's hem is read. There v16 itself is 217, one under 218, and the outline version is 217 too. That's worth knowing for T69: once look U's answers count in the score, the steadiness test should use every look.
 
 Held-out sizes for the creators' version (fitted per split; approved v16's sizes held exactly): the halfway charge over full legs 0.25–0.5; the short outline 0.25 on every split; the long coat 0.25 on 7 of 8. Each ships at its all-164 value.
 
