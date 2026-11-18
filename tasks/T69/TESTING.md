@@ -2,7 +2,7 @@
 
 Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** `3da1ae5c` · Nov 18, 2026 (re-locked after the build's disputes and the closet ruling; earlier `44f16ace`, first lock `6d6f97fc`) · tests: `app/packages/kitted-core/test/{v16,v15Unchanged,v16Steadiness,parts.parity,partsFixes.parity,rulesConformance}.test.ts` (helpers `test/t69.ts`), `app/src/__tests__/T69-{season,legLook,engineRouting,scoreBands,whyRows}.test.ts`, readings `app/src/__tests__/fixtures/t69-readings.json`
+**Lock:** `b2cf7494` · Nov 18, 2026 (re-locked after the reviewer's gaps; earlier `3da1ae5c`, `44f16ace`, first lock `6d6f97fc`) · tests: `app/packages/kitted-core/test/{v16,v15Unchanged,v16Steadiness,parts.parity,partsFixes.parity,rulesConformance}.test.ts` (helpers `test/t69.ts`), `app/src/__tests__/T69-{season,legLook,engineRouting,scoreBands,whyRows}.test.ts`, readings `app/src/__tests__/fixtures/t69-readings.json`
 
 **Plan-line IDs:** **F2.1** and **FAIR** (specs.md's launch bar "The score is fair", line 19). Both are below. F2.1 is covered by F2.1a to F2.1g. FAIR itself can't be measured yet (Not testable yet); what makes the shipped score the one the founder approved is covered by the guards the plan line states in words, **T69-G1 to T69-G11** (parity regenerated from v16, v15 untouched, the leg-width look, the season, the score words to 9.5 with the 3–4.5 word, Why's rows, and the B6 test).
 

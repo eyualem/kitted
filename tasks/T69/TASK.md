@@ -47,6 +47,10 @@ Q-T1 to Q-T10 accepted as IMPLEMENTATION.md defaults them. Q-T5: committing the 
   - `oneCount` G2: the next best buy and the evidence's first row are now s05, +16 (v15: s27, +18).
   - `oneCount` G8 is unchanged and still red: the demo's canned answer card for "What should I buy next?" still names work boots, while the Closet now picks dark straight jeans. The test guards that the two agree, so the demo answer (content: implementer, words: founder) has to change, not the test.
 
+- **Reviewer's gaps (`b2cf7494`):** added two tests to `v16.test.ts`; both take their numbers from Python and both bite.
+  - SCO-3 floor: with the faults amplified, SKINNY's raw is 0.575 and it shows exactly 3.0; nothing scores under 3.0. Bites when the clamp is moved to 3.5.
+  - T69-G6 tie-break: on straight and relaxed jeans and trousers, W's narrow and wide answers give Python's scores; a stored slim, skinny or wide leg never moves. Bites when the tie-break is turned off.
+
 ## Review
 
 ### Round 1 (reviewer, Nov 18) - verdict: ready, with one test weakness and one note
