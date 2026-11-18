@@ -3478,3 +3478,7 @@ Contradictions settled and decisions changed during the build. Newest last.
     - **Haiku** is worse than the code (74%, r 0.42).
     - **Not verified:** one photo per call, the real cost and wait, and whether a stronger model reads the pieces better.
     - **Parked, on his word:** Flash judging by the rules (about 50¢, cap 75¢), a Sonnet API run (about $1.30, cap $2; needs his own Anthropic key and a privacy line), and the stronger-reader test. "The AI sees, the code judges" stays as written.
+
+## Nov 17 · T69: what moves into the app
+
+487. **T69 ports v16 exactly as approved, with no outline or coat rules (the founder, Nov 17: "Yes, build v16", Y47 from PR #140; relayed by the coordinating session).** The outline study (#486, PR #140) found the creators' version of the outline inside the noise, so those rules stay on paper, switched off. Steadiness stays locked at T68's count, 218/223 with each reading's own leg look (Y44); PR #140's stricter count adding looks U and L (217 for v16) is reported alongside as information, not a bar. *(Numbered against PR #140's #486; renumber at merge.)*
