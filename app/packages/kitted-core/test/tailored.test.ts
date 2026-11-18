@@ -429,6 +429,23 @@ describe("TL3.2 · the fixtures come from this branch's engine", () => {
 
 // ── TL4.3 ───────────────────────────────────────────────────────────────────────────────────────────────────────
 describe("TL4.3 · Going for Tailored", () => {
+  it("TL4.3 · Going for Tailored names the piece that keeps it from Tailored: a graphic tee under a blazer is the loud one", () => {
+    // Verification round 1 (Nov 18): Going for reads the 8 looks (Interfaces: pullingPiece's `reads` uses detectLooks),
+    // so the piece that pulls away from Tailored is found the way it is for every other look. A plain tee in its place
+    // reads as Tailored (TL1: a tee is a home piece; a graphic tee is on the never-list).
+    const GT = Rd([top("graphic_tee", "white"), outer("blazer", "navy"), GREY_TROUSERS, LOAFER]);
+    const PLAIN = Rd([top("tee", "white"), outer("blazer", "navy"), GREY_TROUSERS, LOAFER]);
+    expect(defaultRubric.isTailored(defaultRubric.scoredGarments(GT))).toBe(false);
+    expect(defaultRubric.isTailored(defaultRubric.scoredGarments(PLAIN))).toBe(true);
+    const a = goingForAdvice(GT, TAILORED, { occasion: "everyday" })!;
+    expect([a.going, a.kind, a.readsAs]).toEqual(["tailored", "mismatch", "classic_prep"]);
+    expect(a.piece).toEqual({ index: 0, name: "graphic tee", plural: false, why: "loud" });
+    expect([a.move?.id, a.move?.copy]).toEqual(["top_plain_tee", "Swap the graphic tee for a plain tee"]);
+    expect(goingForAdvice(PLAIN, TAILORED, { occasion: "everyday" })!.kind).toBe("match");
+    // and it changes no number
+    expect(numbers(scoreParts(GT, { occasion: "everyday", styles: [["tailored", 1]] }))).toEqual(numbers(scoreParts(GT, { occasion: "everyday" })));
+  });
+
   it("TL4.3 · Going for Tailored: a match on a suit, a mismatch on a blazer with chinos, no score moves", () => {
     const blz = goingForAdvice(BLZ, TAILORED, { occasion: "everyday" })!;
     expect([blz.kind, blz.readsAs, blz.going]).toEqual(["match", "tailored", "tailored"]);

@@ -16,6 +16,7 @@ import { renderFlat } from '@/features/closet/flats';
 import { LOOKS, picksToStyles, togglePick } from '@/features/onboarding/looks';
 import { adviceText, asksLook, lookTiles } from '@/features/fitcheck/goingFor';
 import { createFitCheckService, DEFAULT_TIMERS } from '@/features/fitcheck/service';
+import { evaluateCheck } from '@/features/fitcheck/scoring';
 import { whyParts } from '@/features/why/partsRows';
 import { styleLabel } from '@/features/morning/copy';
 import { t, type StringKey } from '@/i18n/en';
@@ -283,6 +284,37 @@ describe('TL4.3 · Going for offers Tailored and changes no score', () => {
     expect(same(back)).toEqual(same(before));
     expect([back.style, back.details.goingFor?.confirmed, back.details.goingForAdvice?.kind]).toEqual(['tailored', true, 'match']);
     expect(adviceText(back.details.goingForAdvice!).lead).toBe('It reads that way too.');
+  });
+});
+
+describe('TL4.3 · Going for Tailored names what pulls away', () => {
+  it('TL4.3 · a graphic tee under a blazer, going for Tailored: the card names the tee and the swap, the score stays', () => {
+    // Verification round 1 (Nov 18): a made-up outfit (no person): a white graphic tee under a navy blazer, grey trousers,
+    // brown loafers. The graphic tee is on Tailored's never-list; a plain tee in its place reads as Tailored.
+    const G = (category: string, subcategory: string, color: string, more: Record<string, unknown> = {}) => ({
+      category, subcategory, color_family: color, pattern: 'solid', logo: 'none', volume: 3, leg_shape: 'na', hem: 'na', tucked: 'na',
+      condition: 'clean', certainty: 'clear', length: 'na', pattern_scale: 'na', saturation: 'na', sleeve_end: 'na', strain: 'none',
+      distressed_by_design: false, shows_below_outer: false, ...more,
+    });
+    const reading = {
+      scene: { framing: 'full_body', shoes_visible: true, people_count: 1, mirror_selfie: false, lighting: 'good', clothed: 'fully' },
+      garments: [
+        G('top', 'graphic_tee', 'white', { pattern: 'graphic', tucked: 'none', length: 'mid_fly', sleeve_end: 'at_wrist' }),
+        G('outerwear', 'blazer', 'navy', { length: 'at_belt', sleeve_end: 'at_wrist' }),
+        G('bottom', 'trousers', 'grey', { leg_shape: 'straight', hem: 'slight_break' }),
+        G('footwear', 'loafer', 'brown'),
+      ],
+    } as unknown as Reading;
+    const ev = (goingFor: StyleKey | null) =>
+      evaluateCheck({ reading, occasion: 'everyday', styles: PICKS, boldness: null, closet: [], firstCheck: false, goingFor });
+    const a = ev(TAILORED).row.details.goingForAdvice!;
+    expect([a.going, a.kind, a.readsAs, a.piece]).toEqual(['tailored', 'mismatch', 'classic_prep', { index: 0, name: 'graphic tee', plural: false, why: 'loud' }]);
+    expect(adviceText(a)).toEqual({
+      kind: 'mismatch', lead: 'Reads as classic prep.', rest: 'For a tailored look, the graphic tee pulls the other way.',
+      move: { title: 'Swap the graphic tee for a plain tee', detail: 'Toward tailored' },
+    });
+    const none = ev(null).row;
+    expect([ev(TAILORED).row.score, ev(TAILORED).row.rawScore, ev(TAILORED).row.subscores]).toEqual([none.score, none.rawScore, none.subscores]);
   });
 });
 
