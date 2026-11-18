@@ -4,7 +4,7 @@
 export * from "./types";
 export { RUBRIC_DATA } from "./rubricData";
 export {
-  ENGINE_VERSION, createRubric, defaultRubric, score, askQuestion, detectStyles, isScored, stylesMap, roundHalf, nearest, pyRound,
+  ENGINE_VERSION, createRubric, defaultRubric, score, askQuestion, detectStyles, detectLooks, isTailored, isScored, stylesMap, roundHalf, nearest, pyRound,
   type RubricEngine, type DetectedStyles,
 } from "./rubric";
 export { scoreWord, SCORE_WORDS, type ScoreWord } from "./scoreWords";

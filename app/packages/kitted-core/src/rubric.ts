@@ -66,6 +66,10 @@ export interface RubricEngine {
   askQuestion(reading: Reading, opts?: ScoreOptions, shoes?: boolean): TapQuestion | null;
   /** rubric.detect_styles on already-scored garments (see scoredGarments). */
   detectStyles(garments: readonly Garment[], picks?: Styles | null): DetectedStyles;
+  /** T94: the 8 looks (the 7 plus Tailored) and TL2's label, on already-scored garments. */
+  detectLooks(garments: readonly Garment[], picks?: Styles | null): DetectedStyles;
+  /** T94: TL1 on already-scored garments. */
+  isTailored(garments: readonly Garment[]): boolean;
   /** The garments score() judges: filtered, leg aliases normalized, open shirts over a top re-filed as layers. */
   scoredGarments(reading: Reading): Garment[];
   /** rubric.bands_for: the default band first, then each detected style's band (leg as LEG_ORDER indices). */
@@ -1156,8 +1160,16 @@ export function createRubric(data: RubricData): RubricEngine {
     isDenim,
   };
 
+  // T94 stubs (the test writer's): the implementer replaces them.
+  const detectLooks = (_garments: readonly Garment[], _picks?: Styles | null): DetectedStyles => {
+    throw new Error("T94: not built");
+  };
+  const isTailored = (_garments: readonly Garment[]): boolean => {
+    throw new Error("T94: not built");
+  };
+
   return {
-    data, score, askQuestion, detectStyles, scoredGarments, bandsFor, bandSteps, formality, fam, isBright, legIndex,
+    data, score, askQuestion, detectStyles, detectLooks, isTailored, scoredGarments, bandsFor, bandSteps, formality, fam, isBright, legIndex,
     legOrder: LEG_ORDER, occasionTarget, neutrals: NEUTRALS, loungeOk: LOUNGE_OK, helpers,
   };
 }
@@ -1211,6 +1223,16 @@ export function askQuestion(reading: Reading, opts: ScoreOptions = {}, shoes = t
 /** rubric.detect_styles() on a reading: what it reads as, and the card label (null = the general standard). */
 export function detectStyles(reading: Reading, picks?: Styles | null): DetectedStyles {
   return defaultRubric.detectStyles(defaultRubric.scoredGarments(reading), picks);
+}
+
+/** T94: the 8 looks on a reading (like detectStyles), with TL2's label. */
+export function detectLooks(reading: Reading, picks?: Styles | null): DetectedStyles {
+  return defaultRubric.detectLooks(defaultRubric.scoredGarments(reading), picks);
+}
+
+/** T94: TL1 on already-scored garments. */
+export function isTailored(garments: readonly Garment[]): boolean {
+  return defaultRubric.isTailored(garments);
 }
 
 export function isScored(r: RubricResult): r is import("./types").ScoredResult {

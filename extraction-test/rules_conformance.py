@@ -1631,6 +1631,106 @@ case("GEN-2-slim", "GEN-2", "an oversized tee over slim jeans with no style: the
      {"label": None, "fired": [F(PB1, "proportions", -1.5)], "not_fired": [F("PF5_big_top_skinny_leg")], "band": "Getting there"})
 
 
+# ===== Tailored (TLR; T94, specs/tailored.md) ========================================================================
+# The cases above whose outfit meets TL1 (a tailored jacket and dress trousers, nothing on the never-list, no roominess
+# 5) now read as Tailored, and the "reads as" line names it where it said "a matching suit", "reads as smart casual"
+# or "reads as classic prep" (TL2). Name only: every number they assert stays as it was (TL3).
+MEETS_TL1 = ["PRO-7-tailored", "PRO-7-untucked", "PRO-10-hem", "PRO-13-fitted-blazer", "PRO-13-blazer", "PRO-14-blazer",
+             "FIT-1-ceiling", "FIT-2-tailored", "FIT-5-worst", "COL-3-near", "COL-12-suit", "COL-13-tailored", "SHO-5-casual",
+             "SHO-7-suit", "STY-2-suit", "STY-4-covered-suit", "STY-5-blazer", "STY-10-plain", "CON-6-tee-blazer",
+             "OCC-2-derby", "OCC-2-over", "OCC-4-sneakers", "OCC-4-everyday", "OCC-7-blazer", "OCC-7-suitjacket",
+             "MIN-3-blazer", "PRP-3-tailored", "SMC-2-suit", "SMC-5-interview"]
+_by_id = {c["id"]: c for c in CASES}
+assert set(MEETS_TL1) <= set(_by_id), sorted(set(MEETS_TL1) - set(_by_id))
+for _cid in MEETS_TL1:
+    _e = _by_id[_cid]["expect"]
+    _e["label"] = "tailored"
+    _e["detected_has"] = list(dict.fromkeys(_e.get("detected_has", []) + ["tailored"]))
+    _e["fired"] = _e.get("fired", []) + [F("H1_reads_as_style", "cohesion", 0.5, "reads as tailored")]
+
+TL_SHIRT = top("dress_shirt", "white", tucked="full")
+TL_SUIT = Rd(TL_SHIRT, outer("suit_jacket", "charcoal"), bottom("suit_trousers", "charcoal", "straight", "no_break"), shoe("derby", "black"))
+TL_BLZ = Rd(TL_SHIRT, outer("blazer", "navy"), TROUSERS, LOAFER)
+TL_MIN_TIE = Rd(TEE, outer("unstructured_blazer", "navy"), bottom("trousers", "black", "straight"), LOAFER_BK)
+TL_SLEEVES = Rd(TL_SHIRT, outer("blazer", "navy", sleeve_end="covers_hand"), bottom("trousers", "grey", "straight", "no_break"),
+                shoe("canvas_sneaker", "red"))
+H1_TL = F("H1_reads_as_style", "cohesion", 0.5, "reads as tailored")
+
+case("TLR-1-blazer", "TLR-1", "a navy blazer over a tucked white dress shirt, grey trousers and brown loafers: Tailored",
+     TL_BLZ, {"detected_has": ["tailored", "classic_prep", "smart_casual"], "label": "tailored", "fired": [H1_TL], "band": "Sharp"})
+case("TLR-1-clean-sneakers", "TLR-1", "the same with white leather sneakers (a home piece): still Tailored",
+     Rd(TL_SHIRT, outer("blazer", "navy"), TROUSERS, WLS), {"detected_has": ["tailored"], "label": "tailored", "band": "Sharp"})
+case("TLR-1-two-slots", "TLR-1", "a charcoal suit with the shoes out of the photo: jacket and trousers are enough",
+     Rd(*TL_SUIT["garments"], shoes_visible=False), {"detected_has": ["tailored"], "label": "tailored", "band": "Put together"})
+case("TLR-2-suit", "TLR-2", "a charcoal suit over a white dress shirt with black derbies: a matching suit always meets it",
+     TL_SUIT, {"detected_has": ["tailored"], "label": "tailored", "fired": [H1_TL], "band": "Sharp"})
+case("TLR-2-no-jacket", "TLR-2", "a grey sweater, grey trousers and loafers: no tailored jacket, so minimal as before",
+     Rd(top("sweater", "grey"), bottom("trousers", "grey", "straight"), LOAFER),
+     {"detected_lacks": ["tailored"], "label": "minimalist", "band": "Put together"})
+case("TLR-2-overcoat", "TLR-2", "the same under a camel overcoat: an overcoat isn't a tailored jacket",
+     Rd(top("sweater", "grey"), outer("overcoat", "tan_camel"), bottom("trousers", "grey", "straight"), LOAFER),
+     {"detected_lacks": ["tailored"], "band": "Put together"})
+case("TLR-2-top-half", "TLR-2", "the suit with only the top half in the photo: no trousers in view, not Tailored",
+     Rd(*TL_SUIT["garments"], framing="upper_only"), {"detected_lacks": ["tailored"], "label": None, "band": "Put together"})
+case("TLR-3-chinos", "TLR-3", "a navy blazer over a white oxford with khaki chinos and loafers: classic prep, never Tailored",
+     Rd(top("oxford_shirt", "white"), outer("blazer", "navy"), CHINOS, LOAFER),
+     {"detected_lacks": ["tailored"], "label": "classic_prep", "fired": [F("H1_reads_as_style", "cohesion", 0.5, "reads as classic prep")],
+      "band": "Put together"})
+case("TLR-3-jeans", "TLR-3", "a navy blazer over a white tee with dark straight jeans and loafers: never Tailored",
+     Rd(TEE, outer("blazer", "navy"), DJEANS, LOAFER), {"detected_lacks": ["tailored"], "label": "classic_prep", "band": "Put together"})
+case("TLR-3-chunky", "TLR-3", "the Tailored blazer outfit with chunky sneakers: never Tailored, smart casual as before",
+     Rd(TL_SHIRT, outer("blazer", "navy"), TROUSERS, CHUNKY),
+     {"detected_lacks": ["tailored"], "label": "smart_casual", "fired": [F("H1_reads_as_style", "cohesion", 0.5, "reads as smart casual")],
+      "band": "Put together"})
+case("TLR-3-hoodie", "TLR-3", "a hoodie under a navy blazer with grey trousers and loafers: never Tailored",
+     Rd(top("hoodie", "grey"), outer("blazer", "navy"), TROUSERS, LOAFER),
+     {"detected_lacks": ["tailored"], "label": "classic_prep", "band": "Put together"})
+case("TLR-3-roomy", "TLR-3", "the Tailored blazer outfit with the trousers at roominess 5: never Tailored",
+     Rd(TL_SHIRT, outer("blazer", "navy"), mod(TROUSERS, volume=5), LOAFER),
+     {"detected_lacks": ["tailored"], "label_in": ["classic_prep", "smart_casual", None], "band_in": ["Getting there", "Put together", "Sharp"]})
+case("TLR-4-picks", "TLR-4", "the blazer outfit with smart casual as his pick: Tailored wins before his picks",
+     TL_BLZ, {"label": "tailored", "detected_has": ["tailored", "smart_casual"], "fired": [H1_TL], "band": "Sharp"},
+     styles=[("smart_casual", 1.0)])
+case("TLR-4-prep-marker", "TLR-4", "a pink oxford under a navy blazer with grey trousers and loafers, classic prep picked: still Tailored",
+     Rd(top("oxford_shirt", "pink"), outer("blazer", "navy"), TROUSERS, LOAFER),
+     {"label": "tailored", "detected_has": ["tailored", "classic_prep"], "fired": [H1_TL], "band": "Put together"},
+     styles=[("classic_prep", 1.0)])
+case("TLR-4-minimal-pick", "TLR-4", "a tee under an unstructured blazer with black trousers and loafers reads minimal and Tailored: his minimal pick names it",
+     TL_MIN_TIE, {"detected_has": ["tailored", "minimalist"], "label": "minimalist", "band": "Put together"}, styles=[("minimalist", 1.0)])
+case("TLR-4-order", "TLR-4", "the same with no picks: the fixed order puts Tailored before minimal",
+     TL_MIN_TIE, {"detected_has": ["tailored", "minimalist"], "label": "tailored", "fired": [H1_TL], "band": "Put together"})
+case("TLR-5-suit", "TLR-5", "the charcoal suit keeps what it earned as a suit: +0.5 reads as, +0.5 worn properly, nothing more",
+     TL_SUIT, {"overall": 8.0, "part": {"cohesion": {"score": 8.0}}, "fired": [H1_TL, F("H2_suit", "cohesion", 0.5)], "label": "tailored",
+               "band": "Sharp"})
+case("TLR-5-blazer", "TLR-5", "the blazer outfit keeps what it earned as smart casual: the same +0.5 and +0.5, renamed",
+     TL_BLZ, {"overall": 8.0, "part": {"cohesion": {"score": 8.0}}, "label": "tailored",
+              "fired": [H1_TL, F("H2_clear_top_to_toe", "cohesion", 0.5, "clearly tailored top to toe")], "band": "Sharp"})
+case("TLR-5-picks", "TLR-5", "the same with Tailored picked: no number moves",
+     TL_BLZ, {"label": "tailored", "band": "Sharp"}, styles=[("tailored", 1.0)],
+     vs={"case": "TLR-5-blazer", "parts": {"proportions": 0.0, "fit": 0.0, "color": 0.0, "shoes": 0.0, "cohesion": 0.0}, "overall": 0.0})
+case("TLR-5-no-look", "TLR-5", "a blazer, dress shirt and trousers with trail shoes read as no look before: now Tailored, with no new credit",
+     Rd(TL_SHIRT, outer("blazer", "navy"), TROUSERS, shoe("trail_shoe", "grey")),
+     {"label": "tailored", "not_fired": [F("H1_reads_as_style"), F("H2_clear_top_to_toe")], "overall": 7.0, "band": "Put together"},
+     future=["trail_shoe"])
+case("TLR-5-suit-not-tailored", "TLR-5", "a charcoal suit with chunky sneakers isn't Tailored: it keeps +0.5 as a matching suit (founder, option 1)",
+     Rd(*TL_SUIT["garments"][:3], CHUNKY),
+     {"label": None, "detected_lacks": ["tailored"], "fired": [F("H1_reads_as_style", "cohesion", 0.5, "a matching suit")],
+      "band": "Put together"})
+case("TLR-6-lead", "TLR-6", "blazer sleeves over the hands with red canvas sneakers, Tailored picked: the sleeve fix leads",
+     TL_SLEEVES, {"fix_order": ["fit_better", "shoes_loafers"], "label": "tailored", "overall": 6.5, "band": "Getting there"}, styles=[("tailored", 1.0)])
+case("TLR-6-no-pick", "TLR-6", "the same with no picks: the bigger gain first, as before",
+     TL_SLEEVES, {"fix_order": ["shoes_loafers", "fit_better"], "label": "tailored", "overall": 6.5, "band": "Getting there"})
+case("TLR-6-second-pick", "TLR-6", "Tailored as his second pick behind streetwear: the sleeve fix still leads",
+     TL_SLEEVES, {"fix_order": ["fit_better", "shoes_loafers"], "label": "tailored", "overall": 6.5, "band": "Getting there"},
+     styles=[("streetwear", 0.5), ("tailored", 0.5)])
+case("TLR-6-class", "TLR-6", "a wrinkled shirt too: the free steam stays ahead of the sleeve fix (the lead is within a class)",
+     Rd(top("dress_shirt", "white", tucked="full", condition="wrinkled"), outer("blazer", "navy", sleeve_end="covers_hand"), TROUSERS, LOAFER),
+     {"fix_order": ["steam", "fit_better"], "label": "tailored", "band": "Put together"}, styles=[("tailored", 1.0)])
+case("TLR-6-no-jacket", "TLR-6", "overcoat sleeves over the hands: not a tailored jacket, so no lead",
+     Rd(top("sweater", "grey"), outer("overcoat", "tan_camel", sleeve_end="covers_hand"), TROUSERS, shoe("canvas_sneaker", "red")),
+     {"fix_order": ["shoes_loafers", "fit_better"], "band": "Getting there"}, styles=[("tailored", 1.0)])
+
+
 # --------------------------------------------------------------------------------------------- checking
 def schema_problems(reading, future):
     props = SCHEMA["properties"]["garments"]["items"]["properties"]
@@ -1655,6 +1755,11 @@ def run(c):
 def fix_next_level(c):
     """The fix engine's Next level / tip line for the case (no closet, not a warm day, not the first check)."""
     return PF.suggest_parts_fixes(c["reading"], c["occasion"], dict(c["styles"]), c["boldness"], c["second_look"])["next_level"]
+
+
+def fix_order(c):
+    """T94: the fix engine's fixes for the case, in order (ids)."""
+    return [x["id"] for x in PF.suggest_parts_fixes(c["reading"], c["occasion"], dict(c["styles"]), c["boldness"], c["second_look"])["fixes"]]
 
 
 def reasons(r, part=None):
@@ -1760,6 +1865,10 @@ def check(c, r, results):
             bad.append(f"fix tip line {(nl or {}).get('line')} lacks '{e['fix_tip_line']}'")
         if "fix_tip_lacks" in e and (nl or {}).get("id") == e["fix_tip_lacks"]:
             bad.append(f"fix tip {e['fix_tip_lacks']} shown")
+    if "fix_order" in e:                                            # T94 (TLR-6): the fixes, in order
+        got = fix_order(c)
+        if got != e["fix_order"]:
+            bad.append(f"fixes {got} != {e['fix_order']}")
     vs = c.get("vs")
     if vs:
         b = results[vs["case"]]
@@ -1787,6 +1896,8 @@ def snapshot(r, c=None):
            "detected_styles": r["detected_styles"], "style_label": r["style_label"]}
     if c is not None and ({"fix_tip", "fix_tip_lacks"} & set(c["expect"])):
         out["next_level"] = fix_next_level(c)                       # v10: the TS checks the tip line equals Python's
+    if c is not None and "fix_order" in c["expect"]:
+        out["fix_order"] = fix_order(c)                              # T94: the TS checks the order equals Python's
     return out
 
 
@@ -1817,6 +1928,11 @@ def main():
         if bad:
             fails += 1
             print(f"{tag} {c['rule']} {c['id']}: {c['what']}\n     " + "\n     ".join(bad))
+    undeclared_tl = [c["id"] for c in CASES if results[c["id"]].get("style_label") == "tailored"
+                     and c["expect"].get("label") != "tailored"]
+    if undeclared_tl:
+        fails += 1
+        print(f"FAIL these cases read as Tailored but don't say so (T94, TL2): {undeclared_tl}")
     rules = sorted({c["rule"] for c in CASES})
     doc = set(re.findall(r"\*\*\[([A-Z]{3}-\d+)\]", DOC.read_text()))
     if doc != set(rules):

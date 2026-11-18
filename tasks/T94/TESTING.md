@@ -2,7 +2,7 @@
 
 The session wrote this file; the test writer writes and locks the tests. The task's logic criteria go here, never words, labels or layout: those are screenshots, kept in the UI inventory below. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** `<commit SHA>` · <date> · tests: `extraction-test/tailored_test.py`, `extraction-test/rules_conformance.py` (TLR cases and updated cases), `app/packages/kitted-core/test/tailored.test.ts`, `app/src/__tests__/T94-tailored.test.tsx`, `app/e2e/flows/T94-tailored-tile.yaml`, plus the existing tests listed under "Existing tests to update"
+**Lock:** `<commit SHA>` · <date> · tests: `extraction-test/tailored_test.py`, `handoff/fixtures/tailored_base_v15.json` (the pins), `extraction-test/rules_conformance.py` (TLR cases and updated cases), `app/packages/kitted-core/test/tailored.test.ts`, `app/packages/kitted-core/test/rulesConformance.test.ts` (the `fix_order` mirror), `app/src/__tests__/T94-tailored.test.tsx`, `app/e2e/flows/T94-tailored-tile.yaml`, `app/src/__tests__/{styleKeys,onboardingLooks,lookPacks,cardContent,goingFor}.test.ts`; stubs in `app/packages/kitted-core/src/rubric.ts` and `index.ts`
 
 **Spec:** `specs/tailored.md`, the version on main (approved 2026-11-13). If the coordinator moves T94 onto the Nov 17 version (IMPLEMENTATION.md → founder 4), TL3's lines are rewritten against the rescoring engine before the lock.
 
@@ -178,43 +178,50 @@ The session wrote this file; the test writer writes and locks the tests. The tas
 **TL4. Where he sees it**
 
 - **TL4.1** · Setup's style screen shows 8 look tiles with Tailored after Classic prep, its name and line word for word and the two drawings in TL4; screenshots in light and dark and at the largest text size, nothing clipped.
-  - **How:** component test, flow and screenshots.
-  - **Tests:**
-    - `T94-tailored.test.tsx` › `TL4.1 · Looks shows 8 tiles, Tailored right after Classic prep, then Something else? last`;
+  - **Note (the coordinator, Nov 18, before the lock):** TL4.1's "Setup's style screen shows 8 look tiles" is covered for the setup screen by T113's game cards; T94 checks LOOKS and Style profile. T113 replaces setup's tile grid with the style game and deletes `PickLooksScreen.tsx` (demo screen 2 becomes the game), so no T94 test renders the setup grid or opens screen 2. Same criterion, pointed at where the tile lives after T113.
+  - **How:** unit (`LOOKS`, which the game, You and Style profile draw from), component test (Style profile), flow and screenshots.
+  - **Tests:** `T94-tailored.test.tsx`:
+    - `TL4.1 · LOOKS has 8 looks, Tailored right after Classic prep, its name and line word for word`;
     - `TL4.1 · Tailored's two drawings are the suits TL4 describes`;
-    - flow `T94-tailored-tile.yaml`.
+    - `TL4.1 · founder 3: the three redraws (Outdoor's slate-blue shell and heather zip pullover, Streetwear's black chunky sneakers)`;
+    - `TL4.1 · Style profile shows 8 look tiles, Tailored 5th, with its two drawings`;
+    - flow `T94-tailored-tile.yaml` (Style profile, screen 293).
   - **Expect:**
-    - rendering the Looks screen gives 8 look tiles in this order: Streetwear, Minimal, Smart casual, Classic prep, Tailored, Workwear, Outdoor, Vintage sport; then the "Something else?" tile last;
-    - Tailored's visible name is `Tailored` and its line `Suits, blazers, dress trousers, loafers`;
-    - `LOOKS` entry `tailored`, outfit 1: `top.type === 'blazer'`, `bottom.type === 'trousers'`, `top.color === bottom.color` (charcoal), `shoe.type === 'derby'` with a near-black color;
-    - outfit 2: blazer and trousers the same navy color, `shoe.type === 'sneaker'`, white, not chunky;
-    - each piece renders an `<svg`;
-    - `STYLES` has 8 keys and `LOOKS` covers exactly `STYLES`.
+    - `LOOKS` order: streetwear, minimalist, smart_casual, classic_prep, tailored, workwear, outdoor, vintage_sport (names Streetwear, Minimal, Smart casual, Classic prep, Tailored, Workwear, Outdoor, Vintage sport);
+    - Tailored's name is `Tailored` (`style.tailored`, `styleLabel`) and its line `Suits, blazers, dress trousers, loafers` (`onb.looks.line.tailored`);
+    - `LOOKS` entry `tailored`, outfit 1: `top.type === 'blazer'`, `bottom.type === 'trousers'`, `top.color === bottom.color` (charcoal: a grey, highest channel 0x30–0x60), `shoe.type === 'derby'` with a near-black color (every channel ≤ 0x40);
+    - outfit 2: blazer and trousers the same navy color (blue leads by ≥ 20, dark), `shoe.type === 'sneaker'`, white (every channel ≥ 0xE8), not chunky;
+    - each piece renders an `<svg` in light and dark;
+    - `STYLES` has 8 keys and `LOOKS` covers exactly `STYLES`;
+    - Style profile renders 8 tiles (`style-art-<look>`) in `LOOKS` order, Tailored 5th, a button named `Tailored` with its 6 drawn pieces (2 outfits × 3);
+    - founder 3's redraws as IMPLEMENTATION.md → Interfaces gives them (Streetwear outfit 2's shoe `#26272B`, sole and laces `#F2F1EC`, still chunky; Outdoor outfit 1's top `#3D5A73`, a full-zip jacket; Outdoor outfit 2's top a `quarter_zip`, `#D8D2C2`, heather, `ribHem: false`).
   - **Must not:**
-    - a 9th look tile;
+    - a 9th look;
     - a duplicate Tailored;
     - Tailored before Classic prep;
-    - "Something else?" anywhere but last;
     - a drawing with a person (the flats have none: the test checks every piece's `kind` is top, bottom or shoe).
-  - **Screenshots** (`tasks/T94/shots/`): screen 2 scrolled to Tailored, in light, dark and the largest text (`accessibility-extra-extra-extra-large`). The reviewer checks for clipping by eye.
+  - **Screenshots** (`tasks/T94/shots/`): Style profile (screen 293) and You (292), in light, dark and the largest text (`accessibility-extra-extra-extra-large`). The reviewer checks for clipping by eye. Setup's own screen is T113's.
+  - **Red:** `STYLES` has 7 keys (`Expected length: 8, Received length: 7`); `LOOKS` has no Tailored; the redraws fail on Streetwear's shoe `#B5332E` ≠ `#26272B`; Style profile draws 7 tiles (no `style-art-tailored`). Proven passable: with a scratch app-side build (STYLES, the two copy keys, the LOOKS entry and redraws; reverted, never committed) all four pass.
 
 - **TL4.2** · Picking Tailored saves `tailored` in his order; You's Your style and Style profile show it with its drawings.
-  - **How:** component tests.
+  - **How:** unit and component tests (Style profile and You; setup's grid is T113's).
   - **Tests:** `T94-tailored.test.tsx`:
     - `TL4.2 · tapping Tailored saves "tailored" in tap order`;
-    - `TL4.2 · You's Your style and Style profile show Tailored with its drawings, in his order`.
+    - `TL4.2 · the keys: tailored is a look key; the old keys map as before`;
+    - `TL4.2 · You's Your style and Style profile show Tailored with its drawings, in his order`;
+    - `TL4.2 · a stored list with an unknown key shows the rest (no crash)`.
   - **Expect:**
-    - tapping Classic prep, Tailored, Minimal, then Continue writes kv `onboarding.looks` = `["classic_prep","tailored","minimalist"]`;
-    - the button reads `Continue · 2 of 3` after the second tap;
-    - with profile styles `[["tailored",0.5],["classic_prep",0.25],["minimalist",0.25]]`, You renders `style-art-tailored` first in Your style, and Style profile renders Tailored's tile with badge `1` (VoiceOver `Tailored, pick 1`);
+    - `togglePick` over Classic prep, Tailored, Minimal gives `["classic_prep","tailored","minimalist"]`; on Style profile, tapping Classic prep, Tailored, Minimal then Done saves `styles` = `[["classic_prep",0.5],["tailored",0.25],["minimalist",0.25]]`; after the second tap the tile reads `Tailored, pick 2`, selected, badge `2`;
+    - with profile styles `[["tailored",0.5],["classic_prep",0.25],["minimalist",0.25]]`, You renders `style-art-tailored` first in Your style (6 drawn pieces, hidden from VoiceOver; the card reads `Your style: Tailored, first pick; Classic prep; Minimal. Regular fit. Edit.`), and Style profile renders Tailored's tile with badge `1` (VoiceOver `Tailored, pick 1`);
     - `picksToStyles(['tailored'])` is `[['tailored', 1]]`.
   - **Must not:**
-    - a 4th tap (with Tailored among 3) adds anything: the picks stay 3 and the note `Up to 3.` shows;
+    - a 4th tap (with Tailored among 3) adds anything: `togglePick` returns `full` with the picks unchanged, and on Style profile the 4th look stays unselected with Tailored still pick 2;
     - `normStyleKey('tailored')` is null;
     - a stored list with an unknown key crashes You (the unknown key is dropped).
   - **Edges:**
     - a wipe or reinstall: picks live in kv and the profile as today (nothing new to clear);
     - old keys (`preppy`, `old_money`, `gorpcore`) still map as before.
+  - **Red:** Style profile has no `Tailored` button; `normStyleKey('tailored')` is null; You draws `style-art-classic_prep`, `style-art-minimalist` only (Tailored dropped); the unknown-key case draws nothing. Passable: all four pass on the scratch app-side build above.
 
 - **TL4.3** · Going for offers Tailored, and choosing it changes no score.
   - **How:** unit (core) and service test (app).
@@ -233,13 +240,14 @@ The session wrote this file; the test writer writes and locks the tests. The tas
   - **Edge:** offline, Going for runs on the phone, so the same result with no network (the service test runs with no server).
 
 - **TL4.4** · VoiceOver reads the tile as in TL4.
-  - **How:** component test, plus a manual VoiceOver pass (below).
+  - **How:** component test (Style profile's tile, and the look tile's words from setup's template), plus a manual VoiceOver pass (below).
   - **Test:** `T94-tailored.test.tsx` › `TL4.4 · the Tailored tile's VoiceOver label`.
   - **Expect:**
-    - the unpicked tile has `accessibilityRole` `button` and `accessibilityLabel` exactly `Tailored: Suits, blazers, dress trousers, loafers`;
-    - picked first, `Tailored, pick 1: Suits, blazers, dress trousers, loafers` with `accessibilityState.selected === true`;
-    - its drawings are hidden from VoiceOver (`accessibilityElementsHidden`).
-  - **Must not:** the label is missing the line, or reads the key (`onb.looks.line.tailored`).
+    - the look tile's words (`onb.looks.tileA11y`) for Tailored are exactly `Tailored: Suits, blazers, dress trousers, loafers`, and picked first `Tailored, pick 1: Suits, blazers, dress trousers, loafers`;
+    - on Style profile the unpicked tile has `accessibilityRole` `button`, `accessibilityLabel` `Tailored`, not selected; once tapped, `Tailored, pick 1`, `accessibilityState.selected === true`;
+    - its drawings are hidden from VoiceOver (`accessibilityElementsHidden`): one hidden view holding the 6 drawn pieces.
+  - **Must not:** the label is missing the line, or reads a key (`onb.looks.line.tailored`, `style.tailored`).
+  - **Red:** `Expected: "Tailored: Suits, blazers, dress trousers, loafers"`, `Received: "Any style: {line}"` (no `style.tailored`, no line key). Passable on the scratch app-side build.
 
 **TL5. Fixes**
 
@@ -256,10 +264,45 @@ The session wrote this file; the test writer writes and locks the tests. The tas
     - a tailoring fix jumps a cheaper class (a free fix stays ahead of an `own` one: BLZ with `sleeve_end: "covers_hand"` and a wrinkled shirt keeps `steam` before `fit_better` with a Tailored pick);
     - the lead applies on an outfit with no tailored jacket (a knit with `sleeve_end: "covers_hand"`, trousers and loafers: the same order with and without the pick).
 
+## Red lines (at the lock, Nov 18)
+The test writer's record: each test's first failing line on this branch before any T94 code (stubs only: core `detectLooks` and `isTailored` throw `T94: not built`), or how a guard test that can't go red was made to bite. "Passable" means a scratch build made by the test writer (a copy of the engine in the scratchpad with `detect_looks`, `is_tailored`, the four line edits and the fix lead per Interfaces; a temporary app-side patch of `STYLES`, the two copy keys and `LOOKS`; never committed) passes the test, so the contract can be met.
+
+**The pins.** `handoff/fixtures/tailored_base_v15.json` is engine v15's output for every reading below (69), written by `tailored_test.py --pin` on this branch's engine before any T94 change (`--pin` refuses on an engine that knows Tailored). It holds, per reading, every number (overall, raw, average, bonus, problems, floor, condition, occasion, and each part's score, display, reasons as check and points, tips as check), the 7-look `detected_styles` and `style_label`, and the fixes (id, to, gain, raw gain; order). The TS file reads the same pins and passes `TL3.1` today, which proves its readings equal Python's.
+
+**Python, `extraction-test/tailored_test.py`** (19 tests; base: 2 pass, 17 fail; the scratch build: 17 pass, the 2 regeneration tests fail as they should until the fixtures are regenerated):
+- TL1.1 (2): `AttributeError: module 'rubric' has no attribute 'detect_looks'`.
+- TL1.2 (2): `AssertionError: smart_casual` (the label); the edge: `('smart_casual', ['classic_prep', 'smart_casual'])`.
+- TL1.3 (2): `('white_leather_sneaker', 'smart_casual', …)`; edges: `('canvas_sneaker', 'smart_casual')`.
+- TL1.4, TL2.1 (tie), TL1.5, TL1.6, TL1.7, TL2.2 founder 1: `AttributeError: … 'detect_looks'` / `'is_tailored'`.
+- TL2.1 (wins): `('blz@none', 'smart_casual')`. TL2.2 (suit): `('suit', None)`. TL2.2 (parity): `parts_parity.json has no Tailored case`.
+- TL3.2 (picks variant): `no parts_parity case has a Tailored pick`.
+- TL5.1 (lead): `['shoes_loafers', 'fit_better']`.
+- TL5.1 (no lead without Tailored, a class, a jacket) — exists (passes on base): **bites** via a scratch build whose lead skips the tailored-jacket condition: `('tailored', ['fit_better', 'shoes_loafers'])` on the overcoat case.
+- TL3.1 (the pins) — exists: **bites** via the TESTING plant (+0.25 on `H1_reads_as_style` when the look is Tailored, in the scratch `parts_proto.py`): fails naming 36 readings (`suit: a number moved`, `blz: a number moved`, …).
+
+**Conformance, `extraction-test/rules_conformance.py`** (26 new `TLR-*` cases; 29 cases that meet TL1 now expect `label: "tailored"` and `reads as tailored`; a new `fix_order` assertion, mirrored in `rulesConformance.test.ts`; a check that every case reading as Tailored says so). Base: 483/527 pass, the rest fail on `label smart_casual != tailored`, `H1_reads_as_style line ['a matching suit'] lacks 'reads as tailored'`, `fixes ['shoes_loafers', 'fit_better'] != ['fit_better', 'shoes_loafers']`, and `the doc and the cases disagree: … cases for rules not in the doc ['TLR-1', …, 'TLR-6']`. Scratch build (with `[TLR-1]`–`[TLR-6]` in a scratch copy of the doc): 527/527. The TS twin stays green (502) until the JSON is regenerated.
+
+**Core, `app/packages/kitted-core/test/tailored.test.ts`** (23 tests; base: 19 fail, 4 pass):
+- TL1.1–TL1.6, TL1.7 (parity readings), TL2.1 (tie), TL2.2 (suit, founder 1): `Error: T94: not built` (the stubs) or the label assertions (`[ 'canvas_sneaker', 'smart_casual' ]`, `[ 'suit', null, … ]`).
+- TL1.7 (TS = Python): `T94: not built (handoff/fixtures/tailored.json is written by extraction-test/tailored_test.py once every Python test passes)`.
+- TL2.2 (parity): `expected 0 to be greater than 0`. TL3.2 (picks variant): `expected false to be true`.
+- TL4.3: `TypeError: Cannot read properties of undefined (reading 'role')` from `goingForAdvice` (the rubric's `STYLES` has no `tailored` role: Interfaces' `RubricHelpers.role("tailored", …)`, the missing behaviour itself).
+- TL5.1 (lead): `expected [ 'shoes_loafers', 'fit_better' ] to deeply equal [ 'fit_better', 'shoes_loafers' ]`.
+- Exists (pass on base): TL1.7 (the readings are Python's pinned readings), TL3.2 (each fixture's sha256 equals this branch's `rubric.py`, `parts_proto.py`, `parts_fixes.py`: bites whenever an engine file changes without regenerating), TL5.1 (no lead …) and TL3.1 (the pins), which bite as their Python twins do (same assertions on the same pins).
+
+**App, `app/src/__tests__/T94-tailored.test.tsx`** (11 tests; base: 11 fail): TL4.1, TL4.2, TL4.4 as written under each criterion; TL4.3: `lookTiles([]).more` lacks `"tailored"`; TL2.2: `Expected: "tailored"`, `Received: null` (s09's label). On the scratch app-side build 9 pass; TL4.3 and TL2.2 need the core port (they fail there on `readsAs` / the label, as they should).
+
+**Existing tests updated** (each red by design, name, count or key list only): `styleKeys` (8 names; `STYLES` vs `lookOrder`: red, `lookOrder` missing and `'Tailored'` missing), `onboardingLooks` (title only: still passes), `lookPacks` (`PACKED` = the looks with a pack, `NEVER` partial, and `TL4 · a Tailored pick alone keeps today's 12 …`: red `Expected value: "tailored"` in `STYLES`; **bites** with Tailored in `STYLES` and no filter in `starterList`: `TypeError … reading 'ids'`), `cardContent` (s09 reads as `tailored`: red `null`), app `goingFor` (More gains `tailored`: red). No core test needed a change: `coldCard`, `allowedColors`, `v4` assert no label on a tailored outfit, and `demo-story` follows `expected_scores.json` (regenerated by the implementer). Of the app tests that pass `STYLES` as picks, only `cardContent` asserts a `readsAs` on a jacket-led reading (s09; the scratch engine changes no other demo reading's label).
+
+**Not proven red here (behaviour, script or process):**
+- TL3.1's script, TL3.3 and TL3.4 are `tailored_same_scores.py`'s job (the implementer writes it). The plant TESTING asks for (`--new-from` with +0.25 on `H1_reads_as_style`) can only run once the script exists: **the verifier runs it** (or the test writer on a call-back). The same plant already bites `tailored_test.py`'s pins (above).
+- TL3.2's regeneration check (`git diff --exit-code` after re-running the generators) is the verifier's.
+- The flow: not run (screens 292 and 293 don't exist yet, and the Mac is short on memory); it is red by construction until they do.
+
 ## Existing tests to update (the test writer, in the lock; each with its reason in TASK.md → Disputes)
 These turn red by design: a name, a count or a type. Change only the expected look name, count or key list, never a number.
 - `app/src/__tests__/styleKeys.test.ts`: the 7 names become 8 (`…, 'Classic prep', 'Tailored', 'Vintage sport', 'Outdoor'`), and `STYLES` is compared with `RUBRIC_DATA.styles.lookOrder`.
-- `app/src/__tests__/onboardingLooks.test.ts`: the title says 7 (the body already follows `STYLES`).
+- `app/src/__tests__/onboardingLooks.test.ts`: the title says 7 (the body already follows `STYLES`). No test of the setup grid counts 7 tiles (`T39-setupScreens`, `looksOwnWords` don't), so none needed a change.
 - `app/src/__tests__/lookPacks.test.ts`: the `NEVER` record is typed `Record<StyleKey, …>`. The loops over `STYLES` index `PACKS[look]`: iterate the looks that have a pack, and add `TL4 · a Tailored pick alone keeps today's 12` (founder 2 default).
 - `extraction-test/rules_conformance.py`:
   - every case whose outfit meets TL1 expects `label: "tailored"` and `reads as tailored` where it said `a matching suit`, `reads as smart casual` or `reads as classic prep`: at least `SHO-7-suit`, `STY-2-suit`, `SMC-2-suit`, the khaki suit case (≈ line 736) and the tee-under-a-suit cases (≈ lines 926, 1180, 1223);
@@ -273,10 +316,7 @@ No state here is new; Tailored joins states that exist. Loading, error and offli
 
 | State · demo screen | Element | Exact words | VoiceOver | testID |
 |---|---|---|---|---|
-| Setup Looks, nothing picked · **2** (scroll to the 5th tile) | Tailored tile | name `Tailored`; line `Suits, blazers, dress trousers, loafers`; drawings: a charcoal suit with black derbies, a navy suit with white leather sneakers | `Tailored: Suits, blazers, dress trousers, loafers` (button) | none (found by label) |
-| | Something else? tile (last, alone in its row in 2 columns) | `Something else?` and its link as today | as today | none |
-| Setup Looks, Tailored picked first · **2** after a tap (flow) | ring, badge `1`; dock button | `Continue · 1 of 3` | `Tailored, pick 1: Suits, blazers, dress trousers, loafers`, selected | none |
-| Setup Looks, a 4th tap · **2** after 4 taps (flow) | the tile shakes (Reduce Motion: dims), and the note shows | `Up to 3.` | as today | none |
+| Setup's style screen · **2** | T113's style game replaces the grid; its cards cover setup (the coordinator, Nov 18) | | | |
 | You, Tailored picked · **292** | Your style tiles, Tailored first with both drawings | `Your style`, `Tailored` | `Tailored, first pick` | `style-art-tailored` |
 | Style profile, Tailored picked · **293** | Styles grid (8 tiles, Tailored 5th) with badge `1` | `Styles`, `Tailored` | `Tailored, pick 1` | `style-art-tailored` |
 | Score card, a suit · **294** | the card as today; Going for advice when asked | `Reads as tailored.` (Going for advice) | as today | none |
@@ -284,18 +324,18 @@ No state here is new; Tailored joins states that exist. Loading, error and offli
 | Going for, Tailored offered · **296** | first tile `Tailored` (his first pick); More lists the rest | `What are you going for?`; note `Your first pick from setup.` | tile: `Tailored. Suits, blazers, dress trousers, loafers`; on arrival: `While I read it: what are you going for? Tailored is picked, …` (the existing source phrase) | none |
 
 - **The three redraws** (Outdoor's slate-blue shell, Outdoor's heather zip pullover, Streetwear's black chunky sneakers) show on screen 2, on 17 (when picked) and on 80: screenshot them light and dark for the founder's OK (founder 3).
-- **Flow** `T94-tailored-tile.yaml`:
-  1. open screen 2;
-  2. `scrollUntilVisible` the label `Tailored: Suits, blazers, dress trousers, loafers`;
-  3. tap it;
-  4. assert `Continue · 1 of 3`;
-  5. open screen 292 and assert `Tailored`.
+- **Flow** `T94-tailored-tile.yaml` (pointed at Style profile, not setup's screen 2, which T113 replaces):
+  1. open screen 293 (Style profile, Tailored picked first);
+  2. `scrollUntilVisible` `Tailored, pick 1`; assert `Classic prep, pick 2` and `Minimal, pick 3`;
+  3. tap it: assert `Tailored` (unpicked) and `Classic prep, pick 1`;
+  4. tap it again: assert `Tailored, pick 3`;
+  5. open screen 292 (You) and wait for `Your style: Tailored, first pick; Classic prep; Minimal.…`.
 
-  T113 replaces this screen and will supersede the flow.
+  **Red:** screens 292 and 293 don't exist yet (the demo opens no Style profile with Tailored). Not run at the lock (see "Red lines" below).
 
 ## Not testable yet
 Never dropped, never counted as done.
-- **TL4.4 on a device:** the label is tested, but VoiceOver's spoken order on a phone isn't. **Would verify it:** a founder to-do, "with VoiceOver on, swipe to the Tailored tile in setup and in Style profile" (5 min), added to plan.md (P2), or the Simulator's Accessibility Inspector by the verifier.
+- **TL4.4 on a device:** the label is tested, but VoiceOver's spoken order on a phone isn't. **Would verify it:** a founder to-do, "with VoiceOver on, swipe to the Tailored tile in Style profile (and in T113's game)" (5 min), added to plan.md (P2), or the Simulator's Accessibility Inspector by the verifier.
 - **TL4.1 "nothing clipped" at the largest text:** a screenshot judged by eye; no automatic check. **Would verify it:** the reviewer's look at the AX5 shots; on his phone, part of the same to-do.
 - **The look page part of TL2.2:** the Lookbook look page shows no look name or How I scored today; T75 adds How I scored there through the same `whyParts`. **Would verify it:** T75's screenshots and its test of `whyParts` on a suit.
 - **The style game part of TL4** ("Tailored is one of its looks, with the same two drawings"): the game isn't in the app yet (T113). T94 only puts Tailored in `LOOKS`, which the game will read. **Would verify it:** T113's tests.

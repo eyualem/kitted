@@ -1,0 +1,36 @@
+# T94 · Tailored, the 8th look (tasks/T94/TESTING.md, TL4.1, TL4.2 and TL4.4): Style profile shows the Tailored tile
+# with his picks, a tap takes it off and puts it back last, and You shows it first when he picked it first.
+# Setup's own screen is T113's style game (its cards cover setup); this flow checks where the tile lives after T113.
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T94-tailored-tile.yaml (Metro running)
+appId: com.trykitted.kitted
+name: T94 · the Tailored tile on Style profile and You
+---
+# Style profile with Tailored, Classic prep and Minimal picked (demo screen 293).
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "293"
+- extendedWaitUntil:
+    visible: "Styles"
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      text: "Tailored, pick 1"
+    direction: DOWN
+    timeout: 20000
+- assertVisible: "Classic prep, pick 2"
+- assertVisible: "Minimal, pick 3"
+# A tap takes it off (VoiceOver reads the plain name), a second tap puts it back as pick 3.
+- tapOn: "Tailored, pick 1"
+- assertVisible: "Tailored"
+- assertVisible: "Classic prep, pick 1"
+- tapOn: "Tailored"
+- assertVisible: "Tailored, pick 3"
+# You with Tailored picked first (demo screen 292).
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "292"
+- extendedWaitUntil:
+    visible: "Your style: Tailored, first pick; Classic prep; Minimal\\..*"
+    timeout: 90000
