@@ -318,6 +318,12 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   // T39: after the agreement, the first check the story screens 150–162 use.
   283: { steps: [FIRST_CHECK] },
   291: { steps: [FIRST_CHECK] },
+  // T94: a navy suit (s09). 294: the card, Going for his first pick (minimal) says what it reads as; 295: How I scored;
+  // 296: the wait, with Tailored his first pick from setup.
+  294: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's09', occasion: 'everyday' }] },
+  295: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 's09', occasion: 'everyday' }] },
+  296: { steps: [{ at: '2026-10-22T07:41:00', do: 'looks', styles: ['tailored', 'classic_prep', 'minimalist'] },
+    { at: '2026-10-22T07:42:00', do: 'check', photoId: 's09', occasion: 'everyday', hold: 0.86 }] },
   // T35 (SY2.8): Closet right after that first check (its first visit), and Closet once that visit is over.
   285: { steps: [FIRST_CHECK] },
   286: { steps: [FIRST_CHECK, { at: '2026-10-22T07:45:00', do: 'firstVisitDone' }] },

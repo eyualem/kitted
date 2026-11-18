@@ -69,6 +69,8 @@ const FIRST_RUN_NOW = '2026-10-22T07:38:00';
 const FULL_NOW = '2026-10-22T12:20:00';
 /** The end of onboarding's screens (150–162): a minute after his first check. */
 const FIRST_CHECK_NOW = '2026-10-22T07:43:00';
+/** Screens 292-293 (T94): Tailored first, then classic prep and minimal. */
+const TAILORED_LOOKS: Styles = [['tailored', 0.5], ['classic_prep', 0.25], ['minimalist', 0.25]];
 /** After the first check's re-check (7:50). */
 const ALL_DONE_NOW = '2026-10-22T07:55:00';
 
@@ -338,6 +340,13 @@ export const SCREENS: readonly ScreenScenario[] = [
   // card allowed (index.ts): Kit's offer is the only card.
   { n: 290, name: 'Stylist · agreed, no check yet', id: 'S1o', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:30', href: '/stylist', offer: 'checked' },
   { n: 291, name: 'Stylist · first check done, morning card allowed', id: 'S1o', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', offer: 'checked' },
+  // Tailored, the 8th look (T94, specs/tailored.md TL4): You and Style profile with Tailored his first pick; a suit (s09)
+  // on the card, in How I scored and in Going for's wait.
+  { n: 292, name: 'You · Tailored picked', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you', looks: TAILORED_LOOKS },
+  { n: 293, name: 'Style profile · Tailored picked', id: 'Y2', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/profile', under: '/you', looks: TAILORED_LOOKS },
+  { n: 294, name: 'Score card · a suit reads as Tailored', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 295, name: 'Why this score · the suit', id: 'S7', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: `/sheets/why/${STORY_FIRST_CHECK}`, under: '/stylist' },
+  { n: 296, name: 'Going for · Tailored offered', id: 'S5g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:42:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {
