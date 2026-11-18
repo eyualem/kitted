@@ -166,8 +166,25 @@ export function markLeaned(): void {
   if (state && !state.leaned) patch({ leaned: true });
 }
 
+/** An answered card still leaving (its exit is 240 ms): Back takes that answer back instead of the one before it. */
+let inFlight: (() => void) | null = null;
+
+/** The card calls this when an answer starts leaving; the returned function lets go once it has gone. */
+export function holdAnswer(cancel: () => void): () => void {
+  inFlight = cancel;
+  return () => {
+    if (inFlight === cancel) inFlight = null;
+  };
+}
+
 /** Back (the nav's circle): undoes exactly one thing, or says 'exit' when there's nothing to undo. */
 export async function back(store: KittedStore): Promise<'undone' | 'exit'> {
+  if (inFlight) {
+    const cancel = inFlight;
+    inFlight = null;
+    cancel();
+    return 'undone';
+  }
   if (!state || history.length === 0) return 'exit';
   const was = state.stage;
   const s = history.pop()!;
@@ -263,6 +280,7 @@ export async function continueToAbout(store: KittedStore): Promise<void> {
 /** finishSetup and tests: forget the game in memory. */
 export function endStyleGame(): void {
   history = [];
+  inFlight = null;
   starting = null;
   demo = {};
   set(null);

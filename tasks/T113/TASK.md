@@ -30,6 +30,15 @@ The planner's technical defaults 1–14 as written, plus:
 - T113, all locked: **79 / 79 pass** (`T113-styleGame` 26, `T113-styleGameSession` 23, `T113-styleGameScreens` 30). `T39-setupScreens.test.tsx` passes in full, its locked F1.1 test included. The tests TESTING.md expected to stay red until T94 are green: T94's app commit is in this branch.
 - Retargets: the test writer retargeted the old setup tests to the game and re-locked (`8b0cbd52`, Lock line `02071c80`): T39-setupScreens (OS3.1, OS3.2, OS4.5; OS3.3 retired), T39-offerCard OS5.7, looksOwnWords, scenarios, toast U3 and the four T39 flows. After the grid's deletion: tsc clean, eslint clean on the changed folders, and 14 affected files (T113 ×3, T39-*, looksOwnWords, scenarios, toast, syncSchema, privacyWipe, onboardingLooks) **172 / 172 pass** with two workers. A first run with default workers had 2 failures in T39-offerCard and T39-styleProfile (messages not captured); both files pass alone and in the rerun, so most likely timing under load, not verified.
 
+## Fix round 1 (verifier's C1–C5, tests re-locked at `50a0f687`)
+- **C1** · the two outfit dots now sit at the top of the card, above the drawing (FS1); the stamps moved down to clear them.
+- **C2** · Here's your style's text buttons (Add a look's label, the words link, Done, Edit, Play again) stop growing at `CONTROL_TEXT_MAX_SCALE` (2×), like Continue. The design system's TextLink has no cap, so the screen draws its own small text button (`CappedLink` in GameResults.tsx) instead of editing the shared component.
+- **C3** · Back while an answered card is still leaving (its 240 ms exit) takes that answer back, and only it: the card returns to the middle, nothing is answered, and the game stays on that card. The card registers the answer in flight with the session (`holdAnswer`), and `back()` cancels it before touching history.
+- **C4** · Continue's guard is a ref, so two presses in one frame go to About you once.
+- **C5** · Add a look takes one pick per sheet: a second tile pressed before the first add lands is ignored (one add, one close).
+- Results after the fixes: tsc clean; eslint clean on `src/features/onboarding`, `src/demo`, `src/app/onboarding`, `src/sync/schema.ts`. The T113, T39-setupScreens, T39-offerCard, looksOwnWords, scenarios and toast suites: **8 suites, 136 / 136 pass** (two workers). T113 alone: 84 tests (26 + 23 + 35), all passing.
+- Still not seen on a device after these fixes: the dots' new place and the capped labels at AX5 (screenshots 300 and 308/310 again), and Back during an exit with a real finger.
+
 ## Not seen on iOS
 Nothing has run on the Simulator: no Metro on 8082, no Maestro flows (`T113-style-game.yaml`, `T39-setup-fresh.yaml`), no screenshots (light, dark, AX5) and no VoiceOver pass. The lean, the swipe and drag feel, the haptics, the form sheet's detents, the keyboard padding on results, and the held toast on demo screens 306/307 are untested on a device. This is the verifier's step, then the founder's phone to-do (TESTING.md → Not testable yet).
 

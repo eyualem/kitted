@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
-import { Icon, KButton, KText, space, TextLink, useTheme } from '@/design-system';
+import { Icon, KButton, KText, opacity, space, useTheme } from '@/design-system';
 import { CONTROL_TEXT_MAX_SCALE, size } from '@/design-system/tokens';
 import { textStyles } from '@/design-system/typography';
 import { store } from '@/data/db';
@@ -157,8 +157,11 @@ export function GameResults({ session, nav }: { session: SessionState; nav: Reac
   };
   const move = (from: number, to: number) => moveRow(picks, from, to);
 
+  // A ref, not the state: two presses in one frame both see the state as it was (verify round 1, C4).
+  const continuing = useRef(false);
   const onContinue = async () => {
-    if (busy) return;
+    if (continuing.current) return;
+    continuing.current = true;
     setBusy(true);
     try {
       await continueToAbout(store);
@@ -166,6 +169,7 @@ export function GameResults({ session, nav }: { session: SessionState; nav: Reac
     } catch {
       // A failed write (SG3.2): he stays here and Continue works again; nothing new is shown.
     } finally {
+      continuing.current = false;
       setBusy(false);
     }
   };
@@ -231,7 +235,7 @@ export function GameResults({ session, nav }: { session: SessionState; nav: Reac
           style={[styles.add, { borderColor: colors.inkFaint }]}
         >
           <Icon name="plus" size={16} color="ink2" weight="semibold" />
-          <KText variant="body" weight="600">
+          <KText variant="body" weight="600" maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}>
             {t('game.results.add')}
           </KText>
         </Pressable>
@@ -254,7 +258,7 @@ export function GameResults({ session, nav }: { session: SessionState; nav: Reac
               style={[styles.input, { color: colors.ink, backgroundColor: colors.surface, borderColor: colors.line }]}
             />
             <View testID="results-words-done" style={styles.end}>
-              <TextLink title={t('common.done')} onPress={() => void saveWords(store).catch(() => undefined)} />
+              <CappedLink title={t('common.done')} onPress={() => void saveWords(store).catch(() => undefined)} />
             </View>
           </View>
         ) : saved ? (
@@ -263,12 +267,12 @@ export function GameResults({ session, nav }: { session: SessionState; nav: Reac
               {t('game.results.wordsSaved', { words })}
             </KText>
             <View testID="results-words-edit">
-              <TextLink title={t('common.edit')} onPress={openWords} />
+              <CappedLink title={t('common.edit')} onPress={openWords} />
             </View>
           </View>
         ) : (
           <View testID="results-words-link" style={styles.link}>
-            <TextLink title={t('game.results.words')} onPress={openWords} />
+            <CappedLink title={t('game.results.words')} onPress={openWords} />
           </View>
         )}
       </ScrollView>
@@ -277,10 +281,21 @@ export function GameResults({ session, nav }: { session: SessionState; nav: Reac
           <KButton title={t('onb.looks.continue')} size="large" disabled={!ok} onPress={() => void onContinue()} />
         </View>
         <View testID="results-play-again" style={styles.center}>
-          <TextLink title={t('game.results.playAgain')} onPress={() => void playAgain(store)} />
+          <CappedLink title={t('game.results.playAgain')} onPress={() => void playAgain(store)} />
         </View>
       </View>
     </View>
+  );
+}
+
+/** A text button whose label stops growing at 2× (SG9: button labels stop at CONTROL_TEXT_MAX_SCALE), as Continue's. */
+function CappedLink({ title, onPress }: { title: string; onPress: () => void }) {
+  return (
+    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={title} style={({ pressed }) => [styles.capped, { opacity: pressed ? opacity.pressed : 1 }]}>
+      <KText role="textLink" maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}>
+        {title}
+      </KText>
+    </Pressable>
   );
 }
 
@@ -393,4 +408,5 @@ const styles = StyleSheet.create({
   link: { minHeight: size.hit, justifyContent: 'center', alignItems: 'flex-start' },
   dock: { paddingHorizontal: space.gutter, paddingTop: space.s, gap: space.xs },
   center: { alignItems: 'center', minHeight: size.hit, justifyContent: 'center' },
+  capped: { minHeight: size.hit, justifyContent: 'center' },
 });

@@ -16,6 +16,7 @@ import { t } from '@/i18n/en';
 import { LOOKS } from './looks';
 import { Outfit } from './LookTile';
 import { cardExit, cardRelease, cardYields, descKey, shouldLean, swipeFeedback } from './styleGame';
+import { holdAnswer } from './styleGameSession';
 
 export interface GameCardProps {
   look: StyleKey;
@@ -46,7 +47,7 @@ export function cardLabel(look: StyleKey, index: number, peek: 0 | 1): string {
   return t('game.card.a11y', { n: index + 1, view: peek + 1, desc: t(descKey(look, peek)) });
 }
 
-type Callbacks = Pick<GameCardProps, 'onAnswer' | 'onPeek' | 'onLeaned' | 'onLit' | 'leaned' | 'width'> & { reduce: boolean; setStamp(s: 'me' | 'notMe'): void };
+type Callbacks = Pick<GameCardProps, 'onAnswer' | 'onPeek' | 'onLeaned' | 'onLit' | 'leaned' | 'width'> & { reduce: boolean; setStamp(s: 'me' | 'notMe' | null): void };
 
 /** One card's touch and motion, made once per card (its timers and the pan handlers live here, not in render). */
 class CardMotion {
@@ -56,6 +57,7 @@ class CardMotion {
   private cb: Callbacks | null = null;
   private leaving = false;
   private exitTimer: ReturnType<typeof setTimeout> | null = null;
+  private releaseHold: (() => void) | null = null;
   private leanTimer: ReturnType<typeof setTimeout> | null = null;
   private touch = { out: false, sideways: false, lit: null as 'me' | 'notMe' | null };
 
@@ -88,7 +90,27 @@ class CardMotion {
     const exit = cardExit(cb.reduce);
     if (exit.kind === 'fly') Animated.timing(this.x, { toValue: (me ? 1 : -1) * (cb.width + 240), duration: exit.ms, useNativeDriver: true }).start();
     else Animated.timing(this.fade, { toValue: 0, duration: exit.ms, useNativeDriver: true }).start();
-    this.exitTimer = setTimeout(() => this.cb?.onAnswer(me), exit.ms);
+    // Until it has gone, Back takes the answer back (SG7: Back undoes exactly one answer, this one).
+    this.releaseHold = holdAnswer(() => this.cancelExit());
+    this.exitTimer = setTimeout(() => {
+      this.exitTimer = null;
+      this.releaseHold?.();
+      this.releaseHold = null;
+      this.cb?.onAnswer(me);
+    }, exit.ms);
+  }
+
+  /** Back during the exit: the card comes back as it was, nothing answered. */
+  private cancelExit() {
+    if (this.exitTimer) clearTimeout(this.exitTimer);
+    this.exitTimer = null;
+    this.releaseHold = null;
+    this.leaving = false;
+    this.x.stopAnimation();
+    this.fade.stopAnimation();
+    this.cb?.setStamp(null);
+    Animated.spring(this.x, { toValue: 0, useNativeDriver: true }).start();
+    Animated.timing(this.fade, { toValue: 1, duration: 120, useNativeDriver: true }).start();
   }
 
   /** SG1.3: the lean, 1.4 s after card 1 shows. Returns its cancel. */
@@ -107,6 +129,8 @@ class CardMotion {
 
   dispose() {
     if (this.exitTimer) clearTimeout(this.exitTimer);
+    this.releaseHold?.();
+    this.releaseHold = null;
     this.cancelLean();
   }
 
@@ -210,9 +234,7 @@ export function GameCard({ look, index, peek, leaned, dragDx, width, ask, onAnsw
         { opacity: motion.fade, transform: [{ translateX: x }, { rotate }] },
       ]}
     >
-      <View style={[styles.art, { backgroundColor: colors.surface2 }]} {...hidden}>
-        <Outfit outfit={outfit} w={drawW} />
-      </View>
+      {/* FS1: the two outfits' dots at the top of the card. */}
       <View style={styles.dots} {...hidden}>
         {([0, 1] as const).map((i) => (
           <View
@@ -222,6 +244,9 @@ export function GameCard({ look, index, peek, leaned, dragDx, width, ask, onAnsw
             style={[styles.dot, { backgroundColor: i === peek ? colors.ink : colors.inkFaint, opacity: i === peek ? 0.85 : 0.5 }]}
           />
         ))}
+      </View>
+      <View style={[styles.art, { backgroundColor: colors.surface2 }]} {...hidden}>
+        <Outfit outfit={outfit} w={drawW} />
       </View>
       <Animated.View testID="game-stamp-me" {...hidden} pointerEvents="none" style={[styles.stamp, styles.stampMe, { backgroundColor: colors.primary, opacity: meOpacity }]}>
         <KText variant="headline" weight="700" color="onPrimary" maxFontSizeMultiplier={1.4}>
@@ -242,7 +267,7 @@ const styles = StyleSheet.create({
   art: { alignItems: 'center', borderRadius: 14, borderCurve: 'continuous', paddingVertical: space.l },
   dots: { flexDirection: 'row', justifyContent: 'center', gap: 6 },
   dot: { width: 6, height: 6, borderRadius: 3 },
-  stamp: { position: 'absolute', top: space.xl, paddingHorizontal: space.m, paddingVertical: space.xs, borderRadius: 10 },
+  stamp: { position: 'absolute', top: space.xl + space.l, paddingHorizontal: space.m, paddingVertical: space.xs, borderRadius: 10 },
   stampMe: { left: space.l, transform: [{ rotate: '-10deg' }] },
   stampNotMe: { right: space.l, borderWidth: 2, transform: [{ rotate: '10deg' }] },
 });

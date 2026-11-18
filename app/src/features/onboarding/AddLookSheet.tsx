@@ -2,7 +2,7 @@
 // doesn't have, as setup's tiles. A tap adds it last, or on a full list takes #3's place with an Undo toast, then the
 // sheet closes. Opened with no game on results (a stale link), it closes at once.
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, useWindowDimensions, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { space, useTheme } from '@/design-system';
@@ -24,6 +24,7 @@ export function AddLookSheet() {
   const session = useStyleGame();
   const window = useWindowDimensions();
   const [measured, setMeasured] = useState(0);
+  const picked = useRef(false);
   const open = session !== null && session.stage === 'results' && session.results !== null;
   useEffect(() => {
     if (!open) router.back();
@@ -36,6 +37,9 @@ export function AddLookSheet() {
   const choices = lookChoices(session.results!.picks);
 
   const pick = async (look: StyleKey) => {
+    // One pick per sheet: a second tile pressed before the first add lands would add two and pop Here's your style too.
+    if (picked.current) return;
+    picked.current = true;
     const r = await addToResults(store, look);
     void Haptics.selectionAsync();
     router.back();
