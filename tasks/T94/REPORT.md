@@ -143,3 +143,22 @@ The second table (23 other jacket-led readings) has no failures. Every reading t
   - The iOS items above.
   - The look-page part of TL2.2 (T75).
   - Round 1's "worth a look" notes: the suits are low-contrast on dark tiles, and How I scored cuts two point values on the web.
+
+## Summary for the founder
+**What you'll see:** an 8th look, Tailored, after Classic prep, everywhere looks are listed. In You's Your style and Style profile it has two drawn outfits: a charcoal suit with black derbies, and a navy suit with white leather sneakers. Going for offers it too. A suit, or a blazer with dress trousers and dressy shoes (clean low leather sneakers count), now says "Reads as tailored" on the card and in How I scored, where it used to say "a matching suit" or "smart casual". A blazer with chinos still reads as Classic prep, and a blazer with jeans doesn't read as Tailored. Picking Tailored also brings the tailoring fixes (sleeves, hem, a graphic tee under a jacket) to the top.
+
+**Scores:** none moved. The engine was re-run on 67,422 cases: every parity case plus every saved real photo (the corpus, your phone pulls and the 200 gold photos). Every part, score and fix is identical; only the look's name changed, on 2,707 of them. The run cost $0 (stored readings, no AI call). The 6 jacket-led photos are all web photos, so their profile is unknown and they ran with the stated test profile. All 6 now read as Tailored at the same score: ig-059 7.5, ig-131 7.5, rd-002 8.0, rd-008 7.5, rd-010 7.5, rd-011 7.5. Tailored enters the scoring only when T69's look-by-look columns merge (#480); until then it's a name only (#491).
+
+**Verdict:** ready after 2 rounds.
+- 28 deliberate bugs were planted, one at a time, and the tests caught 27. The one they missed (Going for naming the piece) now has a test that catches it.
+- `npm run check` is green when run in parts. A single full run timed out under memory pressure, with no assertion failing.
+
+**Needs you:**
+- An OK on the three redraws in setup and You: Outdoor's slate-blue shell and heather zip pullover, and Streetwear's black sneakers. Before and after shots are in `shots/redraws-293-*`.
+- A look at Tailored's two suits in dark mode. They're low-contrast on the dark tile.
+- A known gap: Next best buy has no Tailored list yet, because the starter catalog has no blazer, dress trousers or derbies.
+
+**Not verified:**
+- iOS screenshots (light, dark, largest text), VoiceOver, and the Maestro flow. The Simulator was busy with another session all night, and the installed app runs an old bundle. The shots in `shots/` come from the web preview (layout only).
+- Setup's own tile grid: tonight's style game (T113) replaces it, so its 8 cards cover that part of TL4.1.
+- The Lookbook look page: T75.
