@@ -70,7 +70,7 @@ Offered on Welcome ("I already have an account"), in one chat card after he's se
 
 ### F1. Onboarding
 The first run above, 7 taps to the first check. Goal, boldness and fit are asked later by Kit, when they change an answer. New users learn by doing: the first check is the lesson, and its pieces slide into Closet, which shows a badge; no tour, no tips (`specs/setup-and-you.md` SY2).
-- F1.1 A fresh install reaches the camera in 17 taps or fewer when he says Me to 3 looks or fewer (7 until Nov 18, when the style game replaced the tile grid, #488; 6 until Nov 11, #449), with no account and no paywall on the way, and the camera never opens until he taps Check my fit.
+- F1.1 A fresh install reaches the camera in 18 taps or fewer when he says Me to 3 looks or fewer (17 until Nov 18, before card 1 taught the swipe, #495; 7 until Nov 18, when the style game replaced the tile grid, #488; 6 until Nov 11, #449), with no account and no paywall on the way, and the camera never opens until he taps Check my fit.
 - F1.2 The age question starts with nothing picked; "Under 18" shows the stop screen and no camera; Declared Age Range under 18 does the same.
 - F1.3 Nothing is sent anywhere before consent is agreed; a photo taken before consent is kept and scored after Agree.
 - F1.4 The name is optional: skipping it changes nothing but the greetings ("Morning." instead of "Morning, Alex."). If he signs in with Apple and gave no name, Apple's first name fills it.

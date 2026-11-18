@@ -88,7 +88,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 6. Once he has any scored check (from the card or the chat's camera button), the offer card's buttons are gone for good. The card's words stay as history, like the "Turn on fit checks" card.
 7. An install that finished setup before this change gets no offer card.
 
-**Taps to the camera:** Get started · a look · Continue · an age · Continue · Check my fit · Agree = 7 (F1.1). From Nov 18 (`specs/style-game.md`): Get started · 8 cards · up to 3 this-or-thats · Continue · an age · Continue · Check my fit · Agree = 17 or fewer with 3 Me's.
+**Taps to the camera:** Get started · a look · Continue · an age · Continue · Check my fit · Agree = 7 (F1.1). From Nov 18 (`specs/style-game.md`): Get started · the card-1 lesson · 8 cards · up to 3 this-or-thats · Continue · an age · Continue · Check my fit · Agree = 18 or fewer with 3 Me's.
 
 ## Rules
 - The age band is kept on his profile with the day he picked it, on this phone only. It's never sent to the server or backed up, the same as the birth year today.

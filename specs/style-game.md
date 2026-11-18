@@ -77,7 +77,7 @@ Three small ones, each kept because it helped in the flow test's simulation (mad
 ## Changes to other specs (on the founder's Nov 18 instruction; confirm in his review)
 - `specs/onboarding-screens.md` OS3, the Looks bullet: the title, line, tiles, `Something else?` and `Continue · {n} of 3` give way to this spec ("Looks is the style game, `specs/style-game.md`").
 - `specs.md` F1 step 2: "Play the style game (8 \"Is this your style?\" cards, then a few this-or-thats), then keep, reorder or fix his top looks, or describe his style in his own words."
-- `specs.md` F1.1: "A fresh install reaches the camera in 17 taps or fewer when he says Me to 3 looks or fewer (7 until Nov 18; #488) …" (Get started · 8 cards · up to 3 this-or-thats · Continue · an age · Continue · Check my fit · Agree).
+- `specs.md` F1.1: "A fresh install reaches the camera in 18 taps or fewer when he says Me to 3 looks or fewer (17 until Nov 18, #495; 7 until Nov 18, #488) …" (Get started · the card-1 lesson · 8 cards · up to 3 this-or-thats · Continue · an age · Continue · Check my fit · Agree; the lesson shows on the first game only).
 
 ## Acceptance criteria
 **SG1**
@@ -102,7 +102,7 @@ Three small ones, each kept because it helped in the flow test's simulation (mad
 - SG7.4 Answer 3 cards, Back: card 3 shows again with 2 answers kept; Back on card 1, then forward, resumes the same deal and answers.
 - SG8.1 Closing mid-game reopens at card 1 with a new deal; closing on results reopens them as left; Delete all my data wipes `looks.notMe`.
 - SG9.1 VoiceOver labels and actions as SG9; light, dark and the largest text show nothing clipped (Simulator screenshots); Reduce Motion fades.
-- F1.1 (new) A fresh install reaches the camera in 17 taps or fewer with 3 Me's (a Maestro flow).
+- F1.1 (new) A fresh install reaches the camera in 18 taps or fewer with 3 Me's, the lesson's tap included (a Maestro flow).
 
 ## Touches
 `app/src/features/onboarding/` (a new game screen, ranking and results, replacing `PickLooksScreen.tsx`'s grid; the shuffle and ranking ported from `tasks/style-quiz/src/logic.js` as a pure, tested module), `app/src/app/onboarding/`, `resume.ts`, `basics.ts` (the Not me key), `privacy/wipe.ts` (one key), `en.ts`, the T39 tests and the Maestro setup flows (new taps), `specs/onboarding-screens.md` OS3, `specs.md` F1. Not touched: `features/you/` (Style profile keeps its tiles), scoring.
