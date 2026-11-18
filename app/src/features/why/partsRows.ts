@@ -2,7 +2,7 @@
 // one group per part (weight, number, the reasons that moved it), then Average of the parts · the earned bonus ·
 // Condition · Occasion (only when it holds the score down) · Reads as · the rounding. Pure, and the rows add up:
 // in each group 7 + the reasons (+ the half rounding) = the part, and Average + the rows after it = the score.
-import { PARTS_DATA, type PartName, type PartsCondition, type PartsOccasion, type PartResult } from '@kitted/core';
+import { PARTS_DATA, type PartName, type PartsCondition, type PartsOccasion, type PartsV16, type PartResult } from '@kitted/core';
 import type { OccasionKey, StyleKey } from '@/data/types';
 import { styleLabel } from '@/features/morning/copy';
 import { occasionLabel } from '@/features/stylist/thread';
@@ -21,6 +21,9 @@ export interface PartsInput {
   weightsUsed: Partial<Record<PartName, number>>;
   condition: PartsCondition;
   occasion: PartsOccasion;
+  /** v16 (T69): the rescoring's steps and the unrounded final. Absent on a check scored with v15 (it gets today's rows). */
+  v16?: PartsV16;
+  rawUnrounded?: number;
 }
 
 export interface StripCell {
@@ -52,12 +55,76 @@ export interface WhyParts {
   total: number;
   /** VoiceOver for the strip: "Parts: Proportions 7.0, Fit 7.0, … Style 6.0, the most to gain." */
   stripLabel: string;
+  /** v16: the first row of the after-list ("Every fit starts at 7.0"); absent on v15, where the Average row stays. */
+  start?: WhyRow;
 }
 
 const r2 = (x: number) => Math.round(x * 100) / 100;
 const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 /** 7 → "7.0", 7.5 → "7.5": one decimal always, like every score (#276; "7" beside "7.5" read as a different scale). */
 export const partText = (x: number | null) => (x === null ? '—' : x.toFixed(1));
+
+const stripLabelOf = (strip: StripCell[]): string => t('pwhy.strip.a11y', {
+  parts: strip.map((c) => (c.display === null ? t('pwhy.strip.partNa', { part: c.label })
+    : `${t('pwhy.strip.part', { part: c.label, score: partText(c.display) })}${c.gain ? `, ${t('pwhy.strip.most')}` : ''}`)).join(', '),
+});
+
+/** A graded look as words: "minimal and streetwear". */
+const lookWords = (looks: readonly string[]): string => {
+  const w = looks.filter((l) => l !== 'none').map((l) => (l === 'minimalist' ? 'minimal' : l.replace(/_/g, ' ')));
+  return w.length > 0 ? w.join(' and ') : t('pwhy.lookAny');
+};
+
+/** The rows after the parts on a v16 check: start at 7.0, then one row per step of v16's finish, in the engine's order, so
+ *  7 + the rows = the score (the rounding row holds only the half-point rounding and each step's two-decimal display). */
+function v16After(res: PartsInput, v: PartsV16, opts: { occasion: OccasionKey; readsAs: StyleKey | null }): { start: WhyRow; after: WhyRow[] } {
+  const after: WhyRow[] = [];
+  const shown = (x: number) => Math.abs(x) >= 0.005;
+  v.lifts.filter((l) => l.size !== 0).forEach((l, i) => {
+    if (shown(l.size)) after.push({ key: `lift-${i}`, rule: cap(l.line), amount: r2(l.size) });
+  });
+  if (shown(v.minor)) after.push({ key: 'minor', rule: t('pwhy.minor'), amount: r2(v.minor) });
+  if (shown(v.faultDrop)) after.push({ key: 'faults', rule: t('pwhy.faults'), item: t('pwhy.faultsItem'), amount: -r2(v.faultDrop) });
+  const cond = res.condition;
+  const unsure = (cond.tips ?? []).map((x) => x.line).join('; ');
+  after.push(v.condDeduction > 0
+    ? { key: 'condition', rule: t('pwhy.condition'), item: unsure ? `${cond.display}; ${unsure}` : cond.display, amount: -r2(v.condDeduction) }
+    : { key: 'condition', rule: t('pwhy.condition'), item: unsure || t('pwhy.conditionClean'), amount: 0, zero: 'plusMinus' });
+  if (shown(res.occasion.deduction)) {
+    after.push({ key: 'occasion', rule: occasionLabel(opts.occasion), item: res.occasion.status ?? undefined, amount: -r2(res.occasion.deduction) });
+  }
+  if (v.heavyLayer && shown(v.heavyLayer[0])) after.push({ key: 'heavy', rule: cap(v.heavyLayer[1]), amount: -r2(v.heavyLayer[0]) });
+  v.taste.filter((x) => x.points !== 0).forEach((x, i) => {
+    if (shown(x.points)) after.push({ key: `taste-${i}`, rule: cap(x.line), item: t('pwhy.tasteFor', { look: lookWords(v.gradedLook) }), amount: r2(x.points) });
+  });
+  if (v.rawUnclamped > 9.5) after.push({ key: 'clampTop', rule: t('pwhy.clampTop'), amount: r2(v.raw - v.rawUnclamped) });
+  if (v.rawUnclamped < 3.0) after.push({ key: 'clampBottom', rule: t('pwhy.clampBottom'), amount: r2(v.raw - v.rawUnclamped) });
+  if (shown(v.curved - v.raw)) after.push({ key: 'curve', rule: t('pwhy.curve'), item: t('pwhy.curveItem'), amount: r2(v.curved - v.raw) });
+  if (v.heldBy !== null) {
+    const final = res.rawUnrounded ?? res.overall;
+    const amount = r2(final - v.curved);
+    const cap1 = v.caps.find((c) => c.id === v.heldBy);
+    const lifts = /^(\d+) lifts?/.exec(v.heldBy);
+    let row: WhyRow;
+    if (cap1) row = { key: 'ceiling', rule: t('pwhy.dealbreaker'), item: cap1.line, amount };
+    else if (lifts) {
+      const n = Number(lifts[1]);
+      row = { key: 'ceiling', rule: n === 1 ? t('pwhy.stackOne') : t('pwhy.stackMany', { n }), item: v.stackCeiling.toFixed(1), amount };
+    } else if (v.heldBy === 'occasion') row = { key: 'ceiling', rule: occasionLabel(opts.occasion), item: res.occasion.status ?? undefined, amount };
+    else if (v.heldBy.startsWith('a fit or shape fault')) row = { key: 'ceiling', rule: t('pwhy.fitFloor'), amount };
+    else if (v.heldBy.startsWith('two sinking')) row = { key: 'ceiling', rule: t('pwhy.twoSinks'), amount };
+    else row = { key: 'ceiling', rule: t('pwhy.twoHolds'), amount };
+    after.push(row);
+  }
+  // v16: always shown when it reads as a look (T69-G10's test; the Style part's own "reads as" credit sits in its group)
+  if (opts.readsAs) {
+    after.push({ key: 'readsAs', rule: t('why.readsAs.rule', { style: styleLabel(opts.readsAs).toLowerCase() }), item: t('why.readsAs.item'), amount: 0, zero: 'plusMinus' });
+  }
+  const sum = after.reduce((s, x) => s + (x.amount ?? 0), 7);
+  const rounding = r2(res.overall - sum);
+  if (Math.abs(rounding) >= 0.01) after.push({ key: 'rounding', rule: t('pwhy.rounded'), amount: rounding, zero: 'plusMinus' });
+  return { start: { key: 'start', rule: t('pwhy.start'), valueText: partText(7) }, after };
+}
 
 export function whyParts(
   res: PartsInput, opts: { occasion: OccasionKey; readsAs: StyleKey | null; gainPart: PartName | null },
@@ -89,8 +156,10 @@ export function whyParts(
     };
   });
 
+  const v16 = res.v16 ? v16After(res, res.v16, opts) : null;
   // After the parts: one row per step of the engine's combine (average + bonus − problems − condition − occasion, the floor).
   const average = Math.round(res.averageUnrounded * 10) / 10;
+  if (v16) return { strip, groups, average, after: v16.after, total: res.overall, stripLabel: stripLabelOf(strip), start: v16.start };
   const after: WhyRow[] = [];
   if (res.earnedBonus > 0) after.push({ key: 'bonus', rule: t('pwhy.bonus'), amount: r2(res.earnedBonus) });
   const piled = res.piledPenalty ?? 0;
@@ -121,9 +190,5 @@ export function whyParts(
   const rounding = r2(res.overall - shown);
   if (Math.abs(rounding) >= 0.01) after.push({ key: 'rounding', rule: t('pwhy.rounded'), amount: rounding, zero: 'plusMinus' });
 
-  const stripLabel = t('pwhy.strip.a11y', {
-    parts: strip.map((c) => (c.display === null ? t('pwhy.strip.partNa', { part: c.label })
-      : `${t('pwhy.strip.part', { part: c.label, score: partText(c.display) })}${c.gain ? `, ${t('pwhy.strip.most')}` : ''}`)).join(', '),
-  });
-  return { strip, groups, average, after, total: res.overall, stripLabel };
+  return { strip, groups, average, after, total: res.overall, stripLabel: stripLabelOf(strip) };
 }
