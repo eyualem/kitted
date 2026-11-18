@@ -31,7 +31,20 @@ export interface SessionState {
   editingWords: boolean;
   /** Back can undo something here. */
   canUndo: boolean;
+  /** SG1.4: card 1's lesson is up (a fresh install's first game); Yes, No and the swipe wait for its tap. */
+  teach: boolean;
+  /** SG1.4: the lesson was just tapped away, so card 1 leans once (once per install). */
+  leanArmed: boolean;
+  /** SG7 FS4: "Just checking" is up before card 4. */
+  checking: boolean;
 }
+
+/** SG1.4: the swipe was taught on this phone (any value). Local, never synced. */
+export const SWIPE_TAUGHT_KEY = 'onboarding.swipeTaught';
+/** FS4: an answer given sooner than this after its card appeared counts as fast. */
+export const FAST_ANSWER_MS = 1500;
+/** FS4: how many fast No's, from card 1, show the check. */
+const FAST_NOS = 3;
 
 /** One step Back can return to. `token` names a results change for its toast's Undo. */
 interface Snapshot { game: Game; stage: Stage; results: ResultsState | null; peek: 0 | 1; token: number | null }
@@ -102,8 +115,21 @@ function resultsOf(g: Game): ResultsState {
   return { picks: s.done ? s.top : [], mes: mesOf(g), notMes: notMesOf(g) };
 }
 
-function freshGame(seed: number, words: string): SessionState {
-  return { game: newGame(seed), stage: 'cards', results: null, peek: 0, leaned: false, words, editingWords: false, canUndo: false };
+function freshGame(seed: number, words: string, teach = false): SessionState {
+  resetFastCheck();
+  return {
+    game: newGame(seed), stage: 'cards', results: null, peek: 0, leaned: false, words, editingWords: false, canUndo: false,
+    teach, leanArmed: false, checking: false,
+  };
+}
+
+// ── FS4: the check on fast No's (per game; memory only) ────────────────────────────────────────────────────────────
+/** How many of his answers, from card 1, were fast No's; a Back or the check itself ends the run for this game. */
+let fastNos = 0;
+let fastCheckSpent = false;
+function resetFastCheck() {
+  fastNos = 0;
+  fastCheckSpent = false;
 }
 
 // ── Starting ───────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -115,9 +141,10 @@ export function startOrResumeStyleGame(store: KittedStore, random?: () => number
   const p = (async () => {
     const words = (await store.getKv('onboarding.otherStyle')) ?? '';
     const draft = parseDraft(await store.getKv('onboarding.styleGame'));
+    const taught = (await store.getKv(SWIPE_TAUGHT_KEY)) !== null;
     history = [];
     if (state) return state;
-    const base = freshGame(newSeed(random), words);
+    const base = freshGame(newSeed(random), words, !draft && !taught);
     set(draft ? { ...base, stage: 'results', results: draft } : base);
     return state!;
   })();
@@ -142,11 +169,41 @@ async function moveOn(store: KittedStore, game: Game) {
   if (results) await writeDraft(store, results);
 }
 
-/** A card's answer (tap or swipe). Ignored outside the cards. */
-export async function answer(store: KittedStore, me: boolean): Promise<void> {
-  if (!state || state.stage !== 'cards') return;
+/** A card's answer (tap or swipe). Ignored outside the cards. `fast`: given under FAST_ANSWER_MS after its card
+ *  appeared (the screen measures it; FS4). After three fast No's from card 1, with no Back, the check shows (once a
+ *  game). */
+export async function answer(store: KittedStore, me: boolean, fast = false): Promise<void> {
+  if (!state || state.stage !== 'cards' || state.checking) return;
+  const n = state.game.answers.length;
+  if (!fastCheckSpent) {
+    if (!me && fast && fastNos === n) fastNos = n + 1;
+    else fastCheckSpent = true;
+  }
+  const check = !fastCheckSpent && fastNos === FAST_NOS && n + 1 === FAST_NOS;
+  if (check) fastCheckSpent = true;
   push();
+  patch({ teach: false, checking: check });
   await moveOn(store, answerCard(state.game, me));
+}
+
+/** FS4's Keep going: card 4, the No's kept. */
+export function keepGoing(): void {
+  if (state?.checking) patch({ checking: false });
+}
+
+/** FS4's Start over: card 1 of the same deal, no answers, no history, no lesson. The check doesn't come back. */
+export function startOver(): void {
+  if (!state?.checking) return;
+  history = [];
+  inFlight = null;
+  set({ ...state, game: newGame(state.game.seed), stage: 'cards', results: null, peek: 0, checking: false, teach: false });
+}
+
+/** SG1.4: the lesson's one tap. It's taught on this phone from now on; card 1 then leans once. */
+export async function finishTeach(store: KittedStore): Promise<void> {
+  if (!state?.teach) return;
+  patch({ teach: false, leanArmed: true });
+  await store.setKv('onboarding.swipeTaught', '1');
 }
 
 /** A this-or-that tap. */
@@ -163,7 +220,7 @@ export function togglePeek(): void {
 }
 
 export function markLeaned(): void {
-  if (state && !state.leaned) patch({ leaned: true });
+  if (state && (!state.leaned || state.leanArmed)) patch({ leaned: true, leanArmed: false });
 }
 
 /** An answered card still leaving (its exit is 240 ms): Back takes that answer back instead of the one before it. */
@@ -179,6 +236,8 @@ export function holdAnswer(cancel: () => void): () => void {
 
 /** Back (the nav's circle): undoes exactly one thing, or says 'exit' when there's nothing to undo. */
 export async function back(store: KittedStore): Promise<'undone' | 'exit'> {
+  // FS4: a Back among his first answers means he's looking, not browsing.
+  if (state && state.stage === 'cards') fastCheckSpent = true;
   if (inFlight) {
     const cancel = inFlight;
     inFlight = null;
@@ -188,7 +247,7 @@ export async function back(store: KittedStore): Promise<'undone' | 'exit'> {
   if (!state || history.length === 0) return 'exit';
   const was = state.stage;
   const s = history.pop()!;
-  patch({ game: s.game, stage: s.stage, results: s.results, peek: s.peek });
+  patch({ game: s.game, stage: s.stage, results: s.results, peek: s.peek, checking: false });
   if (s.stage === 'results' && s.results) await writeDraft(store, s.results);
   else if (was === 'results') await deleteDraft(store);
   return 'undone';
@@ -280,6 +339,7 @@ export async function continueToAbout(store: KittedStore): Promise<void> {
 /** finishSetup and tests: forget the game in memory. */
 export function endStyleGame(): void {
   history = [];
+  resetFastCheck();
   inFlight = null;
   starting = null;
   demo = {};

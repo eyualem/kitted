@@ -16,7 +16,7 @@ import { t } from '@/i18n/en';
 import { LOOKS } from './looks';
 import { Outfit } from './LookTile';
 import { cardExit, cardRelease, cardYields, descKey, shouldLean, swipeFeedback } from './styleGame';
-import { holdAnswer } from './styleGameSession';
+import { FAST_ANSWER_MS, holdAnswer } from './styleGameSession';
 
 export interface GameCardProps {
   look: StyleKey;
@@ -30,16 +30,22 @@ export interface GameCardProps {
   width: number;
   /** An answer from the dock's buttons (a new `n` each press): the same exit as a swipe. */
   ask: { me: boolean; n: number } | null;
-  onAnswer(me: boolean): void;
+  /** `fast`: given under FAST_ANSWER_MS after the card could be answered (FS4). */
+  onAnswer(me: boolean, fast: boolean): void;
   onPeek(): void;
   onLeaned(): void;
   /** The dock's lit button follows the drag. */
   onLit(lit: 'me' | 'notMe' | null): void;
   /** VoiceOver moves to the new card after an answer (SG9). */
   focusOnMount?: boolean;
+  /** SG1.4: the lesson covers the card; it can't be swiped until it's tapped away. */
+  locked?: boolean;
+  /** SG1.4: the lesson was just tapped away: card 1 leans once. */
+  leanArmed?: boolean;
 }
 
-const LEAN_AFTER_MS = 1400;
+/** After the lesson's tap, a beat before the lean (SG1.4). */
+const LEAN_AFTER_MS = 500;
 const LEAN_PT = 18;
 
 /** VoiceOver's words for a card: "Outfit 3 of 8, view 1 of 2. {description}" (founder question F2). */
@@ -47,7 +53,7 @@ export function cardLabel(look: StyleKey, index: number, peek: 0 | 1): string {
   return t('game.card.a11y', { n: index + 1, view: peek + 1, desc: t(descKey(look, peek)) });
 }
 
-type Callbacks = Pick<GameCardProps, 'onAnswer' | 'onPeek' | 'onLeaned' | 'onLit' | 'leaned' | 'width'> & { reduce: boolean; setStamp(s: 'me' | 'notMe' | null): void };
+type Callbacks = Pick<GameCardProps, 'onAnswer' | 'onPeek' | 'onLeaned' | 'onLit' | 'leaned' | 'width'> & { reduce: boolean; locked: boolean; setStamp(s: 'me' | 'notMe' | null): void };
 
 /** One card's touch and motion, made once per card (its timers and the pan handlers live here, not in render). */
 class CardMotion {
@@ -58,14 +64,16 @@ class CardMotion {
   private leaving = false;
   private exitTimer: ReturnType<typeof setTimeout> | null = null;
   private releaseHold: (() => void) | null = null;
+  /** When the card could first be answered (shown, lesson gone): FS4 times the answer from here. */
+  private shownAt: number | null = null;
   private leanTimer: ReturnType<typeof setTimeout> | null = null;
   private touch = { out: false, sideways: false, lit: null as 'me' | 'notMe' | null };
 
   constructor(dx: number) {
     this.x = new Animated.Value(dx);
     this.pan = PanResponder.create({
-      onStartShouldSetPanResponder: () => !this.leaving,
-      onMoveShouldSetPanResponder: () => !this.leaving,
+      onStartShouldSetPanResponder: () => !this.leaving && !this.cb?.locked,
+      onMoveShouldSetPanResponder: () => !this.leaving && !this.cb?.locked,
       onPanResponderGrant: () => this.grant(),
       onPanResponderMove: (_e, g) => this.move(g.dx),
       onPanResponderTerminationRequest: (_e, g) => !this.touch.sideways && cardYields(g.dx, g.dy),
@@ -78,12 +86,19 @@ class CardMotion {
     this.cb = cb;
   }
 
+  /** The card is up and answerable (called from an effect: on mount, and when the lesson goes). */
+  markShown(now: number) {
+    this.shownAt = now;
+  }
+
   /** An answer: the matching stamp, then the card flies off (or fades under Reduce Motion), then the session moves on.
    *  A second one while it leaves is ignored (a double tap). */
   leave(me: boolean) {
     const cb = this.cb;
-    if (this.leaving || !cb) return;
+    if (this.leaving || !cb || cb.locked) return;
     this.leaving = true;
+    this.cancelLean();
+    const fast = this.shownAt !== null && Date.now() - this.shownAt < FAST_ANSWER_MS;
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     cb.setStamp(me ? 'me' : 'notMe');
     cb.onLit(null);
@@ -96,7 +111,7 @@ class CardMotion {
       this.exitTimer = null;
       this.releaseHold?.();
       this.releaseHold = null;
-      this.cb?.onAnswer(me);
+      this.cb?.onAnswer(me, fast);
     }, exit.ms);
   }
 
@@ -113,7 +128,7 @@ class CardMotion {
     Animated.timing(this.fade, { toValue: 1, duration: 120, useNativeDriver: true }).start();
   }
 
-  /** SG1.3: the lean, 1.4 s after card 1 shows. Returns its cancel. */
+  /** SG1.3: the lean, a beat after the lesson is tapped away. Returns its cancel. */
   scheduleLean(): () => void {
     this.leanTimer = setTimeout(() => {
       this.leanTimer = null;
@@ -180,15 +195,18 @@ class CardMotion {
   }
 }
 
-export function GameCard({ look, index, peek, leaned, dragDx, width, ask, onAnswer, onPeek, onLeaned, onLit, focusOnMount }: GameCardProps) {
+export function GameCard({ look, index, peek, leaned, dragDx, width, ask, onAnswer, onPeek, onLeaned, onLit, focusOnMount, locked = false, leanArmed = false }: GameCardProps) {
   const { colors, a11y, scheme } = useTheme();
   const reduce = a11y.reduceMotion;
   const [motion] = useState(() => new CardMotion(dragDx ?? 0));
   const [stamp, setStamp] = useState<'me' | 'notMe' | null>(null);
   const x = motion.x;
   useEffect(() => {
-    motion.update({ onAnswer, onPeek, onLeaned, onLit, leaned, width, reduce, setStamp });
-  }, [motion, onAnswer, onPeek, onLeaned, onLit, leaned, width, reduce]);
+    motion.update({ onAnswer, onPeek, onLeaned, onLit, leaned, width, reduce, locked, setStamp });
+  }, [motion, onAnswer, onPeek, onLeaned, onLit, leaned, width, reduce, locked]);
+  useEffect(() => {
+    if (!locked) motion.markShown(Date.now());
+  }, [locked, motion]);
   useEffect(() => () => motion.dispose(), [motion]);
   // The dock's Me / Not me: only presses made while this card is up (one made for an earlier card is spent).
   const [askedBefore] = useState(() => ask?.n ?? 0);
@@ -206,8 +224,9 @@ export function GameCard({ look, index, peek, leaned, dragDx, width, ask, onAnsw
     return () => clearTimeout(id);
   }, [focusOnMount]);
 
-  // SG1.3: card 1 leans right then left once, never under Reduce Motion.
-  const lean = shouldLean(index, leaned, reduce) && dragDx === undefined;
+  // SG1.3 / SG1.4: right after the lesson is tapped away, card 1 leans right then left once (once per install), never
+  // under Reduce Motion.
+  const lean = leanArmed && !locked && shouldLean(index, leaned, reduce) && dragDx === undefined;
   useEffect(() => (lean ? motion.scheduleLean() : undefined), [lean, motion]);
 
   const outfit = LOOKS.find((l) => l.style === look)!.outfits[peek];

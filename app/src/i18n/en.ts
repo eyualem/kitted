@@ -105,14 +105,19 @@ const addedInBuild = {
   'onb.looks.line.tailored': 'Suits, blazers, dress trousers, loafers',
   // The style game in setup (T113, specs/style-game.md): draft, founder to confirm (specs/style-game.md). The spec's and
   // the coordinator's words (#487, #490; F1–F6 the planner's drafts, IMPLEMENTATION.md → Coordinator's answers).
-  'game.title': 'Me or not me?',
-  'game.line': 'One outfit at a time. Would you wear something like this?',
-  'game.me': 'Me',
-  'game.notMe': 'Not me',
-  'game.hint': 'Swipe right for Me, left for Not me.',
+  'game.title': 'Is this your style?',
+  'game.line': 'One outfit at a time.',
+  'game.me': 'Yes',
+  'game.notMe': 'No',
+  'game.hint': 'Swipe right for Yes, left for No.',
   'game.peekHint': 'Not sure? Tap it for another outfit.',
   'game.card.a11y': 'Outfit {n} of 8, view {view} of 2. {desc}',
   'game.anotherOutfit': 'Another outfit',
+  // Card 1's lesson and the check on fast No's (the founder, Nov 18, #494: a tester thought a swipe meant "next").
+  'game.teach': "Swipe right if it's your style, left if it's not.",
+  'game.check.line': "Just checking: left means it's not your style.",
+  'game.check.startOver': 'Start over',
+  'game.check.keepGoing': 'Keep going',
   'game.order.title': 'Now put them in order',
   'game.order.line': "Tap the one that's more you.", // the founder, Nov 18: drop "You said Me to {n}."
   'game.results.title': "Here's your style",

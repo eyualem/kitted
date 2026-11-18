@@ -132,6 +132,8 @@ export const KV_LOCAL: readonly string[] = [
   'onboarding.about', 'firstCheckOffer.laterAt',
   // The style game's results draft (T113, SG8): this phone's setup in progress, deleted when setup ends.
   'onboarding.styleGame',
+  // Card 1's swipe lesson was shown on this phone (T113, SG1.4, #494): a fresh install teaches it again.
+  'onboarding.swipeTaught',
   // When Closet was last opened (its badge) and the first-visit mark (SY2, features/closet/arrivals.ts): this phone's,
   // never backed up; "Delete all my data" empties them with the rest of the kv table.
   'closet.lastOpened', 'closet.firstVisit',
