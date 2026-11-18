@@ -338,6 +338,18 @@ export const SCREENS: readonly ScreenScenario[] = [
   // card allowed (index.ts): Kit's offer is the only card.
   { n: 290, name: 'Stylist · agreed, no check yet', id: 'S1o', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:30', href: '/stylist', offer: 'checked' },
   { n: 291, name: 'Stylist · first check done, morning card allowed', id: 'S1o', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', offer: 'checked' },
+  // The rescoring (T69, parts v16): the result card at 3.5, 5.5, 7.0, 8.5 and 9.0 (the top a real check reaches), then each
+  // one's Why sheet, then an old check scored with v15 (its rows are today's, with the floor row). Layout only.
+  { n: 300, name: 'Result · 3.5', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 301, name: 'Result · 5.5', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 302, name: 'Result · 7.0', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 303, name: 'Result · 8.5', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 304, name: 'Result · 9.0 (the top)', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  ...[300, 301, 302, 303, 304].map((m, i): ScreenScenario => ({
+    n: 305 + i, name: `Why · ${['3.5', '5.5', '7.0', '8.5', '9.0'][i]}`, id: 'S7', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00',
+    href: `/sheets/why/${STORY_FIRST_CHECK}`, under: '/stylist',
+  })),
+  { n: 310, name: 'Why · an old v15 check', id: 'S7', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: `/sheets/why/${STORY_FIRST_CHECK}`, under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {
