@@ -1,3 +1,6 @@
+// NOT ROUTED since T113: /onboarding/looks is the style game (StyleGameScreen). Kept only until the T39 tests that still
+// mount it (T39-setupScreens OS3.1–OS3.3 and OS4.5, T39-offerCard OS5.7, looksOwnWords) are retargeted to the game;
+// delete it with that change (tasks/T113/TASK.md).
 // O2 · Pick looks (02 D2, update Oct 9, DECISIONS-LOG #173): 7 style tiles drawn in code, up to 3 picks, a
 // "Something else?" tile for his own words, Continue · N of 3 (no Not sure since Nov 11, DECISIONS-LOG #449: setup
 // is 7 taps to the camera). The picks wait in kv until About you ends

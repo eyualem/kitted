@@ -2,13 +2,13 @@
 // "Now put them in order" between his Me's, then "Here's your style". The game lives in the session (styleGameSession):
 // this screen draws its stage and sends the taps there. Back undoes one step; on card 1 it goes to Welcome.
 import { router } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AccessibilityInfo, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KButton, KText, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import { t } from '@/i18n/en';
-import { cardLabel, GameCard, type GameCardHandle } from './GameCard';
+import { cardLabel, GameCard } from './GameCard';
 import { GameRanking } from './GameRanking';
 import { GameResults } from './GameResults';
 import { OnboardingNav } from './OnboardingNav';
@@ -62,7 +62,8 @@ function CardsStage({ session, width }: { session: SessionState; width: number }
   const g = session.game;
   const look = currentCard(g);
   const index = g.answers.length;
-  const card = useRef<GameCardHandle>(null);
+  // The dock's presses, numbered: the card on screen answers the ones made after it showed.
+  const [ask, setAsk] = useState<{ me: boolean; n: number } | null>(null);
   const [dragDx] = useState(() => demoDragDx());
   const [lit, setLit] = useState<'me' | 'notMe' | null>(() => (dragDx === undefined ? null : swipeFeedback(dragDx).lit));
   const cardW = Math.min(width, ax ? 240 : 300);
@@ -75,7 +76,7 @@ function CardsStage({ session, width }: { session: SessionState; width: number }
 
   const button = (me: boolean) => (
     <View key={me ? 'me' : 'notme'} testID={me ? 'game-me' : 'game-notme'} style={[ax ? null : styles.flex, lit === (me ? 'me' : 'notMe') ? styles.lit : lit ? styles.unlit : null]}>
-      <KButton kind={me ? 'primary' : 'secondary'} size="large" title={t(me ? 'game.me' : 'game.notMe')} onPress={() => card.current?.leave(me)} />
+      <KButton kind={me ? 'primary' : 'secondary'} size="large" title={t(me ? 'game.me' : 'game.notMe')} onPress={() => setAsk((a) => ({ me, n: (a?.n ?? 0) + 1 }))} />
     </View>
   );
 
@@ -93,7 +94,7 @@ function CardsStage({ session, width }: { session: SessionState; width: number }
         {look ? (
           <GameCard
             key={`${g.seed}-${index}`}
-            ref={card}
+            ask={ask}
             look={look}
             index={index}
             peek={session.peek}

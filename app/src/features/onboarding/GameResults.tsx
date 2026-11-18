@@ -3,7 +3,7 @@
 // words; Continue to About you; Play again. Every change goes through the session (Back undoes it; the toast's Undo
 // undoes its own one).
 import { router } from 'expo-router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   AccessibilityInfo, Animated, findNodeHandle, Keyboard, PanResponder, Pressable, ScrollView, StyleSheet, TextInput, View,
 } from 'react-native';
@@ -31,7 +31,81 @@ const HEADS = {
   none: ['game.none.title', 'game.none.line'],
 } as const;
 
+/** A move (drag or VoiceOver), announced: "Streetwear, now 2 of 3" (founder question F4). */
+async function moveRow(picks: readonly StyleKey[], from: number, to: number): Promise<void> {
+  const look = picks[from];
+  if (!look) return;
+  const token = await moveInResults(store, from, to);
+  if (token === null) return;
+  AccessibilityInfo.announceForAccessibility(t('game.results.moved', { name: styleLabel(look), n: to + 1, total: picks.length }));
+}
+
 interface RowBox { y: number; height: number }
+interface Drag { from: number; to: number; pitch: number }
+interface DragCallbacks { count: number; move(from: number, to: number): void; setDrag(d: Drag | null): void }
+
+/** The rows' drag, made once (its handlers and the rows' places live here, not in render). */
+class RowDrag {
+  readonly dragY = new Animated.Value(0);
+  readonly handles: ReturnType<typeof PanResponder.create>[];
+  private boxes: RowBox[] = [];
+  private cb: DragCallbacks | null = null;
+
+  constructor() {
+    this.handles = [0, 1, 2].map((from) => this.handle(from));
+  }
+
+  update(cb: DragCallbacks) {
+    this.cb = cb;
+  }
+
+  setBox(i: number, b: RowBox) {
+    this.boxes[i] = b;
+  }
+
+  private pitch(): number {
+    const [a, b] = this.boxes;
+    if (a && b) return b.y - a.y;
+    return a ? a.height + space.s : 0;
+  }
+
+  private handle(from: number) {
+    let to = from;
+    const finish = (commit: boolean) => {
+      this.dragY.setValue(0);
+      this.cb?.setDrag(null);
+      if (commit && to !== from) {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        this.cb?.move(from, to);
+      }
+    };
+    return PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      // While a row is held the list doesn't scroll (scrollEnabled is off) and nothing takes the touch.
+      onPanResponderTerminationRequest: () => false,
+      onPanResponderGrant: () => {
+        to = from;
+        this.dragY.setValue(0);
+        this.cb?.setDrag({ from, to, pitch: this.pitch() });
+      },
+      onPanResponderMove: (_e, g) => {
+        this.dragY.setValue(g.dy);
+        const n = this.cb?.count ?? 0;
+        const mids = this.boxes.slice(0, n).map((b) => b.y + b.height / 2);
+        if (n < 2 || mids.length < n || mids.some((m) => Number.isNaN(m))) return;
+        const next = dragTarget(from, mids[from]! + g.dy, mids);
+        if (next !== to) {
+          to = next;
+          void Haptics.selectionAsync();
+          this.cb?.setDrag({ from, to, pitch: this.pitch() });
+        }
+      },
+      onPanResponderRelease: () => finish(true),
+      onPanResponderTerminate: () => finish(false),
+    });
+  }
+}
 
 export function GameResults({ session, nav }: { session: SessionState; nav: React.ReactNode }) {
   const { colors, isAccessibilitySize: ax } = useTheme();
@@ -40,9 +114,7 @@ export function GameResults({ session, nav }: { session: SessionState; nav: Reac
   const picks = results.picks;
   const [head, line] = HEADS[resultsHead(picks, results.mes)];
   const [busy, setBusy] = useState(false);
-  const [drag, setDrag] = useState<{ from: number; to: number } | null>(null);
-  const [dragY] = useState(() => new Animated.Value(0));
-  const boxes = useRef<RowBox[]>([]);
+  const [drag, setDrag] = useState<Drag | null>(null);
   const rowNodes = useRef<(View | null)[]>([]);
   const addNode = useRef<View | null>(null);
   const input = useRef<TextInput>(null);
@@ -83,12 +155,7 @@ export function GameResults({ session, nav }: { session: SessionState; nav: Reac
     showToast(t('game.results.removed', { name: styleLabel(r.removed) }), () => undoChange(store, r.token).then(() => undefined));
     focusAfterRemove(i, picks.length - 1);
   };
-  const move = async (from: number, to: number) => {
-    const look = picks[from]!;
-    const token = await moveInResults(store, from, to);
-    if (token === null) return;
-    AccessibilityInfo.announceForAccessibility(t('game.results.moved', { name: styleLabel(look), n: to + 1, total: picks.length }));
-  };
+  const move = (from: number, to: number) => moveRow(picks, from, to);
 
   const onContinue = async () => {
     if (busy) return;
@@ -104,56 +171,11 @@ export function GameResults({ session, nav }: { session: SessionState; nav: Reac
   };
 
   // The drag (a row's handle): the row follows the finger, the others make room, and it lands where dragTarget says.
-  const latest = useRef({ picks, move });
+  const [rows] = useState(() => new RowDrag());
   useEffect(() => {
-    latest.current = { picks, move };
-  });
-  const handles = useMemo(
-    () =>
-      [0, 1, 2].map((from) => {
-        const state = { to: from };
-        const finish = (commit: boolean) => {
-          const to = state.to;
-          dragY.setValue(0);
-          setDrag(null);
-          if (commit && to !== from) {
-            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            void latest.current.move(from, to);
-          }
-        };
-        return PanResponder.create({
-          onStartShouldSetPanResponder: () => true,
-          onMoveShouldSetPanResponder: () => true,
-          onPanResponderTerminationRequest: () => false,
-          onPanResponderGrant: () => {
-            state.to = from;
-            dragY.setValue(0);
-            setDrag({ from, to: from });
-          },
-          onPanResponderMove: (_e, g) => {
-            dragY.setValue(g.dy);
-            const n = latest.current.picks.length;
-            const mids = boxes.current.slice(0, n).map((b) => b.y + b.height / 2);
-            if (mids.length < n || n < 2) return;
-            const to = dragTarget(from, mids[from]! + g.dy, mids);
-            if (to !== state.to) {
-              state.to = to;
-              void Haptics.selectionAsync();
-              setDrag({ from, to });
-            }
-          },
-          onPanResponderRelease: () => finish(true),
-          onPanResponderTerminate: () => finish(false),
-        });
-      }),
-    [dragY],
-  );
-
-  const pitch = (() => {
-    const b = boxes.current;
-    if (b.length >= 2 && b[0] && b[1]) return b[1].y - b[0].y;
-    return b[0] ? b[0].height + space.s : 0;
-  })();
+    rows.update({ count: picks.length, move: (from, to) => void moveRow(picks, from, to), setDrag });
+  }, [rows, picks]);
+  const pitch = drag?.pitch ?? 0;
   const shiftOf = (i: number) => {
     if (!drag || i === drag.from) return 0;
     if (drag.from < drag.to && i > drag.from && i <= drag.to) return -pitch;
@@ -188,14 +210,12 @@ export function GameResults({ session, nav }: { session: SessionState; nav: Reac
                 ax={ax}
                 lifted={drag?.from === i}
                 shift={shiftOf(i)}
-                dragY={dragY}
-                handlers={handles[i]!.panHandlers}
+                dragY={rows.dragY}
+                handlers={rows.handles[i]!.panHandlers}
                 nodeRef={(n) => {
                   rowNodes.current[i] = n;
                 }}
-                onLayout={(b) => {
-                  boxes.current[i] = b;
-                }}
+                onLayout={(b) => rows.setBox(i, b)}
                 onRemove={() => void remove(i)}
                 onMove={(to) => void move(i, to)}
               />
