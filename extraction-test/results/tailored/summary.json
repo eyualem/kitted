@@ -1,0 +1,350 @@
+{
+ "base": "541440c2dad7ad1451ebfe12073b5495ed2d17f4",
+ "after": "dc10c266b8afb52bac396ac79371af3b288272fb",
+ "after_dirty": false,
+ "sets": {
+  "parity": {
+   "cases": 28096,
+   "identical": 26206,
+   "name_only": 1890,
+   "failed": 0,
+   "label_changes": {
+    "smart_casual -> tailored": 729,
+    "None -> tailored": 1152,
+    "classic_prep -> tailored": 9
+   },
+   "tailored_ties": 0,
+   "suits_kept": 41
+  },
+  "fixes": {
+   "cases": 30412,
+   "identical": 30412,
+   "name_only": 0,
+   "failed": 0,
+   "label_changes": {},
+   "tailored_ties": 0,
+   "suits_kept": 0
+  },
+  "rubric": {
+   "cases": 7233,
+   "identical": 6489,
+   "name_only": 744,
+   "failed": 0,
+   "label_changes": {
+    "smart_casual -> tailored": 201,
+    "None -> tailored": 534,
+    "classic_prep -> tailored": 9
+   },
+   "tailored_ties": 0,
+   "suits_kept": 0
+  },
+  "conformance": {
+   "cases": 501,
+   "identical": 472,
+   "name_only": 29,
+   "failed": 0,
+   "label_changes": {
+    "smart_casual -> tailored": 21,
+    "None -> tailored": 8
+   },
+   "tailored_ties": 0,
+   "suits_kept": 0
+  },
+  "corpus": {
+   "cases": 156,
+   "identical": 138,
+   "name_only": 18,
+   "failed": 0,
+   "label_changes": {
+    "smart_casual -> tailored": 4,
+    "None -> tailored": 14
+   },
+   "tailored_ties": 0,
+   "suits_kept": 0
+  },
+  "phone": {
+   "cases": 124,
+   "identical": 122,
+   "name_only": 2,
+   "failed": 0,
+   "label_changes": {
+    "smart_casual -> tailored": 2
+   },
+   "tailored_ties": 0,
+   "suits_kept": 0
+  },
+  "gold": {
+   "cases": 900,
+   "identical": 876,
+   "name_only": 24,
+   "failed": 0,
+   "label_changes": {
+    "None -> tailored": 16,
+    "smart_casual -> tailored": 4,
+    "classic_prep -> tailored": 4
+   },
+   "tailored_ties": 0,
+   "suits_kept": 2
+  }
+ },
+ "failed": 0,
+ "six": [
+  {
+   "file": "ig-059 (run 0)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "file": "ig-131 (run 0)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "file": "rd-002 (run 0)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "8.0 -> 8.0",
+   "pass": "PASS"
+  },
+  {
+   "file": "rd-008 (run 0)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "yes",
+   "label": "smart_casual -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "file": "rd-010 (run 0)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "yes",
+   "label": "classic_prep -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "file": "rd-011 (run 0)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  }
+ ],
+ "jacket_led": [
+  {
+   "set": "corpus",
+   "file": "oct7-ph3",
+   "profile": "profile unknown (saved corpus reading); scored with the stated test profile: Minimal + Smart casual, 0.5 each, at its own occasion",
+   "tl1": "yes",
+   "label": "smart_casual -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "corpus",
+   "file": "mirror-m08",
+   "profile": "profile unknown (saved corpus reading); scored with the stated test profile: Minimal + Smart casual, 0.5 each, at its own occasion",
+   "tl1": "yes",
+   "label": "smart_casual -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "corpus",
+   "file": "mirror-m09",
+   "profile": "profile unknown (saved corpus reading); scored with the stated test profile: Minimal + Smart casual, 0.5 each, at its own occasion",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "8.0 -> 8.0",
+   "pass": "PASS"
+  },
+  {
+   "set": "corpus",
+   "file": "mirror-m11",
+   "profile": "profile unknown (saved corpus reading); scored with the stated test profile: Minimal + Smart casual, 0.5 each, at its own occasion",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "corpus",
+   "file": "stock-p03-before_street",
+   "profile": "profile unknown (saved corpus reading); scored with the stated test profile: Minimal + Smart casual, 0.5 each, at its own occasion",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "7.0 -> 7.0",
+   "pass": "PASS"
+  },
+  {
+   "set": "corpus",
+   "file": "stock-p04-after_street",
+   "profile": "profile unknown (saved corpus reading); scored with the stated test profile: Minimal + Smart casual, 0.5 each, at its own occasion",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "corpus",
+   "file": "stock-p04-before_street",
+   "profile": "profile unknown (saved corpus reading); scored with the stated test profile: Minimal + Smart casual, 0.5 each, at its own occasion",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "corpus",
+   "file": "stock-s07-before_studio",
+   "profile": "profile unknown (saved corpus reading); scored with the stated test profile: Minimal + Smart casual, 0.5 each, at its own occasion",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "8.0 -> 8.0",
+   "pass": "PASS"
+  },
+  {
+   "set": "corpus",
+   "file": "stock-s09-before_street",
+   "profile": "profile unknown (saved corpus reading); scored with the stated test profile: Minimal + Smart casual, 0.5 each, at its own occasion",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "6.5 -> 6.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "phone",
+   "file": "20261008-162946 check cccd69",
+   "profile": "the founder (born 2004, 22-25; picks streetwear, minimal, workwear), at its own occasion",
+   "tl1": "yes",
+   "label": "smart_casual -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "phone",
+   "file": "20261018-012049 check d1967f",
+   "profile": "the founder (born 2004, 22-25; picks streetwear, minimal, workwear), at its own occasion",
+   "tl1": "no (bottom: jeans)",
+   "label": "smart_casual -> smart_casual",
+   "score": "7.0 -> 7.0",
+   "pass": "PASS"
+  },
+  {
+   "set": "gold",
+   "file": "ig-059 (run 1)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "gold",
+   "file": "ig-131 (run 1)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "gold",
+   "file": "pin-026 (run 0)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "no (bottom: jeans)",
+   "label": "None -> None",
+   "score": "6.5 -> 6.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "gold",
+   "file": "pin-026 (run 1)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "no (bottom: jeans)",
+   "label": "workwear -> workwear",
+   "score": "7.0 -> 7.0",
+   "pass": "PASS"
+  },
+  {
+   "set": "gold",
+   "file": "pin-056 (run 0)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "no (never-list: work_boot)",
+   "label": "smart_casual -> smart_casual",
+   "score": "6.5 -> 6.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "gold",
+   "file": "pin-056 (run 1)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "no (never-list: work_boot)",
+   "label": "None -> None",
+   "score": "6.5 -> 6.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "gold",
+   "file": "pin-063 (run 0)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "no (bottom: jeans)",
+   "label": "None -> None",
+   "score": "6.5 -> 6.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "gold",
+   "file": "pin-063 (run 1)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "no (bottom: jeans)",
+   "label": "smart_casual -> smart_casual",
+   "score": "6.5 -> 6.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "gold",
+   "file": "rd-002 (run 1)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "gold",
+   "file": "rd-008 (run 1)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "yes",
+   "label": "smart_casual -> tailored",
+   "score": "7.5 -> 7.5",
+   "pass": "PASS"
+  },
+  {
+   "set": "gold",
+   "file": "rd-010 (run 1)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "yes",
+   "label": "classic_prep -> tailored",
+   "score": "7.0 -> 7.0",
+   "pass": "PASS"
+  },
+  {
+   "set": "gold",
+   "file": "rd-011 (run 1)",
+   "profile": "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday",
+   "tl1": "yes",
+   "label": "None -> tailored",
+   "score": "8.0 -> 8.0",
+   "pass": "PASS"
+  }
+ ]
+}
