@@ -22,6 +22,9 @@ import { ExampleCheckScreen } from '@/features/onboarding/ExampleCheckScreen';
 import { LOOKS, picksToStyles } from '@/features/onboarding/looks';
 import { ONBOARDING_STEPS, OnboardingNav } from '@/features/onboarding/OnboardingNav';
 import { PickLooksScreen } from '@/features/onboarding/PickLooksScreen';
+import { StyleGameScreen } from '@/features/onboarding/StyleGameScreen';
+import { endStyleGame } from '@/features/onboarding/styleGameSession';
+import { playStyleGame, pressId, seedRandom } from '@/testing/styleGameTestKit';
 import { WelcomeScreen } from '@/features/onboarding/WelcomeScreen';
 import { styleLabel } from '@/features/morning/copy';
 import { getGate } from '@/state/appGate';
@@ -561,8 +564,11 @@ describe('OS4.5 · the only 18s before a pick', () => {
 // ── F1.1 · nothing opens the camera ───────────────────────────────────────────────────────────────────────────────
 describe('F1.1 · no camera, account or paywall in setup', () => {
   it('F1.1 · nothing opens the camera before Check my fit', async () => {
+    // T113: Looks is the style game (specs/style-game.md). A fixed deal (seed 42); Me on the first 3 cards.
+    const random = jest.spyOn(Math, 'random').mockReturnValue(seedRandom(42)());
     for (const accounts of [false, true]) {
       await mockT39.store.wipe();
+      endStyleGame();
       jest.clearAllMocks();
       mockT39.accounts = accounts;
       let r = await mount(<WelcomeScreen />);
@@ -572,9 +578,10 @@ describe('F1.1 · no camera, account or paywall in setup', () => {
       expect(pushes()).toEqual(['/onboarding/looks']);
       await r.unmount();
 
-      r = await mount(<PickLooksScreen />);
-      await press(tile(0));
-      await press(screen.getByText('Continue · 1 of 3'));
+      r = await mount(<StyleGameScreen />);
+      await playStyleGame({ me: 3 });
+      expect(textAt('results-title')).toBe("Here's your style");
+      await pressId('results-continue');
       await advance(5000);
       await r.unmount();
 
@@ -588,6 +595,8 @@ describe('F1.1 · no camera, account or paywall in setup', () => {
       expect([accounts, replaces()]).toEqual([accounts, ['/']]);
       expect([...pushes(), ...replaces()].filter((p) => /camera|paywall|sign-in|consent/.test(p))).toEqual([]);
     }
+    random.mockRestore();
+    endStyleGame();
   });
 });
 

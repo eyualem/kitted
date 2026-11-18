@@ -2,7 +2,7 @@
 
 Written by the planner. T113 is a **normal** task: the implementer writes these tests with the code, and one reviewer checks them against this file. A test is never weakened to pass; if one here looks wrong, the implementer writes it as a dispute in TASK.md and the coordinator settles it. Results go in TASK.md, never here.
 
-**Lock:** not used (normal size). The reviewer checks every line below has its test and that each test can fail (TASK.md says how each was seen red).
+**Lock:** pending (the next commit records the SHA of `T113: tests (red)`).
 
 **Criteria covered:** the spec's acceptance criteria, all of them (the plan line names no "checks:"; IMPLEMENTATION.md → T2): **SG1.1, SG1.2, SG1.3, SG2.1, SG2.2, SG3.1, SG3.2, SG4.1, SG5.1, SG6.1, SG7.1, SG7.2, SG7.3, SG7.4, SG8.1, SG9.1, F1.1** (17). All 17 are below. Plus the T39 criteria whose tests T113 retargets (OS3.1, OS3.2, OS5.7, F1.1's no-camera half), which must still pass.
 
@@ -12,6 +12,10 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
 - **The profile** (CLAUDE.md rule 6): no photo is used; the players are stated likings in the test (for example "prefers Streetwear > Vintage sport > Outdoor > Workwear"), never a made-up person's age or body.
 - **Gestures:** the card's and the row handle's PanResponder handlers are driven with touch histories as `closetDeck.test.tsx` does (`onStartShouldSetResponder`, `onResponderGrant`, `onResponderMove`, `onResponderRelease`, pageX/Y, timestamps). Pure gesture rules are tested directly.
 - **Nothing sent:** `global.fetch` is a `jest.fn` that fails the test when called, and the T39 recording transport is never called (as T39).
+- **Running them in this worktree (test writer, Nov 18):** `app/node_modules` is a real folder of symlinks, one per entry of the main checkout's `app/node_modules` (`ln -s /Users/eyu/Desktop/files/Kitted/app/node_modules/<entry>`), except `@kitted`, a real folder holding `core -> ../../packages/kitted-core` (this worktree's core); `app/packages/kitted-core/node_modules` links to the main one's. None of it is committed (`.git/info/exclude`). Jest with its own cache: `npx jest --no-watchman --cacheDirectory <scratchpad>/jestcache src/__tests__/T113-`.
+- **Test kit:** `app/src/testing/styleGameTestKit.ts` (test only): `setUpGame` puts a game in memory through the session's own calls (a fixed seed, answers, this-or-thats, results changes) before the screen mounts; `playStyleGame({ me })` plays the mounted screen through its buttons and counts the presses; `seedRandom(n)` is a `random` that makes `newSeed` give exactly n.
+- **Red until T94** (they need Tailored in `STYLES` and its drawings in `LOOKS`; red for the right reason until T94's app commit lands): `T113-styleGame.test.ts` › `SG1.1 · GAME_LOOKS is the 8 looks of STYLES, in LOOKS' order (needs T94)`; `T113-styleGameScreens.test.tsx` › `SG4.1 · the sheet lists the looks he doesn't have; a tap adds it last and closes`, `SG4.1 · the sheet's Close adds nothing`, `SG7.2 · Add a look on a full list shows {name} in, {old} out with Undo`, `SG9.1 · at accessibility sizes Me and Not me stack, Me on top`, `F1.1 · setup with 3 Me's is at most 15 taps to Stylist`; `T39-setupScreens.test.tsx` › `F1.1 · nothing opens the camera before Check my fit`; and every flow that plays past card 4 on the phone. Checked on a scratch build without Tailored: exactly these failed.
+- **Checked against a scratch build:** before locking, every test here passed against a rough scratch build of the interfaces (never committed) with Tailored and the copy patched in temporarily, so a failure after the build is about the build, not the test's mechanics.
 - **Flows:** Metro from this worktree on 8082; `maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test -e PORT=8082 app/e2e/flows/<file>`. Maestro taps by testID (`tapOn: { id: "game-me" }`); the deal is random on a fresh install, so the fresh-install flows never depend on which look is on a card.
 
 ## Criteria
@@ -29,6 +33,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - Flow: after `Get started`, `Me or not me\?` is visible; `Step 2 of 3`.
   - must not: a look twice or missing in a deal; Classic prep beside Tailored, Minimal beside Smart casual, Workwear beside Outdoor, Streetwear beside Vintage sport, or Smart casual beside Classic prep anywhere, including last-to-first; the same order every game (seeds 1–2000 give more than 1,000 different orders, and none of them is `GAME_LOOKS` as is, which has Smart casual beside Classic prep).
   - edges: the generator never loops forever (every seed 1–80,000 returns); `expo lint` passes on the session and screen files (the React Compiler rule that keeps `Math.random` out of render).
+  - red: 8 tests (pure 6, session 1, render 1) + flows. All fail on "T113: not built" (the stubs), except `each deal is the 8 looks once` (Expected 8, Received 0: the stub's CARD_COUNT), `no deal puts look-alikes side by side` (LOOK_ALIKES `[]` ≠ the 5 pairs) and `GAME_LOOKS is the 8 looks of STYLES, in LOOKS' order (needs T94)` (length 0 ≠ 8). Against the scratch port of the mockup (not committed) the goldens, 11.50–13.35% and 12.34–12.80% reproduced; the T94 test stays red until T94 (STYLES lacks `tailored`: Received 7 looks). Flows `T39-setup-fresh.yaml` and `T113-style-game.yaml` not run (memory, no Simulator booted); red by construction: `Me or not me?`, `game-card`, `game-notme`, `rank-pick-left` exist nowhere in `app/src` yet.
 
 - **SG1.2** · Me and Not me answer by tap and by swipe past the line; Back undoes the last card and keeps the order.
   - how: unit + component
@@ -43,6 +48,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - Session: answer 3 cards, `back()` → `'undone'`, answers length 2, the same seed and `dealFor(seed).order`, `currentCard` = order[2].
   - must not: a swipe under 90 pt answering; a press under 6 pt answering (it peeks, SG7.1); a second answer from a double tap; Back changing the seed or the order.
   - edges: a swipe that starts vertical (10 pt up first) gives the touch to the scroll view and answers nothing (`cardYields(0, 10)` true, `cardYields(12, 0)` false).
+  - red: 8 tests (pure 4, session 1, render 3). All fail on "T113: not built" (the stubs), except `the release rule` (TAP_SLOP/SWIPE_LINE 0 ≠ [6, 90]). Bite: with the scratch build's leaving guard removed, `a double tap answers one card` failed (2 answers). The double tap presses twice with no timer between: in the test renderer a native-driver animation ends on the next frame, so "within 100 ms" can only be held as "before the first card has left".
 
 - **SG1.3** · The first card leans once (not under Reduce Motion); the dots show progress.
   - how: unit + component + manual (Simulator)
@@ -53,6 +59,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - Dots: on card 3 (2 answered) `game-progress-dot-0` and `-1` are `ink` and 6 wide, `-2` is 22 wide `ink`, `-3`…`-7` `faint`; `game-progress` is hidden from VoiceOver.
     - Manual: screen 2 on the Simulator, the card leans right then left once (recorded with `xcrun simctl io … recordVideo` or two screenshots ~1.6 s apart), and not with Reduce Motion on.
   - must not: a lean on card 2+, a second lean in the same game, a lean under Reduce Motion.
+  - red: 3 tests (pure 1, render 2). All fail on "T113: not built" (the stubs). The lean is read as an Animated.timing/spring whose toValue is 5–60 pt (right first, then left; an exit flies ≥ 200, a spring back is 0). Manual (Simulator video or two screenshots) not done: the verifier's.
 
 - **SG2.1** · With 2+ Me's the ranking shows two Me's on second drawings; with a seeded game, the sides start random and alternate; with 1 Me it's skipped; with 0, SG6.
   - how: unit + component
@@ -64,6 +71,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - Render (screen 303's set-up): `rank-title` `Now put them in order` (header); `rank-line` `You said Me to 4. Tap the one that's more you.`; `rank-pick-left` and `rank-pick-right` labels are `t('game.desc.workwear.1')` and `t('game.desc.streetwear.1')`; each draws `LOOKS[look].outfits[1]` (the `Outfit` mock receives the second outfit); a tap → `Haptics.impactAsync('light')`, then after 260 ms the next pair.
   - must not: a ranking step with 0 or 1 Me; a pair with a Not me look; a pair on first drawings; the newcomer always on the same side.
   - edges: Reduce Motion: the wait is 120 ms; a second tap during the wait is ignored (one round recorded).
+  - red: 4 tests (pure 2, render 2). All fail on "T113: not built" (the stubs). Bite: the scratch ranker with the flip ignored (`i % 2`) failed both pure tests.
 
 - **SG2.2** · Binary insertion places each Me with at most 2 taps after the first; a player who prefers Streetwear > Vintage sport > Outdoor > Workwear and says Me to those four ends with Streetwear, Vintage sport, Outdoor.
   - how: unit
@@ -74,6 +82,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - For every one of the 336 ordered top 3s (8 × 7 × 6) as a player's true order (the other 5 looks after them in `GAME_LOOKS` order), with Me to his first 3, 4, 5 and 6 looks (seeds 1–100 each): `top` = his first 3, in order.
     - `pickRound` with a look not in the current pair throws; after `done`, `pickRound` throws.
   - must not: a list longer than 3; a Not me look in the top; a result that depends on card order for a consistent player.
+  - red: 4 tests (pure). All fail on "T113: not built" (the stubs). Green on the scratch port (2000 deals, k = 1…8 × 2000 × 2 players, 134,400 top-3 games in about 1.2 s).
 
 - **SG3.1** · Drag reorders and the numbers follow; × removes with Undo for 5 s; Back restores each change.
   - how: unit + session + component + manual (a real drag on the Simulator)
@@ -87,6 +96,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - `undoChange(token)` after a later change → `false`, nothing changes.
   - must not: Back skipping a change or undoing two; a row number out of step with the order; an Undo that restores a stale list over a newer change.
   - edges: a drag on a 1-row list moves nothing; the ScrollView doesn't scroll while a row is held (`scrollEnabled` false during the drag).
+  - red: 7 tests (pure 2, session 2, render 3). All fail on "T113: not built" (the stubs), except `moveLook, removeLook` (MAX_LOOKS 0 ≠ 3). The drag lays rows out through onLayout on `results-row-<i>` (100 pt rows every 110 pt) and drags the handle 150 pt (past row 1's middle for any row pitch 75–150 pt). Manual (a real drag on the Simulator) not done: the verifier's.
 
 - **SG3.2** · Continue is off with no looks and no words, on with either; it saves looks in order, words and Not me's, and goes to About you.
   - how: unit + session + component
@@ -100,6 +110,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - Then `finishSetup` (About you 22–25): `profile.styles` = `picksToStyles(['streetwear','vintage_sport','outdoor'])` = `[['streetwear',0.5],['vintage_sport',0.25],['outdoor',0.25]]`; `onboarding.styleGame` deleted; `looks.notMe` and `onboarding.otherStyle` still there; `getStyleGame()` null.
     - A `setKv` that rejects on the first Continue: no `router.push`, the button enabled again, a second tap succeeds.
   - must not: Continue on with nothing; a push before the writes finish; Not me's that include a look on his list; anything sent (`fetch` and the transport untouched).
+  - red: 8 tests (pure 2, session 4, render 2). All fail on "T113: not built" (the stubs). On a scratch build without the aboutStep change, `Continue writes looks, words, Not me's and the step` failed on its own assertion (kv `onboarding.styleGame` still held the draft after finishSetup).
 
 - **SG4.1** · Add a look lists only looks he doesn't have; a tap adds it last (or takes #3's place on a full list, SG7.2) and closes the sheet.
   - how: unit + component
@@ -111,6 +122,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - The sheet's title `Add a look`; its X label `Close` closes it with nothing added.
     - `results-add` is present on screens 304 (3 looks), 305, 310, 313.
   - must not: a tile for a look already on his list; a 4th row; the sheet staying open after a pick.
+  - red: 3 tests (pure 1, render 2). All fail on "T113: not built" (the stubs). Both render tests stay red until T94 (the sheet lists Tailored, whose drawings T94 adds to LOOKS).
 
 - **SG5.1** · His words save and turn Continue on; 80 characters max.
   - how: session + component
@@ -122,6 +134,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - A blur right after the field opens doesn't close it.
   - must not: Continue staying off while he types; more than 80 characters saved; a blank string saved.
   - edges: words stay through Play again (SG3's "his words stay") and through a relaunch (they're in kv).
+  - red: 5 tests (session 3, render 2). All fail on "T113: not built" (the stubs).
 
 - **SG6.1** · Not me to all 8 shows Nothing clicked yet with Continue off.
   - how: session + component + flow
@@ -132,6 +145,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - With words saved from before (311): Continue enabled.
     - Adding a look from there → `results-title` `Here's your style`, line the one-look line.
   - must not: a ranking step; Continue enabled with no look and no words.
+  - red: 2 tests (session 1, render 1) + flow (screen 310). All fail on "T113: not built" (the stubs). Flow not run (as SG1.1).
 
 - **SG7.1** · Tap card 1 once: it shows that look's second drawing and the second dot is lit; answering counts for that look, and card 2 opens on its first drawing; a swipe past 90 pt answers and never switches the drawing.
   - how: session + component + flow
@@ -146,6 +160,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - Flow (screen 2): `tapOn: { id: game-card }` → `assertVisible: "Outfit 1 of 8, view 2 of 2\\. .*"`; `tapOn: { id: game-me }` → `assertVisible: "Outfit 2 of 8, view 1 of 2\\. .*"`.
     - `game-peek-hint` reads `Not sure? Tap it for another outfit.` under `game-hint` `Swipe right for Me, left for Not me.`.
   - must not: a peek recorded as an answer; a peek pushed on Back's history; the next card starting on its second outfit; a swipe toggling the outfit.
+  - red: 4 tests (session 1, render 3) + flow (screen 2). All fail on "T113: not built" (the stubs). Flow not run (as SG1.1).
 
 - **SG7.2** · With Outdoor, Vintage sport, Workwear, adding Streetwear gives Outdoor, Vintage sport, Streetwear and `Streetwear in, Workwear out · Undo`; Undo restores the three; the sheet never lists a look already on the list.
   - how: unit + session + component
@@ -155,6 +170,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - Render (results Outdoor, Vintage sport, Workwear; the sheet): tiles for the 5 others only; tap `addlook-tile-streetwear` → rows Outdoor, Vintage sport, Streetwear; `showToast('Streetwear in, Workwear out', undo)`; the toast host draws `Undo` (`common.undo`); running the undo → Outdoor, Vintage sport, Workwear.
     - `Back` after the swap (instead of Undo) → the same three restored.
   - must not: a 4th row; the old #1 or #2 replaced; a sheet tile for Outdoor, Vintage sport or Workwear.
+  - red: 3 tests (pure 1, session 1, render 1). All fail on "T113: not built" (the stubs). The render test stays red until T94 (the sheet lists Tailored). It renders the app's ToastHost to see `Undo`.
 
 - **SG7.3** · With 2+ looks the results line reads as FS3; with 1 look, the one-look line.
   - how: unit + component
@@ -163,6 +179,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - `resultsHead(['a','b'], ['a','b'])` `top`; `(['a'], ['a'])` `one`; `([], ['a'])` `empty`; `([], [])` `none`; `(['a'], [])` `one` (added from Nothing clicked).
     - Render: 304 → `results-title` `Here's your style`, `results-line` `Your top looks, in order. Not quite right? Drag, remove or add one.`; 305 → `Your top look. Not quite right? Add one, or play again.`; after × on 305's only row → the F3 line (`Add a look, or tell me in your words.` until the founder picks); removing one of 304's three → still the FS3 line (2 left).
   - must not: the FS3 line on one look (it mentions Drag); "Nothing clicked yet" on a list he emptied himself (technical default 3).
+  - red: 2 tests (pure 1, render 1). All fail on "T113: not built" (the stubs).
 
 - **SG7.4** · Answer 3 cards, Back: card 3 shows again with 2 answers kept; Back on card 1, then forward, resumes the same deal and answers.
   - how: session + component + flow
@@ -176,6 +193,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - Back after `playAgain` on its card 1 → `'exit'` (Play again cleared history; technical default 2).
     - Flow (screen 300): `tapOn: { id: game-me }` → "Outfit 4 of 8…"; `tapOn: "Back"` → "Outfit 3 of 8, view 1 of 2\\. .*".
   - must not: Back undoing two answers; Back on card 1 undoing anything or reshuffling; a return from Welcome dealing a new game.
+  - red: 4 tests (session 3, render 1) + flow (screen 300). All fail on "T113: not built" (the stubs). `the Looks route is registered with the edge swipe off` (session file) failed on its own assertion against today's `_layout.tsx` (no `looks` screen registered: Received undefined). Flow not run (as SG1.1).
 
 - **SG8.1** · Closing mid-game reopens at card 1 with a new deal; closing on results reopens them as left; Delete all my data wipes `looks.notMe`.
   - how: session (memory store; "closing" = `endStyleGame()` with the store kept, as a relaunch empties memory) + flow
@@ -190,6 +208,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - The device part (a real kill and relaunch): "Not testable yet".
   - must not: a mid-game close resuming the old cards (SG8 says a new deal); results lost on a close; `looks.notMe` surviving a wipe.
   - edges: a close on About you → Back → results from the draft (IMPLEMENTATION → Must not break).
+  - red: 6 tests (session) + flow (relaunch block). All fail on "T113: not built" (the stubs). `looks.notMe syncs like his looks…` failed on its own assertion against today's schema (kvPolicy null). Exists, bites: `Delete all my data wipes looks.notMe and the draft` failed with `await d.store.wipe()` commented out of privacy/wipe.ts (looks.notMe still held), reverted. The relaunch block runs on a fresh install with no demo arguments (stopApp, launchApp); not run (as SG1.1). The device kill mid-game stays in "Not testable yet" until that flow has run.
 
 - **SG9.1** · VoiceOver labels and actions as SG9; light, dark and the largest text show nothing clipped (Simulator screenshots); Reduce Motion fades.
   - how: component + unit + screenshots + manual (VoiceOver on the Simulator or the Accessibility Inspector)
@@ -203,6 +222,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - `cardExit(true)` = `{ kind: 'fade', ms: 150 }`; `cardExit(false)` = `{ kind: 'fly', ms: 240 }`; render with Reduce Motion: the answered card animates opacity only (no `translateX` animation started).
     - Screenshots (manual, the verifier): every demo screen in the UI inventory in light and dark at the default size, and 2, 300, 303, 304, 310, 312 at AX5 (`accessibility-extra-extra-extra-large`), in `tasks/T113/shots/<n>-<state>-<light|dark|ax5>.png`; the reviewer checks by eye that no text is cut off and no button runs off screen.
   - must not: an unlabeled button or drawing; the stamps read aloud; a drag-only way to reorder (VoiceOver must have Move up / Move down).
+  - red: 7 tests (pure 2, render 5). All fail on "T113: not built" (the stubs). `at accessibility sizes Me and Not me stack, Me on top` stays red until T94 (its sheet part lists Tailored). Not tested in render: "both KButton labels use CONTROL_TEXT_MAX_SCALE" (the T39 KButton mock drops it; the real KButton applies it, so it holds for any KButton: check by eye in the AX5 shots). Screenshots and VoiceOver on the Simulator: the verifier's.
 
 - **F1.1** (new) · A fresh install reaches the camera in 17 taps or fewer with 3 Me's (a Maestro flow).
   - how: flow + component
@@ -211,6 +231,7 @@ Written by the planner. T113 is a **normal** task: the implementer writes these 
     - Flow, from `launchApp: { clearState: true, clearKeychain: true, permissions: { camera: allow } }` and the dev launcher's server tap (`http://.*:${PORT || '8081'}`, not counted): 1 `Get started`; 2–4 `game-me` three times; 5–9 `game-notme` five times; then `repeat: { times: 3, while: { visible: { id: rank-pick-left } } }` tapping `rank-pick-left` (taps 10–12 at most); `assertVisible: "Here's your style"`; 13 `Continue`; 14 `22–25`; 15 `Continue`; 16 the card's `Check my fit`; 17 `Agree`; `Take photo` visible. Every assertion of today's flow that still applies stays (no Kit bubble, no `Before your first fit check` before Check my fit, no `Continue free`, no checks-a-day line, `Step 2 of 3` on the game, `Step 3 of 3` on About you, the camera not open after a 3 s wait in Stylist).
     - Render: the walk Welcome → game (3 Me's, 5 Not me's, ranking by the left card) → Continue → About you 22–25 → Continue counts at most 15 presses; `router.push` calls are exactly `['/onboarding/looks', '/onboarding/basics']`, `router.replace` `['/']`; nothing matching `camera|paywall|sign-in|consent`.
   - must not: more than 3 ranking taps for 3 Me's; a sign-in, paywall or agreement screen before Check my fit; the camera opening on its own.
+  - red: 2 tests (render 1; T39-setupScreens.test.tsx's retargeted `F1.1 · nothing opens the camera before Check my fit`) + flow `T39-setup-fresh.yaml` (rewritten to the 17 taps, every assertion that still applies kept). Both fail on "T113: not built" (the stubs) and stay red until T94 (the walk draws card 5 of seed 42, Tailored). Flow not run (as SG1.1).
 
 ## The tests that change
 - `T39-setupScreens.test.tsx`: OS3.1, OS3.2 and F1.1 mount `StyleGameScreen` and play through `playStyleGame`; OS3.1 asserts `game-title` `Me or not me?` in place of `What's your style?`. **Retired:** `OS3.3 · the title and the line` and `OS3.3 · the tiles, Something else? and Continue behave as before` (the grid is gone; superseded by SG1–SG7, reason in TASK.md).

@@ -1,0 +1,157 @@
+# T113 · The style game on the Simulator (specs/style-game.md; tasks/T113/TESTING.md): SG6.1 (screen 310), SG7.1
+# (screen 2: a tap shows the other outfit, an answer opens card 2 on its first), SG7.4 (screen 300: Back undoes one
+# card), Here's your style (screen 304), then SG8.1 on a fresh install: a close mid-game reopens Looks at card 1, a
+# close on Nothing clicked yet reopens it.
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test -e PORT=8082 app/e2e/flows/T113-style-game.yaml
+# (this worktree's Metro on 8082). Matching: Maestro matches an element's WHOLE text or label; the card is one
+# VoiceOver element "Outfit n of 8, view v of 2. {description}".
+appId: com.trykitted.kitted
+name: T113 · the style game
+---
+# ── Screen 2: card 1 of a fixed deal (seed 42) ──────────────────────────────────────────────────────────────────────
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "2"
+- extendedWaitUntil:
+    visible: "Me or not me\\?"
+    timeout: 90000
+- assertVisible: "One outfit at a time\\. Would you wear something like this\\?"
+- assertVisible: "Step 2 of 3"
+- assertVisible: "Outfit 1 of 8, view 1 of 2\\. .*"
+- assertVisible: "Swipe right for Me, left for Not me\\."
+- assertVisible: "Not sure\\? Tap it for another outfit\\."
+- assertVisible: "Me"
+- assertVisible: "Not me"
+- assertNotVisible: "What's your style\\?"
+# SG7.1: a tap shows the look's other outfit; it is not an answer.
+- tapOn:
+    id: "game-card"
+- assertVisible: "Outfit 1 of 8, view 2 of 2\\. .*"
+- assertNotVisible: "Outfit 2 of 8.*"
+# Me: card 2, on its first outfit.
+- tapOn:
+    id: "game-me"
+- extendedWaitUntil:
+    visible: "Outfit 2 of 8, view 1 of 2\\. .*"
+    timeout: 5000
+
+# ── Screen 300: card 3; one answer, then Back (SG7.4) ───────────────────────────────────────────────────────────────
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "300"
+- extendedWaitUntil:
+    visible: "Outfit 3 of 8, view 1 of 2\\. .*"
+    timeout: 90000
+- tapOn:
+    id: "game-me"
+- extendedWaitUntil:
+    visible: "Outfit 4 of 8, view 1 of 2\\. .*"
+    timeout: 5000
+- tapOn: "Back"
+- extendedWaitUntil:
+    visible: "Outfit 3 of 8, view 1 of 2\\. .*"
+    timeout: 5000
+- assertNotVisible: "Outfit 2 of 8.*"
+- assertVisible: "Me or not me\\?"
+
+# ── Screen 304: Here's your style, three looks ──────────────────────────────────────────────────────────────────────
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "304"
+- extendedWaitUntil:
+    visible: "Here's your style"
+    timeout: 90000
+- assertVisible: "Your top looks, in order\\. Not quite right\\? Drag, remove or add one\\."
+- assertVisible: "1 of 3, Streetwear\\. .*"
+- assertVisible: "2 of 3, Vintage sport\\. .*"
+- assertVisible: "3 of 3, Outdoor\\. .*"
+- assertVisible: "Add a look"
+- assertVisible:
+    text: "Continue"
+    enabled: true
+- assertVisible: "Play again"
+
+# ── Screen 310: Nothing clicked yet (SG6.1) ─────────────────────────────────────────────────────────────────────────
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "310"
+- extendedWaitUntil:
+    visible: "Nothing clicked yet"
+    timeout: 90000
+- assertVisible: "Add a look you like, play again, or tell me in your words\\."
+- assertVisible: "Add a look"
+- assertVisible: "Not quite you\\? Tell me in your words"
+- assertVisible:
+    text: "Continue"
+    enabled: false
+- assertVisible: "Play again"
+- assertNotVisible: "Now put them in order"
+- assertNotVisible: "1 of .*"
+
+# ── SG8.1 on a fresh install: a close mid-game, then a close on results ─────────────────────────────────────────────
+# No demo arguments: the real store and the real resume. The development launcher's server tap isn't in the app.
+- launchApp:
+    clearState: true
+    clearKeychain: true
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn: "http://.*:${PORT || '8081'}"
+- extendedWaitUntil:
+    visible: "Get started"
+    timeout: 90000
+- tapOn: "Get started"
+- extendedWaitUntil:
+    visible: "Me or not me\\?"
+    timeout: 10000
+- repeat:
+    times: 3
+    commands:
+      - tapOn:
+          id: "game-me"
+      - waitForAnimationToEnd:
+          timeout: 3000
+- assertVisible: "Outfit 4 of 8, view 1 of 2\\. .*"
+# Close mid-game: Looks reopens at card 1 (a new deal), not card 4.
+- stopApp
+- launchApp
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn: "http://.*:${PORT || '8081'}"
+- extendedWaitUntil:
+    visible: "Me or not me\\?"
+    timeout: 90000
+- assertVisible: "Outfit 1 of 8, view 1 of 2\\. .*"
+- assertNotVisible: "Outfit 4 of 8.*"
+# Not me to all 8: Nothing clicked yet. Close there: it reopens as he left it.
+- repeat:
+    while:
+      visible:
+        id: "game-notme"
+    commands:
+      - tapOn:
+          id: "game-notme"
+      - waitForAnimationToEnd:
+          timeout: 3000
+- extendedWaitUntil:
+    visible: "Nothing clicked yet"
+    timeout: 10000
+- stopApp
+- launchApp
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn: "http://.*:${PORT || '8081'}"
+- extendedWaitUntil:
+    visible: "Nothing clicked yet"
+    timeout: 90000
+- assertVisible: "Add a look you like, play again, or tell me in your words\\."
+- assertNotVisible: "Outfit 1 of 8.*"

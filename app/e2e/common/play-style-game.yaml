@@ -1,0 +1,41 @@
+# T113 · Plays the style game on the Looks step (specs/style-game.md): Me on the first ${ME} cards (default 1), Not me
+# on every card after that, then the ranking's left card while it shows (at most 3 taps for 3 Me's), then Continue on
+# Here's your style. Taps are by testID: the deal is random on a fresh install, so nothing here depends on which look
+# is on a card.
+# Usage: - runFlow: { file: ../common/play-style-game.yaml, env: { ME: "3" } }
+appId: com.trykitted.kitted
+---
+- extendedWaitUntil:
+    visible:
+      id: "game-me"
+    timeout: 10000
+- repeat:
+    times: ${ME || 1}
+    commands:
+      - tapOn:
+          id: "game-me"
+      - waitForAnimationToEnd:
+          timeout: 3000
+- repeat:
+    while:
+      visible:
+        id: "game-notme"
+    commands:
+      - tapOn:
+          id: "game-notme"
+      - waitForAnimationToEnd:
+          timeout: 3000
+- repeat:
+    times: 3
+    while:
+      visible:
+        id: "rank-pick-left"
+    commands:
+      - tapOn:
+          id: "rank-pick-left"
+      - waitForAnimationToEnd:
+          timeout: 3000
+- extendedWaitUntil:
+    visible: "Here's your style"
+    timeout: 10000
+- tapOn: "Continue"
