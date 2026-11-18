@@ -175,6 +175,7 @@ describe('OS3.1 · setup screens are plain', () => {
 
 // ── OS3.2 · Welcome → Looks → About you → Stylist ─────────────────────────────────────────────────────────────────
 describe('OS3.2 · three steps, no agreement', () => {
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('OS3.2 · each step goes to the next and About you ends in Stylist', async () => {
     // Looks (the style game, T113): Me on card 1 (seed 42: Workwear), Not me on the rest, Continue.
     endStyleGame();
@@ -204,7 +205,7 @@ describe('OS3.2 · three steps, no agreement', () => {
     expect(pushes()).toEqual([]);
     await r.unmount();
     endStyleGame();
-  });
+  }, 20000);
 
   it('OS3.2 · the bar has 3 segments', async () => {
     const { colors } = themeFor();
@@ -503,6 +504,7 @@ describe('OS4.4 · Under 18', () => {
 
 // ── OS4.5 · no "18" before the pick ───────────────────────────────────────────────────────────────────────────────
 describe('OS4.5 · the only 18s before a pick', () => {
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('OS4.5 · the only 18s before the pick are two choices', async () => {
     const with18 = () => everyString().filter((x) => x.includes('18'));
     for (const ax of [false, true]) {
@@ -547,11 +549,12 @@ describe('OS4.5 · the only 18s before a pick', () => {
       expect(everyString().filter((x) => /18 and up|18\+|ages 18/.test(x))).toEqual([]);
       await r.unmount();
     }
-  });
+  }, 20000);
 });
 
 // ── F1.1 · nothing opens the camera ───────────────────────────────────────────────────────────────────────────────
 describe('F1.1 · no camera, account or paywall in setup', () => {
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('F1.1 · nothing opens the camera before Check my fit', async () => {
     // T113: Looks is the style game (specs/style-game.md). A fixed deal (seed 42); Me on the first 3 cards.
     const random = jest.spyOn(Math, 'random').mockReturnValue(seedRandom(42)());
@@ -586,7 +589,7 @@ describe('F1.1 · no camera, account or paywall in setup', () => {
     }
     random.mockRestore();
     endStyleGame();
-  });
+  }, 20000);
 });
 
 // ── F1.2 · nothing picked, then the stop ──────────────────────────────────────────────────────────────────────────

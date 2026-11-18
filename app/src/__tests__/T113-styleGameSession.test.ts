@@ -555,7 +555,8 @@ describe('SG8.1 · what a close keeps', () => {
   });
 
   it('SG8.1 · a bad draft starts a new game', async () => {
-    for (const raw of ['not json', '{"v":2}', '{"v":1,"picks":["capes"]}', '[]', 'null']) {
+    // An unknown version is ignored even when the rest would read (verify round 1, T2).
+    for (const raw of ['not json', '{"v":2}', '{"v":2,"picks":["streetwear"],"mes":["streetwear"],"notMes":[]}', '{"v":1,"picks":["capes"]}', '[]', 'null']) {
       endStyleGame();
       await store.setKv('onboarding.styleGame', raw);
       const s = await startOrResumeStyleGame(store, seedRandom(42));

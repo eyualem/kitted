@@ -289,6 +289,7 @@ describe('OS5.7 · nothing leaves the phone before Agree', () => {
     return offer!;
   }
 
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('OS5.7 · setup, the offer, Later, Check my fit and Not now send nothing', async () => {
     // Run 1: Later.
     let offer = await walkToCard();
@@ -317,7 +318,7 @@ describe('OS5.7 · nothing leaves the phone before Agree', () => {
     expect(life.fetchMock).toHaveBeenCalledTimes(0);
     expect(mockT39.transport.send).toHaveBeenCalledTimes(0);
     expect(await mayUpload(mockT39.store)).toBe(false);
-  });
+  }, 20000);
 });
 
 // ── F1.3 · a photo held for the agreement ─────────────────────────────────────────────────────────────────────────

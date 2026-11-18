@@ -22,6 +22,7 @@ import {
 import { buttonIn, playStyleGame, pressId, seedRandom, setUpGame, SETTLE_MS } from '@/testing/styleGameTestKit';
 import { act, fireEvent, isHiddenFromAccessibility, render, screen } from '@testing-library/react-native';
 import { AccessibilityInfo, Animated, TextInput } from 'react-native';
+import { CONTROL_TEXT_MAX_SCALE } from '@/design-system/tokens';
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
 import type { StyleKey } from '@/data/types';
@@ -422,13 +423,16 @@ describe('SG1.2 · answering', () => {
 
 // ── SG1.3 · the lean and the dots ─────────────────────────────────────────────────────────────────────────────────
 describe('SG1.3 · the lean and the dots', () => {
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('SG1.3 · card 1 leans once after 1.4 s, never under Reduce Motion', async () => {
     await setUpGame(store(), { seed: 42, me: [], cards: 0 });
     let r = await mount(<StyleGameScreen />);
     await advance(1390);
     expect(leanMoves(timing, spring)).toEqual([]);
-    await advance(20);
-    await advance(3000);
+    // It has started by 1.45 s (1.4 s after the card appears; verify round 1, T1).
+    await advance(60);
+    expect(leanMoves(timing, spring).filter((v) => v > 0).length).toBeGreaterThanOrEqual(1);
+    await advance(2950);
     const one = leanMoves(timing, spring);
     expect(one.filter((v) => v > 0)).toHaveLength(1); // one lean: right …
     expect(one.filter((v) => v < 0)).toHaveLength(1); // … then left
@@ -477,7 +481,7 @@ describe('SG1.3 · the lean and the dots', () => {
     await advance(10_000);
     expect(leanMoves(timing, spring)).toEqual([]);
     await r.unmount();
-  });
+  }, 20000);
 
   it('SG1.3 · the dots follow the answers', async () => {
     await setUpGame(store(), { seed: 42, me: ['workwear'], cards: 2 });
@@ -617,6 +621,7 @@ describe('SG3.1 · Here\'s your style: drag and remove', () => {
 
 // ── SG3.2 · Continue ──────────────────────────────────────────────────────────────────────────────────────────────
 describe('SG3.2 · Continue', () => {
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('SG3.2 · Continue goes to About you', async () => {
     const enabled: [string, boolean][] = [];
     for (const [name, o, words] of [
@@ -644,7 +649,7 @@ describe('SG3.2 · Continue', () => {
     await advance(SETTLE_MS);
     expect(pushes()).toEqual(['/onboarding/basics']);
     expect(await atPush[0]).toEqual(['["streetwear","vintage_sport","outdoor"]', '["minimalist","smart_casual","classic_prep","tailored"]', 'basics']);
-  });
+  }, 20000);
 
   it('SG3.2 · a failed save leaves him on results with Continue working', async () => {
     await setUpGame(store(), SCREEN_304);
@@ -663,10 +668,26 @@ describe('SG3.2 · Continue', () => {
     expect(pushes()).toEqual(['/onboarding/basics']);
     expect(await store().getKv('onboarding.looks')).toBe('["streetwear","vintage_sport","outdoor"]');
   });
+
+  it('SG3.2 · two Continue presses at once go to About you once', async () => {
+    await setUpGame(store(), SCREEN_304);
+    await mount(<StyleGameScreen />);
+    const b = buttonIn('results-continue');
+    // Both in one frame, before either save has finished (verify round 1, C4).
+    await act(async () => {
+      void fireEvent.press(b as never);
+      void fireEvent.press(b as never);
+    });
+    await flush();
+    await advance(SETTLE_MS);
+    expect(pushes()).toEqual(['/onboarding/basics']);
+    expect(await store().getKv('onboarding.looks')).toBe('["streetwear","vintage_sport","outdoor"]');
+  });
 });
 
 // ── SG4.1 · Add a look ────────────────────────────────────────────────────────────────────────────────────────────
 describe('SG4.1 · Add a look', () => {
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('SG4.1 · the sheet lists the looks he doesn\'t have; a tap adds it last and closes', async () => {
     // results-add on 304, 305, 310, 313.
     const present: [string, string][] = [];
@@ -702,7 +723,7 @@ describe('SG4.1 · Add a look', () => {
     expect((router.back as jest.Mock).mock.calls).toHaveLength(1);
     expect(selections()).toBe(1);
     expect(showToast).not.toHaveBeenCalled();
-  });
+  }, 20000);
 
   it('SG4.1 · the sheet\'s Close adds nothing', async () => {
     await setUpGame(store(), { ...SCREEN_305, then: [{ add: 'workwear' as StyleKey }] });
@@ -711,6 +732,23 @@ describe('SG4.1 · Add a look', () => {
     await press(screen.getByRole('button', { name: 'Close' }));
     expect((router.back as jest.Mock).mock.calls.length + (router.dismiss as jest.Mock).mock.calls.length).toBe(1);
     expect(picks()).toEqual(['minimalist', 'workwear']);
+  });
+
+  it('SG4.1 · two tiles pressed at once add one look and close once', async () => {
+    await setUpGame(store(), { ...SCREEN_305, then: [{ add: 'workwear' as StyleKey }] });
+    jest.clearAllMocks();
+    await mount(<AddLookSheet />);
+    const a = getId('addlook-tile-outdoor');
+    const b = getId('addlook-tile-streetwear');
+    // Both before the first add has finished (verify round 1, C5): a second back would also pop Here's your style.
+    await act(async () => {
+      void fireEvent.press(a as never);
+      void fireEvent.press(b as never);
+    });
+    await flush();
+    await advance(SETTLE_MS);
+    expect(picks()).toEqual(['minimalist', 'workwear', 'outdoor']);
+    expect((router.back as jest.Mock).mock.calls.length + (router.dismiss as jest.Mock).mock.calls.length).toBe(1);
   });
 });
 
@@ -861,10 +899,30 @@ describe('SG7.1 · the other outfit', () => {
     expect(label('game-card')).toBe(cardLabel(1, 2, 'workwear'));
     expect(st().game.answers).toEqual([]);
   });
+
+  it('SG7.1 · the two outfit dots sit at the top of the card', async () => {
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    await mount(<StyleGameScreen />);
+    const card = getId('game-card');
+    const inCard = card.queryAll(() => true);
+    const dot = inCard.findIndex((n) => n.props.testID === 'game-card-dot-0');
+    const drawing = inCard.findIndex((n) => n.props.testID === 'mock-outfit');
+    expect([dot >= 0, drawing >= 0]).toEqual([true, true]);
+    // FS1: "two small dots at the top of the card". Either drawn before the drawing, or pinned to the card's top.
+    const pinnedTop = ancestors(inCard[dot]!).filter((a) => inCard.includes(a) || a === card).some((a) => {
+      const st = flat(a);
+      return st.position === 'absolute' && st.top !== undefined && st.bottom === undefined;
+    }) || (() => {
+      const st = flat(inCard[dot]!);
+      return st.position === 'absolute' && st.top !== undefined && st.bottom === undefined;
+    })();
+    expect(dot < drawing || pinnedTop).toBe(true);
+  });
 });
 
 // ── SG7.2 · the full-list swap ────────────────────────────────────────────────────────────────────────────────────
 describe('SG7.2 · Add a look on a full list', () => {
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('SG7.2 · Add a look on a full list shows {name} in, {old} out with Undo', async () => {
     await setUpGame(store(), { seed: 42, me: OVW, prefer: OVW });
     expect(picks()).toEqual(OVW);
@@ -901,7 +959,7 @@ describe('SG7.2 · Add a look on a full list', () => {
     await advance(SETTLE_MS);
     expect(rowNames()).toEqual(['Outdoor', 'Vintage sport', 'Workwear']);
     expect(idsInOrder().filter((id) => /^results-row-\d$/.test(id))).toHaveLength(3);
-  });
+  }, 20000);
 });
 
 // ── SG7.3 · the results line ──────────────────────────────────────────────────────────────────────────────────────
@@ -932,6 +990,7 @@ describe('SG7.3 · the results line', () => {
 
 // ── SG7.4 · Back on card 1 ────────────────────────────────────────────────────────────────────────────────────────
 describe('SG7.4 · Back', () => {
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('SG7.4 · Back on card 1 goes to Welcome', async () => {
     await setUpGame(store(), { seed: 42, me: [], cards: 0 });
     let r = await mount(<StyleGameScreen />);
@@ -973,6 +1032,32 @@ describe('SG7.4 · Back', () => {
     expect(label('game-card')).toBe(cardLabel(3, 1, 'streetwear'));
     expect(answers()).toEqual(['workwear Me', 'classic_prep Not me']);
     expect((router.back as jest.Mock).mock.calls).toHaveLength(0);
+  }, 20000);
+
+  it('SG7.4 · Back while an answered card is leaving undoes that answer, and only it', async () => {
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    await mount(<StyleGameScreen />);
+    await pressId('game-me');
+    await advance(SETTLE_MS);
+    await pressId('game-notme');
+    await advance(SETTLE_MS);
+    expect(label('game-card')).toBe(cardLabel(3, 1, 'streetwear'));
+    // Me on card 3, then Back before the card has gone (on the phone the exit takes 240 ms; verify round 1, C3).
+    // "Back undoes exactly one answer" (SG7): the Me was given, so Back undoes it and nothing before it.
+    await pressId('game-me');
+    await press(backButton());
+    await advance(SETTLE_MS);
+    expect(answers()).toEqual(['workwear Me', 'classic_prep Not me']);
+    expect(label('game-card')).toBe(cardLabel(3, 1, 'streetwear'));
+    // The same 50 ms after the tap.
+    await pressId('game-me');
+    await advance(50);
+    await press(backButton());
+    await advance(SETTLE_MS);
+    expect(answers()).toEqual(['workwear Me', 'classic_prep Not me']);
+    expect(label('game-card')).toBe(cardLabel(3, 1, 'streetwear'));
+    expect((router.back as jest.Mock).mock.calls).toHaveLength(0);
+    expect(replaces()).toEqual([]);
   });
 });
 
@@ -1039,6 +1124,7 @@ describe('SG9.1 · access', () => {
     expect((showToast as jest.Mock).mock.calls.map((c) => c[0])).toEqual(['Removed Outdoor']);
   });
 
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('SG9.1 · at accessibility sizes Me and Not me stack, Me on top', async () => {
     // Default size: side by side, Not me on the left.
     await setUpGame(store(), { seed: 42, me: [], cards: 0 });
@@ -1087,7 +1173,7 @@ describe('SG9.1 · access', () => {
     mockT39.theme = themeFor({ ax: true });
     const wAx = await tileWidth();
     expect(wAx).toBeGreaterThanOrEqual(1.8 * w1);
-  });
+  }, 20000);
 
   it('SG9.1 · under Reduce Motion an answered card fades', async () => {
     // Default: it flies off (240 ms, hundreds of points).
@@ -1115,10 +1201,31 @@ describe('SG9.1 · access', () => {
     expect(fades.length).toBeGreaterThanOrEqual(1);
     await r.unmount();
   });
+
+  it('SG9.1 · the results\' text buttons stop growing at 2×', async () => {
+    mockT39.theme = themeFor({ ax: true });
+    await setUpGame(store(), SCREEN_304);
+    await mount(<StyleGameScreen />);
+    // SG9: "button labels stop at 2× (CONTROL_TEXT_MAX_SCALE)" (verify round 1, C2).
+    const capped = (id: string, words: string) => {
+      const texts = getId(id).queryAll((n) => n.type === 'Text' && textOf(n) === words);
+      return [id, texts.length > 0, texts.some((n) => n.props.maxFontSizeMultiplier === CONTROL_TEXT_MAX_SCALE)];
+    };
+    expect(CONTROL_TEXT_MAX_SCALE).toBe(2);
+    expect(capped('results-add', ADD)).toEqual(['results-add', true, true]);
+    expect(capped('results-words-link', WORDS_LINK)).toEqual(['results-words-link', true, true]);
+    expect(capped('results-play-again', PLAY_AGAIN)).toEqual(['results-play-again', true, true]);
+    await press(buttonIn('results-words-link'));
+    expect(capped('results-words-done', 'Done')).toEqual(['results-words-done', true, true]);
+    await typeIn(getId('results-words-input'), 'all black');
+    await press(buttonIn('results-words-done'));
+    expect(capped('results-words-edit', 'Edit')).toEqual(['results-words-edit', true, true]);
+  });
 });
 
 // ── F1.1 · setup to Stylist ───────────────────────────────────────────────────────────────────────────────────────
 describe('F1.1 · setup in 15 taps', () => {
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('F1.1 · setup with 3 Me\'s is at most 15 taps to Stylist', async () => {
     fixRandom(42);
     let presses = 0;
@@ -1148,5 +1255,5 @@ describe('F1.1 · setup in 15 taps', () => {
     expect(replaces()).toEqual(['/']);
     expect([...pushes(), ...replaces()].filter((p) => /camera|paywall|sign-in|consent/.test(p))).toEqual([]);
     expect(life.fetchMock).toHaveBeenCalledTimes(0);
-  });
+  }, 20000);
 });
