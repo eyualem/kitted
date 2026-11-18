@@ -1,0 +1,12 @@
+variant                              held out (8 splits)    B6 all / leg (bar 218)   sizes fitted on all 164
+the proposal: mid+short+long         87.2% r 0.711      215/223 / 218            {'mid_block': True, 'mid': 0.5, 'mid_full': 0.5, 'short': 0.25, 'long': 0.25}
+mid+long, no short                   86.6% r 0.705      213/223 / 218            {'mid_block': True, 'short': 0, 'mid': 0.5, 'mid_full': 0.5, 'long': 0.25}
+mid+long, no block                   85.8% r 0.700      212/223 / 218            {'mid': 0.75, 'mid_full': 0.5, 'long': 0.25}
+hip at half: mid+short+long          85.8% r 0.696      214/223 / 218            {'mid_block': True, 'hip_factor': 0.5, 'mid': 0.5, 'mid_full': 0.5, 'short': 0.25, 'long': 0.25}
+crotch only: mid+long                84.5% r 0.671      215/223 / 218            {'mid_block': True, 'hip_factor': 0.0, 'mid': 0.5, 'mid_full': 0.5, 'long': 0.25}
+reads agree: mid+short+long          87.2% r 0.707      215/223 / 218            {'mid_block': True, 'agree': True, 'mid': 0.5, 'mid_full': 0.5, 'short': 0.25, 'long': 0.25}
+border agree: mid+short+long         86.1% r 0.696      214/223 / 218            {'mid_block': True, 'agree': 'border', 'mid': 0.5, 'mid_full': 0.5, 'short': 0.25, 'long': 0.25}
+creators: tailored spared, hip on layers only 84.1% r 0.684      218/223 / 218            {'mid_block': True, 'tailored_ok': True, 'mid_layers_only': True, 'mid': 0.5, 'mid_full': 0.5, 'short': 0.25, 'long': 0.25}
+tailored spared: mid+short+long      86.1% r 0.694      215/223 / 218            {'mid_block': True, 'tailored_ok': True, 'mid': 0.5, 'mid_full': 0.5, 'short': 0.25, 'long': 0.25}
+layers only: mid+short+long          85.4% r 0.691      217/223 / 218            {'mid_block': True, 'only': 'outer', 'mid': 0.5, 'mid_full': 0.5, 'short': 0, 'long': 0.25}
+layers only, hip half: mid+long      84.8% r 0.685      217/223 / 218            {'mid_block': True, 'only': 'outer', 'hip_factor': 0.5, 'mid': 0.5, 'mid_full': 0.5, 'long': 0.25}

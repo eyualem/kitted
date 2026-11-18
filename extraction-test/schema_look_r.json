@@ -1,0 +1,3 @@
+{"type": "OBJECT", "properties": {"waistband_shows": {"type": "STRING", "enum": ["yes", "partly", "no"]},
+ "rise": {"type": "STRING", "enum": ["high", "mid", "low", "not_visible"]}},
+ "required": ["waistband_shows", "rise"], "propertyOrdering": ["waistband_shows", "rise"]}

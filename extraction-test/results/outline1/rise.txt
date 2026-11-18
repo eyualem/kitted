@@ -1,0 +1,10 @@
+Rise by eye on the 65 rated photos where the waistband can show (labels blind to every score)
+  rise       n  his mean    v16  outline  his - outline  sure  tucked
+  high      18      7.64   7.72     7.69          -0.06     7      14
+  mid       33      6.83   7.33     7.35          -0.52     4      25
+  low        4      5.62   5.50     5.50          +0.12     0       0
+  unsure    10      7.25   7.45     7.30          -0.05     9       7
+
+  High against mid, after the outline: he scores high rise +0.46 more than the engine does, relative to mid.
+  A rise rule's best case in sample: a 0.46 lift on the 18 high-rise photos (11% of his 164). Within 1 today on them: 14/18; with that lift: 14/18.
+  Labels marked sure among the readable ones: 11/55 (the rest likely or guess).

@@ -1788,6 +1788,19 @@ V16_UNSTEADY = {"FF1_sleeves_tailored", "FF1_sleeves_long", "FF1_cuffs_ribbed", 
 for _r in ("S5", "S7", "H6", "H5"):
     V16_OWNS[_r] = {"X_" + _r}                                         # only when it sinks (a second fault)
 
+# The balance audit's families (outline_paper.py): which part of the outfit each part, lift, cap and taste item speaks
+# for. "shape" = silhouette and proportions (layers' shapes included), "style" = cohesion and layering as a look.
+AUDIT_PART = {"proportions": "shape", "fit": "fit", "color": "color", "shoes": "shoes", "cohesion": "style"}
+AUDIT_FAMILY = {"L1": "shape", "L2": "shape", "SIL": "shape", "SL1": "shape", "OL1": "shape", "OL2": "shape",
+                "L3": "style", "L7": "style", "L7b": "style", "L4s": "color", "L5": "color", "L6": "color",
+                "OC1": "color", "OC2": "color",
+                "S1": "shape", "S2": "shape", "H1": "shape", "H4": "shape", "H7": "shape", "H10": "shape",
+                "H8": "fit", "H9": "fit", "S4": "color", "H3": "color", "S8": "shoes", "H11": "shoes",
+                "S5": "style", "S6": "style", "S7": "style", "H5": "style", "H6": "style", "S9": "condition",
+                "T_leg": "shape", "T_hem": "shape", "T_shorts": "shape", "T_shorts_wide": "shape",
+                "T_shorts_above": "shape", "T_long_top": "shape", "T_color": "color",
+                "OL_mid": "shape", "OL_short": "shape", "OL_long": "shape", "OC_dark_in": "color", "OC_tonal": "color"}
+
 
 def _v16_caps(o, parts, sl_raw, occasion, t):
     """Dealbreaker caps (#466), on reliable reads only: [(cap, id, kind, line)], kind 'sink' or 'hold'."""
@@ -2136,7 +2149,123 @@ def _v16_taste(o, sl_raw, lifts, caps, t, parts=None):
             m = min(_look_val("long_top", looks))
             if long_ and m:
                 items.append((-T["long_top"] * m, "T_long_top", "the top ends low"))
+    if T.get("outline") and parts is not None:
+        lifts, more = _outline(o, sl_raw, lifts, T["outline"])
+        items += more
     return lifts, caps, items, waived
+
+
+# ---- The outline (Nov 17, on paper, outline_paper.py; off unless taste["outline"] is set): the outermost layer plus
+# the leg. Where the outermost upper layer ends (look U's outer_hem_at, which the app already asks on every check: a
+# coat, an open shirt, or the top itself when nothing is over it) sets the line the eye reads (sil.5: "the outer
+# layer defines silhouette"; prop.2: split the outfit a third over two thirds, not in half; prop.3: a waist break;
+# prop.5: a short jacket over full legs; sil.6: a long coat lifts a plain outfit). Garment against garment only: the
+# hem of one piece against the waistband and legs of another, never the body.
+OL_SHORT, OL_MID, OL_LONG = {"tucked", "cropped", "waistband"}, {"hip", "crotch"}, {"thigh", "knee"}
+# light to dark, 5 to 0, by color family (a lookup, not a read; the rulebook's free stopgap for value, concepts.md §6)
+VALUE = {"white": 5, "off_white_cream": 5, "light_grey": 4, "light_blue": 4, "denim_light": 4, "khaki_beige": 4,
+         "pink": 4, "yellow": 4, "sage": 3, "grey": 3, "denim_mid": 3, "blue": 3, "tan_camel": 3, "orange": 3,
+         "olive": 2, "green": 2, "red": 2, "purple": 2, "burgundy": 1, "brown": 1, "denim_dark": 1, "navy": 1,
+         "charcoal": 1, "black": 0}
+
+
+def outline_end(sl_raw):
+    """'short', 'mid', 'long' or None (look U absent, late or the hem not visible)."""
+    x = (sl_raw or {}).get("outer_hem_at")
+    return "short" if x in OL_SHORT else "mid" if x in OL_MID else "long" if x in OL_LONG else None
+
+
+def _outline(o, sl_raw, lifts, OL):
+    """The outline rules. OL: sizes (0 or missing = off). Returns (lifts, items).
+      mid        the outermost layer ends at the hip or crotch over a straight or narrow leg (the halfway box)
+      mid_full   the same over a full leg (relaxed, wide): big on big is a look (sil.4), so it is its own size
+      mid_block  True: with the outline at the hip or crotch, the short-layer and open-layer lifts don't count
+                 (L2's jacket-type stand-in said short; the look says it isn't)
+      short      the outermost layer ends at the waistband or above over a full or straight leg, a real shoe, and
+                 no shape lift already (one shape credit)
+      long       a coat that ends at the thigh or knee over any leg but skinny (one continuous line)
+      dark_in    a layered outfit whose inner top is two or more steps darker than the layer over it (color.10)
+      tonal      a layered outfit in neutrals, inner, outer and bottom, with a step in lightness (color.8)
+      agree      True: a rule fires only when the main reading's length of the same piece doesn't contradict the look;
+                 "border": and at the waistband/hip border the main reading must say the same side
+      hip_factor the hip charge at this fraction of the crotch's (the waistband/hip border flips most)
+      mid_layers_only True: the hip charge only when a layer is worn (prop.7); the short and long rules still run
+                 on a top with nothing over it
+      edges      True: the edge-case defaults (no legs or shoes in the photo, a vest, a long top showing below the
+                 layer, a coat on a warm day), listed in reports/2026-11-17-outline-and-balance.md
+      tailored_ok True: a blazer, sport coat or suit jacket ending at the hip or crotch is spared (suit.6)
+      shorts     True: the outline rules also run over shorts
+      only       ablation: "outer" (only when a layer is worn) or "top" (only when none is)"""
+    B, S = o["bottom"], o["shoes"]
+    items = []
+    if B is None:
+        return lifts, items
+    sub_b = B.get("subcategory")
+    leg = B.get("leg_shape")
+    legc = "full" if leg in R.LOOSE else "straight" if leg == "straight" else "narrow"
+    jk = next((g for g in o["outers"] if g.get("subcategory") == "suit_jacket"), None)
+    suit = jk is not None and sub_b == "suit_trousers" and jk.get("color_family") == B.get("color_family")
+    end = outline_end(sl_raw)
+    if OL.get("edges"):                                               # the edge-case defaults (Nov 17, the founder:
+        u = sl_raw or {}                                              # "make sure ... accounts for edge cases")
+        if o.get("framing") == "upper_only" or S is None:             # legs or shoes not in the photo: no outline (NA)
+            end = None
+        elif u.get("outer_kind") == "vest":                           # a vest isn't the outline; the shirt under it is,
+            end = None                                                # and that isn't read here: NA
+        elif u.get("under_shows") == "clearly" and outline_end({"outer_hem_at": u.get("under_hem_at")}):
+            end = outline_end({"outer_hem_at": u.get("under_hem_at")})    # a long top hanging below a short jacket: the
+                                                                      # line ends at the lowest visible hem (prop.2, prop.13)
+    shorts = sub_b in SHORTS
+    only = OL.get("only")                                             # ablation: "outer" (a layer worn) or "top" (none)
+    if only and (only == "outer") != bool(o["outers"]):
+        end = None
+    if end is not None and OL.get("agree"):                           # both reads must agree on the side of the waist:
+        piece = o["outers"][-1] if o["outers"] else o["top"]          # the main reading's own length of the same piece
+        ln = (piece or {}).get("length")                              # ("na" and a tuck count as no objection)
+        tuck = (piece or {}).get("tucked") in ("full", "half")
+        if (end == "mid" and ln in ("cropped", "at_belt")) or (end == "short" and ln in ("mid_fly", "below_crotch")
+                                                              and not tuck):
+            end = None
+        elif OL["agree"] == "border" and sl_raw.get("outer_hem_at") in ("hip", "waistband"):
+            # the border the look flips across (waistband/hip): there the main reading must say the same side
+            if not ((end == "mid" and ln in ("mid_fly", "below_crotch")) or (end == "short" and (ln in ("cropped", "at_belt") or tuck))):
+                end = None
+    if end is not None and not suit and (not shorts or OL.get("shorts")):
+        what = (f"the {o['outers'][-1].get('subcategory').replace('_', ' ')}" if o["outers"] else
+                f"the {o['top'].get('subcategory').replace('_', ' ')}" if o["top"] else "the top")
+        tail_ok = OL.get("tailored_ok") and (any(g.get("subcategory") in TAILORED for g in o["outers"])   # any layer:
+                                             or (sl_raw or {}).get("outer_kind") == "blazer")           # 2-3 layers
+        if end == "mid" and tail_ok:                                  # suit.6: a tailored jacket has no fixed length;
+            pass                                                      # ending at the seat is how it's cut
+        elif end == "mid" and OL.get("mid_layers_only") and not o["outers"]:
+            pass                                                      # prop.7: an untucked casual top is never a fault
+        elif end == "mid":
+            size = OL.get("mid_full", 0) if legc == "full" else OL.get("mid", 0)
+            if sl_raw.get("outer_hem_at") == "hip":                   # the hip is the border the look flips across
+                size *= OL.get("hip_factor", 1.0)                     # (waistband/hip: 5 of the 12 flips on gold)
+            if size:
+                items.append((-size, "OL_mid", f"{what} ends at the hip, cutting the outfit in half: "
+                              "a shorter or tucked top, or a longer coat, gives it a line"))
+            if OL.get("mid_block"):
+                lifts = [x for x in lifts if x[0] not in ("L2", "L3")]
+        elif end == "short" and OL.get("short") and legc in ("full", "straight") and not shorts:
+            real = S is not None and S.get("subcategory") not in SLIDES | RUNNER
+            if real and not any(x[0] in ("L1", "L2", "SIL", "SL1") for x in lifts):
+                items.append((OL["short"], "OL_short", f"{what} ends at the waist over a full leg: a clean break"))
+        elif (end == "long" and OL.get("long") and o["outers"] and leg != "skinny" and not shorts
+              and not (OL.get("edges") and o.get("season") == "warm")):   # a coat in heat earns no line (season.8)
+            items.append((OL["long"], "OL_long", f"{what} runs long over the legs: one continuous line"))
+    T, O = o["top"], o["outer"]
+    if O is not None and T is not None:
+        vi, vo = VALUE.get(T.get("color_family"), 3), VALUE.get(O.get("color_family"), 3)
+        if OL.get("dark_in") and vo - vi >= 2:
+            items.append((-OL["dark_in"], "OC_dark_in", f"the darker {T.get('subcategory').replace('_', ' ')} inside "
+                          f"the lighter {O.get('subcategory').replace('_', ' ')}: the lighter piece usually sits inside"))
+        cols = [g.get("color_family") for g in o["tops"] + o["outers"] + [B]]
+        neutral = all(c in R.NEUTRALS or str(c).startswith("denim") for c in cols if c)
+        if OL.get("tonal") and neutral and len({VALUE.get(c, 3) for c in cols if c}) >= 2:
+            items.append((OL["tonal"], "OC_tonal", "neutral layers with a step from light to dark"))
+    return lifts, items
 
 
 def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
@@ -2171,6 +2300,15 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
                          "the clash, with a second fault"))
         else:
             caps.append((7.0, dep[0], "clash", "the two halves come from different worlds"))
+    # the balance audit (Nov 17, $0, outline_paper.py; off unless t["audit_off"] names families): one family's own
+    # contribution is left out (its part's charges and credits, its lifts, its caps, its taste items), the rest as is
+    off_f = set(t.get("audit_off") or ())
+    masked = {k for k, f in AUDIT_PART.items() if f in off_f}
+    if off_f:
+        lifts = [x for x in lifts if AUDIT_FAMILY.get(x[0], "style") not in off_f]
+        caps = [c for c in caps if AUDIT_FAMILY.get(c[1], "style") not in off_f]
+        taste = [x for x in taste if AUDIT_FAMILY.get(x[1], "shape") not in off_f]
+        live = {k: r for k, r in live.items() if k not in masked} or live
     owned = set().union(*[V16_OWNS.get(c[1], set()) for c in caps if c[2] != "clash"]) if caps else set()
     owned |= V16_UNSTEADY | waived
     # faults: the worst part's charges at alpha, every other part's at beta (they no longer average away); a charge a
@@ -2178,13 +2316,15 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
     negs = sorted((-sum(r["points"] for r in parts[k].reasons if r["points"] < 0 and r["check"] not in owned)
                    for k in live), reverse=True)
     cond_ded = cond["deduction"] - (min(1.2, cond["deduction"]) if any(c[1] == "S9" for c in caps) else 0.0)
+    if "condition" in off_f:
+        cond_ded = 0.0
     drop = (t["v16_alpha"] * negs[0] + t["v16_beta"] * sum(negs[1:])) if negs else 0.0
     # small credits that aren't lifts keep v15's weight (a shoe that suits the look, reads as a style ...)
     minor = sum(Wt[k] / wsum * r["points"] for k in live for r in parts[k].reasons
                 if r["points"] > 0 and r["check"] not in lift_checks and r["check"] != "CC2s_shape_softens")
     lift_sum = sum(x[1] for x in lifts)
     heavy = None
-    if warm:
+    if warm and "season" not in off_f:
         hv = next((g for g in o["outers"] if g.get("subcategory") in HEAVY_LAYERS), None)
         if hv is None and len(o["outers"]) >= 2:
             hv = o["outers"][0]
@@ -2202,8 +2342,8 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
     n = sum(1 for x in lifts if x[1] >= 0.5)
     if o.get("stack_n") is not None:                                  # round 5: a halved lift still counts as a lift
         n = max(n, o["stack_n"])
-    anything_off = (any(r["points"] < 0 and r["check"] not in waived for p in parts.values() for r in p.reasons)
-                    or bool(cond["faults"]) or bool(caps))
+    anything_off = (any(r["points"] < 0 and r["check"] not in waived for k, p in parts.items() if k not in masked
+                        for r in p.reasons) or bool(cond["faults"] and "condition" not in off_f) or bool(caps))
     owned_lines = sorted(owned & {r["check"] for p in parts.values() for r in p.reasons})
     if n == 0:
         stack = 7.5
@@ -2217,7 +2357,8 @@ def v16_finish(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune):
         stack = 9.5
     ceilings = [(stack, f"{n} lift{'s' if n != 1 else ''}" + (" in one look" if one_look and n >= 3 else ""))]
     # fit is the floor (fit.1, ix.17): with a fit or shape fault, no lift makes it sharp
-    if any(r["points"] < 0 and r["check"] not in owned for k in ("fit", "proportions") for r in parts[k].reasons):
+    if any(r["points"] < 0 and r["check"] not in owned for k in ("fit", "proportions") if k not in masked
+           for r in parts[k].reasons):
         ceilings.append((7.5, "a fit or shape fault: lifts can't cover it"))
     if occ["ceiling"] is not None:
         ceilings.append((occ["ceiling"], "occasion"))
@@ -2304,6 +2445,7 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     care_tips = _unsure_care(garments, t)                            # v7: condition reads count only when "clear"
     o = _outfit(garments, styles)
     o["mirror"] = bool(scene.get("mirror_selfie"))
+    o["framing"] = scene.get("framing")
     o["sx"] = _style_clash(o, t)                                      # v5's SX1, read by Style and (v6) Proportions
     o["t"] = t
     o["occasion"] = occasion

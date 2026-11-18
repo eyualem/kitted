@@ -1,0 +1,7 @@
+Look U's outer hem against an eye label, 69 layered photos; both readable on 64
+  three bands (short/mid/long) agree: 48/64 (75%)
+  look says short: 22, eye agrees on 16   eye says short: 23, look finds 16
+  look says mid  : 36, eye agrees on 29   eye says mid  : 38, look finds 29
+  look says long :  6, eye agrees on  3   eye says long :  3, look finds  3
+  on the eye's 'sure' labels: 0/0
+  disagreements (eye -> look): ('hip', 'waistband')->6, ('waistband', 'hip')->5, ('crotch', 'thigh')->3, ('waistband', 'crotch')->2

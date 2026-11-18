@@ -1,0 +1,38 @@
+Bars: v16 as approved against the proposal (fitted_approved_outline_creators_edges.json: outline {'mid_block': True, 'tailored_ok': True, 'mid_layers_only': True, 'edges': True, 'mid': 0, 'mid_full': 0.5, 'short': 0.25, 'long': 0.25})
+
+B6 steadiness, the gold set's two readings within half a point (bar 218):
+  stored readings alone (as written)                      v16 215/223   proposal 215/223
+  each with its own leg-width look (his count, Y44)       v16 218/223   proposal 218/223
+  each with its own looks U, L and leg (the app's case)   v16 217/223   proposal 217/223
+    new flip with the looks: pin-032 6.5 / 7.5; differs: leg; taste [] || [('OL_short', 0.25)]
+    steady now (flipped under v16 with the looks): ig-061
+
+B2-B4 (dealbreakers, creators' pairs and anchors; no look U, so the outline can't fire): v16 fails 2, proposal fails 2; output identical: True
+
+B5 band shares (target 3-4.5  5.0%  5-5.5 15.0%  6-6.5 30.0%  7-7.5 30.0%  8-8.5 15.0%  9-9.5  5.0%):
+  v16       gold (with its looks) 3-4.5  0.9%  5-5.5  5.8%  6-6.5 13.9%  7-7.5 38.6%  8-8.5 40.8%  9-9.5  0.0% worst gap 25.8
+            his checks           3-4.5  0.0%  5-5.5  8.1%  6-6.5 17.7%  7-7.5 48.4%  8-8.5 25.8%  9-9.5  0.0% worst gap 18.4
+            his 164 rated        3-4.5  0.6%  5-5.5  7.3%  6-6.5 22.0%  7-7.5 39.0%  8-8.5 31.1%  9-9.5  0.0%
+  proposal  gold (with its looks) 3-4.5  0.9%  5-5.5  7.2%  6-6.5 12.6%  7-7.5 42.2%  8-8.5 37.2%  9-9.5  0.0% worst gap 22.2
+            his checks           3-4.5  0.0%  5-5.5  9.7%  6-6.5 17.7%  7-7.5 46.8%  8-8.5 25.8%  9-9.5  0.0% worst gap 16.8
+            his 164 rated        3-4.5  0.6%  5-5.5  7.9%  6-6.5 19.5%  7-7.5 43.9%  8-8.5 28.0%  9-9.5  0.0%
+  him       his 164 ratings      3-4.5  0.0%  5-5.5 15.9%  6-6.5 33.5%  7-7.5 22.6%  8-8.5 19.5%  9-9.5  8.5%
+
+What moved on his 164 (in sample, the proposal's sizes): 17 photos; closer to him 13, further 3
+  C077      him  6.0  v16  6.5 ->  5.5  [OL_mid -0.5; lift gone: L3] end=crotch  multicolor flannel_shirt, brown graphic_tee, khaki_beige chinos (straight), multicolor retro_runner
+  C028      him  5.5  v16  7.5 ->  7.0  [OL_mid -0.5] end=crotch  denim_mid chore_coat, multicolor other, sage chinos (straight), tan_camel work_boot
+  C066      him  6.5  v16  6.5 ->  6.0  [; lift gone: L3] end=crotch  tan_camel flannel_shirt, white graphic_tee, olive cargos (slim), black low_profile_sneaker
+  C067      him  6.0  v16  8.0 ->  7.5  [OL_mid -0.5] end=hip  blue chore_coat, navy other, white tee, navy trousers (straight), brown work_boot
+  C107      him  6.5  v16  8.0 ->  7.5  [OL_mid -0.5] end=hip  black fleece, black dress_shirt, black drawstring_trousers (wide), black derby
+  C123      him  9.0  v16  8.0 ->  7.5  [OL_mid -0.5; lift gone: L2] end=hip  black leather_jacket, white dress_shirt, black trousers (wide), black dress_shoe
+  C125      him  6.5  v16  7.5 ->  7.0  [OL_mid -0.5] end=hip  black hoodie, black graphic_tee, black joggers (relaxed), multicolor chunky_sneaker
+  C128      him  6.5  v16  7.5 ->  7.0  [OL_mid -0.5] end=waistband  sage bomber, tan_camel sweater, sage cargos (relaxed), off_white_cream retro_runner
+  C150      him  6.0  v16  7.5 ->  7.0  [OL_mid -0.5; lift gone: L3] end=hip  orange chore_coat, light_grey tee, denim_dark jeans (straight), brown derby
+  pin-043   him  8.0  v16  8.0 ->  7.5  [OL_mid -0.5] end=crotch  brown cardigan, sage sweatshirt, grey jeans (wide), green low_profile_sneaker
+  pin-047   him  6.0  v16  8.0 ->  7.5  [OL_mid -0.5; lift gone: L3] end=hip  tan_camel flannel_shirt, light_grey tee, denim_mid jeans (relaxed), brown work_boot
+  rd-017    him  6.0  v16  8.0 ->  7.5  [OL_mid -0.5; lift gone: L2] end=hip  navy bomber, off_white_cream polo, brown chinos (straight), black loafer
+  C012      him  7.5  v16  7.0 ->  7.5  [OL_short +0.25] end=tucked  white tee, black chinos (straight), black chelsea_boot
+  C014      him  8.0  v16  7.5 ->  8.0  [OL_short +0.25] end=waistband  light_grey sweater, white tee, grey trousers (straight), white white_leather_sneaker
+  C062      him  7.0  v16  6.5 ->  7.0  [OL_long +0.25] end=knee  black overcoat, black dress_shirt, black jeans (slim), black work_boot
+  C086      him  7.0  v16  6.5 ->  7.0  [OL_long +0.25] end=thigh  black blazer, navy trousers (slim), black derby
+  ig-061    him  8.0  v16  6.5 ->  7.0  [OL_short +0.25] end=cropped  blue sweatshirt, white tee, olive cargos (wide), black derby
