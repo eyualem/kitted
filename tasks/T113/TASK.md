@@ -42,3 +42,4 @@ Nothing has run on the Simulator: no Metro on 8082, no Maestro flows (`T113-styl
 
 ## Disputes
 None about the tests' content. The blocked retargets above are a process conflict (the plan gives them to the implementer; the hook refuses them), not a disagreement with any test.
+- **Re-lock (test writer, Nov 18):** the blocked retargets in "Not done" 1–4 were made by the test writer and locked at `8b0cbd52`: T39 OS3.1, OS3.2, OS4.5, OS5.7, looksOwnWords, scenarios, toast U3 and the four flows retargeted, and the two OS3.3 tests retired (TESTING.md → The tests that change). Left for the implementer: delete `PickLooksScreen.tsx` (no test mounts it now). The flows have not been run on the Simulator.
