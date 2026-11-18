@@ -21,7 +21,7 @@ After this, a new user finds his style by playing, not by reading style names: e
 - One card at a time, 8 in all, one per look: Streetwear, Minimal, Smart casual, Classic prep, Tailored, Workwear, Outdoor, Vintage sport. The card shows the look's first drawing (the app's own drawing code, never a person) and no name.
 - **Order:** a fresh shuffle each game, with no look-alikes side by side, counting the last card as next to the first (Classic prep–Tailored, Minimal–Smart casual, Workwear–Outdoor, Streetwear–Vintage sport, Smart casual–Classic prep). Each look is equally likely at each position. The game's seed is kept with the game, so Back keeps the order and Play again deals a new one.
 - **Answering:** `Me` (primary) and `Not me` (secondary) buttons side by side under the card, 50 pt tall; or swipe the card right for Me, left for Not me. Past the swipe line the matching button lights up and a stamp shows (`Me` on the left, filled; `Not me` on the right, outlined). An answered card slides off from where it is, also after a tap.
-- **Progress:** 8 dots; answered ones filled, the current one a longer pill. Under the card: `Swipe right for Me, left for Not me.`
+- **Progress:** 8 dots; answered ones filled, the current one a longer pill. Under the card: `Swipe right for Me, left for Not me.` and, on a second line, `Not sure? Tap it for another outfit.` (SG7, FS1).
 - **First card only:** it leans right then left once, 1.4 s after it appears, to show the swipe (never under Reduce Motion, never again in that game).
 - **Back** undoes the last card (or the last ranking pick); on card 1 it goes to Welcome.
 
@@ -32,15 +32,15 @@ After this, a new user finds his style by playing, not by reading style names: e
 - With 1 Me, this step is skipped; with 0, he lands on SG6.
 
 ## SG3. Here's your style
-- Title `Here's your style`, line `Your top looks, in order. Drag to change it. You can change it anytime in You.` (with one look, without "Drag to change it.").
+- Title `Here's your style`, line `Your top looks, in order. Not quite right? Drag, remove or add one.` (SG7 FS3; with one look, `Your top look. Not quite right? Add one, or play again.`).
 - Up to 3 rows in order: the drawing he said Me to with its number (1, 2, 3) on its corner, the look's name and line, a × (44 × 44 pt), and a drag handle (44 × 44 pt).
 - **Drag** a row by its handle: the row lifts, the others slide to make room, dropping past a row's middle takes its place, and the numbers follow.
 - **×** removes the row and shows `Removed {name}` with Undo for 5 seconds.
-- Under the rows: `Add a look` while he has fewer than 3 (SG4), then `Not quite you? Tell me in your words` (SG5).
+- Under the rows: `Add a look` (always; SG4 and SG7 FS2), then `Not quite you? Tell me in your words` (SG5). On a full list the words link may sit just under the fold on a 6.3-inch phone; the list scrolls to it.
 - **Buttons:** `Continue` (full width, primary) and `Play again` (a text button under it). Continue needs at least one look or his words (#449); it saves (SG8) and goes to About you. Play again clears this game and deals a new one; his words stay.
 
 ## SG4. Add a look
-- The iOS 26 inset sheet with a grabber and an X: title `Add a look`, the looks he doesn't have, each as today's setup tile (two drawings, name, line). One tap adds it last and closes the sheet.
+- The iOS 26 inset sheet with a grabber and an X: title `Add a look`, the looks he doesn't have, each as today's setup tile (two drawings, name, line). One tap adds it last and closes the sheet; on a full list (3) it takes #3's place instead (SG7 FS2).
 
 ## SG5. His own words
 - `Not quite you? Tell me in your words` opens a field on the same screen: placeholder `Like skater, or all black`, 80 characters, Done. Saved, it reads `In your words: "…"` with Edit. Typing turns Continue on at once.
@@ -48,8 +48,14 @@ After this, a new user finds his style by playing, not by reading style names: e
 ## SG6. Nothing clicked yet
 - When he says Not me to all 8: title `Nothing clicked yet`, line `Add a look you like, play again, or tell me in your words.`, then `Add a look`, the words link, Continue (off until he adds one) and Play again.
 
-## SG7. Fail-safes
-**To be filled in from the flow test (T111):** at most about 3 small ones, each kept only because it measurably helps people make it to the style they want. The flow test's table (persona × mistake, before and after) goes in its DECISIONS-LOG entry; this section names each kept fail-safe, its words and its trigger.
+## SG7. Fail-safes (from the flow test, T111; #490)
+Three small ones, each kept because it helped in the flow test's simulation (made-up people and slips at stated rates, `tasks/style-quiz/flow_sim.py`). Together they raise the share who end with the style they want by about 2 points across every kind of person and slip (one favourite 94 → 95%, two loves 86 → 89%, a style not in the 8 92 → 95%, every slip at once 80 → 84%), for 0.6 extra taps, and only by choice.
+- **FS1. Tap the card for its other outfit.** On any card, a tap (a press that moves under 6 pt; past 90 pt is a swipe; in between springs back) switches between the look's two drawings. Two small dots at the top of the card show which one is up. It's not an answer, so Back doesn't undo it; the answer counts for the look, whichever drawing shows, and the next card starts on its first. VoiceOver: an `Another outfit` action, and the card reads `Outfit 3 of 8, view 2 of 2. {description}`. Words: `Not sure? Tap it for another outfit.` *(Why: a drawing that half-reads as a neighbour is the commonest way the right look gets a Not me.)*
+- **FS2. Add a look works on a full list.** With 3 looks, the pick takes #3's place, with the note `{name} in, {old} out` and Undo for 5 seconds. The sheet never lists a look he has. *(Why: at 3, "Add a look" was a dead end for a guy whose real #1 was missed.)*
+- **FS3. The results line names the fixes** (words only): `Your top looks, in order. Not quite right? Drag, remove or add one.` *(Why: people fix a wrong result more often when the screen says they can, especially a guy whose style isn't one of the 8.)*
+- **Back, already there, pinned down:** undoes exactly one answer (a card or a this-or-that); on card 1 it goes to the previous setup step, and coming back resumes the same game (same deal, same answers).
+- **Tested and dropped, so not to add:** a visible Undo under the card (Back already does it); a second look offered when he says Me to 0 or 1 (it talked the guy whose style isn't listed into looks he doesn't like, −4.8 points); a double-check at 6+ Me's; an automatic second drawing when he hesitates (a step for nearly everyone).
+- **Known cost, left alone:** a guy who says Me to all 8 makes about 13 this-or-thats; "likes almost everything" is the weakest group (77 → 78%).
 
 ## SG8. What's saved
 - On Continue: his looks in order (as today, `LOOKS_KEY`), his words if any (as today, `OTHER_STYLE_KEY`), and, new, the looks he said Not me to (`looks.notMe`, the look keys, kept with his style profile; wiped by "Delete all my data"; synced like his looks when sign-in exists). Not me's are saved but not used yet (Later).
@@ -82,11 +88,14 @@ After this, a new user finds his style by playing, not by reading style names: e
 **SG3–SG6**
 - SG3.1 Drag reorders and the numbers follow; × removes with Undo for 5 s; Back restores each change.
 - SG3.2 Continue is off with no looks and no words, on with either; it saves looks in order, words and Not me's, and goes to About you.
-- SG4.1 Add a look lists only looks he doesn't have; a tap adds it last and closes the sheet; hidden at 3.
+- SG4.1 Add a look lists only looks he doesn't have; a tap adds it last (or takes #3's place on a full list, SG7.2) and closes the sheet.
 - SG5.1 His words save and turn Continue on; 80 characters max.
 - SG6.1 Not me to all 8 shows Nothing clicked yet with Continue off.
 **SG7–SG9**
-- SG7.x One criterion per kept fail-safe (from T111).
+- SG7.1 Tap card 1 once: it shows that look's second drawing and the second dot is lit; answering counts for that look, and card 2 opens on its first drawing; a swipe past 90 pt answers and never switches the drawing.
+- SG7.2 With Outdoor, Vintage sport, Workwear, adding Streetwear gives Outdoor, Vintage sport, Streetwear and `Streetwear in, Workwear out · Undo`; Undo restores the three; the sheet never lists a look already on the list.
+- SG7.3 With 2+ looks the results line reads as FS3; with 1 look, the one-look line.
+- SG7.4 Answer 3 cards, Back: card 3 shows again with 2 answers kept; Back on card 1, then forward, resumes the same deal and answers.
 - SG8.1 Closing mid-game reopens at card 1 with a new deal; closing on results reopens them as left; Delete all my data wipes `looks.notMe`.
 - SG9.1 VoiceOver labels and actions as SG9; light, dark and the largest text show nothing clipped (Simulator screenshots); Reduce Motion fades.
 - F1.1 (new) A fresh install reaches the camera in 17 taps or fewer with 3 Me's (a Maestro flow).
@@ -96,7 +105,7 @@ After this, a new user finds his style by playing, not by reading style names: e
 
 ## Assumptions (Claude's defaults; the founder confirms)
 - Not me's are saved but not used by Kit yet (he was asked; he went to sleep before answering).
-- The words are the design pass's recommended options.
+- The words are the design pass's recommended options (#487) and the flow test's (#490: the FS1 line, the FS2 note, the FS3 results line).
 - Mid-game close restarts the game; results are kept.
 - The fairness redraws (Outdoor's shell and fleece, Streetwear's black sneakers) apply to the app's tiles too (T94 carries them).
 
