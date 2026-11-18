@@ -12,6 +12,7 @@
     /* The app's own light tokens (design-system/tokens.ts) */
     --a-bg: #F3F4F6; --a-surface: #FFFFFF; --a-surface2: #ECEEF1; --a-ink: #121628; --a-ink2: #585E70; --a-ink3: #646A7A;
     --a-line: #E0E3E8; --a-primary: #1A2448; --a-on: #FFFFFF; --a-off: #9CA1B0; --a-seg-off: #E0E3E8; --bezel: #111;
+    --a-faint: #848A99; --a-dim: rgba(10, 12, 20, .42); --a-shadow: 0 1px 2px rgba(18,22,40,.05), 0 6px 18px rgba(18,22,40,.06);
     --sans: -apple-system, "SF Pro Text", system-ui, "Segoe UI", Roboto, sans-serif;
     --display: -apple-system, "SF Pro Display", system-ui, "Segoe UI", Roboto, sans-serif;
   }
@@ -20,6 +21,7 @@
       --page: #07080C; --card: #171A23; --text: #ECEEF3; --muted: #A1A7B5; --rule: #2A2F3B; --mark: #ECEEF3;
       --a-bg: #0C0E14; --a-surface: #171A23; --a-surface2: #21252F; --a-ink: #ECEEF3; --a-ink2: #A1A7B5; --a-ink3: #9096A5;
       --a-line: #2A2F3B; --a-primary: #ECEEF3; --a-on: #0C0E14; --a-off: #3A3F4C; --a-seg-off: #2A2F3B; --bezel: #2b2e36;
+      --a-faint: #6E7484; --a-dim: rgba(0, 0, 0, .55); --a-shadow: none;
       color-scheme: dark;
     }
   }
@@ -27,6 +29,7 @@
     --page: #07080C; --card: #171A23; --text: #ECEEF3; --muted: #A1A7B5; --rule: #2A2F3B; --mark: #ECEEF3;
     --a-bg: #0C0E14; --a-surface: #171A23; --a-surface2: #21252F; --a-ink: #ECEEF3; --a-ink2: #A1A7B5; --a-ink3: #9096A5;
     --a-line: #2A2F3B; --a-primary: #ECEEF3; --a-on: #0C0E14; --a-off: #3A3F4C; --a-seg-off: #2A2F3B; --bezel: #2b2e36;
+      --a-faint: #6E7484; --a-dim: rgba(0, 0, 0, .55); --a-shadow: none;
     color-scheme: dark;
   }
   * { box-sizing: border-box; }
@@ -59,6 +62,17 @@
   .muted { color: var(--muted); }
   .restart { justify-self: center; font: 600 14px/1 var(--sans); color: var(--text); background: var(--card); border: 1px solid var(--rule); border-radius: 999px; padding: 10px 16px; cursor: pointer; }
 
+  details.more summary { font-weight: 700; cursor: pointer; min-height: 32px; display: flex; align-items: center; }
+  details.more summary:focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; border-radius: 6px; }
+  details.more[open] { gap: 10px; }
+  details.more code { font-size: 13px; }
+  .copy-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .copyset { border: 0; border-top: 1px solid var(--rule); margin: 0; padding: 10px 0 0; display: grid; gap: 4px; min-width: 0; }
+  .copyset legend { font-weight: 700; padding: 0; float: left; width: 100%; margin-bottom: 4px; }
+  .opt { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; padding: 3px 0; }
+  .opt input { margin-top: 5px; flex: none; accent-color: var(--mark); }
+  .opt .tag { margin-left: 6px; display: inline-block; vertical-align: 1px; }
+  .why { margin: 2px 0 0 24px; color: var(--muted); font-size: 13px; }
   section.after { padding-block: 32px 0; display: grid; gap: 28px; }
   .tbl { overflow-x: auto; background: var(--card); border: 1px solid var(--rule); border-radius: 14px; }
   table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14px; }
@@ -79,6 +93,14 @@
   }
 
   /* ---------- The phone: the app's screen at 402 × 874 pt (iPhone 17 Pro), scaled to fit ---------- */
+  /* Text sizes are Apple's text styles (typography.ts) at the default size; the page's "Text size" control swaps in
+     Apple's AX1 and AX5 sizes. Controls (buttons, the field) stop at 2× (CONTROL_TEXT_MAX_SCALE). */
+  .phone { --f-lt: 34px; --l-lt: 41px; --f-t2: 22px; --l-t2: 28px; --f-body: 17px; --l-body: 22px; --f-sub: 15px; --l-sub: 20px;
+           --f-foot: 13px; --l-foot: 18px; --f-ctl: 17px; --f-disc: 12px; --disc: 22px; }
+  :root[data-ts="ax1"] .phone { --f-lt: 44px; --l-lt: 52px; --f-t2: 34px; --l-t2: 41px; --f-body: 28px; --l-body: 34px; --f-sub: 25px; --l-sub: 30px;
+           --f-foot: 23px; --l-foot: 28px; --f-ctl: 28px; --f-disc: 16px; --disc: 28px; }
+  :root[data-ts="ax5"] .phone { --f-lt: 60px; --l-lt: 70px; --f-t2: 56px; --l-t2: 66px; --f-body: 53px; --l-body: 62px; --f-sub: 49px; --l-sub: 58px;
+           --f-foot: 44px; --l-foot: 52px; --f-ctl: 34px; --f-disc: 20px; --disc: 34px; }
   .phone { position: absolute; left: 0; top: 0; width: 402px; height: 874px; transform-origin: 0 0; border-radius: 52px; overflow: hidden;
            background: var(--a-bg); color: var(--a-ink); box-shadow: 0 0 0 9px var(--bezel), 0 18px 44px rgba(0,0,0,.22); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
   .sb { height: 54px; position: relative; font: 600 17px/1 var(--sans); }
@@ -98,15 +120,21 @@
   .scr { position: absolute; left: 0; right: 0; top: 106px; bottom: 0; display: flex; flex-direction: column; }
   .scroll { flex: 1; overflow-y: auto; padding: 0 16px 24px; scrollbar-width: none; }
   .scroll::-webkit-scrollbar { display: none; }
+  .scroll.fill { display: flex; flex-direction: column; }
   .ttl { padding: 8px 0 24px; display: grid; gap: 4px; }
-  .ttl h3 { font: 700 34px/41px var(--display); letter-spacing: .2px; margin: 0; text-wrap: balance; }
-  .ttl p { font: 400 17px/22px var(--sans); color: var(--a-ink2); margin: 0; }
+  .ttl h3 { font: 700 var(--f-lt)/var(--l-lt) var(--display); letter-spacing: .2px; margin: 0; text-wrap: balance; overflow-wrap: anywhere; }
+  .ttl p { font: 400 var(--f-body)/var(--l-body) var(--sans); color: var(--a-ink2); margin: 0; }
   .dock { padding: 12px 16px 34px; display: grid; gap: 4px; background: linear-gradient(to bottom, transparent, var(--a-bg) 14px); }
-  .btn { height: 56px; border-radius: 28px; border: 0; font: 600 17px/1 var(--sans); cursor: pointer; width: 100%; background: var(--a-primary); color: var(--a-on); }
-  .btn[disabled] { background: var(--a-off); color: var(--a-on); cursor: default; opacity: .9; }
-  .txt { height: 44px; border: 0; background: none; font: 600 17px/1 var(--sans); color: var(--a-ink); cursor: pointer; }
-  .note { text-align: center; font: 400 13px/18px var(--sans); color: var(--a-ink2); min-height: 18px; }
-  .phone button:focus-visible { outline: 2.5px solid var(--a-ink); outline-offset: 2px; }
+  /* KButton large: 50 pt, .headline, pressed 82 %, disabled 40 % (KButton.tsx). At AX sizes it grows and the label wraps. */
+  .btn { min-height: 50px; padding: 6px 20px; border-radius: 25px; border: 0; font: 600 var(--f-ctl)/1.15 var(--sans); cursor: pointer; width: 100%; background: var(--a-primary); color: var(--a-on); transition: transform .12s ease, opacity .12s ease; }
+  :root[data-ts^="ax"] .btn { border-radius: 30px; }
+  .btn:active { opacity: .82; }
+  .btn[disabled] { opacity: .4; cursor: default; }
+  .txt { min-height: 44px; border: 0; background: none; font: 600 var(--f-ctl)/1.15 var(--sans); color: var(--a-ink); cursor: pointer; }
+  .note { text-align: center; font: 400 var(--f-foot)/var(--l-foot) var(--sans); color: var(--a-ink2); min-height: 18px; }
+  .note:empty { min-height: 0; }
+  .phone button:focus-visible, .phone [tabindex]:focus-visible { outline: 2.5px solid var(--a-ink); outline-offset: 2px; }
+  .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
   /* Outfit drawing: the app's Outfit component (LookTile.tsx), piece for piece */
   .outfit { display: flex; flex-direction: column; align-items: center; }
@@ -116,13 +144,14 @@
   .grid { display: flex; flex-wrap: wrap; gap: 10px; }
   .tile { position: relative; width: 180px; border: 1px solid var(--a-line); background: var(--a-surface); border-radius: 14px; padding: 10px 10px 16px; display: grid; gap: 2px; align-content: start; text-align: left; cursor: pointer; color: var(--a-ink); font: inherit; }
   .tile .art { display: flex; justify-content: center; gap: 8px; background: var(--a-surface2); border-radius: 10px; padding: 12px 0 8px; margin-bottom: 12px; }
-  .tile .nm { display: flex; justify-content: space-between; align-items: center; min-height: 22px; font: 700 15px/20px var(--sans); }
-  .tile .ln { font: 400 13px/18px var(--sans); color: var(--a-ink3); }
+  .tile .nm { display: flex; justify-content: space-between; align-items: center; min-height: 22px; font: 700 var(--f-sub)/var(--l-sub) var(--sans); }
+  .tile .ln { font: 400 var(--f-foot)/var(--l-foot) var(--sans); color: var(--a-ink3); }
   .tile.sel::after { content: ""; position: absolute; inset: -1px; border: 2.5px solid var(--a-ink); border-radius: 14px; pointer-events: none; }
-  .disc { width: 22px; height: 22px; border-radius: 11px; background: var(--a-ink); color: var(--a-on); font: 700 12px/22px var(--sans); text-align: center; flex: none; }
+  .disc { width: var(--disc); height: var(--disc); border-radius: 50%; background: var(--a-ink); color: var(--a-on); font: 700 var(--f-disc)/var(--disc) var(--sans); text-align: center; flex: none; font-variant-numeric: tabular-nums; }
   .tile.other { min-height: 120px; place-content: center; text-align: center; gap: 4px; cursor: default; }
-  .tile.other .t1 { font: 400 15px/20px var(--sans); color: var(--a-ink3); }
-  .tile.other .t2 { font: 600 15px/20px var(--sans); color: var(--a-ink); }
+  .tile.other .t1 { font: 400 var(--f-sub)/var(--l-sub) var(--sans); color: var(--a-ink3); }
+  .tile.other .t2 { font: 600 var(--f-sub)/var(--l-sub) var(--sans); color: var(--a-ink); }
+  :root[data-ts^="ax"] .grid .tile { width: 100%; }
   .shake { animation: shake .25s linear; }
   @keyframes shake { 20% { transform: translateX(6px); } 40% { transform: translateX(-6px); } 60% { transform: translateX(4px); } 80% { transform: translateX(-4px); } }
 
@@ -131,12 +160,13 @@
   .door .ic { width: 40px; height: 40px; border-radius: 10px; background: var(--a-surface2); display: grid; place-items: center; flex: none; }
   .door .ic svg { width: 24px; height: 24px; }
   .door .tx { flex: 1; display: grid; gap: 1px; }
-  .door .tx b { font: 600 17px/22px var(--sans); }
-  .door .tx span { font: 400 13px/18px var(--sans); color: var(--a-ink2); }
+  .door .tx b { font: 600 var(--f-body)/var(--l-body) var(--sans); }
+  .door .tx span { font: 400 var(--f-foot)/var(--l-foot) var(--sans); color: var(--a-ink2); }
   .door .chev { color: var(--a-ink3); }
 
   /* Game cards */
   .pair { display: flex; gap: 12px; }
+  .pair.mid { margin: auto 0; padding-bottom: 24px; }
   .trio { display: flex; gap: 8px; }
   .pick { flex: 1; min-width: 0; border: 1px solid var(--a-line); background: var(--a-surface); border-radius: 14px; padding: 8px; cursor: pointer; position: relative; transition: transform .12s ease, opacity .18s ease; }
   .pick .art { background: var(--a-surface2); border-radius: 10px; padding: 18px 0 12px; display: flex; justify-content: center; }
@@ -149,64 +179,111 @@
   .stage { transition: opacity .16s ease; }
   .stage.out { opacity: 0; }
 
-  /* Reveal */
-  .ranks { display: grid; gap: 10px; }
-  .rank { display: flex; gap: 12px; align-items: center; background: var(--a-surface); border: 1px solid var(--a-line); border-radius: 14px; padding: 10px 14px 10px 10px; }
-  .rank .art { display: flex; gap: 4px; background: var(--a-surface2); border-radius: 10px; padding: 8px 6px 4px; flex: none; }
-  .rank .tx { flex: 1; min-width: 0; display: grid; gap: 2px; }
-  .rank .tx b { font: 700 17px/22px var(--sans); }
-  .rank .tx span { font: 400 13px/18px var(--sans); color: var(--a-ink3); }
-  .rank.first { border-width: 2.5px; border-color: var(--a-ink); padding: 8.5px 12.5px 8.5px 8.5px; }
+  /* A's reveal (unchanged) */
+  .ranks { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+  .rank.old { display: flex; gap: 12px; align-items: center; background: var(--a-surface); border: 1px solid var(--a-line); border-radius: 14px; padding: 10px 14px 10px 10px; }
+  .rank.old .art { display: flex; gap: 4px; background: var(--a-surface2); border-radius: 10px; padding: 8px 6px 4px; flex: none; }
+  .rank.old .tx { flex: 1; min-width: 0; display: grid; gap: 2px; }
+  .rank.old .tx b { font: 700 var(--f-body)/var(--l-body) var(--sans); }
+  .rank.old .tx span { font: 400 var(--f-foot)/var(--l-foot) var(--sans); color: var(--a-ink3); }
+  .rank.old.first { border-width: 2.5px; border-color: var(--a-ink); padding: 8.5px 12.5px 8.5px 8.5px; }
 
   /* The mockup's end (not an app screen) */
-  .end-bg { position: absolute; inset: 0; z-index: 30; background: rgba(0, 0, 0, .28); }
-  .endcard { position: absolute; left: 16px; right: 16px; bottom: 34px; z-index: 31; background: var(--a-primary); color: var(--a-on); border-radius: 20px; padding: 16px; display: grid; gap: 6px; }
+  .end-bg { position: absolute; inset: 0; z-index: 30; background: var(--a-dim); }
+  .endcard { position: absolute; left: 16px; right: 16px; bottom: 34px; z-index: 31; background: var(--a-primary); color: var(--a-on); border-radius: 26px; padding: 20px; display: grid; gap: 6px; }
   .endcard .eyebrow { font: 600 13px/18px var(--sans); opacity: .75; }
   .endcard .big { font: 700 20px/26px var(--display); }
   .endcard .stat { font: 400 14px/19px var(--sans); opacity: .85; font-variant-numeric: tabular-nums; }
-  .endcard button { margin-top: 8px; height: 48px; border-radius: 24px; border: 0; background: var(--a-on); color: var(--a-primary); font: 600 16px/1 var(--sans); cursor: pointer; }
+  .endcard button { margin-top: 8px; min-height: 50px; border-radius: 25px; border: 0; background: var(--a-on); color: var(--a-primary); font: 600 17px/1 var(--sans); cursor: pointer; }
 
-  /* D: one outfit at a time, Me / Not me */
-  .solo { width: 300px; margin: 0 auto; border: 1px solid var(--a-line); background: var(--a-surface); border-radius: 14px; padding: 10px; position: relative;
-          touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; transition: transform .22s ease, opacity .22s ease; }
-  .solo .art { background: var(--a-surface2); border-radius: 10px; padding: 24px 0 14px; display: flex; justify-content: center; }
+  /* ---------- D, step 1: one outfit at a time, Me / Not me ---------- */
+  .solo { width: 300px; margin: 0 auto; border: 1px solid var(--a-line); background: var(--a-surface); border-radius: 18px; padding: 10px; position: relative; box-shadow: var(--a-shadow);
+          touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; transition: transform .24s ease, opacity .24s ease; }
+  .solo .art { background: var(--a-surface2); border-radius: 12px; padding: 24px 0 14px; display: flex; justify-content: center; }
   .solo.drag { transition: none; cursor: grabbing; }
   .solo.fly-r { transform: translateX(440px) rotate(14deg); opacity: 0; }
   .solo.fly-l { transform: translateX(-440px) rotate(-14deg); opacity: 0; }
-  .stamp { position: absolute; top: 22px; font: 700 15px/1 var(--sans); padding: 7px 10px; border-radius: 8px; border: 2px solid var(--a-ink); color: var(--a-ink); background: var(--a-surface); opacity: 0; pointer-events: none; }
-  .stamp.me { right: 22px; } .stamp.no { left: 22px; }
+  /* The stamp sits on the side the card leaves from, so it stays on screen as the card moves: Me on the left of a card
+     going right, Not me on the right of a card going left. Me is filled like the Me button, Not me outlined like its own. */
+  .stamp { position: absolute; top: 24px; z-index: 2; font: 700 20px/1 var(--sans); padding: 9px 14px; border-radius: 12px; opacity: 0; pointer-events: none; transition: opacity .12s ease; }
+  .stamp.me { left: 22px; transform: rotate(-10deg); background: var(--a-primary); color: var(--a-on); }
+  .stamp.no { right: 22px; transform: rotate(10deg); background: var(--a-surface); color: var(--a-ink); box-shadow: inset 0 0 0 2.5px var(--a-ink); }
+  .solo.drag .stamp { transition: none; }
+  .solo.fly-r .stamp.me, .solo.fly-l .stamp.no { opacity: 1; }
+  /* First card only, after a short pause: the card leans right then left once, showing each stamp, so the swipe teaches itself. */
+  .solo.nudge { animation: nudge 1.8s ease-in-out 1.4s 1; }
+  .solo.nudge .stamp.me { animation: peek-me 1.8s ease-in-out 1.4s 1; }
+  .solo.nudge .stamp.no { animation: peek-no 1.8s ease-in-out 1.4s 1; }
+  @keyframes nudge { 0%, 100% { transform: none; } 22% { transform: translateX(34px) rotate(1.5deg); } 46% { transform: none; } 70% { transform: translateX(-34px) rotate(-1.5deg); } 92% { transform: none; } }
+  @keyframes peek-me { 0%, 8%, 40%, 100% { opacity: 0; } 18%, 28% { opacity: .9; } }
+  @keyframes peek-no { 0%, 56%, 88%, 100% { opacity: 0; } 66%, 76% { opacity: .9; } }
+  .prog { display: flex; justify-content: center; align-items: center; gap: 6px; padding: 20px 0 0; }
+  .prog i { width: 6px; height: 6px; border-radius: 3px; background: var(--a-faint); opacity: .55; transition: width .2s ease; }
+  .prog i.done { background: var(--a-ink); opacity: 1; }
+  .prog i.now { width: 22px; background: var(--a-ink); opacity: 1; }
+  .hint { text-align: center; font: 400 var(--f-foot)/var(--l-foot) var(--sans); color: var(--a-ink2); padding-top: 12px; }
   .yn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .btn.sec { background: var(--a-surface2); color: var(--a-ink); }
-  /* D's results screen: it edits itself, so setup needs no grid */
-  .rank { transition: transform .18s ease; }
-  .rank.lift { transition: none; position: relative; z-index: 3; box-shadow: 0 12px 28px rgba(0,0,0,.2); }
-  .rank .art { position: relative; }
-  .rank .art .disc { position: absolute; top: 4px; left: 4px; }
-  .grip { width: 30px; height: 44px; border: 0; background: none; color: var(--a-ink3); display: grid; place-items: center; cursor: grab; touch-action: none; flex: none; padding: 0; }
-  .grip svg { width: 18px; height: 18px; }
+  .btn.hot { transform: scale(1.04); }
+  .btn.sec.hot { background: var(--a-line); }
+  :root[data-ts^="ax"] .yn { grid-template-columns: 1fr; }
+  :root[data-ts^="ax"] .yn [data-yn="me"] { order: -1; }
+  :root[data-ts^="ax"] .solo { width: 240px; }
+  :root[data-ts^="ax"] .solo .art { zoom: .8; }
+
+  /* ---------- D, step 3: the results screen edits itself, so setup needs no grid ---------- */
+  /* A row: the drawing with its number, the name and line, then × and the handle, each a full 44 pt target. */
+  .rank:not(.old) { display: grid; grid-template-columns: auto minmax(0, 1fr) 44px 44px; grid-template-areas: "art tx x grip"; align-items: center; column-gap: 12px;
+         background: var(--a-surface); border: 1px solid var(--a-line); border-radius: 18px; padding: 10px 4px 10px 10px; position: relative; transition: transform .18s ease, box-shadow .18s ease; }
+  .rank:not(.old) .art { grid-area: art; position: relative; display: flex; background: var(--a-surface2); border-radius: 12px; padding: 8px 10px 4px; }
+  .rank:not(.old) .art .disc { position: absolute; top: -6px; left: -6px; box-shadow: 0 0 0 2px var(--a-surface); }
+  .rank:not(.old) .tx { grid-area: tx; display: grid; gap: 2px; }
+  .rank:not(.old) .tx b { font: 600 var(--f-body)/var(--l-body) var(--sans); }
+  .rank:not(.old) .tx span { font: 400 var(--f-foot)/var(--l-foot) var(--sans); color: var(--a-ink3); }
+  .rank .x { grid-area: x; width: 44px; height: 44px; border: 0; background: none; padding: 0; display: grid; place-items: center; cursor: pointer; color: var(--a-ink2); margin-right: -6px; border-radius: 22px; }
+  .rank .x span { width: 28px; height: 28px; border-radius: 14px; background: var(--a-surface2); display: grid; place-items: center; }
+  .rank .x svg { width: 12px; height: 12px; }
+  .grip { grid-area: grip; width: 44px; height: 44px; border: 0; background: none; color: var(--a-ink3); display: grid; place-items: center; cursor: grab; touch-action: none; padding: 0; border-radius: 22px; }
+  .grip svg { width: 20px; height: 20px; }
+  .rank.lift { transition: none; z-index: 3; box-shadow: 0 14px 30px rgba(0,0,0,.22); }
   .lift .grip { cursor: grabbing; }
-  .rank .x { width: 32px; height: 32px; border-radius: 16px; border: 0; background: var(--a-surface2); color: var(--a-ink2); display: grid; place-items: center; cursor: pointer; flex: none; }
-  .rank .x svg { width: 14px; height: 14px; }
-  .addrow { display: flex; align-items: center; justify-content: center; gap: 8px; height: 56px; width: 100%; border: 1.5px dashed var(--a-line); border-radius: 14px; background: none; color: var(--a-ink); font: 600 17px/1 var(--sans); cursor: pointer; }
-  .addrow svg { width: 18px; height: 18px; }
-  .words { display: grid; gap: 8px; padding-top: 18px; }
-  .linkbtn { border: 0; background: none; padding: 10px 0; font: 600 15px/20px var(--sans); color: var(--a-ink); text-align: left; cursor: pointer; justify-self: start; }
-  .wrow { display: flex; gap: 8px; }
-  .field { flex: 1; min-width: 0; height: 48px; border-radius: 12px; border: 1px solid var(--a-line); background: var(--a-surface); color: var(--a-ink); font: 400 17px/22px var(--sans); padding: 0 14px; }
+  :root[data-ts^="ax"] .rank:not(.old) { grid-template-areas: "art . x grip" "tx tx tx tx"; row-gap: 10px; padding-right: 4px; }
+  :root[data-ts^="ax"] .rank:not(.old) .tx { padding-right: 10px; }
+  .addrow { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; width: 100%; margin-top: 10px; border: 1.5px dashed var(--a-faint); border-radius: 18px; background: none; color: var(--a-ink); font: 600 var(--f-ctl)/1.15 var(--sans); cursor: pointer; padding: 6px 16px; }
+  .addrow svg { width: 18px; height: 18px; flex: none; }
+  .words { display: grid; gap: 8px; padding-top: 14px; }
+  /* textLink: .subheadline semibold ink, 44 pt tall */
+  .linkbtn { border: 0; background: none; min-height: 44px; padding: 0; font: 600 var(--f-sub)/var(--l-sub) var(--sans); color: var(--a-ink); text-align: left; cursor: pointer; justify-self: start; }
+  .wrow { display: flex; flex-wrap: wrap; gap: 8px; }
+  .field { flex: 1 1 200px; min-width: 0; min-height: 48px; border-radius: 22px; border: 1px solid var(--a-line); background: var(--a-surface); color: var(--a-ink); font: 400 var(--f-ctl)/1.2 var(--sans); padding: 8px 16px; }
   .field::placeholder { color: var(--a-ink3); }
   .field:focus-visible { outline: 2.5px solid var(--a-ink); outline-offset: 1px; }
-  .wdone { height: 48px; padding: 0 16px; border-radius: 24px; border: 0; background: var(--a-primary); color: var(--a-on); font: 600 15px/1 var(--sans); cursor: pointer; }
-  .saved { font: 400 15px/20px var(--sans); color: var(--a-ink2); }
+  .wdone { min-height: 48px; padding: 0 18px; border-radius: 24px; border: 0; background: var(--a-primary); color: var(--a-on); font: 600 var(--f-ctl)/1.1 var(--sans); cursor: pointer; }
+  :root[data-ts^="ax"] .wdone { flex: 1 1 100%; }
+  .saved { font: 400 var(--f-sub)/var(--l-sub) var(--sans); color: var(--a-ink2); }
   .saved b { color: var(--a-ink); font-weight: 600; }
-  .sheet-bg { position: absolute; inset: 0; background: rgba(0, 0, 0, .38); z-index: 20; }
-  .sheet { position: absolute; left: 0; right: 0; bottom: 0; height: 80%; background: var(--a-bg); border-radius: 24px 24px 0 0; z-index: 21; display: flex; flex-direction: column; box-shadow: 0 -8px 24px rgba(0,0,0,.18); }
+  /* Undo note: the app's UndoToast (a floating capsule, surface + line border, 5 s) just above the dock */
+  .toast { position: absolute; left: 16px; right: 16px; bottom: 150px; z-index: 15; display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 4px 6px 4px 18px;
+           background: var(--a-surface); border: 1px solid var(--a-line); border-radius: 26px; box-shadow: 0 8px 24px rgba(0,0,0,.14); font: 400 var(--f-sub)/var(--l-sub) var(--sans); }
+  .toast span { flex: 1; min-width: 0; }
+  .toast button { min-height: 44px; padding: 0 14px; border: 0; background: none; color: var(--a-ink); font: 600 var(--f-sub)/1 var(--sans); cursor: pointer; }
+  :root[data-ts^="ax"] .toast { bottom: 200px; flex-wrap: wrap; border-radius: 22px; padding: 8px 8px 8px 18px; }
+  /* Add a look: iOS 26's inset sheet as the mockups draw it (8 pt inset, 38 radius, grabber, title + X) */
+  .sheet-bg { position: absolute; inset: 0; background: var(--a-dim); z-index: 20; }
+  .sheet { position: absolute; left: 8px; right: 8px; bottom: 8px; height: 78%; background: var(--a-surface); border-radius: 38px; z-index: 21; display: flex; flex-direction: column; overflow: hidden; }
   .sheet .grab { width: 36px; height: 5px; border-radius: 3px; background: var(--a-line); margin: 8px auto 0; flex: none; }
-  .sheet .hd { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px 12px; flex: none; }
-  .sheet .hd b { font: 700 22px/28px var(--display); }
-  .sheet-body { flex: 1; overflow-y: auto; padding: 0 16px 34px; scrollbar-width: none; }
-  .hint { text-align: center; font: 400 13px/18px var(--sans); color: var(--a-ink3); padding-top: 12px; }
+  .sheet .hd { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 6px 16px 12px 20px; flex: none; }
+  .sheet h4 { margin: 0; font: 700 var(--f-t2)/var(--l-t2) var(--display); }
+  .sheet-body { flex: 1; overflow-y: auto; padding: 0 16px 28px; scrollbar-width: none; }
+  .sheet .tile { width: calc(50% - 5px); background: var(--a-bg); }
+  :root[data-ts^="ax"] .sheet .tile { width: 100%; }
 
-  @media (prefers-reduced-motion: reduce) { .stage, .pick, .solo, .rank { transition: none; } .shake { animation: none; } }
+  /* Reduce Motion (the system setting, or the page's Motion control): no fly-out, nudge or slides; fades instead. */
+  :root[data-rm="1"] .stage, :root[data-rm="1"] .pick, :root[data-rm="1"] .rank, :root[data-rm="1"] .btn, :root[data-rm="1"] .prog i { transition: none; }
+  :root[data-rm="1"] .shake { animation: none; }
+  :root[data-rm="1"] .solo { transition: opacity .15s linear; }
+  :root[data-rm="1"] .solo.fly-r, :root[data-rm="1"] .solo.fly-l { transform: none; opacity: 0; }
+  :root[data-rm="1"] .btn.hot { transform: none; }
 </style>
 
 <div class="wrap">
@@ -219,6 +296,16 @@
         <button type="button" data-th="system" aria-pressed="true">System</button>
         <button type="button" data-th="light" aria-pressed="false">Light</button>
         <button type="button" data-th="dark" aria-pressed="false">Dark</button>
+      </div>
+      <div class="seg-ctl" role="group" aria-label="Text size inside the phones">
+        <button type="button" data-ts="default" aria-pressed="true">Text: default</button>
+        <button type="button" data-ts="ax1" aria-pressed="false">AX1</button>
+        <button type="button" data-ts="ax5" aria-pressed="false">Largest</button>
+      </div>
+      <div class="seg-ctl" role="group" aria-label="Motion inside the phones">
+        <button type="button" data-mo="system" aria-pressed="true">Motion: system</button>
+        <button type="button" data-mo="full" aria-pressed="false">Full</button>
+        <button type="button" data-mo="reduced" aria-pressed="false">Reduced</button>
       </div>
     </div>
   </header>
@@ -253,12 +340,30 @@
       <button type="button" class="restart" data-restart="d">Start again</button>
       <div class="notes">
         <p><span class="k">What happens.</span> One outfit at a time, no names. Tap <b>Me</b> or <b>Not me</b> (or swipe right or left), 8 times, once per look. Then this-or-that between his Me's puts them in order, usually 2 to 4 taps. <b>No grid in setup:</b> the results screen does its jobs. He can drag a look by its handle to change the order, remove one (×), add one from a sheet ("Add a look"), say it in his own words, or play again. The full tile list stays in You → Style profile.</p>
+        <p><span class="k">Design pass, Nov 17.</span> The tap targets reach 44 pt, the Me stamp stays on screen as the card leaves, the first card leans to show the swipe once, Continue is the one big button with Play again under it, the sheet closes with an X like the app's sheets, and every screen works at the largest text and with Reduce Motion (try the controls at the top). <b>The words are today's</b> until you pick below.</p>
         <ul>
           <li>Taps on this step: about <b>12</b>. To the camera: about <b>17</b> (today 7, A 14).</li>
           <li>Every look is judged on its own, so two looks he loves can't knock each other out in round 1, and a look he dislikes rarely sneaks into his top 3.</li>
           <li>About 3 more taps than A. If he says Not me to all 8: "Nothing clicked yet", with Play again and his own words; Continue waits for a look or his words (your Nov 11 rule).</li>
         </ul>
       </div>
+      <details class="notes more">
+        <summary>Words for you to pick (D)</summary>
+        <p class="muted">Each choice changes the phone above right away. "today" is what the screen says now; "recommended" is the design pass's pick. Nothing changes in the app until you say which.</p>
+        <div id="copy-d"></div>
+      </details>
+      <details class="notes more">
+        <summary>For the build: VoiceOver, haptics, motion</summary>
+        <ul>
+          <li><b>VoiceOver order</b> on every screen: Back, the step, the title (a header), the line, then the content, then the dock. The card reads "Outfit 3 of 8" and what's in it ("Navy blazer, cream chinos, brown loafers", drafts in <code>views.js</code>); its actions are Me and Not me, so a swipe up or down on the card answers it. The ranking cards read their outfits.</li>
+          <li><b>Results rows</b> are one element each: "1 of 3, Classic prep. Blazers, polos, knits, chinos, loafers", with the actions Move up, Move down and Remove (<code>accessibilityActions</code>). After a move it says "Classic prep, now 2 of 3". × and the handle stay as their own buttons for Switch Control.</li>
+          <li><b>Haptics</b> (expo-haptics, already in the app): a selection tick when the dragged card crosses the line and when a row passes another row; a light impact when a card is answered (tap or swipe), when a ranking card is tapped, and when a dragged row is dropped; a light impact on × and on Add. No warning or success haptics: nothing here is an error or a reward.</li>
+          <li><b>Reduce Motion:</b> no lean on the first card, no fly-out (the card fades), no slide between rows (the list just re-draws). The Motion control at the top shows it.</li>
+          <li><b>Largest text:</b> titles and lines wrap, never cut off. Me and Not me stack (Me on top), the rows put the name and line under the drawing, the sheet goes to one column, and button labels stop growing at 2×. The Text control at the top shows AX1 and AX5.</li>
+          <li><b>The sheet</b> is the system form sheet (grabber, X, swipe down to close); focus goes to its X when it opens and back to Add a look when it closes. Adding a look says "Added Minimal".</li>
+          <li><b>One gesture per area:</b> the card swipes sideways and the screen scrolls up and down; a row moves only by its handle, so scrolling the list never drags a row.</li>
+        </ul>
+      </details>
     </figure>
 
     <figure data-fig="b">
@@ -401,14 +506,48 @@
     } catch (e) { if (e && e.ask) return { done: false, pair: e.ask }; throw e; }
   }
 
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // ---------- page settings: motion, text size, theme ----------
+  const motionMq = matchMedia('(prefers-reduced-motion: reduce)');
+  let motionPref = 'system';
+  let reduce = motionMq.matches;
+  const applyMotion = () => { reduce = motionPref === 'reduced' || (motionPref === 'system' && motionMq.matches); document.documentElement.dataset.rm = reduce ? '1' : '0'; };
+  applyMotion();
 
-  // ---------- theme ----------
   const darkMq = matchMedia('(prefers-color-scheme: dark)');
   let theme = 'system';
   const isDark = () => theme === 'dark' || (theme === 'system' && darkMq.matches);
   const uriCache = new Map();
   const uri = (svg) => { let u = uriCache.get(svg); if (!u) { u = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); uriCache.set(svg, u); } return u; };
+
+  // ---------- D's words: today's line first, then alternatives. The phone shows today's words until the founder picks. ----------
+  // `pick` is the design pass's recommendation. {n} = a count, {name} = a look's name.
+  const COPY = {
+    hint: { label: 'Under the card', opts: ['Tap below, or swipe the card.', 'Swipe right for Me, left for Not me.', 'Swipe the card, or tap below.'], pick: 1,
+      why: 'Says which way is which, so the swipe teaches itself.' },
+    order: { label: 'The ranking step', opts: [['Now put them in order', 'You said Me to these. Tap the one that’s more you.'], ['Now put them in order', 'You said Me to {n}. Tap the one that’s more you.'], ['Which is more you?', 'A few quick picks put your Me\u2019s in order.']], pick: 1,
+      why: '"These" points at two cards, but he may have said Me to three or more; the count says why there’s a next step.' },
+    result: { label: 'Results line', opts: ['From your {n} picks. Drag to change the order. You can change it anytime in You.', 'Your top looks, in order. Drag to change it. You can change it anytime in You.', 'Drag to change the order. You can change it anytime in You.'], pick: 1,
+      why: '"10 picks" counts the ranking taps too, which reads oddly after 8 cards.' },
+    none: { label: 'Nothing clicked yet', opts: ['Play again, or tell me in your words.', 'Add a look you like, play again, or tell me in your words.', 'No problem. Add a look, or tell me in your words.'], pick: 1,
+      why: 'The screen’s first button is Add a look, and the line didn’t mention it.' },
+    removed: { label: 'After he taps ×', opts: [null, 'Removed {name}', '{name} removed'], pick: 1,
+      why: 'An Undo note like the app’s "Added 4 to Closet · Undo": one tap on × shouldn’t lose a look for good.' },
+  };
+  const copySel = Object.fromEntries(Object.keys(COPY).map((k) => [k, 0]));
+  const fill = (s, v = {}) => s && s.replace(/\{(\w+)\}/g, (_, k) => (v[k] ?? ''));
+  const w = (key, v) => { const o = COPY[key].opts[copySel[key]]; return Array.isArray(o) ? o.map((x) => fill(x, v)) : fill(o, v); };
+
+  // What VoiceOver says for each drawing (outfit 0 is on the card, outfit 1 in the ranking). Drafts, like the words.
+  const DESC = {
+    streetwear: ['Gray hoodie, wide washed jeans, chunky white sneakers', 'Black crewneck, wide olive cargos, chunky red sneakers'],
+    minimalist: ['Cream crewneck, wide black trousers, white sneakers', 'Gray tee, charcoal trousers, black loafers'],
+    smart_casual: ['Navy quarter-zip, khaki chinos, brown suede chukkas', 'Light blue shirt, gray trousers, white sneakers'],
+    classic_prep: ['Navy blazer, cream chinos, brown loafers', 'Green polo, tan chinos, white sneakers'],
+    tailored: ['Charcoal suit, black dress shoes', 'Navy suit, white leather sneakers'],
+    workwear: ['Tan overshirt, cuffed dark jeans, brown work boots', 'Red check shirt, washed blue jeans, gray suede boots'],
+    outdoor: ['Olive zip jacket, gray cargos, gray trail shoes', 'Oatmeal crewneck, dark olive cargos, orange trail shoes'],
+    vintage_sport: ['Green striped tee, faded jeans, white sneakers', 'Navy sweater with gold stripes, dark jeans, cream runners'],
+  };
 
   // ---------- drawing ----------
   const h = (tag, attrs = {}, ...kids) => {
@@ -434,21 +573,27 @@
   const plusIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
   const cardsIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="8" height="14" rx="2"/><rect x="13" y="5" width="8" height="14" rx="2"/><path d="M7 9.5v5M17 9.5v5" stroke-linecap="round"/></svg>';
 
+  // D's card order: a fresh order per game from logic.js's dOrder (style-game-fair, log #486); the fixed D_ORDER only
+  // until that branch lands here.
+  const cardOrder = (g) => (typeof dOrder === 'function' ? dOrder(g) : D_ORDER);
+
   // ---------- one phone ----------
   function Phone(root, dir) {
-    let st, hist;
+    let st, hist, toastTimer;
     const fresh = () => ({
       view: { a: 'duel', b: 'trio', c: 'grid', d: 'swipe' }[dir],
       picks: [], rounds: [], swipes: [], words: '', editing: false, sheet: false, ended: false, taps: 0, played: false, from: null, note: '', chosen: null, shake: null,
+      nudged: false, toast: null,
     });
     const reset = () => { st = fresh(); hist = []; draw(); };
-    const save = () => hist.push(JSON.stringify(st));
+    const save = () => hist.push(JSON.stringify({ ...st, toast: null }));
     const tap = () => { st.taps += 1; };
     const back = () => {
       if (!hist.length) { st.note = 'Back would go to Welcome'; draw(); setTimeout(() => { st.note = ''; draw(); }, 1400); return; }
       const taps = st.taps + 1; st = JSON.parse(hist.pop()); st.taps = taps; draw();
     };
     const go = (fn) => { const stage = root.querySelector('.stage'); if (!stage || reduce) { fn(); draw(); return; } stage.classList.add('out'); setTimeout(() => { fn(); draw(); }, 160); };
+    const focusSoon = (sel) => setTimeout(() => root.querySelector(sel)?.focus({ preventScroll: true }), 0);
 
     function choose(win, pair) {
       if (st.chosen) return;
@@ -462,42 +607,54 @@
       }), win ? (reduce ? 120 : 260) : 0);
     }
 
-    // D: decide on the current card (a tap on Me / Not me, or a swipe past 90 px).
+    // D: decide on the current card (a tap on Me / Not me, or a swipe past 90 pt). The card leaves with its stamp showing
+    // (a fade under Reduce Motion), so a tap on a button looks the same as a swipe.
     function decide(yes) {
       if (st.flying || st.swipes.length >= 8) return;
       tap(); save();
-      st.flying = yes ? 'r' : 'l'; draw();
+      st.nudged = true;
+      st.flying = yes ? 'r' : 'l';
+      // Send the card on screen off from where it is (a fresh card drawn at the end point would skip the motion).
+      const card = root.querySelector('.solo');
+      if (card) {
+        // Drop the first card's lean first and let the style settle, or the fly-out's transition doesn't start.
+        if (card.classList.contains('nudge')) { card.classList.remove('nudge'); void card.offsetWidth; }
+        card.classList.remove('drag'); card.style.transform = ''; card.querySelectorAll('.stamp').forEach((s) => (s.style.opacity = '')); card.classList.add('fly-' + st.flying);
+      }
       setTimeout(() => {
         st.flying = null;
-        st.swipes.push({ look: D_ORDER[st.swipes.length], yes });
+        st.swipes.push({ look: cardOrder(st)[st.swipes.length], yes });
         if (st.swipes.length < 8) { draw(); return; }
         go(() => {
           const r = ranker(st);
           if (r.done) { st.picks = r.result; st.played = true; st.view = 'dresult'; } else st.view = 'order';
         });
-      }, reduce ? 0 : 220);
+      }, reduce ? 150 : 240);
     }
     function dragCard(card) {
       let x0 = null, dx = 0;
       const stamps = () => [card.querySelector('.stamp.me'), card.querySelector('.stamp.no')];
-      card.addEventListener('pointerdown', (e) => { x0 = e.clientX; dx = 0; card.classList.add('drag'); try { card.setPointerCapture(e.pointerId); } catch (err) { /* same */ } });
+      const hot = (yes, on) => root.querySelector(`[data-yn="${yes ? 'me' : 'no'}"]`)?.classList.toggle('hot', on);
+      card.addEventListener('pointerdown', (e) => { x0 = e.clientX; dx = 0; st.nudged = true; if (card.classList.contains('nudge')) { card.classList.remove('nudge'); void card.offsetWidth; } card.classList.add('drag'); try { card.setPointerCapture(e.pointerId); } catch (err) { /* same */ } });
       card.addEventListener('pointermove', (e) => {
         if (x0 === null) return;
         const sc = root.getBoundingClientRect().width / 402 || 1;
         dx = (e.clientX - x0) / sc;
         card.style.transform = `translateX(${dx}px) rotate(${dx / 22}deg)`;
         const [me, no] = stamps(); me.style.opacity = Math.max(0, Math.min(1, dx / 90)); no.style.opacity = Math.max(0, Math.min(1, -dx / 90));
+        // Past the line, the matching button lights up (in the app: one selection haptic as it crosses).
+        hot(true, dx > 90); hot(false, dx < -90);
       });
       const end = () => {
         if (x0 === null) return;
-        x0 = null; card.classList.remove('drag');
+        x0 = null; card.classList.remove('drag'); hot(true, false); hot(false, false);
         if (Math.abs(dx) > 90) { card.style.transform = ''; decide(dx > 0); }
-        else { card.style.transform = ''; stamps().forEach((s) => (s.style.opacity = 0)); }
+        else { card.style.transform = ''; stamps().forEach((s) => (s.style.opacity = '')); }
       };
       card.addEventListener('pointerup', end); card.addEventListener('pointercancel', end);
     }
 
-    // D's results: drag a row by its grip; the others slide to make room; dropping reorders his picks.
+    // D's results: drag a row by its handle; the others slide to make room; dropping reorders his picks.
     function dragRow(e, i, move) {
       e.preventDefault();
       const grip = e.currentTarget; try { grip.setPointerCapture(e.pointerId); } catch (err) { /* a pointer the browser can't capture; moves still reach the grip */ }
@@ -526,26 +683,26 @@
       grip.addEventListener('pointermove', onMove); grip.addEventListener('pointerup', onUp); grip.addEventListener('pointercancel', onUp);
     }
 
-    function frame(content, dock, step = 2) {
+    function frame(content, dock, step = 2, cls = '') {
       return [
-        h('div', { class: 'sb' }, h('span', { class: 'time' }, '9:41'), h('span', { class: 'island' }),
+        h('div', { class: 'sb', 'aria-hidden': 'true' }, h('span', { class: 'time' }, '9:41'), h('span', { class: 'island' }),
           h('span', { class: 'sig' }, [5, 7, 9, 12].map((x) => h('i', { style: `height:${x}px` }))), h('span', { class: 'bat' })),
         h('div', { class: 'nav' },
           h('button', { class: 'circle', 'aria-label': 'Back', html: chevL, onclick: back }),
-          h('div', { class: 'bar', 'aria-hidden': 'true' }, [1, 2, 3].map((n) => h('i', { class: n <= step ? 'on' : '' }))),
+          h('div', { class: 'bar', role: 'progressbar', 'aria-label': `Setup, step ${step} of 3` }, [1, 2, 3].map((n) => h('i', { class: n <= step ? 'on' : '' }))),
           h('span', { class: 'spacer' })),
-        h('div', { class: 'scr' }, h('div', { class: 'scroll stage' }, content), dock ? h('div', { class: 'dock' }, dock) : null),
+        h('div', { class: 'scr' }, h('div', { class: 'scroll stage ' + cls }, content), dock ? h('div', { class: 'dock' }, dock) : null),
         ...(st.ended ? endCard() : []),
       ];
     }
     // The mockup's end (not an app screen): what he saved and the taps, over the screen he left.
     function endCard() {
-      const picks = st.picks.map((s, i) => `${i + 1} ${NAMES[s]}`).join(' \u00b7 ');
-      const said = [picks, st.words ? `\u201c${st.words}\u201d` : ''].filter(Boolean).join(' + ');
+      const picks = st.picks.map((s, i) => `${i + 1} ${NAMES[s]}`).join(' · ');
+      const said = [picks, st.words ? `“${st.words}”` : ''].filter(Boolean).join(' + ');
       return [h('div', { class: 'end-bg' }), h('div', { class: 'endcard', role: 'status' },
         h('div', { class: 'eyebrow' }, 'Saved. End of the mockup.'),
         h('div', { class: 'big' }, said),
-        h('div', { class: 'stat' }, `${st.taps} taps on this step \u00b7 ${5 + st.taps} from a fresh install to the camera (today 7)`),
+        h('div', { class: 'stat' }, `${st.taps} taps on this step · ${5 + st.taps} from a fresh install to the camera (today 7)`),
         h('div', { class: 'stat' }, 'In the app, setup goes on to your age, then Stylist.'),
         h('button', { onclick: reset }, 'Start again'))];
     }
@@ -587,74 +744,106 @@
         return frame([title('This or that?', 'Tap the one that’s more you.'), h('div', { class: 'pair' }, pair.map(card)), dots(8, r)],
           [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('button', { class: 'txt', onclick: () => choose(null, pair) }, 'Neither')]);
       },
+      // D, step 1: one card at a time. The buttons are the main way; the swipe is a shortcut that mirrors them.
       swipe() {
         const n = st.swipes.length;
-        const look = D_ORDER[Math.min(n, 7)];
-        const card = h('div', { class: 'solo' + (st.flying ? ' fly-' + st.flying : ''), 'data-style': look, role: 'img', 'aria-label': `Outfit ${n + 1} of 8` },
-          h('span', { class: 'stamp no' }, 'Not me'), h('span', { class: 'stamp me' }, 'Me'),
+        const look = cardOrder(st)[Math.min(n, 7)];
+        const nudge = n === 0 && !st.nudged && !reduce;
+        const card = h('div', { class: 'solo' + (st.flying ? ' fly-' + st.flying : '') + (nudge ? ' nudge' : ''), 'data-style': look, role: 'img', 'aria-label': `Outfit ${Math.min(n + 1, 8)} of 8. ${DESC[look][0]}` },
+          h('span', { class: 'stamp me', 'aria-hidden': 'true' }, 'Me'), h('span', { class: 'stamp no', 'aria-hidden': 'true' }, 'Not me'),
           h('div', { class: 'art' }, outfit(look, 0, 170)));
         dragCard(card);
-        return frame([title('Me or not me?', 'One outfit at a time. Would you wear something like this?'), card, dots(8, n), h('div', { class: 'hint' }, 'Tap below, or swipe the card.')],
+        const prog = h('div', { class: 'prog', 'aria-hidden': 'true' }, Array.from({ length: 8 }, (_, i) => h('i', { class: i < n ? 'done' : i === n ? 'now' : '' })));
+        return frame([title('Me or not me?', 'One outfit at a time. Would you wear something like this?'), card, prog, h('div', { class: 'hint' }, w('hint'))],
           [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('div', { class: 'yn' },
-            h('button', { class: 'btn sec', onclick: () => decide(false) }, 'Not me'),
-            h('button', { class: 'btn', onclick: () => decide(true) }, 'Me'))]);
+            h('button', { class: 'btn sec', 'data-yn': 'no', onclick: () => decide(false) }, 'Not me'),
+            h('button', { class: 'btn', 'data-yn': 'me', onclick: () => decide(true) }, 'Me'))]);
       },
+      // D, step 2: this-or-that between his Me's. The pair sits mid-screen, in thumb reach.
       order() {
         const pair = ranker(st).pair;
-        const card = (s) => h('button', { class: 'pick' + (st.chosen === s ? ' chosen' : st.chosen ? ' faded' : ''), onclick: () => choose(s, pair), 'data-style': s, 'aria-label': `Outfit ${pair.indexOf(s) + 1}` },
-          h('div', { class: 'art' }, outfit(s, 1, 136)));
-        return frame([title('Now put them in order', 'You said Me to these. Tap the one that’s more you.'), h('div', { class: 'pair' }, pair.map(card))],
-          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note)]);
+        const [t, line] = w('order', { n: yesList(st).length });
+        const card = (s) => h('button', { class: 'pick' + (st.chosen === s ? ' chosen' : st.chosen ? ' faded' : ''), onclick: () => choose(s, pair), 'data-style': s, 'aria-label': DESC[s][1] },
+          h('div', { class: 'art' }, outfit(s, 1, 150)));
+        return frame([title(t, line), h('div', { class: 'pair mid' }, pair.map(card))],
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note)], 2, 'fill');
       },
       // D's results: remove a look, add one from a sheet, say it in his own words, or play again. No grid in setup.
       dresult() {
         const p = st.picks;
         const canGo = () => p.length > 0 || st.words.trim().length > 0;
         const noneLiked = !yesList(st).length;
-        const move = (i, to, kbd = false) => { if (to === i || to < 0 || to >= p.length) return; tap(); save(); const [x] = st.picks.splice(i, 1); st.picks.splice(to, 0, x); draw(); if (kbd) root.querySelectorAll('.grip')[to]?.focus({ preventScroll: true }); };
+        const say = (msg) => { const n = root.querySelector('.dock .note'); if (n) n.textContent = msg; };
+        const move = (i, to, kbd = false) => {
+          if (to === i || to < 0 || to >= p.length) return;
+          tap(); save(); const [x] = st.picks.splice(i, 1); st.picks.splice(to, 0, x); draw();
+          say(`${NAMES[x]}, now ${to + 1} of ${p.length}`);
+          if (kbd) root.querySelectorAll('.grip')[to]?.focus({ preventScroll: true });
+        };
+        const remove = (i) => {
+          tap(); save();
+          const [x] = st.picks.splice(i, 1);
+          const msg = w('removed', { name: NAMES[x] });
+          clearTimeout(toastTimer);
+          st.toast = msg ? { text: msg } : null;
+          if (msg) toastTimer = setTimeout(() => { if (st.toast) { st.toast = null; draw(); } }, 5000);
+          draw();
+          if (!msg) say(`Removed ${NAMES[x]}`); // the Undo note announces itself (role=status)
+          focusSoon(st.picks.length ? `.rank:nth-child(${Math.min(i, st.picks.length - 1) + 1}) .x` : '.addrow');
+        };
         const rows = p.map((s, i) => {
-          const grip = h('button', { class: 'grip', html: gripIc, 'aria-label': `Move ${NAMES[s]}, number ${i + 1}. Use the arrow keys.` });
+          const grip = h('button', { class: 'grip', html: gripIc, 'aria-label': `Reorder ${NAMES[s]}`, 'aria-keyshortcuts': 'ArrowUp ArrowDown' });
           grip.addEventListener('keydown', (e) => { if (e.key === 'ArrowUp') { e.preventDefault(); move(i, i - 1, true); } if (e.key === 'ArrowDown') { e.preventDefault(); move(i, i + 1, true); } });
           grip.addEventListener('pointerdown', (e) => dragRow(e, i, move));
-          return h('div', { class: 'rank' + (i === 0 ? ' first' : ''), 'data-style': s },
-            h('div', { class: 'art' }, outfit(s, 0, 40), outfit(s, 1, 40), h('span', { class: 'disc' }, String(i + 1))),
-            h('div', { class: 'tx' }, h('b', {}, NAMES[s]), h('span', {}, LINES[s])),
-            h('button', { class: 'x', 'aria-label': `Remove ${NAMES[s]}`, html: xIc, onclick: () => { tap(); save(); st.picks.splice(i, 1); draw(); } }),
-            grip);
+          // Screen-reader-only Move up / Move down: the web's stand-in for VoiceOver's actions on the row (see the build notes).
+          const sr = [i > 0 ? h('button', { class: 'sr', tabindex: '-1', onclick: () => move(i, i - 1, true) }, `Move ${NAMES[s]} up`) : null,
+            i < p.length - 1 ? h('button', { class: 'sr', tabindex: '-1', onclick: () => move(i, i + 1, true) }, `Move ${NAMES[s]} down`) : null];
+          return h('li', { class: 'rank', 'data-style': s, 'aria-label': `${i + 1} of ${p.length}, ${NAMES[s]}. ${LINES[s]}` },
+            h('div', { class: 'art', 'aria-hidden': 'true' }, outfit(s, 0, 42), h('span', { class: 'disc' }, String(i + 1))),
+            h('div', { class: 'tx', 'aria-hidden': 'true' }, h('b', {}, NAMES[s]), h('span', {}, LINES[s])),
+            h('button', { class: 'x', 'aria-label': `Remove ${NAMES[s]}`, html: `<span>${xIc}</span>`, onclick: () => remove(i) }),
+            grip, sr);
         });
-        const add = p.length < 3 ? h('button', { class: 'addrow', onclick: () => { tap(); save(); st.sheet = true; draw(); } }, h('span', { html: plusIc, 'aria-hidden': 'true' }), 'Add a look') : null;
-        const finishWords = () => { tap(); save(); st.words = st.words.trim(); st.editing = false; draw(); };
+        const add = p.length < 3 ? h('button', { class: 'addrow', onclick: () => { tap(); save(); st.sheet = true; draw(); focusSoon('.sheet .close'); } }, h('span', { html: plusIc, 'aria-hidden': 'true' }), 'Add a look') : null;
+        const finishWords = () => { tap(); save(); st.words = st.words.trim(); st.editing = false; draw(); focusSoon('.words .linkbtn'); };
         let words;
         if (st.editing) {
-          const input = h('input', { class: 'field', type: 'text', maxlength: '80', placeholder: 'Like skater, or all black', 'aria-label': 'Your style in your words', value: st.words });
-          input.addEventListener('input', (e) => { st.words = e.target.value; const c = root.querySelector('.dock .btn:not(.sec)'); if (c) c.disabled = !canGo(); });
+          const input = h('input', { class: 'field', type: 'text', maxlength: '80', placeholder: 'Like skater, or all black', 'aria-label': 'Your style in your words', value: st.words, enterkeyhint: 'done' });
+          input.addEventListener('input', (e) => { st.words = e.target.value; const c = root.querySelector('.dock .btn'); if (c) c.disabled = !canGo(); });
           input.addEventListener('keydown', (e) => { if (e.key === 'Enter') finishWords(); });
-          setTimeout(() => input.focus({ preventScroll: true }), 0);
+          setTimeout(() => { input.focus({ preventScroll: true }); input.scrollIntoView({ block: 'nearest' }); }, 0);
           words = h('div', { class: 'words' }, h('div', { class: 'wrow' }, input, h('button', { class: 'wdone', onclick: finishWords }, 'Done')));
         } else if (st.words) {
-          words = h('div', { class: 'words' }, h('div', { class: 'saved' }, 'In your words: ', h('b', {}, `\u201c${st.words}\u201d`)),
+          words = h('div', { class: 'words' }, h('div', { class: 'saved' }, 'In your words: ', h('b', {}, `“${st.words}”`)),
             h('button', { class: 'linkbtn', onclick: () => { tap(); st.editing = true; draw(); } }, 'Edit'));
         } else {
           words = h('div', { class: 'words' }, h('button', { class: 'linkbtn', onclick: () => { tap(); st.editing = true; draw(); } }, 'Not quite you? Tell me in your words'));
         }
-        const head = p.length ? title('Here\u2019s your style', `From your ${st.rounds.length + st.swipes.length} picks.${p.length > 1 ? ' Drag to change the order.' : ''} You can change it anytime in You.`)
-          : noneLiked ? title('Nothing clicked yet', 'Play again, or tell me in your words.')
-          : title('Here\u2019s your style', 'Add a look, or tell me in your words.');
-        const f = frame([head, h('div', { class: 'ranks' }, rows, add), words],
-          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('div', { class: 'yn' },
-            h('button', { class: 'btn sec', onclick: () => { tap(); save(); go(() => { st.swipes = []; st.rounds = []; st.picks = []; st.view = 'swipe'; }); } }, 'Play again'),
-            h('button', { class: 'btn', disabled: !canGo(), onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, 'Continue'))]);
+        const line = fill(w('result', { n: st.rounds.length + st.swipes.length }));
+        const head = p.length ? title('Here’s your style', p.length > 1 ? line : line.replace(/ ?Drag[^.]*\./, ''))
+          : noneLiked ? title('Nothing clicked yet', w('none'))
+          : title('Here’s your style', 'Add a look, or tell me in your words.');
+        // One primary action (Continue) in the thumb zone; Play again is a quieter text button under it, as on Welcome.
+        const f = frame([head, h('ol', { class: 'ranks' }, rows), add, words],
+          [h('div', { class: 'note', 'aria-live': 'polite' }, st.note),
+            h('button', { class: 'btn', disabled: !canGo(), onclick: () => { tap(); save(); go(() => (st.ended = true)); } }, 'Continue'),
+            h('button', { class: 'txt', onclick: () => { tap(); save(); go(() => { st.swipes = []; st.rounds = []; st.picks = []; st.dSeed = 0; st.toast = null; st.view = 'swipe'; }); } }, 'Play again')]);
+        if (st.toast) {
+          f.push(h('div', { class: 'toast', role: 'status' }, h('span', {}, st.toast.text),
+            h('button', { onclick: () => { clearTimeout(toastTimer); back(); } }, 'Undo')));
+        }
         if (st.sheet) {
-          const close = () => { tap(); st.sheet = false; draw(); };
+          const close = () => { tap(); st.sheet = false; draw(); focusSoon('.addrow'); };
           const left = ORDER.filter((s) => !p.includes(s));
-          const tiles = left.map((s) => h('button', { class: 'tile', onclick: () => { tap(); save(); st.picks.push(s); st.sheet = false; draw(); }, 'aria-label': `${NAMES[s]}: ${LINES[s]}` },
-            h('div', { class: 'art' }, outfit(s, 0, 73), outfit(s, 1, 73)),
+          const tiles = left.map((s) => h('button', { class: 'tile', onclick: () => { tap(); save(); st.picks.push(s); st.sheet = false; draw(); say(`Added ${NAMES[s]}`); focusSoon(`.rank:nth-child(${st.picks.length}) .x`); }, 'aria-label': `${NAMES[s]}: ${LINES[s]}` },
+            h('div', { class: 'art' }, outfit(s, 0, 66), outfit(s, 1, 66)),
             h('div', { class: 'nm' }, h('span', {}, NAMES[s])),
             h('div', { class: 'ln' }, LINES[s])));
-          f.push(h('div', { class: 'sheet-bg', onclick: close }),
-            h('div', { class: 'sheet', role: 'dialog', 'aria-label': 'Add a look' }, h('span', { class: 'grab' }),
-              h('div', { class: 'hd' }, h('b', {}, 'Add a look'), h('button', { class: 'txt', onclick: close }, 'Close')),
-              h('div', { class: 'sheet-body' }, h('div', { class: 'grid' }, tiles))));
+          const sheet = h('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': `sh-${dir}` }, h('span', { class: 'grab', 'aria-hidden': 'true' }),
+            h('div', { class: 'hd' }, h('h4', { id: `sh-${dir}` }, 'Add a look'), h('button', { class: 'circle close', 'aria-label': 'Close', html: xIc, onclick: close })),
+            h('div', { class: 'sheet-body' }, h('div', { class: 'grid' }, tiles)));
+          sheet.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+          f.push(h('div', { class: 'sheet-bg', onclick: close }), sheet);
         }
         return f;
       },
@@ -672,7 +861,7 @@
           return frame([title('Nothing clicked yet', 'Pick from the full list, or tell me in your words.')],
             [h('button', { class: 'btn', onclick: () => { tap(); save(); go(() => (st.view = 'grid')); } }, 'See all looks')]);
         }
-        const rows = p.map((s, i) => h('div', { class: 'rank' + (i === 0 ? ' first' : '') },
+        const rows = p.map((s, i) => h('div', { class: 'rank old' + (i === 0 ? ' first' : '') },
           h('div', { class: 'art' }, outfit(s, 0, 40), outfit(s, 1, 40)),
           h('div', { class: 'tx' }, h('b', {}, NAMES[s]), h('span', {}, LINES[s])),
           h('span', { class: 'disc' }, String(i + 1))));
@@ -695,6 +884,7 @@
   const phones = {};
   document.querySelectorAll('.phone').forEach((el) => (phones[el.dataset.dir] = Phone(el, el.dataset.dir)));
   document.querySelectorAll('[data-restart]').forEach((b) => b.addEventListener('click', () => phones[b.dataset.restart].reset()));
+  const redrawAll = () => Object.values(phones).forEach((p) => p.draw());
 
   // Fit each 402 × 874 phone into its column.
   const fit = () => document.querySelectorAll('.phone-wrap').forEach((w) => {
@@ -704,22 +894,42 @@
   new ResizeObserver(fit).observe(document.querySelector('.row'));
   fit();
 
-  // Theme control
-  const setTheme = (t) => {
-    theme = t;
-    if (t === 'system') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', t);
-    document.querySelectorAll('[data-th]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.th === t)));
-    Object.values(phones).forEach((p) => p.draw());
+  // Page controls: color scheme, text size, motion. Each is a row of toggle buttons.
+  const control = (attr, set) => {
+    const btns = document.querySelectorAll(`[${attr}]`);
+    btns.forEach((b) => b.addEventListener('click', () => { btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b))); set(b.getAttribute(attr)); }));
   };
-  document.querySelectorAll('[data-th]').forEach((b) => b.addEventListener('click', () => setTheme(b.dataset.th)));
-  darkMq.addEventListener('change', () => theme === 'system' && Object.values(phones).forEach((p) => p.draw()));
+  control('data-th', (t) => { theme = t; if (t === 'system') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', t); redrawAll(); });
+  control('data-ts', (t) => { document.documentElement.dataset.ts = t; redrawAll(); });
+  control('data-mo', (m) => { motionPref = m; applyMotion(); redrawAll(); });
+  darkMq.addEventListener('change', () => theme === 'system' && redrawAll());
+  motionMq.addEventListener('change', () => { applyMotion(); redrawAll(); });
+
+  // D's word options: today's words are on until the founder picks; "Recommended" marks the design pass's pick.
+  const copyBox = document.getElementById('copy-d');
+  if (copyBox) {
+    const sample = { n: 3, name: 'Minimal' };
+    const show = (o) => (o === null ? 'No note (today: Back undoes it)' : Array.isArray(o) ? `${fill(o[0], sample)} / ${fill(o[1], sample)}` : fill(o, sample));
+    const render = () => {
+      copyBox.replaceChildren(
+        h('div', { class: 'copy-actions' },
+          h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = 0)); render(); phones.d?.draw(); } }, 'Today’s words'),
+          h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = COPY[k].pick)); render(); phones.d?.draw(); } }, 'All recommended')),
+        ...Object.entries(COPY).map(([k, c]) => h('fieldset', { class: 'copyset' }, h('legend', {}, c.label),
+          ...c.opts.map((o, i) => h('label', { class: 'opt' },
+            h('input', { type: 'radio', name: `copy-${k}`, checked: copySel[k] === i, onchange: () => { copySel[k] = i; phones.d?.draw(); } }),
+            h('span', {}, show(o), i === 0 ? h('span', { class: 'tag' }, 'today') : null, i === c.pick ? h('span', { class: 'tag rec' }, 'recommended') : null))),
+          h('p', { class: 'why' }, c.why))));
+    };
+    render();
+  }
 
   // Tabs (narrow screens show one phone at a time)
   const showTab = (k) => {
     document.querySelectorAll('figure[data-fig]').forEach((f) => f.classList.toggle('on', f.dataset.fig === k));
     document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tab === k)));
     fit();
-    if (['a', 'b', 'c', 'd'].includes(k)) { try { history.replaceState(null, '', '#' + k); } catch (e) { /* fine */ } }
+    if (['a', 'b', 'c', 'd'].includes(k)) { try { history.replaceState(null, '', location.search + '#' + k); } catch (e) { /* fine */ } }
   };
   document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
   const fromHash = location.hash.slice(1);
