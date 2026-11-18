@@ -14,7 +14,7 @@
 // round(x, 6) (pyRound) on raw numbers, the half-point helpers for shown numbers, first-max / first-min ties.
 
 import { garmentName, G, SLOT_TO_CLOSET } from "./names";
-import { defaultParts, type PartName, type PartsEngine, type PartsScored, type SecondLookInput } from "./parts";
+import { defaultParts, type PartName, type PartsEngine, type PartsScored, type Season, type SecondLookInput } from "./parts";
 import { PARTS_FIXES_DATA } from "./partsFixesData";
 import { defaultRubric, type RubricEngine } from "./rubric";
 import type { ClosetItem, Garment, Reading, Styles } from "./types";
@@ -182,6 +182,9 @@ export interface PartsFixOptions {
   firstCheck?: boolean;
   /** Candidate ids he said don't apply. */
   exclude?: readonly string[];
+  /** T69 (stub): the card's season and graded look (v16 only). */
+  season?: Season;
+  gradedLook?: string | readonly string[] | null;
 }
 
 export interface PartsFixEngines {
@@ -267,7 +270,7 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
   const exclude = new Set(opts.exclude ?? []);
 
   const score = (r: Reading, sl: SecondLookInput | null | undefined) =>
-    PE.scoreParts(r, { occasion, styles, boldness, secondLook: sl ?? null });
+    PE.scoreParts(r, { occasion, styles, boldness, secondLook: sl ?? null, season: opts.season ?? null, gradedLook: opts.gradedLook ?? null });
 
   const out: PartsFixSuggestions = { baseOverall: null, baseRaw: null, fixes: [], smallerStep: null, nextLevel: null, noneLine: null };
   const b = score(reading, opts.secondLook);

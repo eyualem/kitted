@@ -10,6 +10,12 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { askWithClosetParts, knownMatches, scoreParts, type KnownPiece, type PartsScored, type Reading } from "../src";
 import { collarFamiliesDiffer, patternsDiffer } from "../src/closetIdentity";
+import { afterAll as afterAllT69 } from "vitest";
+import { setRescoreV16 as setRescoreV16T69 } from "../src/index";
+// T69 (#484, #487): this file tests v12-v15's wrinkle, label and closet-question rules on his Oct 11 check (numbers v16 moves). That engine still ships as the third switch's rollback and scores
+// every check stored before T69, so the file is pinned to v15; v16's own behaviour is in the T69 tests.
+setRescoreV16T69(false);
+afterAllT69(() => setRescoreV16T69(true));
 
 interface Oct11 { occasion: string; first: Reading; recheckRaw: Reading; whiteTee: Omit<KnownPiece, "shoeKind" | "shoeKindSaid" | "confirmed" | "sightings"> }
 const D = JSON.parse(readFileSync(join(__dirname, "data/phone-oct11-af7e93.json"), "utf8")) as Oct11;

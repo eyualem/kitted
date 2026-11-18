@@ -1,6 +1,7 @@
 // The bundled v3 readings (handoff/fixtures/readings, copied into assets): one per demo photo,
 // plus the variants the story uses (shoe snap, corrections, the real p01 reads).
 import type { Reading } from '@kitted/core';
+import { V16_SCREEN_READINGS } from '@/demo/v16Readings';
 import index from '../../../assets/demo-readings/INDEX.json';
 import p01a from '../../../assets/demo-readings/p01a.json';
 import p01b from '../../../assets/demo-readings/p01b.json';
@@ -60,6 +61,8 @@ const BY_ID: Record<string, Reading> = {
   // Demo screens 60–62 (the shoe question): shown with s12's stand-in photo too.
   ph8: readingOf(ph8),
   ph9: readingOf(ph9),
+  // Demo screens 300-310 (T69, the rescoring): made-up readings the engine scores live (demo/v16Readings.ts).
+  ...V16_SCREEN_READINGS,
 };
 
 /**

@@ -80,6 +80,21 @@ PICKS_VARIANTS = {"none": [], "one": [["workwear", 1.0]],
                   "three": [["streetwear", 0.5], ["vintage_sport", 0.25], ["smart_casual", 0.25]]}
 
 
+def _taste(**kw):
+    return {"taste": dict(P.TUNE["v16"]["taste"], **kw)}
+
+
+# T69 (Q-T7): v16's off-by-default knobs, each on in a what-if tune (proven by parity like every earlier engine)
+WHATIF16 = {
+    "leg_replace": _taste(leg_look_mode="replace"), "leg_off": _taste(leg_look_mode="off"), "leg_global": _taste(leg_look_global=True),
+    "accent_by_look": _taste(accent_by_look=True), "accent_agree": _taste(accent_by_look=True, accent_agree=True),
+    "pn1_look": _taste(pn1_look=True), "sil_single": _taste(sil_mode="single"), "sil_top_up": _taste(sil_mode="top_up"),
+    "sil_shape": _taste(sil_mode="shape"), "long_ruler": _taste(long_top_read="ruler"), "shorts": _taste(shorts=0.5),
+    "color": _taste(color=0.5), "h7_cap": _taste(h7_tip=False), "h9_cap": {"v16_h9_cap": True},
+    **{"top_" + k: v for k, v in P.V16_TOP_WHATIF.items()},
+}
+
+
 def canon(r):
     return json.dumps({"scene": r.get("scene"), "garments": r.get("garments")}, sort_keys=True, separators=(",", ":"))
 
@@ -618,6 +633,81 @@ def newest_pull():
     return pulls[-1] if pulls else None
 
 
+# T69 (Q-T6): the pull is pinned to the one the v15 cases were made from, so they regenerate byte for byte. The phone
+# pulls are git-ignored: read from KITTED_DATA (the main checkout) when this runs in a worktree.
+DATA = os.environ.get("KITTED_DATA", KEMPT)
+PINNED_PULL = "screenshots/phone/20261017-212744/SQLite/kitted.db"
+
+
+def pinned_pull():
+    p = os.path.join(DATA, PINNED_PULL)
+    assert os.path.exists(p), f"the pinned pull {PINNED_PULL} isn't under {DATA}: set KITTED_DATA to the main checkout"
+    return p
+
+
+def run16(reading, occ, styles, sl, bold, tune=None, season=None, graded_look=None):
+    """T69: v16's result as parts_proto returns it (its own average_unrounded / raw_unrounded; combine is v15's)."""
+    try:
+        return P.score_parts(copy.deepcopy(reading), occ, {k: w for k, w in styles}, copy.deepcopy(sl), bold, "v16", tune,
+                             season=season, graded_look=copy.deepcopy(graded_look))
+    except Exception as e:  # a prototype bug: recorded, the TS must throw too
+        return {"error": f"{type(e).__name__}: {e}"}
+
+
+def w_readings():
+    """T69: the leg-width look's edge readings: jeans and trousers on every stored leg, and two kinds of shorts."""
+    out = []
+    for sub in ("jeans", "trousers"):
+        for leg in ("straight", "relaxed", "wide", "slim", "skinny"):
+            out.append((f"{sub}-{leg}", Rd(TEE(), JEANS(sub=sub, color="denim_dark" if sub == "jeans" else "charcoal", leg_shape=leg), SHOE())))
+    for sub in ("shorts", "athletic_shorts"):
+        out.append((sub, Rd(TEE(), JEANS(sub=sub, color="khaki_beige", leg_shape="relaxed", hem="na"), SHOE())))
+    return out
+
+
+W_ANSWERS = [None] + [{"knee": k, "opening": o} for k in ("clings", "skims", "hangs_away", "not_visible")
+                      for o in ("narrower", "about_the_same", "wider", "not_visible")]
+
+
+def swap_readings():
+    """T69 round 7: the classes the reader swaps on one photo (the steady map), and where the swap must not happen."""
+    blazer = G("outerwear", "blazer", "navy", length="at_hip")
+    return [
+        ("oxford", Rd(TEE(sub="oxford_shirt", color="white"), JEANS(color="denim_dark"), SHOE())),
+        ("chelsea", Rd(TEE(), JEANS(color="denim_dark"), SHOE("chelsea_boot", "brown"))),
+        ("other-shoe", Rd(TEE(), JEANS(color="denim_dark"), SHOE("other", "black"))),
+        ("oxford-blazer", Rd(blazer, TEE(sub="oxford_shirt", color="white"), JEANS(sub="trousers", color="grey"), SHOE("loafer", "brown"))),
+        ("chinos-blazer", Rd(blazer, TEE(), JEANS(sub="chinos", color="khaki_beige"), SHOE("loafer", "brown"))),
+    ]
+
+
+def named_outfits():
+    """T69: v16_paper.NAMED, each as run_named scores it (its reading, occasion, profile and second look): his phone
+    checks with his profile, gold's first reading with its own looks, a creator still's median reading, the made-up two."""
+    sys.path.insert(0, ET)
+    import v16_paper as V  # noqa: E402  (reads KITTED_DATA)
+    import hoodie_layer_paper as H  # noqa: E402
+    runs = H.load_gold()[0]
+    ph = H.load_phone()
+    cr = V.load_creators()
+    looks = V.load_looks()
+    out = []
+    for src, key, name in V.NAMED:
+        if src == "phone":
+            v = ph[key]
+            out.append((name, v["reading"], v["occ"], [[k, w] for k, w in V.FOUNDER.items()], v["sl"]))
+        elif src == "gold":
+            out.append((name, runs[key][0], "everyday", [[k, w] for k, w in V.PROFILE.items()], (looks.get(key) or [None])[0]))
+        elif src == "creator":
+            m, xs = V.med(cr[key])
+            i = next(i for i, x in enumerate(xs) if x["overall"] == m)
+            out.append((name, cr[key][i], "everyday", [[k, w] for k, w in V.PROFILE.items()], None))
+        else:
+            out.append((name, key, "everyday", [], None))
+    assert len(out) == 15 and len({n for n, *_ in out}) == 15
+    return out
+
+
 def main():
     rp = json.load(open(os.path.join(HERE, "rubric_parity.json")))
     readings = {}             # readings not already in rubric_parity.json
@@ -631,13 +721,18 @@ def main():
             readings[rid] = {"scene": r.get("scene"), "garments": r.get("garments")}
         return rid
 
-    def add(src, r, occ, styles, bold, sl=None, tune=None):
+    def add(src, r, occ, styles, bold, sl=None, tune=None, season=None, graded_look=None, name=None):
         rid = ref(r)
         eng, tn = ("v15", None) if tune is None else TUNES[tune]["call"]
-        exp = run(r, occ, styles, sl, bold, eng, tn)
+        exp = run16(r, occ, styles, sl, bold, tn, season, graded_look) if eng == "v16" else run(r, occ, styles, sl, bold, eng, tn)
         case = {"src": src, "reading": rid, "occasion": occ, "styles": styles, "boldness": bold, "second_look": sl, "expected": exp}
         if tune is not None:
             case["tune"] = tune
+        if eng == "v16":                    # T69: v16 cases carry their season and graded look
+            case["season"] = season
+            case["graded_look"] = graded_look
+            if name is not None:
+                case["name"] = name
         x = exp.get("raw_unrounded")
         if x is not None:
             y = x * 2 + 0.5
@@ -701,7 +796,11 @@ def main():
         "v10_whatif": {"call": ("v10", WHATIF10), "data": {"engine": "v10", "label": P.VERSIONS["v10"], "tune": MJ.tune_json(P._tune("v10", WHATIF10))}},
         "v9_whatif": {"call": ("v9", WHATIF9), "data": {"engine": "v9", "label": P.VERSIONS["v9"], "tune": MJ.tune_json(P._tune("v9", WHATIF9))}},
         "v8_whatif": {"call": ("v8", WHATIF8), "data": {"engine": "v8", "label": P.VERSIONS["v8"], "tune": MJ.tune_json(P._tune("v8", WHATIF8))}},
+        "v16": {"call": ("v16", None), "data": {"engine": "v16", "label": P.VERSIONS["v16"], "tune": MJ.tune_json(P.TUNE["v16"])}},
     }
+    for wn, over in WHATIF16.items():
+        TUNES["v16_whatif_" + wn] = {"call": ("v16", over), "data": {"engine": "v16", "label": P.VERSIONS["v16"], "tune": MJ.tune_json(P._tune("v16", over))}}
+    named_outfits_cache = named_outfits()
 
     # 1. every rubric_parity case
     for c in rp["cases"]:
@@ -712,7 +811,7 @@ def main():
     U = T.load_runs(os.path.join(ET, "results/look1/raw.json"), "U")
     L = T.load_runs(os.path.join(ET, "results/look1/raw.json"), "L")
     corpus = json.load(open(os.path.join(ET, "results/parts1/corpus.json")))
-    pull_path = newest_pull()
+    pull_path = pinned_pull()
     T.PULL = pull_path
     pull = T.load_pull() if pull_path else {}
     real = []                                           # (src, key, reading, own occasion)
@@ -762,7 +861,7 @@ def main():
 
     # 6. tune variants
     n_before_tunes = len(cases)
-    for tname in TUNES:
+    for tname in [t for t in TUNES if not t.startswith("v16")]:    # v16 and its what-ifs: section 8
         for src, k, r, occ in real:
             add(f"{src}@{occ}", r, occ, PROFILE, BOLD, T.second_look_for(k, U, L), tname)
         for name, r, occ, sl, bold, styles in edges:
@@ -779,6 +878,70 @@ def main():
         for pn, st in PICKS_VARIANTS.items():
             add(f"picks:{pn}:parts-edge:{name}", r, occ, st, bold, sl)
     n_picks = len(cases) - n_before_picks
+
+    # 8. T69: parts engine v16 (tune "v16", the bundled engine) and its what-ifs (tune "v16_whatif_<knob>")
+    n_before_v16 = len(cases)
+    SEASONS = (None, "warm")
+    # PB1_no_subcategory (a roomy top with no subcategory) makes v16 raise (_v16_caps' H1 line calls .replace on None):
+    # a prototype bug, reported (tasks/T69), left out of the v16 cases so the TS isn't asked to copy a crash
+    edges16 = [e for e in edges if e[0] != "PB1_no_subcategory"]
+    LOOKS = ["vintage_sport", "outdoor", "workwear", "streetwear", "tailored", "classic_prep", "minimalist", "smart_casual", "none"]
+    for src, k, r, occ in real:
+        sl = T.second_look_for(k, U, L)
+        for o in [occ] + [o for o in OCCASIONS if o != occ]:
+            for se in SEASONS:
+                add(f"{src}@{o}", r, o, PROFILE, BOLD, sl, "v16", se)
+        for gl in LOOKS + [["streetwear", "tailored"]]:
+            add(f"look:{src}@{occ}", r, occ, PROFILE, BOLD, sl, "v16", None, gl)
+        for pn, st in PICKS_VARIANTS.items():
+            add(f"picks:{pn}:{src}@{occ}", r, occ, st, BOLD, sl, "v16")
+    for name, r, occ, sl, bold, styles in edges16:
+        for se in SEASONS:
+            add("parts-edge:" + name, r, occ, styles, bold, sl, "v16", se)
+    for rid in edge_ids:
+        for se in SEASONS:
+            add("edge:" + rid, rp["readings"][rid], "everyday", PROFILE, BOLD, None, "v16", se)
+    for name, r in w_readings():
+        for w in W_ANSWERS:
+            for se in SEASONS:
+                add(f"w-edge:{name}", r, "everyday", PROFILE, BOLD, w, "v16", se)
+    for name, r in swap_readings():
+        for se in SEASONS:
+            add(f"swap-edge:{name}", r, "everyday", PROFILE, BOLD, None, "v16", se)
+            add(f"swap-edge:{name}", r, "date", PROFILE, BOLD, None, "v16", se)
+    for name, r, occ, styles, sl in named_outfits():
+        for se in SEASONS:
+            add("named:" + name, r, occ, styles, BOLD, sl, "v16", se, None, name)
+    # the what-ifs: every off-by-default knob on (Q-T7), the top-of-scale ones included (tasks/T69/top-of-scale.md)
+    LONG = [("long-tee", Rd(TEE(length="below_crotch"), JEANS(color="denim_dark"), SHOE()), {"long_top": True}),
+            ("long-tee-short", Rd(TEE(length="below_crotch"), JEANS(color="denim_dark"), SHOE()), {"long_top": False}),
+            ("shorts-above", Rd(TEE(), JEANS(sub="shorts", color="khaki_beige", leg_shape="relaxed", hem="na"), SHOE()), {"shorts_end": "above_knee"})]
+    for tname in [t for t in TUNES if t.startswith("v16_whatif")]:
+        for i, (src, k, r, occ) in enumerate(real):
+            add(f"{src}@{occ}", r, occ, PROFILE, BOLD, T.second_look_for(k, U, L), tname, "warm" if i % 2 else None)
+        for name, r, occ, sl, bold, styles in edges16[::4]:
+            add("parts-edge:" + name, r, occ, styles, bold, sl, tname)
+        for name, r in w_readings():
+            for w in W_ANSWERS[::3]:
+                add(f"w-edge:{name}", r, "everyday", PROFILE, BOLD, w, tname)
+        for name, r, sl in LONG:
+            add(f"long-edge:{name}", r, "everyday", PROFILE, BOLD, sl, tname)
+        for name, r, occ, styles, sl in named_outfits_cache:
+            add("named:" + name, r, occ, styles, BOLD, sl, tname, None, None, name)
+    n_v16 = len(cases) - n_before_v16
+
+    # v16: picks never move a number either (with his taste rules on)
+    groups16 = {}
+    for c in cases:
+        if c.get("tune") != "v16" or "error" in c["expected"]:
+            continue
+        g = (c["reading"], c["occasion"], c["boldness"], json.dumps(c["second_look"], sort_keys=True), c["season"],
+             json.dumps(c["graded_look"]))
+        e = c["expected"]
+        groups16.setdefault(g, set()).add((e["overall"], e.get("raw_unrounded"), json.dumps(e.get("v16"), sort_keys=True),
+                                           tuple((kk, e["parts"][kk]["score"]) for kk in sorted(e.get("parts", {})))))
+    bad16 = [g for g, v in groups16.items() if len(v) > 1]
+    assert not bad16, f"picks moved a v16 score: {bad16[:3]}"
 
     # picks never move a number: every reading x occasion x boldness x second look scores the same under any picks
     groups = {}
@@ -873,14 +1036,15 @@ def main():
         "parts_version": base["version"], "parts_proto_sha256": base["sourceSha256"],
         "rubric_sha256": hashlib.sha256(open(os.path.join(ET, "rubric.py"), "rb").read()).hexdigest(),
         "rubric_parity_sha256": rp["rubric_sha256"],
-        "pull": os.path.relpath(pull_path, KEMPT) if pull_path else None,
+        "pull": os.path.relpath(pull_path, DATA) if pull_path else None,
         "counts": {"rubric_parity_cases": n_rp, "real_cases": n_real, "real_readings": len(real), "run_cases": n_runs,
                    "edge_second_look_cases": len(edge_ids) * len(SLS), "parts_edge_cases": len(edges),
-                   "tune_cases": n_before_picks - n_before_tunes, "picks_cases": n_picks, "cases": len(cases), "own_readings": len(readings),
+                   "tune_cases": n_before_picks - n_before_tunes, "picks_cases": n_picks, "v16_cases": n_v16, "cases": len(cases), "own_readings": len(readings),
                    "python_errors": sum(1 for c in cases if "error" in c["expected"]),
                    "fp_boundary_cases": dict(Counter(c["fp_boundary"] for c in cases if c.get("fp_boundary")))},
         "coverage": dict(sorted(cov.items())),
         "overall_histogram": dict(sorted(Counter(str(c["expected"].get("overall")) for c in cases if "tune" not in c).items())),
+        "overall_histogram_v16": dict(sorted(Counter(str(c["expected"].get("overall")) for c in cases if c.get("tune") == "v16").items())),
         "v15_vs_v14": {"cases_changed": len(changed), "overall_changed": sum(1 for x in changed if x["v14"] != x["v15"]),
                      "changed": changed},
         "tunes": tunes,

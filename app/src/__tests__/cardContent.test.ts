@@ -7,6 +7,11 @@ import { evaluateCheck } from '@/features/fitcheck/scoring';
 import { garmentLabel, readingPill, whatIRead } from '@/features/fitcheck/labels';
 import { t } from '@/i18n/en';
 import type { OccasionKey } from '@/data/types';
+import { setRescoreV16 as setRescoreV16T69 } from '@kitted/core';
+// T69 (#484, #487): this file tests "Reads as" with v15's detection (v16's steady-class swap, [TST-st], moves s10). v15 still scores every check stored before T69 (and is the third
+// switch's rollback), so the file is pinned to it; v16's card, rows and numbers are in the T69-*.test.ts files.
+beforeAll(() => setRescoreV16T69(false));
+afterAll(() => setRescoreV16T69(true));
 
 const STYLES = expected.profile.styles as unknown as Styles;
 const closet = seed.scenarios.full.closet as unknown as ClosetItem[];

@@ -4,9 +4,12 @@
 // extraction-test/rules_conformance.py against parts_proto.py; the assertion rules below mirror its check() line for
 // line. Each test name starts with its rule ID, so a broken rule names itself. If a case fails, the engine broke a
 // written rule: fix the engine (or, after a decision, the doc and the case), never the fixture by hand.
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { scoreParts, suggestPartsFixes, type PartResult, type PartsResult, type Reading, type SecondLookInput, type Styles } from "../src/index";
-import { loadJSON } from "./helpers";
+import { createParts, PARTS_DATA, partsDataFor, suggestPartsFixes, type PartResult, type PartsResult, type PartsScored, type Reading, type SecondLookInput, type Styles } from "../src/index";
+import { FIXTURES, loadJSON } from "./helpers";
+import { R, scored, T69 } from "./t69";
 
 interface CheckRef { check: string; part?: string; points?: number; line?: string }
 interface Expect {
@@ -22,26 +25,35 @@ interface Expect {
 interface Case {
   id: string; rule: string; what: string; reading: Reading; occasion: string; styles: [string, number][];
   boldness: string; second_look: SecondLookInput | null; expect: Expect;
+  /** T69: the engine the case is written for (absent = "v15"), its season and graded look (v16 only). */
+  engine?: string; season?: "warm" | null; graded_look?: string | string[] | null;
   vs: { case: string; parts?: Record<string, number>; overall?: number | "up" | "down" | "same" } | null;
   future: string[]; kd: string | null;
   python: { overall: number | null; reason?: string; raw_score?: number; parts?: Record<string, number | null>;
     detected_styles?: string[]; style_label?: string | null; next_level?: { id: string; line: string } | null };
 }
 interface Conformance { parts_version: string; engine: string; bands: [number, string][]; counts: { cases: number; rules: number };
+  /** T69: v16's band table (3-4.5 has its own word). */
+  bands_v16?: [number, string][];
   rules: string[]; cases: Case[] }
 
 const D = loadJSON<Conformance>("rules_conformance.json");
 const EPS = 1e-6;
-const bandOf = (x: number): string => D.bands.find(([top]) => x <= top)![1];
+const isV16 = (c: Case) => c.engine === "v16";
+const bandOf = (x: number, c?: Case): string => ((c && isV16(c) ? D.bands_v16 : null) ?? D.bands).find(([top]) => x <= top)![1];
+/** T69: each case on its own engine: v15's tune for the v15 cases, the bundled v16 for the v16 ones. */
+const V15 = createParts(partsDataFor(true, true, false));
+const V16 = createParts(PARTS_DATA);
+const optsOf = (c: Case) => ({ occasion: c.occasion, styles: c.styles as Styles, boldness: c.boldness, secondLook: c.second_look,
+  ...(isV16(c) ? { season: c.season ?? null, gradedLook: c.graded_look ?? null } : {}) });
 
 function run(c: Case): PartsResult {
-  return scoreParts(c.reading, { occasion: c.occasion, styles: c.styles as Styles, boldness: c.boldness, secondLook: c.second_look });
+  return (isV16(c) ? V16 : V15).scoreParts(c.reading, optsOf(c));
 }
 const results = new Map<string, PartsResult>(D.cases.map((c) => [c.id, run(c)]));
 
 /** The fix engine's Next level / tip line for a case (no closet, not a warm day, not the first check). */
-const fixNextLevel = (c: Case) =>
-  suggestPartsFixes(c.reading, { occasion: c.occasion, styles: c.styles as Styles, boldness: c.boldness, secondLook: c.second_look }).nextLevel;
+const fixNextLevel = (c: Case) => suggestPartsFixes(c.reading, optsOf(c), { parts: isV16(c) ? V16 : V15 }).nextLevel;
 
 const partsOf = (r: PartsResult): [string, PartResult][] => Object.entries(r.parts ?? {}) as [string, PartResult][];
 const reasons = (r: PartsResult, part?: string) =>
@@ -62,8 +74,8 @@ function check(c: Case, r: PartsResult): string[] {
   const ov = r.overall;
   if (e.overall !== undefined && Math.abs(ov - e.overall) > EPS) bad.push(`overall ${ov} != ${e.overall}`);
   if (e.overall_max !== undefined && ov > e.overall_max + EPS) bad.push(`overall ${ov} > ${e.overall_max}`);
-  if (e.band !== undefined && bandOf(ov) !== e.band) bad.push(`band ${bandOf(ov)} (${ov}) != ${e.band}`);
-  if (e.band_in !== undefined && !e.band_in.includes(bandOf(ov))) bad.push(`band ${bandOf(ov)} (${ov}) not in ${e.band_in}`);
+  if (e.band !== undefined && bandOf(ov, c) !== e.band) bad.push(`band ${bandOf(ov, c)} (${ov}) != ${e.band}`);
+  if (e.band_in !== undefined && !e.band_in.includes(bandOf(ov, c))) bad.push(`band ${bandOf(ov, c)} (${ov}) not in ${e.band_in}`);
   for (const f of e.fired ?? []) {
     const hits = reasons(r, f.part).filter((x) => x.check === f.check);
     if (!hits.length) bad.push(`${f.check} didn't fire${f.part ? " on " + f.part : ""}`);
@@ -132,6 +144,70 @@ describe("rules conformance (rubric/v5-styles.md)", () => {
     expect(D.cases.length).toBe(D.counts.cases);
     expect(new Set(D.cases.map((c) => c.rule)).size).toBe(D.counts.rules);
     expect([...new Set(D.cases.map((c) => c.rule))].sort()).toEqual(D.rules);
+  });
+
+  it("T69-G4 · the doc and the cases agree", () => {
+    const doc = readFileSync(join(FIXTURES, "../../rubric/v5-styles.md"), "utf8");
+    const docIds = [...new Set([...doc.matchAll(/\*\*\[([A-Z]{3}-\d+)\]/g)].map((m) => m[1]!))].sort();
+    const caseIds = [...new Set(D.cases.map((c) => c.rule).filter((r) => /^[A-Z]{3}-\d+$/.test(r)))].sort();
+    expect(caseIds).toEqual(docIds);
+    // every case's rule, sub-IDs too (DB-S1, TST-a, LFT-4s), is a rule the doc has
+    const notInDoc = [...new Set(D.cases.map((c) => c.rule))].filter((r) => !doc.includes(`**[${r}]`));
+    expect(notInDoc).toEqual([]);
+    const v16 = D.cases.filter(isV16);
+    const v16Rules = new Set(v16.map((c) => c.rule));
+    // the new rule IDs, the rules rewritten for v16, the dealbreaker rows and the sub-IDs: each has a v16 case
+    const need = ["SCO-8", "SCO-9", "SCO-10", "LFT-1", "LFT-2", "LFT-3", "LFT-5", "LFT-6", "LFT-7", "STY-13", "TST-0",
+      "SCO-1", "SCO-2", "SCO-3", "SCO-4", "SCO-7", "STY-3", "STY-9", "COL-2", "COL-12",
+      "DB-S1", "DB-S2", "DB-S4", "DB-S6", "DB-S8", "DB-S9", "DB-H1", "DB-H3", "DB-H4", "DB-H7", "DB-H8", "DB-H10", "DB-H11",
+      "LFT-4s", "LFT-S", "SL-1", "TST-a", "TST-c", "TST-e", "TST-j", "TST-sk", "TST-SIL", "TST-leg", "TST-st", "TST-sd", "TST-rn", "TST-mix"];
+    expect(need.filter((r) => !v16Rules.has(r))).toEqual([]);
+    expect(new Set(v16.map((c) => c.season ?? null))).toEqual(new Set([null, "warm"]));
+    // the v15 cases are all still there, on their own engine (their numbers: v15Unchanged.test.ts)
+    expect(D.cases.filter((c) => !isV16(c)).length).toBe(501);
+    expect(D.cases.filter((c) => c.engine !== undefined && c.engine !== "v15" && c.engine !== "v16")).toEqual([]);
+    // v16's bands: 3-4.5 has its own word, then the five of today
+    expect(D.bands_v16?.map(([top]) => top).slice(0, 5)).toEqual([4.5, 5.5, 6.5, 7.5, 8.5]);
+    expect(D.bands_v16?.length).toBe(6);
+    expect(D.bands_v16![5]![0]).toBeGreaterThanOrEqual(9.5);
+  });
+
+  it("T69-G4 · the dealbreaker examples land exactly at their caps, the spared rows carry none, the depends rows sit in 5.5-7.0", () => {
+    const sc = (rd: Reading, sl: SecondLookInput | null = null) => scored(V16.scoreParts(rd, { occasion: "everyday", secondLook: sl }));
+    const WANT: Record<string, number> = { S1: 5.5, S2: 5.5, S4: 4.5, S6: 5.5, S8: 5.5, S8b: 5.5, S9: 5.5, H1: 6.5, H3: 6.5, H4: 6.5, H8: 6.5, H10: 6.0, H11: 6.5, H7: 7.0 };
+    expect(T69.dealbreakers.sinks.map((x) => x.row).sort()).toEqual(Object.keys(WANT).sort());
+    for (const x of T69.dealbreakers.sinks) {
+      const r = sc(x.reading, x.second_look);
+      const caps = (r.v16?.caps ?? []).map((c) => c.id);
+      expect([x.row, r.overall]).toEqual([x.row, WANT[x.row]]);
+      if (x.row === "H7") expect([x.row, caps]).toEqual([x.row, []]); // pooling: a tip, no cap (Y34)
+      else expect([x.row, caps.some((id) => id.replace(/b$/, "") === x.row.replace(/b$/, ""))]).toEqual([x.row, true]);
+    }
+    const s4 = sc(T69.dealbreakers.sinks.find((x) => x.row === "S4")!.reading);
+    expect(s4.v16?.heldBy).toBe("S4");
+    expect(T69.dealbreakers.spared.length).toBe(7);
+    for (const x of T69.dealbreakers.spared) {
+      const r = sc(x.reading, x.second_look);
+      expect([x.row, x.what, (r.v16?.caps ?? []).some((c) => c.id === x.row)]).toEqual([x.row, x.what, false]);
+      expect([x.row, r.v16 === undefined]).toEqual([x.row, false]);
+    }
+    expect(T69.dealbreakers.depends.length).toBe(3);
+    for (const x of T69.dealbreakers.depends) {
+      const [b, w, s] = [sc(x.base), sc(x.weak), sc(x.strong)];
+      for (const r of [b, w, s]) expect([x.row, r.overall >= 5.5 && r.overall <= 7.0, r.v16 === undefined]).toEqual([x.row, true, false]);
+      expect([x.row, w.overall < s.overall]).toEqual([x.row, true]);
+    }
+    // the named outfits of TESTING.md (made up), cool and warm
+    const at = (k: Parameters<typeof R>[0], season: "warm" | null) => scored(V16.scoreParts(R(k), { occasion: "everyday", season }));
+    expect([at("PLAIN", null).overall, at("PLAIN", "warm").overall]).toEqual([7.0, 7.0]);
+    expect(at("BOXY", null).overall).toBe(8.5);
+    expect(at("TOP9", null).overall).toBe(9.0);
+    expect(at("SKINNY", null).overall).toBe(5.5); // [SCO-7]'s example as the engine gives it (Q-F2: the doc now says 5.5)
+    expect([at("TANK", null).overall, at("TANK", "warm").overall]).toEqual([6.0, 7.0]);
+    expect([at("PUFFER", null).overall, at("PUFFER", "warm").overall]).toEqual([7.0, 6.5]);
+    expect(at("PUFFER", "warm").v16?.heavyLayer).toEqual([0.5, "the puffer is a lot of layer for a warm day"]);
+    expect(at("PUFFER", null).v16?.heavyLayer).toBeNull();
+    expect((at("PUFFER", null) as PartsScored).v16?.season).toBe("cool");
   });
 
   for (const c of D.cases) {

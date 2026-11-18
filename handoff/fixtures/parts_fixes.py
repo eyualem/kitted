@@ -44,9 +44,13 @@ CATALOG = json.load(open(os.path.join(HERE, "fixes.json")))["parts"]
 SLOTS = ("top", "outerwear", "bottom", "footwear")
 
 
-def _score(reading, occasion, styles, sl, boldness):
-    """score_parts plus the unrounded final (parts_proto.combine), like make_parts_parity.run."""
+def _score(reading, occasion, styles, sl, boldness, engine="v15", season=None):
+    """score_parts plus the unrounded final (parts_proto.combine), like make_parts_parity.run. T69: engine "v16" scores
+    with the card's season and takes the unrounded final from the result itself (combine is v15's)."""
     K._captured.clear()            # kitted_logic patches rubric.round to record calls; keep that list from growing
+    if engine == "v16":
+        return P.score_parts(copy.deepcopy(reading), occasion, dict(styles or {}), copy.deepcopy(sl), boldness, engine="v16",
+                             season=season)
     res = P.score_parts(copy.deepcopy(reading), occasion, dict(styles or {}), copy.deepcopy(sl), boldness)
     if res["overall"] is not None:
         ps = {k: res["parts"][k]["score"] for k in P.PART_ORDER if res["parts"][k]["score"] is not None}
@@ -354,7 +358,7 @@ def _shift(base, r):
     return abs(R.formality(s1) - R.formality(s0))
 
 
-def _evaluate(cand, w, closet, occasion, styles, boldness, base_sl, warm):
+def _evaluate(cand, w, closet, occasion, styles, boldness, base_sl, warm, engine="v15", season=None):
     """All the readings the candidate's edits make, scored; the best one (max raw), or None. An 'ALTS' edit is scored
     at its worst alternative (never over-promise)."""
     states = [(w, {})]
@@ -378,7 +382,7 @@ def _evaluate(cand, w, closet, occasion, styles, boldness, base_sl, warm):
             if a["garments"] == w["garments"] or _blocked(w, a, warm):
                 worst = None
                 break
-            res = _score(a, occasion, styles, sl, boldness)
+            res = _score(a, occasion, styles, sl, boldness, engine, season)
             if res["overall"] is None:
                 worst = None
                 break
@@ -417,15 +421,16 @@ def _pick_rank(res, picks):
 
 
 def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_little", second_look=None, closet=(),
-                        warm=False, first_check=False, exclude=()):
-    """Up to 3 parts-engine fixes, a Smaller step and a Next level line. styles: [name, weight] pairs or a dict."""
+                        warm=False, first_check=False, exclude=(), engine="v15", season=None):
+    """Up to 3 parts-engine fixes, a Smaller step and a Next level line. styles: [name, weight] pairs or a dict.
+    T69: engine "v16" scores every candidate with v16 and the card's season (the app passes warm = season == "warm")."""
     if isinstance(styles, list):
         styles = {k: wt for k, wt in styles}
     styles = dict(styles or {})
     picks = _picks(styles)
     c = CATALOG["copy"]
     classes = CATALOG["classes"]
-    base = _score(reading, occasion, styles, second_look, boldness)
+    base = _score(reading, occasion, styles, second_look, boldness, engine, season)
     out = {"base_overall": base["overall"], "base_raw": None, "fixes": [], "smaller_step": None, "next_level": None,
            "none_line": None}
     if base["overall"] is None:
@@ -444,7 +449,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
             continue
         if not _when_ok(cand.get("when"), w, occasion, warm):
             continue
-        ev = _evaluate(cand, w, closet, occasion, styles, boldness, bsl, warm)
+        ev = _evaluate(cand, w, closet, occasion, styles, boldness, bsl, warm, engine, season)
         if ev is None:
             continue
         res, r, info = ev
@@ -549,7 +554,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
                 continue
             if not _when_ok(nl.get("when"), w, occasion, warm):
                 continue
-            ev = _evaluate(nl, w, (), occasion, styles, boldness, bsl, warm)
+            ev = _evaluate(nl, w, (), occasion, styles, boldness, bsl, warm, engine, season)
             if ev is None:
                 continue
             if st is not None and st not in (ev[0].get("detected_styles") or []):
