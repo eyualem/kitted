@@ -267,6 +267,59 @@ describe('KC1.3 · the checker keeps at most 3 taps, in order', () => {
     expect(check([good, 'Make it warmer', 'Add a watch', 'Show me jackets'], 'Anything else?')).toEqual([good, 'Make it warmer', 'Add a watch']);
   });
 
+  // Round 5 (verifier, founder-approved allowlist): an "I", "I'd" or "I'm" tap with no garment noun stays only when it is
+  // one of a short fixed set of clothes-shopping or choice phrasings ("What should I buy first?", "I'd go darker",
+  // "Which should I wear?", "Should I buy it?"); every other tap of that shape is dropped. Also others rating his look,
+  // him set against the clothes, "myself", and "Rate my look".
+  it.each([
+    ['Should I bulk?'],
+    ['Am I dateable?'],
+    ['Do I look sharp?'],
+    ['Should I try a mustache?'],
+    ['Should I get a fade?'],
+    ['Should I get a buzz cut?'],
+    ['Should I get a perm?'],
+    ['Do I need a trim?'],
+    ['Do I need to bulk?'],
+    ['Do I need to tone up?'],
+    ['Should I get veneers?'],
+    ['Should I get lasik?'],
+    ['Should I wear makeup?'],
+    ['Should I get contacts?'],
+    ['Should I get a tattoo?'],
+    ['Should I get a piercing?'],
+    ['Is it me or the shirt?'],
+    ['Does it look childish on me?'],
+    ['Do people like my look?'],
+    ['Do people like my style?'],
+    ['Would she like my outfit?'],
+    ['Dress myself better'],
+    ['Rate my look'],
+  ])('KC1.3 · dropped (round 5): a tap about him, not his clothes (%s)', (bad) => {
+    expect(bad.length).toBeLessThanOrEqual(30); // dropped for what it says, not for its length
+    expect(check([bad], 'Anything else?')).toEqual([]);
+    expect(check([bad, 'Show me jackets'], 'Anything else?')).toEqual(['Show me jackets']);
+    expect(check(['Show me jackets', bad, 'Add a watch'], 'Anything else?')).toEqual(['Show me jackets', 'Add a watch']);
+  });
+
+  // Round 5: clothes taps the allowlist must keep (a garment noun, including a closet-table word or a plural, or one of
+  // the fixed shopping and choice phrasings).
+  it.each([
+    ['Show my jackets'],
+    ['Is my quarter-zip too warm?'],
+    ['Should I get a jacket?'],
+    ['What should I buy first?'],
+    ["I'd go darker"],
+    ['Which should I wear?'],
+    ['Should I buy it?'],
+    ['What should I wear tonight?'],
+  ])('KC1.3 · kept (round 5): a clothes tap the allowlist must not over-block (%s)', (good) => {
+    expect(good.length).toBeLessThanOrEqual(30);
+    expect(check([good], 'Anything else?')).toEqual([good]);
+    expect(check(['Make it warmer', good], 'Anything else?')).toEqual(['Make it warmer', good]);
+    expect(check([good, 'Make it warmer', 'Add a watch', 'Show me jackets'], 'Anything else?')).toEqual([good, 'Make it warmer', 'Add a watch']);
+  });
+
   it('KC1.3 · a one-word tap that is his one-word question is dropped, a different one-word tap stays', () => {
     expect(check(['Dressier'], 'Dressier?')).toEqual([]);
     expect(check(['Dressier', 'Warmer'], 'Dressier?')).toEqual(['Warmer']);
