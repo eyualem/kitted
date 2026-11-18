@@ -3,7 +3,7 @@
 // only (no person, no photo): PLAIN, BOXY, TOP9, BRIGHTS, SKINNY from TESTING.md's shared set-up, TL1 from
 // graded_look_check.py, and every v16 case reading of parts_parity.json. Every number is the Python engine's.
 import { describe, expect, it } from "vitest";
-import { PARTS_DATA, type PartsOptions, type PartsScored, type Reading, type SecondLookInput, type Styles } from "../src/index";
+import { createParts, PARTS_DATA, type PartsOptions, type PartsScored, type Reading, type SecondLookInput, type Styles } from "../src/index";
 import { loadJSON } from "./helpers";
 import { KNEES, OPENINGS, R, scored, T69, v15Engine, v16Engine } from "./t69";
 
@@ -174,6 +174,58 @@ describe("the leg-width look in the engine (T69-G6)", () => {
     expect(shorts.v16).toBeDefined();
     for (const knee of KNEES) for (const opening of OPENINGS) {
       expect(eng.scoreParts(R("SHORTS"), { occasion: "everyday", secondLook: { knee, opening } })).toEqual(shorts);
+    }
+  });
+});
+
+describe("the bottom of the scale and the leg tie-break (reviewer's gaps)", () => {
+  it("SCO-3 · the 3.0 floor: a raw below 3 shows exactly 3.0, and nothing shows under it", () => {
+    // v16's own engine with its faults amplified (a what-if tune, data only): SKINNY's raw falls to 0.575 (Python)
+    const harsh = createParts({ ...PARTS_DATA, tune: { ...PARTS_DATA.tune, v16_alpha: 3.0, v16_beta: 2.0 } as typeof PARTS_DATA.tune });
+    const r = scored(harsh.scoreParts(R("SKINNY"), { occasion: "everyday" }));
+    expect([r.overall, r.rawUnrounded, r.v16?.raw, r.v16?.rawUnclamped, r.v16?.curved]).toEqual([3.0, 3.0, 3.0, 0.575, 3.0]);
+    let n = 0;
+    for (const { reading, opts } of [...madeUp(), ...v16Inputs()]) {
+      for (const eng of [v16Engine(), harsh]) {
+        const x = eng.scoreParts(reading, opts);
+        if (x.overall === null) continue;
+        n++;
+        const s = x as PartsScored;
+        expect([s.overall >= 3.0, s.rawUnrounded >= 3.0, (s.v16?.curved ?? 0) >= 3.0, (s.v16?.raw ?? 0) >= 3.0]).toEqual([true, true, true, true]);
+      }
+    }
+    expect(n).toBeGreaterThan(1000);
+  }, 120_000);
+
+  it("T69-G6 · the leg-width look settles straight vs relaxed both ways, and never replaces slim, skinny or wide", () => {
+    const eng = v16Engine();
+    const NARROW = { knee: "clings", opening: "narrower" };
+    const WIDE = { knee: "hangs_away", opening: "wider" };
+    const at = (sub: string, color: string, leg: string, sl: SecondLookInput | null) => {
+      const rd = R("PLAIN");
+      rd.garments[1] = { ...rd.garments[1]!, subcategory: sub, color_family: color, leg_shape: leg };
+      const x = scored(eng.scoreParts(rd, { occasion: "everyday", secondLook: sl }));
+      return [x.overall, x.rawUnrounded];
+    };
+    const near = (got: (number | null)[], want: number[]) => {
+      expect(got[0]).toBe(want[0]);
+      expect(Math.abs((got[1] ?? NaN) - want[1]!)).toBeLessThan(1e-9);
+    };
+    // Python (parts_proto v16): [overall, raw_unrounded]
+    near(at("jeans", "denim_dark", "straight", NARROW), [7.0, 7.1225]);
+    near(at("jeans", "denim_dark", "straight", WIDE), [8.0, 7.95375]);
+    near(at("jeans", "denim_dark", "relaxed", null), [8.0, 8.0]);
+    near(at("jeans", "denim_dark", "relaxed", NARROW), [7.0, 7.175]);
+    near(at("jeans", "denim_dark", "relaxed", WIDE), [8.0, 8.0]);
+    near(at("trousers", "charcoal", "straight", NARROW), [7.5, 7.35]);
+    near(at("trousers", "charcoal", "straight", WIDE), [7.5, 7.6125]);
+    near(at("trousers", "charcoal", "relaxed", NARROW), [7.5, 7.35]);
+    near(at("trousers", "charcoal", "relaxed", WIDE), [7.5, 7.6125]);
+    // a stored slim, skinny or wide leg is the reading's: W changes nothing
+    for (const leg of ["slim", "skinny", "wide"]) {
+      const alone = at("jeans", "denim_dark", leg, null);
+      expect([leg, at("jeans", "denim_dark", leg, NARROW)]).toEqual([leg, alone]);
+      expect([leg, at("jeans", "denim_dark", leg, WIDE)]).toEqual([leg, alone]);
     }
   });
 });
