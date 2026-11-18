@@ -27,7 +27,7 @@ The whole process on one page, for the founder and for Claude. It explains and p
      ├─ tiny ............. the session fixes it, a test for any bug, fast checks, a screenshot
      ├─ normal ........... the session builds + tests the logic; one reviewer reads it; 1 fix round
      └─ strict ........... test writer (tests first, locked) → implementer → reviewer who
-                           plants up to 3 bugs; 2 fix rounds
+                           plants up to 3 bugs; 1 fix round
      │
      ▼
   A pull request with screenshots ──► you merge ──► the task is [x] in plan.md
@@ -47,11 +47,12 @@ Checking goes where a mistake hurts a person, not where it only looks rough. A b
 |---|---|---|---|
 | **For** | Words, a row, a removal, a small fix (1–2 files) | A change to a screen or feature with real logic; the daily limits; the server | Scoring, privacy (what leaves the phone, face blur, consent, wipes), the age gate |
 | **Who** | The session alone | The session builds; one reviewer | Test writer, implementer, reviewer |
-| **Model** | Sonnet | Sonnet | Opus for the test writer; Sonnet for the rest |
+| **Model** | Sonnet | Sonnet | Sonnet for every agent |
 | **Tests** | One that reproduces any bug | The logic it changes | Written first by a separate mind, locked |
 | **Target** | 10–20 min, about 2–4% of a 5-hour window | 20–40 min, about 5–10% | 45–75 min, about 15–25% |
 
-- **Models switch by themselves:** every session starts on Sonnet and each agent has its own model. Two times you switch the model menu to Opus: a spec interview (it asks you), and a task still failing after its fix rounds (the session asks you).
+- **Models switch by themselves:** every session and every agent runs on Sonnet (the test writer too, since Nov 18). Two times you switch the model menu to Opus: a spec interview (it asks you), and a task still failing after its fix round (the session asks you).
+- **Lean builds** (your call, Nov 18): tests cover the spec's checks only, agents read diffs and slices of files, only the related tests run until one full check at the end, and a task that reaches its call budget stops and tells you what's left before going on.
 - **Strict depends on what the code touches, not on size.** A one-line change to face blur is strict.
 - **A task that outgrows its size moves up** (one line to you). It never moves down to skip a check.
 - **Words, labels and layout get screenshots, not tests.** You see them in the pull request.
@@ -120,7 +121,7 @@ Cost: about 2–4% of a 5-hour window per build, since the session reads a summa
 - **A question only you can answer** (words, taste, money, an install): it asks, then carries on.
 - **A design is ready for your look:** it shows you the frames and waits for your yes.
 - **Its feature isn't defined yet:** it offers the interview.
-- **Still failing after its fix rounds** (1 for normal, 2 for strict): a normal task goes to you with what's left in the pull request; a strict one shows `stuck: <why>` in `plan.md`. Nothing gets loosened to get out.
+- **Still failing after its fix round** (1 at every size): a normal task goes to you with what's left in the pull request; a strict one shows `stuck: <why>` in `plan.md`. Nothing gets loosened to get out.
 
 ## Reading plan.md
 
