@@ -102,7 +102,8 @@ function pullingPiece(reading: Reading, going: DetectedStyle, base: PartsScored,
   const main = scored.filter((g) => inList(g.category, MAIN));
   if (main.length === 0) return null;
   const outfit = RE.helpers.outfit(main);
-  const reads = (gs: readonly Garment[]) => RE.detectStyles(gs, []).detected.includes(going);
+  // T94: the 8 looks, so Going for Tailored works; for the 7 others the membership is detectStyles' exactly.
+  const reads = (gs: readonly Garment[]) => RE.detectLooks(gs, []).detected.includes(going);
   // Where a scored garment sits in the reading (prepare() drops unsure pieces and may re-file an open shirt as a layer).
   const indexOf = (g: Garment): number => reading.garments.findIndex((x) => nv(x.subcategory) === nv(g.subcategory)
     && nv(x.color_family) === nv(g.color_family) && (x.category === g.category || has(g, "recategorized")));

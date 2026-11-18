@@ -205,7 +205,10 @@ type Expanded = { kind: "one"; reading: Reading; info: Info } | { kind: "alts"; 
 interface Scored { res: PartsScored; reading: Reading; info: Info }
 interface Cand {
   id: string; group: string; cls: PartsFixClass; rank: number; effort: number; free: boolean; to: number; toRaw: number;
-  gain: number; rawGain: number; itemId: string | null; order: number; shift: number; pickRank: number; copy: string; tag: string;
+  gain: number; rawGain: number; itemId: string | null; order: number; shift: number; pickRank: number;
+  /** T94 (TL5): 0 when Tailored is among his picks and the fix clears a tailoring fault; else 1 (today's order). */
+  tailorLead: number;
+  copy: string; tag: string;
   raises: PartRaise[]; raisesLine: string; step: string; drops: boolean; liftsDisplay: boolean; edits: PartsFixEdit[];
   tucks: Set<string>; swaps: Set<string>;
   /** v1.9: the fix clears the light-on-light charge. */
@@ -213,6 +216,16 @@ interface Cand {
 }
 
 const first = (r: Reading, cat: string): Garment | null => r.garments.find((g) => g.category === cat) ?? null;
+
+/** parts_fixes.TAILORING_CHECKS (T94, TL5, [TLR-6]): the faults a tailoring fix clears; the hem checks only over dress trousers. */
+const TAILORING_CHECKS = ["FF1_sleeves_tailored", "FF1_sleeves_long", "FF1_cuffs_ribbed", "FF7_pooling",
+  "FF7b_full_break_narrow", "H3_another_world", "GT1_graphic_under_tailoring", "SX1_another_look"] as const;
+const HEM_CHECKS: readonly string[] = ["FF7_pooling", "FF7b_full_break_narrow"];
+const reasonChecks = (card: PartsScored): Set<string> => {
+  const out = new Set<string>();
+  for (const p of Object.values(card.parts)) for (const x of p.reasons ?? []) out.add(x.check);
+  return out;
+};
 const index = (r: Reading, cat: string): number => r.garments.findIndex((g) => g.category === cat);
 
 /** parts_fixes._swapped (v1.7, #336): the slots whose first piece the edit replaced (a different kind, color, pattern or
@@ -257,6 +270,7 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
   const styles = opts.styles ?? null;
   // his picks in order (the 1st pick first); a weight of 0 is not a pick. They shape the fixes, never the score.
   const picks = (styles ?? []).filter(([, wt]) => truthy(wt) && wt > 0).map(([st]) => st as string);
+  const tailoredPick = picks.includes("tailored"); // TL5: any position, weight > 0
   const pickRank = (res: PartsScored): number => {
     const i = picks.findIndex((st) => (res.detectedStyles as readonly string[]).includes(st));
     return i < 0 ? picks.length : i;
@@ -310,6 +324,17 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
   const knitOnKnit = (r: Reading): boolean =>
     r.garments.filter((g) => (g.category === "top" || g.category === "outerwear") && inList(g.subcategory, KNITS)).length >= 2;
   /** v1.9 tip_anchor (parts_fixes._light_on_light, #376): the scored card has the light-on-light charge on Color ([COL-12]). */
+  /** parts_fixes._tailoring_fix (T94): w has a tailored jacket, and the fixed card no longer carries a tailoring check the
+   *  scored card carried (as a reason on any part); the hem checks count only over dress trousers. */
+  const TL_JACKET = new Set(RE.data.styles.sets["TL_JACKET"] ?? []);
+  const TL_TROUSERS = new Set(RE.data.styles.sets["TL_TROUSERS"] ?? []);
+  const tailoringFix = (res: PartsScored): boolean => {
+    if (!w.garments.some((g) => (g.category === "top" || g.category === "outerwear") && TL_JACKET.has(g.subcategory as string))) return false;
+    const b = first(w, "bottom");
+    const trousers = b !== null && TL_TROUSERS.has(b.subcategory as string);
+    const before = reasonChecks(base), after = reasonChecks(res);
+    return TAILORING_CHECKS.some((k) => before.has(k) && !after.has(k) && (!HEM_CHECKS.includes(k) || trousers));
+  };
   const lightOnLight = (card: PartsScored): boolean => card.parts.color.reasons.some((x) => x.check === "CL2_light_on_light");
   /** The styles the outfit reads as, pick-free (parts_fixes._reads_as). */
   const readsAs = (r: Reading): readonly string[] => RE.detectStyles(r.garments, []).detected as readonly string[];
@@ -583,6 +608,7 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
       id: cand.id, group: cand.group, cls: cand.class, rank: cl.rank, effort: cand.effort, free: cl.free,
       to: res.overall, toRaw: pyRound(res.rawUnrounded, 6), gain: res.overall - base.overall,
       rawGain: pyRound(res.rawUnrounded - base.rawUnrounded, 6), itemId: info.item_id ?? null, order, shift: shiftOf(r), pickRank: pickRank(res),
+      tailorLead: tailoredPick && tailoringFix(res) ? 0 : 1,
       copy: fill(cand.copy, info), tag: cl.tag + (cand.detail ? ` · ${cand.detail}` : ""), raises, raisesLine: raisesLine(res, raises),
       step: fill(cand.step, info), drops: ch.some(([, , , d0, d1]) => d1 < d0), liftsDisplay: ch.some(([, , , d0, d1]) => d1 > d0),
       edits: clone(cand.edits), tucks: new Set(cand.tucks ?? []), swaps: swappedSlots(w, r),
@@ -591,7 +617,8 @@ export function suggestPartsFixes(reading: Reading, opts: PartsFixOptions = {}, 
   });
 
   // on the same rounded gain, the fix that makes the outfit read as his earliest pick goes first
-  const keyOf = (x: Cand): number[] => [x.rank, -x.gain, x.pickRank, -x.rawGain, x.effort, x.shift, x.order];
+  // T94 (TL5): tailorLead after the class, before the gain; 1 everywhere without a Tailored pick (today's order)
+  const keyOf = (x: Cand): number[] => [x.rank, x.tailorLead, -x.gain, x.pickRank, -x.rawGain, x.effort, x.shift, x.order];
   const cmp = (a: number[], bb: number[]): number => {
     for (let i = 0; i < a.length; i++) if (a[i] !== bb[i]) return a[i]! < bb[i]! ? -1 : 1;
     return 0;

@@ -294,8 +294,9 @@ export interface RubricData {
   /** Style detection (rubric v4): the fixed label order, card names, old pick keys and every set the detector reads. */
   styles: {
     order: DetectedStyle[];
-    // T94 (interim, until the engine port regenerates RUBRIC_DATA with Tailored's name): Partial.
-    names: Partial<Record<DetectedStyle, string>>;
+    /** T94: the 8 looks' fixed order (the name only; `order` stays the 7 scoring looks). */
+    lookOrder: DetectedStyle[];
+    names: Record<DetectedStyle, string>;
     pickAlias: Record<string, string>;
     sets: Record<string, string[]>;
   };

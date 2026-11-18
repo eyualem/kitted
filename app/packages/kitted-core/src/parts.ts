@@ -484,6 +484,12 @@ interface PartsOutfit {
   /** The label with no picks (v4's H2). */
   labelNoPick: DetectedStyle | null;
   detNoShoe: DetectedStyle[];
+  /** T94: the 8 looks (Tailored added), names only: the card's look and the look a line names. det, label, labelNoPick
+   *  and detNoShoe stay the only inputs to points. */
+  looks: DetectedStyle[];
+  look: DetectedStyle | null;
+  lookNoPick: DetectedStyle | null;
+  looksNoShoe: DetectedStyle[];
   slots: Set<string>;
   credited: Set<Garment>;
   colorFault: boolean;
@@ -645,17 +651,25 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     return out;
   }
 
+  /** parts_proto._shown (T94): the look a line names for one of the 7: Tailored where it stands for smart casual or prep. */
+  const shown = (style: DetectedStyle, looks: readonly DetectedStyle[]): DetectedStyle =>
+    (style === "smart_casual" || style === "classic_prep") && looks.includes("tailored") ? "tailored" : style;
+
   function outfit(gs: Garment[], picks: Styles | null | undefined): PartsOutfit {
     const tops = gs.filter((g) => g.category === "top");
     const outers = gs.filter((g) => g.category === "outerwear");
     const main = gs.filter((g) => has(SLOT, g.category as string));
+    const noShoe = gs.filter((g) => g.category !== "footwear");
     const d = rubric.detectStyles(gs, picks);
-    const nd = rubric.detectStyles(gs.filter((g) => g.category !== "footwear"), picks);
+    const nd = rubric.detectStyles(noShoe, picks);
     const d0 = picks && picks.length > 0 ? rubric.detectStyles(gs, []) : d;
+    const lk = rubric.detectLooks(gs, picks);
     return {
       tops, outers, top: tops[0] ?? null, outer: outers[0] ?? null,
       bottom: gs.find((g) => g.category === "bottom") ?? null, shoes: gs.find((g) => g.category === "footwear") ?? null,
-      main, det: d.detected, label: d.label, labelNoPick: d0.label, detNoShoe: nd.detected, slots: new Set(main.map((g) => SLOT[g.category as string]!)),
+      main, det: d.detected, label: d.label, labelNoPick: d0.label, detNoShoe: nd.detected,
+      looks: lk.detected, look: lk.label, lookNoPick: picks && picks.length > 0 ? rubric.detectLooks(gs, []).label : lk.label,
+      looksNoShoe: rubric.detectLooks(noShoe, picks).detected, slots: new Set(main.map((g) => SLOT[g.category as string]!)),
       credited: new Set(), colorFault: false, mirror: false, sx: [0.0, null, null], occasion: "everyday",
     };
   }
@@ -674,7 +688,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     if (o.det.some((s) => ok.has(s))) return null; // a look the outfit reads as holds it
     const what = rep(or(sub, "top"));
     if (narrow) return [t.pb, `a roomy ${what} over slim legs: an oversized top wants a fuller leg`];
-    const look = o.label ? `a ${STYLE_NAMES[o.label]} outfit` : "the rest of the outfit";
+    const look = o.label ? `a ${STYLE_NAMES[o.look!]} outfit` : "the rest of the outfit"; // T94: the card's look name
     return [t.pb, `the roomy ${what} is roomier than ${look} calls for`];
   }
 
@@ -1166,7 +1180,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       if (heavy) {
         // no "look's own shoe" either
       } else if (truthy(role) && earns(S)) {
-        const d0 = o.detNoShoe[0]!;
+        const d0 = shown(o.detNoShoe[0]!, o.looksNoShoe); // T94: Tailored where it stands for smart casual or prep
         p.add(SH.chosen * up, o.detNoShoe.length === 1 ? `a ${STYLE_NAMES[d0]} shoe for a ${STYLE_NAMES[d0]} outfit` : "the shoes belong to the look", "SC_chosen_for_look");
       } else if (truthy(t.sc_pair) && earns(S) && o.det.some((st) => H.role(st, S, c)[0] >= 2
           && o.main.some((g) => g.category !== "footwear" && H.role(st, g, c)[0] >= 2))) {
@@ -1246,10 +1260,13 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     }
     const det = o.det, label = o.label;
     const h2Label = truthy(t.h2_pick_free) ? o.labelNoPick : label; // v4: picks never move a number
+    const h2Look = truthy(t.h2_pick_free) ? o.lookNoPick : o.look; // T94: the name in its line (8 looks)
     const subs = new Set<unknown>(o.main.map((g) => nv(g.subcategory)));
     const suit = subs.has("suit_jacket") && subs.has("suit_trousers");
     const [sx, sxLine, sxTip] = o.sx; // v5 (0 in v1-v4); computed once in scoreParts
-    if ((det.length > 0 || suit) && !truthy(sx)) p.add(t.h1, label ? `reads as ${STYLE_NAMES[label]}` : "a matching suit", "H1_reads_as_style");
+    // T94 (TL2.2): the card's look by name ("reads as tailored" for a suit); "a matching suit" only for a suit that reads
+    // as no look (founder 1), with the same +0.5
+    if ((det.length > 0 || suit) && !truthy(sx)) p.add(t.h1, o.look ? `reads as ${STYLE_NAMES[o.look]}` : "a matching suit", "H1_reads_as_style");
     // H2: the label style has an anchor (role 2) in all three slots and nothing against it; or a suit over a top
     if (truthy(sx)) {
       // v5: a piece from another look: no "reads as"
@@ -1268,7 +1285,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
           against += neg;
         }
         if (["upper", "bottom", "shoes"].every((s) => (best.get(s) ?? 0) >= 2) && against === 0) {
-          p.add(t.h2, `clearly ${STYLE_NAMES[h2Label]} top to toe`, "H2_clear_top_to_toe");
+          p.add(t.h2, `clearly ${STYLE_NAMES[h2Look!]} top to toe`, "H2_clear_top_to_toe");
           break;
         }
       }
@@ -1641,7 +1658,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       version: data.label, engine: data.engine,
       parts: res, naParts: ORDER.filter((k) => res[k].score === null), weightsUsed,
       condition: cond, occasion: occ, floored, careOrStrain, lowest, secondLook: sl,
-      detectedStyles: o.det, styleLabel: o.label, notRated: prep.notRated, partial: prep.notRated.length > 0,
+      detectedStyles: o.looks, styleLabel: o.look, notRated: prep.notRated, partial: prep.notRated.length > 0,
     };
   }
 
