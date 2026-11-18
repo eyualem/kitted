@@ -99,6 +99,16 @@ Recorded by the coordinator from the verifier's report (the hook blocks the veri
 - **Not verified:** VoiceOver on the lesson and the check; Reduce Motion with the lesson; a real finger's feel; on iOS, that Start over keeps the same deal (render test only).
 - **Shots:** `shots/2-lesson-{light,dark,ax5,ax5-scrolled}.png`, `2-lesson-tap-then-lean-frames-8fps-light.png`, `fast-no-check-{light,dark}.png`, `fast-no-after-start-over-light.png`, `play-again-no-lesson-dark.png`.
 
+## Verification, round 4 (the second for the Nov 18 changes): **not ready, by one test gap (T7); no code defects**
+Recorded by the coordinator from the verifier's report.
+- **Built:** `f32f76d3` (C6, C7) on tests locked at `478d2207` (Lock line `912a1d83`). **Lock holds.**
+- **Suites:** `tsc`, eslint clean; jest `--runInBand` on T113, every T39 file and neighbours: 15 suites, 213/213; T113 92/92.
+- **Planted bugs:** 5 caught (C6 any release dismisses; C6 tap slop ÷100; C7 the old every-Back rule; `FAST_ANSWER_MS` 1600; Back's run-ending line removed). **Not caught (1):** `inFlight ||` dropped from `back()`'s FS4 condition (a No on card 1 cancelled by Back mid-exit no longer ends the run).
+- **On iOS** (Release-bundle swap of `60838f04`, sha1 `279950e5…`; left installed fresh at Welcome, light, text size large): two 140 pt swipes across the lesson leave it up and card 1 unanswered; one tap dismisses it (no peek) and the lean follows about 0.5 s later; Back on card 1 to Welcome, Get started, three quick No's show the check; `T113-style-game.yaml` and `T39-setup-fresh.yaml` (18 taps) pass. SpringBoard restarted once mid-run (memory pressure, not T113's); that step was redone.
+- **Per criterion:** SG1.4 pass; SG7.5 pass with gap T7; F1.1 pass; SG1.2 and rounds 1–3 pass.
+- **Test defect:** **T7** SG7.5: a fresh game, a No on card 1, Back before its card has left, then three fast No's → no check.
+- **Shots:** `shots/2-lesson-after-two-swipes-light.png`, `2-lesson-tap-then-lean-r4-frames-8fps-light.png`, `fast-no-check-after-back-to-welcome-light.png`.
+
 ## Summary for the founder
 Setup's style step is now the game you picked. After Welcome he sees "Me or not me?": 8 drawn outfits, one at a time, tap or swipe, with a tap on the card for that look's other outfit. Then a few this-or-thats put his Me's in order, then "Here's your style", where he can drag, remove, add, type his own words or play again. A fresh install reaches the camera in 17 taps with 3 Me's. Real: all of it runs on the iPhone app on the Simulator, with 84 tests of its own and two verify rounds; his Not me's are saved but not used yet. Mocked: nothing; the drawings are the app's own. Not checked: VoiceOver and haptics on a real phone, the software keyboard, and real people (your test with friends). The words are drafts for you.
 - **Re-lock (test writer, Nov 18): `0624257e`.** The founder changed the ranking line (#493). SG2.1's render test was retargeted to `Tap the one that's more you.`, still checked exactly on the ranking stage. It passes on the build and fails with the old line restored.
