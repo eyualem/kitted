@@ -111,3 +111,35 @@ The second table (23 other jacket-led readings) has no failures. Every reading t
 
 ### Screenshots (web preview, layout only; `tasks/T94/shots/`)
 `292-you-tailored-{light,dark}-web.jpg`, `293-style-profile-tailored-{light,dark}-web.jpg`, `294-card-suit-{light,dark}-web.jpg`, `295-how-i-scored-suit-{light,dark}-web.jpg`, `296-going-for-tailored-{light,dark}-web.jpg`, `redraws-293-{before,after}-{light,dark}-web.jpg`. "Before" is the base drawings (red chunky sneakers, olive zip jacket, cream crew), put in temporarily and reverted.
+
+## Verification, round 2 (the verifier, Nov 18, head `15ac657d`)
+
+**Verdict: ready.** Round 1's one defect (test, TL4.3) is closed. Nothing fails, no planted bug goes uncaught, and the lock holds. The iOS screenshots, the largest-text pass, VoiceOver on a device and the Maestro flows are still **not verified**; each says below what would verify it. Ready is for the logic. The founder still needs the iOS shots before he OKs the redraws.
+
+- **The lock:**
+  - `git diff 7fff88a0..HEAD` changes only TESTING.md's Lock line (re-lock `15ac657d`).
+  - `7fff88a0` (the test writer) only adds tests: one in core `tailored.test.ts` and one in app `T94-tailored.test.tsx`, plus Disputes 3 in TESTING.md.
+  - No app code changed since round 1 (`git diff 3a79ea4f..HEAD` is the tests, TESTING.md, this report and the shots).
+  - No `.only`, `.skip`, `xit`, `it.todo` or snapshots.
+- **The round-1 plant, again:** `goingFor.ts:106` `reads` back on `RE.detectStyles(...)`. Both new tests fail:
+  - core: `× TL4.3 · Going for Tailored names the piece that keeps it from Tailored: a graphic tee under a blazer is the loud one` (`Tests 1 failed | 30 passed (31)` with `goingFor.test.ts`);
+  - app: `✕ TL4.3 · a graphic tee under a blazer, going for Tailored: the card names the tee and the swap, the score stays` (`Tests: 1 failed, 11 passed, 12 total`).
+  - Restored with `git checkout`: core 31/31, app 12/12, tree clean.
+- **`npm run check`:**
+  - Run twice in full; both times exit 1, all from timeouts. First: 9 failures, each `Test timed out in 5000ms`. Second: 14 failures (12 at 5,000 ms, 1 at 60,000 ms, 1 at 180,000 ms). Not one was an assertion failure.
+  - The Mac had 100–350 MB free, and another session's Maestro and xcodebuild held the Simulator. A 5-second parity test took 172 s.
+  - The same parts, run so they didn't compete for memory:
+    - tsc, the core typecheck and lint (0 errors, 6 warnings, none in T94's files) passed inside the full run;
+    - core `npx vitest run --no-file-parallelism`: `Test Files 32 passed (32) · Tests 939 passed (939)`, exit 0;
+    - app `npx jest --no-watchman -w 2`: `Test Suites: 3 skipped, 150 passed · Tests: 4 skipped, 2019 passed, 2023 total`, exit 0.
+  - In round 1, at `3a79ea4f`, `npm run check` exited 0. The coordinator should rerun it once the Mac is quieter, before merging.
+- **iOS shots: not verified.** The coordinator asked for the embed-and-swap route (`expo export:embed`, `hermesc`, a re-signed copy of the app). That route needs no Simulator booted and no `maestro`, `xcodebuild` or `hermesc` running, so the two verifiers don't swap bundles under each other. That never happened.
+  - From about 07:30 to 09:10 the main Simulator `111D0A09` stayed booted, with another session's `maestro … test` (pid 82460) and `xcodebuild test-without-building` (pid 82498) alive for over 3 hours at about 0% CPU.
+  - I didn't touch them, didn't boot a second Simulator (memory was nearly gone), and didn't swap any bundle.
+  - The installed app is untouched.
+  - **Would verify it:** the same route once 111D0A09 is free: screens 292–296 in light, dark and `accessibility-extra-extra-extra-large`, the redraws on 17 and 80, VoiceOver labels, then the original app back. Then `maestro … test app/e2e/flows/` on that build.
+- **Built, round 2:** the test writer's note in TESTING.md (Disputes 3) says both tests were red with the revert and green restored. Confirmed.
+- **Still open:**
+  - The iOS items above.
+  - The look-page part of TL2.2 (T75).
+  - Round 1's "worth a look" notes: the suits are low-contrast on dark tiles, and How I scored cuts two point values on the web.
