@@ -306,6 +306,30 @@ Add or strengthen only: no test was loosened or removed. Each change was proven 
   - **C2 · SG9.1** › `the results' text buttons stop growing at 2×`: at AX size, the label Text of `results-add`, the words link, Done, Edit and Play again carries `maxFontSizeMultiplier` = `CONTROL_TEXT_MAX_SCALE` (2). The T39 mock's KButton / TextLink now passes `maxFontSizeMultiplier` to its label, as the real controls draw it, so a fix through TextLink or through the screen's own text both show. Red today: `results-add`'s label has none.
   - **C1 · SG7.1** › `the two outfit dots sit at the top of the card`: within `game-card`, `game-card-dot-0` comes before the drawing in the tree, or its container is pinned to the card's top (`position: 'absolute'`, `top` set, no `bottom`). This checks placement, not looks: how far from the top and how big stay screenshot-only. Red today: the dots come after the drawing and aren't pinned.
 
+## Verify round 3: tests added and strengthened (test writer, Nov 18)
+I only added or strengthened tests: none was loosened or removed. Each change is red on today's build (`e22020de`, app code `b3ba32a1`) for the right reason, or bites a planted bug (reverted each time). All runs used Jest `--runInBand`.
+- **T4 · SG1.4** › `on a fresh install card 1 shows the overlay; Yes, No and a swipe do nothing until a tap dismisses it`. **Strengthened.**
+  - *The gap:* the old swipes ran only when the lesson didn't cover the card. It does (pinned), so no swipe was ever tried, and the "still shown" checks never saw one.
+  - *The change:* the test now swipes the lesson itself, +120 pt then −120 pt across its words, released inside it. After each swipe it checks the words still show exactly once and kv `onboarding.swipeTaught` is still `null`. The other checks are kept.
+  - *The finger:* a new helper, `swipeFrom`, routes the touch the way React Native's responder system does. Capture runs root first and bubble deepest first. On a move, a node above may take the touch. Touch events bubble along the path. Each event's `currentTarget` measures as a box, so a Pressable measures its press rect as on the phone.
+  - *Red:* `expect(screen.getAllByText(TEACH)).toHaveLength(1)` after the first swipe. The swipe dismissed the lesson (C6).
+  - *A correct lesson can pass it:* a scratch fix that dismisses only on a release under 6 pt (and still on a press with no coordinates) passes SG1.4 (both tests), SG1.3 and F1.1. Reverted.
+  - *Note for the implementer:* `dismissTeach` presses the words with RNTL's `fireEvent.press`, which passes no event. The fix must still dismiss on a press with no event or no coordinates.
+- **T5 · SG7.5** › `the 1.5 s line: a No at 1.45 s counts as fast, at 1.55 s it doesn't`. **New.**
+  - On card 1 (lesson taught, so the card appears when the screen mounts): a No at 1450 ms, then two fast No's, shows the check. A No at 1550 ms, then two fast, gives no check and card 4 (Minimal).
+  - On card 3, up at least 1550 ms (timed from the end of the settle, when the card is certainly up): no check, card 4.
+  - The behaviour exists, so it is green. Bites: `FAST_ANSWER_MS` 1500 → 1600 fails it at the 1.55 s case (the check shows); 1500 → 1400 fails it at the 1.45 s case (no check).
+- **T6 · SG7.5** › `No, No, a No cancelled by Back as its card leaves, then No: no check`. **New.**
+  - No, No, then No on card 3 and Back 50 ms later. The answers are the 2 No's, card 3 shows, no check. Then No: 3 No's, no check, card 4.
+  - Green on the build. Bite: removing `back()`'s `if (state && state.stage === 'cards') fastCheckSpent = true;` fails it at the last `checkShown()` (the check shows).
+- **C7 · SG7.5** › `Back on card 1 before any answer, then back in: three fast No's still show the check`. **New.**
+  - Back on card 1 with no answers: `router.back` once, the game is `{ seed: 42, answers: [], rounds: [] }`. Remount: card 1 (Workwear). Two fast No's: no check. The third: the check, once, with the 3 No's.
+  - *Reading:* FS4 says "with no Back in between", which rules out only a Back between his first three answers. A Back before any answer isn't between them. I agree with the verifier.
+  - *Red:* `expect(screen.getAllByText(CHECK)).toHaveLength(1)` (C7: `back()` spends the check on any Back during the cards).
+- **Left for the founder, not written:** on a fresh install, is the lesson's time part of card 1's 1.5 s?
+  - The spec says "after its card appeared". The build counts from when the card can be answered, after the lesson.
+  - The spec doesn't settle it, so no test pins it.
+
 ## Edges (from the spec and the setup's failure cases)
 - **Offline:** the game needs no network; the render tests run with `fetch` failing on any call.
 - **A failure mid-way:** a kv write that fails on Continue (SG3.2) or on Done (`saveWords` rejects: the field stays open with his text, Continue still on from memory).

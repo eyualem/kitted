@@ -279,6 +279,77 @@ async function tapCard() {
   await advance(50);
 }
 
+/** A finger put down on `start` (a node with no testID, such as the lesson's words) and dragged `dx` sideways in
+ *  10 pt steps, then lifted, the way React Native's responder system routes it (verify round 3, T4): the start
+ *  capture runs root first, then the start bubble deepest first; on each move another node on the path may take the
+ *  touch (move capture, then move bubble) if the holder lets go; touch events bubble along the path. Each event
+ *  carries a `currentTarget` that measures as a 390 × 600 pt box at (0, 100), so a Pressable on the path measures its
+ *  press rect and behaves as on the phone: a press that moves but is released inside it still counts as a press. */
+async function swipeFrom(start: Node, dx: number) {
+  const path = [start, ...ancestors(start)].filter((n) => typeof n.type === 'string');
+  const box = { measure: (cb: (...a: number[]) => void) => cb(0, 0, 390, 600, 0, 100) };
+  let t = 20_000;
+  const sx = 200, sy = 300;
+  let x = sx, px = sx, pt = t;
+  const ev = (active: boolean) => {
+    const touch = { pageX: x, pageY: sy, locationX: x, locationY: sy, identifier: 0, timestamp: t, target: box };
+    return {
+      nativeEvent: { ...touch, touches: active ? [touch] : [], changedTouches: [touch] },
+      touchHistory: {
+        numberActiveTouches: active ? 1 : 0, indexOfSingleActiveTouch: 0, mostRecentTimeStamp: t,
+        touchBank: [{
+          touchActive: active, startPageX: sx, startPageY: sy, startTimeStamp: 20_000, currentPageX: x, currentPageY: sy,
+          currentTimeStamp: t, previousPageX: px, previousPageY: sy, previousTimeStamp: pt,
+        }],
+      },
+      currentTarget: box, target: box,
+      persist() {}, preventDefault() {}, stopPropagation() {}, isDefaultPrevented: () => false, isPropagationStopped: () => false,
+    };
+  };
+  const call = (n: Node, name: string, e: unknown) => {
+    const h = n.props[name];
+    return typeof h === 'function' ? (h as Call)(e) : undefined;
+  };
+  const bubble = (name: string, e: unknown) => {
+    for (const n of path) call(n, name, e);
+  };
+  let holder: Node | null = null;
+  const claim = (capture: string, bubbleName: string, e: unknown, among: Node[]) =>
+    [...among].reverse().find((n) => call(n, capture, e) === true) ?? among.find((n) => call(n, bubbleName, e) === true) ?? null;
+  await act(async () => {
+    const e = ev(true);
+    bubble('onTouchStart', e);
+    holder = claim('onStartShouldSetResponderCapture', 'onStartShouldSetResponder', e, path);
+    if (holder) call(holder, 'onResponderGrant', e);
+  });
+  const steps = Math.max(1, Math.ceil(Math.abs(dx) / 10));
+  for (let i = 0; i <= steps; i++) {
+    px = x; pt = t;
+    if (i < steps) x += dx / steps;
+    t += i < steps ? 16 : 400;
+    await act(async () => {
+      const e = ev(true);
+      bubble('onTouchMove', e);
+      // Nodes above the holder (or the whole path when nothing holds it) may ask for the touch.
+      const above = holder ? path.slice(path.indexOf(holder) + 1) : path;
+      const taker = claim('onMoveShouldSetResponderCapture', 'onMoveShouldSetResponder', e, above);
+      if (taker && (!holder || call(holder, 'onResponderTerminationRequest', e) !== false)) {
+        if (holder) call(holder, 'onResponderTerminate', e);
+        holder = taker;
+        call(holder, 'onResponderGrant', e);
+      }
+      if (holder) call(holder, 'onResponderMove', e);
+    });
+  }
+  await act(async () => {
+    const e = ev(false);
+    if (holder) call(holder, 'onResponderRelease', e);
+    bubble('onTouchEnd', e);
+  });
+  await flush();
+  await advance(SETTLE_MS);
+}
+
 /** The animations a lean starts: x moves of 5–60 pt (see the header). */
 function leanMoves(timing: jest.SpyInstance, spring: jest.SpyInstance): number[] {
   return [...timing.mock.calls, ...spring.mock.calls]
@@ -1314,6 +1385,14 @@ describe('SG1.4 · card 1 teaches the swipe', () => {
       await swipeCard(120);
       await swipeCard(-120);
     }
+    // And a swipe that starts on the lesson itself (verify round 3, T4): ±120 pt across its words, released inside
+    // it. SG1.4: "while it shows, Yes, No and a swipe do nothing", so a moved press must not dismiss it either.
+    await swipeFrom(screen.getAllByText(TEACH)[0] as unknown as Node, 120);
+    expect(screen.getAllByText(TEACH)).toHaveLength(1);
+    expect(await store().getKv(TAUGHT_KEY)).toBeNull();
+    await swipeFrom(screen.getAllByText(TEACH)[0] as unknown as Node, -120);
+    expect(screen.getAllByText(TEACH)).toHaveLength(1);
+    expect(await store().getKv(TAUGHT_KEY)).toBeNull();
     expect(st().game.answers).toEqual([]);
     expect(impacts()).toEqual([]);
     expect(label('game-card')).toBe(cardLabel(1, 1, 'workwear'));
@@ -1458,6 +1537,88 @@ describe('SG7.5 · Just checking', () => {
     await fastNo();
     expect(checkShown()).toBe(false);
     expect(label('game-card')).toBe(cardLabel(4, 1, 'minimalist'));
+    await r.unmount();
+  }, 20000);
+
+  // Verify round 3, T5: the line is 1.5 s (FS4: "less than 1.5 s after its card appeared"). Card 1 (the lesson
+  // already taught) appears when the screen mounts, so its time is exact; a later card is timed from the end of the
+  // settle, when it is certainly up, so it has been up at least that long.
+  it('SG7.5 · the 1.5 s line: a No at 1.45 s counts as fast, at 1.55 s it doesn\'t', async () => {
+    // Card 1 answered 1.45 s after it appeared: fast, so with two fast No's the check shows.
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    let r = await mount(<StyleGameScreen />);
+    await advance(1450);
+    await fastNo();
+    await fastNo();
+    await fastNo();
+    expect(screen.getAllByText(CHECK)).toHaveLength(1);
+    expect(answers()).toEqual(noes);
+    await r.unmount();
+    // Card 1 answered 1.55 s after it appeared: not fast, so no check, and card 4 shows.
+    endStyleGame();
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    r = await mount(<StyleGameScreen />);
+    await advance(1550);
+    await fastNo();
+    await fastNo();
+    await fastNo();
+    expect(checkShown()).toBe(false);
+    expect(answers()).toEqual(noes);
+    expect(label('game-card')).toBe(cardLabel(4, 1, 'minimalist'));
+    await r.unmount();
+    // Card 3 up for at least 1.55 s before its No: not fast either.
+    endStyleGame();
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    r = await mount(<StyleGameScreen />);
+    await fastNo();
+    await fastNo();
+    expect(label('game-card')).toBe(cardLabel(3, 1, 'streetwear'));
+    await advance(1550);
+    await fastNo();
+    expect(checkShown()).toBe(false);
+    expect(answers()).toEqual(noes);
+    expect(label('game-card')).toBe(cardLabel(4, 1, 'minimalist'));
+    await r.unmount();
+  }, 20000);
+
+  // Verify round 3, T6: a Back that cancels a No while its card is still leaving is a Back between his answers.
+  it('SG7.5 · No, No, a No cancelled by Back as its card leaves, then No: no check', async () => {
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    await mount(<StyleGameScreen />);
+    await fastNo();
+    await fastNo();
+    // No on card 3, then Back 50 ms later, before the card has gone (the exit takes 240 ms on the phone).
+    await pressId('game-notme');
+    await advance(50);
+    await press(backButton());
+    await advance(SETTLE_MS);
+    expect(answers()).toEqual(['workwear Not me', 'classic_prep Not me']);
+    expect(label('game-card')).toBe(cardLabel(3, 1, 'streetwear'));
+    expect(checkShown()).toBe(false);
+    await fastNo();
+    expect(answers()).toEqual(noes);
+    expect(checkShown()).toBe(false);
+    expect(label('game-card')).toBe(cardLabel(4, 1, 'minimalist'));
+  }, 20000);
+
+  // Verify round 3, C7: FS4 rules out a Back between his answers. Back on card 1 before any answer (the exit to
+  // Welcome) comes before them, not between them: coming back, three fast No's still show the check.
+  it('SG7.5 · Back on card 1 before any answer, then back in: three fast No\'s still show the check', async () => {
+    await setUpGame(store(), { seed: 42, me: [], cards: 0 });
+    let r = await mount(<StyleGameScreen />);
+    await press(backButton());
+    await advance(SETTLE_MS);
+    expect((router.back as jest.Mock).mock.calls).toHaveLength(1);
+    expect(st().game).toEqual({ seed: 42, answers: [], rounds: [] });
+    await r.unmount();
+    r = await mount(<StyleGameScreen />);
+    expect(label('game-card')).toBe(cardLabel(1, 1, 'workwear'));
+    await fastNo();
+    await fastNo();
+    expect(checkShown()).toBe(false);
+    await fastNo();
+    expect(screen.getAllByText(CHECK)).toHaveLength(1);
+    expect(answers()).toEqual(noes);
     await r.unmount();
   }, 20000);
 });
