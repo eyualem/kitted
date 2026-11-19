@@ -34,6 +34,9 @@
 - **The Next buy sheet is off in the beta** (it sends him to Closet). Opened from Kit's card, it now shows that one piece: drawn, its name, its price range and Got it, with no outfit counts. Settled by Claude; logged.
 - **Add, No thanks, Undo and I have one** draw here; what they do is T106 (adds) and T107 (corrections). Until T106, `I have one` stays out of the menu (an outfit card from the model can reach a tester), and the add and changed cards can't appear outside demo screens (only code builds them).
 
+## The card's entrance (approved)
+- **The founder approved it on Nov 18** (proposal 1 of `reports/2026-11-18-chat-feel-research.md`, PR #150; relayed by the control session). About 120 ms after the answer's words finish, the card fades in while rising 12 pt over 280 ms, then the follow-up taps fade in 50 ms apart; Reduce Motion: fades only; once per new answer, never in Past chats or on scroll-back. It lands as its own commit for a clean history (log #496).
+
 ## Built
 - **Changed:** the outfit card draws his pieces then the drawn ones (dashed with `You'd need`, or plain in an Example titled `Example` with `Check my fit`); the tag reads `<occasion> · From your closet + n`. New views for options, colors (pieces or swatches), the add card (asking, added with Undo and a tap to open the piece, not added; Past chats read-only), Changed · Undo / Changed back, and the drawn buy card (tap → the Next buy sheet on that piece). A `You'd need` tile opens the action sheet when it has a row. The follow-up taps sit under the latest answer only and send as his message. Tiles are 76 pt (up to 1.5x with text); every card hugs its content. `cardSpoken` gives every new card a VoiceOver line made of its own words. Demo screens 400–412.
 - **Tests added:** `app/src/__tests__/T104-cardViews.test.tsx` (25: KC1.6, KC2.2, KC2.3, KC2.10, KC3.1, KC3.2, KC3.4, KC4.2, KC6.4, the VoiceOver lines, "bracelet"). `closetNoOutfits.test.tsx`'s mocks gained the tiles module's new exports, the drawing and `useLocalSearchParams` (no assertion changed).
@@ -41,4 +44,21 @@
 - **Not done or not checked:**
 
 ## Review
-Written by the reviewer.
+### Round 1 (code and spec read; no screenshots yet)
+Ran `npx jest src/__tests__/T104-cardViews.test.tsx`: 25 passed. `npm run check`, Simulator, Metro not run (low memory).
+- KC1.6 tiles one fixed size, card hugs content: done in code (tileSize, tilesWidth, HUG); looks right at default/largest text: can't tell yet (needs shots).
+- KC2.2 dashed tile, color, `You'd need`, tag `From your closet + n`, never `Yours`: done.
+- KC2.3 Example drawn plain, titled `Example`, no `Yours`/`You'd need`/`From your closet`: done.
+- KC2.10 tile menu, `Next buy` only with a Starter entry; `I have one` held back by ADD_READY=false (T106): done. The iOS action sheet itself: can't tell yet.
+- KC3.1 / KC3.2 / KC3.4 colors, names in text: done in code; light/dark legibility of swatches: can't tell yet.
+- KC4.2 add card three states, Past chats read-only (#493): done.
+- KC6.4 buy card drawn, name, price range, reason, tap opens Next buy on that piece, no outfit count: done.
+- Must not break: morning compact tiles kept (OutfitTiles compact path); old needs-less cards draw as before; "bracelet" test passes; no emoji/rank/streak, nothing new leaves the phone.
+- Words: new strings match the spec list; `Options` and the tag orders are from the mockup and logged as #495.
+Defects: none open.
+Small things for later (never blocking):
+- OutfitTiles.tsx: the `needs` prop was dropped from `OutfitTiles`; only MorningCard uses it, so fine, but check no other lane's branch passes it.
+- NextBuySheet StarterPiece shows no reason line (the card has one); fine for the beta.
+- needMenu.web.ts picks the first row on tap (preview only).
+- Can't tell yet, needs the iOS shots: clipped swatch names/tile names at the largest text, dashed tile contrast in dark mode, the add card at accessibility size.
+Verdict: **Ready** (code and spec checks); the visual checks wait for the shots on the second pass.
