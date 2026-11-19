@@ -4,7 +4,7 @@
 # No on 5 (6–10), the ranking's left card while it shows (at most 3: 11–13), Continue (14), 22–25 (15), Continue (16),
 # the card's Check my fit (17), Agree (18). The lesson shows on the first game only. No bubble on
 # Looks or About you, no agreement screen in setup, no sign-in and no paywall on the way, and the camera never opens on
-# its own. The name is never typed (it's optional). Taps on the game are by testID: the deal is random on a fresh
+# its own. The name is typed (#497: the field opens focused, and typing isn't a tap). Taps on the game are by testID: the deal is random on a fresh
 # install, so nothing here depends on which look is on a card.
 # Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test -e PORT=8082 app/e2e/flows/T39-setup-fresh.yaml
 # (PORT defaults to 8081). No demo arguments: a demo screen opens the camera without the agreement. The development
@@ -102,6 +102,11 @@ name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesso
 - assertNotVisible: "Take photo"
 - assertNotVisible: "Continue free"
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
+# #497: a small Skip until he types (the hint above Continue is hidden from VoiceOver, so Maestro can't see it; the
+# render tests check it).
+- assertVisible: "Skip"
+# Not a tap: the field has focus when the step opens, so the letters go straight in.
+- inputText: "Alex"
 - assertNotVisible: "Skip"
 
 # Tap 15.

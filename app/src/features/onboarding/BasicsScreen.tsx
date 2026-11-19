@@ -1,7 +1,9 @@
 // About you (T39, specs/onboarding-screens.md OS4, specs/setup-and-you.md SY4; tasks/T39/DESIGN.md phones 2–5, 7): the
-// last setup step, a plain screen (no chat bubbles, OS3). An optional first name ("What should Kit call you?") and
-// five age choices with nothing picked; Continue is off, with the hint, until he picks one. His pick and the name as
-// typed wait in kv (onboarding.about, never synced), so a close keeps both.
+// last setup step, a plain screen (no chat bubbles, OS3). A first name ("What should Kit call you?") and five age
+// choices with nothing picked. The name stays optional (Apple 5.1.1(x)) but setup nudges for it (#497): the field opens
+// focused with the keyboard up, Continue waits for a name and an age, and a small Skip under it goes on without a name
+// (off until an age is picked). His pick and the name as typed wait in kv (onboarding.about, never synced), so a close
+// keeps both.
 //
 // Continue with an 18+ band ends setup (finishSetup: the profile with his band, no birth year, no agreement; Kit's
 // first-check offer) and lands in Stylist; the camera opens only when he taps Check my fit there. "Under 18" asks once
@@ -20,12 +22,15 @@ import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
 import { setAgeBlocked, setOnboarded } from '@/state/appGate';
 import { parseRestoreParam } from '@/features/account/account';
-import { AGE_CHOICES, ageChoiceLabel, ageChoiceSpoken, ageChoiceTestID, EMPTY_ABOUT, finishSetup, NAME_MAX, saveAbout, type AboutDraft, type AgeChoice } from './aboutStep';
+import { AGE_CHOICES, ageChoiceLabel, ageChoiceSpoken, ageChoiceTestID, cleanName, EMPTY_ABOUT, finishSetup, NAME_MAX, saveAbout, type AboutDraft, type AgeChoice } from './aboutStep';
 import { loadDraft } from './basics';
 import { ChoiceList, type Choice } from './ChoiceList';
 import { OnboardingNav } from './OnboardingNav';
 
 const CHOICES: readonly Choice<AgeChoice>[] = AGE_CHOICES.map((c) => ({ value: c, label: ageChoiceLabel(c), spoken: ageChoiceSpoken(c), testID: ageChoiceTestID(c) }));
+
+/** A native-stack push takes about 350 ms; the name field asks for focus again after it (#497). */
+export const FOCUS_AFTER_PUSH_MS = 450;
 
 /** Hidden from VoiceOver as its own stop (the field's label, or the disabled Continue's hint, says it). */
 const HIDDEN = { accessibilityElementsHidden: true, importantForAccessibility: 'no-hide-descendants' } as const;
@@ -42,6 +47,8 @@ export function BasicsScreen() {
   // Signed in from Welcome to an account that has his fits (10-onboarding.md §4.4): only this step, then A4.
   const { restore } = useLocalSearchParams<{ restore?: string }>();
   const restoring = parseRestoreParam(restore);
+  const isRestore = restoring !== null;
+  const nameField = useRef<TextInput>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -51,6 +58,19 @@ export function BasicsScreen() {
         setAbout(d.about);
       });
     }, []),
+  );
+
+  // #497: the keyboard opens on the name. autoFocus covers a reopen on this step; on a push, iOS drops a focus asked
+  // for mid-slide (seen on the Simulator, Nov 18), so it's asked again once the slide is over.
+  useFocusEffect(
+    useCallback(() => {
+      if (isRestore) return undefined;
+      const id = setTimeout(() => {
+        const f = nameField.current;
+        if (f && !f.isFocused?.()) f.focus?.();
+      }, FOCUS_AFTER_PUSH_MS);
+      return () => clearTimeout(id);
+    }, [isRestore]),
   );
 
   // The dock rides above the keyboard with a small gap instead of the home-indicator inset.
@@ -107,6 +127,9 @@ export function BasicsScreen() {
 
   const back = () => (router.canGoBack() ? router.back() : router.replace(restoring ? '/onboarding/welcome' : '/onboarding/looks'));
   const none = about.age === null;
+  // Restore has no name field, so only the age counts there.
+  const noName = !restoring && cleanName(about.name) === null;
+  const hint = noName ? t('onb.about.nameHint') : none ? t('onb.about.hint') : null;
 
   return (
     <KeyboardAvoidingView behavior="padding" style={[styles.root, { backgroundColor: colors.bg, paddingTop: insets.top }]}>
@@ -125,7 +148,10 @@ export function BasicsScreen() {
               {t('onb.about.nameLabel')}
             </KText>
             <TextInput
+              ref={nameField}
               testID="about-name-input"
+              // #497: the step opens with the keyboard up on the name (Restore has no name field).
+              autoFocus
               value={about.name}
               onChangeText={(name) => change({ name })}
               placeholder={t('onb.about.namePlaceholder')}
@@ -154,19 +180,33 @@ export function BasicsScreen() {
       </ScrollView>
       <View style={[styles.dock, { paddingBottom: keyboard ? space.s : Math.max(insets.bottom, space.l) }]}>
         {/* Why the button is off (09 UI review): the one answer it waits for. VoiceOver hears it as Continue's hint. */}
-        {none ? (
+        {hint !== null ? (
           <KText testID="about-hint" variant="footnote" color="ink2" style={styles.center} {...HIDDEN}>
-            {t('onb.about.hint')}
+            {hint}
           </KText>
         ) : null}
         <View testID="about-continue">
           <KButton
             title={t('onb.basics.cta')}
-            disabled={none || busy}
-            accessibilityHint={none ? t('onb.about.hint') : undefined}
+            disabled={none || noName || busy}
+            accessibilityHint={hint ?? undefined}
             onPress={() => void done()}
           />
         </View>
+        {/* #497: the only way on without a name; it does what Continue does, so it waits for an age too. */}
+        {noName ? (
+          <View testID="about-skip">
+            <KButton
+              title={t('onb.about.skip')}
+              kind="ghost"
+              size="regular"
+              fullWidth
+              disabled={none || busy}
+              accessibilityHint={none ? t('onb.about.hint') : t('onb.about.skipHint')}
+              onPress={() => void done()}
+            />
+          </View>
+        ) : null}
       </View>
     </KeyboardAvoidingView>
   );

@@ -1177,7 +1177,7 @@ const addedInBuild = {
   'onb.looks.line': "Pick up to 3 looks you like. Today's outfit comes next.",
   'onb.about.title': 'About you',
   'onb.about.nameLabel': 'What should Kit call you?',
-  'onb.about.namePlaceholder': 'First name (optional)',
+  'onb.about.namePlaceholder': 'First name', // #497: the name stays optional (Skip), but the field no longer says so
   'onb.about.ageLabel': 'How old are you?',
   'onb.about.age.under18': 'Under 18',
   'onb.about.age.18to21': '18–21',
@@ -1186,6 +1186,9 @@ const addedInBuild = {
   'onb.about.age.31plus': '31 or older',
   'onb.about.footnote': 'Stays on your phone. It never changes your score.',
   'onb.about.hint': 'Pick your age to go on.',
+  'onb.about.nameHint': 'Add your first name to go on.', // #497, draft for the founder
+  'onb.about.skip': 'Skip', // #497: under Continue while the name is blank
+  'onb.about.skipHint': 'Goes on without a name.', // #497, VoiceOver only; draft
   'onb.about.under18.title': 'Under 18?',
   'onb.restore.title': 'Welcome back',
   'onb.restore.line': "Your age first, then I'll bring back your fits.",

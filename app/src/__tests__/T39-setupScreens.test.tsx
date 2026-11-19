@@ -16,7 +16,7 @@ import { getAgeBlocked, setAgeBlocked } from '@/data/secure';
 import type { ProfileRow } from '@/data/types';
 import OnboardingConsent from '@/app/onboarding/consent';
 import { looksReply } from '@/features/onboarding/basics';
-import { BasicsScreen } from '@/features/onboarding/BasicsScreen';
+import { BasicsScreen, FOCUS_AFTER_PUSH_MS } from '@/features/onboarding/BasicsScreen';
 import { ConsentScreen } from '@/features/onboarding/ConsentScreen';
 import { ExampleCheckScreen } from '@/features/onboarding/ExampleCheckScreen';
 import { picksToStyles } from '@/features/onboarding/looks';
@@ -38,7 +38,10 @@ const RESULTS_TITLE = "Here's your style";
 const SV = ['streetwear', 'vintage_sport', 'outdoor', 'workwear'];
 const ABOUT_TITLE = 'About you';
 const NAME_Q = 'What should Kit call you?';
-const NAME_PLACEHOLDER = 'First name (optional)';
+const NAME_PLACEHOLDER = 'First name'; // #497 (was "First name (optional)")
+const NAME_HINT = 'Add your first name to go on.'; // #497
+const SKIP = 'Skip'; // #497
+const SKIP_HINT = 'Goes on without a name.'; // #497
 const AGE_Q = 'How old are you?';
 const FOOTNOTE = 'Stays on your phone. It never changes your score.';
 const HINT = 'Pick your age to go on.';
@@ -63,6 +66,7 @@ const LOOKS_AX = [{ scheme: 'light' as const, ax: false }, { scheme: 'dark' as c
 const isDisabled = (n: Node) => (n.props.accessibilityState as { disabled?: boolean } | undefined)?.disabled === true || n.props['aria-disabled'] === true;
 const isSelected = (n: Node) => (n.props.accessibilityState as { selected?: boolean } | undefined)?.selected === true || n.props['aria-selected'] === true;
 const continueBtn = () => within(getId('about-continue') as never).getByRole('button') as unknown as Node;
+const skipBtn = () => within(getId('about-skip') as never).getByRole('button') as unknown as Node;
 const rowLabel = (id: string, label: string) => getId(id).queryAll((x) => x.type === 'Text' && textOf(x) === label)[0]!;
 const bubbles = () => [(StylistMessage as unknown as jest.Mock).mock.calls.length, (UserBubble as unknown as jest.Mock).mock.calls.length, screen.queryAllByTestId('mock-stylist-message').length, screen.queryAllByTestId('mock-user-bubble').length];
 const pushes = () => (router.push as jest.Mock).mock.calls.map((c) => (typeof c[0] === 'string' ? c[0] : String((c[0] as { pathname?: string }).pathname)));
@@ -194,9 +198,10 @@ describe('OS3.2 · three steps, no agreement', () => {
     await r.unmount();
     random.mockRestore();
 
-    // About you: 22–25, Continue → onboarded, to "/" (Stylist), never the agreement or the camera.
+    // About you: a name, 22–25, Continue → onboarded, to "/" (Stylist), never the agreement or the camera.
     jest.clearAllMocks();
     r = await mount(<BasicsScreen />);
+    await typeIn(getId('about-name-input'), 'Alex');
     await press(getId('age-22-25'));
     await press(continueBtn());
     await advance(5000);
@@ -262,7 +267,7 @@ describe('OS4.1 · About you', () => {
       mockT39.theme = themeFor(look);
       const r = await mount(<BasicsScreen />);
       const order = idsInOrder();
-      const want = ['about-title', 'about-name-label', 'about-name-input', 'about-age-label', 'about-age-list', ...ROWS.map((x) => x.id), 'about-footnote', 'about-hint', 'about-continue'];
+      const want = ['about-title', 'about-name-label', 'about-name-input', 'about-age-label', 'about-age-list', ...ROWS.map((x) => x.id), 'about-footnote', 'about-hint', 'about-continue', 'about-skip'];
       const at = want.map((id) => order.indexOf(id));
       expect([look, at.every((i) => i >= 0), at.every((i, k) => k === 0 || i > at[k - 1]!)]).toEqual([look, true, true]);
 
@@ -271,7 +276,7 @@ describe('OS4.1 · About you', () => {
       expect(textAt('about-name-label')).toBe(NAME_Q);
       expect(isHiddenFromAccessibility(getId('about-name-label') as never)).toBe(true);
       const input = getId('about-name-input');
-      expect([input.props.placeholder, input.props.accessibilityLabel, input.props.value ?? '']).toEqual([NAME_PLACEHOLDER, NAME_Q, '']);
+      expect([input.props.placeholder, input.props.accessibilityLabel, input.props.value ?? '', input.props.autoFocus]).toEqual([NAME_PLACEHOLDER, NAME_Q, '', true]);
       const ageQ = getId('about-age-label');
       expect([textOf(ageQ), ageQ.props.accessibilityRole, isHiddenFromAccessibility(ageQ as never)]).toEqual([AGE_Q, 'header', false]);
       const list = getId('about-age-list');
@@ -283,10 +288,13 @@ describe('OS4.1 · About you', () => {
         expect([row.id, rowLabel(row.id, row.label).props.weight]).toEqual([row.id, '400']);
       }
       expect(textAt('about-footnote')).toBe(FOOTNOTE);
-      expect(textAt('about-hint')).toBe(HINT);
+      // #497: the name is asked first, so its hint shows first; Skip is there but waits for an age.
+      expect(textAt('about-hint')).toBe(NAME_HINT);
       expect(isHiddenFromAccessibility(getId('about-hint') as never)).toBe(true);
       const btn = continueBtn();
-      expect([textOf(btn), isDisabled(btn), btn.props.accessibilityHint]).toEqual(['Continue', true, HINT]);
+      expect([textOf(btn), isDisabled(btn), btn.props.accessibilityHint]).toEqual(['Continue', true, NAME_HINT]);
+      const skip = skipBtn();
+      expect([textOf(skip), isDisabled(skip), skip.props.accessibilityHint]).toEqual([SKIP, true, HINT]);
       // Not present on About you.
       expect(everyString().filter((x) => /Birth year|^Choose$|Kitted is for 18 and up|Pick your birth year to go on/.test(x))).toEqual([]);
       // Only the name and the age are asked: no height, build or fit (BY1's promise, retired into this test).
@@ -304,8 +312,10 @@ describe('OS4.1 · About you', () => {
     expect(ROWS.filter((x) => byId(`${x.id}-check`)).map((x) => x.id)).toEqual(['age-22-25']);
     expect(rowLabel('age-22-25', '22–25').props.weight).toBe('600');
     expect(Haptics.selectionAsync).toHaveBeenCalledTimes(1);
-    expect(byId('about-hint')).toBeNull();
-    expect([isDisabled(continueBtn()), continueBtn().props.accessibilityHint]).toEqual([false, undefined]);
+    // #497: an age without a name: Continue still waits for the name; Skip goes on.
+    expect(textAt('about-hint')).toBe(NAME_HINT);
+    expect([isDisabled(continueBtn()), continueBtn().props.accessibilityHint]).toEqual([true, NAME_HINT]);
+    expect([isDisabled(skipBtn()), skipBtn().props.accessibilityHint]).toEqual([false, SKIP_HINT]);
     expect(await kvJson('onboarding.about')).toEqual({ age: '22-25', name: '' });
     // Nothing saved to the profile before Continue.
     expect(await profile()).toBeNull();
@@ -316,6 +326,45 @@ describe('OS4.1 · About you', () => {
     expect(byId('age-26-30-check')).not.toBeNull();
     expect(rowLabel('age-22-25', '22–25').props.weight).toBe('400');
     expect(await kvJson('onboarding.about')).toEqual({ age: '26-30', name: '' });
+    expect(await profile()).toBeNull();
+
+    // #497: a name and an age: no hint, Continue on, Skip gone; spaces only count as no name.
+    await typeIn(getId('about-name-input'), 'Alex');
+    expect([byId('about-hint'), byId('about-skip')]).toEqual([null, null]);
+    expect([isDisabled(continueBtn()), continueBtn().props.accessibilityHint]).toEqual([false, undefined]);
+    await typeIn(getId('about-name-input'), '   ');
+    expect([textAt('about-hint'), isDisabled(continueBtn()), isDisabled(skipBtn())]).toEqual([NAME_HINT, true, false]);
+    expect(await profile()).toBeNull();
+  });
+
+  it('OS4.1 · the name field asks for focus on open and again after the push (not on Restore)', async () => {
+    const { TextInput } = jest.requireActual<typeof import('react-native')>('react-native');
+    const proto = (TextInput as unknown as { prototype?: { focus?: () => void } }).prototype;
+    expect(typeof proto?.focus).toBe('function');
+    const focus = jest.spyOn(proto as { focus: () => void }, 'focus');
+    await drafts();
+    let r = await mount(<BasicsScreen />);
+    expect(getId('about-name-input').props.autoFocus).toBe(true);
+    const before = focus.mock.calls.length;
+    await advance(FOCUS_AFTER_PUSH_MS + 50);
+    expect(focus.mock.calls.length).toBe(before + 1);
+    await r.unmount();
+    focus.mockClear();
+    mockT39.params = { restore: '214,38,61' };
+    r = await mount(<BasicsScreen />);
+    await advance(FOCUS_AFTER_PUSH_MS + 50);
+    expect(focus).not.toHaveBeenCalled();
+    await r.unmount();
+    focus.mockRestore();
+  });
+
+  it('OS4.1 · with a name and no age, the hint asks for the age', async () => {
+    await drafts();
+    await mount(<BasicsScreen />);
+    await typeIn(getId('about-name-input'), 'Alex');
+    expect([textAt('about-hint'), isDisabled(continueBtn()), continueBtn().props.accessibilityHint, byId('about-skip')]).toEqual([HINT, true, HINT, null]);
+    await press(continueBtn());
+    expect([router.replace, router.push].map((f) => (f as jest.Mock).mock.calls.length)).toEqual([0, 0]);
     expect(await profile()).toBeNull();
   });
 
@@ -370,7 +419,7 @@ describe('OS4.1 · About you', () => {
 
 // ── OS4.2 · the name is optional, trimmed and cut ─────────────────────────────────────────────────────────────────
 describe('OS4.2 · the name', () => {
-  it('OS4.2 · a blank name goes on; a name is saved trimmed and cut', async () => {
+  it('OS4.2 · a blank name goes on only by Skip; a name is saved trimmed and cut', async () => {
     const cases: { typed: string | null; name: string | null }[] = [
       { typed: null, name: null },
       { typed: '  Alex ', name: 'Alex' },
@@ -385,8 +434,12 @@ describe('OS4.2 · the name', () => {
       expect(getId('about-name-input').props.maxLength).toBe(30);
       if (c.typed !== null) await typeIn(getId('about-name-input'), c.typed);
       await press(getId('age-22-25'));
-      expect([c.typed, isDisabled(continueBtn())]).toEqual([c.typed, false]);
-      await press(continueBtn());
+      // #497: no name → Continue off, Skip on; a name → Continue on, no Skip.
+      const blank = c.name === null;
+      expect([c.typed, isDisabled(continueBtn()), byId('about-skip') === null]).toEqual([c.typed, blank, !blank]);
+      if (blank) await press(continueBtn());
+      expect([c.typed, await profile()]).toEqual([c.typed, null]);
+      await press(blank ? skipBtn() : continueBtn());
       const p = await profile();
       expect([c.typed, p?.name, p?.ageBand]).toEqual([c.typed, c.name, '22-25']);
       expect(router.replace).toHaveBeenCalledWith('/');
@@ -427,6 +480,7 @@ describe('OS4.3 · About you saves the band and lands in Stylist', () => {
     const err = jest.spyOn(console, 'error').mockImplementation(() => {});
     s.profile.put = jest.fn(() => Promise.reject(new Error('disk full'))) as never;
     await mount(<BasicsScreen />);
+    await typeIn(getId('about-name-input'), 'Alex');
     await press(getId('age-22-25'));
     await press(continueBtn());
     await advance(1000);
@@ -455,15 +509,18 @@ describe('OS4.4 · Under 18', () => {
     await drafts();
     await mount(<BasicsScreen />);
     await press(getId('age-under18'));
-    await press(continueBtn());
+    // #497: with no name, Skip is the way on; it asks the same as Continue.
+    await press(skipBtn());
     expect(life.alert).toHaveBeenCalledTimes(1);
     const [title, message, buttons] = life.alert.mock.calls[0]! as [string, string, Button[]];
     expect([title, message]).toEqual(['Under 18?', 'Kitted is for ages 18 and up.']);
     expect(buttons.map((b) => ({ text: b.text, style: b.style }))).toEqual([{ text: 'Change', style: 'cancel' }, { text: "That's right", style: 'destructive' }]);
     expect(typeof buttons[1]!.onPress).toBe('function');
-    // One alert per tap.
+    // One alert per tap; with a name, Continue asks the same.
+    await typeIn(getId('about-name-input'), 'Alex');
     await press(continueBtn());
     expect(life.alert).toHaveBeenCalledTimes(2);
+    expect(life.alert.mock.calls[1]!.slice(0, 2)).toEqual(['Under 18?', 'Kitted is for ages 18 and up.']);
     expect(everyString().filter((x) => /^Born in /.test(x))).toEqual([]);
   });
 
@@ -471,7 +528,7 @@ describe('OS4.4 · Under 18', () => {
     await drafts();
     await mount(<BasicsScreen />);
     await press(getId('age-under18'));
-    await press(continueBtn());
+    await press(skipBtn());
     // The alert's buttons are taken before the mocks are cleared (clearing empties the Alert spy too).
     const change = alertButtons()[0]!;
     expect({ text: change.text, style: change.style }).toEqual({ text: 'Change', style: 'cancel' });
@@ -490,7 +547,7 @@ describe('OS4.4 · Under 18', () => {
     await drafts();
     await mount(<BasicsScreen />);
     await press(getId('age-under18'));
-    await press(continueBtn());
+    await press(skipBtn());
     alertButtons()[1]!.onPress!();
     await flush();
     await advance(5000);
@@ -581,6 +638,7 @@ describe('F1.1 · no camera, account or paywall in setup', () => {
       await r.unmount();
 
       r = await mount(<BasicsScreen />);
+      await typeIn(getId('about-name-input'), 'Alex');
       await press(getId('age-22-25'));
       await press(continueBtn());
       await advance(5000);
@@ -603,7 +661,7 @@ describe('F1.2 · the age question', () => {
     await mount(<BasicsScreen />);
     expect(ROWS.map((x) => isSelected(getId(x.id)))).toEqual([false, false, false, false, false]);
     await press(getId('age-under18'));
-    await press(continueBtn());
+    await press(skipBtn());
     const buttons = life.alert.mock.calls[0]![2] as { text: string; onPress?: () => void }[];
     buttons.find((b) => b.text === "That's right")!.onPress!();
     await flush();
@@ -616,7 +674,7 @@ describe('F1.2 · the age question', () => {
 
 // ── SY4.1 · the name comes first and is optional ──────────────────────────────────────────────────────────────────
 describe('SY4.1 · the name field', () => {
-  it('SY4.1 · the name comes first and is optional', async () => {
+  it('SY4.1 · the name comes first and is optional, by a small Skip', async () => {
     await drafts();
     let r = await mount(<BasicsScreen />);
     const order = idsInOrder();
@@ -626,9 +684,18 @@ describe('SY4.1 · the name field', () => {
     const input = getId('about-name-input');
     expect({ textContentType: input.props.textContentType, autoComplete: input.props.autoComplete, autoCapitalize: input.props.autoCapitalize })
       .toEqual({ textContentType: 'givenName', autoComplete: 'given-name', autoCapitalize: 'words' });
-    expect(everyString().filter((x) => /\bSkip\b/.test(x))).toEqual([]);
+    // #497 (replacing "No Skip button"): Skip sits under Continue, and with an age it goes on without a name.
+    // Every string that says Skip is that button's own (its words and its label), and it's drawn once.
+    expect(new Set(everyString().filter((x) => /\bSkip\b/.test(x)))).toEqual(new Set([SKIP]));
+    expect(screen.getAllByText(SKIP)).toHaveLength(1);
+    const order2 = idsInOrder();
+    expect(order2.indexOf('about-continue')).toBeLessThan(order2.indexOf('about-skip'));
     await press(getId('age-18-21'));
-    expect(isDisabled(continueBtn())).toBe(false);
+    expect([isDisabled(continueBtn()), isDisabled(skipBtn())]).toEqual([true, false]);
+    await press(skipBtn());
+    await advance(5000);
+    expect(router.replace).toHaveBeenCalledWith('/');
+    expect([(await profile())?.name, (await profile())?.ageBand]).toEqual([null, '18-21']);
     await r.unmount();
 
     // No name field on Restore.
@@ -637,6 +704,10 @@ describe('SY4.1 · the name field', () => {
     expect(byId('about-name-input')).toBeNull();
     expect(byId('about-name-label')).toBeNull();
     expect(byId('about-age-list')).not.toBeNull();
+    // Restore asks the age only: no Skip, no name hint; an age turns Continue on.
+    expect([byId('about-skip'), textAt('about-hint')]).toEqual([null, HINT]);
+    await press(getId('age-22-25'));
+    expect([isDisabled(continueBtn()), byId('about-hint')]).toEqual([false, null]);
     // The same age list as setup, and no height, build or fit (BY1's "one layout in both paths").
     expect(ROWS.map((x) => [x.id, getId(x.id).props.accessibilityRole, textOf(getId(x.id))])).toEqual(ROWS.map((x) => [x.id, 'radio', x.label]));
     expect(everyString().filter((x) => NOT_ASKED.test(x))).toEqual([]);

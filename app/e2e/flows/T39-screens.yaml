@@ -43,6 +43,11 @@ name: T39 · setup, offer and Style profile screens
 - assertVisible:
     text: "Continue"
     enabled: false
+# #497: a small Skip that waits for an age (the hint is hidden from VoiceOver; the render tests check it).
+- assertVisible:
+    text: "Skip"
+    enabled: false
+- assertNotVisible: "First name \\(optional\\)"
 - assertNotVisible: "Kit: .*"
 - assertNotVisible: "Birth year"
 - assertNotVisible: "Kitted is for 18 and up\\. It never changes your score\\."
@@ -65,6 +70,8 @@ name: T39 · setup, offer and Style profile screens
     text: "Continue"
     enabled: true
 - assertNotVisible: "Pick your age to go on\\."
+# #497: with a name (Alex) there's no Skip.
+- assertNotVisible: "Skip"
 
 # 136 · Restore
 - runFlow:

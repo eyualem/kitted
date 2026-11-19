@@ -59,7 +59,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 **Top to bottom**
 1. The progress bar and Back.
 2. The large title `About you`.
-3. `What should Kit call you?`, then a text field with the placeholder `First name` (SY4's rules: trimmed, up to 30 characters, blank means no name). When the step opens with the field empty, the field has focus and the keyboard is up (not on Restore).
+3. `What should Kit call you?`, then a text field with the placeholder `First name` (SY4's rules: trimmed, up to 30 characters, blank means no name). When the step opens, the field has focus and the keyboard is up (not on Restore, which has no name field).
 4. `How old are you?`, then five choices of equal size and weight, in this order: `Under 18` · `18–21` · `22–25` · `26–30` · `31 or older`. Nothing is picked when the step opens. One tap picks; tapping another moves the pick.
 5. The footnote: `Stays on your phone. It never changes your score.`
 6. At the bottom: `Continue`, on only with a name and an age. While it's off, one hint sits above it: `Add your first name to go on.` while the name is blank, else `Pick your age to go on.` While the name is blank, a small text button `Skip` sits under Continue: with an age picked it does what Continue does, without a name; with no age it's off. (#497: the name stays optional, as Apple requires, but skipping it takes a deliberate tap.)

@@ -1346,6 +1346,8 @@ describe('F1.1 · setup in 16 taps', () => {
     await advance(SETTLE_MS);
     await r.unmount();
     r = await mount(<BasicsScreen />);
+    // #497: he types his first name (typing isn't a tap: the field opens focused), then the age and Continue.
+    await typeIn(getId('about-name-input'), 'Alex');
     await press(getId('age-22-25'));
     presses++;
     await pressId('about-continue');

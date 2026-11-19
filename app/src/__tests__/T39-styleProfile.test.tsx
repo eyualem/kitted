@@ -46,7 +46,7 @@ describe('OS4.6 · Style profile shows Name and Age', () => {
 
     const input = getId('profile-name-input');
     expect({ value: input.props.value, placeholder: input.props.placeholder, label: input.props.accessibilityLabel, maxLength: input.props.maxLength })
-      .toEqual({ value: 'Alex', placeholder: 'First name (optional)', label: 'Name', maxLength: 30 });
+      .toEqual({ value: 'Alex', placeholder: 'First name' /* #497, the same as setup's (SY4) */, label: 'Name', maxLength: 30 });
     expect(textAt('profile-age-value')).toBe('22–25');
     const age = getId('profile-age-row');
     expect([age.props.accessible, age.props.accessibilityLabel]).toEqual([true, 'Age, 22–25']);
@@ -63,7 +63,7 @@ describe('OS4.6 · Style profile shows Name and Age', () => {
     expect(textAt('profile-age-value')).toBe('18–21');
     expect(getId('profile-age-row').props.accessibilityLabel).toBe('Age, 18–21');
     expect(getId('profile-name-input').props.value ?? '').toBe('');
-    expect(getId('profile-name-input').props.placeholder).toBe('First name (optional)');
+    expect(getId('profile-name-input').props.placeholder).toBe('First name') // #497;
     await r.unmount();
 
     // A set band wins over a birth year.

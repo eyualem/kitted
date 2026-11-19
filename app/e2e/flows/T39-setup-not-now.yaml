@@ -28,7 +28,8 @@ name: T39 · Not now on the agreement after the offer
     visible: "About you"
     timeout: 10000
 - tapOn: "22–25"
-- tapOn: "Continue"
+# #497: no name typed, so Skip goes on (Continue waits for a name).
+- tapOn: "Skip"
 - extendedWaitUntil:
     visible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
     timeout: 15000
