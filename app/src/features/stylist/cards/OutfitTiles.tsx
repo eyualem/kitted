@@ -13,9 +13,10 @@ export const TILE_GAP = 8;
 /** The tile's side at the default text size (KC1.6). */
 export const TILE_PT = 76;
 
-/** The tile side for a text scale: 76 pt, growing with the text up to 1.5x (so 2 or 3 still fit a row at the largest). */
+/** The tile side for a text scale: 76 pt, growing with the text up to 2x (two to a row at the largest sizes, so a name
+ *  like "Charcoal beanie" doesn't break mid-word). */
 export function tileSize(fontScale: number): number {
-  return Math.round(TILE_PT * Math.min(1.5, Math.max(1, fontScale)));
+  return Math.round(TILE_PT * Math.min(2, Math.max(1, fontScale)));
 }
 
 /** How wide a row of `n` tiles is when at most `room` pt is free: as many columns as fit (at least 1), never more than

@@ -74,13 +74,26 @@ export function ColorsCard({ card }: { card: Extract<AskCard, { type: 'colors' }
 }
 
 function Swatches({ families }: { families: readonly string[] }) {
-  const { colors, fontScale } = useTheme();
-  const dot = Math.round(40 * Math.min(1.5, Math.max(1, fontScale)));
+  const { colors, isAccessibilitySize } = useTheme();
+  const ring = { borderWidth: 1, borderColor: colors.inkFaint };
+  // At the largest text sizes, a list (the dot, then its name) so no color name breaks mid-word.
+  if (isAccessibilitySize) {
+    return (
+      <View style={{ gap: space.s }}>
+        {families.map((f) => (
+          <View key={f} style={{ flexDirection: 'row', alignItems: 'center', gap: space.s }}>
+            <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: FAMILY_HEX[f as keyof typeof FAMILY_HEX], ...ring }} />
+            <KText role="miniLabel">{colorName(f) ?? f}</KText>
+          </View>
+        ))}
+      </View>
+    );
+  }
   return (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 6, rowGap: space.s }}>
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 2, rowGap: space.s }}>
       {families.map((f) => (
-        <View key={f} style={{ width: dot + 24, alignItems: 'center', gap: 5 }}>
-          <View style={{ width: dot, height: dot, borderRadius: dot / 2, backgroundColor: FAMILY_HEX[f as keyof typeof FAMILY_HEX], borderWidth: 1, borderColor: colors.inkFaint }} />
+        <View key={f} style={{ width: 60, alignItems: 'center', gap: 5 }}>
+          <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: FAMILY_HEX[f as keyof typeof FAMILY_HEX], ...ring }} />
           <KText role="miniLabel" style={{ textAlign: 'center' }}>
             {colorName(f) ?? f}
           </KText>
@@ -200,7 +213,7 @@ export function ChangedCard({ m, card, readOnly }: { m: ChatMessage; card: Extra
 /** The drawn buy card (KC6.4): `Next buy` and the Starter price range, the piece in its color, its name, Kit's one reason
  *  line. A tap opens the Next buy sheet on that piece. No outfit count while Outfits are off (the beta). */
 export function DrawnBuyCard({ card }: { card: Extract<AskCard, { type: 'buy' }> }) {
-  const { fontScale } = useTheme();
+  const { fontScale, isAccessibilitySize } = useTheme();
   const on = useOutfitsOn();
   const row = catalogRow(card.starterId);
   if (!row) return null;
@@ -218,9 +231,9 @@ export function DrawnBuyCard({ card }: { card: Extract<AskCard, { type: 'buy' }>
       <KCard>
         <KCardSection gap={space.s}>
           <TagLine left={t('ask.card.buy.tag')} right={row.budget} />
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <View style={{ flexDirection: isAccessibilitySize ? 'column' : 'row', alignItems: isAccessibilitySize ? 'flex-start' : 'center', gap: 12 }}>
             {piece ? <AddArt side={side}><PieceArt item={drawnSpec(piece)} size={Math.round(side * 0.8)} /></AddArt> : null}
-            <View style={{ flexShrink: 1, gap: 3, maxWidth: 200 * Math.max(1, fontScale) }}>
+            <View style={{ flexShrink: 1, gap: 3, maxWidth: isAccessibilitySize ? undefined : 200 * Math.max(1, fontScale) }}>
               <KText variant="headline">{row.pick?.name ?? row.name}</KText>
               {card.why ? (
                 <KText variant="subheadline" color="ink2">

@@ -91,14 +91,15 @@ describe('KC1.6 · a card fits its content', () => {
     expect(tileSize(1)).toBe(TILE_PT);
     expect(tileSize(0.85)).toBe(TILE_PT);
     expect(tileSize(1.3)).toBe(Math.round(TILE_PT * 1.3));
-    expect(tileSize(3.1)).toBe(Math.round(TILE_PT * 1.5));
+    expect(tileSize(1.8)).toBe(Math.round(TILE_PT * 1.8));
+    expect(tileSize(3.1)).toBe(TILE_PT * 2);
   });
   it('two tiles make a narrow card; more than fit wrap; never wider than the room', () => {
     expect(tilesWidth(2, 76, 330)).toBe(160);
     expect(tilesWidth(3, 76, 330)).toBe(244);
     expect(tilesWidth(6, 76, 330)).toBe(4 * 76 + 3 * 8);
-    expect(tilesWidth(6, 114, 300)).toBe(2 * 114 + 8);
-    expect(tilesWidth(1, 114, 50)).toBe(114);
+    expect(tilesWidth(6, 152, 328)).toBe(2 * 152 + 8);
+    expect(tilesWidth(1, 152, 50)).toBe(152);
   });
   it('the tile row takes exactly that width', async () => {
     await render(
