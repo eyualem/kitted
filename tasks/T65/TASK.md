@@ -44,3 +44,32 @@ _(none yet)_
 
 ## Review
 Written by the reviewer.
+
+### Round 1 (reviewer, strict)
+
+**Criteria**
+- ER1.1 (at most two picks, only rules that fired, biggest cost and credit, the other cases): done. The locked ER1.1 tests pass (27); picks come only from `costsOf` / `creditsOf`, which read fired reasons, lifts, caps that bound, taste, condition, occasion and the heavy layer; tips, parts not in the photo and non-rule ceilings are never read.
+- ER1.5 (a re-check leads with what the fix cleared or earned): done. 11 locked tests pass; the cleared, earned and cost_now branches read as the Decisions say.
+- ER1.6 (every engine rule has a plain name, no score moves): done. 5 locked tests pass (coverage over the parity and conformance fixtures, name rules, unique names). No change to `parts.ts`, `partsData.ts`, any fixture or `extraction-test/` (`git diff fe7d1b8d..HEAD --name-only` lists only core `index.ts`, `picks.ts`, `ruleNames.ts`, the two test files, `plan.md`, and `tasks/T65/`).
+
+**Checks**
+- Test lock: `git diff 3d38df1a..HEAD -- app/packages/kitted-core/test` is empty; TESTING.md's only change since is the Lock line itself. Disputes: none.
+- `npx vitest run test/picks.test.ts test/ruleNames.test.ts` in the core package: `Test Files 2 passed (2), Tests 43 passed (43)`.
+- `npm run check` not re-run (the build session ran it; this task is core-only and touches no screen). Parity suites were run by the builder (648 passed); no scoring file changed.
+- `tasks/T65/names.md`: 131 rows, the same 131 ids as `RULE_NAMES` (none missing, none extra, no duplicates), plain names match the code table. Example lines are sensible; the only digits are one score (`6.5` on `heavy_layer`). No face, body, weight, height, skin or hair words, no emoji.
+
+**Planted bugs (3, each reverted; `git status` clean afterwards)**
+1. Re-check "did not rise" test `<=` changed to `<` in `pickRecheckExplanation`: 3 ER1.5 tests failed. Caught.
+2. Heavy layer cost dropped from `costsOf`: 2 failed (ER1.1 PUFFER, ER1.5 puffer removed). Caught.
+3. "Two sinking faults" fallback to the first sink cap removed: 1 failed (ER1.1 two sinking faults). Caught.
+No test-defect found.
+
+**Defects:** none open (code: none, test: none).
+
+**Worth a later look (never blocks)**
+- Founder's OK on the names (Y24) is still open; a few example lines in `names.md` sketch a tip or "possible" id (`C_unsure_*`, `SX1_tip`), which picks never name, so those rows only matter for T58's wording.
+- A rule with no name is silently skipped by `biggest()` in `picks.ts` rather than failing; the ER1.6 coverage test is the only guard, so a new engine rule must get an entry the same day.
+- v15 results: occasion hold, caps and the earned bonus are not read (the builder and test writer both noted it); T58 should treat a v15 check's picks as partial.
+- Held amounts use `res.rawScore` (rounded to 3 places), so cap and hold points carry about 1e-3 of rounding; harmless for ordering.
+
+**Verdict: ready.**
