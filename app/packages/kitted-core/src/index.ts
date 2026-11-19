@@ -73,3 +73,8 @@ export {
   type ReadingReconcileEntry, type StoredProfile,
 } from "./closetIdentity";
 export { allowedColors, COLOR_CHOICES, type AllowedColorsInput, type AllowedColorsEngines } from "./allowedColors";
+// T65: the score's two picks (the rules that made it) and the plain name of every rule, read from the result alone.
+export { RULE_NAMES, RULE_IDS, ruleName, type RuleName } from "./ruleNames";
+export {
+  pickExplanation, pickRecheckExplanation, type PickKind, type PickRole, type RulePick, type PickCase, type ExplainPicks,
+} from "./picks";
