@@ -93,8 +93,8 @@ describe('SB1.6 · with ACCOUNTS_BUILT off the account rows render nothing outsi
   });
 });
 
-describe('SB1.4 · You: the account rows', () => {
-  it('SB1.4 · signed out: Back up your fits, "Off · on this iPhone only", opens the sheet', async () => {
+describe('SB1.6 · You: the account rows, with accounts on', () => {
+  it('SB1.6 · signed out: Back up your fits, "Off · on this iPhone only", opens the sheet', async () => {
     setDemoAccounts('ok');
     await render(<AccountSection />);
     await flush();
@@ -106,7 +106,7 @@ describe('SB1.4 · You: the account rows', () => {
     expect(router.push).toHaveBeenCalledWith({ pathname: '/sheets/sign-in', params: { from: 'settings' } });
   });
 
-  it('SB1.4 · signed in with Apple through a relay address: "Signed in with Apple", "Hidden email", and Sign out', async () => {
+  it('SB1.6 · signed in with Apple through a relay address: "Signed in with Apple", "Hidden email", and Sign out', async () => {
     setDemoAccounts('ok');
     await saveAccount(mockDb.store, user());
     await render(<AccountSection />);
@@ -118,7 +118,7 @@ describe('SB1.4 · You: the account rows', () => {
     expect(texts()).not.toContain('Back up your fits');
   });
 
-  it('SB1.4 · signed in with Google: his email as it is', async () => {
+  it('SB1.6 · signed in with Google: his email as it is', async () => {
     setDemoAccounts('ok');
     await saveAccount(mockDb.store, user({ provider: 'google', email: 'sam.lee@gmail.com' }));
     await render(<AccountSection />);
