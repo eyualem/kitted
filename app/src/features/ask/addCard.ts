@@ -94,9 +94,10 @@ export async function planAdd(i: PlanInput): Promise<AddPlan> {
     if (!pending) return NO_PLAN;
     const w = pieceWordsOf(i.question);
     const kind = pending.kind ?? w.kind;
-    const color = pending.color ?? colorOf(i.question);
-    if (!kind || !color) return NO_PLAN; // "Not sure": no add, Kit just answers.
-    read = { mode: pending.mode, kind, color };
+    if (!kind) return NO_PLAN; // "Not sure" to the kind question: no add, Kit just answers.
+    // "Not sure" to the color question: no add either. A kind with no color yet goes on to the color question.
+    if (pending.kind !== null && !colorOf(i.question)) return NO_PLAN;
+    read = { mode: pending.mode, kind, color: pending.color ?? colorOf(i.question) };
   }
   if (!read) return NO_PLAN;
   const chat = await i.store.chat.all();
@@ -144,6 +145,12 @@ export async function planAdd(i: PlanInput): Promise<AddPlan> {
   // KC4.5: he asked, so the code adds it now.
   const itemId = await addChatPiece(i.deps, piece);
   if (!itemId) return NO_PLAN;
+  // An older card still asking about this piece now shows it as added too, so its Add can't write a second one.
+  for (const c of cards) {
+    if (c.outcome === 'asked' && sameP(c.piece, piece)) {
+      await i.store.chat.patch(c.m.id, { payload: { ...c.m.payload, askCard: { ...(c.m.payload.askCard as object), outcome: 'added', itemId } } });
+    }
+  }
   return {
     card: { type: 'add', piece, outcome: 'added', itemId },
     evidence: `The app just added ${piece.name} to his closet; under your answer he sees "Added to Closet" with Undo. Say in one short sentence that it's added, and don't ask whether to add it. Use the name ${piece.name} for it. Never say you can't add pieces.`,

@@ -240,6 +240,38 @@ describe('KC4.7 · the kind is unclear: a tap question, never a card or a guess'
     if (o.kind === 'sent') await o.done;
     expect((await t.fromChat()).map((c) => c.name)).toEqual(['Black hoodie']);
   });
+  it('the kind tap goes on to the color question, and the color tap adds it (no dead end)', async () => {
+    const t = await setup('That one pairs well with straight jeans.');
+    await t.say('add it');
+    const o = await t.ask.tap((await t.answerOf()).id, 'Tee');
+    if (o.kind === 'sent') await o.done;
+    const q = (await t.cardOf()) as Extract<AskCard, { type: 'ask' }>;
+    expect(q.type).toBe('ask');
+    expect(q.question).toBe('What color is it?');
+    expect(await t.fromChat()).toEqual([]);
+    const o2 = await t.ask.tap((await t.answerOf()).id, 'Navy');
+    if (o2.kind === 'sent') await o2.done;
+    expect((await t.fromChat()).map((c) => c.name)).toEqual(['Navy tee']);
+  });
+  it('an old card still asking cannot add a second piece after "add it" (review defect 1)', async () => {
+    const t = await setup('That pairs well with straight jeans.');
+    await t.say('I have a white tee');
+    const old = await t.answerOf();
+    await t.say('add it');
+    expect(await t.fromChat()).toHaveLength(1);
+    expect(((await t.store.chat.get(old.id))!.payload.askCard as { outcome: string }).outcome).toBe('added');
+    expect(await t.actions.add(old)).toBe(false);
+    expect(await t.fromChat()).toHaveLength(1);
+  });
+  it('Add on a card for a piece he already has links to it and writes nothing (review defect 1)', async () => {
+    const t = await setup('That pairs well with straight jeans.');
+    await t.say('I have a white tee');
+    const m = await t.answerOf();
+    const id = await addChatPiece(t, cardPiece('tee', 'white')!);
+    expect(await t.actions.add(m)).toBe(true);
+    expect(await t.fromChat()).toHaveLength(1);
+    expect(((await t.cardOf()) as { itemId: string }).itemId).toBe(id);
+  });
   it('"add it" right after a mention adds the piece Kit just offered', async () => {
     const t = await setup('That pairs well with straight jeans.');
     await t.say('I have a white tee');

@@ -4,7 +4,7 @@
 import { store } from '@/data/db';
 import type { KittedStore } from '@/data/store';
 import type { ChatMessage } from '@/data/types';
-import { addChatPiece, removeChatPiece, type ChatAddDeps } from '@/features/closet/chatAdd';
+import { addChatPiece, ownedSame, removeChatPiece, type ChatAddDeps } from '@/features/closet/chatAdd';
 import { t } from '@/i18n/en';
 import { newId } from '@/services/ids';
 import { showToast } from '@/features/toast/toast';
@@ -39,7 +39,9 @@ export function createCardActions(deps: CardActionDeps) {
     add: async (m: ChatMessage): Promise<boolean> => {
       const cur = await addCardOf(deps, m);
       if (!cur || cur.card.outcome !== 'asked') return false;
-      const itemId = await addChatPiece(deps, cur.card.piece);
+      // He already has it (another card or "add it" added it): the card links to that piece, nothing is written twice.
+      const have = ownedSame(await deps.store.closet.all(), cur.card.piece);
+      const itemId = have ? have.id : await addChatPiece(deps, cur.card.piece);
       if (!itemId) return false;
       await setCard(deps, cur.row, { ...cur.card, outcome: 'added', itemId });
       return true;
