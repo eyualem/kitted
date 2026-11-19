@@ -78,7 +78,7 @@ h2{font-size:15px;margin:26px 0 8px;color:var(--ink2);font-weight:600}
 .badge{position:absolute;top:7px;right:7px;width:24px;height:24px;border-radius:12px;background:var(--ink);display:grid;place-items:center}
 .badge svg{width:13px;height:13px;stroke:var(--surface)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;column-gap:10px;row-gap:10px}
-.grid2 .bx{height:104px}
+.grid2 .bx{height:150px}
 .grid2 .lb{font-size:17px;font-weight:600;color:var(--ink);min-height:0;text-align:left;padding-left:2px}
 .btnp{height:36px;border-radius:18px;background:var(--primary);color:var(--onPrimary);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;position:relative}
 .btnp::after{content:"";position:absolute;inset:-4px 0}
@@ -132,9 +132,9 @@ const newRow=()=>`<div class="nrow"><div class="pl">${IC.plus}</div>It's a new p
 const TOPS=[['navyCrew','Navy sweater'],['whiteTee','White tee'],['blackTee','Black tee'],['oliveHood','Olive hoodie'],['tanOver','Tan overshirt'],['blueShirt','Blue button-up']];
 const grid=(sc,sel)=>`<div class="grid3">${TOPS.map(([k,n])=>`<div class="tile ${sel===k?'sel':''}"><div class="bx">${art(k,86,sc)}${sel===k?`<div class="badge">${IC.check}</div>`:''}</div><div class="lb">${n}</div></div>`).join('')}</div>`;
 function sheetPick(sc,detent){
- return `<div class="sheet med"><div class="grab"></div>${''}
+ return `<div class="sheet lg">
   ${head('What is it, then?','Pick the one it is, or add it as new.')}
-  <div class="sh-body">${refRow(sc)}${newRow()}<div class="sec">Tops</div>${grid(sc)}</div></div>`;
+  <div class="sh-body">${refRow(sc)}<div class="sec">Tops</div>${grid(sc)}${newRow()}</div></div>`;
 }
 function sheetConfirm(sc){
  return `<div class="sheet lg">
@@ -143,12 +143,12 @@ function sheetConfirm(sc){
     <div class="t" style="font-size:15px;font-weight:600">Is this your navy sweater?</div>
     <div class="pair" style="justify-content:center"><div class="fr">${crop(150,140,sc)}This photo</div><div class="fr">${tilebox('navyCrew',150,140,sc)}In your closet</div></div>
     <div class="btnp">Yes, same one</div></div>
-   ${newRow()}<div class="sec">Tops</div>${grid(sc,'navyCrew')}</div></div>`;
+   <div class="sec">Tops</div>${grid(sc,'navyCrew')}${newRow()}</div></div>`;
 }
 const KINDS=[['kSweater','Sweater'],['kTee','Tee'],['kShirt','Shirt'],['kHoodie','Hoodie']];
-const kindGrid=(sc)=>`<div class="grid2 tile">${KINDS.map(([k,n])=>`<div class="tile"><div class="bx">${art(k,92,sc)}</div><div class="lb">${n}</div></div>`).join('')}</div>`;
+const kindGrid=(sc)=>`<div class="grid2 tile">${KINDS.map(([k,n])=>`<div class="tile"><div class="bx">${art(k,120,sc)}</div><div class="lb">${n}</div></div>`).join('')}</div>`;
 function sheetKind(sc,{empty}={}){
- return `<div class="sheet med">
+ return `<div class="sheet lg">
   ${head('What kind of piece is it?',empty?'Nothing else like it in your closet yet.':'',{back:!empty})}
   <div class="sh-body">${refRow(sc)}${kindGrid(sc)}</div></div>`;
 }
@@ -157,9 +157,9 @@ const withSheet=(sc,state,sheet)=>chat(sc,state,`<div class="dim"></div>${sheet}
 function frames(sc){
  const F=[
   ['1 · Where it starts','The question on the score card. <b>No, a new one</b> becomes <b>Not the same</b>; the other chips are as today.',chat(sc,'press')],
-  ['2 · The sheet opens (medium)','<b>What is it, then?</b> The photographed piece for reference, <b>It\'s a new piece</b> first, then his tops. Pulls up to large.',withSheet(sc,'press',sheetPick(sc))],
-  ['3 · He picks a piece (large)','A tap selects it and shows it beside the photo with the existing <b>Yes, same one</b>. Nothing is saved until then.',withSheet(sc,'press',sheetConfirm(sc))],
-  ['4 · It\'s a new piece: the kind','Same words as Kit\'s add card (T106). One tap on a kind saves the piece as new and closes the sheet.',withSheet(sc,'press',sheetKind(sc))],
+  ['2 · The sheet opens, in place (large)','The moment he taps <b>Not the same</b>. <b>What is it, then?</b> His tops come first, the photographed piece sits above them for reference, and <b>It\'s a new piece</b> is the second path, under them.',withSheet(sc,'press',sheetPick(sc))],
+  ['3 · He picks a piece (large)','The easiest path: one tap selects it and shows it beside the photo with the existing <b>Yes, same one</b>. Nothing is saved until then.',withSheet(sc,'press',sheetConfirm(sc))],
+  ['4 · It\'s a new piece: the kind (second path)','Same words as Kit\'s add card (T106). One tap on a kind saves the piece as new and closes the sheet.',withSheet(sc,'press',sheetKind(sc))],
   ['5 · Back on the card: picked a piece','Existing line <b>Saved as your {item}.</b> and <b>Change</b>.',chat(sc,'pick')],
   ['6 · Back on the card: new piece','Existing line <b>Saved as its own piece: {item}.</b> and <b>Change</b>.',chat(sc,'new')],
   ['7 · Empty: nothing else like it','No grid to show, so the sheet opens straight on the kind question, with one line saying why. No Back.',withSheet(sc,'press',sheetKind(sc,{empty:true}))]
@@ -183,7 +183,7 @@ document.getElementById('root').innerHTML=
 `<div class="panel light" style="padding-bottom:6px"><h1>Not the same: the "What is it, then?" sheet</h1>
 <p class="note">Design pass for the founder's Nov 19 request (voice): when he says a piece isn't the one the app asked about, a sheet asks what it is, shows his other pieces of that kind so he can say "it's this one" instead of adding a duplicate, and, for a new piece, confirms its kind. Frames are the key states; light first, then dark. Nothing here is built, and no spec has changed.</p>
 <div class="notes">
-<div><b>Why the sheet opens on a new-piece row first.</b> The app's best guess was just ruled out, so a new piece is the likelier answer. The row sits above the grid so it never scrolls out of reach on a big closet.</div>
+<div><b>Pick one of yours comes first (the founder, Nov 19).</b> When the app thinks a piece already exists, the question is asked right there, on the card, at the moment he taps Not the same, not later as a chore in Closet. His own pieces are the first and easiest path; <b>It's a new piece</b> is the second, directly under them. The sheet opens at large so both are in view on a normal closet; a long closet scrolls, and the row follows the last tile.</div>
 <div><b>Why a picked piece is confirmed.</b> Picking folds this photo into that piece (wears, photos). The comparison reuses the question's own two pictures and <b>Yes, same one</b>, so it reads like the question he just answered.</div>
 <div><b>Which pieces are shown.</b> His other pieces in the same slot (top, bottom, shoes, layer), closest first. The piece he just said no to and the photographed piece itself are left out. Same rule as "Same as which piece?".</div>
 <div><b>Apple HIG.</b> A sheet with medium and large detents, a grabber, and a visible close button; one level of navigation inside it (Back on the kind step), never a second sheet. Targets: tiles 113 × 104+, rows 56, chips and buttons 44 pt with the invisible padding. Dynamic Type: at the largest sizes the grid is 2 across and the kind options 1 across, and the sheet opens at large only.</div>
