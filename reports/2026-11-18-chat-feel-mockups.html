@@ -1,0 +1,355 @@
+<title>Kit Reply Motion</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&display=swap">
+<!-- Animated mockups for reports/2026-11-18-chat-feel-research.md (Nov 18, 2026). Each moment plays twice: what the
+     app does today (read from the code: arrival.ts, arrivalMotion.ts, LiveAnswerRow.tsx, StylistScreen.tsx) and the
+     proposal. Tokens are the app's own (mockups/kit-stylist-chat.html). Inside each phone 1 CSS px = 1 pt.
+     Nothing here is built; the words in the phones are the app's current copy or the approved spec's mockup. -->
+<style>
+/* Layout: a narrow column of three "moments"; each moment is a pair of phones (Today | Proposed) over a beat list in ms. */
+:root{
+  --page:#E5E7EB; --page-ink:#131726; --page-ink-2:#4F5565; --page-line:#C8CCD4; --page-panel:#EEF0F3;
+  --bg:#F3F4F6; --surface:#FFFFFF; --surface-2:#ECEEF1; --ink:#121628; --ink-2:#585E70; --ink-3:#848A99;
+  --line:#E0E3E8; --accent:#9C5326; --primary:#121628; --on-primary:#FFFFFF; --me:#1B2340; --on-me:#F2F3F7;
+  --dash:#A9AEBA; --edge:rgba(18,22,40,.38); --bezel:#1B1D22; --tap:#1B2340;
+  --shadow:0 1px 2px rgba(18,22,40,.05),0 6px 18px rgba(18,22,40,.06);
+  --ios:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --page:#0A0C11; --page-ink:#E8EAF0; --page-ink-2:#9AA1B0; --page-line:#252A37; --page-panel:#11141B;
+  --bg:#0C0E14; --surface:#171A23; --surface-2:#21252F; --ink:#ECEEF3; --ink-2:#A1A7B5; --ink-3:#6E7484;
+  --line:#2A2F3B; --accent:#DE9762; --primary:#ECEEF3; --on-primary:#0C0E14; --me:#2A3150; --on-me:#EEF0F6;
+  --dash:#525868; --edge:rgba(255,255,255,.30); --bezel:#2A2D35; --tap:#C9CFEA;
+  --shadow:0 0 0 1px rgba(255,255,255,.03); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --page:#0A0C11; --page-ink:#E8EAF0; --page-ink-2:#9AA1B0; --page-line:#252A37; --page-panel:#11141B;
+  --bg:#0C0E14; --surface:#171A23; --surface-2:#21252F; --ink:#ECEEF3; --ink-2:#A1A7B5; --ink-3:#6E7484;
+  --line:#2A2F3B; --accent:#DE9762; --primary:#ECEEF3; --on-primary:#0C0E14; --me:#2A3150; --on-me:#EEF0F6;
+  --dash:#525868; --edge:rgba(255,255,255,.30); --bezel:#2A2D35; --tap:#C9CFEA;
+  --shadow:0 0 0 1px rgba(255,255,255,.03); color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--page-ink);font-family:var(--ios);-webkit-font-smoothing:antialiased;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:32px 80px}
+.wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,5vw,38px);line-height:1.05;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h2{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.01em;margin:0;text-wrap:balance}
+p{margin:0;line-height:1.5;max-width:68ch}
+.lede{color:var(--page-ink-2);font-size:15.5px}
+.muted{color:var(--page-ink-2);font-size:14px}
+code{font-family:var(--mono);font-size:.88em}
+
+/* controls */
+.controls{position:sticky;top:env(safe-area-inset-top, 0px);z-index:5;background:var(--page);padding-block:10px;border-bottom:1px solid var(--page-line);
+  display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--page)}
+.seg{display:inline-flex;border:1px solid var(--page-line);border-radius:99px;overflow:hidden}
+.seg button{font:600 13px var(--ios);color:var(--page-ink-2);background:transparent;border:0;padding:7px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--page-ink);color:var(--page)}
+.ctl{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--page-ink-2);font-weight:600}
+.btn-replay{font:600 14px var(--ios);background:var(--page-ink);color:var(--page);border:0;border-radius:99px;padding:8px 16px;cursor:pointer}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.switch{appearance:none;width:40px;height:24px;border-radius:99px;background:var(--page-line);position:relative;cursor:pointer;margin:0;transition:background .15s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.switch:checked{background:var(--page-ink)}
+.switch:checked::after{transform:translateX(16px)}
+.switch:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* a moment */
+.moment{display:flex;flex-direction:column;gap:14px;padding-block:22px 6px;border-top:1px solid var(--page-line)}
+.moment-head{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font:600 12px var(--ios);letter-spacing:.06em;text-transform:uppercase;color:var(--page-ink-2)}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.side{display:flex;flex-direction:column;gap:10px;min-width:0}
+.side-label{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font:600 14px var(--ios)}
+.side-label .replay1{font:600 12.5px var(--ios);background:none;border:1px solid var(--page-line);color:var(--page-ink-2);border-radius:99px;padding:4px 10px;cursor:pointer}
+
+/* the phone */
+.phone{width:100%;max-width:390px;height:560px;background:var(--bg);border-radius:38px;box-shadow:0 0 0 7px var(--bezel), var(--shadow);
+  display:flex;flex-direction:column;overflow:hidden;color:var(--ink);margin:7px}
+.phone .bar{flex:none;text-align:center;font:600 16px var(--ios);padding:16px 0 8px;color:var(--ink)}
+.thread{flex:1;position:relative;overflow:hidden}
+.scroller{position:absolute;left:0;right:0;bottom:0;padding:0 14px 10px;display:flex;flex-direction:column;gap:10px}
+.composer{flex:none;margin:0 12px 14px;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:10px 16px;font-size:15px;color:var(--ink-3)}
+
+.me{align-self:flex-end;max-width:82%;background:var(--me);color:var(--on-me);padding:9px 15px;border-radius:21px 21px 6px 21px;font-size:15.5px;line-height:1.35}
+.who{font-size:13px;font-weight:600;color:var(--ink-3);margin:2px 0 -6px 2px}
+.kit{align-self:flex-start;max-width:90%;background:var(--surface);border:1px solid var(--line);padding:11px 15px;border-radius:21px 21px 21px 6px;font-size:15.5px;line-height:1.38;color:var(--ink-2)}
+.kit b{display:block;color:var(--ink);font-weight:650;margin-bottom:1px}
+.kit .s{display:inline}
+.stamp{text-align:center;font-size:12px;color:var(--ink-3)}
+.dots{display:flex;gap:5px;align-items:center;height:21px;padding-left:2px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--ink-3);opacity:.35}
+.ell{color:var(--ink-3)}
+
+.card{align-self:flex-start;max-width:100%;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:13px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:11px}
+.tag{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--ink-3)}
+.tag .l{font-weight:600;color:var(--ink-2)}
+.tiles{display:flex;flex-wrap:wrap;gap:8px}
+.tile{width:70px;display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--ink);line-height:1.2}
+.art{aspect-ratio:1;max-width:100%;border-radius:12px;background:var(--surface-2);display:grid;place-items:center}
+.art svg{width:70%;height:70%}
+.tile.need .art{background:transparent;border:1.5px dashed var(--dash)}
+.tile .k{font-size:11px;color:var(--accent);font-weight:600}
+.btns{display:flex;gap:8px}
+.kb{font:600 14px var(--ios);padding:8px 15px;border-radius:99px;background:var(--surface-2);color:var(--ink)}
+.kb.pr{background:var(--primary);color:var(--on-primary)}
+.follow{display:flex;gap:7px;flex-wrap:wrap}
+.follow span{font-size:14px;padding:6px 13px;border-radius:99px;border:1px solid var(--line);color:var(--ink)}
+.offer{align-self:stretch}
+.offer h4{margin:0;font-size:16px;color:var(--ink)}
+.offer p{font-size:14px;color:var(--ink-2);line-height:1.38}
+.offer .kb{display:block;text-align:center}
+
+/* the haptic marker and the beat list (outside the phone: annotations, not app UI) */
+.hap{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font:600 12.5px var(--ios);color:var(--page-ink-2);
+  border:1px dashed var(--page-line);border-radius:99px;padding:5px 11px 5px 8px}
+.hap i{width:10px;height:10px;border-radius:50%;border:2px solid var(--page-ink-2);opacity:.5}
+.hap.on{color:var(--page-ink);border-color:var(--page-ink)}
+.hap.on i{opacity:1;background:var(--page-ink)}
+.beats{list-style:none;margin:0;padding:10px 12px;background:var(--page-panel);border-radius:12px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px;color:var(--page-ink-2)}
+.beats li{display:contents}
+.beats .t{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--page-ink)}
+.beats li.now .d{color:var(--page-ink);font-weight:600}
+.why{font-size:14px;color:var(--page-ink-2);line-height:1.5}
+.why strong{color:var(--page-ink)}
+footer{border-top:1px solid var(--page-line);padding-top:18px}
+@media (max-width:420px){ .phone{height:520px} }
+</style>
+
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:10px">
+    <h1>How Kit's replies could arrive</h1>
+    <p class="lede">Three moments from Kit's chat, each played twice: what the app does today, then the proposal. The phones replay on their own every few seconds. Slow motion and Reduce Motion are in the bar below. Haptics can't play in a browser, so a dashed tag under each phone lights up where a soft tap would land.</p>
+  </header>
+
+  <div class="controls" role="group" aria-label="Playback">
+    <button class="btn-replay" id="replayAll" type="button">Replay all</button>
+    <div class="ctl"><span id="lblSpeed">Speed</span>
+      <div class="seg" role="group" aria-labelledby="lblSpeed">
+        <button type="button" id="sp1" data-speed="1" aria-pressed="true">Real time</button>
+        <button type="button" id="sp4" data-speed="4" aria-pressed="false">Slow ×4</button>
+      </div>
+    </div>
+    <label class="ctl" for="rm"><input class="switch" type="checkbox" id="rm"> Reduce Motion</label>
+    <div class="ctl"><span id="lblTheme">Theme</span>
+      <div class="seg" role="group" aria-labelledby="lblTheme">
+        <button type="button" id="thS" data-theme-btn="system" aria-pressed="true">System</button>
+        <button type="button" id="thL" data-theme-btn="light" aria-pressed="false">Light</button>
+        <button type="button" id="thD" data-theme-btn="dark" aria-pressed="false">Dark</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="moment" data-moment="card">
+    <div class="moment-head">
+      <span class="eyebrow">Proposal 1 · goes into the card views task</span>
+      <h2>The card lands as its own beat</h2>
+      <p class="why">Today the words stream in, then the card and the follow-up taps appear in one frame with no motion, the moment the stored answer replaces the live one. The proposal keeps the words still and gives the card a short rise of its own about 120 ms after the last sentence, then brings the follow-up taps in last, so the eye moves from the move to the picture to what's next. <strong>Reduce Motion:</strong> the same order as plain fades, and the thread jumps instead of gliding.</p>
+    </div>
+    <div class="pair">
+      <div class="side" data-variant="today"><div class="side-label"><span>Today</span><button class="replay1" type="button">Replay</button></div><div class="phone"><div class="bar">Stylist</div><div class="thread"><div class="scroller"></div></div><div class="composer">Ask Kit…</div></div><span class="hap"><i></i><span>No haptic</span></span><ol class="beats"></ol></div>
+      <div class="side" data-variant="new"><div class="side-label"><span>Proposed</span><button class="replay1" type="button">Replay</button></div><div class="phone"><div class="bar">Stylist</div><div class="thread"><div class="scroller"></div></div><div class="composer">Ask Kit…</div></div><span class="hap"><i></i><span>Soft tap (proposal 2)</span></span><ol class="beats"></ol></div>
+    </div>
+  </section>
+
+  <section class="moment" data-moment="words">
+    <div class="moment-head">
+      <span class="eyebrow">Proposals 2 and 3 · one small task of their own</span>
+      <h2>Each sentence fades in, and one soft tap at the end</h2>
+      <p class="why">Today the first words fade in once and every sentence after that pops in whole, because Kit's words are checked one sentence at a time before they show. The proposal fades each sentence in over 160 ms, with no movement so the text never jumps under his eyes, and plays one soft tap when the answer is complete: once per answer, never per sentence. <strong>Reduce Motion:</strong> the fades stay, because Apple names a fade as the replacement for movement; the tap stays too.</p>
+    </div>
+    <div class="pair">
+      <div class="side" data-variant="today"><div class="side-label"><span>Today</span><button class="replay1" type="button">Replay</button></div><div class="phone"><div class="bar">Stylist</div><div class="thread"><div class="scroller"></div></div><div class="composer">Ask Kit…</div></div><span class="hap"><i></i><span>No haptic</span></span><ol class="beats"></ol></div>
+      <div class="side" data-variant="new"><div class="side-label"><span>Proposed</span><button class="replay1" type="button">Replay</button></div><div class="phone"><div class="bar">Stylist</div><div class="thread"><div class="scroller"></div></div><div class="composer">Ask Kit…</div></div><span class="hap"><i></i><span>Soft tap</span></span><ol class="beats"></ol></div>
+    </div>
+  </section>
+
+  <section class="moment" data-moment="hello">
+    <div class="moment-head">
+      <span class="eyebrow">Proposal 4 · its own task</span>
+      <h2>Kit types before it says hello after setup</h2>
+      <p class="why">Today, half a second after setup slides away, Kit's first line and the "Want to check a fit now?" card rise in together, 100 ms apart, and nothing else happens. The proposal shows Kit's typing dots for about 0.9 s first, swaps them for the line, then brings the card in on its own beat with one soft tap. Kit is already marked as an AI in that first line, so the dots are a pause, not a pretend person. The same beat could come before "Your first 3 moves" after the first score. <strong>Reduce Motion:</strong> fades only, and a still "…" in place of the dots.</p>
+    </div>
+    <div class="pair">
+      <div class="side" data-variant="today"><div class="side-label"><span>Today</span><button class="replay1" type="button">Replay</button></div><div class="phone"><div class="bar">Stylist</div><div class="thread"><div class="scroller"></div></div><div class="composer">Ask Kit…</div></div><span class="hap"><i></i><span>No haptic</span></span><ol class="beats"></ol></div>
+      <div class="side" data-variant="new"><div class="side-label"><span>Proposed</span><button class="replay1" type="button">Replay</button></div><div class="phone"><div class="bar">Stylist</div><div class="thread"><div class="scroller"></div></div><div class="composer">Ask Kit…</div></div><span class="hap"><i></i><span>Soft tap</span></span><ol class="beats"></ol></div>
+    </div>
+  </section>
+
+  <footer class="muted">
+    <p>The timings in "Today" come from the code: Kit's rows fade in and rise 8 pt over 250 ms (<code>arrival.ts</code>), the typing dots pulse every 420 ms, the first words fade in over 180 ms (<code>LiveAnswerRow.tsx</code>), and the finished answer's card mounts with no entrance (<code>StylistScreen.tsx</code>). The stream's pace (a sentence about every half second) is a stand-in. Nothing on this page is built. The words in the phones are the app's current copy or the approved chat mockup's.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const root = document.documentElement;
+  let speed = 1;
+  const rmInput = document.getElementById('rm');
+  try { rmInput.checked = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  const RM = () => rmInput.checked;
+  const EASE = 'cubic-bezier(.33,1,.68,1)'; // Easing.out(cubic)
+
+  // drawings: rough stand-ins for the app's code-drawn pieces
+  const svg = {
+    bomber:c=>`<svg viewBox="0 0 40 40"><path d="M10 9l6-3h8l6 3 6 6-4 4-3-2v17H11V17l-3 2-4-4z" fill="${c}"/></svg>`,
+    shirt:c=>`<svg viewBox="0 0 40 40"><path d="M14 6l6 4 6-4 9 6-3 6-4-2v19H12V16l-4 2-3-6z" fill="${c}" stroke="var(--edge)" stroke-width=".6"/></svg>`,
+    jeans:c=>`<svg viewBox="0 0 40 40"><path d="M12 5h16l2 30h-7l-3-20-3 20h-7z" fill="${c}"/></svg>`,
+    boots:c=>`<svg viewBox="0 0 40 40"><path d="M7 12h9v12l6 3h9v6H7z" fill="${c}"/><path d="M7 33h24" stroke="var(--edge)" stroke-width="1"/></svg>`
+  };
+  const tile = (k,c,n,need) => `<div class="tile${need?' need':''}"><div class="art">${svg[k](c)}</div><span>${n}</span>${need?'<span class="k">You\'d need</span>':''}</div>`;
+
+  function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstChild; }
+
+  // the thread follows the bottom; `glide` animates the scroll like scrollTo(animated)
+  function add(scroller, node, glide){
+    const before = scroller.offsetHeight;
+    scroller.appendChild(node);
+    shift(scroller, before, glide);
+    return node;
+  }
+  function shift(scroller, before, glide){
+    const d = scroller.offsetHeight - before;
+    if (glide && d > 0) scroller.animate([{transform:`translateY(${d}px)`},{transform:'none'}],{duration:300*speed,easing:'ease-out'});
+  }
+  function enter(node, {rise=8, ms=250, delay=0, fadeOnly=false}={}){
+    const from = fadeOnly ? {opacity:0} : {opacity:0, transform:`translateY(${rise}px)`};
+    const to = fadeOnly ? {opacity:1} : {opacity:1, transform:'none'};
+    node.animate([from,to],{duration:ms*speed,delay:delay*speed,easing:EASE,fill:'backwards'});
+  }
+  function dots(){
+    if (RM()) return el('<span class="ell">…</span>');
+    const d = el('<div class="dots"><i></i><i></i><i></i></div>');
+    [...d.children].forEach((dot,i)=>dot.animate(
+      [{opacity:.35,transform:'translateY(1.5px)'},{opacity:1,transform:'none'},{opacity:.35,transform:'translateY(1.5px)'}],
+      {duration:840*speed,delay:i*140*speed,iterations:Infinity}));
+    return d;
+  }
+
+  // each moment: a seed (rows already there), and the beats for each variant: [ms, label, fn]
+  const moments = {
+    card:{
+      seed(s){
+        s.append(el('<div class="stamp">Thursday 7:42 pm</div>'));
+        s.append(el('<div class="me">What goes with the tan bomber?</div>'));
+        s.append(el('<div class="who">Kit</div>'));
+        s.append(el('<div class="kit"><b>Your olive sweater and dark jeans.</b>Black work boots keep it grounded.</div>'));
+      },
+      beats(v){
+        const ctx = {};
+        const list = [
+          [0,'His question lands',(s)=>{ add(s, el('<div class="me">How can I style this up for a nice dinner with my girlfriend?</div>'), !RM()); }],
+          [400,'Kit\'s dots rise in (250 ms)',(s)=>{ ctx.row = el('<div style="display:flex;flex-direction:column;gap:10px"><div class="who">Kit</div></div>'); ctx.bubble = el('<div class="kit"></div>'); ctx.bubble.append(dots()); ctx.row.append(ctx.bubble); add(s, ctx.row, !RM()); enter(ctx.row,{fadeOnly:RM()}); }],
+          [1500,'First sentence fades in (180 ms)',(s)=>{ const b=s.offsetHeight; ctx.bubble.innerHTML='<b>Swap the olive sweater for an off-white collared shirt.</b>'; shift(s,b,!RM()); if(!RM()||v==='new') enter(ctx.bubble.firstChild,{ms:v==='new'?160:180,fadeOnly:true}); }],
+          [2050, v==='new'?'Second sentence fades in (160 ms)':'Second sentence pops in',(s)=>{ const b=s.offsetHeight; const sp=el('<span class="s">Keep the tan bomber, jeans and boots. The collar makes it dinner.</span>'); ctx.bubble.append(sp); shift(s,b,!RM()); if(v==='new') enter(sp,{ms:160,fadeOnly:true}); }],
+        ];
+        const card = () => el(`<div class="card"><div class="tag"><span class="l">Dinner</span><span>From your closet + 1</span></div><div class="tiles">${tile('bomber','#B98E62','Tan bomber')}${tile('shirt','#EDE6D6','Off-white collared shirt',true)}${tile('jeans','#26324F','Dark jeans')}${tile('boots','#1E2026','Black work boots')}</div><div class="btns"><span class="kb pr">Wear this</span><span class="kb">Check it</span></div></div>`);
+        const follow = () => el('<div class="follow"><span>What color shirt?</span><span>Add a watch</span><span>Make it dressier</span></div>');
+        if (v==='today'){
+          list.push([2600,'Card and taps appear in one frame, no entrance',(s)=>{ const b=s.offsetHeight; ctx.row.append(card()); ctx.row.append(follow()); shift(s,b,!RM()); }]);
+        } else {
+          list.push([2720,'Card rises 12 pt (280 ms), thread glides with it',(s)=>{ const b=s.offsetHeight; const c=card(); const f=follow(); ctx.row.append(c); ctx.row.append(f); shift(s,b,!RM()); enter(c,{rise:12,ms:RM()?200:280,fadeOnly:RM()}); [...f.children].forEach((x,i)=>enter(x,{rise:6,ms:200,delay:180+i*50,fadeOnly:RM()})); }]);
+          list.push([2860,'One soft tap as the card settles',(s,side)=>hap(side)]);
+          list.push([2900,'Follow-up taps fade in last, 50 ms apart',()=>{}]);
+        }
+        return list;
+      }
+    },
+    words:{
+      seed(s){
+        s.append(el('<div class="stamp">Thursday 8:05 pm</div>'));
+        s.append(el('<div class="me">Is the olive sweater too much with dark jeans?</div>'));
+        s.append(el('<div class="who">Kit</div>'));
+        s.append(el('<div class="kit"><b>Not at all. Olive and dark denim are an easy pair.</b></div>'));
+      },
+      beats(v){
+        const ctx = {};
+        const sents = ['They suit the dark jeans and the olive.','White sneakers work too if you want it lighter.','Keep the laces dark so the boots stay the focus.'];
+        const list = [
+          [0,'His question lands',(s)=>{ add(s, el('<div class="me">What shoes with that for class tomorrow?</div>'), !RM()); }],
+          [400,'Kit\'s dots rise in (250 ms)',(s)=>{ ctx.row = el('<div style="display:flex;flex-direction:column;gap:10px"><div class="who">Kit</div></div>'); ctx.bubble = el('<div class="kit"></div>'); ctx.bubble.append(dots()); ctx.row.append(ctx.bubble); add(s, ctx.row, !RM()); enter(ctx.row,{fadeOnly:RM()}); }],
+          [1500,'First sentence fades in ('+(v==='new'?'160':'180')+' ms)',(s)=>{ const b=s.offsetHeight; ctx.bubble.innerHTML='<b>Your black work boots.</b>'; shift(s,b,!RM()); if(!RM()||v==='new') enter(ctx.bubble.firstChild,{ms:v==='new'?160:180,fadeOnly:true}); }],
+        ];
+        sents.forEach((t,i)=>{
+          list.push([2050+i*520, v==='new'?`Sentence ${i+2} fades in (160 ms)`:`Sentence ${i+2} pops in`,(s)=>{ const b=s.offsetHeight; const sp=el(`<span class="s">${i?' '+t:t}</span>`); ctx.bubble.append(sp); shift(s,b,!RM()); if(v==='new') enter(sp,{ms:160,fadeOnly:true}); }]);
+        });
+        if (v==='new') list.push([3300,'Answer complete: one soft tap',(s,side)=>hap(side)]);
+        else list.push([3300,'Answer complete: nothing marks it',()=>{}]);
+        return list;
+      }
+    },
+    hello:{
+      seed(s){ s.append(el('<div class="stamp">Thursday 7:40 am</div>')); },
+      beats(v){
+        const ctx = {};
+        const line = 'I\'m Kit, your stylist. Quick note: I\'m an AI. I read clothes, never faces, and I can get things wrong. Tap "Not quite right?" when I do.';
+        const offer = () => el('<div class="card offer"><h4>Want to check a fit now?</h4><p>Stand back so your shoes are in the shot. Not dressed for it? Later works.</p><span class="kb pr">Check my fit</span><span class="kb">Later</span></div>');
+        if (v==='today'){
+          return [
+            [0,'Setup slides away; the thread waits 500 ms',()=>{}],
+            [500,'Kit\'s first line rises in (250 ms)',(s)=>{ const r=el(`<div style="display:flex;flex-direction:column;gap:10px"><div class="who">Kit</div><div class="kit" style="color:var(--ink)">${line}</div></div>`); add(s,r,false); enter(r,{fadeOnly:RM()}); }],
+            [600,'The offer card rises in 100 ms later',(s)=>{ const c=offer(); add(s,c,false); enter(c,{fadeOnly:RM()}); }],
+            [900,'Then nothing moves',()=>{}],
+          ];
+        }
+        return [
+          [0,'Setup slides away; the thread waits 500 ms',()=>{}],
+          [500,'Kit\'s dots rise in (250 ms)',(s)=>{ ctx.row=el('<div style="display:flex;flex-direction:column;gap:10px"><div class="who">Kit</div></div>'); ctx.bubble=el('<div class="kit" style="color:var(--ink)"></div>'); ctx.bubble.append(dots()); ctx.row.append(ctx.bubble); add(s,ctx.row,false); enter(ctx.row,{fadeOnly:RM()}); }],
+          [1400,'The dots become his first line (180 ms fade)',(s)=>{ ctx.bubble.textContent=line; enter(ctx.bubble,{ms:180,fadeOnly:true}); }],
+          [1850,'The offer card rises 12 pt on its own beat (280 ms)',(s)=>{ const c=offer(); add(s,c,false); enter(c,{rise:12,ms:RM()?200:280,fadeOnly:RM()}); }],
+          [1990,'One soft tap as it settles',(s,side)=>hap(side)],
+        ];
+      }
+    }
+  };
+
+  function hap(side){
+    const h = side.querySelector('.hap');
+    h.classList.add('on');
+    h.querySelector('i').animate([{transform:'scale(1)'},{transform:'scale(1.7)'},{transform:'scale(1)'}],{duration:260*speed,easing:'ease-out'});
+    setTimeout(()=>h.classList.remove('on'), 900*speed);
+  }
+
+  const timers = new WeakMap();
+  function play(side){
+    const moment = moments[side.closest('.moment').dataset.moment];
+    const v = side.dataset.variant;
+    (timers.get(side)||[]).forEach(clearTimeout);
+    const s = side.querySelector('.scroller');
+    s.getAnimations({subtree:true}).forEach(a=>a.cancel());
+    s.innerHTML = '';
+    side.querySelector('.hap').classList.remove('on');
+    moment.seed(s);
+    const beats = moment.beats(v);
+    const ol = side.querySelector('.beats');
+    ol.innerHTML = beats.map(([t,l])=>`<li><span class="t">${t} ms</span><span class="d">${l}</span></li>`).join('');
+    const items = [...ol.children];
+    const ids = beats.map(([t,,fn],i)=>setTimeout(()=>{ items.forEach(x=>x.classList.remove('now')); items[i].classList.add('now'); fn(s,side); }, t*speed));
+    const end = beats[beats.length-1][0];
+    ids.push(setTimeout(()=>play(side), (end + 3200) * speed));
+    timers.set(side, ids);
+  }
+  const sides = [...document.querySelectorAll('.side')];
+  const playAll = () => sides.forEach(play);
+  sides.forEach(side=>side.querySelector('.replay1').addEventListener('click',()=>play(side)));
+  document.getElementById('replayAll').addEventListener('click', playAll);
+  rmInput.addEventListener('change', playAll);
+  document.querySelectorAll('[data-speed]').forEach(b=>b.addEventListener('click',()=>{
+    speed = Number(b.dataset.speed);
+    document.querySelectorAll('[data-speed]').forEach(x=>x.setAttribute('aria-pressed', String(x===b)));
+    playAll();
+  }));
+  document.querySelectorAll('[data-theme-btn]').forEach(b=>b.addEventListener('click',()=>{
+    const t = b.dataset.themeBtn;
+    if (t==='system') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
+    document.querySelectorAll('[data-theme-btn]').forEach(x=>x.setAttribute('aria-pressed', String(x===b)));
+  }));
+  playAll();
+})();
+</script>
