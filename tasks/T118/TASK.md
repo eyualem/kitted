@@ -71,3 +71,14 @@ Small things worth a later look (not blocking):
 - `KIND_SHORTLIST` duplicates T106's table (the builder's own note).
 
 **Verdict: not ready.** One code defect (1), plus CB4.11/CB4.12 unproven. Once defect 1 is fixed and the Added sheet matched path is shown once on the Simulator (pick, new piece, Undo), this is ready.
+
+### Round 2 (normal)
+
+Reviewed: the diff `585d7d29..HEAD` (service.ts, NotSameSheet.tsx, closetService.test.ts, the demo screen 424), shots 11, 12 and 13, and the Built section. I did not run tests (the session's `npm run check` is the record); I read the assertion and the code path it exercises.
+
+- Defect 1 (Undo of a new piece with a kind left the pair marked never-ask-again): fixed. `revertAnswer` now restores `kindUndo.profile` with the candidate filtered out of `distinctFrom`, so the flagged piece and the candidate both end clean. The CB4.7 test now asserts `distinctFrom` is empty on both rows, which fails against the old code (the old `kindUndo.profile` carried `['B1']`). The `kindUndo.profile === null` case restores null, which carries no mark: fine.
+- Defect 2 (Built empty, CB4.11 unproven): Built is filled in. CB4.11 is shown on the Simulator for the two answers: shot 11 (the sheet over the white tee with the Tops tiles), shot 12 (the photo moved to the grey tee, the white tee gone from the matched list), shot 13 (the sneakers split off as "White leather sneakers", a new piece with its own Undo, kind confirmed). Undo of the matched path is still not shown on the Simulator, and Built says so; its logic reuses `restorePhoto`. I accept that as honest and non-blocking.
+- Small fix: `NotSameSheet.run` catches a thrown write (clears the selection, un-busies) and stays busy after success. Matches CB4.15 and avoids the Gone flash.
+- Built's claims match the diff and the shots. Its "Not verified" list is honest (VoiceOver, matched-path Undo toast, dark shots of the picked/kind/card states, the Maestro edit, a phone). Two things it does not list, both minor: there is still no component test for the sheet (CB4.4, 4.9 and 4.15 rest on reading the code), and the shots are on an iPhone 17e rather than the main iPhone 17 Pro (layout only).
+
+**Verdict: ready.** No open defect. Later look (never blocks): demo story 424 sits between 422 and 423 in `prepareDemoScreen.ts` (tidy the order); run the matched-path Undo and VoiceOver on the phone.
