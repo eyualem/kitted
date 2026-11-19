@@ -229,7 +229,7 @@ describe('KC5.2 · rewrite', () => {
   it.each([
     ['Wear your dark brown work boots with the jeans.', 'Wear your black work boots with the jeans.'],
     ['Your brown boots look right here.', 'Your black work boots look right here.'],
-    ['The brown boots disappear under wide jeans.', 'The black work boots disappear under wide jeans.'],
+    ['Your brown boots disappear under wide jeans.', 'Your black work boots disappear under wide jeans.'],
   ])('KC5.2 · rewrite: %s becomes %s', (before, after) => {
     expect(rewritePieceNames(before, MINE)).toBe(after);
   });
@@ -237,6 +237,8 @@ describe('KC5.2 · rewrite', () => {
   it.each([
     'Wear your black work boots.',
     'Wear the boots.',
+    'Try the brown boots instead.', // not "your": could be a buy (T105 review)
+    'Swap your sneakers for the white sneakers.',
     'Buy the olive chinos instead.', // a kind he doesn't own
     'Pick up a pair of olive chinos.',
     'Your brown loafers look right here.', // never renamed to a piece of a different kind
@@ -265,8 +267,8 @@ describe('KC5.2 · rewrite', () => {
       return st;
     };
     // rewritten, not dropped, no `fact`
-    const a = run(ctx, 'Wear your dark brown work boots with the jeans. ', 'Your brown boots look right here. ', 'The brown boots disappear under wide jeans.');
-    expect(a.text).toBe('Wear your black work boots with the jeans. Your black work boots look right here. The black work boots disappear under wide jeans.');
+    const a = run(ctx, 'Wear your dark brown work boots with the jeans. ', 'Your brown boots look right here. ', 'Your brown boots disappear under wide jeans.');
+    expect(a.text).toBe('Wear your black work boots with the jeans. Your black work boots look right here. Your black work boots disappear under wide jeans.');
     expect(a.dropped).toEqual([]);
     // a correct mention is untouched, and the first word keeps its capital
     const b = run(ctx, 'Your black work boots stay. Wear the boots.');

@@ -111,6 +111,9 @@ function fitsPiece(p: GatePiece, legs: readonly string[], colors: readonly strin
 export function rewritePieceNames(sentence: string, pieces: readonly GatePiece[] = []): string {
   if (pieces.length === 0) return sentence;
   return sentence.replace(PIECE_NOUN, (match: string, det: string, rawWords: string, noun: string) => {
+    // Only "your …" is his piece. "the/those/that white sneakers" is often one he'd buy ("Swap them for the white
+    // sneakers"), so renaming it to his black pair would say nonsense (T105 review): the fact rule handles those.
+    if (det.toLowerCase() !== 'your') return match;
     const words = rawWords.toLowerCase().trim().split(/\s+/);
     const legs = words.filter((w) => LEG_GROUP[w]);
     const colors = words.filter((w) => COLOR_FAMILIES[w]);

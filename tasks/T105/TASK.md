@@ -53,3 +53,9 @@ Written by the reviewer.
 - `TASK.md` Built has an empty "Tests added" line; list the three kitWords test files.
 
 **Verdict: not ready** (one code defect). Nothing was run beyond the probe; `npm run check` was the session's.
+
+
+## Fix round 1 (coordinator)
+- Review defect 1 fixed: `rewritePieceNames` now rewrites only after "your" (`gate.ts`). "the/those/that white sneakers" can be a piece he'd buy, so those go to the `fact` rule as before.
+- Two committed tests changed to match: the "The brown boots disappear…" cases now start with "Your"; added "Try the brown boots instead." and "Swap your sneakers for the white sneakers." as unchanged. No test was weakened for a wrong reason: the old case encoded the bug.
+- Small review notes left open (not blocking): a price with no piece noun passes; "I can't show you every outfit." is dropped by `deny`; the tabs line says "today's limits" even with no plan screen.
