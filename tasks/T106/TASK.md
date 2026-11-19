@@ -17,6 +17,8 @@
 - **Must not break:** Kit's gate (T105, T117), the closet's chat-piece rules (a color he says is the piece's color for good; the fit check's "Same as your …?"), Past chats' read-only add card.
 
 ## Calls settled (listed in the PR)
+- **The founder approved the two new words** (`What kind of piece is it?`, `What color is it?`) on Nov 19 in chat ("Yes, all four", relayed by the control session).
+- **Control review fixes (Nov 19):** a fit word he says stays in the name (`Grey oversized tee`, so it draws oversized); the gate drops "I can't add that", "I won't be able to add it", "Done, it's in your closet" when nothing was added; a failed `prepare` takes an explicit add back.
 - **A color is never guessed.** "Add it" with a kind but no color (his Nov 19 message) asks `What color is it?` as a tap card (Black, White, Grey, Navy, Not sure). The Nov 12 bug (a piece drawn the wrong color) is the reason; a plain mention with no color shows no card at all.
 - **The piece's name is made by code** from its color and kind (`Grey tee`), as KC4.2's card shows it. A brand he typed ("Uniqlo") never reaches a name; "oversized" is not kept (the closet names fit separately).
 - **Undo on an added card returns the card to asking** (Add and No thanks again), not to "Not added".
