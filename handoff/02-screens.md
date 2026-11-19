@@ -1722,6 +1722,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `card.tag.recheck` | Re-check · Full | M |
 | `card.tag.recheckPartial` | Re-check · Partial | N |
 | `card.outOf` | /10 | M |
+| `score.word.redo` | Start fresh | M |
 | `score.word.needsFix` | Needs a fix | M |
 | `score.word.gettingThere` | Getting there | M |
 | `score.word.putTogether` | Put together | M |

@@ -30,12 +30,14 @@ Say it to the founder in one plain line before any work ("Tiny: I'll fix it, tes
 | **Who** | You alone | You build; one `reviewer` | `test-writer`, `implementer`, `reviewer` |
 | **Target** | 10–20 min · 30–60 calls | 20–40 min · 80–150 calls | 45–75 min · 250–400 calls |
 | **Record** | The PR description | `tasks/<ID>/TASK.md` | `TASK.md` + `TESTING.md` |
-| **Fix rounds** | — | 1 | 2 |
+| **Fix rounds** | — | 1 | 1 |
 
-- **Models** (the founder, Nov 10): sessions start on Sonnet (`.claude/settings.json`); the reviewer, implementer and designer run on Sonnet and the test writer on Opus, each set in its own file. Nothing to pick by hand.
+- **Models** (the founder, Nov 18): sessions start on Sonnet (`.claude/settings.json`), and every agent runs on Sonnet, the test writer included, each set in its own file. A session started from another one gets Sonnet passed explicitly, since it otherwise inherits its parent's model (T69 ran on Opus that way and used a whole usage window).
+- **Lean** (the founder, Nov 18: "it should not consume as much tokens and time as it has been"): tests cover the spec's checks in TESTING.md, not every edge case. Every agent reads the diff and the slices of files it needs (grep, line ranges), never a big file or fixture whole. While working, run only the related tests (`npx jest --findRelatedTests`, or the one test file); one full `npm run check` at the end.
+- **The call budget is a stop:** at the size's call target, stop and tell the founder in one line what's left and the estimate; go on only on his yes.
 - **Move to Opus** when a normal or strict task is still failing after its fix rounds, or the problem turns out to be tangled (it spans many files, or the cause isn't clear after a real look): stop and ask the founder in one line to switch this session to Opus in the model menu, then carry on. A session can't switch its own model.
 - **Strict is decided by what the code touches, not by size.** A one-line change to face blur is strict.
-- **Move up** when a task outgrows its size (more files than it said, a strict area turns up, or it's well past its call budget): one line to the founder, then carry on at the new size. Never move down to get out of a check.
+- **Move up** when a task outgrows its size (more files than it said, a strict area turns up, or it's the budget stop above): one line to the founder, then carry on at the new size. Never move down to get out of a check.
 - A **brand-new screen** (or a new flow of screens) adds step D to a normal or strict task. A change to a screen he already has is never drawn: he sees the screenshots in the PR (the founder, Nov 10).
 - Words the user reads that aren't in the spec are his call, at every size: ask in one AskUserQuestion with your pick first.
 
@@ -49,7 +51,7 @@ Say it to the founder in one plain line before any work ("Tiny: I'll fix it, tes
 1. Write `tasks/<ID>/TASK.md` from the template: half a page, what changes, the files, the spec checks as "done means".
 2. Build it. Tests for the logic you change (a rule, a state change, a limit, a server route), each named with its criterion ID. No tests for words, labels or layout, and no new Maestro flows.
 3. `npm run check` in `app/`; the server tests if `firebase/` changed.
-4. Screenshots of each changed screen, light and dark (the largest text too if the change is mostly text). Put the paths in TASK.md → Built, and commit (`<ID>: build`).
+4. Screenshots of each changed screen, light only (dark too only when colors changed; the largest text only when the change is mostly text). Put the paths in TASK.md → Built, and commit (`<ID>: build`).
 5. Plan line → `· review`. Run the **reviewer** (`subagent_type: "reviewer"`) with the task ID and mode `normal`. Pass paths, not your opinion of the work.
 6. **One fix round** on "not ready": fix, re-run the checks it touches, and run the reviewer once more. Anything still open after that goes to the founder in the PR summary; it doesn't hold the task.
 
@@ -58,7 +60,7 @@ Say it to the founder in one plain line before any work ("Tiny: I'll fix it, tes
 2. Plan line → `· tests`. Run the **test-writer** with the task ID. It writes those tests, shows each one failing for the right reason, and locks them. Confirm the Lock line has a SHA.
 3. Run the **implementer** with the task ID. It builds until the locked tests and `npm run check` pass, and it can't edit the tests (the `protect-tests.sh` hook). A **dispute** (a test that looks wrong) goes back to the test-writer to judge against the spec; a question the spec doesn't settle goes to the founder.
 4. Take the screenshots as in Normal, then plan line → `· review` and run the **reviewer** with the task ID and mode `strict`.
-5. **At most 2 fix rounds.** Sort each defect: **code** → the implementer; **test** (a planted bug went uncaught) → the test-writer, to add or strengthen only. Then the reviewer again. After round 2: `[~] <ID> · stuck: <one line>` and the report says what's left. Never relax a test or a criterion to get out.
+5. **One fix round.** Sort each defect: **code** → the implementer; **test** (a planted bug went uncaught) → the test-writer, to add or strengthen only. Then the reviewer again, on the fixes only. After that round: `[~] <ID> · stuck: <one line>` and the report says what's left. Never relax a test or a criterion to get out.
 
 ## D. A brand-new screen
 Before step 1 of Normal or Strict:

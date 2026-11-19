@@ -75,9 +75,9 @@ export const DEMO_CARD_ANSWERS: readonly SeededAnswer[] = [
   },
   {
     question: 'What should I buy next?',
-    // The demo profile picks smart casual and workwear, so its list has work boots (#364): the Closet's next best buy.
-    answer: 'Get brown work boots next. They go with your jeans and your overshirt, and workwear is one of your looks.',
-    card: { type: 'buy', kind: 'work boots', shade: 'brown' },
+    // Under v16 (T69) the Closet's next best buy for the demo closet is dark straight jeans (+16): the answer names them.
+    answer: 'Get dark straight jeans next. They go with your tops and your shoes, and they open up the most outfits.',
+    card: { type: 'buy', kind: 'dark straight jeans', shade: null },
   },
   {
     question: 'Which shoes are my dressiest?',

@@ -25,6 +25,8 @@ export interface LedgerRowProps {
   valueText?: string;
   /** How a 0 reads: "+0" for an unearned credit (default), "±0" for the occasion/partial rows. */
   zero?: 'plus' | 'plusMinus';
+  /** For the UI inventory (the Why rows); no visual change. */
+  testID?: string;
   /** A reason sentence (the parts groups): regular weight, not a rule name. */
   plain?: boolean;
 }
@@ -41,7 +43,7 @@ function spokenAmount(n: number): string {
   return t(n > 0 ? 'a11y.plus' : 'a11y.minus', { n: Math.round(Math.abs(n) * 100) / 100 });
 }
 
-export function LedgerRow({ rule, item, amount, valueText, zero = 'plus', plain }: LedgerRowProps) {
+export function LedgerRow({ rule, item, amount, valueText, zero = 'plus', plain, testID }: LedgerRowProps) {
   const { colors, isAccessibilitySize } = useTheme();
   const value = valueText ?? (amount !== undefined ? formatAmount(amount, zero) : '');
   const valueColor = amount === undefined || amount === 0 ? 'ink' : amount > 0 ? 'good' : 'ink2';
@@ -51,6 +53,7 @@ export function LedgerRow({ rule, item, amount, valueText, zero = 'plus', plain 
     <View
       accessible
       accessibilityLabel={spoken}
+      testID={testID}
       style={{
         flexDirection: isAccessibilitySize ? 'column' : 'row',
         justifyContent: 'space-between',

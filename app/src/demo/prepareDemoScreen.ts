@@ -1,7 +1,7 @@
 // Puts the app in screen n's state (04 §10.3) by running the REAL code at latency 0:
 // wipe → load the scenario (as of the screen's time) → play the story through the fit-check
 // service → set the clock. So /demo/screen/7 shows what the code really produces.
-import { dayKey, US_EASTERN, type Styles } from '@kitted/core';
+import { dayKey, setRescoreV16, US_EASTERN, type Styles } from '@kitted/core';
 import seed from '../../assets/seed.json';
 import { store } from '@/data/db';
 import { KV } from '@/data/store';
@@ -35,7 +35,8 @@ const at = (iso: string) => parseZonedIso(iso) ?? 0;
 
 /** Story steps per screen (firstRun story; screen 11 runs s24 live inside `full`). */
 type Step =
-  | { at: string; do: 'check'; photoId: string; occasion: OccasionKey; hold?: number; checkId?: string; style?: StyleKey; tapLook?: StyleKey; fault?: DemoFault }
+  /** `old`: scored with the v15 engine, as a check stored before T69 (demo screen 310). */
+  | { at: string; do: 'check'; photoId: string; occasion: OccasionKey; hold?: number; checkId?: string; style?: StyleKey; tapLook?: StyleKey; fault?: DemoFault; old?: true }
   /** A question that failed for no connection (09-ui-review §20.8 G18.4): his bubble and the offline line with Retry, as
    *  the pipeline writes them (askPipeline tests cover the path itself; the screen's own state is offline). */
   | { at: string; do: 'askOffline'; text: string }
@@ -115,6 +116,11 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   7: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
   8: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
   9: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }] },
+  // The rescoring (T69, parts v16): the result card for five made-up readings the engine scores live (300-304: 3.5, 5.5, 7.0,
+  // 8.5, 9.0), their Why sheets (305-309), and an old check scored with v15 (310: the floor row). demo/v16Readings.ts.
+  ...Object.fromEntries([300, 301, 302, 303, 304].map((n) => [n, { steps: [{ at: '2026-10-22T07:42:00', do: 'check' as const, photoId: `v${n}`, occasion: 'everyday' as const }] }])),
+  ...Object.fromEntries([305, 306, 307, 308, 309].map((n) => [n, { steps: [{ at: '2026-10-22T07:42:00', do: 'check' as const, photoId: `v${n - 5}`, occasion: 'everyday' as const }] }])),
+  310: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'v300', occasion: 'everyday', old: true }] },
   // The optional correction is skipped: it would make the re-check 8.5 (PLAN.md decision 1).
   10: {
     steps: [
@@ -601,12 +607,14 @@ async function playStory(sc: ScreenScenario): Promise<void> {
     } else {
       // A step's fault (G18: no connection) holds for that check only.
       if (step.fault) setDemoArgs({ ...getDemoArgs(), fault: step.fault });
+      if (step.old) setRescoreV16(false); // the switch is off for this one check: it scores, and is stored, as v15
       try {
         await fitCheck.start({
           mode: 'check', photoId: step.photoId, occasion: step.occasion, checkId: step.checkId ?? (sc.scenario === 'firstRun' ? STORY_FIRST_CHECK : STORY_PARTIAL),
           ...(step.style ? { style: step.style } : {}),
         });
       } finally {
+        if (step.old) setRescoreV16(true);
         if (step.fault) setDemoArgs({ ...getDemoArgs(), fault: args.fault });
       }
     }

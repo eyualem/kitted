@@ -35,14 +35,14 @@ export function spokenScoreLine(now: number, was?: number | null): string {
 /** The word comes from the ROUNDED score. */
 export function scoreWord(x: number): ScoreWord {
   const r = roundedToHalf(x);
-  let word: ScoreWord = 'Needs a fix';
+  let word: ScoreWord = 'Redo';
   for (const band of scoreBands) {
     if (r >= band.min) word = band.word;
   }
   return word;
 }
 
-/** Index 0…4 of the band, for the ScoreWordScale's "You're here" highlight. */
+/** Index 0…5 of the band, for the ScoreWordScale's "You're here" highlight. */
 export function scoreBandIndex(x: number): number {
   const r = roundedToHalf(x);
   let index = 0;
@@ -53,6 +53,7 @@ export function scoreBandIndex(x: number): number {
 }
 
 const WORD_KEYS: Record<ScoreWord, StringKey> = {
+  Redo: 'score.word.redo',
   'Needs a fix': 'score.word.needsFix',
   'Getting there': 'score.word.gettingThere',
   'Put together': 'score.word.putTogether',

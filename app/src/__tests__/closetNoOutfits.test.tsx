@@ -268,10 +268,11 @@ describe('CB1.2 · nothing about outfits on a switch-off screen', () => {
   it('CB1.2 · Kit still ranks by the Closet\'s count (private evidence)', async () => {
     const { store, closet, styles } = await setup();
     const input = { handles: {}, closet, checks: [], styles, starterMarks: [], gate: { allowedScores: new Set<string>() } };
-    expect(buildCard({ type: 'buy', kind: 'work boots', shade: 'brown' }, input)).toEqual({ type: 'buy', starterId: 's27', gain: 18 });
+    // T69: under v16 the boots add 6 outfits at 7.0+ (v15: 18) and dark straight jeans lead (+16)
+    expect(buildCard({ type: 'buy', kind: 'work boots', shade: 'brown' }, input)).toEqual({ type: 'buy', starterId: 's27', gain: 6 });
     // The demo's own answer card, too (oneCount G8): the Closet's pick with its gain, stored on the message.
     const nb = nextBestBuy({ closet, checks: [], styles, marks: [] })!;
-    expect([nb.entry.id, nb.gain]).toEqual(['s27', 18]);
+    expect([nb.entry.id, nb.gain]).toEqual(['s05', 16]);
 
     const clock = manualClock(Date.parse('2026-10-22T12:30:00-04:00'));
     const snap = await loadStylistSnapshot(store, clock);
@@ -282,7 +283,7 @@ describe('CB1.2 · nothing about outfits on a switch-off screen', () => {
     const ev = await buildEvidence(route, snap, ctx, { readingOf: async () => null, starterMarks: [] });
     const lines = ev.text.split('\n').filter((l) => l.startsWith('- '));
     expect(lines.length).toBeGreaterThan(2);
-    expect(lines[0]).toMatch(/^- s27 brown work boots · \+18 outfits/);
+    expect(lines[0]).toMatch(/^- s05 dark straight jeans · \+16 outfits/); // T69 (v15: s27 brown work boots, +18)
     const gains = lines.map((l) => Number(/\+(\d+) outfits/.exec(l)![1]));
     for (let i = 1; i < gains.length; i++) expect(gains[i - 1]).toBeGreaterThanOrEqual(gains[i]!);
   });
@@ -416,7 +417,7 @@ describe('CB1.5 · with the switch on (a demo screen), everything as before', ()
     jest.mocked(useLive).mockReturnValue({ ...nb, closet });
     await render(<NextBuySheet />);
     expect(Redirect).not.toHaveBeenCalled();
-    expect(screen.getByText('Brown work boots')).toBeTruthy();
+    expect(screen.getByText('Dark straight jeans')).toBeTruthy(); // T69: v16's next best buy (v15: brown work boots)
     expect(screen.getByText('What it unlocks')).toBeTruthy();
     expect(screen.getByText(String(nb.unlocks.length))).toBeTruthy();
   });

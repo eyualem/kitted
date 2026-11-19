@@ -4,6 +4,12 @@
 import { describe, expect, it } from "vitest";
 import { G, defaultRubric, goingForAdvice, scoreParts, type DetectedStyle, type Reading } from "../src";
 import { loadReading } from "./helpers";
+import { afterAll as afterAllT69 } from "vitest";
+import { setRescoreV16 as setRescoreV16T69 } from "../src/index";
+// T69 (#484, #487): this file tests Going for with v15's detection (v16's steady-class swap, [TST-st], reads s10's Chelsea boots as dress shoes). That engine still ships as the third switch's rollback and scores
+// every check stored before T69, so the file is pinned to v15; v16's own behaviour is in the T69 tests.
+setRescoreV16T69(false);
+afterAllT69(() => setRescoreV16T69(true));
 
 const STYLES: DetectedStyle[] = ["streetwear", "minimalist", "smart_casual", "workwear", "classic_prep", "vintage_sport", "outdoor"];
 const DEMO = ["p01a", "p01b", "s05", "s09", "s10", "s12", "s13", "s14", "s15", "s22", "s24", "s25", "p01a_real", "p01b_real", "p01b_chinos_slim", "s24_jeans"];

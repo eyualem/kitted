@@ -8,6 +8,12 @@ import {
   type AllowedColorsInput, type ClosetItem, type ColorFamily, type Garment, type PartsEngine, type PartsOptions, type PartsResult, type Reading,
 } from "../src/index";
 import { loadReading, seedCloset } from "./helpers";
+import { afterAll as afterAllT69 } from "vitest";
+import { setRescoreV16 as setRescoreV16T69 } from "../src/index";
+// T69 (#484, #487): this file tests allowedColors' rules with v15's costs (v16 moves the costs; T69-G2 checks it follows the switch). That engine still ships as the third switch's rollback and scores
+// every check stored before T69, so the file is pinned to v15; v16's own behaviour is in the T69 tests.
+setRescoreV16T69(false);
+afterAllT69(() => setRescoreV16T69(true));
 
 // Taken at load time, before any test (so before any allowedColors call), so guard G3 does not depend on test order:
 // a write made by an earlier test is still a difference from these copies.

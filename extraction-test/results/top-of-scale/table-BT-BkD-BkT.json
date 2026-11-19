@@ -1,0 +1,614 @@
+{
+ "v16": {
+  "label": "v16 as approved (raw clamp 9.5, top slope 0.7)",
+  "tune": {},
+  "steady": {
+   "leg": 218,
+   "none": 215,
+   "all": 217
+  },
+  "heldout": {
+   "raw": [
+    0.8201219512195121,
+    0.6306995611872105,
+    0.7926829268292683,
+    0.8414634146341463
+   ],
+   "key": [
+    0.8109756097560976,
+    0.6197537229548059,
+    0.7804878048780488,
+    0.8414634146341463
+   ]
+  },
+  "gold_shares": {
+   "3-4.5": 0.004484304932735426,
+   "5-5.5": 0.07174887892376682,
+   "6-6.5": 0.16143497757847533,
+   "7-7.5": 0.4170403587443946,
+   "8-8.5": 0.3452914798206278,
+   "9-9.5": 0.0
+  },
+  "gold_gap": 0.1952914798206278,
+  "checks_shares": {
+   "3-4.5": 0.0,
+   "5-5.5": 0.08064516129032258,
+   "6-6.5": 0.1774193548387097,
+   "7-7.5": 0.4838709677419355,
+   "8-8.5": 0.25806451612903225,
+   "9-9.5": 0.0
+  },
+  "checks_gap": 0.1838709677419355,
+  "b2": [
+   6,
+   6
+  ],
+  "b3": [
+   17,
+   18
+  ],
+  "b4_fail": [
+   "H7"
+  ],
+  "all164": [
+   134,
+   164,
+   0.6298501965049348
+  ],
+  "his9_mean": 7.96875,
+  "his9_shown9": 0,
+  "n_his9": 16,
+  "tops": [],
+  "named": [
+   [
+    "His check: grey hoodie, black wide jeans, navy slides (Everyday)",
+    6.5
+   ],
+   [
+    "His check: grey tee under a tan overshirt, black wide jeans (Class)",
+    7.5
+   ],
+   [
+    "His check: charcoal hoodie, cream overshirt over it, relaxed jeans, chunky sneakers",
+    8.0
+   ],
+   [
+    "His check: charcoal hoodie, light wide jeans, white leather sneakers",
+    8.0
+   ],
+   [
+    "His check: charcoal tee with a clear stain, light jeans, slides",
+    5.5
+   ],
+   [
+    "His check: black sweatshirt, slim ripped jeans (Class)",
+    6.0
+   ],
+   [
+    "Gold, he rated 5.5: black graphic tee, skinny jeans, red basketball sneakers",
+    5.0
+   ],
+   [
+    "Gold, he rated 8: green cardigan over a white tee, relaxed black trousers, white sneakers",
+    8.0
+   ],
+   [
+    "Gold, he rated 5: pink graphic tee, light denim shorts",
+    7.0
+   ],
+   [
+    "Gold, he rated 8: blue sweatshirt over a tee, olive wide cargos, black derbies",
+    6.5
+   ],
+   [
+    "Tim's before (a01, his 4.5): oversized tee, denim jacket, skinny jeans",
+    4.5
+   ],
+   [
+    "Tim's favorite (a51, his 9): brown blazer, white tee, black trousers",
+    8.0
+   ],
+   [
+    "Wanhee's red bomber over dark trousers (a26, his 7.5)",
+    8.0
+   ],
+   [
+    "Made up: red tee, yellow chinos, purple sneakers (three brights)",
+    4.5
+   ],
+   [
+    "Made up: boxy white tee tucked into charcoal wide trousers, a burgundy cardigan, black loafers",
+    8.5
+   ]
+  ]
+ },
+ "BT": {
+  "label": "B + T: the knee, and with nothing off in one look two lifts may reach 9.0, three 9.5",
+  "tune": {
+   "curve_knee": [
+    8.5,
+    1.45
+   ],
+   "stack_clean": {
+    "2c": 9.0,
+    "3c": 9.5,
+    "4c": 9.5
+   }
+  },
+  "steady": {
+   "leg": 217,
+   "none": 214,
+   "all": 211
+  },
+  "heldout": {
+   "raw": [
+    0.8216463414634146,
+    0.6414061623697368,
+    0.8048780487804879,
+    0.8414634146341463
+   ],
+   "key": [
+    0.8140243902439024,
+    0.6330907941506025,
+    0.7926829268292683,
+    0.8414634146341463
+   ]
+  },
+  "gold_shares": {
+   "3-4.5": 0.004484304932735426,
+   "5-5.5": 0.07174887892376682,
+   "6-6.5": 0.16143497757847533,
+   "7-7.5": 0.4170403587443946,
+   "8-8.5": 0.32286995515695066,
+   "9-9.5": 0.02242152466367713
+  },
+  "gold_gap": 0.17286995515695067,
+  "checks_shares": {
+   "3-4.5": 0.0,
+   "5-5.5": 0.08064516129032258,
+   "6-6.5": 0.1774193548387097,
+   "7-7.5": 0.4838709677419355,
+   "8-8.5": 0.25806451612903225,
+   "9-9.5": 0.0
+  },
+  "checks_gap": 0.1838709677419355,
+  "b2": [
+   6,
+   6
+  ],
+  "b3": [
+   17,
+   18
+  ],
+  "b4_fail": [
+   "H7"
+  ],
+  "all164": [
+   134,
+   164,
+   0.6347750478298674
+  ],
+  "his9_mean": 8.0,
+  "his9_shown9": 1,
+  "n_his9": 16,
+  "tops": [
+   [
+    "gold",
+    "ig-008",
+    9.0,
+    null,
+    "bomber (navy) + tee (white) + jeans (denim_dark, wide) + basketball_sneaker (white)",
+    "lifts L2 +0.5, L7 +0.5; taste: wide legs +0.75"
+   ],
+   [
+    "gold",
+    "ig-034",
+    9.0,
+    9.0,
+    "tee (burgundy) + trousers (off_white_cream, barrel) + loafer (black)",
+    "lifts L1 +0.25, L5 +0.5, L7b +0.5; taste: wide legs +0.75"
+   ],
+   [
+    "gold",
+    "ig-035",
+    9.0,
+    8.5,
+    "tee (olive) + trousers (brown, barrel) + loafer (black)",
+    "lifts L1 +0.5, L7b +0.5; taste: wide legs +0.75"
+   ],
+   [
+    "gold",
+    "ig-093",
+    9.0,
+    8.0,
+    "knit_polo (off_white_cream) + trousers (black, wide) + loafer (burgundy)",
+    "lifts L1 +0.5, L7 +0.5; taste: wide legs +0.75"
+   ],
+   [
+    "gold",
+    "ig-118",
+    9.0,
+    null,
+    "quarter_zip (black) + dress_shirt (white) + jeans (charcoal, wide) + derby (black)",
+    "held by 2 lifts; lifts L1 +0.5, L6 +0.25, L7b +0.5; taste: wide legs +0.75"
+   ]
+  ],
+  "named": [
+   [
+    "His check: grey hoodie, black wide jeans, navy slides (Everyday)",
+    6.5
+   ],
+   [
+    "His check: grey tee under a tan overshirt, black wide jeans (Class)",
+    7.5
+   ],
+   [
+    "His check: charcoal hoodie, cream overshirt over it, relaxed jeans, chunky sneakers",
+    8.0
+   ],
+   [
+    "His check: charcoal hoodie, light wide jeans, white leather sneakers",
+    8.0
+   ],
+   [
+    "His check: charcoal tee with a clear stain, light jeans, slides",
+    5.5
+   ],
+   [
+    "His check: black sweatshirt, slim ripped jeans (Class)",
+    6.0
+   ],
+   [
+    "Gold, he rated 5.5: black graphic tee, skinny jeans, red basketball sneakers",
+    5.0
+   ],
+   [
+    "Gold, he rated 8: green cardigan over a white tee, relaxed black trousers, white sneakers",
+    8.5
+   ],
+   [
+    "Gold, he rated 5: pink graphic tee, light denim shorts",
+    7.0
+   ],
+   [
+    "Gold, he rated 8: blue sweatshirt over a tee, olive wide cargos, black derbies",
+    6.5
+   ],
+   [
+    "Tim's before (a01, his 4.5): oversized tee, denim jacket, skinny jeans",
+    4.5
+   ],
+   [
+    "Tim's favorite (a51, his 9): brown blazer, white tee, black trousers",
+    8.0
+   ],
+   [
+    "Wanhee's red bomber over dark trousers (a26, his 7.5)",
+    8.0
+   ],
+   [
+    "Made up: red tee, yellow chinos, purple sneakers (three brights)",
+    4.5
+   ],
+   [
+    "Made up: boxy white tee tucked into charcoal wide trousers, a burgundy cardigan, black loafers",
+    9.0
+   ]
+  ]
+ },
+ "BkD": {
+  "label": "Bk + D: a steeper knee (raw 8.5, slope 1.6: raw 9.25 -> 9.25) and the clean three-lift step",
+  "tune": {
+   "curve_knee": [
+    8.5,
+    1.6
+   ],
+   "stack_clean": {
+    "3c": 9.5,
+    "4c": 9.5
+   }
+  },
+  "steady": {
+   "leg": 217,
+   "none": 214,
+   "all": 213
+  },
+  "heldout": {
+   "raw": [
+    0.823170731707317,
+    0.6465029693866129,
+    0.8048780487804879,
+    0.8414634146341463
+   ],
+   "key": [
+    0.8155487804878049,
+    0.6422835474989387,
+    0.7926829268292683,
+    0.8414634146341463
+   ]
+  },
+  "gold_shares": {
+   "3-4.5": 0.004484304932735426,
+   "5-5.5": 0.07174887892376682,
+   "6-6.5": 0.16143497757847533,
+   "7-7.5": 0.4170403587443946,
+   "8-8.5": 0.34080717488789236,
+   "9-9.5": 0.004484304932735426
+  },
+  "gold_gap": 0.19080717488789237,
+  "checks_shares": {
+   "3-4.5": 0.0,
+   "5-5.5": 0.08064516129032258,
+   "6-6.5": 0.1774193548387097,
+   "7-7.5": 0.4838709677419355,
+   "8-8.5": 0.25806451612903225,
+   "9-9.5": 0.0
+  },
+  "checks_gap": 0.1838709677419355,
+  "b2": [
+   6,
+   6
+  ],
+  "b3": [
+   17,
+   18
+  ],
+  "b4_fail": [
+   "H7"
+  ],
+  "all164": [
+   134,
+   164,
+   0.6371341038577903
+  ],
+  "his9_mean": 8.0625,
+  "his9_shown9": 1,
+  "n_his9": 16,
+  "tops": [
+   [
+    "gold",
+    "ig-034",
+    9.5,
+    9.0,
+    "tee (burgundy) + trousers (off_white_cream, barrel) + loafer (black)",
+    "lifts L1 +0.25, L5 +0.5, L7b +0.5; taste: wide legs +0.75"
+   ]
+  ],
+  "named": [
+   [
+    "His check: grey hoodie, black wide jeans, navy slides (Everyday)",
+    6.5
+   ],
+   [
+    "His check: grey tee under a tan overshirt, black wide jeans (Class)",
+    7.5
+   ],
+   [
+    "His check: charcoal hoodie, cream overshirt over it, relaxed jeans, chunky sneakers",
+    8.0
+   ],
+   [
+    "His check: charcoal hoodie, light wide jeans, white leather sneakers",
+    8.0
+   ],
+   [
+    "His check: charcoal tee with a clear stain, light jeans, slides",
+    5.5
+   ],
+   [
+    "His check: black sweatshirt, slim ripped jeans (Class)",
+    6.0
+   ],
+   [
+    "Gold, he rated 5.5: black graphic tee, skinny jeans, red basketball sneakers",
+    5.0
+   ],
+   [
+    "Gold, he rated 8: green cardigan over a white tee, relaxed black trousers, white sneakers",
+    8.5
+   ],
+   [
+    "Gold, he rated 5: pink graphic tee, light denim shorts",
+    7.0
+   ],
+   [
+    "Gold, he rated 8: blue sweatshirt over a tee, olive wide cargos, black derbies",
+    6.5
+   ],
+   [
+    "Tim's before (a01, his 4.5): oversized tee, denim jacket, skinny jeans",
+    4.5
+   ],
+   [
+    "Tim's favorite (a51, his 9): brown blazer, white tee, black trousers",
+    8.0
+   ],
+   [
+    "Wanhee's red bomber over dark trousers (a26, his 7.5)",
+    8.0
+   ],
+   [
+    "Made up: red tee, yellow chinos, purple sneakers (three brights)",
+    4.5
+   ],
+   [
+    "Made up: boxy white tee tucked into charcoal wide trousers, a burgundy cardigan, black loafers",
+    9.0
+   ]
+  ]
+ },
+ "BkT": {
+  "label": "Bk + T: the steeper knee, and with nothing off in one look two lifts 9.0, three 9.5",
+  "tune": {
+   "curve_knee": [
+    8.5,
+    1.6
+   ],
+   "stack_clean": {
+    "2c": 9.0,
+    "3c": 9.5,
+    "4c": 9.5
+   }
+  },
+  "steady": {
+   "leg": 216,
+   "none": 213,
+   "all": 208
+  },
+  "heldout": {
+   "raw": [
+    0.8262195121951219,
+    0.6469335541099503,
+    0.8048780487804879,
+    0.8414634146341463
+   ],
+   "key": [
+    0.8170731707317073,
+    0.6438849152914593,
+    0.7926829268292683,
+    0.8414634146341463
+   ]
+  },
+  "gold_shares": {
+   "3-4.5": 0.004484304932735426,
+   "5-5.5": 0.07174887892376682,
+   "6-6.5": 0.16143497757847533,
+   "7-7.5": 0.4170403587443946,
+   "8-8.5": 0.32286995515695066,
+   "9-9.5": 0.02242152466367713
+  },
+  "gold_gap": 0.17286995515695067,
+  "checks_shares": {
+   "3-4.5": 0.0,
+   "5-5.5": 0.08064516129032258,
+   "6-6.5": 0.1774193548387097,
+   "7-7.5": 0.4838709677419355,
+   "8-8.5": 0.25806451612903225,
+   "9-9.5": 0.0
+  },
+  "checks_gap": 0.1838709677419355,
+  "b2": [
+   6,
+   6
+  ],
+  "b3": [
+   17,
+   18
+  ],
+  "b4_fail": [
+   "H7"
+  ],
+  "all164": [
+   134,
+   164,
+   0.6385811637609402
+  ],
+  "his9_mean": 8.0625,
+  "his9_shown9": 1,
+  "n_his9": 16,
+  "tops": [
+   [
+    "gold",
+    "ig-008",
+    9.0,
+    null,
+    "bomber (navy) + tee (white) + jeans (denim_dark, wide) + basketball_sneaker (white)",
+    "lifts L2 +0.5, L7 +0.5; taste: wide legs +0.75"
+   ],
+   [
+    "gold",
+    "ig-034",
+    9.5,
+    9.0,
+    "tee (burgundy) + trousers (off_white_cream, barrel) + loafer (black)",
+    "lifts L1 +0.25, L5 +0.5, L7b +0.5; taste: wide legs +0.75"
+   ],
+   [
+    "gold",
+    "ig-035",
+    9.0,
+    8.5,
+    "tee (olive) + trousers (brown, barrel) + loafer (black)",
+    "lifts L1 +0.5, L7b +0.5; taste: wide legs +0.75"
+   ],
+   [
+    "gold",
+    "ig-093",
+    9.0,
+    8.0,
+    "knit_polo (off_white_cream) + trousers (black, wide) + loafer (burgundy)",
+    "lifts L1 +0.5, L7 +0.5; taste: wide legs +0.75"
+   ],
+   [
+    "gold",
+    "ig-118",
+    9.0,
+    null,
+    "quarter_zip (black) + dress_shirt (white) + jeans (charcoal, wide) + derby (black)",
+    "held by 2 lifts; lifts L1 +0.5, L6 +0.25, L7b +0.5; taste: wide legs +0.75"
+   ]
+  ],
+  "named": [
+   [
+    "His check: grey hoodie, black wide jeans, navy slides (Everyday)",
+    6.5
+   ],
+   [
+    "His check: grey tee under a tan overshirt, black wide jeans (Class)",
+    7.5
+   ],
+   [
+    "His check: charcoal hoodie, cream overshirt over it, relaxed jeans, chunky sneakers",
+    8.0
+   ],
+   [
+    "His check: charcoal hoodie, light wide jeans, white leather sneakers",
+    8.0
+   ],
+   [
+    "His check: charcoal tee with a clear stain, light jeans, slides",
+    5.5
+   ],
+   [
+    "His check: black sweatshirt, slim ripped jeans (Class)",
+    6.0
+   ],
+   [
+    "Gold, he rated 5.5: black graphic tee, skinny jeans, red basketball sneakers",
+    5.0
+   ],
+   [
+    "Gold, he rated 8: green cardigan over a white tee, relaxed black trousers, white sneakers",
+    8.5
+   ],
+   [
+    "Gold, he rated 5: pink graphic tee, light denim shorts",
+    7.0
+   ],
+   [
+    "Gold, he rated 8: blue sweatshirt over a tee, olive wide cargos, black derbies",
+    6.5
+   ],
+   [
+    "Tim's before (a01, his 4.5): oversized tee, denim jacket, skinny jeans",
+    4.5
+   ],
+   [
+    "Tim's favorite (a51, his 9): brown blazer, white tee, black trousers",
+    8.0
+   ],
+   [
+    "Wanhee's red bomber over dark trousers (a26, his 7.5)",
+    8.0
+   ],
+   [
+    "Made up: red tee, yellow chinos, purple sneakers (three brights)",
+    4.5
+   ],
+   [
+    "Made up: boxy white tee tucked into charcoal wide trousers, a burgundy cardigan, black loafers",
+    9.0
+   ]
+  ]
+ }
+}

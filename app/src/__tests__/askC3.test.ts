@@ -139,7 +139,7 @@ describe('R2 · evidence is computed by code', () => {
     const r = await routeOf(store, clock, 'What should I buy next?');
     const ev = await buildEvidence(r.route, r.snap, r.ctx, deps(store));
     expect(ev.text).toMatch(/s05 dark straight jeans · \+16 outfits/);
-    expect(ev.text).toMatch(/s02 a navy polo · \+12 outfits/);
+    expect(ev.text).toMatch(/s02 a navy polo · \+6 outfits/);
     expect(ev.text.indexOf('s05')).toBeLessThan(ev.text.indexOf('s02'));
   });
 
@@ -191,7 +191,7 @@ describe('R3 · one lookup at most', () => {
     const m = await run('Anything I should pick up?');
     expect(seen.prompts).toHaveLength(2);
     expect(seen.prompts[0]).not.toContain('<evidence>');
-    expect(seen.prompts[1]).toMatch(/<evidence>[\s\S]*navy polo · \+12 outfits/);
+    expect(seen.prompts[1]).toMatch(/<evidence>[\s\S]*navy polo · \+6 outfits/);
     expect(m.text).toBe('A navy polo. It goes with both chinos.');
   });
 
@@ -239,7 +239,7 @@ describe('R4–R5 · cards are built by code', () => {
   it('a buy card names a Starter row he lacks; "+N" is the Closet\'s count, never the model\'s; no brand', async () => {
     const { input } = await inputs();
     const c = buildCard({ type: 'buy', kind: 'polo', shade: 'navy', plus: 99 }, input) as Extract<AskCard, { type: 'buy' }>;
-    expect(c).toEqual({ type: 'buy', starterId: 's02', gain: 12 });
+    expect(c).toEqual({ type: 'buy', starterId: 's02', gain: 6 });
     expect(buildCard({ type: 'buy', kind: 'loafers' }, input)).toBeNull(); // he owns brown loafers
     expect(buildCard({ type: 'buy', kind: 'Nike Dunks' }, input)).toBeNull();
     expect(STARTER.find((e) => e.id === 's02')!.name).not.toMatch(/nike|adidas|uniqlo/i);
