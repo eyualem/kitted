@@ -4,14 +4,18 @@
 import { View } from 'react-native';
 import { Chip, ChipFlow, space } from '@/design-system';
 import { sendQuestion } from '@/features/stylist/ask';
+import { Enter } from '@/features/stylist/Enter';
 
-export function FollowUpRow({ taps }: { taps: readonly string[] }) {
+/** `enter`: they fade in after the card, 50 ms apart (log #496). */
+export function FollowUpRow({ taps, enter = false }: { taps: readonly string[]; enter?: boolean }) {
   if (taps.length === 0) return null;
   return (
     <View style={{ paddingTop: space.s }}>
       <ChipFlow>
-        {taps.map((tap) => (
-          <Chip key={tap} title={tap} onPress={() => void sendQuestion(tap)} />
+        {taps.map((tap, i) => (
+          <Enter key={tap} on={enter} tap={i}>
+            <Chip title={tap} onPress={() => void sendQuestion(tap)} />
+          </Enter>
         ))}
       </ChipFlow>
     </View>

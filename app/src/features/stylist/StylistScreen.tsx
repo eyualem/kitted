@@ -386,7 +386,9 @@ export function StylistScreen() {
               style={i > 0 ? { marginTop: item.gap } : undefined}
               onLayout={item.type === 'msg' ? (e) => rowY.current.set(item.message.id, e.nativeEvent.layout.y) : undefined}
             >
-              <ThreadRow item={item} followUps={item.type === 'msg' && followUps?.messageId === item.message.id && (!live || live.phase === 'done') ? followUps.taps : undefined} />
+              <ThreadRow item={item} followUps={item.type === 'msg' && followUps?.messageId === item.message.id && (!live || live.phase === 'done') ? followUps.taps : undefined}
+                enter={item.type === 'msg' && arrivals.cardEnters(item.message.id)}
+              />
             </Animated.View>
           );
         })}
