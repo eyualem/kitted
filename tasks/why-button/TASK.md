@@ -9,7 +9,7 @@ The founder, Nov 18 (voice): the Why rating should be "a button alongside whatev
 - **While the Share icon shows (until T67 cuts share cards)** on a 7.0+ first check, the icon takes 44 pt of the row, so Re-check and Why can't sit side by side (found on the Simulator): Re-check keeps the row with the icon and Why drops to its own full-width line below, as before. The side-by-side row shows on checks under 7.0 and on every check once T67 lands.
 - No new words; `specs/explain-rating.md` items 6 (result card) and 3 (re-check card) say "beside Re-check" / "a secondary button"; log #513.
 
-## Deviation from the drawn option A
+## Deviation from the drawn option A (founder OK'd, Nov 18: "Yes, drop it")
 The mockup showed an info icon on Why. At 393 pt the card's inner width is 329 pt; Re-check (about 204 pt with its icon) plus an icon-bearing Why (about 118 pt) is 330 pt, one point too wide, so the row wrapped back into two stacked buttons. Why has no icon now (about 96 pt): the row is about 308 pt and fits at 393 pt. On a 375 pt phone (311 pt inside) it is tight and falls back to stacked, which is still fine.
 
 ## Checks
