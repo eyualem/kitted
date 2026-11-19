@@ -348,3 +348,24 @@ Never dropped, never counted as done.
    - core `tailored.test.ts` › `TL4.3 · Going for Tailored names the piece that keeps it from Tailored: a graphic tee under a blazer is the loud one`: a white graphic tee under a navy blazer, grey trousers, brown loafers (made up, no person) going for Tailored is a mismatch reading as `classic_prep`, piece `{ index: 0, name: "graphic tee", plural: false, why: "loud" }`, move `top_plain_tee` "Swap the graphic tee for a plain tee"; the same outfit with a plain tee is a match; no number moves with a Tailored pick;
    - app `T94-tailored.test.tsx` › `TL4.3 · a graphic tee under a blazer, going for Tailored: the card names the tee and the swap, the score stays`: through `evaluateCheck`, the stored advice names the tee, and `adviceText` reads `Reads as classic prep.` / `For a tailored look, the graphic tee pulls the other way.` / `Swap the graphic tee for a plain tee` · `Toward tailored`; score, raw score and parts equal no Going for.
    Both red with the revert planted (`expected null to deeply equal { Object (index, name, ...) }`), green once restored (`git checkout`). Core: 24/24 with `goingFor.test.ts` 31/31 together; app: 12/12.
+4. **Nov 18 · the merge with main (T69, engine v16 by default; the coordinator).** 26 tests red, none edited by the implementer. Rulings, against `specs/tailored.md` (TL3 name only; since v16 the taste rules follow the graded look) and T69's TESTING.md:
+   - **T69's locked tests (changed here, recorded for T69):**
+     - `v15Unchanged.test.ts` › `T69-G2 · the v15 cases are the same as before T69`. Its intent is "v15 never moves". T94 renames looks in v15 outputs and adds v15 cases, so T69's whole-case hashes (H15*, kept in the file for the record) can't hold. Replaced by two hashes per fixture, computed from git history with the test's own code:
+       - NAMES15p/f/c: the pre-T69 cases (T94's additions left out: the Tailored picks variant and the TLR cases), with look names masked, "tailored" dropped from the look lists and the label left out, hash to a2480b09's under the same mask (12,021 / 30,412 / 501). So no number, check, tip or other word of v15 moved through T69 and T94 together.
+       - H94p/f/c: every v15 case, exactly, hashes to T94's fixtures before T69 merged (27f02eed; 12,549 / 31,183 / 527). So merging T69 changed nothing of v15, names included.
+       - Both bite: one v15 overall moved by 0.5 changes them.
+     - `rulesConformance.test.ts` › `T69-G4 · the doc and the cases agree`: T69's 501 v15 cases plus T94's 26 TLR cases, each counted (501 + 26 = 527).
+     - T69's `TST-0-suit` (the implementer's added `label: "tailored"`): **confirmed**, since TL1.1's suit reads as Tailored. Strengthened as `MEETS_TL1` is, with `detected_has` tailored and H1 `reads as tailored` at +0.5 (true on v16: 7.0, `reads as tailored`).
+   - **T94's tests on the default engine:**
+     - Core `tailored.test.ts` now pins v15 with `setRescoreV16(false)`, as T69 did for tests about v15 rules. T94's contract is v15's numbers (the Python twins run v15), and TL1.7's TS-equals-Python needs the same engine.
+     - The TS `fixOrder` in `rulesConformance.test.ts` now runs on the case's own engine, as `fixNextLevel` does; Python's `fix_order` too.
+     - Strengthened so name-only holds on v16 as well. New pins `handoff/fixtures/tailored_main_v16.json` (`tailored_test.py --pin-v16` on main's engine at da9b7253: T69 merged, T94 not) and new tests in Python and TS:
+       - `TL3.1 · on v16 too, every reading keeps every number T69's v16 gave before Tailored (main, da9b7253)`: every number, the v16 block without its lines, the fixes and their order;
+       - `TL2.1 · on v16 the names are v15's: the same looks, label and reads-as line on every reading`.
+     - Both pass on the merge. Both bite: a +0.25 on H1 for Tailored on v16 only fails them while the v15 tests stay green.
+     - TL5.1's lead stays a v15 test: on v16 that reading's fixes don't include the sleeve fix (the pinned v16 order is the same with or without a Tailored pick).
+   - **App `T94-tailored.test.tsx` TL2.2, "no Reads as row after the parts": not changed, not settled by the specs.** The test still fails on v16: T69's v16 Why rows add `readsAs` whenever the card reads as a look, so How I scored names Tailored twice. On the other side:
+     - T69's IMPLEMENTATION (Why) says `readsAs (±0, as today)` and that `readsAs` "follow[s] today's rules". Today's rule shows it only when the Style part doesn't already say "reads as".
+     - But T69's code comment and its locked `T69-whyRows.test.ts` (`readsAs missing` with readsAs passed) expect it always.
+     - `specs/tailored.md` TL2.2 only asks that it say Tailored, never "a matching suit".
+     - The founder or the coordinator decides; the test stays as it is.

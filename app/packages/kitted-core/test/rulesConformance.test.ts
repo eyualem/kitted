@@ -58,8 +58,8 @@ const results = new Map<string, PartsResult>(D.cases.map((c) => [c.id, run(c)]))
 const fixNextLevel = (c: Case) => suggestPartsFixes(c.reading, optsOf(c), { parts: isV16(c) ? V16 : V15 }).nextLevel;
 
 /** T94: the fix engine's fixes for a case, in order (ids). */
-const fixOrder = (c: Case) =>
-  suggestPartsFixes(c.reading, { occasion: c.occasion, styles: c.styles as Styles, boldness: c.boldness, secondLook: c.second_look }).fixes.map((f) => f.id);
+// on the case's own engine, like fixNextLevel (T94 after T69, Disputes 4: the default engine is v16 now)
+const fixOrder = (c: Case) => suggestPartsFixes(c.reading, optsOf(c), { parts: isV16(c) ? V16 : V15 }).fixes.map((f) => f.id);
 
 const partsOf = (r: PartsResult): [string, PartResult][] => Object.entries(r.parts ?? {}) as [string, PartResult][];
 const reasons = (r: PartsResult, part?: string) =>
@@ -174,7 +174,10 @@ describe("rules conformance (rubric/v5-styles.md)", () => {
     expect(need.filter((r) => !v16Rules.has(r))).toEqual([]);
     expect(new Set(v16.map((c) => c.season ?? null))).toEqual(new Set([null, "warm"]));
     // the v15 cases are all still there, on their own engine (their numbers: v15Unchanged.test.ts)
-    expect(D.cases.filter((c) => !isV16(c)).length).toBe(501);
+    // T94 (merged after T69, Disputes 4): T69's 501 v15 cases, plus T94's 26 Tailored (TLR-*) cases on v15
+    expect(D.cases.filter((c) => !isV16(c) && !c.rule.startsWith("TLR-")).length).toBe(501);
+    expect(D.cases.filter((c) => !isV16(c) && c.rule.startsWith("TLR-")).length).toBe(26);
+    expect(D.cases.filter((c) => !isV16(c)).length).toBe(527);
     expect(D.cases.filter((c) => c.engine !== undefined && c.engine !== "v15" && c.engine !== "v16")).toEqual([]);
     // v16's bands: 3-4.5 has its own word, then the five of today
     expect(D.bands_v16?.map(([top]) => top).slice(0, 5)).toEqual([4.5, 5.5, 6.5, 7.5, 8.5]);

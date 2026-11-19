@@ -66991,7 +66991,18 @@
    "expect": {
     "overall": 7.0,
     "band": "Put together",
-    "label": "tailored"
+    "label": "tailored",
+    "detected_has": [
+     "tailored"
+    ],
+    "fired": [
+     {
+      "check": "H1_reads_as_style",
+      "part": "cohesion",
+      "points": 0.5,
+      "line": "reads as tailored"
+     }
+    ]
    },
    "vs": null,
    "future": [],

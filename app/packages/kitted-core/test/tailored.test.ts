@@ -10,12 +10,19 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
-  RUBRIC_DATA, defaultRubric, detectLooks, goingForAdvice, scoreParts, suggestPartsFixes,
+  RUBRIC_DATA, defaultRubric, detectLooks, goingForAdvice, scoreParts, setRescoreV16, suggestPartsFixes,
   type DetectedStyle, type Garment, type PartsResult, type PartsScored, type Reading, type Styles,
 } from "../src/index";
 import { FIXTURES, loadJSON, loadReading } from "./helpers";
+import { v16ToPy } from "./t69";
+
+// T94's contract is on engine v15 (TL3: every number v15 gave before T94; the Python twins run v15). Since T69 the
+// default engine is v16, so these tests pin v15 the way T69 pinned its v15 tests (Disputes 4); the "on v16" block at the
+// end holds T94 to the same name-only guarantee on v16, against T69's v16 before Tailored.
+beforeAll(() => setRescoreV16(false));
+afterAll(() => setRescoreV16(true));
 
 const TAILORED = "tailored" as DetectedStyle;
 const SEVEN = ["vintage_sport", "outdoor", "workwear", "streetwear", "classic_prep", "minimalist", "smart_casual"];
@@ -505,5 +512,49 @@ describe("TL5 · the fix order", () => {
       sameNumbers(id);
       expect([id, fixNumbers(fixes(id))]).toEqual([id, pin(id).fixes]);
     }
+  });
+});
+
+// ── on v16 (T69 merged first; Disputes 4) ─────────────────────────────────────────────────────────────────────────
+interface Pin16 { reading: Reading; picks: [string, number][]; numbers: unknown; v16: unknown; fixes: unknown; fix_order: string[] }
+const PINS16 = loadJSON<{ engine_commit: string; cases: Record<string, Pin16> }>("tailored_main_v16.json");
+const noLines = (x: unknown): unknown =>
+  Array.isArray(x) ? x.map(noLines) : x !== null && typeof x === "object"
+    ? Object.fromEntries(Object.entries(x as Record<string, unknown>).filter(([k]) => k !== "line").map(([k, v]) => [k, noLines(v)])) : x;
+
+describe("on v16 too (T69's engine, the default since T69)", () => {
+  beforeAll(() => setRescoreV16(true));
+  afterAll(() => setRescoreV16(false));
+
+  it("TL3.1 · on v16 too, every reading keeps every number T69's v16 gave before Tailored (main, da9b7253)", () => {
+    expect(PINS16.engine_commit).toBe("da9b7253");
+    expect(Object.keys(PINS16.cases).sort()).toEqual([...CASES.keys()].sort());
+    for (const [id, c] of CASES) {
+      const p = PINS16.cases[id]!;
+      expect([id, c.reading, c.picks]).toEqual([id, p.reading, p.picks]);
+      const r = parts(id) as PartsScored;
+      expect([id, r.engine]).toEqual([id, "v16"]);
+      expect([id, numbers(r)]).toEqual([id, p.numbers]);
+      expect([id, noLines(r.v16 ? v16ToPy(r.v16) : null)]).toEqual([id, p.v16]);
+      expect([id, fixNumbers(fixes(id)), order(id)]).toEqual([id, p.fixes, p.fix_order]);
+    }
+    // the v16 pins aren't v15's: the case is real
+    expect([...CASES.keys()].some((id) => JSON.stringify(PINS16.cases[id]!.numbers) !== JSON.stringify(pin(id).numbers))).toBe(true);
+  });
+
+  it("TL2.1 · on v16 the names are v15's: the same looks, label and reads-as line on every reading", () => {
+    const names = (id: string) => {
+      const r = parts(id);
+      return [r.detectedStyles, r.styleLabel, r.overall === null ? null : h1(r)];
+    };
+    const v16 = new Map([...CASES.keys()].map((id) => [id, names(id)]));
+    setRescoreV16(false);
+    try {
+      for (const id of CASES.keys()) expect([id, v16.get(id)]).toEqual([id, names(id)]);
+    } finally {
+      setRescoreV16(true);
+    }
+    expect(v16.get("suit")).toEqual([["tailored"], "tailored", [["H1_reads_as_style", 0.5, "reads as tailored"]]]);
+    expect(v16.get("suit+chunky")![2]).toEqual([["H1_reads_as_style", 0.5, "a matching suit"]]);
   });
 });

@@ -1868,7 +1868,11 @@ for _rid, _what, _base, _weak, _strong, (_b, _w, _s) in [
 # reads as Tailored and declares it, as MEETS_TL1 does above (T94's check below, TL2). Adds a label only; every number
 # stays T69's.
 for _cid in ["TST-0-suit"]:
-    next(c for c in CASES if c["id"] == _cid)["expect"]["label"] = "tailored"
+    _e = next(c for c in CASES if c["id"] == _cid)["expect"]
+    _e["label"] = "tailored"
+    # T94's test writer (Disputes 4): the same as MEETS_TL1 asks of every Tailored outfit: the look, and the line that names it
+    _e["detected_has"] = list(dict.fromkeys(_e.get("detected_has", []) + ["tailored"]))
+    _e["fired"] = _e.get("fired", []) + [F("H1_reads_as_style", "cohesion", 0.5, "reads as tailored")]
 
 
 # --------------------------------------------------------------------------------------------- checking
@@ -1904,7 +1908,10 @@ def fix_next_level(c):
 
 
 def fix_order(c):
-    """T94: the fix engine's fixes for the case, in order (ids)."""
+    """T94: the fix engine's fixes for the case, in order (ids), on the case's own engine (as fix_next_level)."""
+    if c.get("engine") == "v16":
+        return [x["id"] for x in PF.suggest_parts_fixes(c["reading"], c["occasion"], dict(c["styles"]), c["boldness"], c["second_look"],
+                                                       engine="v16", season=c.get("season"))["fixes"]]
     return [x["id"] for x in PF.suggest_parts_fixes(c["reading"], c["occasion"], dict(c["styles"]), c["boldness"], c["second_look"])["fixes"]]
 
 
