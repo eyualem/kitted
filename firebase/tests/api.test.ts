@@ -566,6 +566,7 @@ describe('FP7 the beta', () => {
   });
 });
 
+
 describe('L8 the day', () => {
   it('rolls at 4 am local; a time zone change within 20 h is ignored', async () => {
     const ny = '-240'; // EDT
@@ -787,5 +788,45 @@ describe('D3 deletion and purge', () => {
     expect(await index.purgeUsageBefore(now)).toEqual({ usage: 1, spend: 1 });
     expect((await db.collection('usage/u1/usageDays').get()).docs.map((d) => d.id)).toEqual(['2026-10-28']);
     expect((await db.collection('spend').get()).docs.map((d) => d.id)).toContain('2026-10-01');
+  });
+});
+
+// ---- the founder's own account: higher limits, only for uids in server/config.founderUids ---------------------------
+describe('founder limits', () => {
+  // The config cache keys on the fake clock, which earlier tests move forward: start later than all of them.
+  beforeEach(() => {
+    clockMs = Date.UTC(2040, 0, 1);
+  });
+  const readTier = async (id: string) => {
+    fake.respond = sse();
+    const r = await call('read', photoBody(), { check: id, kind: 'full' });
+    await r.arrayBuffer();
+    return [r.status, r.headers.get('x-kitted-tier')];
+  };
+
+  it('a founder account passes the beta\'s 3 checks and 22 questions, up to 50 checks and 200 + 2 questions', async () => {
+    await setConfig({ tier: 'beta', founderUids: [me.uid] });
+    for (let i = 1; i <= 4; i++) expect(await readTier(`F${i}`)).toEqual([200, 'founder']);
+    for (let i = 5; i <= 50; i++) expect((await readTier(`F${i}`))[0]).toBe(200);
+    await expectLimit(call('read', photoBody(), { check: 'F51', kind: 'full' }), 'checks');
+  }, 120_000);
+
+  it('the founder gets 200 questions (+2), then the 203rd is refused', async () => {
+    await setConfig({ tier: 'beta', founderUids: [me.uid] });
+    for (let i = 0; i < 202; i++) expect((await ask()).status).toBe(200);
+    await expectLimit(call('ask', askBody()), 'questions');
+  }, 240_000);
+
+  it('another account keeps the beta\'s day (the 4th check is refused, header stays beta)', async () => {
+    await setConfig({ tier: 'beta', founderUids: ['someone-else'] });
+    for (const id of ['G1', 'G2', 'G3']) expect(await readTier(id)).toEqual([200, 'beta']);
+    await expectLimit(call('read', photoBody(), { check: 'G4', kind: 'full' }), 'checks');
+  });
+
+  it('a founder account still stops at the server-wide spend cap', async () => {
+    await setConfig({ tier: 'beta', founderUids: [me.uid], spendCapCents: 300 });
+    await db.doc('spend/2040-01-01').set({ cents: 300, calls: 1, at: clockMs });
+    const r = await call('read', photoBody(), { check: 'H1', kind: 'full' });
+    expect([r.status, await json(r)]).toEqual([503, { error: 'paused' }]);
   });
 });

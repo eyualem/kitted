@@ -9,10 +9,12 @@ export interface Config {
   spendCapCents: number;
   enforceAppCheck: boolean;
   timeoutMs: number;
+  /** Accounts that get the founder's limits. Set in Firestore only (server/config), never in git. */
+  founderUids: string[];
 }
 
 /** During the beta every account gets the beta's day (FP7, the founder, Nov 8): no or unknown tier is `beta`. */
-export const DEFAULT_CONFIG: Config = { tier: 'beta', spendCapCents: 300, enforceAppCheck: false, timeoutMs: 30_000 };
+export const DEFAULT_CONFIG: Config = { tier: 'beta', spendCapCents: 300, enforceAppCheck: false, timeoutMs: 30_000, founderUids: [] };
 
 export interface Ticket {
   uid: string;
@@ -46,6 +48,7 @@ export function firestoreStore(db: Firestore, opts: { configTtlMs?: number; now?
         spendCapCents: num(d.spendCapCents, DEFAULT_CONFIG.spendCapCents),
         enforceAppCheck: typeof d.enforceAppCheck === 'boolean' ? d.enforceAppCheck : DEFAULT_CONFIG.enforceAppCheck,
         timeoutMs: num(d.timeoutMs, DEFAULT_CONFIG.timeoutMs),
+        founderUids: Array.isArray(d.founderUids) ? d.founderUids.filter((x): x is string => typeof x === 'string') : DEFAULT_CONFIG.founderUids,
       };
       cached = { at: now(), config };
       return config;

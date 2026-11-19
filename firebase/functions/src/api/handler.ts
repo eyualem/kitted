@@ -5,7 +5,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { costCents } from './prices';
 import { CHECK_ID, KINDS, ROUTES, checkShape, providerOf, type Kind, type RouteName } from './routes';
 import { readReply, sseScanner, type Seen } from './sse';
-import { parseTz } from './limits';
+import { parseTz, type Tier } from './limits';
 import type { Store, Ticket } from './store';
 
 export interface ApiDeps {
@@ -111,9 +111,11 @@ export function createApi(deps: ApiDeps) {
       deps.log({ route: route.name, uid, outcome: 'paused' });
       return send(res, 503, { error: 'paused' });
     }
+    // A founder account gets the founder's day; everyone else the config's tier. The header tells the app which.
+    const tier: Tier = config.founderUids.includes(uid) ? 'founder' : config.tier;
     const tap = route.name === 'ask' && header(req, 'x-kitted-free') === 'tap';
     const { result, day } = await deps.store.reserve({
-      uid, route: route.name, checkId, kind, tap, tz: parseTz(header(req, 'x-kitted-tz')), tier: config.tier, nowMs: t0,
+      uid, route: route.name, checkId, kind, tap, tz: parseTz(header(req, 'x-kitted-tz')), tier, nowMs: t0,
     });
     if (!result.ok) {
       deps.log({ route: route.name, uid, outcome: 'limit', which: result.which });
@@ -175,7 +177,7 @@ export function createApi(deps: ApiDeps) {
         await settle();
         send(res, 502, { error: 'upstream', status: up.status });
       } else if (route.stream) {
-        res.writeHead(200, { 'content-type': 'text/event-stream', 'cache-control': 'no-cache, no-transform', 'x-accel-buffering': 'no', 'x-kitted-tier': config.tier });
+        res.writeHead(200, { 'content-type': 'text/event-stream', 'cache-control': 'no-cache, no-transform', 'x-accel-buffering': 'no', 'x-kitted-tier': tier });
         res.flushHeaders();
         const scan = sseScanner();
         seen = scan.seen; // filled in place, so a stream cut short still bills what it saw
@@ -197,7 +199,7 @@ export function createApi(deps: ApiDeps) {
         seen = readReply(text);
         finished = seen.finishReason === 'STOP';
         await settle();
-        res.writeHead(200, { 'content-type': 'application/json', 'x-kitted-tier': config.tier });
+        res.writeHead(200, { 'content-type': 'application/json', 'x-kitted-tier': tier });
         res.end(text);
       }
     } catch {
