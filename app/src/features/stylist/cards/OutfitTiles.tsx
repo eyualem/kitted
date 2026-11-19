@@ -56,7 +56,7 @@ export function PieceTiles({ tiles }: { tiles: readonly Tile[] }) {
         );
         const words = (
           <View style={{ gap: 1 }}>
-            <KText role="miniLabel" color="ink" numberOfLines={isAccessibilitySize ? 4 : 2}>
+            <KText role="miniLabel" color="ink" numberOfLines={isAccessibilitySize ? 4 : 3}>
               {name}
             </KText>
             {tile.mark ? (

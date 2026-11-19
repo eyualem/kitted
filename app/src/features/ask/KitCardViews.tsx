@@ -77,9 +77,9 @@ function Swatches({ families }: { families: readonly string[] }) {
   const { colors, fontScale } = useTheme();
   const dot = Math.round(40 * Math.min(1.5, Math.max(1, fontScale)));
   return (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 14, rowGap: space.s }}>
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 6, rowGap: space.s }}>
       {families.map((f) => (
-        <View key={f} style={{ width: dot + 12, alignItems: 'center', gap: 5 }}>
+        <View key={f} style={{ width: dot + 24, alignItems: 'center', gap: 5 }}>
           <View style={{ width: dot, height: dot, borderRadius: dot / 2, backgroundColor: FAMILY_HEX[f as keyof typeof FAMILY_HEX], borderWidth: 1, borderColor: colors.inkFaint }} />
           <KText role="miniLabel" style={{ textAlign: 'center' }}>
             {colorName(f) ?? f}
