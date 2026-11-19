@@ -2,7 +2,7 @@
 
 Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** _(not locked yet)_
+**Lock:** locked at commit `3d38df1a` (`T65: tests (red)`), 2026-11-19. Tests: `app/packages/kitted-core/test/picks.test.ts` (38: 27 ER1.1, 11 ER1.5) and `app/packages/kitted-core/test/ruleNames.test.ts` (5: ER1.6). Stubs: `src/picks.ts`, `src/ruleNames.ts`, export lines in `src/index.ts`.
 
 **Where:** core, Vitest: `app/packages/kitted-core/test/picks.test.ts` and `ruleNames.test.ts`; run from `app/packages/kitted-core` with `npx vitest run test/picks.test.ts test/ruleNames.test.ts` (this worktree's `app/node_modules` is a symlink to the main checkout's; core tests import `../src/index`). Stubs (throwing `new Error('T65: not built')`) go in `src/picks.ts` and `src/ruleNames.ts`, exported from `src/index.ts`.
 
