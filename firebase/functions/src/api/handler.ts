@@ -65,9 +65,12 @@ export function createApi(deps: ApiDeps) {
       if (req.method !== 'GET') return send(res, 405, { error: 'method' });
       return send(res, 200, { ok: true });
     }
+    // GET /v1/tier: which day this account is on, signed in, with no AI call and nothing counted. The app asks it
+    // before showing a limit, so a change on the server (a higher limit) reaches a phone that has stopped sending.
+    const isTier = name === 'tier';
     const route = (Object.keys(ROUTES) as RouteName[]).includes(name as RouteName) ? ROUTES[name as RouteName] : null;
-    if (!route) return send(res, 404, { error: 'notFound' });
-    if (req.method !== 'POST') return send(res, 405, { error: 'method' });
+    if (!route && !isTier) return send(res, 404, { error: 'notFound' });
+    if (req.method !== (isTier ? 'GET' : 'POST')) return send(res, 405, { error: 'method' });
 
     // Who's asking (P2).
     const bearer = /^Bearer (.+)$/.exec(header(req, 'authorization') ?? '')?.[1];
@@ -87,6 +90,12 @@ export function createApi(deps: ApiDeps) {
       } catch {
         return send(res, 401, { error: 'appCheck' });
       }
+    }
+    if (isTier || !route) {
+      const tier: Tier = config.founderUids.includes(uid) ? 'founder' : config.tier;
+      res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store', 'x-kitted-tier': tier });
+      res.end(JSON.stringify({ tier }));
+      return;
     }
 
     // The shape (P5).

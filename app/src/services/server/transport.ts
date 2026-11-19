@@ -52,6 +52,9 @@ export type AiFetch = (url: string, init: { method: string; headers: Record<stri
 export interface AiTransport {
   readonly kind: 'direct' | 'server';
   send(req: AiSend): Promise<AiResponse>;
+  /** Our server only: ask which day this account is on (GET /v1/tier; no AI call, nothing counted). The tier, or
+   *  null when it can't be reached. */
+  refreshTier?(): Promise<ServerTier | null>;
 }
 
 /** Straight to Gemini with the dev key (dev builds only): exactly the calls the app made before the server. */
@@ -147,6 +150,19 @@ export function serverTransport(o: ServerTransportOptions): AiTransport {
   }
   return {
     kind: 'server',
+    async refreshTier() {
+      try {
+        const token = await o.token(false);
+        // A GET carries no body (fetch throws on one), so the same fetch without it.
+        const get = o.fetch as unknown as (url: string, init: { method: 'GET'; headers: Record<string, string> }) => ReturnType<AiFetch>;
+        const res = await get(`${o.base}/v1/tier`, { method: 'GET', headers: { Authorization: `Bearer ${token}` } });
+        const tier = res.ok ? parseTier(res.headers?.get('x-kitted-tier')) : null;
+        if (tier) o.onTier?.(tier);
+        return tier;
+      } catch {
+        return null;
+      }
+    },
     async send(req) {
       const r = await once(req, false);
       // An expired or revoked token: one fresh token and one more try (A6).

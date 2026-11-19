@@ -109,7 +109,7 @@ async function call(route: string, body: unknown, o: CallOpts = {}) {
   if (o.tz) headers['x-kitted-tz'] = o.tz;
   if (o.appCheck) headers['x-firebase-appcheck'] = o.appCheck;
   if (o.free) headers['x-kitted-free'] = o.free;
-  const method = o.method ?? (route === 'health' ? 'GET' : 'POST');
+  const method = o.method ?? (route === 'health' || route === 'tier' ? 'GET' : 'POST');
   return fetch(`${apiUrl}/v1/${route}${o.model ? `?model=${o.model}` : ''}`, {
     method, headers, signal: o.signal, ...(method === 'GET' ? {} : { body: o.raw ?? JSON.stringify(body) }),
   });
@@ -828,5 +828,18 @@ describe('founder limits', () => {
     await db.doc('spend/2040-01-01').set({ cents: 300, calls: 1, at: clockMs });
     const r = await call('read', photoBody(), { check: 'H1', kind: 'full' });
     expect([r.status, await json(r)]).toEqual([503, { error: 'paused' }]);
+  });
+  // GET /v1/tier: the app asks it before showing a limit, so a raised limit reaches a phone that stopped sending.
+  it('GET /v1/tier answers the account\'s day, signed in, and counts nothing', async () => {
+    await setConfig({ tier: 'beta', founderUids: [me.uid] });
+    const before = (await db.collection(`usage/${me.uid}/usageDays`).get()).docs.map((d) => d.data());
+    const r = await call('tier', null);
+    expect([r.status, r.headers.get('x-kitted-tier'), await json(r)]).toEqual([200, 'founder', { tier: 'founder' }]);
+    expect((await db.collection(`usage/${me.uid}/usageDays`).get()).docs.map((d) => d.data())).toEqual(before);
+    await setConfig({ tier: 'beta', founderUids: ['someone-else'] });
+    clockMs += 60_000; // past the config cache
+    expect((await call('tier', null)).headers.get('x-kitted-tier')).toBe('beta');
+    expect((await call('tier', null, { token: null })).status).toBe(401);
+    expect((await call('tier', null, { method: 'POST' })).status).toBe(405);
   });
 });

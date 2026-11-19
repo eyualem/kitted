@@ -107,7 +107,13 @@ export interface QuotaDeps {
   serverTier?: () => Promise<ServerTier | null>;
   /** Demo override: `freeChecksUsed=<n>`. */
   checksUsedOverride?: () => number | null;
+  /** Asks the server which day this account is on and stores it (services/server GET /v1/tier). Called only when the
+   *  local count says no, so a higher limit set on the server reaches a phone that has stopped sending. */
+  refreshTier?: () => Promise<unknown>;
 }
+
+/** At most one server ask a minute while he's at a limit (each tap on a used-up day would otherwise ask again). */
+export const TIER_REFRESH_MS = 60_000;
 
 export function createQuota(deps: QuotaDeps) {
   const { store, clock } = deps;
@@ -149,20 +155,25 @@ export function createQuota(deps: QuotaDeps) {
     await store.usage.put({ ...u, [field]: u[field] + 1 });
   };
 
+  let refreshedAt = -Infinity;
+  /** The local count's answer; when it says no, the server is asked once (a minute apart) and the count read again. */
+  async function allowed(ok: (s: QuotaSnapshot) => boolean): Promise<boolean> {
+    if (ok(await snapshot())) return true;
+    const now = clock.nowMs();
+    if (!deps.refreshTier || now - refreshedAt < TIER_REFRESH_MS) return false;
+    refreshedAt = now;
+    await deps.refreshTier().catch(() => null);
+    return ok(await snapshot());
+  }
+
   return {
     snapshot,
-    async canStartCheck(): Promise<boolean> {
-      const s = await snapshot();
-      return s.checksUsed < s.checkLimit;
-    },
+    canStartCheck: () => allowed((s) => s.checksUsed < s.checkLimit),
     /** `day`: the check's own day key (an answer to the one quick tap after 4 am still counts for its day). */
     consumeCheck: (day?: string) => bump('checks', day),
     consumeRecheck: () => bump('rechecks'),
     /** A question may be sent (07 §6.2): one is counted only when its answer arrives (consumeQuestion). */
-    async canAskQuestion(): Promise<boolean> {
-      const s = await snapshot();
-      return s.questionsUsed < s.questionLimit;
-    },
+    canAskQuestion: () => allowed((s) => s.questionsUsed < s.questionLimit),
     consumeQuestion: () => bump('questions'),
   };
 }

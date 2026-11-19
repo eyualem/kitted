@@ -8,7 +8,8 @@ import { demoEntitlements } from '@/services/entitlements';
 import { newId } from '@/services/ids';
 import { imagePrep } from '@/services/imagePrep/real';
 import { createQuota } from '@/services/quota';
-import { appTier } from '@/services/server/tier';
+import { aiTransport } from '@/services/server';
+import { appTier, SERVER_TIER_KV } from '@/services/server/tier';
 import { LIVE_READING, routedSource } from '@/services/readingSource/live';
 import { createMockReadingSource } from '@/services/readingSource/mock';
 import { realScheduler } from '@/services/scheduler';
@@ -38,6 +39,12 @@ export const quota = createQuota({
   serverTier: () => appTier(store),
   // Testing real readings on the founder's phone: the daily limit doesn't apply (DEV + key only).
   checksUsedOverride: () => getDemoArgs().freeChecksUsed ?? (LIVE_READING ? 0 : null),
+  // At a limit, ask the server once whether it still holds (a demo screen keeps its own tier and never asks).
+  refreshTier: async () => {
+    if (DEMO_ENABLED && getDemoArgs().demoScreen !== null) return;
+    const tier = await aiTransport()?.refreshTier?.();
+    if (tier) await store.setKv(SERVER_TIER_KV, tier);
+  },
 });
 
 let timerOverride: Partial<TimerConfig> = {};
