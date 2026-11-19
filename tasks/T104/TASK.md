@@ -35,9 +35,9 @@
 - **Add, No thanks, Undo and I have one** draw here; what they do is T106 (adds) and T107 (corrections). Until T106, `I have one` stays out of the menu (an outfit card from the model can reach a tester), and the add and changed cards can't appear outside demo screens (only code builds them).
 
 ## Built
-- **Changed:**
-- **Tests added:**
-- **Screenshots:**
+- **Changed:** the outfit card draws his pieces then the drawn ones (dashed with `You'd need`, or plain in an Example titled `Example` with `Check my fit`); the tag reads `<occasion> · From your closet + n`. New views for options, colors (pieces or swatches), the add card (asking, added with Undo and a tap to open the piece, not added; Past chats read-only), Changed · Undo / Changed back, and the drawn buy card (tap → the Next buy sheet on that piece). A `You'd need` tile opens the action sheet when it has a row. The follow-up taps sit under the latest answer only and send as his message. Tiles are 76 pt (up to 1.5x with text); every card hugs its content. `cardSpoken` gives every new card a VoiceOver line made of its own words. Demo screens 400–412.
+- **Tests added:** `app/src/__tests__/T104-cardViews.test.tsx` (25: KC1.6, KC2.2, KC2.3, KC2.10, KC3.1, KC3.2, KC3.4, KC4.2, KC6.4, the VoiceOver lines, "bracelet"). `closetNoOutfits.test.tsx`'s mocks gained the tiles module's new exports, the drawing and `useLocalSearchParams` (no assertion changed).
+- **Screenshots:** web preview checked for layout on 400–409 (light and dark); iOS shots pending a Debug build (the Simulator held another session's Release build).
 - **Not done or not checked:**
 
 ## Review
