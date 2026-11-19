@@ -31,7 +31,13 @@
 7. **Names:** each id has a plain name (lowercase, usable mid-sentence, no digits, no word about a face, body, weight, height, skin or hair, no all-caps, unique across the table) and, for a few, a known name ("the rule of thirds"). The table covers: every check id the parts engine can put on a reason or tip (about 74 reasons, 10 tips), the 10 lifts, 16 caps, 4 taste rules, `condition`, the three occasion ids and `heavy_layer`.
 
 ## Built
-_(filled in by the build)_
+- **`ruleNames.ts`:** `RULE_NAMES` with 131 entries in tie-break order (Proportions, Fit, Color, Shoes, Style, condition, occasion, lifts, dealbreakers, taste, heavy layer), `RULE_IDS`, and `ruleName(id)` (throws on an unknown id). Beyond the Decisions' list it also names every check id in `parts.ts` that never fires in a fixture (CC5_denim_near_match, FF5_too_big, H4_standout_piece, CP1_standout_color, SW3_dainty_wide), the three condition-tip ids, all 18 caps the engine can emit, and 7 taste ids (T_shorts, T_color and T_shorts_above added). Known names only on PR1_waist_break (the rule of thirds), CP3_tonal_range (a monochrome look) and CP6_light_mid_dark (value contrast).
+- **`picks.ts`:** `pickExplanation` and `pickRecheckExplanation`, read from the result alone. Costs and credits are worked out in score points as Decisions 2 to 5 say; the biggest wins, a tie (under 1e-9) goes to the rule first in `RULE_IDS`. A re-check calls a rule cleared only on a full clear (a cost before, none after) and earned only when the credit is new in after; the score not rising gives `cost_now`. A rule with no name is never picked (the coverage test is what catches a new one). Not handled, as the test writer noted: a v15 occasion hold, caps and the earned bonus.
+- **`tasks/T65/names.md`:** the founder's review table, 131 rows, grouped by section (Y24).
+- **Files:** `app/packages/kitted-core/src/picks.ts`, `src/ruleNames.ts`, `tasks/T65/names.md`, this file. `src/index.ts` already carried the export lines from the earlier commit; no other file touched, no score moves.
+- **Checks:** the two locked files: 43 passed (38 + 5). `npx tsc --noEmit -p .` in the core package: clean. Parity suites `parts.parity`, `rubric.parity`, `partsFixes.parity`, `rulesConformance`: 648 passed. `npm run check` in `app/` is left to the session (not run here).
+- **Demo screens:** none; nothing shows yet (T58 and T66 read these).
+- **Not done:** the founder's OK on the names (Y24); the v15 gaps above.
 
 ## Disputes
 _(none yet)_
