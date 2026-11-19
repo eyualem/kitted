@@ -284,6 +284,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-19 · taste-check-runners-graphics (control's task, $0 paper, no code): on your 164 blind ratings you rate running-shoe and loud-print outfits a little below the app (runners 6.76 vs 7.09, loud prints 5.81 vs 6.06), so no softening is recommended (report `reports/2026-11-19-taste-check-runners-graphics.md`); the puffer's pooling line moves no points in the score (it only shows on the card); a shoulder-line test plan is priced at about 66¢, capped at 75¢, not run.
 - 2026-11-19 · oversized-tee-half-sleeve (control's task, tiny): the oversized tee's sleeves are now half sleeves, low at the dropped shoulder, wide and loose to about the elbow, a level hemmed opening (DECISIONS-LOG #519, PR #161).
 - 2026-11-19 · tier-refresh (your "Yes, fix it"): your phone kept showing the 3-check limit after your account was raised to 50, because the app only hears its limits from server answers and had stopped asking; now, at a limit, it asks the server once (no AI call) and lets you through if the server allows; log #518
 - 2026-11-19 · oversized-tee (control's task, tiny): his "Oversized tee" tile now draws oversized (dropped shoulders, boxy body, longer hem, sleeves toward the elbow) because the name says so; a plain tee is unchanged (DECISIONS-LOG #517, PR #158).
