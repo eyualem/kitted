@@ -9,7 +9,7 @@ import type { KittedStore } from '@/data/store';
 import type { FitCheckRow, UsageDay } from '@/data/types';
 import { t, type StringKey } from '@/i18n/en';
 import type { Clock } from './clock';
-import type { ServerTier } from './server/tier';
+import { type DisplayTier, type ServerTier } from './server/tier';
 
 const cfg = RUBRIC_DATA.config as Record<string, number>;
 export const LIMITS = {
@@ -19,13 +19,17 @@ export const LIMITS = {
   proQuestions: cfg.proQuestionsPerDay ?? 50,
   betaChecks: 3,
   betaQuestions: 20,
+  /** The founder's own account (the server's tier `founder`): same numbers as firebase limits.ts TIERS.founder. */
+  founderChecks: 50,
+  founderQuestions: 200,
 };
 
 /** Which day the limits follow: a purchase or the server's `pro` is Pro; the server's `beta` is the beta; else free. */
-export type PlanTier = ServerTier;
+export type PlanTier = DisplayTier;
 
-export function limitsFor(tier: PlanTier): { checks: number; questions: number } {
+export function limitsFor(tier: ServerTier): { checks: number; questions: number } {
   if (tier === 'pro') return { checks: LIMITS.proChecks, questions: LIMITS.proQuestions };
+  if (tier === 'founder') return { checks: LIMITS.founderChecks, questions: LIMITS.founderQuestions };
   if (tier === 'beta') return { checks: LIMITS.betaChecks, questions: LIMITS.betaQuestions };
   return { checks: LIMITS.freeChecks, questions: LIMITS.freeQuestions };
 }
@@ -117,9 +121,10 @@ export function createQuota(deps: QuotaDeps) {
     const u = await usage(key);
     const purchased = deps.isPro();
     const server = (await deps.serverTier?.().catch(() => null)) ?? null;
-    const tier: PlanTier = purchased || server === 'pro' ? 'pro' : server === 'beta' ? 'beta' : 'free';
+    const tier: PlanTier = purchased || server === 'pro' ? 'pro' : server === 'beta' || server === 'founder' ? 'beta' : 'free';
     const pro = tier === 'pro';
-    const limits = limitsFor(tier);
+    // His own account: the beta's wording and rules, the founder's numbers (purchasing Pro still wins).
+    const limits = limitsFor(server === 'founder' && !pro ? 'founder' : tier);
     const checks = await store.fitChecks.all();
     const todays = checks.filter((c) => c.dayKey === key && !c.parentId && c.status === 'scored');
     const override = deps.checksUsedOverride?.() ?? null;
