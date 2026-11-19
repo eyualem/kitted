@@ -1,6 +1,6 @@
 # Setup and You
 
-**Approved by the founder:** 2026-11-09 (SY2.1, SY4–SY6 changed with his yes the same day, to match `specs/onboarding-screens.md`). SY2–SY3 rewritten 2026-11-10 with his yes (direction A, `tasks/T36/`); SY2's badge color and the slide's start changed the same day with his yes (#439)
+**Approved by the founder:** 2026-11-09 (SY2.1, SY4–SY6 changed with his yes the same day, to match `specs/onboarding-screens.md`). SY2–SY3 rewritten 2026-11-10 with his yes (direction A, `tasks/T36/`); SY2's badge color and the slide's start changed the same day with his yes (#439). SY2.12–SY2.18 (Kit types before it speaks) added Nov 18 with his yes in chat, from proposal 4 and mockup 3 of `reports/2026-11-18-chat-feel-research.md`
 
 After this, a new user learns Stylist and Closet by doing his first fit check and seeing his pieces land in Closet, finds every setting on You without digging, and setup asks his name (optional), checks his age the Apple way and asks for the privacy agreement when he first opens the camera.
 
@@ -36,6 +36,12 @@ The pages these rows open (Plan & usage, Notifications, Privacy & data, Acknowle
 No tour, no tips, no `Got it` cards. He learns Stylist by doing his first check, and Closet by seeing his pieces land there.
 
 **Kit's hello.** At setup's end (About you's `Continue`), Kit's first message is `I'm Kit, your stylist.`, above Kit's offer card (`specs/onboarding-screens.md` OS5). Today's AI note goes: the agreement says `Kit, your stylist, is an AI.` and shows before his first check or question, and Kit says so plainly when asked (F5.1).
+
+**Kit types before it speaks** (his yes in chat, Nov 18; no word changes, only when they appear). The first two times Kit speaks on its own in his first minutes, three typing dots show first, then the words:
+1. Setup slides away and Kit's typing dots show for about 0.9 s. Then `I'm Kit, your stylist.` lands, and a beat later (about 0.6 s) Kit's offer card (`Want to check a fit now?`) arrives, with one soft haptic tap.
+2. After his first scored check, the same typing beat comes before Kit's line that opens the optional step after it (the `Your first 3 moves` post; today `Want outfit ideas from your own clothes? This part is optional.`), then its card a beat later. No haptic there.
+3. Never on a normal answer (it has its own dots) or the morning and evening card. Each of the two plays once per phone, never when he scrolls back, reopens the app or reads Past chats.
+4. Reduce Motion: a still `…` for the same pause, then plain fades. VoiceOver reads `Kit is writing`, then the line.
 
 **The slide into Closet.** When a scored check or re-check adds pieces to Closet:
 1. As the card lands, small pictures of the pieces lift off and slide into the Closet tab: from the `Added {n} to Closet` row when it shows, otherwise from the card's bottom edge (a folded card, a re-check card). They go a few hundredths of a second apart, shrinking and fading as they reach it, in about 0.6 s, with a light haptic. Nothing is drawn: no line, no trail.
@@ -104,6 +110,13 @@ Removed with the tips: there's nothing left to replay. Help & about has no `Show
 - SY2.9 An install that finished setup before this update: no label or marks ever; the slide and the badge work; the old AI-note message reads `I'm Kit, your stylist.`
 - SY2.10 "Delete all my data" clears the badge, the last-opened time and the first-visit mark.
 - SY2.11 VoiceOver: the row reads `Added {n} to Closet`; each new piece reads `New, {piece name}`; the label reads as a heading.
+- SY2.12 A new setup's end: Kit's typing dots show for about 0.9 s before `I'm Kit, your stylist.`; the offer card shows about 0.6 s after the hello, never before it, with one soft haptic as it lands; the words are unchanged.
+- SY2.13 After his first scored check: the same dots for about 0.9 s before Kit's line that opens the optional step, then its card a beat later; no haptic. The paywall still opens after the card has shown.
+- SY2.14 Each plays once per phone: reopening the app, coming back to the tab, scrolling back, Past chats and an install from before this update never show the dots or the pause.
+- SY2.15 No dots and no pause before a normal answer's rows, the morning or evening card, or any other message of Kit's; the soft tap plays nowhere else (the general answer tap is a separate later choice).
+- SY2.16 Reduce Motion: a still `…` for the same pause, then plain fades (no rise); the fades still play.
+- SY2.17 VoiceOver hears `Kit is writing`, then the line, in that order.
+- SY2.18 Past chats and a stored hello read as before: the hello is still one stored message that draws `I'm Kit, your stylist.` (SY2.1, SY2.9).
 
 **SY4. The name**
 - SY4.1 The About you step shows `What should Kit call you?` with `First name` above `How old are you?`; with an age picked and a blank name, `Continue` is off and `Skip` goes on without a name.

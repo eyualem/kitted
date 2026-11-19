@@ -167,6 +167,8 @@ describe('E1–E7 · the whole sequence through the service', () => {
     await s.later('a');
     let msgs = await cards(store);
     expect(msgs.map((m) => m.kind + ':' + (m.cardType ?? m.text))).toEqual(['text:' + t('plan.intro'), 'card:plan']);
+    // T116 (SY2.13): the opening line is tagged, so Kit types before it; the words are the same.
+    expect(msgs[0].payload).toEqual({ beat: 'moves' });
     expect(opened).toHaveLength(0);
     await tick(PAYWALL_AFTER_MS + 50);
     expect(opened).toEqual([clock.nowMs()]);

@@ -406,6 +406,8 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   ...Object.fromEntries([150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166].map((n) => [n, { steps: [FIRST_CHECK] }])),
   // T39: after the agreement, the first check the story screens 150–162 use.
   283: { steps: [FIRST_CHECK] },
+  // T116: the optional step's line after his first check, typed first (scenarios.ts 288).
+  288: { steps: [FIRST_CHECK] },
   291: { steps: [FIRST_CHECK] },
   // T94: a navy suit (s09). 294: the card, Going for his first pick (minimal) says what it reads as; 295: How I scored;
   // 296: the wait, with Tailored his first pick from setup.
@@ -487,6 +489,8 @@ async function playStory(sc: ScreenScenario): Promise<void> {
   }
   await store.setKv(KV.scenario, sc.scenario);
   await store.setKv(KV.seedLoaded, sc.scenario);
+  // T116: Kit's rows are new to him, so the typing beat plays (stylist/arrival.ts).
+  if (sc.fresh) await store.setKv('stylist.seenUntil', sc.fresh === 'afterSetup' ? String(at('2026-10-22T07:40:30')) : '0');
   if (sc.weather && sc.weatherAllowed) await store.setKv(WEATHER_PERMISSION_KV, 'granted');
   // A beta screen's checks used are today's real count (T14): its next photos count from there.
   if (sc.tier === 'beta' && sc.freeChecksUsed !== undefined) {
