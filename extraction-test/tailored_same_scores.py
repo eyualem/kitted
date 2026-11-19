@@ -2,7 +2,8 @@
 """T94 · TL3: Tailored is a name, never a number. The $0 before/after proof (specs/tailored.md TL3.1-TL3.4).
 
   KITTED_DATA=/Users/eyu/Desktop/files/Kitted /usr/bin/python3 tailored_same_scores.py
-      [--base <git ref>]       the engine before Tailored (default 541440c2: this branch before any engine change)
+      [--base <git ref>]       the engine to compare against (default da9b7253: main's engine as T69 merged it, v15 and
+                               v16; before the merge with main it was 541440c2, this branch before any engine change)
       [--sets parity,fixes,rubric,conformance,corpus,phone,gold]
       [--new-from <dir>]       the "after" engine is this checkout's, with any of rubric.py / parts_proto.py /
                                parts_fixes.py found in <dir> laid over it (a scratch plant); writes nothing
@@ -14,13 +15,15 @@ Writes results/tailored/report.md and summary.json (not with --new-from); exits 
 Two kinds of set (IMPLEMENTATION.md Step 4):
   (a) the parity sets: the base commit's parts_parity.json, parts_fixes.json, rubric_parity.json and
       rules_conformance.json. Their `expected` is the base engine's exact output; every case is re-run, by its own
-      config (src, reading, occasion, styles, boldness, second look, tune, closet, warm, first check), on the after engine.
+      config (src, reading, occasion, styles, boldness, second look, tune, closet, warm, first check; for a v16 case also
+      its season and graded look), on the after engine.
   (b) the saved real photos, run on both engines: the corpus (results/parts1/corpus.json), every phone pull's scored
       checks (deduped by image hash, the newest pull wins; the loader of hoodie_layer_paper.py) and every gold run
       (results/gold1/raw.json). Each at its own occasion (gold: everyday), with no picks and with its profile's picks,
       with fixes. Profiles (CLAUDE.md rule 7): gold and the corpus are "profile unknown", run with the one stated test
       profile (Minimal + Smart casual, 0.5 each, boldness a little); the phone pulls are the founder's own checks, run
-      with his profile (born 2004, 22-25; picks streetwear, minimal, workwear).
+      with his profile (born 2004, 22-25; picks streetwear, minimal, workwear). Each on engine v15 and on v16 (the
+      engine the app scores new checks with since T69; cool, graded as the outfit's own looks).
 
 Every number must be identical. Allowed to differ, name only: detected_styles may gain "tailored" (in LOOK_ORDER's
 place) and nothing else; style_label may become "tailored" (only when "tailored" is detected); a line may differ only
@@ -52,7 +55,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 DATA = Path(os.environ.get("KITTED_DATA", ROOT))
 OUT = HERE / "results" / "tailored"
-DEFAULT_BASE = "541440c2"
+DEFAULT_BASE = "da9b7253"     # main's engine after T69 (PR #149); T94's own first base was 541440c2
 ENGINE_FILES = {"rubric.py": "extraction-test/rubric.py", "parts_proto.py": "extraction-test/rubrics/parts_proto.py",
                 "parts_fixes.py": "handoff/fixtures/parts_fixes.py"}
 SUPPORT_FILES = ["handoff/fixtures/kitted_logic.py", "handoff/fixtures/fixes.json"]   # this checkout's, both engines
@@ -217,13 +220,17 @@ def tune_calls(R, P):
     """make_parts_parity.py's tune variants: name -> (engine, what-if overrides). Read from its source (no import)."""
     src = (ROOT / "handoff/fixtures/make_parts_parity.py").read_text()
     consts = {}
+    env = {"__builtins__": {}, "frozenset": frozenset, "set": set, "tuple": tuple, "dict": dict, "R": R, "P": P,
+           "_taste": lambda **kw: {"taste": dict(P.TUNE["v16"]["taste"], **kw)}}   # make_parts_parity._taste
     for node in ast.parse(src).body:
         if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name) \
                 and node.targets[0].id.startswith("WHATIF"):
             # this repo's own constants (dicts of numbers, a few `1 / 3`-style sums): evaluated with no builtins
-            consts[node.targets[0].id] = eval(compile(ast.Expression(node.value), "make_parts_parity.py", "eval"), {"__builtins__": {}, "frozenset": frozenset, "set": set, "tuple": tuple, "R": R, "P": P})
+            consts[node.targets[0].id] = eval(compile(ast.Expression(node.value), "make_parts_parity.py", "eval"), env)
 
     def call(name):
+        if name.startswith("v16_whatif_"):                      # T69: TUNES["v16_whatif_" + knob] = ("v16", WHATIF16[knob])
+            return "v16", consts["WHATIF16"][name[len("v16_whatif_"):]]
         if not name.endswith("_whatif"):
             return name, None
         eng = name[:-len("_whatif")]
@@ -238,9 +245,13 @@ def parts_garments(R, P, reading):
     return P._refile(R._normalize(gs))
 
 
-def run_parts(R, P, reading, occ, styles, sl, bold, engine="v15", tune=None):
-    """make_parts_parity.run(): score_parts plus the unrounded average and final, or the error Python raised."""
+def run_parts(R, P, reading, occ, styles, sl, bold, engine="v15", tune=None, season=None, graded_look=None):
+    """make_parts_parity.run() (run16() for engine v16: its own unrounded values, with the season and graded look):
+    score_parts plus the unrounded average and final, or the error Python raised."""
     try:
+        if engine == "v16":
+            return P.score_parts(copy.deepcopy(reading), occ, {k: w for k, w in styles}, copy.deepcopy(sl), bold, "v16", tune,
+                                 season=season, graded_look=copy.deepcopy(graded_look))
         res = P.score_parts(copy.deepcopy(reading), occ, {k: w for k, w in styles}, copy.deepcopy(sl), bold, engine, tune)
     except Exception as e:  # noqa: BLE001  (a stored error must be the same error)
         return {"error": f"{type(e).__name__}: {e}"}
@@ -287,8 +298,10 @@ def worker_parity(tree, which, base_ref, out_path):
                 if k in e:
                     e[k] = pool[e[k]]
             eng, tn = ("v15", None) if "tune" not in c else calls(c["tune"])
-            n = run_parts(R, P, r, c["occasion"], c["styles"], c["second_look"], c["boldness"], eng, tn)
-            cfg = {k: c.get(k) for k in ("src", "reading", "occasion", "styles", "boldness", "second_look", "tune")}
+            n = run_parts(R, P, r, c["occasion"], c["styles"], c["second_look"], c["boldness"], eng, tn, c.get("season"),
+                          c.get("graded_look"))
+            cfg = {k: c.get(k) for k in ("src", "reading", "occasion", "styles", "boldness", "second_look", "tune", "season",
+                                         "graded_look")}
             T.add(f"parity#{i}:{c['src']}", cfg, e, n, is_tl(R, parts_garments(R, P, r)) if "detected_styles" in n else None,
                   (e.get("style_label"), n.get("style_label")) if "style_label" in n else None)
             if n.get("style_label") is None and matching_suit(n):
@@ -304,16 +317,20 @@ def worker_parity(tree, which, base_ref, out_path):
             if e["smaller_step"] is not None:
                 e["smaller_step"] = pool[e["smaller_step"]]
             st = c.get("styles", fx["profile"])
+            v16 = c.get("tune") == "v16" or c.get("engine") == "v16"          # T69: a v16 case is tagged, with its season
             n = F.suggest_parts_fixes(copy.deepcopy(r), c["occasion"], st, fx["boldness"], copy.deepcopy(c["second_look"]),
-                                      fx["closet"] if c["closet"] == "seed" else [], c["warm"], c["first_check"])
-            cfg = {k: c.get(k) for k in ("src", "reading", "occasion", "second_look", "warm", "closet", "first_check")}
+                                      fx["closet"] if c["closet"] == "seed" else [], c["warm"], c["first_check"],
+                                      **({"engine": "v16", "season": c.get("season")} if v16 else {}))
+            cfg = {k: c.get(k) for k in ("src", "reading", "occasion", "second_look", "warm", "closet", "first_check", "tune",
+                                         "season")}
             cfg["styles"] = st
             T.add(f"fixes#{i}:{c['src']}", cfg, e, json.loads(json.dumps(n)))
         del fx
     elif which == "conformance":
         rc = json.loads(git_show(base_ref, "handoff/fixtures/rules_conformance.json"))
         for c in rc["cases"]:
-            n = run_parts(R, P, c["reading"], c["occasion"], c["styles"], c["second_look"], c["boldness"])
+            n = run_parts(R, P, c["reading"], c["occasion"], c["styles"], c["second_look"], c["boldness"],
+                          c.get("engine", "v15"), None, c.get("season"), c.get("graded_look"))
             if "error" in n or n.get("overall") is None:
                 proj = {"overall": n.get("overall"), "error": n.get("error")}
                 b = {"overall": c["python"].get("overall"), "error": c["python"].get("error")}
@@ -322,7 +339,7 @@ def worker_parity(tree, which, base_ref, out_path):
                         "parts": {k: v["score"] for k, v in n["parts"].items()},
                         "detected_styles": n["detected_styles"], "style_label": n["style_label"]}
                 b = {k: c["python"].get(k) for k in proj}
-            cfg = {k: c.get(k) for k in ("id", "occasion", "styles", "boldness", "second_look")}
+            cfg = {k: c.get(k) for k in ("id", "occasion", "styles", "boldness", "second_look", "engine", "season")}
             T.add(c["id"], cfg, b, proj, is_tl(R, parts_garments(R, P, c["reading"])) if "detected_styles" in proj else None,
                   (b.get("style_label"), proj.get("style_label")) if "style_label" in proj else None)
     Path(out_path).write_text(json.dumps(T.summary()))
@@ -335,10 +352,12 @@ def worker_real(tree, jobs_path, out_path):
     out = []
     for j in jobs:
         r, occ, st, sl = j["reading"], j["occasion"], j["styles"], j.get("second_look")
-        o = {"id": j["id"], "parts": run_parts(R, P, r, occ, st, sl, BOLD, j.get("engine", "v15"))}
+        eng = j.get("engine", "v15")
+        o = {"id": j["id"], "parts": run_parts(R, P, r, occ, st, sl, BOLD, eng)}
         if j.get("fixes"):
             try:
-                o["fixes"] = json.loads(json.dumps(F.suggest_parts_fixes(copy.deepcopy(r), occ, st, BOLD, copy.deepcopy(sl))))
+                o["fixes"] = json.loads(json.dumps(F.suggest_parts_fixes(copy.deepcopy(r), occ, st, BOLD, copy.deepcopy(sl),
+                                                                         **({"engine": "v16"} if eng == "v16" else {}))))
             except Exception as e:  # noqa: BLE001
                 o["fixes"] = {"error": f"{type(e).__name__}: {e}"}
         gs = parts_garments(R, P, r)
@@ -415,9 +434,11 @@ def real_jobs(name, photos):
     prof = FOUNDER if name == "phone" else PROFILE
     jobs = []
     for p in photos:
-        for pn, st in (("none", []), ("profile", prof)):
-            jobs.append({"id": f"{p['id']}|{pn}", "reading": p["reading"], "occasion": p["occasion"], "styles": st,
-                         "second_look": p.get("second_look"), "fixes": True})
+        for eng in ("v15", "v16"):                               # v16: the engine new checks score with since T69
+            for pn, st in (("none", []), ("profile", prof)):
+                jobs.append({"id": f"{p['id']}|{pn}" + ("" if eng == "v15" else "|v16"), "reading": p["reading"],
+                             "occasion": p["occasion"], "styles": st, "second_look": p.get("second_look"), "fixes": True,
+                             "engine": eng})
     return jobs
 
 
@@ -473,7 +494,7 @@ def main():
             T = Tally(s)
             for j in json.loads((work / f"{s}-jobs.json").read_text()):
                 b, n = B[j["id"]], N[j["id"]]
-                cfg = {"occasion": j["occasion"], "styles": j["styles"], "second_look": j["second_look"]}
+                cfg = {"occasion": j["occasion"], "styles": j["styles"], "second_look": j["second_look"], "engine": j["engine"]}
                 bo = {"parts": b["parts"], "fixes": b.get("fixes")}
                 no = {"parts": n["parts"], "fixes": n.get("fixes")}
                 T.add(j["id"], cfg, bo, no, n["is_tailored"] if "detected_styles" in n["parts"] else None,
@@ -533,17 +554,23 @@ def dirty():
 
 
 def report_rows(extra, six):
-    def row(s, pid, file, prof_txt):
-        b, n = extra[s]["base"][f"{pid}|profile"], extra[s]["new"][f"{pid}|profile"]
+    def one(s, key):
+        b, n = extra[s]["base"][key], extra[s]["new"][key]
         bp, np_ = b["parts"], n["parts"]
         tl = n["is_tailored"]
         lab0, lab1 = bp.get("style_label"), np_.get("style_label")
         ok = bp.get("overall") == np_.get("overall") and (lab1 == "tailored") == bool(tl) if tl is not None else True
         if tl and lab1 not in ("tailored", "smart_casual", "classic_prep", None):
             ok = bp.get("overall") == np_.get("overall")       # TL2.1: his picks chose another look the outfit reads as
+        return n, f"{lab0} -> {lab1}", f"{bp.get('overall')} -> {np_.get('overall')}", ok
+
+    def row(s, pid, file, prof_txt):
+        n, lab15, sc15, ok15 = one(s, f"{pid}|profile")
+        _, lab16, sc16, ok16 = one(s, f"{pid}|profile|v16")
+        tl = n["is_tailored"]
         return {"file": file, "profile": prof_txt, "tl1": "yes" if tl else f"no ({n.get('blocks', '?')})" if tl is False else "n/a",
-                "label": f"{lab0} -> {lab1}", "score": f"{bp.get('overall')} -> {np_.get('overall')}",
-                "pass": "PASS" if ok else "FAIL"}
+                "label": lab15, "score": sc15, "label16": lab16, "score16": sc16,
+                "pass": "PASS" if ok15 and ok16 else "FAIL"}
     gold_txt = "profile unknown (web photo); age band unknown; picked looks none known; scored with the stated test profile: Minimal + Smart casual, 0.5 each, everyday"
     out = {"six": [], "others": []}
     if six is not None and "gold" in extra:
@@ -578,7 +605,7 @@ def report(results, rows, base_sha, head_sha, failed):
                     L.append(f"| {f['set']} | {f['id'][:60]} | | | TL3.3 | | {'; '.join(f['tl3_3'])} |")
         L.append("")
     L.append("# Tailored: same scores (TL3)\n")
-    L.append(f"Base engine `{base_sha[:8]}` (v15 before Tailored) against this branch's engine `{head_sha[:8]}`"
+    L.append(f"Base engine `{base_sha[:8]}` (main's engine after T69: v15 and v16, before T94's names) against this branch's engine `{head_sha[:8]}`"
              f"{' (with uncommitted engine changes)' if dirty() else ''}. Generated by `extraction-test/tailored_same_scores.py`; "
              "stored readings only, no AI call, $0.\n")
     sc = OUT / "self_check.json"
@@ -596,7 +623,8 @@ def report(results, rows, base_sha, head_sha, failed):
         L.append(f"| {s} | {r['cases']:,} | {r['identical']:,} | {r['name_only']:,} | {r['failed']} |")
     L.append("\nThe parity sets re-run the base commit's committed fixtures (their `expected` is the base engine's exact output). "
              "The real photos (corpus, phone, gold) are each scored with no picks and with the profile's picks, with fixes, on both "
-             "engines. The gold set has 2 runs per photo on file (run 0 and run 1), each compared.\n")
+             "engines, each on v15 and on v16 (cool; graded as the outfit's own looks). The gold set has 2 runs per photo on file "
+             "(run 0 and run 1), each compared.\n")
     L.append("## The name changes (old -> new label)\n\n| set | old -> new | cases | examples |\n|---|---|---|---|")
     for s, r in results.items():
         for k, v in sorted(r["label_changes"].items(), key=lambda t: -t[1]):
@@ -614,16 +642,18 @@ def report(results, rows, base_sha, head_sha, failed):
     L.append("The gold photos where `PR3_tailored_line` fires on run 0 under engine v13 (#266's count), recomputed here"
              + ("" if len(six) == 6 else f": the real count is **{len(six)}**, not 6, and all are listed") + ". "
              f"{len(six)} photos, a small sample; the founder chose the saved 6 only. File names only, never a photo.\n")
-    L.append("| photo | profile | TL1 met | label before -> after | score before -> after | result |\n|---|---|---|---|---|---|")
+    L.append("| photo | profile | TL1 met | v15 label before -> after | v15 score | v16 label before -> after | v16 score | result |\n"
+             "|---|---|---|---|---|---|---|---|")
     for x in six:
-        L.append(f"| {x['file']} | {x['profile']} | {x['tl1']} | {x['label']} | {x['score']} | {x['pass']} |")
+        L.append(f"| {x['file']} | {x['profile']} | {x['tl1']} | {x['label']} | {x['score']} | {x['label16']} | {x['score16']} | {x['pass']} |")
     oth = rows["others"]
     L.append(f"\n## Every other saved jacket-led reading ({len(oth)})\n")
     L.append("Corpus and phone readings with a blazer, suit jacket, sport coat or unstructured blazer; gold runs not in the table above. "
              "Scored with the profile in the row.\n")
-    L.append("| set | reading | profile | TL1 met | label before -> after | score before -> after | result |\n|---|---|---|---|---|---|---|")
+    L.append("| set | reading | profile | TL1 met | v15 label before -> after | v15 score | v16 label before -> after | v16 score | result |\n"
+             "|---|---|---|---|---|---|---|---|---|")
     for x in oth:
-        L.append(f"| {x['set']} | {x['file']} | {x['profile']} | {x['tl1']} | {x['label']} | {x['score']} | {x['pass']} |")
+        L.append(f"| {x['set']} | {x['file']} | {x['profile']} | {x['tl1']} | {x['label']} | {x['score']} | {x['label16']} | {x['score16']} | {x['pass']} |")
     L.append("")
     return "\n".join(L)
 

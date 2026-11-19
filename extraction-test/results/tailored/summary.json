@@ -1,24 +1,24 @@
 {
- "base": "541440c2dad7ad1451ebfe12073b5495ed2d17f4",
- "after": "dc10c266b8afb52bac396ac79371af3b288272fb",
+ "base": "da9b7253ca9ec8888ad960ce6e5fb3bd81189cf5",
+ "after": "293ebc0c93c62804af44426da6dc336136191d75",
  "after_dirty": false,
  "sets": {
   "parity": {
-   "cases": 28096,
-   "identical": 26206,
-   "name_only": 1890,
+   "cases": 40550,
+   "identical": 37919,
+   "name_only": 2631,
    "failed": 0,
    "label_changes": {
-    "smart_casual -> tailored": 729,
-    "None -> tailored": 1152,
+    "smart_casual -> tailored": 969,
+    "None -> tailored": 1653,
     "classic_prep -> tailored": 9
    },
    "tailored_ties": 0,
-   "suits_kept": 41
+   "suits_kept": 43
   },
   "fixes": {
-   "cases": 30412,
-   "identical": 30412,
+   "cases": 33992,
+   "identical": 33992,
    "name_only": 0,
    "failed": 0,
    "label_changes": {},
@@ -39,52 +39,52 @@
    "suits_kept": 0
   },
   "conformance": {
-   "cases": 501,
-   "identical": 472,
-   "name_only": 29,
+   "cases": 592,
+   "identical": 562,
+   "name_only": 30,
    "failed": 0,
    "label_changes": {
     "smart_casual -> tailored": 21,
-    "None -> tailored": 8
+    "None -> tailored": 9
    },
    "tailored_ties": 0,
    "suits_kept": 0
   },
   "corpus": {
-   "cases": 156,
-   "identical": 138,
-   "name_only": 18,
+   "cases": 312,
+   "identical": 276,
+   "name_only": 36,
    "failed": 0,
    "label_changes": {
-    "smart_casual -> tailored": 4,
-    "None -> tailored": 14
+    "smart_casual -> tailored": 8,
+    "None -> tailored": 28
    },
    "tailored_ties": 0,
    "suits_kept": 0
   },
   "phone": {
-   "cases": 124,
-   "identical": 122,
-   "name_only": 2,
+   "cases": 248,
+   "identical": 244,
+   "name_only": 4,
    "failed": 0,
    "label_changes": {
-    "smart_casual -> tailored": 2
+    "smart_casual -> tailored": 4
    },
    "tailored_ties": 0,
    "suits_kept": 0
   },
   "gold": {
-   "cases": 900,
-   "identical": 876,
-   "name_only": 24,
+   "cases": 1800,
+   "identical": 1752,
+   "name_only": 48,
    "failed": 0,
    "label_changes": {
-    "None -> tailored": 16,
-    "smart_casual -> tailored": 4,
-    "classic_prep -> tailored": 4
+    "None -> tailored": 32,
+    "smart_casual -> tailored": 8,
+    "classic_prep -> tailored": 8
    },
    "tailored_ties": 0,
-   "suits_kept": 2
+   "suits_kept": 4
   }
  },
  "failed": 0,
@@ -95,6 +95,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "None -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -103,6 +105,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "None -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -111,6 +115,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "8.0 -> 8.0",
+   "label16": "None -> tailored",
+   "score16": "8.0 -> 8.0",
    "pass": "PASS"
   },
   {
@@ -119,6 +125,8 @@
    "tl1": "yes",
    "label": "smart_casual -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "smart_casual -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -127,6 +135,8 @@
    "tl1": "yes",
    "label": "classic_prep -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "classic_prep -> tailored",
+   "score16": "7.0 -> 7.0",
    "pass": "PASS"
   },
   {
@@ -135,6 +145,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "None -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   }
  ],
@@ -146,6 +158,8 @@
    "tl1": "yes",
    "label": "smart_casual -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "smart_casual -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -155,6 +169,8 @@
    "tl1": "yes",
    "label": "smart_casual -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "smart_casual -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -164,6 +180,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "8.0 -> 8.0",
+   "label16": "None -> tailored",
+   "score16": "8.0 -> 8.0",
    "pass": "PASS"
   },
   {
@@ -173,6 +191,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "None -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -182,6 +202,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "7.0 -> 7.0",
+   "label16": "None -> tailored",
+   "score16": "6.5 -> 6.5",
    "pass": "PASS"
   },
   {
@@ -191,6 +213,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "None -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -200,6 +224,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "None -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -209,6 +235,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "8.0 -> 8.0",
+   "label16": "None -> tailored",
+   "score16": "8.0 -> 8.0",
    "pass": "PASS"
   },
   {
@@ -218,6 +246,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "6.5 -> 6.5",
+   "label16": "None -> tailored",
+   "score16": "6.0 -> 6.0",
    "pass": "PASS"
   },
   {
@@ -227,6 +257,8 @@
    "tl1": "yes",
    "label": "smart_casual -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "smart_casual -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -236,6 +268,8 @@
    "tl1": "no (bottom: jeans)",
    "label": "smart_casual -> smart_casual",
    "score": "7.0 -> 7.0",
+   "label16": "smart_casual -> smart_casual",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -245,6 +279,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "None -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -254,6 +290,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "None -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -263,6 +301,8 @@
    "tl1": "no (bottom: jeans)",
    "label": "None -> None",
    "score": "6.5 -> 6.5",
+   "label16": "None -> None",
+   "score16": "7.0 -> 7.0",
    "pass": "PASS"
   },
   {
@@ -272,6 +312,8 @@
    "tl1": "no (bottom: jeans)",
    "label": "workwear -> workwear",
    "score": "7.0 -> 7.0",
+   "label16": "workwear -> workwear",
+   "score16": "7.0 -> 7.0",
    "pass": "PASS"
   },
   {
@@ -281,6 +323,8 @@
    "tl1": "no (never-list: work_boot)",
    "label": "smart_casual -> smart_casual",
    "score": "6.5 -> 6.5",
+   "label16": "smart_casual -> smart_casual",
+   "score16": "6.5 -> 6.5",
    "pass": "PASS"
   },
   {
@@ -290,6 +334,8 @@
    "tl1": "no (never-list: work_boot)",
    "label": "None -> None",
    "score": "6.5 -> 6.5",
+   "label16": "None -> None",
+   "score16": "7.0 -> 7.0",
    "pass": "PASS"
   },
   {
@@ -299,6 +345,8 @@
    "tl1": "no (bottom: jeans)",
    "label": "None -> None",
    "score": "6.5 -> 6.5",
+   "label16": "None -> None",
+   "score16": "7.0 -> 7.0",
    "pass": "PASS"
   },
   {
@@ -308,6 +356,8 @@
    "tl1": "no (bottom: jeans)",
    "label": "smart_casual -> smart_casual",
    "score": "6.5 -> 6.5",
+   "label16": "smart_casual -> smart_casual",
+   "score16": "7.0 -> 7.0",
    "pass": "PASS"
   },
   {
@@ -317,6 +367,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "None -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -326,6 +378,8 @@
    "tl1": "yes",
    "label": "smart_casual -> tailored",
    "score": "7.5 -> 7.5",
+   "label16": "smart_casual -> tailored",
+   "score16": "7.5 -> 7.5",
    "pass": "PASS"
   },
   {
@@ -335,6 +389,8 @@
    "tl1": "yes",
    "label": "classic_prep -> tailored",
    "score": "7.0 -> 7.0",
+   "label16": "classic_prep -> tailored",
+   "score16": "6.5 -> 6.5",
    "pass": "PASS"
   },
   {
@@ -344,6 +400,8 @@
    "tl1": "yes",
    "label": "None -> tailored",
    "score": "8.0 -> 8.0",
+   "label16": "None -> tailored",
+   "score16": "8.0 -> 8.0",
    "pass": "PASS"
   }
  ]
