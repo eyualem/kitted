@@ -27,6 +27,42 @@ export const ARRIVE = {
  *  Reduce Motion: the same order as plain fades (`fadeMs`). */
 export const ARRIVE_CARD = { delayMs: 120, risePt: 12, riseMs: 280, fadeMs: 200, tapStaggerMs: 50 } as const;
 
+/** Kit types before it speaks, in his first minutes only (the founder's yes Nov 18; chat-feel research proposal 4; SY2.12–SY2.18).
+ *  Two moments, each once: the hello after setup (then Kit's offer card a beat later, with one soft tap) and the line
+ *  that opens the step after his first scored check (then its card a beat later, no tap). The words don't change. */
+export const BEAT = { typingMs: 900, cardGapMs: 600 } as const;
+
+export type BeatKind = 'hello' | 'moves';
+
+/** One typing beat: the lead line (held back while the dots show) and the cards that follow it (held a beat longer). */
+export interface Beat {
+  kind: BeatKind;
+  leadId: string;
+  followerIds: string[];
+}
+
+/** Which cards trail each lead line. */
+const BEAT_CARDS: Record<BeatKind, readonly string[]> = { hello: ['firstCheckOffer', 'turnOnChecks'], moves: ['plan'] };
+/** A follower is the card posted with its lead, a moment later. */
+const BEAT_WINDOW_MS = 60_000;
+
+/** The cards posted with a lead line, a moment later: Kit's, of the cards that trail this kind, no older than the lead and
+ *  nothing has decided. Asked again while the beat runs, so a card written after the lead (a second write) is held too. */
+export function beatFollowers(kind: BeatKind, lead: Pick<ChatMessage, 'createdAt'>, rows: readonly BeatRow[], isDecided: (id: string) => boolean = () => false): string[] {
+  return rows
+    .filter((m) => m.role === 'stylist' && m.cardType !== null && BEAT_CARDS[kind].includes(m.cardType)
+      && m.createdAt >= lead.createdAt && m.createdAt - lead.createdAt <= BEAT_WINDOW_MS && !isDecided(m.id))
+    .map((m) => m.id);
+}
+
+/** The lead lines: the hello (stored as the `aiNote` flag, drawn from the string) and the post's opening line (finish/service.ts tags it). */
+export function beatKindOf(m: Pick<ChatMessage, 'role' | 'payload'>): BeatKind | null {
+  if (m.role !== 'stylist') return null;
+  if (m.payload.aiNote === true) return 'hello';
+  if (m.payload.beat === 'moves') return 'moves';
+  return null;
+}
+
 /** kv: when he last had the thread in front of him (String(epoch ms)); per device (sync/schema.ts KV_LOCAL). */
 export const SEEN_UNTIL_KEY = 'stylist.seenUntil';
 
@@ -36,6 +72,7 @@ export function parseSeenUntil(raw: string | null | undefined): number | null {
 }
 
 type Row = Pick<ChatMessage, 'id' | 'role' | 'createdAt'>;
+export type BeatRow = Row & Pick<ChatMessage, 'payload' | 'cardType'>;
 
 export function createArrivals() {
   /** id → delay in ms (it moves), or null (it never will). */
@@ -43,6 +80,8 @@ export function createArrivals() {
   const played = new Set<string>();
   /** The answers that just streamed in live: their words stay still, their card and taps enter (ARRIVE_CARD). */
   const cards = new Set<string>();
+  /** Lead lines whose beat has started: a beat never starts twice for one line, even if the screen remounts. */
+  const began = new Set<string>();
   return {
     /**
      * Decides every row not decided before. `seenUntil` is when he last saw the thread; `skip` are ids that must not
@@ -64,6 +103,20 @@ export function createArrivals() {
           decided.set(m.id, null);
         }
       }
+    },
+    /** The typing beat to play now, or null: the oldest lead line of Kit's he hasn't seen, nothing has decided, and no beat
+     *  has started for, with the cards posted with it. Safe to call on every render until `beatBegan`. */
+    findBeat(rows: readonly BeatRow[], seenUntil: number): Beat | null {
+      const lead = rows
+        .filter((m) => m.createdAt > seenUntil && !decided.has(m.id) && !began.has(m.id) && beatKindOf(m) !== null)
+        .sort((a, b) => a.createdAt - b.createdAt)[0];
+      if (!lead) return null;
+      const kind = beatKindOf(lead)!;
+      const followerIds = beatFollowers(kind, lead, rows, (id) => decided.has(id));
+      return { kind, leadId: lead.id, followerIds };
+    },
+    beatBegan(leadId: string): void {
+      began.add(leadId);
     },
     /** Kit's row he hasn't seen and nothing has decided yet: it will move once the thread is in front of him. */
     isNew(m: Row, seenUntil: number): boolean {
@@ -87,6 +140,7 @@ export function createArrivals() {
       decided.clear();
       played.clear();
       cards.clear();
+      began.clear();
     },
   };
 }

@@ -34,6 +34,8 @@ import { ACCESSORY_H, COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from
 import { ThreadRow } from './MessageView';
 import { ARRIVE, arrivals, parseSeenUntil, SEEN_UNTIL_KEY } from './arrival';
 import { arrivalEntering } from './arrivalMotion';
+import { KitTypingRow } from './KitTypingRow';
+import { useTypingBeat } from './useTypingBeat';
 import { OfflineBanner } from './OfflineBanner';
 import { LatestPill } from './LatestPill';
 import { AT_BOTTOM_PT, latestPillShows } from './latestShows';
@@ -101,11 +103,13 @@ export function StylistScreen() {
     return () => clearTimeout(timer);
   }, []);
   const focused = onTab && settled;
+  const kept = useMemo(() => withoutMorningWhileFirstCheckPending(messages, firstCheckHeld), [messages, firstCheckHeld]);
+  // Kit types before it speaks: the hello after setup and the line after his first score wait out the dots (T116).
+  const beat = useTypingBeat(kept, seenUntil, focused);
   const shown = useMemo(() => {
-    const kept = withoutMorningWhileFirstCheckPending(messages, firstCheckHeld);
-    const rows = replaced ? kept.filter((m) => m.id !== replaced) : kept;
+    const rows = (replaced ? kept.filter((m) => m.id !== replaced) : kept).filter((m) => !beat.held.has(m.id));
     return focused || seenUntil === undefined ? rows : rows.filter((m) => !arrivals.isNew(m, seenUntil));
-  }, [messages, replaced, firstCheckHeld, focused, seenUntil]);
+  }, [kept, replaced, beat.held, focused, seenUntil]);
   const items = useMemo(() => buildThreadItems(shown, now, sessionClock.offset), [shown, now]);
   // The follow-up taps under the latest answer only (KC1.3); his next message hides them.
   const followUps = useMemo(() => latestFollowUps([...shown].sort((a, b) => a.createdAt - b.createdAt)), [shown]);
@@ -392,6 +396,11 @@ export function StylistScreen() {
             </Animated.View>
           );
         })}
+        {beat.typing ? (
+          <Animated.View entering={arrivalEntering(0, a11y.reduceMotion)} style={items.length > 0 ? { marginTop: liveGap(shown.length ? shown.reduce((a, m) => (m.createdAt >= a.createdAt ? m : a)) : null) } : undefined}>
+            <KitTypingRow />
+          </Animated.View>
+        ) : null}
         {live && showLive ? (
           // Once, when the answer's first row (the dots) appears; not per sentence, and the finished row doesn't repeat it.
           <Animated.View

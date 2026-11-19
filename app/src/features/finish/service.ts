@@ -123,7 +123,8 @@ export function createFinishService(deps: FinishDeps) {
       if (d.kind !== 'post') return;
       const first = await deps.store.fitChecks.get(d.checkId);
       if (!first) return;
-      const intro = message({ kind: 'text', text: t('plan.intro') });
+      // `beat`: Kit types before this line (stylist/arrival.ts, SY2.13); the card follows a beat later.
+      const intro = message({ kind: 'text', text: t('plan.intro'), payload: { beat: 'moves' } });
       const card = message({ kind: 'card', cardType: 'plan', fitCheckId: d.checkId, payload: { why: d.why } });
       card.createdAt = intro.createdAt + 1;
       await deps.store.chat.put(intro);
