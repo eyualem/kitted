@@ -241,6 +241,8 @@ function top(s: TopFlat, ctx: Ctx): string {
   const shortSl = s.sleeves ? s.sleeves === 'short' : tee;
   // a long-sleeve tee (§24, #359): slimmer sleeves than a sweatshirt's, finished with a stitched hem instead of a cuff
   const longTee = tee && !shortSl;
+  // an oversized short-sleeve tee: dropped shoulders, a boxy body, a longer hem and longer, wider sleeves (oversized-tee)
+  const bigTee = t === 'tee' && shortSl && !noSleeves && s.fit === 'oversized';
   const hood = t === 'hoodie';
   const shirt = t === 'shirt' || t === 'overshirt';
   const tailored = t === 'blazer' || t === 'coat';
@@ -265,6 +267,10 @@ function top(s: TopFlat, ctx: Ctx): string {
   const sleeve = (side: number): Sleeve => {
     const m = (x: number) => cx + side * x;
     if (noSleeves) return { d: '', cuff: null, co: [], ci: [], oPt: [], iPt: [], m };
+    if (shortSl && bigTee) {
+      // an oversized tee's sleeves (oversized-tee): wider and dropped from the shoulder, reaching toward the elbow
+      return { d: `M${m(S[0] - 1)},${S[1] - 1} Q${m(hw + 31)},66 ${m(hw + 45)},104 Q${m(hw + 40)},114 ${m(hw + 31)},122 L${m(A[0] - 0.5)},${A[1] + 4} Z`, cuff: null, co: [], ci: [], oPt: [], iPt: [], m };
+    }
     if (shortSl) {
       return { d: `M${m(S[0] - 1)},${S[1] - 1} Q${m(hw + 24)},58 ${m(hw + 35)},79 Q${m(hw + 29)},88 ${m(hw + 21)},95 L${m(A[0] - 0.5)},${A[1] + 3} Z`, cuff: null, co: [], ci: [], oPt: [], iPt: [], m };
     }
@@ -298,7 +304,8 @@ function top(s: TopFlat, ctx: Ctx): string {
   for (const sl of sleeves) out += `<path d="${sl.d}" fill="${fill}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${sl.d}" fill="url(#${id}ty)"/>`;
   for (const side of sleeves.length ? [-1, 1] : []) {
     const m = (x: number) => cx + side * x;
-    if (shortSl) out += fold(ctx, `M${m(hw + 6)},70 Q${m(hw + 14)},74 ${m(hw + 20)},84`, 2, 0.8);
+    if (shortSl && bigTee) out += fold(ctx, `M${m(hw + 9)},80 Q${m(hw + 20)},88 ${m(hw + 27)},106`, 2.2, 0.8);
+    else if (shortSl) out += fold(ctx, `M${m(hw + 6)},70 Q${m(hw + 14)},74 ${m(hw + 20)},84`, 2, 0.8);
     else {
       out += `<path d="M${m(hw + 3)},90 Q${m(hw + 10)},126 ${m(hw + 15)},160" fill="none" stroke="#000" stroke-opacity=".1" stroke-width="4" stroke-linecap="round"/>`;
       out += fold(ctx, `M${m(hw + 14)},118 Q${m(hw + 21)},116 ${m(hw + 27)},121`, 2.2);
