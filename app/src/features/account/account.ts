@@ -157,3 +157,34 @@ export function parseRestoreParam(v: string | undefined): AccountHoldings | null
   const m = /^(\d+),(\d+),(\d+)$/.exec(v ?? '');
   return m ? { fits: Number(m[1]), pieces: Number(m[2]), chats: Number(m[3]) } : null;
 }
+
+// ── T41 additions (tests: T41-accountState.test.ts). Not built yet. ─────────────────────────────────────────────────
+/** SB2.1: the providers the sheet lists, from whatever list is live: Apple first, then Google, nothing else (no email,
+ *  duplicates once), whatever order `live` is in. */
+export function sheetProviders(_live: readonly string[]): ('apple' | 'google')[] {
+  throw new Error('T41: not built');
+}
+
+/** SB7.1: his pick when the account and this phone both have fits. */
+export type ChoiceAction = 'keepBoth' | 'useAccount' | 'cancel';
+
+export type ChoiceResult =
+  /** The account is saved. `deleted`: ids of this iPhone's fit checks that were deleted ([] unless `useAccount`). */
+  | { status: 'saved'; deleted: readonly string[] }
+  /** `useAccount` without the second confirm: nothing deleted, account not saved. */
+  | { status: 'needsConfirm' }
+  /** Cancel: signed out again, account not saved, nothing deleted. */
+  | { status: 'cancelled' };
+
+/** SB7.1 (pure apart from the store and `service`): `keepBoth` saves the account and touches no fit. `useAccount` with
+ *  `confirmed` not true does nothing and says `needsConfirm`; with `confirmed: true` it deletes only this iPhone's scored
+ *  fit checks (full checks, `status: 'scored'`) whose id is not in `inAccount`, then saves the account (closet pieces,
+ *  outfits, chat and the account's own fits are never touched). `cancel` calls `service.signOut()` and nothing else. */
+export async function resolveChoice(
+  _store: Pick<KittedStore, 'getKv' | 'setKv' | 'deleteKv' | 'fitChecks'>,
+  _action: ChoiceAction,
+  _input: { user: AccountUser; inAccount: readonly string[]; confirmed?: boolean },
+  _service: Pick<AuthService, 'signOut'> = auth,
+): Promise<ChoiceResult> {
+  throw new Error('T41: not built');
+}

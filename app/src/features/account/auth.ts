@@ -23,7 +23,8 @@ export interface AccountHoldings {
 }
 
 export type SignInResult =
-  | { kind: 'ok'; user: AccountUser; holdings: AccountHoldings | null }
+  /** `givenName`: Apple's first name (SB10), set by createSignIn for Apple only (null for Google, absent from mocks). */
+  | { kind: 'ok'; user: AccountUser; holdings: AccountHoldings | null; givenName?: string | null }
   | { kind: 'cancelled' }
   | { kind: 'failed' }
   | { kind: 'offline' };
