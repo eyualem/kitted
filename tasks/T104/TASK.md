@@ -83,4 +83,5 @@ Verdict: **Ready**.
 
 ### After the live tap-through (Nov 18)
 - **Next buy only on an exact match** (the founder, log #497): a "You'd need" tile's Next buy shows only when a Starter pick matches its kind and color family; a tile with nothing to offer isn't a button. Tests in `T104-cardViews.test.tsx` (the off-white oxford gets none, the light blue one does; no button role or hint).
-- **Cut-off names ("Olive over…") seen once, not reproduced:** it appeared on one card after the app was reopened on a thread the demo had kept. Four tries since (two captured live arrivals, two reopenings) all wrap correctly, and the demo now reseeds on each launch, so that thread can't come back. No fix shipped blind; open with the control session.
+- **Cut-off names ("Olive over…") seen once, not reproduced** (log #498): it appeared on one card after the app was reopened on a thread the demo had kept. Four tries since (two captured live arrivals, two reopenings) all wrap correctly, and the demo now reseeds on each launch, so that thread can't come back. Best guess: a text-measuring race on launch. No change (the line cap stays).
+- **For T110's checks:** watch for cut-off piece names on a card after reopening the app (also on the founder's phone replay, Y33).
