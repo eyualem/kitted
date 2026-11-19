@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Why button options</title>
+<style>
+:root{font-family:-apple-system,"SF Pro Text",system-ui,sans-serif}
+.light{--bg:#F3F4F6;--surface:#fff;--surface2:#ECEEF1;--ink:#121628;--ink2:#585E70;--ink3:#646A7A;--line:#E0E3E8;--accent:#9C5326;--primary:#121628;--onPrimary:#fff}
+.dark{--bg:#0C0E14;--surface:#171A23;--surface2:#21252F;--ink:#ECEEF3;--ink2:#A1A7B5;--ink3:#9096A5;--line:#2A2F3B;--accent:#DE9762;--primary:#ECEEF3;--onPrimary:#0C0E14}
+body{margin:0;background:#888}
+.panel{background:var(--bg);color:var(--ink);padding:24px 28px 40px}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:28px 0 2px}
+.note{font-size:13px;color:var(--ink2);margin:0 0 12px;max-width:1100px;line-height:1.45}
+.row{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start}
+.cap{font:11px ui-monospace,Menlo,monospace;color:var(--ink3);margin:0 0 6px}
+.card{width:361px;box-sizing:border-box;background:var(--surface);border-radius:28px;padding:16px;box-shadow:0 1px 0 var(--line);display:flex;flex-direction:column;gap:12px}
+.mono{font:12px ui-monospace,Menlo,monospace;color:var(--ink3)}
+.score{display:flex;align-items:flex-end;gap:10px}
+.num{font:700 64px/0.95 "SF Pro Display",-apple-system,sans-serif;letter-spacing:-2px}
+.den{font:13px ui-monospace,Menlo,monospace;color:var(--ink3);padding-bottom:6px}
+.verdict{font-size:15px;line-height:1.3;color:var(--ink2)}.verdict b{color:var(--ink)}
+.was{font:700 38px/1 -apple-system,sans-serif;color:var(--ink3);text-decoration:line-through;opacity:.8}
+.new{font:700 64px/0.95 -apple-system,sans-serif;letter-spacing:-2px}
+.fix{display:flex;gap:10px;align-items:center;font-size:15px;border-top:1px dashed var(--line);padding-top:12px}
+.badge{width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--onPrimary);display:grid;place-items:center;font-size:13px;font-weight:700;flex:none}
+.link{font-size:14px;font-weight:600;color:var(--ink)}
+.btns{display:flex;gap:8px}.stack{flex-direction:column}
+.btn{height:36px;border-radius:18px;padding:0 16px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:15px;font-weight:600;white-space:nowrap;position:relative;box-sizing:border-box;border:0}
+.btn.p{background:var(--primary);color:var(--onPrimary)}
+.btn.s{background:var(--surface2);color:var(--ink)}
+.btn.grow{flex:1}.btn.hug{flex:none}
+.btn.wrap{white-space:normal;text-align:center;line-height:1.15;height:auto;min-height:36px;padding:7px 14px}
+.btn::after{content:"";position:absolute;inset:-4px 0}
+svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:9px;margin-left:8px;vertical-align:middle}
+.rec{background:var(--ink);color:var(--onPrimary)}.cur{background:var(--surface2);color:var(--ink2)}.no{background:var(--surface2);color:var(--ink2)}
+.verdictline{font-size:13px;color:var(--ink2);max-width:1100px;margin:4px 0 12px;line-height:1.45}
+</style></head><body>
+<template id="ic">
+<svg id="re" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v5h-5"/></svg>
+<svg id="info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+</template>
+<div id="root"></div>
+<script>
+const RE='<svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v5h-5"/></svg>';
+const INFO='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>';
+const btn=(cls,label,icon)=>`<div class="btn ${cls}">${icon||''}${label}</div>`;
+const first=(buttons,extra='')=>`<div class="card"><div class="mono">Fit check · Full</div>
+ <div class="score"><div class="num">7.0</div><div class="den">/10</div><div class="verdict"><b>Put together</b><br>Good base. One easy change sharpens it.</div></div>
+ <div class="fix"><div class="badge">1</div><div>Tuck the front of the tee</div></div>
+ <div class="link">2 more fixes</div>${buttons}${extra}</div>`;
+const recheck=(buttons)=>`<div class="card"><div class="mono">Re-check · Full</div>
+ <div class="score"><div class="was">6.5</div><div class="new" style="margin-left:2px">7.5</div><div class="den">/10</div></div>
+ <div class="verdict"><b>Put together.</b> You tucked the tee.</div>${buttons}</div>`;
+const nofix=(buttons)=>`<div class="card"><div class="mono">Fit check · Full</div>
+ <div class="score"><div class="num">7.5</div><div class="den">/10</div><div class="verdict"><b>Put together</b><br>No quick fixes for this one.</div></div>${buttons}</div>`;
+const B=(cls,inner)=>`<div class="btns ${cls||''}">${inner}</div>`;
+const opts=[
+ {id:'Today',tag:'cur',tagText:'as built',line:'First-check card: Re-check is a full-width button and Why 7.0? sits on its own full-width row below it. Re-check card: Why is a plain text link, next to Not quite right? (this is the one that reads as weak). No-fix card: Why alone, full width.',
+  a:first(B('stack',btn('p',' Re-check after fixing',RE)+btn('s','Why 7.0?',INFO))),
+  b:recheck('<div style="display:flex;gap:18px"><span class="link">Why 7.5?</span><span class="link">Not quite right?</span></div>'),
+  c:nofix(B('stack',btn('s','Why 7.5?',INFO)))},
+ {id:'A',tag:'rec',tagText:'recommended',line:'One row. Re-check stays the one primary and fills the row; Why 7.0? is a secondary button beside it, as wide as its label. The re-check card gets both as buttons side by side (no primary there: nothing is left to do, so nothing should shout). When Re-check is absent, Why is the lone full-width secondary. At the largest text sizes the row stacks, like every KButton row does.',
+  a:first(B('',btn('p grow',' Re-check after fixing',RE)+btn('s hug','Why 7.0?',INFO))),
+  b:recheck(B('',btn('s grow','Why 7.5?',INFO)+btn('s grow','Not quite right?'))),
+  c:nofix(B('stack',btn('s','Why 7.5?',INFO)))},
+ {id:'B',tag:'no',tagText:'minimal change',line:'Keep the first-check layout (stacked, full width) and give the re-check card the same: Why 8.0? as a full-width secondary button, Not quite right? stays a link under it. Smallest change, but the card gets taller and the two buttons are not alongside each other.',
+  a:first(B('stack',btn('p',' Re-check after fixing',RE)+btn('s','Why 7.0?',INFO))),
+  b:recheck(B('stack',btn('s','Why 7.5?',INFO))+'<div class="link" style="text-align:center">Not quite right?</div>'),
+  c:nofix(B('stack',btn('s','Why 7.5?',INFO)))},
+ {id:'C',tag:'no',tagText:'not recommended',line:'Two equal halves. Each half is about 160 pt, so Re-check after fixing wraps to two lines and that button grows taller than its neighbour. Fixing that means shortening the Re-check words, which the spec and the founder have already settled.',
+  a:first(B('',btn('p grow wrap',RE+'Re-check after fixing')+btn('s grow wrap',INFO+'Why 7.0?'))),
+  b:recheck(B('',btn('s grow','Why 7.5?',INFO)+btn('s grow','Not quite right?'))),
+  c:nofix(B('stack',btn('s','Why 7.5?',INFO)))}
+];
+function panel(theme){
+ let h=`<div class="panel ${theme}"><h1>Why button: ${theme}</h1><p class="note">Cards at their real width (361 pt on a 393 pt phone). Buttons are KButton regular: 36 pt tall with a 44 pt tap area, capsule, secondary = surface2 fill. No copper, no emoji.</p>`;
+ for(const o of opts){
+  h+=`<h2>${o.id==='Today'?'Today':'Option '+o.id}<span class="tag ${o.tag}">${o.tagText}</span></h2><p class="verdictline">${o.line}</p>
+  <div class="row"><div><p class="cap">first check, with a fix</p>${o.a}</div><div><p class="cap">re-check</p>${o.b}</div><div><p class="cap">no fix, or 9+</p>${o.c}</div></div>`;
+ }
+ return h+'</div>';
+}
+document.getElementById('root').innerHTML=panel('light')+panel('dark');
+</script></body></html>
