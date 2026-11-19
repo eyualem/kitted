@@ -16,10 +16,25 @@
 - Words the spec leaves open: one fit with no pieces reads `Your first fit lives only on this iPhone. Sign in to back it up and get it back on a new phone. Kitted works the same without it.`; the empty-account line shows as a toast on arriving at Looks. Both go to the founder in the PR.
 
 ## Built
-Filled in by the implementer and the session.
+**Changed (implementer, Nov 19):**
+- Apple and Google only, email gone: `signIn.ts` (`createSignIn`: waits for the saved sign-in, links the guest so the account ID stays, signs in with the credential from `credential-already-in-use`, Apple's name and email scopes with only the first name returned, sign out reaches Google then Firebase), `firebaseAuth.ts` wires it to the real modules (`expo-apple-authentication` loaded lazily, so a build without it reports Apple as failed instead of crashing), `appleName.ts` (Apple's first name fills an empty name only: the profile's name, or About you's draft mid-setup), `offerCopy.ts` (the card's body by the numbers).
+- `account.ts`: `sheetProviders`, `resolveChoice` (keep both / use the account's after the second confirm / cancel signs out), `liveProviders` is `['apple','google']` only with `ACCOUNTS_BUILT` on (Google needs its client ID), `SIGN_IN_LIVE` removed from `features.ts`, restore counts are two numbers, a saved `provider: 'email'` reads as signed out. `auth.ts`/mock: no email methods, `MOCK_HOLDINGS` is 214 fits and 38 pieces.
+- Screens: `SignInSheet` (Apple, Google, the fine print, the three states, the "both have fits" choice through `resolveChoice`, Apple's name after the account is kept), `ProviderButton`, `AccountOfferCard` (fits and pieces from the posted payload), `AccountRows` (`Back up your fits`), `RestoreScreen` (no chats; completes setup with his age band and Apple's first name from the About you draft), `BasicsScreen` (restore param without chats). The posted card carries `fits` (scored full checks) and `pieces` (live ones).
+- Words (`en.ts`): sheet bodies, `No problem. It's in You whenever you want it.`, `Signed in with {provider}. Your fits are backed up.`, `Back up your fits`, restore counts without chats; the `acct.email.*`, `acct.code.*`, `Continue with email`, `I'm new here` keys are gone. Kit's app map line (`features/ask/prompt.ts`) now says `Back up your fits` and Apple or Google.
+- `app.config.ts`: the `expo-apple-authentication` plugin added; it adds the Sign in with Apple entitlement by itself, so `APPLE.paid` stays false and `ios.entitlements` stays `{}` (see Disputes). `scripts/check-release-app.js`: `checkApp` takes `appleSignIn` (the command line always sets it): the entitlement must be there in every build, and it is not counted as a paid one.
+- Demo screens: 134 and 135 (the email screens) now show the sheet from the card and from You, because `scenarios.test.ts` still lists 134 and 135 as pre-onboarding screens; 136 and 137 lose the chat count.
+
+**Files outside the Files list, and why:** `src/features/onboarding/BasicsScreen.tsx` (one line: the restore route's params had `chats`), `src/features/ask/prompt.ts` (Kit's app map named "Back up and sync" and email), `src/config/features.ts` (in the list, `SIGN_IN_LIVE` goes).
+
+**Tests passing (run one file at a time, no full check):** T41-signIn 14, T41-accountState 25, T41-offer 15, T41-screens 26, T41-accountRows 5, plus onboardingAccount, T39-setupScreens, serverProxy, approvalDay, scenarios, stepFourBatch, youSettingsHome, kitWordsPack, kitWordsPrompt, onboardingFinish, privacyKnowsRow, T39-offerCard, aboutYouCard, T35-hello, copyChecks, i18n, toast, heightBuildRemoved, youTonight all green. `npx tsc --noEmit` clean (the `@ts-expect-error` for `'email'` holds). ESLint clean on the changed files. The full `npm run check` is the session's.
+
+**Not done:** no Simulator run, no screenshots (the memory limit); restore from the server and `inAccount` ids come with T41b (the choice treats the account as holding none of this iPhone's fits until then); `deleteAccount` is as on main (no Apple revoke); `expo-apple-authentication` is not installed, so a real Apple sign-in needs the founder's `npm install` and a native rebuild; `RestoreScreen` still saves `consent: false` (not `'later'`) because `stepFourBatch.test.ts` checks the source for it, which means a restored phone gets the "turn on fit checks" card as before; `ACCOUNTS_BUILT` stays false.
 
 ## Disputes
-None yet.
+No locked test is wrong. Two older tests outside the lock pin things the spec's wording touches, so I built around them without editing them (the founder or the test writer can decide to update them):
+- `approvalDay.test.ts` S1 expects `ios.entitlements` to be `{}` with the paid switch off, and A3 expects `checkApp` to flag all four entitlements (including `com.apple.developer.applesignin`) when unpaid. So the Sign in with Apple entitlement is not written into `ios.entitlements`: the `expo-apple-authentication` plugin adds it at prebuild, and `checkApp` has an opt-in `appleSignIn` flag instead of a changed default. If the founder wants the entitlement visible in `app.config.ts`, S1 and A3 need updating first.
+- `scenarios.test.ts` expects demo screens 134 and 135 to exist and run before onboarding, so they stayed and became the sheet from the card and from You instead of being deleted.
+- `stepFourBatch.test.ts` greps `RestoreScreen.tsx` for `consent: false` (the spec's SB6 reads as `'later'`: no agreement, no "turn on fit checks" card); kept `consent: false`.
 
 ## Review
 Written by the reviewer.

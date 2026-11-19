@@ -73,7 +73,7 @@ export function SignInSheet() {
           await resolveChoice(store, 'keepBoth', input, auth);
           await done();
         };
-        const useAccount = async () => {
+        const takeAccount = async () => {
           await resolveChoice(store, 'useAccount', { ...input, confirmed: true }, auth);
           await done();
         };
@@ -87,7 +87,7 @@ export function SignInSheet() {
               onPress: () =>
                 Alert.alert(t('acct.choose.confirmTitle'), t('acct.choose.confirmBody', { local: next.localFits }), [
                   { text: t('common.cancel'), style: 'cancel', onPress: () => void stay() },
-                  { text: t('acct.choose.confirmYes'), style: 'destructive', onPress: () => void useAccount() },
+                  { text: t('acct.choose.confirmYes'), style: 'destructive', onPress: () => void takeAccount() },
                 ]),
             },
             { text: t('common.cancel'), style: 'cancel', onPress: () => void stay() },
