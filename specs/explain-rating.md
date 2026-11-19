@@ -30,7 +30,7 @@ On Nov 9 a friend testing the app felt overwhelmed by the numbers on the result 
 3. **One fix**, numbered 1, with its title and detail and no gain. When the card has a free fix, the one shown is a free fix **(assumed: keeps F2.7 true with one fix in view)**.
 4. `2 more fixes` (or `1 more fix`) when there are more, which opens them in place, numbered 2 and 3, still with no gains. The "Next level" and weather tips sit behind the same tap **(assumed)**. With one fix and a tip, the tap reads `More`.
 5. `Re-check after fixing` (as today, only while a re-check is open and there's a fix).
-6. `Explain rating`, under Re-check; on its own where Re-check isn't shown (a 9+, no fixes, or the 30 minutes ran out).
+6. `Explain rating`, a secondary button in the same row as Re-check, beside it (the founder's pick, Nov 18, `tasks/why-button/design.html` option A); on its own, full width, where Re-check isn't shown (a 9+, no fixes, or the 30 minutes ran out).
 7. Unchanged: the Going-for line, the closet summary row, the duplicate question, the finish row, `Later` on his first-ever check, the "re-scored from" footnote, and the partial-check label.
 
 **Off the card:** `Why 7.5?` and the math sheet it opened; `Not quite right?`; the unsure-piece line (`Not sure about your mid-wash jeans' leg? Tap.`); the share button; every fix gain (`→ 7.0`); any `+1.0` pill.
@@ -38,7 +38,7 @@ On Nov 9 a friend testing the app felt overwhelmed by the numbers on the result 
 ### The re-check card
 1. The score moving: the old score small, the new one big with its word, `6.5 → 7.5 Put together`. No `+1.0` pill, no gain on the fix he made.
 2. Unchanged: what he did (`You tucked the tee.`), `Didn't catch the change? Tell me` (F3.3), `Try another photo`, the new-problem and not-seen lines.
-3. `Explain rating`.
+3. `Explain rating`, a secondary button (beside `Not quite right?` until T66 takes that off; then on its own, full width).
 4. **Off:** `Why 7.5?`, `Not quite right?`, `Share the before and after`.
 
 ### Tapping Explain rating

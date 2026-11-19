@@ -381,6 +381,8 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     : undefined;
 
   const shareable = !readOnly && shareOffered(row);
+  // The action row's primary (Save look at 9+, else Re-check): Why is the lone full-width button when there is none.
+  const rowFill = { flexGrow: 1 } as const;
   const fold = { name: 'fold', label: open ? t('card.fold.less') : t('card.fold.more') };
   const actions = readOnly ? [fold, { name: 'why', label: t('card.why', { score: scoreText }) }] : [
     fold,
@@ -424,6 +426,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     finishSnap: () => { if (finish) router.push(finish.snapHref as Href); },
     finishSkip: () => void fitCheck.skipFinish(row.id),
   };
+  const whyButton = <KButton title={t('card.why', { score: scoreText })} kind="secondary" size="regular" style={rowFill} onPress={go.why} />;
   const spokenHead = {
     occasion: occasionLabel(row.occasion),
     score: spokenScore(score),
@@ -563,23 +566,26 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
             </View>
           ) : null}
           {finish ? <FinishRow row={row} info={finish} /> : null}
-          {/* "Re-check after fixing" only when there's a fix to make: under "No quick fixes" it had nothing to check. */}
-          {(SAVE_LOOK_BUILT && dialed && score >= 9) || (recheckOpen && !dialed) || shareable ? (
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: (SAVE_LOOK_BUILT && dialed && score >= 9) || (recheckOpen && !dialed) ? 'flex-start' : 'flex-end' }}>
+          {/* "Re-check after fixing" only when there's a fix to make: under "No quick fixes" it had nothing to check.
+              "Why 7.5?" is a secondary button in the same row (the founder's pick A, Nov 18): the primary and Why share the row's width, and with no primary Why is the lone full-width
+              secondary. When larger text won't fit both, the row wraps and each takes a full line.
+              "Not quite right?" left the card (specs/explain-rating.md ER2.3); Kit (T59) and the Lookbook look page take it over. */}
+          {/* While the Share icon shows (until T67 cuts share cards) it takes the row's end, 44 pt of the width Re-check and Why
+              need side by side, so Why drops to its own full-width line below, as it did before. */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
               {SAVE_LOOK_BUILT && dialed && score >= 9 ? (
-                <KButton title={t('dialed.save')} icon="bookmark" size="regular" style={{ flex: 1 }} />
+                <KButton title={t('dialed.save')} icon="bookmark" size="regular" style={rowFill} />
               ) : recheckOpen && !dialed ? (
-                <KButton title={t('card.recheck')} icon="recheck" size="regular" style={{ flex: 1 }} onPress={() => void go.recheck()} />
+                <KButton title={t('card.recheck')} icon="recheck" size="regular" style={rowFill} onPress={() => void go.recheck()} />
               ) : null}
-              {shareable ? <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={go.share} /> : null}
+              {shareable ? null : whyButton}
             </View>
-          ) : null}
+            {shareable ? <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={go.share} /> : null}
+          </View>
+          {shareable ? <View style={{ flexDirection: 'row' }}>{whyButton}</View> : null}
           {/* "Not sure about your mid-wash jeans' leg? Tap." (§19, #322): a statement, never a question before the score. */}
           <DoubtLine row={row} readOnly={readOnly} />
-          {/* One secondary button, the same family as "Re-check after fixing" (44 pt hit area). "Not quite right?" left the card
-              (specs/explain-rating.md ER2.3). A misread is still fixed from the Why sheet's piece pills and the doubt line above; Kit (T59) and
-              the Lookbook look page ("Fix what I read") take it over when built. */}
-          <KButton title={t('card.why', { score: scoreText })} icon="info" kind="secondary" size="regular" fullWidth onPress={go.why} />
           {/* `Later` (ruling 23, #291): his first-ever check only; the first 3 moves follow at once. */}
           {later ? (
             <TextLinkRow>

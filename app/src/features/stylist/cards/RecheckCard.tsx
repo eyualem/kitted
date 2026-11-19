@@ -46,6 +46,7 @@ export function RecheckCard({ checkId, readOnly = false }: { checkId: string; re
 
 function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { row: FitCheckRow; reading: Parameters<typeof notSeenProblem>[0] | null } | null | undefined; readOnly: boolean }) {
   const rc = row.details.recheck!;
+  const rowFill = { flexGrow: 1 } as const;
   // The re-check win (#242, #246 (16)): once, only when the score went up and the card shows the change (not the
   // "same photo" or "change not seen" cards, which land as they are).
   const { t: winT, plan, values: winValues, pill, attachScore, onScoreLayout, touch, done: revealDone } = useWinReveal(
@@ -227,13 +228,17 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
             {move === 'up' && shareOffered(row) ? (
               <KButton title={t('recheck.share')} icon="share" size="regular" fullWidth onPress={() => router.push(`/share/${row.id}`)} />
             ) : null}
-            {/* Why and Not quite right? as on the first check's card (09 §20.8 G15): after a drop he can see why and
-                correct a misread. Tell me sits with them when no fix was caught. */}
-            <TextLinkRow>
-              <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
-              <TextLink title={t('card.nqr')} onPress={go.nqr} compact />
-              {missed ? <TextLink title={t('recheck.tellMe')} compact onPress={go.tell} /> : null}
-            </TextLinkRow>
+            {/* Why and Not quite right? are two secondary buttons side by side (the founder's pick A, Nov 18): after a drop he
+                can see why and correct a misread. Larger text wraps them onto two lines. Tell me stays a quiet link under them. */}
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              <KButton title={t('card.why', { score: scoreText })} kind="secondary" size="regular" style={rowFill} onPress={go.why} />
+              <KButton title={t('card.nqr')} kind="secondary" size="regular" style={rowFill} onPress={go.nqr} />
+            </View>
+            {missed ? (
+              <TextLinkRow>
+                <TextLink title={t('recheck.tellMe')} compact onPress={go.tell} />
+              </TextLinkRow>
+            ) : null}
           </>
         )}
       </KCardSection>
@@ -241,9 +246,7 @@ function ScoredRecheck({ row, parent, readOnly }: { row: FitCheckRow; parent: { 
       {/* Past chats keep Why (read-only), as FitCheckCard does. */}
       {readOnly && !notSeen ? (
         <KCardSection gap={4} style={{ paddingTop: 4 }}>
-          <TextLinkRow>
-            <TextLink title={t('card.why', { score: scoreText })} onPress={go.why} compact />
-          </TextLinkRow>
+          <KButton title={t('card.why', { score: scoreText })} kind="secondary" size="regular" fullWidth onPress={go.why} />
         </KCardSection>
       ) : null}
       </Expandable>
