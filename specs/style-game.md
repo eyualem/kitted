@@ -49,7 +49,7 @@ After this, a new user finds his style by playing, not by reading style names: e
 ## SG6. Nothing clicked yet
 - When he says No to all 8: title `Nothing clicked yet`, line `Add a look you like, play again, or tell me in your words.`, then `Add a look`, the words link, Continue (off until he adds one) and Play again.
 
-## SG7. Fail-safes (from the flow test, T111; #490)
+## SG7. Fail-safes (from the flow test, T111; #507)
 Three small ones, each kept because it helped in the flow test's simulation (made-up people and slips at stated rates, `tasks/style-quiz/flow_sim.py`). Together they raise the share who end with the style they want by about 2 points across every kind of person and slip (one favourite 94 → 95%, two loves 86 → 89%, a style not in the 8 92 → 95%, every slip at once 80 → 84%), for 0.6 extra taps, and only by choice.
 - **FS1. Tap the card for its other outfit.** On any card, a tap (a press that moves under 6 pt; past 90 pt is a swipe; in between springs back) switches between the look's two drawings. Two small dots at the top of the card show which one is up. It's not an answer, so Back doesn't undo it; the answer counts for the look, whichever drawing shows, and the next card starts on its first. VoiceOver: an `Another outfit` action, and the card reads `Outfit 3 of 8, view 2 of 2. {description}`. Words: `Not sure? Tap it for another outfit.` *(Why: a drawing that half-reads as a neighbour is the commonest way the right look gets a Not me.)*
 - **FS2. Add a look works on a full list.** With 3 looks, the pick takes #3's place, with the note `{name} in, {old} out` and Undo for 5 seconds. The sheet never lists a look he has. *(Why: at 3, "Add a look" was a dead end for a guy whose real #1 was missed.)*
@@ -109,7 +109,7 @@ Three small ones, each kept because it helped in the flow test's simulation (mad
 
 ## Assumptions (Claude's defaults; the founder confirms)
 - No's are saved but not used by Kit yet (he was asked; he went to sleep before answering).
-- The words are the design pass's recommended options (#487) and the flow test's (#490: the FS1 line, the FS2 note, the FS3 results line).
+- The words are the design pass's recommended options (#487) and the flow test's (#507: the FS1 line, the FS2 note, the FS3 results line).
 - Mid-game close restarts the game; results are kept.
 - The fairness redraws (Outdoor's shell and fleece, Streetwear's black sneakers) apply to the app's tiles too (T94 carries them).
 

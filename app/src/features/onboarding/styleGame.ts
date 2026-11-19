@@ -1,7 +1,7 @@
 // T113 · The style game's rules (specs/style-game.md SG1–SG9), pure: no store, no React. The deal, the answers, the
 // ranking by binary insertion, the results' changes and the card's gesture rules.
 //
-// The deal is an exact port of the mockup's (tasks/style-quiz/src/logic.js, the fail-safe version, #486/#490): the
+// The deal is an exact port of the mockup's (tasks/style-quiz/src/logic.js, the fail-safe version, #486/#507): the
 // cards come in a fresh order each game (mulberry32 seeded, Fisher–Yates repeated until no look-alikes touch, counting
 // the last card as next to the first), so every look is equally likely at every position; then a coin decides which
 // side the first this-or-that puts the newcomer on, and the sides alternate from there. Same seed, same game: Back and a

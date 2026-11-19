@@ -348,7 +348,7 @@ I only added a test: none was loosened or removed. All runs used Jest `--runInBa
 - **A close or crash:** mid-game, in the ranking, on results, on About you (SG8.1).
 - **A wipe:** SG8.1. **A reinstall:** a fresh install starts at Welcome, then a new game (flow `clearState`).
 - **The 4 am day change:** not involved (the game keeps no dates).
-- **Slips the flow test measured (#490):** a double tap (SG1.2), a stray short swipe (SG1.2), a stray Back (SG7.4), Continue right away (results are already a valid list).
+- **Slips the flow test measured (#507):** a double tap (SG1.2), a stray short swipe (SG1.2), a stray Back (SG7.4), Continue right away (results are already a valid list).
 
 ## UI inventory
 Every state, its words, VoiceOver and testID, and the demo screen. Each screen is screenshotted in light and dark; the starred ones also at AX5. Words marked F<n> are the founder's open questions (IMPLEMENTATION.md).
@@ -394,5 +394,5 @@ Never dropped, never counted as done.
 - **Haptics** (SG9): the calls are tested; whether they feel right needs a phone. · **Would verify it:** the same founder to-do.
 - **VoiceOver end to end** (SG9.1): labels and actions are tested in render; the spoken order and the custom actions' rotor on a device aren't. · **Would verify it:** the Accessibility Inspector on the Simulator by the verifier, or the founder with VoiceOver on (part of the same to-do).
 - **SG8.1's close on the device:** the session tests prove the logic; a real kill-and-relaunch in the middle of a game on the dev build is a manual step (Maestro's `launchApp: stopApp` would re-run the demo arguments). · **Would verify it:** the verifier on the Simulator: play to card 4, `xcrun simctl terminate`, relaunch without `-demoScreen`, expect card 1 with a different first card in most tries (a new deal can repeat the order by chance, 1 in a few hundred).
-- **Whether the game finds his style for real people** (#490's numbers are a simulation of made-up people). · **Would verify it:** plan.md Y30, the founder's test with friends.
+- **Whether the game finds his style for real people** (#507's numbers are a simulation of made-up people). · **Would verify it:** plan.md Y30, the founder's test with friends.
 - **Anything T94 hasn't pushed yet:** every render test needs Tailored's drawings in `LOOKS`. Until the rebase onto T94's app commit, only the pure and session tests can run. · **Would verify it:** the rebase (IMPLEMENTATION.md → Picking up T94).

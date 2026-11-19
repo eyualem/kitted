@@ -104,7 +104,7 @@ const addedInBuild = {
   'style.tailored': 'Tailored',
   'onb.looks.line.tailored': 'Suits, blazers, dress trousers, loafers',
   // The style game in setup (T113, specs/style-game.md): draft, founder to confirm (specs/style-game.md). The spec's and
-  // the coordinator's words (#487, #490; F1–F6 the planner's drafts, IMPLEMENTATION.md → Coordinator's answers).
+  // the coordinator's words (#487, #507; F1–F6 the planner's drafts, IMPLEMENTATION.md → Coordinator's answers).
   'game.title': 'Is this your style?',
   'game.line': 'One outfit at a time.',
   'game.me': 'Yes',
