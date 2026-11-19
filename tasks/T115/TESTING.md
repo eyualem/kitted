@@ -2,7 +2,7 @@
 
 Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** `<commit SHA>` · <date> · tests: `<path>`, `<path>`
+**Lock:** `b44bc0b5` · 2026-11-18 · tests: `app/src/__tests__/bodyGate.test.ts`, `app/src/__tests__/bodyDecline.test.ts`, `app/src/__tests__/bodyTaps.test.ts`
 
 Spec: `specs/kit-stylist-chat.md` KC11.2 "nothing about his body: 100%", KC1.3 (taps about clothes), KC3.5; CLAUDE.md's hard line (never rate faces, bodies, weight or skin; never say anything about a user's body). Cases come from `reports/2026-11-17-body-questions-check.md` (read it with `git show origin/claude/nifty-dewdney-9e79d2:reports/2026-11-17-body-questions-check.md`), table rows #1–#34, plus the founder's Nov 18 list. Each case is one `it.each` row. Name every test with its ID below.
 
