@@ -1,6 +1,6 @@
 // About you (T39, specs/onboarding-screens.md OS4, specs/setup-and-you.md SY4; tasks/T39/DESIGN.md phones 2–5, 7): the
 // last setup step, a plain screen (no chat bubbles, OS3). A first name ("What should Kit call you?") and five age
-// choices with nothing picked. The name stays optional (Apple 5.1.1(x)) but setup nudges for it (#497): the field opens
+// choices with nothing picked. The name stays optional (Apple 5.1.1(x)) but setup nudges for it (#506): the field opens
 // focused with the keyboard up, Continue waits for a name and an age, and a small Skip under it goes on without a name
 // (off until an age is picked). His pick and the name as typed wait in kv (onboarding.about, never synced), so a close
 // keeps both.
@@ -29,7 +29,7 @@ import { OnboardingNav } from './OnboardingNav';
 
 const CHOICES: readonly Choice<AgeChoice>[] = AGE_CHOICES.map((c) => ({ value: c, label: ageChoiceLabel(c), spoken: ageChoiceSpoken(c), testID: ageChoiceTestID(c) }));
 
-/** A native-stack push takes about 350 ms; the name field asks for focus again after it (#497). */
+/** A native-stack push takes about 350 ms; the name field asks for focus again after it (#506). */
 export const FOCUS_AFTER_PUSH_MS = 450;
 
 /** Hidden from VoiceOver as its own stop (the field's label, or the disabled Continue's hint, says it). */
@@ -60,7 +60,7 @@ export function BasicsScreen() {
     }, []),
   );
 
-  // #497: with the name still empty, the keyboard opens on it. Asked for once the push is over: iOS drops a focus
+  // #506: with the name still empty, the keyboard opens on it. Asked for once the push is over: iOS drops a focus
   // asked for mid-slide (seen on the Simulator, Nov 18, with autoFocus). A saved name (a reopen mid-setup) gets no
   // keyboard, so the age choices stay in view.
   useFocusEffect(
@@ -192,7 +192,7 @@ export function BasicsScreen() {
             onPress={() => void done()}
           />
         </View>
-        {/* #497: the only way on without a name; it does what Continue does, so it waits for an age too. */}
+        {/* #506: the only way on without a name; it does what Continue does, so it waits for an age too. */}
         {noName ? (
           <View testID="about-skip">
             <KButton

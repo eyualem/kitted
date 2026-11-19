@@ -1,6 +1,6 @@
-# T113 · The style game on the Simulator (specs/style-game.md; tasks/T113/TESTING.md): SG6.1 (screen 310), SG7.1
-# (screen 2: a tap shows the other outfit, an answer opens card 2 on its first), SG7.4 (screen 300: Back undoes one
-# card), Here's your style (screen 304), then SG1.4 and SG8.1 on a fresh install: the teaching overlay; a close mid-game reopens Looks at card 1, a
+# T113 · The style game on the Simulator (specs/style-game.md; tasks/T113/TESTING.md): SG6.1 (screen 330), SG7.1
+# (screen 2: a tap shows the other outfit, an answer opens card 2 on its first), SG7.4 (screen 320: Back undoes one
+# card), Here's your style (screen 324), then SG1.4 and SG8.1 on a fresh install: the teaching overlay; a close mid-game reopens Looks at card 1, a
 # close on Nothing clicked yet reopens it.
 # Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test -e PORT=8082 app/e2e/flows/T113-style-game.yaml
 # (this worktree's Metro on 8082). Matching: Maestro matches an element's WHOLE text or label; the card is one
@@ -44,11 +44,11 @@ name: T113 · the style game
     visible: "Outfit 2 of 8, view 1 of 2\\. .*"
     timeout: 5000
 
-# ── Screen 300: card 3; one answer, then Back (SG7.4) ───────────────────────────────────────────────────────────────
+# ── Screen 320: card 3; one answer, then Back (SG7.4) ───────────────────────────────────────────────────────────────
 - runFlow:
     file: ../common/open-demo.yaml
     env:
-      SCREEN: "300"
+      SCREEN: "320"
 - extendedWaitUntil:
     visible: "Outfit 3 of 8, view 1 of 2\\. .*"
     timeout: 90000
@@ -64,11 +64,11 @@ name: T113 · the style game
 - assertNotVisible: "Outfit 2 of 8.*"
 - assertVisible: "Is this your style\\?"
 
-# ── Screen 304: Here's your style, three looks ──────────────────────────────────────────────────────────────────────
+# ── Screen 324: Here's your style, three looks ──────────────────────────────────────────────────────────────────────
 - runFlow:
     file: ../common/open-demo.yaml
     env:
-      SCREEN: "304"
+      SCREEN: "324"
 - extendedWaitUntil:
     visible: "Here's your style"
     timeout: 90000
@@ -82,11 +82,11 @@ name: T113 · the style game
     enabled: true
 - assertVisible: "Play again"
 
-# ── Screen 310: Nothing clicked yet (SG6.1) ─────────────────────────────────────────────────────────────────────────
+# ── Screen 330: Nothing clicked yet (SG6.1) ─────────────────────────────────────────────────────────────────────────
 - runFlow:
     file: ../common/open-demo.yaml
     env:
-      SCREEN: "310"
+      SCREEN: "330"
 - extendedWaitUntil:
     visible: "Nothing clicked yet"
     timeout: 90000

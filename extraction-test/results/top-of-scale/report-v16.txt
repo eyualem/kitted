@@ -1,0 +1,10 @@
+== v16 as approved (raw clamp 9.5, top slope 0.7) ==  tune {}
+  B6 steady: with each reading's own leg look 218/223 (bar 218); none 215; looks U, L + leg 217
+  held out (8 splits): raw 82.0% (79-84), r 0.631; key 81.1%, r 0.620
+  gold shares   3-4.5  0.4%  5-5.5  7.2%  6-6.5 16.1%  7-7.5 41.7%  8-8.5 34.5%  9-9.5  0.0%  worst gap 19.5
+  his checks    3-4.5  0.0%  5-5.5  8.1%  6-6.5 17.7%  7-7.5 48.4%  8-8.5 25.8%  9-9.5  0.0%  worst gap 18.4
+  B2 6/6  B3 17/18  B4 rows failing: H7
+  all 164 rated (engine sizes, info): within 1 134/164, r 0.630; his 9+ (16 on the key) average 7.97, 0 shown 9+; shown 9+ overall 0, his mean on those nan
+  shows 9-9.5: 0 photos (0 at 9.5)
+  named: 6.5; 7.5; 8; 8; 5.5; 6; 5; 8; 7; 6.5; 4.5; 8; 8; 4.5; 8.5
+

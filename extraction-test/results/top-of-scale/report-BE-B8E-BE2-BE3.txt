@@ -1,0 +1,126 @@
+== v16 as approved (raw clamp 9.5, top slope 0.7) ==  tune {}
+  B6 steady: with each reading's own leg look 218/223 (bar 218); none 215; looks U, L + leg 217
+  held out (8 splits): raw 82.0% (79-84), r 0.631; key 81.1%, r 0.620
+  gold shares   3-4.5  0.4%  5-5.5  7.2%  6-6.5 16.1%  7-7.5 41.7%  8-8.5 34.5%  9-9.5  0.0%  worst gap 19.5
+  his checks    3-4.5  0.0%  5-5.5  8.1%  6-6.5 17.7%  7-7.5 48.4%  8-8.5 25.8%  9-9.5  0.0%  worst gap 18.4
+  B2 6/6  B3 17/18  B4 rows failing: H7
+  all 164 rated (engine sizes, info): within 1 134/164, r 0.630; his 9+ (16 on the key) average 7.97, 0 shown 9+; shown 9+ overall 0, his mean on those nan
+  shows 9-9.5: 0 photos (0 at 9.5)
+  named: 6.5; 7.5; 8; 8; 5.5; 6; 5; 8; 7; 6.5; 4.5; 8; 8; 4.5; 8.5
+
+== B + E: the knee, and with nothing off every stacking ceiling half a step higher ==  tune {"curve_knee": [8.5, 1.45], "stack_clean": {"0": 8.0, "1": 8.5, "2": 9.0, "3": 9.0, "3c": 9.5, "4": 9.0, "4c": 9.5}}
+  B6 steady: with each reading's own leg look 216/223 (bar 218); none 213; looks U, L + leg 213
+  held out (8 splits): raw 81.7% (79-84), r 0.672; key 80.9%, r 0.666
+  gold shares   3-4.5  0.4%  5-5.5  7.2%  6-6.5 16.1%  7-7.5 41.7%  8-8.5 32.3%  9-9.5  2.2%  worst gap 17.3
+  his checks    3-4.5  0.0%  5-5.5  8.1%  6-6.5 17.7%  7-7.5 48.4%  8-8.5 25.8%  9-9.5  0.0%  worst gap 18.4
+  B2 6/6  B3 17/18  B4 rows failing: H7
+  all 164 rated (engine sizes, info): within 1 133/164, r 0.659; his 9+ (16 on the key) average 8.16, 1 shown 9+; shown 9+ overall 5, his mean on those 8.50
+  shows 9-9.5: 5 photos (0 at 9.5)
+     9  gold ig-008: bomber (navy) + tee (white) + jeans (denim_dark, wide) + basketball_sneaker (white)
+            why: lifts L2 +0.5, L7 +0.5; taste: wide legs +0.75
+     9  gold ig-034 (his 9): tee (burgundy) + trousers (off_white_cream, barrel) + loafer (black)
+            why: lifts L1 +0.25, L5 +0.5, L7b +0.5; taste: wide legs +0.75
+     9  gold ig-035 (his 8.5): tee (olive) + trousers (brown, barrel) + loafer (black)
+            why: lifts L1 +0.5, L7b +0.5; taste: wide legs +0.75
+     9  gold ig-093 (his 8): knit_polo (off_white_cream) + trousers (black, wide) + loafer (burgundy)
+            why: lifts L1 +0.5, L7 +0.5; taste: wide legs +0.75
+     9  gold ig-118: quarter_zip (black) + dress_shirt (white) + jeans (charcoal, wide) + derby (black)
+            why: held by 2 lifts; lifts L1 +0.5, L6 +0.25, L7b +0.5; taste: wide legs +0.75
+  named: 6.5; 7.5; 8; 8; 5.5; 6; 5; 8.5; 7; 6.5; 4.5; 8; 8; 4.5; 9
+
+== B' + E: the knee at 8.0, and with nothing off every stacking ceiling half a step higher ==  tune {"curve_knee": [8.0, 1.2], "stack_clean": {"0": 8.0, "1": 8.5, "2": 9.0, "3": 9.0, "3c": 9.5, "4": 9.0, "4c": 9.5}}
+  B6 steady: with each reading's own leg look 215/223 (bar 218); none 212; looks U, L + leg 212
+  held out (8 splits): raw 81.7% (79-84), r 0.671; key 81.1%, r 0.663
+  gold shares   3-4.5  0.4%  5-5.5  7.2%  6-6.5 16.1%  7-7.5 40.8%  8-8.5 32.3%  9-9.5  3.1%  worst gap 17.3
+  his checks    3-4.5  0.0%  5-5.5  8.1%  6-6.5 17.7%  7-7.5 48.4%  8-8.5 24.2%  9-9.5  1.6%  worst gap 18.4
+  B2 6/6  B3 17/18  B4 rows failing: H7
+  all 164 rated (engine sizes, info): within 1 133/164, r 0.666; his 9+ (16 on the key) average 8.22, 2 shown 9+; shown 9+ overall 7, his mean on those 8.57
+  shows 9-9.5: 10 photos (0 at 9.5)
+     9  gold ig-008: bomber (navy) + tee (white) + jeans (denim_dark, wide) + basketball_sneaker (white)
+            why: lifts L2 +0.5, L7 +0.5; taste: wide legs +0.75
+     9  gold ig-011 (his 9): quarter_zip (green) + tee (white) + trousers (black, wide) + loafer (burgundy)
+            why: lifts L1 +0.25, L5 +0.5, L7 +0.5; taste: wide legs +0.375
+     9  gold ig-012: overshirt (green) + graphic_tee (white) + jeans (charcoal, wide) + work_boot (tan_camel)
+            why: lifts L2 +0.375, L5 +0.5; taste: wide legs +0.75
+     9  gold ig-034 (his 9): tee (burgundy) + trousers (off_white_cream, barrel) + loafer (black)
+            why: lifts L1 +0.25, L5 +0.5, L7b +0.5; taste: wide legs +0.75
+     9  gold ig-035 (his 8.5): tee (olive) + trousers (brown, barrel) + loafer (black)
+            why: lifts L1 +0.5, L7b +0.5; taste: wide legs +0.75
+     9  gold ig-093 (his 8): knit_polo (off_white_cream) + trousers (black, wide) + loafer (burgundy)
+            why: lifts L1 +0.5, L7 +0.5; taste: wide legs +0.75
+     9  gold ig-118: quarter_zip (black) + dress_shirt (white) + jeans (charcoal, wide) + derby (black)
+            why: held by 2 lifts; lifts L1 +0.5, L6 +0.25, L7b +0.5; taste: wide legs +0.75
+     9  his check phone-af7e93: oxford_shirt (off_white_cream) + jeans (denim_mid, wide) + basketball_sneaker (black) + hoodie (green)
+            why: lifts L2 +0.375, L5 +0.5, L7b +0.5; taste: wide legs +0.375
+     9  rated C113 (his 8.5): puffer (burgundy) + drawstring_trousers (off_white_cream, wide) + retro_runner (white)
+            why: lifts L2 +0.375, L5 +0.5; taste: wide legs +0.375, a full hem over the shoe +0.5
+     9  creator -V2bE8nDsdo/outfit07-04-20: tee (white) + trousers (black, wide) + loafer (black)
+            why: lifts L1 +0.5, L7b +0.5; taste: wide legs +0.75
+  named: 6.5; 7.5; 8.5; 8; 5.5; 6; 5; 8.5; 7; 6.5; 4.5; 8; 8; 4.5; 9
+
+== B + E2: the knee, and with nothing off two or more lifts in one look may reach 9.5 ==  tune {"curve_knee": [8.5, 1.45], "stack_clean": {"0": 8.0, "1": 8.5, "2": 9.0, "3": 9.0, "3c": 9.5, "4": 9.0, "4c": 9.5, "2c": 9.5}}
+  B6 steady: with each reading's own leg look 216/223 (bar 218); none 213; looks U, L + leg 211
+  held out (8 splits): raw 81.7% (79-84), r 0.672; key 80.9%, r 0.666
+  gold shares   3-4.5  0.4%  5-5.5  7.2%  6-6.5 16.1%  7-7.5 41.7%  8-8.5 32.3%  9-9.5  2.2%  worst gap 17.3
+  his checks    3-4.5  0.0%  5-5.5  8.1%  6-6.5 17.7%  7-7.5 48.4%  8-8.5 25.8%  9-9.5  0.0%  worst gap 18.4
+  B2 6/6  B3 17/18  B4 rows failing: H7
+  all 164 rated (engine sizes, info): within 1 133/164, r 0.659; his 9+ (16 on the key) average 8.16, 1 shown 9+; shown 9+ overall 5, his mean on those 8.50
+  shows 9-9.5: 5 photos (0 at 9.5)
+     9  gold ig-008: bomber (navy) + tee (white) + jeans (denim_dark, wide) + basketball_sneaker (white)
+            why: lifts L2 +0.5, L7 +0.5; taste: wide legs +0.75
+     9  gold ig-034 (his 9): tee (burgundy) + trousers (off_white_cream, barrel) + loafer (black)
+            why: lifts L1 +0.25, L5 +0.5, L7b +0.5; taste: wide legs +0.75
+     9  gold ig-035 (his 8.5): tee (olive) + trousers (brown, barrel) + loafer (black)
+            why: lifts L1 +0.5, L7b +0.5; taste: wide legs +0.75
+     9  gold ig-093 (his 8): knit_polo (off_white_cream) + trousers (black, wide) + loafer (burgundy)
+            why: lifts L1 +0.5, L7 +0.5; taste: wide legs +0.75
+     9  gold ig-118: quarter_zip (black) + dress_shirt (white) + jeans (charcoal, wide) + derby (black)
+            why: lifts L1 +0.5, L6 +0.25, L7b +0.5; taste: wide legs +0.75
+  named: 6.5; 7.5; 8; 8; 5.5; 6; 5; 8.5; 7; 6.5; 4.5; 8; 8; 4.5; 9
+
+== B + E3 (a bound): the knee, and with nothing off no stacking ceiling ==  tune {"curve_knee": [8.5, 1.45], "stack_clean": {"0": 9.5, "1": 9.5, "2": 9.5, "3": 9.5, "4": 9.5}}
+  B6 steady: with each reading's own leg look 214/223 (bar 218); none 211; looks U, L + leg 207
+  held out (8 splits): raw 81.7% (79-84), r 0.673; key 80.8%, r 0.669
+  gold shares   3-4.5  0.4%  5-5.5  7.2%  6-6.5 16.1%  7-7.5 41.7%  8-8.5 30.0%  9-9.5  4.5%  worst gap 15.0
+  his checks    3-4.5  0.0%  5-5.5  8.1%  6-6.5 17.7%  7-7.5 48.4%  8-8.5 21.0%  9-9.5  4.8%  worst gap 18.4
+  B2 6/6  B3 17/18  B4 rows failing: H7
+  all 164 rated (engine sizes, info): within 1 132/164, r 0.664; his 9+ (16 on the key) average 8.34, 5 shown 9+; shown 9+ overall 14, his mean on those 8.43
+  shows 9-9.5: 18 photos (12 at 9.5)
+     9.5  gold ig-013: other (red) + tee (white) + cargos (light_blue, wide) + work_boot (brown)
+            why: lifts SIL +1.75; taste: wide legs +0.75
+     9.5  gold ig-053: sweatshirt (navy) + shorts (black, wide) + chunky_sneaker (white)
+            why: lifts SIL +2; taste: roomy shorts +0.5
+     9.5  gold ig-063 (his 9): graphic_tee (black) + shorts (olive, wide) + work_boot (brown)
+            why: lifts SIL +2; taste: roomy shorts +0.5
+     9.5  gold ig-069: graphic_tee (black) + jeans (white, wide) + retro_runner (grey)
+            why: lifts SIL +2; taste: wide legs +0.75
+     9.5  his check phone-8bc29d: overshirt (off_white_cream) + hoodie (grey) + jeans (black, wide) + other (grey)
+            why: lifts SIL +2; taste: wide legs +0.75
+     9.5  his check phone-403ade: tee (black) + jeans (black, wide) + white_leather_sneaker (white)
+            why: lifts SIL +2; taste: wide legs +0.75
+     9.5  his check phone-8ad378: tee (black) + jeans (black, wide) + white_leather_sneaker (white)
+            why: lifts SIL +2; taste: wide legs +0.75
+     9.5  rated C026 (his 7): graphic_tee (white) + shorts (denim_light, wide) + white_leather_sneaker (white)
+            why: lifts SIL +2; taste: roomy shorts +0.5
+     9.5  rated C033 (his 8.5): tee (white) + shorts (denim_mid, wide) + work_boot (tan_camel)
+            why: lifts SIL +2; taste: roomy shorts +0.25
+     9.5  rated C055 (his 7.5): bomber (brown) + shorts (black, wide) + retro_runner (black)
+            why: lifts SIL +2; taste: roomy shorts +0.5
+     9.5  rated C085 (his 8.5): tee (black) + shorts (black, wide) + retro_runner (grey)
+            why: lifts SIL +2; taste: roomy shorts +0.5
+     9.5  rated C142 (his 9): tee (white) + shorts (black, wide) + basketball_sneaker (white)
+            why: lifts SIL +2; taste: roomy shorts +0.25
+     9  gold ig-008: bomber (navy) + tee (white) + jeans (denim_dark, wide) + basketball_sneaker (white)
+            why: lifts L2 +0.5, L7 +0.5; taste: wide legs +0.75
+     9  gold ig-021 (his 9): graphic_tee (white) + shorts (khaki_beige, relaxed) + loafer (black)
+            why: lifts SIL +2
+     9  gold ig-034 (his 9): tee (burgundy) + trousers (off_white_cream, barrel) + loafer (black)
+            why: lifts L1 +0.25, L5 +0.5, L7b +0.5; taste: wide legs +0.75
+     9  gold ig-035 (his 8.5): tee (olive) + trousers (brown, barrel) + loafer (black)
+            why: lifts L1 +0.5, L7b +0.5; taste: wide legs +0.75
+     9  gold ig-093 (his 8): knit_polo (off_white_cream) + trousers (black, wide) + loafer (burgundy)
+            why: lifts L1 +0.5, L7 +0.5; taste: wide legs +0.75
+     9  gold ig-118: quarter_zip (black) + dress_shirt (white) + jeans (charcoal, wide) + derby (black)
+            why: lifts L1 +0.5, L6 +0.25, L7b +0.5; taste: wide legs +0.75
+  named: 6.5; 7.5; 8; 8; 5.5; 6; 5; 8.5; 7; 6.5; 4.5; 8; 8; 4.5; 9
+

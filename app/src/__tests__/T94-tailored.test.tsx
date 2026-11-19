@@ -9,13 +9,14 @@
 // (18–21), regular fit, everyday. Nothing is sent: global fetch fails the test, the AI transport must stay empty.
 import { flush, mockT39, mount, press, root, setUpT39Tests, textOf, type Node } from '@/testing/t39ScreenMocks';
 import { screen, within } from '@testing-library/react-native';
-import { scoreParts, type PartsScored, type Reading, type Styles } from '@kitted/core';
+import { scoreParts, setRescoreV16, type PartsScored, type Reading, type Styles } from '@kitted/core';
 import type { ProfileRow, StyleKey } from '@/data/types';
 import { normStyleKey, STYLES } from '@/data/types';
 import { renderFlat } from '@/features/closet/flats';
 import { LOOKS, picksToStyles, togglePick } from '@/features/onboarding/looks';
 import { adviceText, asksLook, lookTiles } from '@/features/fitcheck/goingFor';
 import { createFitCheckService, DEFAULT_TIMERS } from '@/features/fitcheck/service';
+import { evaluateCheck } from '@/features/fitcheck/scoring';
 import { whyParts } from '@/features/why/partsRows';
 import { styleLabel } from '@/features/morning/copy';
 import { t, type StringKey } from '@/i18n/en';
@@ -267,31 +268,76 @@ describe('TL4.3 · Going for offers Tailored and changes no score', () => {
     // his first pick from setup is the pre-pick, and the suit reads as it
     expect([before.style, before.details.goingFor?.style, before.details.goingFor?.source, before.details.readsAs]).toEqual(['tailored', 'tailored', 'setup', 'tailored']);
     expect([before.details.goingForAdvice?.kind, before.details.goingForAdvice?.readsAs]).toEqual(['match', 'tailored']);
-    expect(adviceText(before.details.goingForAdvice!).lead).toBe('Reads as tailored.');
+    // a match says what it says for every look (Going for works as today; dispute 2, Nov 18)
+    expect(adviceText(before.details.goingForAdvice!)).toMatchObject({ kind: 'match', lead: 'It reads that way too.', move: null });
     const s09 = demoReadingById('s09') as Reading;
     expect(before.score).toBe(scoreParts(s09, { occasion: 'everyday' }).overall);
 
     const same = (r: typeof before) => [r.score, r.rawScore, r.subscores, r.occasion, r.details.parts?.parts, r.details.readsAs, r.fixes.map((f) => [f.target, f.to])];
     const other = (await svc.changeGoingFor(checkId, 'classic_prep'))!;
     expect(same(other)).toEqual(same(before));
-    expect([other.style, other.details.goingForAdvice?.kind, other.details.goingForAdvice?.readsAs]).toEqual(['classic_prep', 'mismatch', 'tailored']);
+    expect([other.style, other.details.goingForAdvice?.going, other.details.goingForAdvice?.kind, other.details.goingForAdvice?.readsAs])
+      .toEqual(['classic_prep', 'classic_prep', 'mismatch', 'tailored']);
+    // the mismatch names the look it reads as: "Reads as tailored."
+    expect(adviceText(other.details.goingForAdvice!)).toMatchObject({ kind: 'mismatch', lead: 'Reads as tailored.' });
     const back = (await svc.changeGoingFor(checkId, TAILORED))!;
     expect(same(back)).toEqual(same(before));
     expect([back.style, back.details.goingFor?.confirmed, back.details.goingForAdvice?.kind]).toEqual(['tailored', true, 'match']);
+    expect(adviceText(back.details.goingForAdvice!).lead).toBe('It reads that way too.');
+  });
+});
+
+describe('TL4.3 · Going for Tailored names what pulls away', () => {
+  it('TL4.3 · a graphic tee under a blazer, going for Tailored: the card names the tee and the swap, the score stays', () => {
+    // Verification round 1 (Nov 18): a made-up outfit (no person): a white graphic tee under a navy blazer, grey trousers,
+    // brown loafers. The graphic tee is on Tailored's never-list; a plain tee in its place reads as Tailored.
+    const G = (category: string, subcategory: string, color: string, more: Record<string, unknown> = {}) => ({
+      category, subcategory, color_family: color, pattern: 'solid', logo: 'none', volume: 3, leg_shape: 'na', hem: 'na', tucked: 'na',
+      condition: 'clean', certainty: 'clear', length: 'na', pattern_scale: 'na', saturation: 'na', sleeve_end: 'na', strain: 'none',
+      distressed_by_design: false, shows_below_outer: false, ...more,
+    });
+    const reading = {
+      scene: { framing: 'full_body', shoes_visible: true, people_count: 1, mirror_selfie: false, lighting: 'good', clothed: 'fully' },
+      garments: [
+        G('top', 'graphic_tee', 'white', { pattern: 'graphic', tucked: 'none', length: 'mid_fly', sleeve_end: 'at_wrist' }),
+        G('outerwear', 'blazer', 'navy', { length: 'at_belt', sleeve_end: 'at_wrist' }),
+        G('bottom', 'trousers', 'grey', { leg_shape: 'straight', hem: 'slight_break' }),
+        G('footwear', 'loafer', 'brown'),
+      ],
+    } as unknown as Reading;
+    const ev = (goingFor: StyleKey | null) =>
+      evaluateCheck({ reading, occasion: 'everyday', styles: PICKS, boldness: null, closet: [], firstCheck: false, goingFor });
+    const a = ev(TAILORED).row.details.goingForAdvice!;
+    expect([a.going, a.kind, a.readsAs, a.piece]).toEqual(['tailored', 'mismatch', 'classic_prep', { index: 0, name: 'graphic tee', plural: false, why: 'loud' }]);
+    expect(adviceText(a)).toEqual({
+      kind: 'mismatch', lead: 'Reads as classic prep.', rest: 'For a tailored look, the graphic tee pulls the other way.',
+      move: { title: 'Swap the graphic tee for a plain tee', detail: 'Toward tailored' },
+    });
+    const none = ev(null).row;
+    expect([ev(TAILORED).row.score, ev(TAILORED).row.rawScore, ev(TAILORED).row.subscores]).toEqual([none.score, none.rawScore, none.subscores]);
   });
 });
 
 // ── TL2.2 · How I scored ────────────────────────────────────────────────────────────────────────────────────────
 describe('TL2.2 · How I scored on a suit', () => {
+  // Ruled retarget (Disputes 5): exactly what TL2.2 asks, on the default engine (v16) and on v15. Whether a "Reads as"
+  // row may also follow the parts is T69's plan, not TL2.2 (its own task in T69's lane).
+  afterEach(() => setRescoreV16(true));
   it('TL2.2 · How I scored on the suit shows "Reads as tailored"', () => {
-    const res = scoreParts(demoReadingById('s09') as Reading, { occasion: 'everyday' }) as PartsScored;
-    expect(res.styleLabel).toBe('tailored');
-    const w = whyParts(res, { occasion: 'everyday', readsAs: res.styleLabel as StyleKey, gainPart: null });
-    const style = w.groups.find((g) => g.part === 'cohesion')!;
-    expect(style.rows.filter((r) => /^Reads as/.test(r.rule)).map((r) => [r.rule, r.amount])).toEqual([['Reads as tailored', 0.5]]);
-    const every = [...w.groups.flatMap((g) => g.rows), ...w.after].map((r) => `${r.rule} ${r.item ?? ''}`);
-    expect(every.filter((x) => /matching suit/i.test(x))).toEqual([]);
-    // the engine line says it, so no "Reads as" row after the parts
-    expect(w.after.filter((r) => r.key === 'readsAs')).toEqual([]);
+    for (const engine of ['v16', 'v15'] as const) {
+      setRescoreV16(engine === 'v16');
+      const res = scoreParts(demoReadingById('s09') as Reading, { occasion: 'everyday' }) as PartsScored;
+      expect([engine, res.engine, res.styleLabel]).toEqual([engine, engine, 'tailored']);
+      const w = whyParts(res, { occasion: 'everyday', readsAs: res.styleLabel as StyleKey, gainPart: null });
+      const style = w.groups.find((g) => g.part === 'cohesion')!;
+      // the Style part's credit says Tailored, at its +0.5
+      expect([engine, style.rows.filter((r) => /^Reads as/.test(r.rule)).map((r) => [r.rule, r.amount])]).toEqual([engine, [['Reads as tailored', 0.5]]]);
+      const every = [...(w.start ? [w.start] : []), ...w.groups.flatMap((g) => g.rows), ...w.after].map((r) => `${r.rule} ${r.item ?? ''}`);
+      // never "a matching suit", and every row that names the look names Tailored
+      expect([engine, every.filter((x) => /matching suit/i.test(x))]).toEqual([engine, []]);
+      const named = every.filter((x) => /reads as/i.test(x));
+      expect(named.length).toBeGreaterThan(0);
+      expect([engine, named.filter((x) => !/reads as tailored/i.test(x))]).toEqual([engine, []]);
+    }
   });
 });

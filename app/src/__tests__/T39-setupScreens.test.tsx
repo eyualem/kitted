@@ -32,16 +32,16 @@ const life = setUpT39Tests();
 // ── The words (TESTING.md, exact) ─────────────────────────────────────────────────────────────────────────────────
 const OLD_LOOKS_PROMPT = 'Which of these would you actually wear? Tap up to 3.';
 // T113: Looks is the style game (specs/style-game.md SG1); the grid's "What's your style?" is gone.
-const GAME_TITLE = 'Is this your style?'; // #494 (was "Me or not me?")
+const GAME_TITLE = 'Is this your style?'; // #503 (was "Me or not me?")
 const RESULTS_TITLE = "Here's your style";
 /** Seed 42; he says Me to Streetwear, Vintage sport, Outdoor and Workwear and prefers them in that order. */
 const SV = ['streetwear', 'vintage_sport', 'outdoor', 'workwear'];
 const ABOUT_TITLE = 'About you';
 const NAME_Q = 'What should Kit call you?';
-const NAME_PLACEHOLDER = 'First name'; // #497 (was "First name (optional)")
-const NAME_HINT = 'Add your first name to go on.'; // #497
-const SKIP = 'Skip'; // #497
-const SKIP_HINT = 'Goes on without a name.'; // #497
+const NAME_PLACEHOLDER = 'First name'; // #506 (was "First name (optional)")
+const NAME_HINT = 'Add your first name to go on.'; // #506
+const SKIP = 'Skip'; // #506
+const SKIP_HINT = 'Goes on without a name.'; // #506
 const AGE_Q = 'How old are you?';
 const FOOTNOTE = 'Stays on your phone. It never changes your score.';
 const HINT = 'Pick your age to go on.';
@@ -288,7 +288,7 @@ describe('OS4.1 · About you', () => {
         expect([row.id, rowLabel(row.id, row.label).props.weight]).toEqual([row.id, '400']);
       }
       expect(textAt('about-footnote')).toBe(FOOTNOTE);
-      // #497: the name is asked first, so its hint shows first; Skip is there but waits for an age.
+      // #506: the name is asked first, so its hint shows first; Skip is there but waits for an age.
       expect(textAt('about-hint')).toBe(NAME_HINT);
       expect(isHiddenFromAccessibility(getId('about-hint') as never)).toBe(true);
       const btn = continueBtn();
@@ -312,7 +312,7 @@ describe('OS4.1 · About you', () => {
     expect(ROWS.filter((x) => byId(`${x.id}-check`)).map((x) => x.id)).toEqual(['age-22-25']);
     expect(rowLabel('age-22-25', '22–25').props.weight).toBe('600');
     expect(Haptics.selectionAsync).toHaveBeenCalledTimes(1);
-    // #497: an age without a name: Continue still waits for the name; Skip goes on.
+    // #506: an age without a name: Continue still waits for the name; Skip goes on.
     expect(textAt('about-hint')).toBe(NAME_HINT);
     expect([isDisabled(continueBtn()), continueBtn().props.accessibilityHint]).toEqual([true, NAME_HINT]);
     expect([isDisabled(skipBtn()), skipBtn().props.accessibilityHint]).toEqual([false, SKIP_HINT]);
@@ -328,7 +328,7 @@ describe('OS4.1 · About you', () => {
     expect(await kvJson('onboarding.about')).toEqual({ age: '26-30', name: '' });
     expect(await profile()).toBeNull();
 
-    // #497: a name and an age: no hint, Continue on, Skip gone; spaces only count as no name.
+    // #506: a name and an age: no hint, Continue on, Skip gone; spaces only count as no name.
     await typeIn(getId('about-name-input'), 'Alex');
     expect([byId('about-hint'), byId('about-skip')]).toEqual([null, null]);
     expect([isDisabled(continueBtn()), continueBtn().props.accessibilityHint]).toEqual([false, undefined]);
@@ -451,7 +451,7 @@ describe('OS4.2 · the name', () => {
       expect(getId('about-name-input').props.maxLength).toBe(30);
       if (c.typed !== null) await typeIn(getId('about-name-input'), c.typed);
       await press(getId('age-22-25'));
-      // #497: no name → Continue off, Skip on; a name → Continue on, no Skip.
+      // #506: no name → Continue off, Skip on; a name → Continue on, no Skip.
       const blank = c.name === null;
       expect([c.typed, isDisabled(continueBtn()), byId('about-skip') === null]).toEqual([c.typed, blank, !blank]);
       if (blank) await press(continueBtn());
@@ -526,7 +526,7 @@ describe('OS4.4 · Under 18', () => {
     await drafts();
     await mount(<BasicsScreen />);
     await press(getId('age-under18'));
-    // #497: with no name, Skip is the way on; it asks the same as Continue.
+    // #506: with no name, Skip is the way on; it asks the same as Continue.
     await press(skipBtn());
     expect(life.alert).toHaveBeenCalledTimes(1);
     const [title, message, buttons] = life.alert.mock.calls[0]! as [string, string, Button[]];
@@ -701,7 +701,7 @@ describe('SY4.1 · the name field', () => {
     const input = getId('about-name-input');
     expect({ textContentType: input.props.textContentType, autoComplete: input.props.autoComplete, autoCapitalize: input.props.autoCapitalize })
       .toEqual({ textContentType: 'givenName', autoComplete: 'given-name', autoCapitalize: 'words' });
-    // #497 (replacing "No Skip button"): Skip sits under Continue, and with an age it goes on without a name.
+    // #506 (replacing "No Skip button"): Skip sits under Continue, and with an age it goes on without a name.
     // Every string that says Skip is that button's own (its words and its label), and it's drawn once.
     expect(new Set(everyString().filter((x) => /\bSkip\b/.test(x)))).toEqual(new Set([SKIP]));
     expect(screen.getAllByText(SKIP)).toHaveLength(1);

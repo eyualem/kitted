@@ -1,0 +1,16 @@
+{
+ "type": "OBJECT",
+ "properties": {
+  "top_below_crotch": {
+   "type": "STRING",
+   "enum": [
+    "yes",
+    "no",
+    "not_applicable"
+   ]
+  }
+ },
+ "required": [
+  "top_below_crotch"
+ ]
+}

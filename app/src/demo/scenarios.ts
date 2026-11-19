@@ -72,6 +72,8 @@ const FIRST_RUN_NOW = '2026-10-22T07:38:00';
 const FULL_NOW = '2026-10-22T12:20:00';
 /** The end of onboarding's screens (150–162): a minute after his first check. */
 const FIRST_CHECK_NOW = '2026-10-22T07:43:00';
+/** Screens 292-293 (T94): Tailored first, then classic prep and minimal. */
+const TAILORED_LOOKS: Styles = [['tailored', 0.5], ['classic_prep', 0.25], ['minimalist', 0.25]];
 /** After the first check's re-check (7:50). */
 const ALL_DONE_NOW = '2026-10-22T07:55:00';
 
@@ -102,20 +104,20 @@ const game = (n: number, name: string, styleGame: StyleGameDemo, more: Partial<S
   n, name, id: 'O2', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/looks', styleGame, ...more,
 });
 const STYLE_GAME_SCREENS: ScreenScenario[] = [
-  game(300, 'Style game · card 3', G300),
-  game(301, 'Style game · the other outfit', { ...G300, peek: 1 }),
-  game(302, 'Style game · swiped past the line', { ...G300, dragDx: 120 }),
-  game(303, 'Style game · put them in order', G303),
-  game(304, "Here's your style · three looks", G304),
-  game(305, "Here's your style · one look", G305),
-  game(306, "Here's your style · removed, Undo", { ...G304, then: [{ remove: 1 }], toast: true }),
-  game(307, "Here's your style · in and out, Undo", { seed: 42, me: ['outdoor', 'vintage_sport', 'workwear'], prefer: ['outdoor', 'vintage_sport', 'workwear'], then: [{ add: 'streetwear' }], toast: true }),
-  game(308, "Here's your style · typing his words", { ...G304, editingWords: true, words: 'skater but clean' }),
-  game(309, "Here's your style · his words saved", { ...G304, words: 'all black' }),
-  game(310, 'Nothing clicked yet', G310),
-  game(311, 'Nothing clicked yet · his words', { ...G310, words: 'all black' }),
-  game(312, 'Add a look', { ...G305, then: [{ add: 'workwear' }] }, { href: '/onboarding/add-look', under: '/onboarding/looks' }),
-  game(313, "Here's your style · every look removed", { ...G305, then: [{ remove: 0 }] }),
+  game(320, 'Style game · card 3', G300),
+  game(321, 'Style game · the other outfit', { ...G300, peek: 1 }),
+  game(322, 'Style game · swiped past the line', { ...G300, dragDx: 120 }),
+  game(323, 'Style game · put them in order', G303),
+  game(324, "Here's your style · three looks", G304),
+  game(325, "Here's your style · one look", G305),
+  game(326, "Here's your style · removed, Undo", { ...G304, then: [{ remove: 1 }], toast: true }),
+  game(327, "Here's your style · in and out, Undo", { seed: 42, me: ['outdoor', 'vintage_sport', 'workwear'], prefer: ['outdoor', 'vintage_sport', 'workwear'], then: [{ add: 'streetwear' }], toast: true }),
+  game(328, "Here's your style · typing his words", { ...G304, editingWords: true, words: 'skater but clean' }),
+  game(329, "Here's your style · his words saved", { ...G304, words: 'all black' }),
+  game(330, 'Nothing clicked yet', G310),
+  game(331, 'Nothing clicked yet · his words', { ...G310, words: 'all black' }),
+  game(332, 'Add a look', { ...G305, then: [{ add: 'workwear' }] }, { href: '/onboarding/add-look', under: '/onboarding/looks' }),
+  game(333, "Here's your style · every look removed", { ...G305, then: [{ remove: 0 }] }),
 ];
 
 export const SCREENS: readonly ScreenScenario[] = [
@@ -371,6 +373,26 @@ export const SCREENS: readonly ScreenScenario[] = [
   // card allowed (index.ts): Kit's offer is the only card.
   { n: 290, name: 'Stylist · agreed, no check yet', id: 'S1o', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:30', href: '/stylist', offer: 'checked' },
   { n: 291, name: 'Stylist · first check done, morning card allowed', id: 'S1o', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', offer: 'checked' },
+  // Tailored, the 8th look (T94, specs/tailored.md TL4): You and Style profile with Tailored his first pick; a suit (s09)
+  // on the card, in How I scored and in Going for's wait.
+  { n: 292, name: 'You · Tailored picked', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you', looks: TAILORED_LOOKS },
+  { n: 293, name: 'Style profile · Tailored picked', id: 'Y2', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/profile', under: '/you', looks: TAILORED_LOOKS },
+  { n: 294, name: 'Score card · a suit reads as Tailored', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 295, name: 'Why this score · the suit', id: 'S7', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: `/sheets/why/${STORY_FIRST_CHECK}`, under: '/stylist' },
+  { n: 296, name: 'Going for · Tailored offered', id: 'S5g', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:42:00', href: '/stylist' },
+  // The rescoring (T69, parts v16): the result card at 3.5, 5.5, 7.0, 8.5 and 9.0 (the top a real check reaches), then each
+  // one's Why sheet, then an old check scored with v15 (its rows are today's, with the floor row). Layout only.
+  { n: 300, name: 'Result · 3.5', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 301, name: 'Result · 5.5', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 302, name: 'Result · 7.0', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 303, name: 'Result · 8.5', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  { n: 304, name: 'Result · 9.0 (the top)', id: 'S6', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: '/stylist' },
+  ...[300, 301, 302, 303, 304].map((m, i): ScreenScenario => ({
+    n: 305 + i, name: `Why · ${['3.5', '5.5', '7.0', '8.5', '9.0'][i]}`, id: 'S7', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00',
+    href: `/sheets/why/${STORY_FIRST_CHECK}`, under: '/stylist',
+  })),
+  { n: 310, name: 'Why · an old v15 check', id: 'S7', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: `/sheets/why/${STORY_FIRST_CHECK}`, under: '/stylist' },
+  // The style game (T113): 320–333 (300–313 until main's rescoring screens took 300–310).
   ...STYLE_GAME_SCREENS,
 ];
 

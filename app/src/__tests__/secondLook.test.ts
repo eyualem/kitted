@@ -53,8 +53,9 @@ describe('the request (look_test.py / b1_test.call)', () => {
   });
 
   it('U reads the upper close-up and L the lower; one whole-person close-up serves both; none, no look', () => {
-    expect(lookImages(['up', 'low'])).toEqual({ U: 'up', L: 'low' });
-    expect(lookImages(['body'])).toEqual({ U: 'body', L: 'body' });
+    // T69: the leg-width look W reads L's image (the lower close-up)
+    expect(lookImages(['up', 'low'])).toEqual({ U: 'up', L: 'low', W: 'low' });
+    expect(lookImages(['body'])).toEqual({ U: 'body', L: 'body', W: 'body' });
     expect(lookImages([])).toBeNull();
     expect(lookImages(undefined)).toBeNull();
   });

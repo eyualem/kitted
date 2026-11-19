@@ -113,7 +113,7 @@ const addedInBuild = {
   'game.peekHint': 'Not sure? Tap it for another outfit.',
   'game.card.a11y': 'Outfit {n} of 8, view {view} of 2. {desc}',
   'game.anotherOutfit': 'Another outfit',
-  // Card 1's lesson and the check on fast No's (the founder, Nov 18, #494: a tester thought a swipe meant "next").
+  // Card 1's lesson and the check on fast No's (the founder, Nov 18, #503: a tester thought a swipe meant "next").
   'game.teach': "Swipe right if it's your style, left if it's not.",
   'game.check.line': "Just checking: left means it's not your style.",
   'game.check.startOver': 'Start over',
@@ -882,6 +882,22 @@ const addedInBuild = {
   'pwhy.fitNote': 'I can spot a bad fit, not a great one yet, so Fit stops at 7.',
   'pwhy.naNote': 'The other parts share its weight.',
   'pwhy.average': 'Average of the parts',
+  'pwhy.start': 'Every fit starts at',
+  'pwhy.minor': 'Small credits in the parts',
+  'pwhy.faults': "What's off",
+  'pwhy.faultsItem': 'the worst part counts most',
+  'pwhy.tasteFor': 'for {look}',
+  'pwhy.lookAny': 'any look',
+  'pwhy.clampTop': 'Top of the scale: 9.5',
+  'pwhy.clampBottom': 'Bottom of the scale: 3.0',
+  'pwhy.curve': "Kitted's scale",
+  'pwhy.curveItem': 'steps above 7 count less',
+  'pwhy.dealbreaker': 'Dealbreaker',
+  'pwhy.stackOne': 'The most 1 lift reaches',
+  'pwhy.stackMany': 'The most {n} lifts reach',
+  'pwhy.fitFloor': "A fit or shape fault: lifts can't cover it",
+  'pwhy.twoSinks': 'Two dealbreakers: a redo',
+  'pwhy.twoHolds': 'Two holding faults',
   'pwhy.bonus': 'Strong in more than one part',
   'pwhy.piled': 'Problems in more than one part',
   'pwhy.condition': 'Condition',
@@ -1177,7 +1193,7 @@ const addedInBuild = {
   'onb.looks.line': "Pick up to 3 looks you like. Today's outfit comes next.",
   'onb.about.title': 'About you',
   'onb.about.nameLabel': 'What should Kit call you?',
-  'onb.about.namePlaceholder': 'First name', // #497: the name stays optional (Skip), but the field no longer says so
+  'onb.about.namePlaceholder': 'First name', // #506: the name stays optional (Skip), but the field no longer says so
   'onb.about.ageLabel': 'How old are you?',
   'onb.about.age.under18': 'Under 18',
   'onb.about.age.18to21': '18–21',
@@ -1186,9 +1202,9 @@ const addedInBuild = {
   'onb.about.age.31plus': '31 or older',
   'onb.about.footnote': 'Stays on your phone. It never changes your score.',
   'onb.about.hint': 'Pick your age to go on.',
-  'onb.about.nameHint': 'Add your first name to go on.', // #497, draft for the founder
-  'onb.about.skip': 'Skip', // #497: under Continue while the name is blank
-  'onb.about.skipHint': 'Goes on without a name.', // #497, VoiceOver only; draft
+  'onb.about.nameHint': 'Add your first name to go on.', // #506, draft for the founder
+  'onb.about.skip': 'Skip', // #506: under Continue while the name is blank
+  'onb.about.skipHint': 'Goes on without a name.', // #506, VoiceOver only; draft
   'onb.about.under18.title': 'Under 18?',
   'onb.restore.title': 'Welcome back',
   'onb.restore.line': "Your age first, then I'll bring back your fits.",

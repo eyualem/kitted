@@ -26,9 +26,13 @@ export function PartsBreakdown({ parts, score }: { parts: WhyParts; score: numbe
         ))}
       </View>
       <View>
-        <LedgerRow rule={t('pwhy.average')} valueText={parts.average.toFixed(1)} />
+        {parts.start ? (
+          <LedgerRow testID="why-row-start" rule={parts.start.rule} valueText={parts.start.valueText} />
+        ) : (
+          <LedgerRow rule={t('pwhy.average')} valueText={parts.average.toFixed(1)} />
+        )}
         {parts.after.map((r) => (
-          <LedgerRow key={r.key} rule={r.rule} item={r.item} amount={r.amount} valueText={r.valueText} zero={r.zero} />
+          <LedgerRow key={r.key} testID={`why-row-${r.key}`} rule={r.rule} item={r.item} amount={r.amount} valueText={r.valueText} zero={r.zero} />
         ))}
         <LedgerTotal score={score} note={t('why.rounded')} />
       </View>

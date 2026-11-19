@@ -1,7 +1,7 @@
 // The vision step behind one interface (05 §3.2). Demo: MockReadingSource replays bundled
 // readings with the real timing. Later: DirectGemini (dev only) and the proxy (M4).
 import type { Garment, Reading } from '@kitted/core';
-import type { LookAnswerL, LookAnswerU } from '@/data/types';
+import type { LookAnswerL, LookAnswerU, LookAnswerW } from '@/data/types';
 
 export type ReadKind = 'full' | 'recheck' | 'shoeSnap' | 'bottomSnap';
 
@@ -60,6 +60,8 @@ export interface ReadingSource {
   /** The second look, started next to read() (live source only; null when it can't run: a demo photo, no close-ups,
    *  no key). The demo replays without one. */
   secondLook?(image: PreparedImage, kind: ReadKind, opts?: ReadOpts): SecondLookCall | null;
+  /** T69 (stub): the leg-width look, started by the service once the bottom is known to be pants. Never rejects. */
+  legLook?(image: PreparedImage, kind: ReadKind, opts?: ReadOpts): Promise<LookResult<LookAnswerW>> | null;
 }
 
 /** Debug toggles (04 §11) for the demo: `fault=unreadable|notClothed|offline|ai|paused`. */

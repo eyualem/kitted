@@ -44,9 +44,13 @@ CATALOG = json.load(open(os.path.join(HERE, "fixes.json")))["parts"]
 SLOTS = ("top", "outerwear", "bottom", "footwear")
 
 
-def _score(reading, occasion, styles, sl, boldness):
-    """score_parts plus the unrounded final (parts_proto.combine), like make_parts_parity.run."""
+def _score(reading, occasion, styles, sl, boldness, engine="v15", season=None):
+    """score_parts plus the unrounded final (parts_proto.combine), like make_parts_parity.run. T69: engine "v16" scores
+    with the card's season and takes the unrounded final from the result itself (combine is v15's)."""
     K._captured.clear()            # kitted_logic patches rubric.round to record calls; keep that list from growing
+    if engine == "v16":
+        return P.score_parts(copy.deepcopy(reading), occasion, dict(styles or {}), copy.deepcopy(sl), boldness, engine="v16",
+                             season=season)
     res = P.score_parts(copy.deepcopy(reading), occasion, dict(styles or {}), copy.deepcopy(sl), boldness)
     if res["overall"] is not None:
         ps = {k: res["parts"][k]["score"] for k in P.PART_ORDER if res["parts"][k]["score"] is not None}
@@ -354,7 +358,7 @@ def _shift(base, r):
     return abs(R.formality(s1) - R.formality(s0))
 
 
-def _evaluate(cand, w, closet, occasion, styles, boldness, base_sl, warm):
+def _evaluate(cand, w, closet, occasion, styles, boldness, base_sl, warm, engine="v15", season=None):
     """All the readings the candidate's edits make, scored; the best one (max raw), or None. An 'ALTS' edit is scored
     at its worst alternative (never over-promise)."""
     states = [(w, {})]
@@ -378,7 +382,7 @@ def _evaluate(cand, w, closet, occasion, styles, boldness, base_sl, warm):
             if a["garments"] == w["garments"] or _blocked(w, a, warm):
                 worst = None
                 break
-            res = _score(a, occasion, styles, sl, boldness)
+            res = _score(a, occasion, styles, sl, boldness, engine, season)
             if res["overall"] is None:
                 worst = None
                 break
@@ -405,6 +409,27 @@ def _swapped(w, r):
     return out
 
 
+# T94 (TL5, [TLR-6]): with Tailored among his picks, a fix that clears a tailoring fault leads within its class.
+TAILORING_CHECKS = ("FF1_sleeves_tailored", "FF1_sleeves_long", "FF1_cuffs_ribbed", "FF7_pooling",
+                    "FF7b_full_break_narrow", "H3_another_world", "GT1_graphic_under_tailoring", "SX1_another_look")
+HEM_CHECKS = ("FF7_pooling", "FF7b_full_break_narrow")      # a tailoring fault only over dress trousers
+
+
+def _reason_checks(res):
+    return {x["check"] for part in res["parts"].values() for x in (part.get("reasons") or [])}
+
+
+def _tailoring_fix(base, res, w):
+    """The working outfit w has a tailored jacket (a top or layer), and the fixed card `res` no longer carries a
+    tailoring check that `base` carried (as a reason on any part). The hem checks count only over dress trousers."""
+    if not any(g.get("category") in ("top", "outerwear") and g.get("subcategory") in R.TL_JACKET for g in w["garments"]):
+        return False
+    b = _first(w, "bottom")
+    trousers = b is not None and b.get("subcategory") in R.TL_TROUSERS
+    cleared = _reason_checks(base) - _reason_checks(res)
+    return any(k in cleared and (k not in HEM_CHECKS or trousers) for k in TAILORING_CHECKS)
+
+
 def _picks(styles):
     """His picks in order (the 1st pick first), from [name, weight] pairs or a dict; weight 0 is not a pick."""
     return [k for k, wt in styles.items() if wt and wt > 0]
@@ -417,15 +442,17 @@ def _pick_rank(res, picks):
 
 
 def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_little", second_look=None, closet=(),
-                        warm=False, first_check=False, exclude=()):
-    """Up to 3 parts-engine fixes, a Smaller step and a Next level line. styles: [name, weight] pairs or a dict."""
+                        warm=False, first_check=False, exclude=(), engine="v15", season=None):
+    """Up to 3 parts-engine fixes, a Smaller step and a Next level line. styles: [name, weight] pairs or a dict.
+    T69: engine "v16" scores every candidate with v16 and the card's season (the app passes warm = season == "warm")."""
     if isinstance(styles, list):
         styles = {k: wt for k, wt in styles}
     styles = dict(styles or {})
     picks = _picks(styles)
+    tailored_pick = "tailored" in picks                  # TL5: any position, weight > 0
     c = CATALOG["copy"]
     classes = CATALOG["classes"]
-    base = _score(reading, occasion, styles, second_look, boldness)
+    base = _score(reading, occasion, styles, second_look, boldness, engine, season)
     out = {"base_overall": base["overall"], "base_raw": None, "fixes": [], "smaller_step": None, "next_level": None,
            "none_line": None}
     if base["overall"] is None:
@@ -444,7 +471,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
             continue
         if not _when_ok(cand.get("when"), w, occasion, warm):
             continue
-        ev = _evaluate(cand, w, closet, occasion, styles, boldness, bsl, warm)
+        ev = _evaluate(cand, w, closet, occasion, styles, boldness, bsl, warm, engine, season)
         if ev is None:
             continue
         res, r, info = ev
@@ -452,7 +479,8 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
         x = {"id": cand["id"], "group": cand["group"], "class": cand["class"], "rank": cl["rank"], "effort": cand["effort"],
              "free": cl["free"], "to": res["overall"], "to_raw": round(res["raw_unrounded"], 6),
              "gain": res["overall"] - base["overall"], "raw_gain": round(res["raw_unrounded"] - base["raw_unrounded"], 6),
-             "item_id": info.get("item_id"), "order": order, "shift": _shift(w, r), "pick_rank": _pick_rank(res, picks)}
+             "item_id": info.get("item_id"), "order": order, "shift": _shift(w, r), "pick_rank": _pick_rank(res, picks),
+             "tailor_lead": 0 if tailored_pick and _tailoring_fix(base, res, w) else 1}
         x["copy"] = _fill(cand["copy"], info)
         x["tag"] = cl["tag"] + (f" · {cand['detail']}" if cand.get("detail") else "")
         x["raises"] = _raises(base, res)
@@ -465,7 +493,8 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
         x["anchors"] = _light_on_light(base) and not _light_on_light(res)   # v1.9: the fix clears light on light
         cands.append(x)
 
-    key = lambda x: (x["rank"], -x["gain"], x["pick_rank"], -x["raw_gain"], x["effort"], x["shift"], x["order"])  # noqa: E731
+    # TL5: tailor_lead after the class, before the gain; with no Tailored pick it is 1 everywhere (today's order)
+    key = lambda x: (x["rank"], x["tailor_lead"], -x["gain"], x["pick_rank"], -x["raw_gain"], x["effort"], x["shift"], x["order"])  # noqa: E731
 
     def pick(allowed_classes):
         fixes = [x for x in cands if x["gain"] >= 0.5 and x["class"] in allowed_classes]
@@ -549,7 +578,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
                 continue
             if not _when_ok(nl.get("when"), w, occasion, warm):
                 continue
-            ev = _evaluate(nl, w, (), occasion, styles, boldness, bsl, warm)
+            ev = _evaluate(nl, w, (), occasion, styles, boldness, bsl, warm, engine, season)
             if ev is None:
                 continue
             if st is not None and st not in (ev[0].get("detected_styles") or []):
@@ -561,7 +590,7 @@ def suggest_parts_fixes(reading, occasion="everyday", styles=None, boldness="a_l
                 break
 
     for x in picked:
-        for k in ("order", "rank", "step", "drops", "lifts_display", "shift", "pick_rank", "tucks", "swaps", "anchors"):
+        for k in ("order", "rank", "step", "drops", "lifts_display", "shift", "pick_rank", "tailor_lead", "tucks", "swaps", "anchors"):
             x.pop(k, None)
     out["fixes"] = picked
     if not picked:

@@ -252,14 +252,15 @@ describe('A2 · the same bodies', () => {
 // ------------------------------------------------------------------ A3, A4
 
 describe('A3 · headers', () => {
-  it('a check: its read, both look arms and its closet call carry its id and `full`, the token and the time zone', async () => {
+  it('a check: its read, its look arms and its closet call carry its id and `full`, the token and the time zone', async () => {
     const p = await phone();
     const r = await p.check('p01b');
     expect(r.outcome).toBe('scored');
     await p.closet.settle();
     const id = idOf(r);
     const photo = p.server.calls.filter((c) => c.route !== 'ask');
-    expect(photo.map((c) => c.route).sort()).toEqual(['closet', 'look', 'look', 'read']);
+    // T69: p01b's bottom is chinos, so the leg-width look W is a third look call on the same check
+    expect(photo.map((c) => c.route).sort()).toEqual(['closet', 'look', 'look', 'look', 'read']);
     for (const c of photo) {
       expect([header(c, 'X-Kitted-Check'), header(c, 'X-Kitted-Kind'), header(c, 'Authorization'), header(c, 'X-Kitted-Tz')]).toEqual([id, 'full', 'Bearer TOKEN', '-240']);
       expect(header(c, 'X-Kitted-Free')).toBeUndefined();

@@ -60,7 +60,7 @@ jest.mock('@/features/toast/toast', () => {
 const life = setUpT39Tests();
 
 // ── The words (TESTING.md, exact) ─────────────────────────────────────────────────────────────────────────────────
-// The card's words changed on Nov 18 after a real tester (#494): "Is this your style?" with Yes / No.
+// The card's words changed on Nov 18 after a real tester (#503): "Is this your style?" with Yes / No.
 const TITLE = 'Is this your style?';
 const LINE = 'One outfit at a time.';
 const HINT = 'Swipe right for Yes, left for No.';
@@ -72,7 +72,7 @@ const START_OVER = 'Start over';
 const KEEP_GOING = 'Keep going';
 const PEEK_HINT = 'Not sure? Tap it for another outfit.';
 const RANK_TITLE = 'Now put them in order';
-const RANK_LINE = "Tap the one that's more you."; // the founder, Nov 18 (#493): no "You said Me to {n}."
+const RANK_LINE = "Tap the one that's more you."; // the founder, Nov 18 (#502): no "You said Me to {n}."
 const RES_TITLE = "Here's your style";
 const RES_LINE = 'Your top looks, in order. Not quite right? Drag, remove or add one.';
 const RES_ONE = 'Your top look. Not quite right? Add one, or play again.';
@@ -439,7 +439,7 @@ describe('SG1.2 · answering', () => {
     await setUpGame(store(), { seed: 42, me: [], cards: 0 });
     await mount(<StyleGameScreen />);
     expect(label('game-card')).toBe(cardLabel(1, 1, 'workwear'));
-    // The words (#494): Yes on the right with a check icon, No on the left with a cross; drawn icons, never emoji.
+    // The words (#503): Yes on the right with a check icon, No on the left with a cross; drawn icons, never emoji.
     expect([buttonIn('game-me').props.accessibilityLabel, textOf(buttonIn('game-me'))]).toEqual([YES, YES]);
     expect([buttonIn('game-notme').props.accessibilityLabel, textOf(buttonIn('game-notme'))]).toEqual([NO, NO]);
     const icons = (id: string) => getId(id).queryAll((n) => typeof n.props.name === 'string').map((n) => n.props.name as string);
@@ -514,7 +514,7 @@ describe('SG1.2 · answering', () => {
 
 // ── SG1.3 · the lean and the dots ─────────────────────────────────────────────────────────────────────────────────
 describe('SG1.3 · the lean and the dots', () => {
-  // SG1 (Nov 18, #494): "After it's dismissed, card 1 leans right then left once to show the swipe (never under Reduce
+  // SG1 (Nov 18, #503): "After it's dismissed, card 1 leans right then left once to show the swipe (never under Reduce
   // Motion, never again)." The lean follows the overlay's tap, so it plays once per install: not before the tap, not
   // after Play again, not after a relaunch. (Until Nov 18 it ran 1.4 s after card 1 appeared, in every game.)
   // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
@@ -1332,7 +1332,7 @@ describe('F1.1 · setup in 16 taps', () => {
     presses++;
     await r.unmount();
     r = await mount(<StyleGameScreen />);
-    // F1.1 is 18 taps to the camera since Nov 18 (#495): the card-1 lesson (SG1.4) keeps its own tap. In-screen that
+    // F1.1 is 18 taps to the camera since Nov 18 (#504): the card-1 lesson (SG1.4) keeps its own tap. In-screen that
     // is 16 (18 less Check my fit and Agree, as 15 came from 17): Get started, the lesson, 8 cards, up to 3
     // this-or-thats, Continue, an age, Continue. Seed 42 deals 3 this-or-thats, so the walk is exactly 16: one extra
     // tap anywhere fails it. A fresh install shows the lesson, so its tap is in this count, never skipped.
@@ -1346,7 +1346,7 @@ describe('F1.1 · setup in 16 taps', () => {
     await advance(SETTLE_MS);
     await r.unmount();
     r = await mount(<BasicsScreen />);
-    // #497: he types his first name (typing isn't a tap: the field opens focused), then the age and Continue.
+    // #506: he types his first name (typing isn't a tap: the field opens focused), then the age and Continue.
     await typeIn(getId('about-name-input'), 'Alex');
     await press(getId('age-22-25'));
     presses++;
@@ -1362,7 +1362,7 @@ describe('F1.1 · setup in 16 taps', () => {
   }, 20000);
 });
 
-// ── SG1.4 · card 1 teaches the swipe (Nov 18, #494) ──────────────────────────────────────────────────────────────
+// ── SG1.4 · card 1 teaches the swipe (Nov 18, #503) ──────────────────────────────────────────────────────────────
 // The flag: the swipe is taught once kv `onboarding.swipeTaught` holds any value (kept on this phone); dismissing the
 // overlay writes it. setUpGame sets it unless `taught: false` (a fresh install).
 describe('SG1.4 · card 1 teaches the swipe', () => {
@@ -1441,7 +1441,7 @@ describe('SG1.4 · card 1 teaches the swipe', () => {
   });
 });
 
-// ── SG7.5 · FS4, the check on three fast No's (Nov 18, #494) ─────────────────────────────────────────────────────
+// ── SG7.5 · FS4, the check on three fast No's (Nov 18, #503) ─────────────────────────────────────────────────────
 // "Less than 1.5 s after its card appeared" is read on the screen's clock (Date.now, which jest's fake timers move
 // with advance()); the T39 mocks fix sessionClock, so a timing read from it can't be told apart here.
 describe('SG7.5 · Just checking', () => {

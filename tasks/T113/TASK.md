@@ -1,6 +1,6 @@
 # T113 · The style game in setup
 
-**Spec:** `specs/style-game.md` (built on the founder's Nov 18 instruction, #489) · **Plan:** `IMPLEMENTATION.md` · **Contract:** `TESTING.md` (locked at `f5e230e8`) · **Branch:** `claude/t113-style-game`
+**Spec:** `specs/style-game.md` (built on the founder's Nov 18 instruction, #500) · **Plan:** `IMPLEMENTATION.md` · **Contract:** `TESTING.md` (locked at `f5e230e8`) · **Branch:** `claude/t113-style-game`
 
 ## Built
 What he sees: after Welcome, Looks is now the game. "Me or not me?" deals the 8 looks one card at a time, in a new order each game, with no look-alikes side by side. He answers with the Me / Not me buttons or by swiping past 90 pt. A tap shows the look's other outfit, and the second dot lights. Card 1 leans once after 1.4 s (not under Reduce Motion), and 8 dots show where he is. With 2 or more Me's comes "Now put them in order": this-or-thats between his Me's on their second drawings, placed by binary insertion. Then "Here's your style" shows up to 3 numbered rows. He can drag a row by its handle, remove one with × (toast "Removed {name}" with Undo, 5 s), add one from the "Add a look" sheet (on a full list it takes #3's place with "{name} in, {old} out" and Undo), tell me in his words (80 characters max), play again, or Continue to About you. Not me to all 8 shows "Nothing clicked yet". Back undoes exactly one step; on card 1 it goes to Welcome. Back from Welcome and Get started again resumes the same game. A relaunch mid-game deals a new game; a relaunch on the results reopens them from a local draft. Continue saves his looks in order, his words and his Not me's (`looks.notMe`, synced, kept after setup, wiped by Delete all my data). Nothing is sent. His picks still never move a score.
@@ -18,7 +18,7 @@ Demo screens (UI inventory): 2, 300 card 3, 301 the other outfit, 302 swiped pas
 - **The interface's `GameCard` props differ** (`ask`, `width`, `onLit`, `focusOnMount`; no `ref`). Only the screen uses them.
 - `notMesToSave(notMes, picks)` was added next to `notMeToSave(game, picks)`. Continue reads the Not me's from the results, so a draft reopened after a relaunch (which has no answers in memory) still saves them (SG8.1's test).
 
-## Defaults used (for the coordinator to log as #492)
+## Defaults used (for the coordinator to log as #501)
 The planner's technical defaults 1–14 as written, plus:
 - A draft write that fails is ignored. The game stays in memory, and a close before the next change deals a new game.
 - On a full list, `addToResults` with a look already on the list returns `null` (nothing changes, no toast).
@@ -39,7 +39,7 @@ The planner's technical defaults 1–14 as written, plus:
 - Results after the fixes: tsc clean; eslint clean on `src/features/onboarding`, `src/demo`, `src/app/onboarding`, `src/sync/schema.ts`. The T113, T39-setupScreens, T39-offerCard, looksOwnWords, scenarios and toast suites: **8 suites, 136 / 136 pass** (two workers). T113 alone: 84 tests (26 + 23 + 35), all passing.
 - Still not seen on a device after these fixes: the dots' new place and the capped labels at AX5 (screenshots 300 and 308/310 again), and Back during an exit with a real finger.
 
-## Build round 3: Yes / No, card 1's lesson, the fast-No check (the founder's real-person test, #494, #495; tests locked at `ae83ebfa`)
+## Build round 3: Yes / No, card 1's lesson, the fast-No check (the founder's real-person test, #503, #504; tests locked at `ae83ebfa`)
 - **SG1, the words:** the cards ask `Is this your style?` / `One outfit at a time.`. The buttons are `No` (✕ `close` icon, left, secondary) and `Yes` (✓ `check` icon, right, primary), and the stamps read Yes and No. The hint is `Swipe right for Yes, left for No.`, with `Not sure? Tap it for another outfit.` under it. testIDs unchanged (`game-me`, `game-notme`). The new words are in `en.ts` (`game.teach`, `game.check.*`), marked drafts like the rest.
 - **SG1.4, card 1's lesson:** on a fresh install's first game an overlay is laid over card 1 (a see-through ink panel, left and right arrows, `Swipe right if it's your style, left if it's not.`). While it shows, Yes and No are disabled and the card takes no touch. One tap anywhere on it dismisses it, writes kv `onboarding.swipeTaught` (local, in `KV_LOCAL`), and card 1 leans right then left once, 0.5 s later. That lean is the only one per install: none after Back, Play again or a relaunch, and none under Reduce Motion. Session fields added: `teach`, `leanArmed`, `checking`; `finishTeach(store)` is new.
 - **FS4 / SG7.5, the fast-No check:** the card times each answer from when it could first be answered (its mount, or the lesson's tap on card 1) and passes `fast` (< 1.5 s) to `answer(store, me, fast)`. If the first 3 answers are fast No's with no Back in between, `Just checking: left means it's not your style.` shows in the card's place, with `Start over` (primary) and `Keep going`.
@@ -57,7 +57,7 @@ The planner's technical defaults 1–14 as written, plus:
 
 ## Fix round (verify round 3: C6, C7; tests re-locked at `478d2207`)
 - **C6** · `StyleGameScreen.tsx` `Lesson`: swiping across card 1's lesson no longer dismisses it. Only a tap does. The press records where it touched down (`onPressIn`), and a release that moved `TAP_SLOP` (6 pt) or more in any direction is ignored. That is the card's own `cardRelease(dx, dy) === 'peek'` rule. A press that carries no event or no coordinates still dismisses it, as the test kit's `fireEvent.press` sends none.
-- **C7** · `styleGameSession.ts` `back()`: Back on card 1 with nothing answered (the way out to Welcome) no longer rules out the fast-No check. Only a Back that undoes something during the cards does: an answer, or one still leaving. The timing is unchanged: card 1 is timed from the lesson's tap (#496).
+- **C7** · `styleGameSession.ts` `back()`: Back on card 1 with nothing answered (the way out to Welcome) no longer rules out the fast-No check. Only a Back that undoes something during the cards does: an answer, or one still leaving. The timing is unchanged: card 1 is timed from the lesson's tap (#505).
 - **Results:**
   - tsc clean; eslint clean on `src/features/onboarding`.
   - T113 in band: **92 / 92 pass**.

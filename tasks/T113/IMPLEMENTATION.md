@@ -1,6 +1,6 @@
 # T113 · The style game in setup
 
-**Size:** normal · **From:** `plan.md` → T113 · **Spec:** `specs/style-game.md`, SG1–SG9 and its "Changes to other specs". It has no approval line: it is built on the founder's chat instruction of Nov 18 (DECISIONS-LOG #489; the founder in chat outranks the spec rule), so the spec is the contract and its words are drafts he confirms · **Also:** `specs.md` F1 (step 2, F1.1, already rewritten for the game), `specs/onboarding-screens.md` OS3.1–OS3.2 (still hold), `specs/tailored.md` TL4 (Tailored is one of the 8) · **Reference:** the mockup `tasks/style-quiz/src/{logic.js,views.js,page.html}` on the unmerged branch `claude/style-flow-test-f504ea` (the version with the three fail-safes; read with `git show origin/claude/style-flow-test-f504ea:tasks/style-quiz/src/logic.js`). Where it and the spec disagree, the spec wins · **Decisions:** #482–#490 (#486 fairness, #487 design pass, #490 the fail-safes) · **Lane:** Setup and You (`app/src/features/onboarding/`, `app/src/app/onboarding/`, `en.ts` shared, `app/e2e/`) · **Branch:** `claude/t113-style-game` · **Log number for this task's decisions:** #492
+**Size:** normal · **From:** `plan.md` → T113 · **Spec:** `specs/style-game.md`, SG1–SG9 and its "Changes to other specs". It has no approval line: it is built on the founder's chat instruction of Nov 18 (DECISIONS-LOG #500; the founder in chat outranks the spec rule), so the spec is the contract and its words are drafts he confirms · **Also:** `specs.md` F1 (step 2, F1.1, already rewritten for the game), `specs/onboarding-screens.md` OS3.1–OS3.2 (still hold), `specs/tailored.md` TL4 (Tailored is one of the 8) · **Reference:** the mockup `tasks/style-quiz/src/{logic.js,views.js,page.html}` on the unmerged branch `claude/style-flow-test-f504ea` (the version with the three fail-safes; read with `git show origin/claude/style-flow-test-f504ea:tasks/style-quiz/src/logic.js`). Where it and the spec disagree, the spec wins · **Decisions:** #482–#490 (#486 fairness, #487 design pass, #490 the fail-safes) · **Lane:** Setup and You (`app/src/features/onboarding/`, `app/src/app/onboarding/`, `en.ts` shared, `app/e2e/`) · **Branch:** `claude/t113-style-game` · **Log number for this task's decisions:** #501
 
 ## Goal
 After Welcome, he plays instead of reading style names: 8 "Me or not me?" cards (one drawn outfit each, a tap shows the look's other outfit), then a few this-or-thats between his Me's, then "Here's your style", where he can drag, remove or add a look, type his own words, play again, or Continue to About you. His picks still never move a score. You → Style profile keeps its tiles.
@@ -339,7 +339,7 @@ After today's deletes it also deletes kv `onboarding.styleGame` and calls `endSt
    - `scenarios.test.ts`: the before-onboarding list.
 9. Flows: `play-style-game.yaml`, `T113-style-game.yaml`, and the four T39 setup flows plus `T39-screens.yaml`'s screen 2 block. The fresh-install flows tap the server as `http://.*:${PORT || '8081'}` (today they hard-code 8081).
 10. `npm run check` alone; then the flows on the Simulator on 8082 (one at a time); then screenshots of every demo screen in light, dark and AX5 into `tasks/T113/shots/`.
-11. TASK.md: what was built, retired tests, the defaults used (for the coordinator to log as #492), what wasn't seen on iOS.
+11. TASK.md: what was built, retired tests, the defaults used (for the coordinator to log as #501), what wasn't seen on iOS.
 
 ## Must not break
 - Style profile's tiles (`app/(tabs)/you/profile.tsx`): unchanged, all 8 after T94.
@@ -358,7 +358,7 @@ After today's deletes it also deletes kv `onboarding.styleGame` and calls `endSt
 - **F5 · The words field's VoiceOver label.** Recommended: `Your style in your words` (the mockup's).
 - **F6 · Quote marks in `In your words: "…"`.** The spec uses straight quotes, the mockup curly. Recommended: straight, like today's `"{words}"` on the old tile.
 
-**Technical defaults** (Claude's, for the coordinator to log as #492)
+**Technical defaults** (Claude's, for the coordinator to log as #501)
 1. **The game lives in memory, the results in kv.** Back to Welcome and forward resumes the same deal and answers (FS Back, SG7.4); a relaunch mid-game deals a new game (SG8.1); results are drafted in local kv `onboarding.styleGame` and reopen after a relaunch with no Back history (Back there goes to Welcome).
 2. **Back never undoes his words,** and Play again clears Back's history (so Back on its card 1 goes to Welcome, as SG1 says for card 1). The mockup did both differently (its Back reverted saved words and undid Play again). Words have their own Edit, and SG1 sends card 1's Back to Welcome.
 3. **A results list emptied by ×** (he had Me's) shows `Here's your style` with F3's line; the Nothing clicked title is only for Not me to all 8 (the mockup's rule). Once he adds a look from Nothing clicked, the title becomes `Here's your style`.
@@ -380,7 +380,7 @@ After today's deletes it also deletes kv `onboarding.styleGame` and calls `endSt
 - **T3 · SG1.1's sample size.** "Over 2,000 seeded deals every look is first 12.5% ± 1.5%" is about two standard errors, so a correct but differently seeded shuffle would fail it about 3 times in 10. With the mockup's generator ported exactly, seeds 1–2000 give 11.50–13.35% (checked Nov 18), so the test is stable *because* the port must be exact (the golden deals pin it). TESTING.md adds #486's stronger check (80,000 deals, every look at every position 12.5% ± 0.5) beside it.
 
 ## Coordinator's answers (Nov 18, overnight; the founder is asleep)
-The founder told the coordinator to build tonight and show him in the morning (#489). His questions F1–F6 take the planner's recommended drafts, all marked `draft, founder to confirm (specs/style-game.md)` in `en.ts`, and listed for him in the PR:
+The founder told the coordinator to build tonight and show him in the morning (#500). His questions F1–F6 take the planner's recommended drafts, all marked `draft, founder to confirm (specs/style-game.md)` in `en.ts`, and listed for him in the PR:
 - **F1:** the planner's 16 descriptions, including the three rewritten for T94's redraws. **F2:** always `Outfit 3 of 8, view 1 of 2. …`. **F3:** `Here's your style` / `Add a look, or tell me in your words.`. **F4:** `{name}, now {n} of {total}` and `Added {name}`. **F5:** `Your style in your words`. **F6:** straight quotes.
-- **Technical defaults 1–14:** accepted as written (logged as #492).
+- **Technical defaults 1–14:** accepted as written (logged as #501).
 - **T1:** asked T94's session to point TL4.1's test and flow at `LOOKS` and Style profile before its tests lock, and to push its app-facing commit early. **T2:** checks added to the plan line. **T3:** keep the 80,000-deal check beside SG1.1 (golden deals pin the port).

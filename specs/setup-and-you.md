@@ -57,7 +57,7 @@ Words approved Nov 10: `I'm Kit, your stylist.` · `From your first check` · `N
 Removed with the tips: there's nothing left to replay. Help & about has no `Show me around` row.
 
 ## SY4. The name (before launch)
-- On setup's About you step (`specs/onboarding-screens.md` OS4), above `How old are you?`: the label `What should Kit call you?` and a text field with the placeholder `First name`, focused with the keyboard up. `Continue` waits for a name and an age; a small `Skip` under it goes on without a name (the founder, Nov 18, #497, replacing "No Skip button": the name stays optional, as Apple 5.1.1(x) requires, but skipping it takes a deliberate tap).
+- On setup's About you step (`specs/onboarding-screens.md` OS4), above `How old are you?`: the label `What should Kit call you?` and a text field with the placeholder `First name`, focused with the keyboard up. `Continue` waits for a name and an age; a small `Skip` under it goes on without a name (the founder, Nov 18, #506, replacing "No Skip button": the name stays optional, as Apple 5.1.1(x) requires, but skipping it takes a deliberate tap).
 - Trimmed; up to 30 characters **(assumed)**; blank means no name.
 - Style profile → Basics gets a `Name` row to change or clear it (the same placeholder).
 - Used only in code-written lines (F1.5); never sent to Google, OpenAI or PostHog; Kit's AI answers never say it. Signing in with Apple fills an empty one with Apple's first name (F1.4, built with sign-in).

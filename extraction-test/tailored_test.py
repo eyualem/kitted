@@ -37,6 +37,7 @@ from rules_conformance import top, outer, bottom, shoe, Rd, mod  # noqa: E402
 
 PINS = K / "handoff" / "fixtures" / "tailored_base_v15.json"
 OUT = K / "handoff" / "fixtures" / "tailored.json"
+PINS16 = K / "handoff" / "fixtures" / "tailored_main_v16.json"   # T69's v16 on main before T94 merged (da9b7253)
 SEVEN = ["vintage_sport", "outdoor", "workwear", "streetwear", "classic_prep", "minimalist", "smart_casual"]
 LOOK_ORDER = ["vintage_sport", "outdoor", "workwear", "streetwear", "tailored", "classic_prep", "minimalist", "smart_casual"]
 
@@ -221,6 +222,35 @@ def write_pins():
                              "fixes": fix_numbers(f), "fix_order": [x["id"] for x in f["fixes"]]}
     PINS.write_text(json.dumps(out, indent=1) + "\n")
     print(f"wrote {PINS.relative_to(K)} ({len(CASES)} readings)")
+
+
+def strip_lines(x):
+    """A result's v16 block with its words left out (a line may name the look; every number and id stays)."""
+    if isinstance(x, dict):
+        return {k: strip_lines(v) for k, v in x.items() if k != "line"}
+    if isinstance(x, (list, tuple)):                                  # a tuple reads back from JSON as a list
+        return [strip_lines(v) for v in x]
+    return x
+
+
+def v16_snapshot(cid):
+    c = CASES[cid]
+    sp = P.score_parts(c["reading"], c["occasion"], picks_of(c), engine="v16")
+    f = PF.suggest_parts_fixes(c["reading"], c["occasion"], c["picks"], engine="v16")
+    return {"numbers": numbers(sp), "v16": strip_lines(sp.get("v16")), "fixes": fix_numbers(f), "fix_order": [x["id"] for x in f["fixes"]]}
+
+
+def write_pins_v16():
+    if hasattr(R, "detect_looks"):
+        sys.exit("--pin-v16 runs on main's engine before T94 (da9b7253) only; the pins are locked.")
+    out = {"about": "T94 after T69 (tasks/T94/TESTING.md, Disputes 4): engine v16's numbers (the v16 block without its "
+                    "lines), fixes and fix order for every reading in extraction-test/tailored_test.py, recorded by the test "
+                    "writer with tailored_test.py --pin-v16 on main's engine at da9b7253 (T69 merged, T94 not). Read by "
+                    "tailored_test.py and kitted-core's tailored.test.ts. Never edit by hand, never regenerate after the lock.",
+           "engine_commit": "da9b7253", "cases": {cid: dict(v16_snapshot(cid), reading=CASES[cid]["reading"], picks=CASES[cid]["picks"])
+                                                  for cid in CASES}}
+    PINS16.write_text(json.dumps(out, indent=1) + "\n")
+    print(f"wrote {PINS16.relative_to(K)} ({len(CASES)} readings)")
 
 
 # --------------------------------------------------------------------------------------------- the tests
@@ -530,6 +560,37 @@ def _():
         assert (p["reading"], p["picks"], p["occasion"]) == (c["reading"], c["picks"], c["occasion"]), f"{cid}: reading changed"
 
 
+# ===== TL3 on v16 (T69 merged first; Disputes 4) =====================================================================
+@test("TL3.1 · on v16 too, every reading keeps every number T69's v16 gave before Tailored (main, da9b7253)")
+def _():
+    pins = json.loads(PINS16.read_text())["cases"]
+    assert sorted(pins) == sorted(CASES), "the v16 pins and the test's readings differ"
+    bad = []
+    for cid, c in CASES.items():
+        p = pins[cid]
+        assert (p["reading"], p["picks"]) == (c["reading"], c["picks"]), f"{cid}: reading changed"
+        got = v16_snapshot(cid)
+        for k in ("numbers", "v16", "fixes", "fix_order"):
+            if got[k] != p[k]:
+                bad.append(f"{cid}: {k}")
+    assert not bad, bad
+    # the v16 pins aren't v15's: the case is real
+    assert any(pins[cid]["numbers"] != pinned(cid)["numbers"] for cid in CASES)
+
+
+@test("TL2.1 · on v16 the names are v15's: the same looks, label and reads-as line on every reading")
+def _():
+    off = []
+    for cid, c in CASES.items():
+        a = parts(cid)
+        b = P.score_parts(c["reading"], c["occasion"], picks_of(c), engine="v16")
+        if (a.get("detected_styles"), a.get("style_label"), h1(a) if a.get("parts") else None) != \
+                (b.get("detected_styles"), b.get("style_label"), h1(b) if b.get("parts") else None):
+            off.append((cid, a.get("style_label"), b.get("style_label")))
+    assert not off, off
+    assert parts("suit")["style_label"] == "tailored"
+
+
 # --------------------------------------------------------------------------------------------- the TS fixture
 def snapshot(cid):
     c = CASES[cid]
@@ -543,6 +604,9 @@ def snapshot(cid):
 
 
 def main():
+    if "--pin-v16" in sys.argv:
+        write_pins_v16()
+        return 0
     if "--pin" in sys.argv:
         write_pins()
         return 0

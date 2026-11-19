@@ -30,7 +30,7 @@ name: T39 · Under 18 stops the app
 - assertVisible: "Under 18"
 - assertNotVisible: "Born in .*"
 - tapOn: "Under 18"
-# #497: no name typed, so Skip is the way on; it asks the same as Continue.
+# #506: no name typed, so Skip is the way on; it asks the same as Continue.
 - tapOn: "Skip"
 - extendedWaitUntil:
     visible: "Under 18\\?"

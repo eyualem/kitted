@@ -17,7 +17,7 @@ After this, a new user finds his style by playing, not by reading style names: e
 - **For the beta:** all of it, in the same build as Tailored (T94). The friends' beta is paused (#462); this ships in the next TestFlight build.
 
 ## SG1. Is this your style?
-*Changed on Nov 18 after a real tester thought swiping meant "next outfit" and rejected looks he liked (the founder: "it should be more intuitive"; #494). Was "Me or not me?" with Me / Not me.*
+*Changed on Nov 18 after a real tester thought swiping meant "next outfit" and rejected looks he liked (the founder: "it should be more intuitive"; #503). Was "Me or not me?" with Me / Not me.*
 - Large title `Is this your style?`, line `One outfit at a time.`
 - One card at a time, 8 in all, one per look: Streetwear, Minimal, Smart casual, Classic prep, Tailored, Workwear, Outdoor, Vintage sport. The card shows the look's first drawing (the app's own drawing code, never a person) and no name.
 - **Order:** a fresh shuffle each game, with no look-alikes side by side, counting the last card as next to the first (Classic prep–Tailored, Minimal–Smart casual, Workwear–Outdoor, Streetwear–Vintage sport, Smart casual–Classic prep). Each look is equally likely at each position. The game's seed is kept with the game, so Back keeps the order and Play again deals a new one.
@@ -27,7 +27,7 @@ After this, a new user finds his style by playing, not by reading style names: e
 - **Back** undoes the last card (or the last ranking pick); on card 1 it goes to Welcome.
 
 ## SG2. Now put them in order
-- Shown only when he said Me to 2 or more looks. Title `Now put them in order`, line `Tap the one that's more you.` (the founder, Nov 18: no "You said Me to {n}.", #493)
+- Shown only when he said Me to 2 or more looks. Title `Now put them in order`, line `Tap the one that's more you.` (the founder, Nov 18: no "You said Me to {n}.", #502)
 - Two of his Me's side by side, each on its second drawing, mid-screen in thumb reach. He taps the one that's more him.
 - Each Me is placed into a top 3 by binary insertion: at most 2 taps per Me after the first. The first pair starts on a random side, then sides alternate, so neither side wins more often.
 - With 1 Me, this step is skipped; with 0, he lands on SG6.
@@ -54,7 +54,7 @@ Three small ones, each kept because it helped in the flow test's simulation (mad
 - **FS1. Tap the card for its other outfit.** On any card, a tap (a press that moves under 6 pt; past 90 pt is a swipe; in between springs back) switches between the look's two drawings. Two small dots at the top of the card show which one is up. It's not an answer, so Back doesn't undo it; the answer counts for the look, whichever drawing shows, and the next card starts on its first. VoiceOver: an `Another outfit` action, and the card reads `Outfit 3 of 8, view 2 of 2. {description}`. Words: `Not sure? Tap it for another outfit.` *(Why: a drawing that half-reads as a neighbour is the commonest way the right look gets a Not me.)*
 - **FS2. Add a look works on a full list.** With 3 looks, the pick takes #3's place, with the note `{name} in, {old} out` and Undo for 5 seconds. The sheet never lists a look he has. *(Why: at 3, "Add a look" was a dead end for a guy whose real #1 was missed.)*
 - **FS3. The results line names the fixes** (words only): `Your top looks, in order. Not quite right? Drag, remove or add one.` *(Why: people fix a wrong result more often when the screen says they can, especially a guy whose style isn't one of the 8.)*
-- **FS4. Catch "swiping to browse" (#494, from a real tester).** If his first 3 answers are all No, each given less than 1.5 s after its card appeared, with no Back in between, a small card shows before card 4: `Just checking: left means it's not your style.` with `Start over` (primary) and `Keep going`. Start over clears those 3 answers and returns to card 1 of the same deal (no overlay again); Keep going goes on to card 4. It shows at most once per game. *(Why: a guy who thinks a swipe means "next" says No to everything at browsing speed; a guy who really dislikes the first three loses one tap.)*
+- **FS4. Catch "swiping to browse" (#503, from a real tester).** If his first 3 answers are all No, each given less than 1.5 s after its card appeared, with no Back in between, a small card shows before card 4: `Just checking: left means it's not your style.` with `Start over` (primary) and `Keep going`. Start over clears those 3 answers and returns to card 1 of the same deal (no overlay again); Keep going goes on to card 4. It shows at most once per game. *(Why: a guy who thinks a swipe means "next" says No to everything at browsing speed; a guy who really dislikes the first three loses one tap.)*
 - **Back, already there, pinned down:** undoes exactly one answer (a card or a this-or-that); on card 1 it goes to the previous setup step, and coming back resumes the same game (same deal, same answers).
 - **Tested and dropped, so not to add:** a visible Undo under the card (Back already does it); a second look offered when he says Me to 0 or 1 (it talked the guy whose style isn't listed into looks he doesn't like, −4.8 points); a double-check at 6+ Me's; an automatic second drawing when he hesitates (a step for nearly everyone).
 - **Known cost, left alone:** a guy who says Me to all 8 makes about 13 this-or-thats; "likes almost everything" is the weakest group (77 → 78%).
@@ -77,7 +77,7 @@ Three small ones, each kept because it helped in the flow test's simulation (mad
 ## Changes to other specs (on the founder's Nov 18 instruction; confirm in his review)
 - `specs/onboarding-screens.md` OS3, the Looks bullet: the title, line, tiles, `Something else?` and `Continue · {n} of 3` give way to this spec ("Looks is the style game, `specs/style-game.md`").
 - `specs.md` F1 step 2: "Play the style game (8 \"Is this your style?\" cards, then a few this-or-thats), then keep, reorder or fix his top looks, or describe his style in his own words."
-- `specs.md` F1.1: "A fresh install reaches the camera in 18 taps or fewer when he says Me to 3 looks or fewer (17 until Nov 18, #495; 7 until Nov 18, #488) …" (Get started · the card-1 lesson · 8 cards · up to 3 this-or-thats · Continue · an age · Continue · Check my fit · Agree; the lesson shows on the first game only).
+- `specs.md` F1.1: "A fresh install reaches the camera in 18 taps or fewer when he says Me to 3 looks or fewer (17 until Nov 18, #504; 7 until Nov 18, #488) …" (Get started · the card-1 lesson · 8 cards · up to 3 this-or-thats · Continue · an age · Continue · Check my fit · Agree; the lesson shows on the first game only).
 
 ## Acceptance criteria
 **SG1**

@@ -2,7 +2,7 @@
 // value), so Back to Welcome and Get started again resume the same deal and answers (FS Back). A relaunch empties memory:
 // mid-game he starts at card 1 with a new deal, and on Here's your style the kv draft (onboarding.styleGame, local)
 // brings his list back (SG8). Back undoes exactly one thing: a results change, else the last this-or-that, else the last
-// card. His words are never undone by Back; Play again clears Back's history (technical defaults 1 and 2, #492).
+// card. His words are never undone by Back; Play again clears Back's history (technical defaults 1 and 2, #501).
 import { useSyncExternalStore } from 'react';
 import type { KittedStore } from '@/data/store';
 import type { StyleKey } from '@/data/types';

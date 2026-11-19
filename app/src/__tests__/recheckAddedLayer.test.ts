@@ -16,6 +16,11 @@ import type { ImagePrep } from '@/services/imagePrep/demo';
 import { createQuota } from '@/services/quota';
 import type { ReadingEvent, ReadingSource } from '@/services/readingSource/types';
 import { realScheduler } from '@/services/scheduler';
+import { setRescoreV16 as setRescoreV16T69 } from '@kitted/core';
+// T69 (#484, #487): this file tests the re-check's confirm flow with v15's numbers. v15 still scores every check stored before T69 (and is the third
+// switch's rollback), so the file is pinned to it; v16's card, rows and numbers are in the T69-*.test.ts files.
+beforeAll(() => setRescoreV16T69(false));
+afterAll(() => setRescoreV16T69(true));
 
 const clone = <T,>(x: T): T => JSON.parse(JSON.stringify(x)) as T;
 const FIRST = fixture.first as unknown as Reading;

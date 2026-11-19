@@ -18,7 +18,7 @@ import { advance, byId, flush, getId, type Node } from './t39ScreenMocks';
 /** A `random` whose first number makes newSeed (1 + floor(random() × 0x7FFFFFFE)) give exactly `seed`. */
 export const seedRandom = (seed: number) => () => (seed - 1 + 0.5) / 0x7ffffffe;
 
-/** SG1.4 (#494): card 1's teaching overlay, word for word, and the per-install flag the tests read and write: the
+/** SG1.4 (#503): card 1's teaching overlay, word for word, and the per-install flag the tests read and write: the
  *  overlay is taught (never shown again) once kv `onboarding.swipeTaught` holds any value; dismissing it writes one. */
 export const TEACH = "Swipe right if it's your style, left if it's not.";
 export const TAUGHT_KEY = 'onboarding.swipeTaught';

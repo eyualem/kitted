@@ -1,6 +1,6 @@
 # T114 · About you nudges for the name, with a small Skip
 
-**Size:** normal (CLAUDE.md: the session builds it with tests, then one separate reviewer). **Spec:** `specs/onboarding-screens.md` OS4 (items 3 and 6, OS4.1, OS4.2), `specs/setup-and-you.md` SY4 / SY4.1, `specs.md` F1 step 3 and F1.4, all changed on the founder's Nov 18 instruction ("let us make adding a name mandatory", then "Nudge, small Skip"; log #497). Built in the T113 branch (PR #146) because he asked for it before that merge.
+**Size:** normal (CLAUDE.md: the session builds it with tests, then one separate reviewer). **Spec:** `specs/onboarding-screens.md` OS4 (items 3 and 6, OS4.1, OS4.2), `specs/setup-and-you.md` SY4 / SY4.1, `specs.md` F1 step 3 and F1.4, all changed on the founder's Nov 18 instruction ("let us make adding a name mandatory", then "Nudge, small Skip"; log #506). Built in the T113 branch (PR #146) because he asked for it before that merge.
 
 ## Plan
 - The name stays optional (Apple App Review 5.1.1(x)); setup makes skipping it deliberate.
@@ -20,7 +20,7 @@
 - Shots: `shots/about-open-light.png`, `about-open-caret-light.png` (the field focused, its caret showing; the build before the review fix, same focus for an empty name), `about-age-no-name-light.png`, `about-typed-light.png`, `about-open-dark.png`, `about-open-ax5.png`.
 
 ## Not verified
-- That the software keyboard rises on its own: the Simulator showed the caret (the field has focus) but kept the on-screen keyboard down until typing, as it does with a hardware keyboard connected. A phone check (Y48).
+- That the software keyboard rises on its own: the Simulator showed the caret (the field has focus) but kept the on-screen keyboard down until typing, as it does with a hardware keyboard connected. A phone check (Y49).
 - With the keyboard up, 26–30 and 31 or older sit under it until he taps the keyboard's ✓ or scrolls (one extra tap for those two bands).
 
 ## Review (one separate reviewer, Nov 18)

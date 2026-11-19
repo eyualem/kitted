@@ -25,10 +25,12 @@ Read `CLAUDE.md`'s hard lines. Open other docs only if a finding needs one.
 - **The screenshots:** anything broken (clipped or overlapping text, a missing element, wrong words, unreadable dark mode). For a designed task: an element missing or extra, or different words, compared with the frames by eye. Spacing differences aren't defects.
 - Don't re-run the Simulator or the flows: the screenshots are your view. Don't re-run `npm run check` in normal mode; the session ran it.
 
+Read the diff (`git diff main...HEAD`) and slices of the files it touches, never a big file or fixture whole (the founder, Nov 18: keep builds lean).
+
 ## Strict mode, also
 - The test lock: `git diff <the Lock SHA in TESTING.md>..HEAD -- <the locked test files> tasks/<ID>/TESTING.md` is empty, apart from the `<ID>: lock tests` commit itself and the test-writer commits whose SHAs are in TASK.md → Disputes.
 - `npm run check` in `app/` (memory first: `top -l 1 | grep PhysMem`), and the server tests, the parity tests or the Python engine's tests (`python3 extraction-test/<name>_test.py`) if the task touched `firebase/`, `@kitted/core` or `extraction-test/`. Paste the last lines.
-- **At most 3 planted bugs, only in the strict code:** a skipped face blur, an off-by-one in a score, the age gate letting 17 through, a photo sent without consent. For each: make it, run the locked tests, at least one must fail, then `git checkout -- <file>` and confirm the tree is clean. A bug no test catches is a **test** defect.
+- **At most 3 planted bugs, only in the strict code:** a skipped face blur, an off-by-one in a score, the age gate letting 17 through, a photo sent without consent. For each: make it, run the one locked test file it should trip (not the whole suite), at least one test must fail, then `git checkout -- <file>` and confirm the tree is clean. A bug no test catches is a **test** defect.
 
 ## Verdict
 Add a new **Round <n>** block under TASK.md → **Review** (never replace an earlier round):

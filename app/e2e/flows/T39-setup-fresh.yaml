@@ -1,10 +1,10 @@
 # T39 · OS3.1, OS3.2, OS5.1, OS5.2 (Agree), OS5.5, F1.1, SY4.1 (tasks/T39/TESTING.md), retargeted by T113 (the style
-# game, specs/style-game.md; F1.1 is now "18 taps or fewer with 3 Me's", #495, the lesson's tap included): a fresh install
-# reaches a live camera in at most 18 taps: Get started (1), card 1's lesson (2, SG1.4, #494), Yes on 3 cards (3–5),
+# game, specs/style-game.md; F1.1 is now "18 taps or fewer with 3 Me's", #504, the lesson's tap included): a fresh install
+# reaches a live camera in at most 18 taps: Get started (1), card 1's lesson (2, SG1.4, #503), Yes on 3 cards (3–5),
 # No on 5 (6–10), the ranking's left card while it shows (at most 3: 11–13), Continue (14), 22–25 (15), Continue (16),
 # the card's Check my fit (17), Agree (18). The lesson shows on the first game only. No bubble on
 # Looks or About you, no agreement screen in setup, no sign-in and no paywall on the way, and the camera never opens on
-# its own. The name is typed (#497: the field opens focused, and typing isn't a tap). Taps on the game are by testID: the deal is random on a fresh
+# its own. The name is typed (#506: the field opens focused, and typing isn't a tap). Taps on the game are by testID: the deal is random on a fresh
 # install, so nothing here depends on which look is on a card.
 # Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test -e PORT=8082 app/e2e/flows/T39-setup-fresh.yaml
 # (PORT defaults to 8081). No demo arguments: a demo screen opens the camera without the agreement. The development
@@ -102,7 +102,7 @@ name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesso
 - assertNotVisible: "Take photo"
 - assertNotVisible: "Continue free"
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
-# #497: a small Skip until he types (the hint above Continue is hidden from VoiceOver, so Maestro can't see it; the
+# #506: a small Skip until he types (the hint above Continue is hidden from VoiceOver, so Maestro can't see it; the
 # render tests check it).
 - assertVisible: "Skip"
 # Not a tap: the field has focus when the step opens, so the letters go straight in.

@@ -43,7 +43,7 @@ name: T39 · setup, offer and Style profile screens
 - assertVisible:
     text: "Continue"
     enabled: false
-# #497: a small Skip that waits for an age (the hint is hidden from VoiceOver; the render tests check it).
+# #506: a small Skip that waits for an age (the hint is hidden from VoiceOver; the render tests check it).
 - assertVisible:
     text: "Skip"
     enabled: false
@@ -70,7 +70,7 @@ name: T39 · setup, offer and Style profile screens
     text: "Continue"
     enabled: true
 - assertNotVisible: "Pick your age to go on\\."
-# #497: with a name (Alex) there's no Skip.
+# #506: with a name (Alex) there's no Skip.
 - assertNotVisible: "Skip"
 
 # 136 · Restore
@@ -86,7 +86,7 @@ name: T39 · setup, offer and Style profile screens
 - assertNotVisible: "What should Kit call you\\?"
 - assertNotVisible: "Kit: .*"
 - assertNotVisible: "Step .* of .*"
-# #497: Restore asks the age only, so no Skip.
+# #506: Restore asks the age only, so no Skip.
 - assertNotVisible: "Skip"
 
 # 280 · Kit's offer

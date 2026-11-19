@@ -2,6 +2,12 @@
 // at run time (tests only) moves scoreParts, defaultParts and the fix engine together.
 import { afterEach, describe, expect, it } from "vitest";
 import { CASUAL_FITS_V14, defaultParts, PARTS_DATA, partsDataFor, scoreParts, setCasualFitsV14, suggestPartsFixes, type Reading } from "../src";
+import { afterAll as afterAllT69 } from "vitest";
+import { setRescoreV16 as setRescoreV16T69 } from "../src/index";
+// T69 (#484, #487): this file tests the v14 switch and its v13 rollback. That engine still ships as the third switch's rollback and scores
+// every check stored before T69, so the file is pinned to v15; v16's own behaviour is in the T69 tests.
+setRescoreV16T69(false);
+afterAllT69(() => setRescoreV16T69(true));
 
 const G = (category: string, subcategory: string, color_family: string, extra: Record<string, unknown> = {}) => ({
   category, subcategory, color_family, pattern: "solid", logo: "none", volume: 3, leg_shape: "na", hem: "na", tucked: "na",
@@ -22,7 +28,8 @@ describe("the casual-fits switch (parts v14)", () => {
 
   it("is on: the bundled data is v15 (v14 plus the hoodie layer, #385) and v13 is the rollback", () => {
     expect(CASUAL_FITS_V14).toBe(true);
-    expect(PARTS_DATA.engine).toBe("v15");
+    expect(PARTS_DATA.engine).toBe("v16"); // T69: v16 is bundled now; v15 is the third switch's rollback (this file is pinned to it)
+    expect(partsDataFor(true, true, false).engine).toBe("v15");
     expect(partsDataFor(false).engine).toBe("v13");
     expect(partsDataFor(false).version).toBe("1.10.0");
     expect(partsDataFor(false, false).engine).toBe("v13"); // v13 wins whatever the hoodie switch says
