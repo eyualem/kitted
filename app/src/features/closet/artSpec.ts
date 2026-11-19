@@ -73,6 +73,13 @@ function shapeOf(category: unknown, sub: string): ArtShape {
   return 'top';
 }
 
+/** The cut a piece's name says: "Oversized tee", "Black boxy tee", "drop-shoulder tee" draw oversized; "relaxed fit" draws relaxed. */
+function fitFromName(name: unknown): 'oversized' | 'relaxed' | null {
+  const n = String(name ?? '').toLowerCase();
+  if (/\b(oversized|over-sized|boxy|drop[- ]?shoulders?)\b/.test(n)) return 'oversized';
+  return /\brelaxed[- ]fit\b/.test(n) ? 'relaxed' : null;
+}
+
 /** The drawing for a piece. */
 export function artSpec(item: ArtItem): ArtSpec {
   const g = item.garment;
@@ -134,8 +141,11 @@ export function artSpec(item: ArtItem): ArtSpec {
       ?? (kind === 'henley' && art?.sleeves === 'short' ? 'short' as const : undefined)
       ?? ((type === 'tee' || type === 'polo') && isLongSleeved(sub, art) ? 'long' as const : undefined)
       ?? KIND_SLEEVES[kind];
+    // A tee his own words call oversized (oversized-tee, founder Nov 19) draws oversized even at the default volume: the piece's
+    // name says it, and a name never moves a score. A fit he set (volume 2, 4 or 5) still wins over the name.
+    const nameFit = vol === 3 && type === 'tee' ? fitFromName(item.name) : null;
     flat = {
-      kind: 'top', type, color: c, fit: vol <= 2 ? 'slim' : vol >= 5 ? 'oversized' : vol === 4 ? 'relaxed' : type === 'overshirt' ? 'relaxed' : 'regular',
+      kind: 'top', type, color: c, fit: vol <= 2 ? 'slim' : vol >= 5 ? 'oversized' : vol === 4 ? 'relaxed' : nameFit ?? (type === 'overshirt' ? 'relaxed' : 'regular'),
       pattern: p, details, brand, print: pattern === 'graphic' || sub === 'graphic_tee',
       ...(topSleeves ? { sleeves: topSleeves } : {}),
       ...(kind === 'henley' ? { neck: 'henley' as const } : kind === 'turtleneck' ? { neck: 'turtle' as const } : {}),

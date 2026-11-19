@@ -240,6 +240,7 @@ Lane files: `app/src/features/{closet,scan,lookbook}`, `app/src/services/closetS
 - [x] 2026-11-10, #74 · **T72** · Your Nov 8 beta notes on Closet: write `specs/closet-beta.md` with you (Outfits off for now; the piece questions one card at a time), and `specs.md` F7 if you say yes · *done: your yes · files: `specs/closet-beta.md`, `specs.md` F7* · **approved Nov 8**, F7 changed
 - [x] 2026-11-10, #84 · **T73** · Closet without Outfits: no Pieces | Outfits switch, nothing elsewhere leads to it · *after T72 · checks: CB1.1–CB1.5 · files: closet/, `(tabs)/closet/index.tsx`, ask/ (buy card line), features.ts, en.ts*
 - [~] closet-beta-fixes · PR #94 · **T74** · The piece questions one card at a time: swipe or answer to move on, "2 of 5", Undo, Skip · *after T73 · checks: CB2.1–CB2.10 · files: closet/, `(tabs)/closet/index.tsx`, en.ts*
+- [~] **oversized-tee** · PR #158 · tiny · *(beta, the founder in chat Nov 19: "Can we add tiles for oversized T's?")* A tee called oversized, boxy or drop-shoulder now draws with dropped shoulders, a boxy body, a longer hem and longer, wider sleeves toward the elbow; his "Oversized tee" no longer looks like his Charcoal tee; a fit set on the piece still wins, polos, shirts and every drawing that existed are unchanged (DECISIONS-LOG #517; shots in `tasks/oversized-tee/shots/`) · *files: closet/artSpec.ts, closet/flats.ts*
 
 ### Launch
 *Getting into the App Store. Done means Apple's weather and app lock are on, both launch tests pass (the fix works, the score is fair), every requirement is checked, and the app is submitted.*
@@ -282,6 +283,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-19 · oversized-tee (control's task, tiny): his "Oversized tee" tile now draws oversized (dropped shoulders, boxy body, longer hem, sleeves toward the elbow) because the name says so; a plain tee is unchanged (DECISIONS-LOG #517, PR #158).
 - 2026-11-19 · founder-limits (your ask via the control session): your own account gets 50 fit checks and 200 questions a day on the live server and in the app's mirror; everyone else keeps 3 and 20, the spend cap is untouched, and the app shows no Pro wording or paywall. Your yes Nov 19 ("Yes, all three"): merged, functions deployed, `founderUids` set in Firestore (your account ID is never in git). DECISIONS-LOG #516.
 - 2026-11-19 · t105-kit-words (control's task): Kit's answers are now checked by code: shorter (40 words with a card), no brands or shop names, no invented app sections, no colors the scoring rules would mark down, and Kit sees today's cards so it can't deny them (PR #156). No screen changed; real-model proof waits for T110.
 - 2026-11-18 · why-button (your ask, voice): Why 7.5? is now a grey button beside the result's other button: first check, Re-check after fixing and Why share a row; re-check card, Why and Not quite right? side by side instead of links (option A, no icon on Why so it fits at 393 pt); web-preview screenshots light and dark, `npm run check` green; iOS Simulator, largest text and VoiceOver not checked; PR #154, log #513
