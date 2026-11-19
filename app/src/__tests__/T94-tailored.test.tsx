@@ -9,7 +9,7 @@
 // (18–21), regular fit, everyday. Nothing is sent: global fetch fails the test, the AI transport must stay empty.
 import { flush, mockT39, mount, press, root, setUpT39Tests, textOf, type Node } from '@/testing/t39ScreenMocks';
 import { screen, within } from '@testing-library/react-native';
-import { scoreParts, type PartsScored, type Reading, type Styles } from '@kitted/core';
+import { scoreParts, setRescoreV16, type PartsScored, type Reading, type Styles } from '@kitted/core';
 import type { ProfileRow, StyleKey } from '@/data/types';
 import { normStyleKey, STYLES } from '@/data/types';
 import { renderFlat } from '@/features/closet/flats';
@@ -320,15 +320,24 @@ describe('TL4.3 · Going for Tailored names what pulls away', () => {
 
 // ── TL2.2 · How I scored ────────────────────────────────────────────────────────────────────────────────────────
 describe('TL2.2 · How I scored on a suit', () => {
+  // Ruled retarget (Disputes 5): exactly what TL2.2 asks, on the default engine (v16) and on v15. Whether a "Reads as"
+  // row may also follow the parts is T69's plan, not TL2.2 (its own task in T69's lane).
+  afterEach(() => setRescoreV16(true));
   it('TL2.2 · How I scored on the suit shows "Reads as tailored"', () => {
-    const res = scoreParts(demoReadingById('s09') as Reading, { occasion: 'everyday' }) as PartsScored;
-    expect(res.styleLabel).toBe('tailored');
-    const w = whyParts(res, { occasion: 'everyday', readsAs: res.styleLabel as StyleKey, gainPart: null });
-    const style = w.groups.find((g) => g.part === 'cohesion')!;
-    expect(style.rows.filter((r) => /^Reads as/.test(r.rule)).map((r) => [r.rule, r.amount])).toEqual([['Reads as tailored', 0.5]]);
-    const every = [...w.groups.flatMap((g) => g.rows), ...w.after].map((r) => `${r.rule} ${r.item ?? ''}`);
-    expect(every.filter((x) => /matching suit/i.test(x))).toEqual([]);
-    // the engine line says it, so no "Reads as" row after the parts
-    expect(w.after.filter((r) => r.key === 'readsAs')).toEqual([]);
+    for (const engine of ['v16', 'v15'] as const) {
+      setRescoreV16(engine === 'v16');
+      const res = scoreParts(demoReadingById('s09') as Reading, { occasion: 'everyday' }) as PartsScored;
+      expect([engine, res.engine, res.styleLabel]).toEqual([engine, engine, 'tailored']);
+      const w = whyParts(res, { occasion: 'everyday', readsAs: res.styleLabel as StyleKey, gainPart: null });
+      const style = w.groups.find((g) => g.part === 'cohesion')!;
+      // the Style part's credit says Tailored, at its +0.5
+      expect([engine, style.rows.filter((r) => /^Reads as/.test(r.rule)).map((r) => [r.rule, r.amount])]).toEqual([engine, [['Reads as tailored', 0.5]]]);
+      const every = [...(w.start ? [w.start] : []), ...w.groups.flatMap((g) => g.rows), ...w.after].map((r) => `${r.rule} ${r.item ?? ''}`);
+      // never "a matching suit", and every row that names the look names Tailored
+      expect([engine, every.filter((x) => /matching suit/i.test(x))]).toEqual([engine, []]);
+      const named = every.filter((x) => /reads as/i.test(x));
+      expect(named.length).toBeGreaterThan(0);
+      expect([engine, named.filter((x) => !/reads as tailored/i.test(x))]).toEqual([engine, []]);
+    }
   });
 });

@@ -369,3 +369,8 @@ Never dropped, never counted as done.
      - But T69's code comment and its locked `T69-whyRows.test.ts` (`readsAs missing` with readsAs passed) expect it always.
      - `specs/tailored.md` TL2.2 only asks that it say Tailored, never "a matching suit".
      - The founder or the coordinator decides; the test stays as it is.
+5. **Nov 18 · app `T94-tailored.test.tsx` TL2.2, a ruled retarget (Disputes 4's open item, ruled A by the parent session for the founder).**
+   - **What changed:** the test now asks exactly what TL2.2 asks. How I scored for the suit (s09, everyday) says Tailored: the label is `tailored`, the Style part's row is `Reads as tailored` at +0.5, and every row that says "reads as" names Tailored (at least one does). No row says "a matching suit". It checks this on the app's default engine (v16) and on v15 (`setRescoreV16(false)`), and asserts which engine scored each run.
+   - **What was dropped, and why:** only the "no Reads as row after the parts" assertion. Whether a second "Reads as" row may follow the parts belongs to T69's plan (its Why rows), not to TL2.2, and becomes its own task in T69's lane.
+   - **Result:** green on both engines (the file passes 12/12).
+   - **Bite:** I planted "a matching suit" back as the line for a suit that reads as Tailored (`parts.ts`, H1), and TL2.2 failed (`Reads as tailored` missing from the Style rows). I reverted it.
