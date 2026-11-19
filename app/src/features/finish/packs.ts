@@ -26,7 +26,8 @@ export interface LookPack {
   own: readonly string[];
 }
 
-export const PACKS: Readonly<Record<StyleKey, LookPack>> = {
+// T94 (founder 2): Tailored has no pack yet (the catalog has no blazer, trousers or derbies); a Tailored pick is skipped.
+export const PACKS: Readonly<Partial<Record<StyleKey, LookPack>>> = {
   // [STR-1]/[STR-2]: "Grey hoodie + wide jeans + chunky sneakers reads as streetwear".
   streetwear: {
     ids: ['s15', 's13', 's18', 's14', 's17', 's16', 's19', 's01', 's09', 's21', 's20', 's12'],
@@ -104,9 +105,9 @@ const byId = (id: string): StarterEntry => {
  * pick's rows in theirs, so ties in "+N" go to his first pick.
  */
 export function starterList(styles: Styles | null): StarterEntry[] {
-  const looks = picksOf(styles);
+  const looks = picksOf(styles).filter((k) => PACKS[k]);
   if (looks.length === 0) return COMMON_IDS.map(byId);
-  const packs = looks.map((k) => PACKS[k]);
+  const packs = looks.map((k) => PACKS[k]!);
   if (packs.length === 1) return packs[0]!.ids.map(byId);
   const chosen: StarterEntry[] = CORE_IDS.map(byId);
   const add = (id: string): boolean => {

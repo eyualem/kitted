@@ -150,6 +150,7 @@
 - **Minimal:** a quiet palette, clean lines, a relaxed top over straight or wide trousers ("city boy"), loafers or clean leather sneakers. The detail is the point: fabric, wash, a perfect plain tee. Tone-in-tone works best here.
 - **Smart casual:** polos, oxfords, knits, overshirts, chinos or trousers, loafers or clean leather sneakers; a knit polo tucked into straight chinos is one of the easiest sharp outfits. One relaxed piece keeps it from looking stiff.
 - **Classic prep:** oxfords, cardigans, rugby shirts, chinos, loafers; a colored or striped oxford is the marker. Keep the fit neat, not tight.
+- **Tailored:** suits, blazers, dress trousers, loafers or derbies. Everything rides on the jacket's shoulders (they should sit right and not pull), and a slightly relaxed jacket looks easier than a sharp, tight one; a tailor is cheap compared to a new jacket. The trousers just touch the shoe with one clean break at most. Don't overdress for an errand: a suit for a gas-station run kills the suit's effect.
 - **Workwear:** a chore coat or trucker jacket, straight dark jeans or work pants, boots; patina and fading are part of it. Different washes if wearing double denim.
 - **Vintage sport:** one hero piece (a jersey, a rugby shirt, a track jacket) with straight jeans and retro sneakers; the rest stays plain.
 - **Outdoor:** a shell or fleece with cargos and trail shoes; function first, one color pop.

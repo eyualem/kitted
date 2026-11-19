@@ -1,0 +1,50 @@
+{
+ "base": "da9b7253ca9ec8888ad960ce6e5fb3bd81189cf5",
+ "against": "da9b7253ca9ec8888ad960ce6e5fb3bd81189cf5",
+ "sets": {
+  "parity": {
+   "cases": 40550,
+   "identical": 40550,
+   "name_only": 0,
+   "failed": 0
+  },
+  "fixes": {
+   "cases": 33992,
+   "identical": 33992,
+   "name_only": 0,
+   "failed": 0
+  },
+  "rubric": {
+   "cases": 7233,
+   "identical": 7233,
+   "name_only": 0,
+   "failed": 0
+  },
+  "conformance": {
+   "cases": 592,
+   "identical": 592,
+   "name_only": 0,
+   "failed": 0
+  },
+  "corpus": {
+   "cases": 312,
+   "identical": 312,
+   "name_only": 0,
+   "failed": 0
+  },
+  "phone": {
+   "cases": 248,
+   "identical": 248,
+   "name_only": 0,
+   "failed": 0
+  },
+  "gold": {
+   "cases": 1800,
+   "identical": 1800,
+   "name_only": 0,
+   "failed": 0
+  }
+ },
+ "all_identical": true,
+ "not_identical": {}
+}

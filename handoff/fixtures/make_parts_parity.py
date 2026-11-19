@@ -31,11 +31,12 @@ round(x, 3), recomputed with parts_proto.combine). A reading Python can't score 
 {"error": "..."}: the TypeScript must throw on it too. Those are prototype bugs, reported, not fixed here.
 """
 import sys as _sys; _sys.dont_write_bytecode = True  # never write __pycache__ next to rubric.py
-import copy, glob, hashlib, json, os, sys
+import copy, glob, hashlib, json, os, re, sys
 from collections import Counter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 KEMPT = os.path.abspath(os.path.join(HERE, "../.."))
+DATA = os.environ.get("KITTED_DATA", "/Users/eyu/Desktop/files/Kitted")   # git-ignored phone pulls (main checkout)
 ET = os.path.join(KEMPT, "extraction-test")
 sys.path.insert(0, ET)
 sys.path.insert(0, os.path.join(ET, "rubrics"))
@@ -77,7 +78,8 @@ WHATIF14 = {"sh_shape": 1.5, "sh_layer": 0.5, "sh_cap": 1.0, "sh_fitted": 0.5, "
 # v15's what-if (#385): a smaller hoodie layer credit
 WHATIF15 = {"hl": 1.0, "cp8": 1.0}
 PICKS_VARIANTS = {"none": [], "one": [["workwear", 1.0]],
-                  "three": [["streetwear", 0.5], ["vintage_sport", 0.25], ["smart_casual", 0.25]]}
+                  "three": [["streetwear", 0.5], ["vintage_sport", 0.25], ["smart_casual", 0.25]],
+                  "tailored": [["tailored", 1.0], ["smart_casual", 0.5]]}   # T94: a Tailored pick moves no number either
 
 
 def _taste(**kw):
@@ -629,7 +631,18 @@ def parts_edges():
 
 # ---------------------------------------------------------------------------------------------------- main
 def newest_pull():
-    pulls = sorted(p for p in glob.glob(os.path.join(KEMPT, "screenshots/phone/*/SQLite/kitted.db")))
+    """The phone pull the real cases come from: the pull the committed fixtures already name (so a regeneration never
+    quietly moves to a newer pull, the "pinned pull" of #367 onward; T94), else the newest. KITTED_PULL=<folder> picks
+    one, KITTED_PULL=newest the newest."""
+    pulls = sorted(p for p in glob.glob(os.path.join(DATA, "screenshots/phone/*/SQLite/kitted.db")))
+    want = os.environ.get("KITTED_PULL")
+    if want is None and os.path.exists(os.path.join(HERE, "parts_parity.json")):
+        m = re.search(r'"pull": ?"screenshots/phone/([^/"]+)/', open(os.path.join(HERE, "parts_parity.json")).read())
+        want = m.group(1) if m else None
+    if want and want != "newest":
+        named = [p for p in pulls if os.path.basename(os.path.dirname(os.path.dirname(p))) == want]
+        assert named, f"no phone pull {want} under {DATA}/screenshots/phone"
+        return named[0]
     return pulls[-1] if pulls else None
 
 

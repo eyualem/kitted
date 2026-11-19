@@ -9,7 +9,10 @@ Only imports rubric.py; never modifies it.
 import sys as _sys; _sys.dont_write_bytecode = True  # never write __pycache__ next to rubric.py
 import copy, itertools, json, math, os, sys
 
-KEMPT = "/Users/eyu/Desktop/files/Kitted"
+# Code comes from this file's own checkout (a worktree scores with its own rubric.py, T94); the git-ignored data (phone
+# pulls, gold runs, inputs/*/fixes.csv) lives only in the main checkout: KITTED_DATA, defaulting to it.
+KEMPT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.."))
+DATA = os.environ.get("KITTED_DATA", "/Users/eyu/Desktop/files/Kitted")
 sys.path.insert(0, os.path.join(KEMPT, "extraction-test"))
 import rubric  # noqa: E402
 
