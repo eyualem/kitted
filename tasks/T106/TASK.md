@@ -62,3 +62,16 @@ Read: plan line, spec KC4.1–KC4.9 and KC2.10, TASK.md What changes, the `app/s
 - `askC4` and `kitWordsPrompt` test updates look like honest follow-ups to the intended change (a dropped key, the prompt version), not weakened tests. No `.only` or `.skip` seen.
 
 **Hard lines:** nothing rates a face, body or skin; nothing new leaves the phone; no emoji, ranks or streaks; the new words are the two tap questions only (`What kind of piece is it?`, `What color is it?`), which match the TASK.md and look right for the spec's tap-question rule, but they are words users read, so the founder should OK them.
+
+### Review round 2 · normal · **ready**
+
+Read: the fix commit's `app/src` diff only (`addCard.ts`, `cardActions.ts`, the test file). Ran `npx jest src/__tests__/T106-addCard`: 30 passed. Did not run the whole suite or the Simulator.
+
+**Round 1 defects**
+1. Duplicate add from an older card: **fixed.** `planAdd` now marks every earlier `asked` card for the same kind and color as `added` (with the new `itemId`) when "add it" writes the piece, and `cardActions.add` looks up `ownedSame` first and links the card to that piece instead of writing. The day-2 case (two unanswered cards, Add on both) also ends with one piece, because the second Add links. Tests: an old card after "add it" returns false and the closet keeps one piece; Add on a card for an owned piece links to it and writes nothing.
+2. Kind tap dead end: **fixed.** A kind tap with no color in his words now goes on to `What color is it?`; a color tap then adds one piece; "Not sure" to the kind question, or to the color question, returns no add. The new test walks add it, Tee, the color question, Navy, one "Navy tee". Checked the branches: a kind with a color already in his words still adds straight away, and the guard `pending.kind !== null` only applies on the color step.
+
+**No new defects.** Small things from the fixes (never block):
+- If the answer then fails and `rollback` removes the piece, the older cards that were patched to `added` keep their `Added · Undo` state for a piece that is gone. Rare (needs an older asked card plus a failed answer); Undo on it just returns it to Add. A later fix could restore those cards in `rollback`.
+- Two cards now can share one `itemId`: Undo on one removes the piece and the other still reads Added until its Undo is tapped (harmless, `removeChatPiece` no-ops on a deleted row). A card linked to a photographed or non-chat piece shows Undo that cannot remove it (guarded, the card just returns to Add).
+- The earlier round-1 small things still stand (double-tap guard, `DENY` and `CLAIM_ADD` regexes, the colour and kind tap questions have no screenshot, the two new tap questions need the founder's OK as words).
