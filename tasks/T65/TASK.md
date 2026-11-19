@@ -1,0 +1,40 @@
+# T65 · The score's two picks and the plain rule names, in core
+
+**Size:** strict · **From:** `plan.md` → T65 · **Spec:** `specs/explain-rating.md` (approved by the founder 2026-11-10) · **Lane:** Fit check and scoring (core only)
+
+## What changes
+- **Goal:** `@kitted/core` can say, from a scoring result alone, which one or two rules made the score (never the model's choice), and has a plain name for every rule the engine can charge or credit. Nothing shows yet: T58 (the chat explanation) and T66 (the quieter card) read these.
+- **Files (all new, core only):**
+  - `app/packages/kitted-core/src/ruleNames.ts`: `RULE_NAMES` (one entry per rule id the engine can emit, in tie-break order, each `{ plain, known? }`), `ruleName(id)`, `RULE_IDS`.
+  - `app/packages/kitted-core/src/picks.ts`: `pickExplanation(result)` and `pickRecheckExplanation(before, after)`.
+  - `app/packages/kitted-core/src/index.ts` (shared): two export lines, staged with `git add -p`.
+  - `app/packages/kitted-core/test/picks.test.ts`, `ruleNames.test.ts` (the test writer's).
+  - `tasks/T65/names.md`: the founder's review table (rule id · plain name · one line of Kit using it). Words users read (Y24).
+- **No change to** `parts.ts`, `partsData.ts`, the Python engine or any fixture. Parity stays 100%.
+- **Done means:** ER1.1 (the picks name only rules that fired, at most two, the biggest cost and biggest credit or the other cases) · ER1.5 (a re-check leads with the rule the fix cleared or earned) · ER1.6 (every engine rule has a plain name, a test fails on an unnamed one, no score moves).
+- **Must not break:** every score and every parity case; the core's existing exports.
+
+## Decisions this task makes (the spec leaves them open; all logged in DECISIONS-LOG)
+1. **Input** is a `PartsScored` (the live engine, v16; a check scored by v15 or earlier has no `v16` block and is read with its part weights). Older rubric-v4 results are out of scope: T58 uses the code-written fallback for them.
+2. **Points are score points on the shown scale.** A charge or credit in the engine's own units is multiplied by the curve's slope at the result's raw score (`v16.raw`; 1.1 under 7, 0.7 over, from `PARTS_DATA.tune.curve`), so a charge, a ceiling and a lift compare in the same unit the founder sees. For a non-v16 result the multiplier is the part's `weightsUsed`.
+3. **What counts as a cost:**
+   - a negative part reason not in `v16.owned` (a dealbreaker owns it), at the faults' rule: the worst part's charges at `v16_alpha` (0.5), every other part's at `v16_beta` (0.25), both times the slope;
+   - the condition deduction (`v16.condDeduction`; non-v16: `condition.deduction`), id `condition`;
+   - the occasion: its deduction, plus the hold when the occasion's ceiling is what held the score (`v16.heldBy === "occasion"`: `curved − final`); id `occasion`, `occasion_loungewear` when the first occasion line starts "loungewear", `occasion_hold` when the occasion has a ceiling that held the score and it is not loungewear;
+   - a dealbreaker cap that held the score (`v16.heldBy` equals its id: `curved − final`; for "two sinking faults" / "two holding faults" the whole drop goes to the first sink / hold cap in `v16.caps`); a cap that did not bind costs nothing;
+   - the warm-day heavy layer (`v16.heavyLayer`), id `heavy_layer`;
+   - a negative taste rule (`v16.taste`).
+   A part that is not in the photo has no reasons, so it never counts (F2.6). A ceiling that is not a rule (the stacking ceiling, "a fit or shape fault") is never a pick.
+4. **What counts as a credit:** a lift (`v16.lifts`, size × slope, id the lift's own `L1`…), a positive taste rule, and a positive part reason that is not a lift and not `CC2s_shape_softens` (points × the part's `weightsUsed` × slope: the engine's "minor" credits).
+5. **Biggest means the most points; a tie goes to the rule that comes first in `RULE_NAMES`** (the table is ordered as `rubric/v5-styles.md` orders its sections: Proportions, Fit, Color, Shoes, Style, then Condition, Occasion, lifts, dealbreakers, taste). A difference under 1e-9 is a tie.
+6. **The cases** (`ExplainPicks.case`): first check: `cost_and_credit` (picks `[cost, credit]`), `cost_only` (`[cost]`), `credits_only` (the two biggest credits, or one if only one), `none` (`[]`, "no rule fired at all"). Re-check: `cleared` (the rule the fix cleared, `[cleared, biggest cost still left]` or just the cleared one), `earned` (no cost was cleared but a credit was earned: `[earned, biggest cost still left]`), `cost_now` (the score did not rise: `[biggest cost now]`); when a re-check has nothing to lead with it falls back to the first-check cases on the new result.
+7. **Names:** each id has a plain name (lowercase, usable mid-sentence, no digits, no word about a face, body, weight, height, skin or hair, no all-caps, unique across the table) and, for a few, a known name ("the rule of thirds"). The table covers: every check id the parts engine can put on a reason or tip (about 74 reasons, 10 tips), the 10 lifts, 16 caps, 4 taste rules, `condition`, the three occasion ids and `heavy_layer`.
+
+## Built
+_(filled in by the build)_
+
+## Disputes
+_(none yet)_
+
+## Review
+Written by the reviewer.
