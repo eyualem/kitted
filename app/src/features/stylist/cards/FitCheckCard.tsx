@@ -426,6 +426,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
     finishSnap: () => { if (finish) router.push(finish.snapHref as Href); },
     finishSkip: () => void fitCheck.skipFinish(row.id),
   };
+  const whyButton = <KButton title={t('card.why', { score: scoreText })} kind="secondary" size="regular" style={rowFill} onPress={go.why} />;
   const spokenHead = {
     occasion: occasionLabel(row.occasion),
     score: spokenScore(score),
@@ -569,18 +570,20 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
               "Why 7.5?" is a secondary button in the same row (the founder's pick A, Nov 18): the primary and Why share the row's width, and with no primary Why is the lone full-width
               secondary. When larger text won't fit both, the row wraps and each takes a full line.
               "Not quite right?" left the card (specs/explain-rating.md ER2.3); Kit (T59) and the Lookbook look page take it over. */}
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-            {SAVE_LOOK_BUILT && dialed && score >= 9 ? (
-              <KButton title={t('dialed.save')} icon="bookmark" size="regular" style={rowFill} />
-            ) : recheckOpen && !dialed ? (
-              <KButton title={t('card.recheck')} icon="recheck" size="regular" style={rowFill} onPress={() => void go.recheck()} />
-            ) : null}
-            <KButton
-              title={t('card.why', { score: scoreText })} kind="secondary" size="regular"
-              style={rowFill} onPress={go.why}
-            />
+          {/* While the Share icon shows (until T67 cuts share cards) it takes the row's end, 44 pt of the width Re-check and Why
+              need side by side, so Why drops to its own full-width line below, as it did before. */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              {SAVE_LOOK_BUILT && dialed && score >= 9 ? (
+                <KButton title={t('dialed.save')} icon="bookmark" size="regular" style={rowFill} />
+              ) : recheckOpen && !dialed ? (
+                <KButton title={t('card.recheck')} icon="recheck" size="regular" style={rowFill} onPress={() => void go.recheck()} />
+              ) : null}
+              {shareable ? null : whyButton}
+            </View>
             {shareable ? <IconButton icon="share" diameter={36} label={t('card.share.a11y')} onPress={go.share} /> : null}
           </View>
+          {shareable ? <View style={{ flexDirection: 'row' }}>{whyButton}</View> : null}
           {/* "Not sure about your mid-wash jeans' leg? Tap." (§19, #322): a statement, never a question before the score. */}
           <DoubtLine row={row} readOnly={readOnly} />
           {/* `Later` (ruling 23, #291): his first-ever check only; the first 3 moves follow at once. */}
