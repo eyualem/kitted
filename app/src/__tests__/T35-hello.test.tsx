@@ -35,6 +35,8 @@ jest.mock('@/features/morning/MorningCard', () => ({ MorningCard: () => null }))
 jest.mock('@/features/whichOne/WhichOneCard', () => ({ WhichOneCard: () => null }));
 jest.mock('@/features/ask/SupportCard', () => ({ SupportCard: () => null }));
 jest.mock('@/features/ask/AskCardView', () => ({ AskAttachment: () => null }));
+// The card's entrance wrapper (T104) pulls in Reanimated's native runtime: a plain pass-through here.
+jest.mock('@/features/stylist/Enter', () => ({ Enter: ({ children }: { children: unknown }) => children, attachmentEnters: () => false }));
 jest.mock('@/features/ask/AnswerBody', () => ({ AnswerBody: () => null, answerLayout: () => ({ chips: [] }), chipActions: () => [], useAnswerCloset: () => [] }));
 jest.mock('@/features/held/HeldReadyCard', () => ({ HeldReadyCard: () => null }));
 jest.mock('@/features/held/LimitCard', () => ({ LimitCard: () => null }));

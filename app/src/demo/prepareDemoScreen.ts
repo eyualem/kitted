@@ -1,7 +1,7 @@
 // Puts the app in screen n's state (04 §10.3) by running the REAL code at latency 0:
 // wipe → load the scenario (as of the screen's time) → play the story through the fit-check
 // service → set the clock. So /demo/screen/7 shows what the code really produces.
-import { dayKey, setRescoreV16, US_EASTERN, type Styles } from '@kitted/core';
+import { dayKey, FAMILY_HEX, G, setRescoreV16, US_EASTERN, type Styles } from '@kitted/core';
 import seed from '../../assets/seed.json';
 import { store } from '@/data/db';
 import { KV } from '@/data/store';
@@ -24,6 +24,7 @@ import type { WhichOnePayload } from '@/features/fitcheck/whichOne';
 import { armDemoReveal, DEMO_REVEAL_SCREENS, setDemoPreparing } from '@/features/fitcheck/reveal';
 import { holdBadge } from '@/features/closet/slide';
 import { askService } from '@/features/ask/session';
+import type { AskCard, PieceFields } from '@/features/ask/cards';
 import { saveDemoScan } from '@/features/scan/inbox';
 import { liveAnswer } from '@/features/ask/live';
 import { endFirstVisit, openCloset } from '@/features/closet/arrivals';
@@ -76,6 +77,9 @@ type Step =
   | { at: string; do: 'whichOne'; photoId: string }
   /** A question through the real ask pipeline (the demo source answers at latency 0). */
   | { at: string; do: 'ask'; text: string }
+  /** His question and Kit's answer with one of the new cards stored as the pipeline stores it (T104's views; the
+   *  model's block isn't involved, so each card state shows exactly). */
+  | { at: string; do: 'kitCard'; q: string; a: string; card: AskCard; followUps?: string[] }
   /** Tap an answer on the newest ask card (07 §13 R6). */
   | { at: string; do: 'askTap'; option: string }
   /** A stored setting (Closet's remembered Pieces | Outfits tap, #307). */
@@ -93,6 +97,69 @@ const ASK_OLIVE = 'Can I wear the olive overshirt with the navy chinos?';
 const ASK_BELT = 'What belt goes with brown loafers?';
 /** Before M15 (12:05), so the seeded Q&A isn't loaded and the pipeline writes it. */
 const ASK_AS_OF = '2026-10-22T12:04:00';
+
+/** T104's demo answers: Kit's words from the mockup, the cards as the pipeline stores them. */
+const drawn = (kind: string, color: string, name: string) => ({ kind, color, name });
+type KitStep = { q: string; a: string; card: AskCard; followUps?: string[] };
+const KIT_NEED: KitStep = {
+  q: 'How can I dress this up for dinner?',
+  a: 'Swap the tee for an off-white oxford. Keep the olive overshirt, jeans and boots: the collar makes it dinner.',
+  card: { type: 'outfit', occasion: 'date', itemIds: ['L2', 'B3', 'S4'], needs: [drawn('oxford_shirt', 'off_white_cream', 'Off-white oxford')], example: false },
+  followUps: ['What color shirt?', 'Add a watch', 'Make it dressier'],
+};
+const KIT_SIX: KitStep = {
+  q: 'How could I add accessories for my date?',
+  a: 'Add a simple watch and a black belt. Keep them quiet so the oxford stays the point.',
+  card: {
+    type: 'outfit', occasion: 'date', itemIds: ['L2', 'T4', 'B3', 'S4'],
+    needs: [drawn('watch', 'black', 'Black watch'), drawn('belt', 'black', 'Black belt')], example: false,
+  },
+};
+const KIT_EXAMPLE: KitStep = {
+  q: 'What should I wear to class tomorrow?',
+  a: "Here's an easy everyday example to start from. Check a fit you own and I'll build from your clothes.",
+  card: {
+    type: 'outfit', occasion: 'class', itemIds: [], example: true,
+    needs: [drawn('sweater', 'grey', 'Grey sweater'), drawn('jeans', 'denim_dark', 'Dark wash jeans'), drawn('white_leather_sneaker', 'white', 'White sneakers'), drawn('beanie', 'charcoal', 'Charcoal beanie')],
+  },
+  followUps: ['Make it warmer', 'What should I buy first?'],
+};
+const KIT_OPTIONS: KitStep = {
+  q: 'I want an alternative to the navy overshirt. A jacket, not a sweater.',
+  a: 'Try your denim jacket, or a jacket with a straighter cut. Each works over a tee and dark jeans.',
+  card: { type: 'options', slot: 'outer', options: [{ itemId: 'L3' }, { piece: drawn('chore_coat', 'charcoal', 'Charcoal chore coat') }, { piece: drawn('field_jacket', 'olive', 'Olive field jacket') }] },
+  followUps: ['Which is most versatile?', 'Show me one in an outfit'],
+};
+const KIT_COLORS_PIECE: KitStep = {
+  q: 'What color should the oxford be?',
+  a: 'Off-white or light blue. Both brighten the olive without fighting it.',
+  card: { type: 'colors', about: 'piece', kind: 'oxford_shirt', families: ['off_white_cream', 'light_blue'] },
+};
+const KIT_COLORS_GENERAL: KitStep = {
+  q: 'What goes with olive?',
+  a: 'Earthy and dark colors, with one light one. Your dark jeans already do the dark part.',
+  card: { type: 'colors', about: 'general', goesWith: 'olive', families: ['off_white_cream', 'tan_camel', 'brown', 'charcoal', 'denim_dark'] },
+};
+const KIT_ADD = (outcome: 'asked' | 'added' | 'declined'): KitStep => ({
+  q: "I have a nice one with light brown stripes that's kind of off-white. Can I use that?",
+  a: 'Yes, wear it: the stripes tie it to the olive overshirt. Keep the jeans and boots as they are.',
+  card: { type: 'add', piece: drawn('button_up_shirt', 'off_white_cream', 'Off-white button-up'), outcome, itemId: null },
+});
+const boots = (color: 'black' | 'brown', name: string): PieceFields => ({
+  name, slot: 'shoes', garment: G('footwear', 'chelsea_boot', color), hex: FAMILY_HEX[color], confirmedFields: ['color_family'],
+});
+const KIT_CHANGED: KitStep = {
+  q: 'My Chelsea boots are black',
+  a: 'Got it: black Chelsea boots. Black is right with the olive and dark denim.',
+  card: { type: 'changed', itemId: 'S4', before: boots('brown', 'Brown Chelsea boots'), after: boots('black', 'Black Chelsea boots') },
+};
+const KIT_BUY: KitStep = {
+  q: 'What should I buy next?',
+  a: "I don't point to shops, but here's what to look for: cotton or canvas, a straight hem, room for a sweater under it.",
+  card: { type: 'buy', starterId: 's07', gain: 6, why: 'Layers over every top you own.' },
+};
+/** A kitCard step at `hm` on `day` (today by default). */
+const kit = (k: KitStep, hm = '12:05', day = '2026-10-22'): Step => ({ at: `${day}T${hm}:00`, do: 'kitCard', ...k });
 
 const CLOSET_3: Step = { at: '2026-10-22T07:30:00', do: 'closet', ids: ['T1', 'B1', 'S1'] };
 const DUP_STORY: Step[] = [
@@ -254,6 +321,21 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   172: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'Which shoes are my dressiest?' }] },
   173: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: "I'm a 32 waist." }] },
   174: { asOf: ASK_AS_OF, steps: [{ at: '2026-10-22T12:05:00', do: 'ask', text: 'I also have a grey hoodie.' }] },
+  // Kit's card views (T104, specs/kit-stylist-chat.md; mockups/kit-stylist-chat.html), on the full scenario's closet.
+  400: { asOf: ASK_AS_OF, steps: [kit(KIT_NEED)] },
+  401: { asOf: ASK_AS_OF, steps: [kit(KIT_SIX)] },
+  402: { asOf: ASK_AS_OF, steps: [kit(KIT_EXAMPLE)] },
+  403: { asOf: ASK_AS_OF, steps: [kit(KIT_OPTIONS)] },
+  404: { asOf: ASK_AS_OF, steps: [kit(KIT_COLORS_PIECE), kit(KIT_COLORS_GENERAL, '12:07')] },
+  405: { asOf: ASK_AS_OF, steps: [kit(KIT_ADD('asked'))] },
+  406: { asOf: ASK_AS_OF, steps: [kit(KIT_ADD('added'))] },
+  407: { asOf: ASK_AS_OF, steps: [kit(KIT_ADD('declined'))] },
+  408: { asOf: ASK_AS_OF, steps: [kit(KIT_CHANGED)] },
+  409: { asOf: ASK_AS_OF, steps: [kit(KIT_BUY)] },
+  // Past chats, yesterday: the same cards read-only, with their outcomes (KC1.5).
+  410: { asOf: ASK_AS_OF, steps: [kit(KIT_NEED, '12:05', '2026-10-21'), kit(KIT_ADD('added'), '12:06', '2026-10-21'), kit(KIT_ADD('asked'), '12:07', '2026-10-21'), kit(KIT_CHANGED, '12:08', '2026-10-21')] },
+  411: { asOf: ASK_AS_OF, steps: [kit(KIT_BUY)] },
+  412: { asOf: ASK_AS_OF, steps: [kit(KIT_COLORS_PIECE), kit(KIT_COLORS_GENERAL, '12:07')] },
   // The Closet's Outfits (09-ui-review §13, #307). Screen 15 keeps showing the Pieces grid it always did.
   15: { steps: [{ at: '2026-10-22T07:00:00', do: 'kv', key: 'closet.segment', value: 'pieces' }] },
   // How baggy a piece is (09-ui-review §18, #316): the dark jeans read slim, wide, wide and straight in four checks.
@@ -501,6 +583,16 @@ async function playStory(sc: ScreenScenario): Promise<void> {
     if (step.do === 'ask') {
       const o = await askService.ask(step.text);
       if (o.kind === 'sent') await o.done;
+      continue;
+    }
+    if (step.do === 'kitCard') {
+      const t0 = at(step.at);
+      const q = newId('M');
+      await store.chat.put({ id: q, createdAt: t0, role: 'user', kind: 'text', text: step.q, cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: { counts: true } });
+      await store.chat.put({
+        id: newId('M'), createdAt: t0 + 1, role: 'stylist', kind: 'text', text: step.a, cardType: null, fitCheckId: null, outfitId: null, itemId: null,
+        chips: [], payload: { answerTo: q, askCard: step.card, ...(step.followUps?.length ? { followUps: step.followUps } : {}) },
+      });
       continue;
     }
     if (step.do === 'askOffline') {
