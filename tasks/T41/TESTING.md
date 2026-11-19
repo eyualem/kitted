@@ -2,7 +2,7 @@
 
 Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** (pending)
+**Lock:** locked 2026-11-19 at commit 842b5413 (`T41: locked tests`; the tests first went in at 8f18d933 `T41: tests (red)`). Tests: app/src/__tests__/T41-signIn.test.ts, T41-accountState.test.ts, T41-offer.test.ts, T41-screens.test.tsx, T41-accountRows.test.tsx, and the T41 lines of onboardingAccount.test.ts, T39-setupScreens.test.tsx, serverProxy.test.ts.
 
 Interfaces fixed in the stubs (the implementer builds to them, the doc comments in each stub are the contract): `signIn.ts` `createSignIn(deps: SignInDeps)` returning `{signIn, signOut}` (types `FbUser`, `Cred`, `AppleCredential`, `SignInDeps`); `SignInResult` ok carries `givenName?`; `appleName.ts` `applyAppleFirstName(store, givenName)`; `offerCopy.ts` `offerBody({fits, pieces})`; `account.ts` `sheetProviders(live)`, `resolveChoice(store, action, input, service)` (`ChoiceAction`, `ChoiceResult`), `restoreParam`/`parseRestoreParam` as two numbers, `AuthProvider` without `email`, `AuthService` without the email methods, `SIGN_IN_LIVE` gone from `features.ts`, the offer card's payload `{offer, fits, pieces, state}`. The spec's `from=you` is `from=settings` in the code and the tests (the `SignInFrom` type on main). Tests use fakes for Firebase, Apple and Google: no network, no real sign-in. `expo-apple-authentication` is not installed here, so a test that reaches it mocks it `{ virtual: true }`. Existing tests that name email sign-in (`onboardingAccount.test.ts` A3 and the email lines of A2, `T35-hello`, `youSettingsHome`, `kitWordsPack` where they mention it) are updated by the test writer as part of this lock.
 
@@ -39,8 +39,6 @@ Interfaces fixed in the stubs (the implementer builds to them, the doc comments 
 ## Not testable yet
 Never dropped, never counted as done.
 - **SB1.1** (the 7 taps) · why: a tap count needs the whole app running · would verify it: the core Maestro flow in `/test-build`.
-  - red: exists, bites: `WelcomeScreen` `from: "welcome"` → `"offer"` fails `T41-screens` SB1.1 (accounts on); `accounts ? (` → `true ? (` fails SB1.1 (accounts off); `ONBOARDING_STEPS` 3 → 4 fails `onboardingAccount` "the bar has a segment per step". Not red today because Welcome and the 3-step list already exist.
 - **SB2.1** (Apple's button follows the theme; same size as Google's) and all words and layout · why: look, not logic · would verify it: light screenshots in the PR.
-  - red: red now: `sheetProviders` not built; a saved `provider: 'email'` still parses; `sendEmailCode`/`verifyEmailCode` still on `auth` and the mock; the sheet still shows `Continue with email`; `createSignIn` not built. The `@ts-expect-error` line (`'email'` is not an `AuthProvider`) has no runtime bite: `tsc` (`npm run check`) fails on it as an unused directive until `email` leaves the type (not run here: memory).
 - **Real Apple and Google sign-ins** · why: the founder's passwords; Claude never types them; needs Y21's capability and a build with `expo-apple-authentication` · would verify it: a founder phone test on the second TestFlight build (a Y item in `plan.md`).
 - **Restoring real fits from the server, deleting the account on the server** · why: T41b (sync pull, `deleteAccount`) · would verify it: T41b's checks SB4, SB5, SB9.
