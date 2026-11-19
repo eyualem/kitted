@@ -12,7 +12,7 @@ import type { ChatMessage, ClosetItemRow } from '@/data/types';
 import { addChatPiece, ownedSame, removeChatPiece, type ChatAddDeps } from '@/features/closet/chatAdd';
 import { t } from '@/i18n/en';
 import { cardPiece, colorName, kindNoun, slotOfKind, type AskCard, type CardPiece, type PieceSlot } from './cards';
-import { colorOf, pieceWordsOf } from './memory';
+import { colorOf, fitWordOf, pieceWordsOf } from './memory';
 import type { AddRead } from './router';
 
 /** What a tap question waits for, kept on Kit's row so his tap can finish the add. */
@@ -20,6 +20,7 @@ export interface AddPending {
   mode: 'mention' | 'ask';
   kind: string | null;
   color: string | null;
+  fit?: string | null;
 }
 
 export interface AddPlan {
@@ -81,6 +82,13 @@ const addCards = (chat: readonly ChatMessage[]) =>
     return m.role === 'stylist' && c?.type === 'add' && c.piece ? [{ m, piece: c.piece, outcome: c.outcome as string }] : [];
   });
 
+/** "Grey tee" + oversized → "Grey oversized tee" (the closet draws a fit word in the name). A brand never gets here. */
+function withFit(piece: CardPiece, fit: string | null): CardPiece {
+  const noun = kindNoun(piece.kind);
+  if (!fit || !piece.name.toLowerCase().endsWith(noun)) return piece;
+  return { ...piece, name: `${piece.name.slice(0, piece.name.length - noun.length)}${fit} ${noun}` };
+}
+
 const sameP = (a: Pick<CardPiece, 'kind' | 'color'>, b: Pick<CardPiece, 'kind' | 'color'>) => a.kind === b.kind && a.color === b.color;
 
 /** What to do with his message about adding (KC4). */
@@ -97,7 +105,7 @@ export async function planAdd(i: PlanInput): Promise<AddPlan> {
     if (!kind) return NO_PLAN; // "Not sure" to the kind question: no add, Kit just answers.
     // "Not sure" to the color question: no add either. A kind with no color yet goes on to the color question.
     if (pending.kind !== null && !colorOf(i.question)) return NO_PLAN;
-    read = { mode: pending.mode, kind, color: pending.color ?? colorOf(i.question) };
+    read = { mode: pending.mode, kind, color: pending.color ?? colorOf(i.question), fit: pending.fit ?? fitWordOf(i.question) };
   }
   if (!read) return NO_PLAN;
   const chat = await i.store.chat.all();
@@ -114,15 +122,16 @@ export async function planAdd(i: PlanInput): Promise<AddPlan> {
     if (read.mode !== 'ask') return NO_PLAN;
     const hint = slotHint(i.question);
     const kinds = hint ? KINDS_BY_SLOT[hint] ?? GENERIC_KINDS : GENERIC_KINDS;
-    return tapQuestion(t('ask.card.addKind'), kinds.map((k) => kindNoun(k).replace(/^./, (c) => c.toUpperCase())), { mode: 'ask', kind: null, color: read.color }, true);
+    return tapQuestion(t('ask.card.addKind'), kinds.map((k) => kindNoun(k).replace(/^./, (c) => c.toUpperCase())), { mode: 'ask', kind: null, color: read.color, fit: read.fit ?? null }, true);
   }
   if (!slotOfKind(read.kind) || slotOfKind(read.kind) === 'accessory') return NO_PLAN;
   if (!read.color) {
     if (read.mode !== 'ask') return NO_PLAN;
-    return tapQuestion(t('ask.card.addColor'), COLOR_CHOICES.map((c) => colorName(c)!), { mode: 'ask', kind: read.kind, color: null }, false);
+    return tapQuestion(t('ask.card.addColor'), COLOR_CHOICES.map((c) => colorName(c)!), { mode: 'ask', kind: read.kind, color: null, fit: read.fit ?? null }, false);
   }
-  const piece = cardPiece(read.kind, read.color);
-  if (!piece) return NO_PLAN;
+  const made = cardPiece(read.kind, read.color);
+  if (!made) return NO_PLAN;
+  const piece = withFit(made, read.fit ?? null);
 
   // KC4.1: he already has it, so Kit uses that piece by its closet name and nothing is offered.
   const have = ownedSame(closet as ClosetItemRow[], piece);

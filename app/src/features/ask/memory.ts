@@ -97,6 +97,14 @@ export function garmentOf(value: string): Garment | null {
   return g;
 }
 
+/** A fit word he says about a piece ("oversized tee"), kept in the piece's name: the closet draws "Grey oversized tee" oversized. */
+export function fitWordOf(text: string): string | null {
+  const m = /\b(over-?sized|boxy|relaxed|cropped|slim|drop[- ]?shoulders?)\b/i.exec(text);
+  if (!m) return null;
+  const w = m[1]!.toLowerCase();
+  return /^over/.test(w) ? 'oversized' : /^drop/.test(w) ? 'drop-shoulder' : w;
+}
+
 /** A color family from his words ("off white" first: core's parser reads it as white). Null when none is named. */
 export function colorOf(words: string): string | null {
   if (/\boff[ -]?white\b/i.test(words)) return 'off_white_cream';

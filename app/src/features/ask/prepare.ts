@@ -46,7 +46,7 @@ function liveSwitches(): AppSwitches {
 
 export function createPrepare(deps: PrepareDeps): (question: string, meta?: PrepareMeta) => Promise<Prepared> {
   const { store, clock } = deps;
-  return async (question, meta) => {
+  const run = async (question: string, meta: PrepareMeta | undefined, box: { rollback?: (() => Promise<void>) | undefined }): Promise<Prepared> => {
     let snap = await loadStylistSnapshot(store, clock);
     let ctx = buildStylistContext(snap, question, { shownCards: shownCardLines(snap) });
     const today = dayKey(snap.nowMs, snap.zone);
@@ -55,6 +55,7 @@ export function createPrepare(deps: PrepareDeps): (question: string, meta?: Prep
     // T106 (KC4): his mention or "add it", read by code before Kit answers. An explicit add is written here, so the pack
     // and the gate below already know the piece.
     const plan = await planAdd({ question, read: route.add ?? null, tapOf: meta?.tapOf ?? null, at: meta?.at ?? snap.nowMs, zone: snap.zone, store, deps: { store, clock, ids: deps.ids } });
+    box.rollback = plan.rollback;
     if (plan.didAdd) {
       snap = await loadStylistSnapshot(store, clock);
       ctx = buildStylistContext(snap, question, { shownCards: shownCardLines(snap) });
@@ -132,5 +133,15 @@ export function createPrepare(deps: PrepareDeps): (question: string, meta?: Prep
         },
       }),
     };
+  };
+  // The explicit add is written before the rest is built; if building throws, no answer will confirm it, so it goes back.
+  return async (question, meta) => {
+    const box: { rollback?: (() => Promise<void>) | undefined } = {};
+    try {
+      return await run(question, meta, box);
+    } catch (e) {
+      await box.rollback?.().catch(() => {});
+      throw e;
+    }
   };
 }

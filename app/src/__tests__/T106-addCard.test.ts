@@ -3,6 +3,8 @@
 // model can no longer save a closet piece silently; Kit never denies it.
 import { createMemoryStore } from '@/data/memoryStore';
 import type { ChatMessage } from '@/data/types';
+import { artSpec } from '@/features/closet/artSpec';
+import { checkSentence } from '@/features/ask/gate';
 import { createCardActions } from '@/features/ask/cardActions';
 import { cardPiece, type AskCard } from '@/features/ask/cards';
 import { liveAnswer } from '@/features/ask/live';
@@ -60,13 +62,13 @@ beforeEach(() => liveAnswer.clear());
 
 describe('reading what he says (KC4.1, KC4.5)', () => {
   it('his exact message is an ask for a tee, with no color', () => {
-    expect(readAdd(HIS_MESSAGE)).toEqual({ mode: 'ask', kind: 'tee', color: null });
+    expect(readAdd(HIS_MESSAGE)).toEqual({ mode: 'ask', kind: 'tee', color: null, fit: 'oversized' });
   });
   it.each([
-    ['I have a white tee', { mode: 'mention', kind: 'tee', color: 'white' }],
-    ['I bought black chelsea boots yesterday', { mode: 'mention', kind: 'chelsea_boot', color: 'black' }],
-    ['Add it', { mode: 'ask', kind: null, color: null }],
-    ['can you add my olive overshirt to my closet', { mode: 'ask', kind: 'overshirt', color: 'olive' }],
+    ['I have a white tee', { mode: 'mention', kind: 'tee', color: 'white', fit: null }],
+    ['I bought black chelsea boots yesterday', { mode: 'mention', kind: 'chelsea_boot', color: 'black', fit: null }],
+    ['Add it', { mode: 'ask', kind: null, color: null, fit: null }],
+    ['can you add my olive overshirt to my closet', { mode: 'ask', kind: 'overshirt', color: 'olive', fit: null }],
   ])('%s', (q, want) => {
     expect(readAdd(q)).toEqual(want);
   });
@@ -208,9 +210,20 @@ describe('the founder\'s Nov 19 message, replayed', () => {
     const used = (await t.quota.snapshot()).questionsUsed;
     const o = await t.ask.tap((await t.answerOf()).id, 'Grey');
     if (o.kind === 'sent') await o.done;
-    expect((await t.fromChat()).map((c) => c.name)).toEqual(['Grey tee']);
+    expect((await t.fromChat()).map((c) => c.name)).toEqual(['Grey oversized tee']);
     expect(await t.cardOf()).toMatchObject({ type: 'add', outcome: 'added' });
+    // His fit word stays in the name, so the drawing is the oversized tee; the brand never reaches it.
+    const [tee] = await t.fromChat();
+    expect(tee!.name).not.toMatch(/uniqlo/i);
+    expect((artSpec({ garment: tee!.garment, hex: tee!.hex, art: tee!.art ?? null, name: tee!.name }).flat as { fit?: string }).fit).toBe('oversized');
     expect((await t.quota.snapshot()).questionsUsed).toBe(used);
+  });
+  it('a fit word he says stays in the name for a plain add, a mention, and when he gives the color first', async () => {
+    const t = await setup('That pairs well with straight jeans.');
+    await t.say('add my black boxy tee to my closet');
+    await t.say('I have a relaxed olive overshirt');
+    expect((await t.fromChat()).map((c) => c.name)).toEqual(['Black boxy tee']);
+    expect(((await t.cardOf()) as { piece: { name: string } }).piece.name).toBe('Olive relaxed overshirt');
   });
   it('"Not sure" adds nothing', async () => {
     const t = await setup('Here is what goes with it.');
@@ -293,5 +306,30 @@ describe('KC2.10 · I have one', () => {
     expect(ownedSame(all, piece)).toMatchObject({ name: 'Olive overshirt', source: 'chat', isPhotographed: false });
     await undo!();
     expect(ownedSame(await store.closet.all(), piece)).toBeNull();
+  });
+});
+
+describe('the gate closes the add gaps (control review)', () => {
+  const ctx = { allowedScores: new Set<string>() };
+  it.each(["I can't add that.", "I won't be able to add it.", "I can't add that tee for you.", "Done, it's in your closet.", 'All set, the tee is in your closet now.', "It's now in your closet."])('drops %s when the code did not add anything', (s) => {
+    expect(checkSentence(s, ctx)).not.toBeNull();
+  });
+  it('lets the added claims through when the code added the piece', () => {
+    expect(checkSentence("Done, it's in your closet.", { ...ctx, didAdd: true })).toBeNull();
+  });
+  it.each(["It's already in your closet.", 'You can add a belt later.', "I can't see how it fits from here."])('keeps %s', (s) => {
+    expect(checkSentence(s, ctx)).toBeNull();
+  });
+});
+
+describe('a failure while preparing takes an explicit add back (control review)', () => {
+  it('prepare throws after the add: the closet keeps nothing', async () => {
+    const t = await setup('That pairs well with straight jeans.');
+    // The snapshot is read again right after the add is written (so the pack knows the piece); make that second read fail.
+    const real = t.store.facts.all.bind(t.store.facts);
+    let reads = 0;
+    t.store.facts.all = (async () => { if (++reads >= 2) throw new Error('boom'); return real(); }) as typeof t.store.facts.all;
+    await t.say('add my white tee to my closet');
+    expect(await t.fromChat()).toEqual([]);
   });
 });

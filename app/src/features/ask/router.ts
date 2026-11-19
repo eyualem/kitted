@@ -4,7 +4,7 @@
 import type { ClosetItemRow, FitCheckRow, OccasionKey } from '@/data/types';
 import { displayScore } from '@/design-system/score';
 import type { StylistContext } from './context';
-import { pieceWordsOf } from './memory';
+import { fitWordOf, pieceWordsOf } from './memory';
 import type { AskKind } from './prompt';
 
 export interface Route {
@@ -25,6 +25,8 @@ export interface AddRead {
   /** A closet subcategory ('tee', 'work_boot'), or null when his words name no kind of piece. */
   kind: string | null;
   color: string | null;
+  /** A fit word he said (oversized, boxy…), kept in the piece's name. */
+  fit?: string | null;
 }
 
 // Lower case, quotes straightened, punctuation gone (a "." stays only inside a number like 6.5).
@@ -55,11 +57,11 @@ const NOT_ADD = / (?:(?:don'?t|do not|never|no need to|not|should i|would it be 
 export function readAdd(question: string): AddRead | null {
   const q = norm(question);
   if (NOT_ADD.test(q)) return null;
-  if (ADD_ASK.test(q)) return { mode: 'ask', ...pieceWordsOf(q) };
+  if (ADD_ASK.test(q)) return { mode: 'ask', ...pieceWordsOf(q), fit: fitWordOf(q) };
   const own = OWN_MENTION.exec(q);
   if (own) {
     const w = pieceWordsOf(own[1]!);
-    return w.kind ? { mode: 'mention', ...w } : null;
+    return w.kind ? { mode: 'mention', ...w, fit: fitWordOf(own[1]!) } : null;
   }
   return null;
 }
