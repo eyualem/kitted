@@ -1,6 +1,6 @@
 // T41 (SB10.1): Apple's first name fills an empty name and never replaces one he typed (F1.4). 
 import type { KittedStore } from '@/data/store';
-import { ABOUT_KEY, cleanName, parseAbout } from '@/features/onboarding/aboutStep';
+import { ABOUT_KEY, cleanName, parseAbout, saveAbout } from '@/features/onboarding/aboutStep';
 
 /** Apple's `givenName` (as createSignIn returns it) goes to his name only when none is set, cleaned like About you's
  *  name (aboutStep.cleanName: trimmed, 30 characters). Where it goes: his profile's `name` when the profile exists; mid
@@ -18,6 +18,6 @@ export async function applyAppleFirstName(store: Pick<KittedStore, 'getKv' | 'se
   }
   const draft = parseAbout(await store.getKv(ABOUT_KEY));
   if (cleanName(draft.name) !== null) return null;
-  await store.setKv(ABOUT_KEY, JSON.stringify({ age: draft.age, name }));
+  await saveAbout(store, { ...draft, name });
   return name;
 }
