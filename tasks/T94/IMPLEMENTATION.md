@@ -260,7 +260,7 @@ Screen 2 (Pick looks), 17 (You) and 80 (Style profile) show the new tile with no
 - `askC2.test.ts` (the guide matches the generated file).
 
 ## Open questions
-**Answered (Nov 18, by the parent session, which answers for the founder overnight; logged as #491):**
+**Answered (Nov 18, by the parent session, which answers for the founder overnight; logged as #495):**
 - **4 → A.** Build name-only on today's main engine, with one shared is-Tailored check using T69's exact never-list. Main's approved TL3 is name-only; the founder's Nov 17 "Yes, edit the spec" (#480, unmerged `claude/rules-by-style-1f91b5`) puts Tailored in the scoring through T69's look-by-look columns, which aren't on main, so on today's engine name-only is what both decisions produce. Whichever of T94 and T68/T69 merges second rebases onto the single check, regenerates fixtures from the Python engine and reruns the TL3 script. The PR says: "Tailored enters the scoring when T69's columns merge (#480); until then, name only."
 - **1 → recommended.** A matching suit that isn't Tailored keeps its +0.5 and the words "a matching suit".
 - **2 → recommended.** Next best buy skips a Tailored pick for now; the PR lists it as a known gap (the starter catalog has no blazer, trousers or derbies).
