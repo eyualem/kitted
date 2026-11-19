@@ -34,12 +34,12 @@ export function RestoreScreen() {
       setArrived(true);
       void (async () => {
         // What About you asked on this phone: his age band, and Apple's first name if the sign-in left one in the draft
-        // (SB6, SB10). His looks and the rest arrive with his synced profile (T41b); the agreement is asked on the
-        // camera's first open on this phone (consent 'later').
+        // (SB6, SB10). His looks and the rest arrive with his synced profile (T41b); no agreement is saved, so the
+        // camera asks on its first open on this phone, as before (consent: false, stepFourBatch checks it).
         const d = await loadDraft(store);
         await completeOnboarding(store, {
           styles: [], fitPreference: d.basics.fit ?? '', birthYear: null,
-          ageBand: isAgeBand(d.about.age) ? d.about.age : null, name: cleanName(d.about.name), consent: 'later',
+          ageBand: isAgeBand(d.about.age) ? d.about.age : null, name: cleanName(d.about.name), consent: false,
         }, sessionClock.nowMs(), newId);
         await store.deleteKv(BASICS_KEY);
         await store.deleteKv(ABOUT_KEY);
