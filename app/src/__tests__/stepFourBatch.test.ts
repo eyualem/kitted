@@ -57,10 +57,10 @@ async function checks(o: { fault?: 'offline'; net?: { confirmOffline: () => Prom
 describe('G15 · a scored re-check has Why and Not quite right?', () => {
   const card = src('features/stylist/cards/RecheckCard.tsx');
 
-  it('G15.1 the link row opens the re-check\'s own Why and Not quite right? (Tell me beside them when it shows)', () => {
+  it('G15.1 Why and Not quite right? are two secondary buttons side by side, each opening the re-check\'s own sheet (Tell me, a link, under them when it shows)', () => {
     expect(card).toMatch(/why: \(\) => router\.push\(`\/sheets\/why\/\$\{row\.id\}`\)/);
     expect(card).toMatch(/nqr: \(\) => router\.push\(`\/sheets\/correct\/\$\{row\.id\}`\)/);
-    expect(card).toMatch(/<TextLink title=\{t\('card\.why', \{ score: scoreText \}\)\} onPress=\{go\.why\} compact \/>\s*<TextLink title=\{t\('card\.nqr'\)\} onPress=\{go\.nqr\} compact \/>\s*\{missed \?/);
+    expect(card).toMatch(/<KButton title=\{t\('card\.why', \{ score: scoreText \}\)\}[^>]*kind="secondary"[^>]*onPress=\{go\.why\} \/>\s*<KButton title=\{t\('card\.nqr'\)\} kind="secondary"[^>]*onPress=\{go\.nqr\} \/>[\s\S]*?\{missed \? \(/);
   });
 
   it('G15.2–3 VoiceOver gets both as actions; Past chats keep Why only', () => {
