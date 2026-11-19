@@ -86,6 +86,8 @@ name: T39 · setup, offer and Style profile screens
 - assertNotVisible: "What should Kit call you\\?"
 - assertNotVisible: "Kit: .*"
 - assertNotVisible: "Step .* of .*"
+# #497: Restore asks the age only, so no Skip.
+- assertNotVisible: "Skip"
 
 # 280 · Kit's offer
 - runFlow:

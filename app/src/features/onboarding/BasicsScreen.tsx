@@ -60,14 +60,15 @@ export function BasicsScreen() {
     }, []),
   );
 
-  // #497: the keyboard opens on the name. autoFocus covers a reopen on this step; on a push, iOS drops a focus asked
-  // for mid-slide (seen on the Simulator, Nov 18), so it's asked again once the slide is over.
+  // #497: with the name still empty, the keyboard opens on it. Asked for once the push is over: iOS drops a focus
+  // asked for mid-slide (seen on the Simulator, Nov 18, with autoFocus). A saved name (a reopen mid-setup) gets no
+  // keyboard, so the age choices stay in view.
   useFocusEffect(
     useCallback(() => {
       if (isRestore) return undefined;
       const id = setTimeout(() => {
         const f = nameField.current;
-        if (f && !f.isFocused?.()) f.focus?.();
+        if (f && cleanName(latest.current.name) === null && !f.isFocused?.()) f.focus?.();
       }, FOCUS_AFTER_PUSH_MS);
       return () => clearTimeout(id);
     }, [isRestore]),
@@ -150,8 +151,6 @@ export function BasicsScreen() {
             <TextInput
               ref={nameField}
               testID="about-name-input"
-              // #497: the step opens with the keyboard up on the name (Restore has no name field).
-              autoFocus
               value={about.name}
               onChangeText={(name) => change({ name })}
               placeholder={t('onb.about.namePlaceholder')}

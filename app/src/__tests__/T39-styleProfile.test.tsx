@@ -63,7 +63,7 @@ describe('OS4.6 · Style profile shows Name and Age', () => {
     expect(textAt('profile-age-value')).toBe('18–21');
     expect(getId('profile-age-row').props.accessibilityLabel).toBe('Age, 18–21');
     expect(getId('profile-name-input').props.value ?? '').toBe('');
-    expect(getId('profile-name-input').props.placeholder).toBe('First name') // #497;
+    expect(getId('profile-name-input').props.placeholder).toBe('First name'); // #497
     await r.unmount();
 
     // A set band wins over a birth year.

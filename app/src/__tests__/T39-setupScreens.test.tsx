@@ -276,7 +276,7 @@ describe('OS4.1 · About you', () => {
       expect(textAt('about-name-label')).toBe(NAME_Q);
       expect(isHiddenFromAccessibility(getId('about-name-label') as never)).toBe(true);
       const input = getId('about-name-input');
-      expect([input.props.placeholder, input.props.accessibilityLabel, input.props.value ?? '', input.props.autoFocus]).toEqual([NAME_PLACEHOLDER, NAME_Q, '', true]);
+      expect([input.props.placeholder, input.props.accessibilityLabel, input.props.value ?? '']).toEqual([NAME_PLACEHOLDER, NAME_Q, '']);
       const ageQ = getId('about-age-label');
       expect([textOf(ageQ), ageQ.props.accessibilityRole, isHiddenFromAccessibility(ageQ as never)]).toEqual([AGE_Q, 'header', false]);
       const list = getId('about-age-list');
@@ -337,17 +337,34 @@ describe('OS4.1 · About you', () => {
     expect(await profile()).toBeNull();
   });
 
-  it('OS4.1 · the name field asks for focus on open and again after the push (not on Restore)', async () => {
+  it('OS4.1 · an empty name field gets focus once the push is over (not with a saved name, not on Restore)', async () => {
     const { TextInput } = jest.requireActual<typeof import('react-native')>('react-native');
     const proto = (TextInput as unknown as { prototype?: { focus?: () => void } }).prototype;
     expect(typeof proto?.focus).toBe('function');
     const focus = jest.spyOn(proto as { focus: () => void }, 'focus');
     await drafts();
     let r = await mount(<BasicsScreen />);
-    expect(getId('about-name-input').props.autoFocus).toBe(true);
-    const before = focus.mock.calls.length;
+    // Not mid-push: only once the slide is over.
+    expect(focus).not.toHaveBeenCalled();
+    await advance(FOCUS_AFTER_PUSH_MS - 100);
+    expect(focus).not.toHaveBeenCalled();
+    await advance(150);
+    expect(focus).toHaveBeenCalledTimes(1);
+    await advance(5000);
+    expect(focus).toHaveBeenCalledTimes(1);
+    await r.unmount();
+    focus.mockClear();
+    // A saved name (a reopen mid-setup): no keyboard, so the ages stay in view.
+    await drafts({ about: { age: null, name: 'Alex' } });
+    r = await mount(<BasicsScreen />);
     await advance(FOCUS_AFTER_PUSH_MS + 50);
-    expect(focus.mock.calls.length).toBe(before + 1);
+    expect(focus).not.toHaveBeenCalled();
+    await r.unmount();
+    // Spaces only is no name: focus.
+    await drafts({ about: { age: null, name: '   ' } });
+    r = await mount(<BasicsScreen />);
+    await advance(FOCUS_AFTER_PUSH_MS + 50);
+    expect(focus).toHaveBeenCalledTimes(1);
     await r.unmount();
     focus.mockClear();
     mockT39.params = { restore: '214,38,61' };
