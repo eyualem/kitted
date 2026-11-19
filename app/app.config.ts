@@ -154,6 +154,10 @@ const config: ExpoConfig = {
     // Continue with Google (#295): Google's sign-in sheet returns to the app through this URL scheme, the reversed iOS
     // client ID (src/config/firebase.ts GOOGLE_IOS_CLIENT_ID).
     ['@react-native-google-signin/google-signin', { iosUrlScheme: 'com.googleusercontent.apps.1069635510987-h35362quu682rbpvvsdhqdkp4ic295v9' }],
+    // Continue with Apple (T41): this plugin adds the Sign in with Apple entitlement (com.apple.developer.applesignin) on its
+    // own, whatever APPLE.paid says, so the paid-team switch above stays off and Apple's weather stays off with it. The
+    // package needs the founder's next npm install; scripts/check-release-app.js expects the entitlement in every build.
+    'expo-apple-authentication',
     ['expo-secure-store', { faceIDPermission: false }], // no Face ID in Kitted; keeps NSFaceIDUsageDescription out (05 T29)
     // PHPicker needs no Photos permission (09 §3). cameraPermission must be the SAME string as
     // NSCameraUsageDescription above: `false` deletes that key, and iOS then kills the app the

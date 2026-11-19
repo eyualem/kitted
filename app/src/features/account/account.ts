@@ -1,10 +1,10 @@
 // The account on this phone (10-onboarding.md §2–§5): who is signed in (kv `account.user`), the save offer's state
-// (kv `account.offer`), the switch that keeps every account screen out of real builds until Firebase exists, and what
+// (kv `account.offer`), the one switch that keeps every account screen out of real builds (ACCOUNTS_BUILT), and what
 // happens after a sign-in (restore, set up, ask which fits to keep, or the age stop). Firebase takes over the sign-in
-// itself (auth.ts); these rules stay.
+// itself (signIn.ts, firebaseAuth.ts); these rules stay.
 import { useSyncExternalStore } from 'react';
 import { Platform } from 'react-native';
-import { ACCOUNTS_BUILT, SIGN_IN_LIVE } from '@/config/features';
+import { ACCOUNTS_BUILT } from '@/config/features';
 import { FIREBASE_CONFIG, GOOGLE_IOS_CLIENT_ID } from '@/config/firebase';
 import type { KittedStore } from '@/data/store';
 import { createMockAuth, type AccountHoldings, type AccountUser, type AuthService, type MockScript, type SignInResult } from './auth';
@@ -45,25 +45,30 @@ export function useAccountsOn(): boolean {
 const mockAuth: AuthService = createMockAuth({ script: () => demoScript ?? 'ok' });
 let realAuth: AuthService | null = null;
 
-/** Sign-in methods that really work here: every one on a demo screen (scripted), else the live ones on iPhone. */
-export function liveProviders(): readonly ('apple' | 'google' | 'email')[] {
-  if (demoScript !== null) return ['apple', 'google', 'email'];
-  if (Platform.OS !== 'ios') return [];
-  // Google needs its iOS client ID (set once Google is enabled in the console) and a build with its native module.
-  return FIREBASE_CONFIG.apiKey ? SIGN_IN_LIVE.filter((p) => p !== 'google' || GOOGLE_IOS_CLIENT_ID !== '') : [];
+/** Sign-in methods that really work here: both on a demo screen (scripted); on iPhone only with ACCOUNTS_BUILT on, and
+ *  then only with the Firebase key (Apple needs nothing more), and Google only with its iOS client ID. With the switch
+ *  off there is no entry point at all (SB1.6), so no dev-only row either. */
+export function liveProviders(): readonly ('apple' | 'google')[] {
+  if (demoScript !== null) return ['apple', 'google'];
+  if (!ACCOUNTS_BUILT || Platform.OS !== 'ios' || !FIREBASE_CONFIG.apiKey) return [];
+  return GOOGLE_IOS_CLIENT_ID !== '' ? ['apple', 'google'] : ['apple'];
 }
 
-/** You → Settings → Account shows when accounts are on, or when a real sign-in exists to test (#295). */
+/** You's account rows show when accounts are on (the one switch). */
 export function settingsAccountOn(): boolean {
-  return accountsOn() || liveProviders().length > 0;
+  return accountsOn();
 }
 
-/** The sign-in in use: MockAuth on demo screens, Firebase (Google) when a live provider exists, MockAuth otherwise
- *  (nothing points at it then). Firebase loads lazily so the web preview and tests never touch the native module. */
+/** SB2.1: the providers the sheet lists, from whatever list is live: Apple first, then Google, nothing else (no email,
+ *  duplicates once), whatever order `live` is in. */
+export function sheetProviders(live: readonly string[]): ('apple' | 'google')[] {
+  return (['apple', 'google'] as const).filter((p) => live.includes(p));
+}
+
+/** The sign-in in use: MockAuth on demo screens, Firebase when a live provider exists, MockAuth otherwise (nothing points
+ *  at it then). Firebase loads lazily so the web preview and tests never touch the native modules. */
 export const auth: AuthService = {
   signIn: (p) => current().signIn(p),
-  sendEmailCode: (e) => current().sendEmailCode(e),
-  verifyEmailCode: (e, c) => current().verifyEmailCode(e, c),
   signOut: () => current().signOut(),
   deleteAccount: () => current().deleteAccount(),
 };
@@ -82,7 +87,7 @@ export function parseAccount(raw: string | null): AccountUser | null {
   if (!raw) return null;
   try {
     const v = JSON.parse(raw) as Partial<AccountUser>;
-    if (typeof v.uid !== 'string' || !v.uid || (v.provider !== 'apple' && v.provider !== 'google' && v.provider !== 'email')) return null;
+    if (typeof v.uid !== 'string' || !v.uid || (v.provider !== 'apple' && v.provider !== 'google')) return null;
     return { uid: v.uid, provider: v.provider, email: typeof v.email === 'string' ? v.email : null, signedInAt: typeof v.signedInAt === 'number' ? v.signedInAt : 0 };
   } catch {
     return null;
@@ -148,23 +153,17 @@ export async function afterSignIn(
   return { next: 'done' };
 }
 
-/** The restore's counts, carried through Basics in the route ("214,38,61"). */
+/** The restore's counts, carried through Basics in the route ("214,38"): two numbers, no chat count (SB6.1). */
 export function restoreParam(h: AccountHoldings): string {
-  return `${h.fits},${h.pieces},${h.chats}`;
+  return `${h.fits},${h.pieces}`;
 }
 
 export function parseRestoreParam(v: string | undefined): AccountHoldings | null {
-  const m = /^(\d+),(\d+),(\d+)$/.exec(v ?? '');
-  return m ? { fits: Number(m[1]), pieces: Number(m[2]), chats: Number(m[3]) } : null;
+  const m = /^(\d+),(\d+)$/.exec(v ?? '');
+  return m ? { fits: Number(m[1]), pieces: Number(m[2]) } : null;
 }
 
-// ── T41 additions (tests: T41-accountState.test.ts). Not built yet. ─────────────────────────────────────────────────
-/** SB2.1: the providers the sheet lists, from whatever list is live: Apple first, then Google, nothing else (no email,
- *  duplicates once), whatever order `live` is in. */
-export function sheetProviders(_live: readonly string[]): ('apple' | 'google')[] {
-  throw new Error('T41: not built');
-}
-
+// ── The "both have fits" choice (SB7.1) ──────────────────────────────────────────────────────────────────────────
 /** SB7.1: his pick when the account and this phone both have fits. */
 export type ChoiceAction = 'keepBoth' | 'useAccount' | 'cancel';
 
@@ -181,10 +180,27 @@ export type ChoiceResult =
  *  fit checks (full checks, `status: 'scored'`) whose id is not in `inAccount`, then saves the account (closet pieces,
  *  outfits, chat and the account's own fits are never touched). `cancel` calls `service.signOut()` and nothing else. */
 export async function resolveChoice(
-  _store: Pick<KittedStore, 'getKv' | 'setKv' | 'deleteKv' | 'fitChecks'>,
-  _action: ChoiceAction,
-  _input: { user: AccountUser; inAccount: readonly string[]; confirmed?: boolean },
-  _service: Pick<AuthService, 'signOut'> = auth,
+  store: Pick<KittedStore, 'getKv' | 'setKv' | 'deleteKv' | 'fitChecks'>,
+  action: ChoiceAction,
+  input: { user: AccountUser; inAccount: readonly string[]; confirmed?: boolean },
+  service: Pick<AuthService, 'signOut'> = auth,
 ): Promise<ChoiceResult> {
-  throw new Error('T41: not built');
+  if (action === 'cancel') {
+    await service.signOut();
+    return { status: 'cancelled' };
+  }
+  if (action === 'useAccount') {
+    if (input.confirmed !== true) return { status: 'needsConfirm' };
+    const inAccount = new Set(input.inAccount);
+    const all = await store.fitChecks.all();
+    const fits = all.filter((c) => c.status === 'scored' && c.parentId === null && !inAccount.has(c.id));
+    const goneIds = new Set(fits.map((c) => c.id));
+    // A re-check hangs off its fit, so it goes with it (and never stands alone).
+    const gone = [...fits, ...all.filter((c) => c.parentId !== null && goneIds.has(c.parentId))];
+    for (const c of gone) await store.fitChecks.delete(c.id);
+    await saveAccount(store, input.user);
+    return { status: 'saved', deleted: gone.map((c) => c.id) };
+  }
+  await saveAccount(store, input.user);
+  return { status: 'saved', deleted: [] };
 }

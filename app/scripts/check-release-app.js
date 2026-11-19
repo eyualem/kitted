@@ -3,7 +3,8 @@
 // EAS .ipa unzipped: Payload/Kitted.app) before it goes to testers.
 //   - Info.plist: none of the dev launcher's local-network keys or dev-menu keys (its build phase strips them outside Debug);
 //   - PrivacyInfo.xcprivacy: every required-reason category the app declares (app.config.ts), no tracking;
-//   - the entitlements: the paid team's four with --paid, none of them without.
+//   - the entitlements: the paid team's four with --paid, none of them without, except Sign in with Apple, which every
+//     build has (the expo-apple-authentication plugin adds it whatever the paid-team switch says).
 const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -21,8 +22,11 @@ const PAID_ENTITLEMENTS = [
   'com.apple.developer.applesignin',
 ];
 
-/** Problems with a built app's plist, manifest and entitlements (parsed objects). Pure, for the tests. */
-function checkApp({ info, privacy, entitlements, paid }) {
+const APPLE_SIGN_IN = 'com.apple.developer.applesignin';
+
+/** Problems with a built app's plist, manifest and entitlements (parsed objects). Pure, for the tests. `appleSignIn`: the
+ *  build is meant to carry Sign in with Apple whatever `paid` says (T41; the command line always sets it). */
+function checkApp({ info, privacy, entitlements, paid, appleSignIn = false }) {
   const problems = [];
   if ((info.NSBonjourServices ?? []).some((s) => String(s).toLowerCase().startsWith('_expo._tcp'))) problems.push('Info.plist still lists the dev launcher\'s _expo._tcp Bonjour service');
   if (/Expo Dev Launcher/.test(String(info.NSLocalNetworkUsageDescription ?? ''))) problems.push('Info.plist still has the dev launcher\'s local-network string');
@@ -34,7 +38,9 @@ function checkApp({ info, privacy, entitlements, paid }) {
     if (privacy.NSPrivacyTracking !== false) problems.push('PrivacyInfo.xcprivacy doesn\'t say NSPrivacyTracking = false');
     if ((privacy.NSPrivacyCollectedDataTypes ?? []).length === 0) problems.push('PrivacyInfo.xcprivacy declares no collected data');
   }
+  if (appleSignIn && !(APPLE_SIGN_IN in entitlements)) problems.push(`the entitlement ${APPLE_SIGN_IN} is missing, so Continue with Apple can't sign in`);
   for (const k of PAID_ENTITLEMENTS) {
+    if (appleSignIn && k === APPLE_SIGN_IN) continue;
     if (paid && !(k in entitlements)) problems.push(`the paid entitlement ${k} is missing`);
     if (!paid && k in entitlements) problems.push(`the paid entitlement ${k} is on, but the switch is off`);
   }
@@ -74,13 +80,14 @@ function main() {
     privacy: fs.existsSync(privacyFile) ? plistJson(privacyFile) : null,
     entitlements: entitlementsOf(app),
     paid: args.includes('--paid'),
+    appleSignIn: true,
   });
   if (problems.length > 0) {
     console.error(`check:app FAILED for ${app}:`);
     for (const p of problems) console.error(`  - ${p}`);
     process.exit(1);
   }
-  console.log(`check:app passed: ${app} (no dev launcher keys, the privacy manifest, ${args.includes('--paid') ? 'the paid' : 'no paid'} entitlements).`);
+  console.log(`check:app passed: ${app} (no dev launcher keys, the privacy manifest, ${args.includes('--paid') ? 'the paid' : 'no other paid'} entitlements, Sign in with Apple).`);
 }
 
 module.exports = { checkApp, REQUIRED_API_CATEGORIES, PAID_ENTITLEMENTS };
