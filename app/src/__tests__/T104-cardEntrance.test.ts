@@ -4,7 +4,9 @@
 // jest hoists the mocks below above these imports.
 import { ARRIVE, ARRIVE_CARD, createArrivals } from '@/features/stylist/arrival';
 import { cardEntering, tapEntering } from '@/features/stylist/arrivalMotion';
-import { attachmentEnters } from '@/features/stylist/Enter';
+import { attachmentEnters, Enter } from '@/features/stylist/Enter';
+import { render } from '@testing-library/react-native';
+import { createElement, useEffect } from 'react';
 
 jest.mock('react-native-reanimated', () => {
   const chain = (calls: string[]) => {
@@ -12,7 +14,16 @@ jest.mock('react-native-reanimated', () => {
     for (const k of ['duration', 'delay', 'reduceMotion']) o[k] = (v: unknown) => chain([...calls, `${k}:${String(v)}`]);
     return o;
   };
+  const { View } = jest.requireActual('react-native');
+  const seen: unknown[] = [];
+  const AnimatedView = (props: { entering?: unknown; children?: unknown }) => {
+    seen.push(props.entering);
+    return jest.requireActual('react').createElement(View, null, props.children);
+  };
   return {
+    __esModule: true,
+    default: { View: AnimatedView },
+    __seen: seen,
     Easing: { out: (f: unknown) => f, cubic: 'cubic' },
     FadeIn: chain(['fadeIn']),
     ReduceMotion: { Never: 'never' },
@@ -95,5 +106,25 @@ describe('the look', () => {
     expect(delays).toEqual(['delay:400', 'delay:450', 'delay:500']);
     expect((tapEntering(0, true) as unknown as { calls: string[] }).calls).toContain('delay:320');
     expect((tapEntering(0, true) as unknown as { calls: string[] }).calls[0]).toBe('fadeIn');
+  });
+});
+
+describe('a re-render never cuts the entrance short (review, round 2)', () => {
+  it('the wrapper stays the same and the card is not mounted again when the row stops entering', async () => {
+    let mounts = 0;
+    const Card = () => {
+      useEffect(() => {
+        mounts += 1;
+      }, []);
+      return null;
+    };
+    const seen = jest.requireMock<{ __seen: unknown[] }>('react-native-reanimated').__seen;
+    seen.length = 0;
+    const r = await render(createElement(Enter, { on: true }, createElement(Card)));
+    await r.rerender(createElement(Enter, { on: false }, createElement(Card)));
+    expect(mounts).toBe(1);
+    expect(seen).toHaveLength(2);
+    expect(seen[1]).toBe(seen[0]);
+    expect(seen[0]).toBeDefined();
   });
 });

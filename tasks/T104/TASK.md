@@ -63,3 +63,20 @@ Small things for later (never blocking):
 - needMenu.web.ts picks the first row on tap (preview only).
 - Can't tell yet, needs the iOS shots: clipped swatch names/tile names at the largest text, dashed tile contrast in dark mode, the add card at accessibility size.
 Verdict: **Ready** (code and spec checks); the visual checks wait for the shots on the second pass.
+
+### Round 2 (shots read; diff 5fb20d0b..HEAD read; no tests run, as asked)
+- KC1.6 default and largest text: done. Tiles are one size, two to a row at the largest size, names no longer break mid-word (shots 01, 06 xxxl; dark 01 shows four tiles in one row, `You'd need` under the dashed tile).
+- Dark-mode legibility: done. Dashed tile border and the copper `You'd need` read in dark (01-dark); the five swatches and their names are legible with a visible ring (05-dark).
+- Add card at accessibility size: done (06-add-asking-light-xxxl): stacked art, name, question, Add and No thanks all whole.
+- Entrance (#496): once per new answer: done (`cards` set filled only from the live row, `cardEnters` false once drawn; tests cover re-render, next answer, rows that moved in whole). Never in Past chats: done (`attachmentEnters` false when read-only; PastChats passes no `enter`). Reduce Motion fades only: done (200 ms FadeIn, no translate). Tests can fail: yes, they assert exact delays, rise, durations and the Past-chats source.
+- Defects: none blocking.
+- Small things for later (never blocking):
+  - Enter.tsx / StylistScreen.tsx:121: `arrivals.drawn` runs in an effect and doesn't re-render, so the next render of the row flips `Enter` from an Animated.View to a bare fragment, which remounts the card (and the taps). If any re-render lands inside the first ~400-500 ms, the animation can be cut short and the card redraws once. Fix idea: keep the wrapper stable (always Animated.View, `entering` only when `on`), or latch `on` in a ref. Can't tell on the Simulator without a re-render during the beat; worth one look on a real answer.
+  - The entrance itself is only seen in the strip 13-entrance-strip-light.jpg; I did not review the .mp4.
+  - `Swatches` at default size uses fixed 60 pt cells; fine for five, check if a sixth is ever allowed.
+Verdict: **Ready**.
+
+### The fix round (by the building session, after round 2)
+- **Fixed:** the reviewer's remount note. `Enter` is now always the same `Animated.View`, its entrance fixed at first mount (`useState`), so a re-render after the row is drawn never swaps the wrapper or remounts the card. New test in `T104-cardEntrance.test.ts`; it fails on the old wrapper (checked) and passes now.
+- **Also:** `T35-hello` and `T39-offerCard` render the chat row, which now reaches Reanimated through the wrapper: both got a pass-through mock of `Enter` (like the cards they already mock). No assertion changed.
+- Swatches: a colors card holds 3–5 (`buildCard`), so a sixth can't occur.
