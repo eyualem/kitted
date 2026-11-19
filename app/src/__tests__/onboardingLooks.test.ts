@@ -4,7 +4,7 @@ import { cleanOtherWords, LOOKS, picksToStyles, togglePick } from '@/features/on
 import { t, type StringKey } from '@/i18n/en';
 
 describe('O2 pick looks (#173)', () => {
-  it('has one tile for each of the 7 styles, two drawn outfits each', () => {
+  it('has one tile for each of the 8 styles, two drawn outfits each', () => {
     expect(LOOKS.map((l) => l.style).sort()).toEqual([...STYLES].sort());
     for (const l of LOOKS) {
       expect(l.outfits).toHaveLength(2);

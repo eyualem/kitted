@@ -16,7 +16,8 @@ import sys as _sys; _sys.dont_write_bytecode = True  # never write __pycache__ n
 import copy, csv, hashlib, json, os, sys
 from collections import Counter
 
-KEMPT = "/Users/eyu/Desktop/files/Kitted"
+KEMPT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.."))   # this checkout (T94)
+DATA = os.environ.get("KITTED_DATA", "/Users/eyu/Desktop/files/Kitted")   # git-ignored inputs/ (main checkout)
 FIX = os.path.join(KEMPT, "handoff/fixtures")
 OUT = os.path.join(FIX, "readings")
 sys.path.insert(0, os.path.join(KEMPT, "extraction-test"))
@@ -118,10 +119,10 @@ def write(path, obj):
 def main():
     locked = json.load(open(LOCKED))
     meta = {}
-    with open(os.path.join(KEMPT, "inputs/fitcheck-photos/metadata.csv")) as f:
+    with open(os.path.join(DATA, "inputs/fitcheck-photos/metadata.csv")) as f:
         for row in csv.DictReader(f):
             meta[(row["folder"], row["file"])] = row
-    index = {"generated_by": "handoff/fixtures/make_readings.py", "locked_source": LOCKED,
+    index = {"generated_by": "handoff/fixtures/make_readings.py", "locked_source": os.path.relpath(LOCKED, KEMPT),
              "locked_config": {"model": "gemini-3.8-flash", "thinking": "off", "format": "v3", "image_px": 1024,
                                "prompt_sha": "392fcb9a0679", "schema_sha": "4e7307888d97", "rubric_sha": "807f18c29da1"},
              "modal_rule": "most common overall (everyday, minimalist 0.5 / smart_casual 0.5) -> most field agreement -> lowest run",

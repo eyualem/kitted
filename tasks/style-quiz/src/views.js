@@ -20,16 +20,21 @@
       why: 'Says which way is which, so the swipe teaches itself.' },
     order: { label: 'The ranking step', opts: [['Now put them in order', 'You said Me to these. Tap the one that’s more you.'], ['Now put them in order', 'You said Me to {n}. Tap the one that’s more you.'], ['Which is more you?', 'A few quick picks put your Me\u2019s in order.']], pick: 1,
       why: '"These" points at two cards, but he may have said Me to three or more; the count says why there’s a next step.' },
-    result: { label: 'Results line', opts: ['From your {n} picks. Drag to change the order. You can change it anytime in You.', 'Your top looks, in order. Drag to change it. You can change it anytime in You.', 'Drag to change the order. You can change it anytime in You.'], pick: 1,
-      why: '"10 picks" counts the ranking taps too, which reads oddly after 8 cards.' },
+    result: { label: 'Results line', opts: ['From your {n} picks. Drag to change the order. You can change it anytime in You.', 'Your top looks, in order. Drag to change it. You can change it anytime in You.', 'Drag to change the order. You can change it anytime in You.', 'Your top looks, in order. Not quite right? Drag, remove or add one.'], pick: 3,
+      why: '"10 picks" counts the ranking taps too, which reads oddly after 8 cards. The flow test (Nov 18) recommends the last: saying the result can be off, and how to fix it, is a cheap safety net (about +1 point if it makes people fix a clearly wrong result a bit more often; an assumption). "Anytime in You" moves to the Saved note in the app.' },
     none: { label: 'Nothing clicked yet', opts: ['Play again, or tell me in your words.', 'Add a look you like, play again, or tell me in your words.', 'No problem. Add a look, or tell me in your words.'], pick: 1,
       why: 'The screen’s first button is Add a look, and the line didn’t mention it.' },
     neither: { label: 'A and C: the skip button under the pair', opts: ['Neither', 'Neither is me', 'Not these'], pick: 1,
       why: 'Now a full-width button, so he sees he can skip a pair he doesn’t like; "Neither is me" echoes D’s Not me.' },
+    peek: { label: 'Under the card, second line (new: tap the card for its other outfit)', fresh: true, opts: ['Not sure? Tap it for another outfit.', 'Tap the card for another outfit.', 'Tap to see a second outfit.'], pick: 0,
+      why: 'The flow test’s second safety net (Nov 18): one drawing can miss a look he loves; the dots on the card and this line say there’s another. "Not sure?" speaks to exactly the people it helps.' },
+    replaced: { label: 'After Add a look on a full list (new)', fresh: true, opts: ['{name} in, {old} out', 'Swapped {old} for {name}', 'Replaced {old} with {name}'], pick: 0,
+      why: 'Add a look now stays when he has 3; the look he adds takes #3’s place, and this note (with Undo) says which one left.' },
     removed: { label: 'After he taps ×', opts: [null, 'Removed {name}', '{name} removed'], pick: 1,
       why: 'An Undo note like the app’s "Added 4 to Closet · Undo": one tap on × shouldn’t lose a look for good.' },
   };
-  const copySel = Object.fromEntries(Object.keys(COPY).map((k) => [k, 0]));
+  // New words (fresh: true) have no "today": they start on the recommended draft.
+  const copySel = Object.fromEntries(Object.keys(COPY).map((k) => [k, COPY[k].fresh ? COPY[k].pick : 0]));
   const fill = (s, v = {}) => s && s.replace(/\{(\w+)\}/g, (_, k) => (v[k] ?? ''));
   const w = (key, v) => { const o = COPY[key].opts[copySel[key]]; return Array.isArray(o) ? o.map((x) => fill(x, v)) : fill(o, v); };
 
@@ -80,7 +85,7 @@
     const fresh = () => ({
       view: { a: 'duel', b: 'trio', c: 'grid', d: 'swipe' }[dir],
       picks: [], rounds: [], swipes: [], words: '', editing: false, sheet: false, ended: false, taps: 0, played: false, from: null, note: '', chosen: null, shake: null,
-      nudged: false, toast: null,
+      nudged: false, toast: null, peek: false,
     });
     const reset = () => { st = fresh(); hist = []; draw(); };
     const save = () => hist.push(JSON.stringify({ ...st, toast: null }));
@@ -119,7 +124,7 @@
         card.classList.remove('drag'); card.style.transform = ''; card.querySelectorAll('.stamp').forEach((s) => (s.style.opacity = '')); card.classList.add('fly-' + st.flying);
       }
       setTimeout(() => {
-        st.flying = null;
+        st.flying = null; st.peek = false;
         st.swipes.push({ look: cardOrder(st)[st.swipes.length], yes });
         if (st.swipes.length < 8) { draw(); return; }
         go(() => {
@@ -128,6 +133,9 @@
         });
       }, reduce ? 150 : 240);
     }
+    // A safety net from the flow test (T111): one drawing can miss a look he loves, so a tap on the card shows the
+    // look's other outfit (like a dating card's photos). Not an answer, so Back doesn't undo it.
+    function flip() { if (st.flying) return; tap(); st.peek = !st.peek; draw(); focusSoon('.solo-more'); }
     function dragCard(card) {
       let x0 = null, dx = 0;
       const stamps = () => [card.querySelector('.stamp.me'), card.querySelector('.stamp.no')];
@@ -146,6 +154,7 @@
         if (x0 === null) return;
         x0 = null; card.classList.remove('drag'); hot(true, false); hot(false, false);
         if (Math.abs(dx) > 90) { card.style.transform = ''; decide(dx > 0); }
+        else if (Math.abs(dx) < 6) { card.style.transform = ''; flip(); }
         else { card.style.transform = ''; stamps().forEach((s) => (s.style.opacity = '')); }
       };
       card.addEventListener('pointerup', end); card.addEventListener('pointercancel', end);
@@ -239,13 +248,17 @@
       swipe() {
         const n = st.swipes.length;
         const look = cardOrder(st)[Math.min(n, 7)];
+        const side = st.peek ? 1 : 0;
         const nudge = n === 0 && !st.nudged && !reduce;
-        const card = h('div', { class: 'solo' + (st.flying ? ' fly-' + st.flying : '') + (nudge ? ' nudge' : ''), 'data-style': look, role: 'img', 'aria-label': `Outfit ${Math.min(n + 1, 8)} of 8. ${DESC[look][0]}` },
+        const card = h('div', { class: 'solo' + (st.flying ? ' fly-' + st.flying : '') + (nudge ? ' nudge' : ''), 'data-style': look, role: 'img', 'aria-label': `Outfit ${Math.min(n + 1, 8)} of 8, view ${side + 1} of 2. ${DESC[look][side]}` },
           h('span', { class: 'stamp me', 'aria-hidden': 'true' }, 'Me'), h('span', { class: 'stamp no', 'aria-hidden': 'true' }, 'Not me'),
-          h('div', { class: 'art' }, outfit(look, 0, 170)));
+          h('span', { class: 'pg', 'aria-hidden': 'true' }, h('i', { class: side ? '' : 'on' }), h('i', { class: side ? 'on' : '' })),
+          h('div', { class: 'art' }, outfit(look, side, 170)));
         dragCard(card);
         const prog = h('div', { class: 'prog', 'aria-hidden': 'true' }, Array.from({ length: 8 }, (_, i) => h('i', { class: i < n ? 'done' : i === n ? 'now' : '' })));
-        return frame([title('Me or not me?', 'One outfit at a time. Would you wear something like this?'), card, prog, h('div', { class: 'hint' }, w('hint'))],
+        // In the app the card's VoiceOver actions are Me, Not me and Another outfit; on the web, a hidden button stands in.
+        const more = h('button', { class: 'sr solo-more', onclick: flip }, 'Another outfit');
+        return frame([title('Me or not me?', 'One outfit at a time. Would you wear something like this?'), card, more, prog, h('div', { class: 'hint' }, w('hint'), h('br'), w('peek'))],
           [h('div', { class: 'note', 'aria-live': 'polite' }, st.note), h('div', { class: 'yn' },
             h('button', { class: 'btn sec', 'data-yn': 'no', onclick: () => decide(false) }, 'Not me'),
             h('button', { class: 'btn', 'data-yn': 'me', onclick: () => decide(true) }, 'Me'))]);
@@ -295,7 +308,8 @@
             h('button', { class: 'x', 'aria-label': `Remove ${NAMES[s]}`, html: `<span>${xIc}</span>`, onclick: () => remove(i) }),
             grip, sr);
         });
-        const add = p.length < 3 ? h('button', { class: 'addrow', onclick: () => { tap(); save(); st.sheet = true; draw(); focusSoon('.sheet .close'); } }, h('span', { html: plusIc, 'aria-hidden': 'true' }), 'Add a look') : null;
+        // Stays on a full list (a T111 safety net): the look he adds takes #3's place, with an Undo note.
+        const add = h('button', { class: 'addrow', onclick: () => { tap(); save(); st.sheet = true; draw(); focusSoon('.sheet .close'); } }, h('span', { html: plusIc, 'aria-hidden': 'true' }), 'Add a look');
         const finishWords = () => { tap(); save(); st.words = st.words.trim(); st.editing = false; draw(); focusSoon('.words .linkbtn'); };
         let words;
         if (st.editing) {
@@ -326,7 +340,18 @@
         if (st.sheet) {
           const close = () => { tap(); st.sheet = false; draw(); focusSoon('.addrow'); };
           const left = ORDER.filter((s) => !p.includes(s));
-          const tiles = left.map((s) => h('button', { class: 'tile', onclick: () => { tap(); save(); st.picks.push(s); st.sheet = false; draw(); say(`Added ${NAMES[s]}`); focusSoon(`.rank:nth-child(${st.picks.length}) .x`); }, 'aria-label': `${NAMES[s]}: ${LINES[s]}` },
+          const pickLook = (s) => {
+            tap(); save();
+            const r = addLook(st.picks, s);
+            st.picks = r.picks; st.sheet = false;
+            clearTimeout(toastTimer);
+            st.toast = r.replaced ? { text: w('replaced', { name: NAMES[s], old: NAMES[r.replaced] }) } : null;
+            if (r.replaced) toastTimer = setTimeout(() => { if (st.toast) { st.toast = null; draw(); } }, 5000);
+            draw();
+            if (!r.replaced) say(`Added ${NAMES[s]}`);
+            focusSoon(`.rank:nth-child(${st.picks.length}) .x`);
+          };
+          const tiles = left.map((s) => h('button', { class: 'tile', onclick: () => pickLook(s), 'aria-label': `${NAMES[s]}: ${LINES[s]}` },
             h('div', { class: 'art' }, outfit(s, 0, 66), outfit(s, 1, 66)),
             h('div', { class: 'nm' }, h('span', {}, NAMES[s])),
             h('div', { class: 'ln' }, LINES[s])));
@@ -400,17 +425,17 @@
   // The word options (D, plus A and C's skip button): today's words are on until the founder picks; "Recommended" marks the design pass's pick.
   const copyBox = document.getElementById('copy-d');
   if (copyBox) {
-    const sample = { n: 3, name: 'Minimal' };
+    const sample = { n: 3, name: 'Minimal', old: 'Outdoor' };
     const show = (o) => (o === null ? 'No note (today: Back undoes it)' : Array.isArray(o) ? `${fill(o[0], sample)} / ${fill(o[1], sample)}` : fill(o, sample));
     const render = () => {
       copyBox.replaceChildren(
         h('div', { class: 'copy-actions' },
-          h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = 0)); render(); redrawAll(); } }, 'Today’s words'),
+          h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = COPY[k].fresh ? COPY[k].pick : 0)); render(); redrawAll(); } }, 'Today’s words'),
           h('button', { type: 'button', class: 'restart', onclick: () => { Object.keys(COPY).forEach((k) => (copySel[k] = COPY[k].pick)); render(); redrawAll(); } }, 'All recommended')),
         ...Object.entries(COPY).map(([k, c]) => h('fieldset', { class: 'copyset' }, h('legend', {}, c.label),
           ...c.opts.map((o, i) => h('label', { class: 'opt' },
             h('input', { type: 'radio', name: `copy-${k}`, checked: copySel[k] === i, onchange: () => { copySel[k] = i; redrawAll(); } }),
-            h('span', {}, show(o), i === 0 ? h('span', { class: 'tag' }, 'today') : null, i === c.pick ? h('span', { class: 'tag rec' }, 'recommended') : null))),
+            h('span', {}, show(o), i === 0 && !c.fresh ? h('span', { class: 'tag' }, 'today') : null, c.fresh ? h('span', { class: 'tag' }, 'new, draft') : null, i === c.pick ? h('span', { class: 'tag rec' }, 'recommended') : null))),
           h('p', { class: 'why' }, c.why))));
     };
     render();

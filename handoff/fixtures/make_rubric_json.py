@@ -55,14 +55,16 @@ DETECTION_SETS = ["ATHLETIC_BOTTOMS", "DRESS_SHOES", "COLLARED", "DARK_TECH", "S
                   "ST_STREET_SHOES", "ST_VETO", "PREP_TOPS", "EARTH_OUTER", "WW_VETO", "WW_NEG", "RETRO_SHOES", "VS_BOTTOM_H", "OUT_A",
                   "OUT_H", "OUT_VETO", "NEUT_MIN", "MIN_HOME_UP", "MIN_HOME_BOTTOM", "MIN_HOME_SHOES", "MIN_AGAINST_SHOES", "PRESSED",
                   "PREP_ANCHOR_UP", "PREP_HOME_UP", "PREP_HOME_BOTTOM", "PREP_HOME_SHOES", "PREP_VETO", "PREP_CASUAL_TOPS",
-                  "SC_ANCHOR_UP", "SC_HOME_UP", "SC_ANCHOR_SHOES", "SC_VETO", "JEANS_FAMILY", "DARK_NONDENIM"]
+                  "SC_ANCHOR_UP", "SC_HOME_UP", "SC_ANCHOR_SHOES", "SC_VETO", "JEANS_FAMILY", "DARK_NONDENIM",
+                  # T94: Tailored (a name only; TL_SIGNATURE_UP = TL_JACKET)
+                  "TL_JACKET", "TL_TROUSERS", "TL_NEVER", "TL_HOME_UP", "TL_SIGNATURE_SHOES", "TL_HOME_SHOES"]
 
 
 def main():
     sl = lambda s: sorted(s)
     out = {
         "version": "4.1.0", "engine": 5, "minAppBuild": 1, "source": "extraction-test/rubric.py",
-        "rubricSha256": __import__("hashlib").sha256(open(os.path.join(K.KEMPT, "extraction-test/rubric.py"), "rb").read()).hexdigest(),
+        "rubricSha256": __import__("hashlib").sha256(open(r.__file__, "rb").read()).hexdigest(),
         "config": {"minAge": 18, "freeChecksPerDay": 1, "freeRechecksPerCheck": 1, "freeQuestionsPerDay": 5, "proChecksPerDay": 10,
                    "proQuestionsPerDay": 50, "dayRollsOverAt": "04:00"},
         "scoring": {"baseline": r.BASELINE, "weights": {"fit": 0.40, "color": 0.30, "proportion": 0.30}, "mistakeMultiplier": 2.0,
@@ -86,7 +88,7 @@ def main():
             "CREDITS": [{"id": k, "points": v[0], "needs": list(v[1])} for k, v in r.CREDITS.items()],
         },
         "styles": {
-            "order": r.STYLE_ORDER, "names": r.STYLE_NAMES, "pickAlias": r.PICK_ALIAS,
+            "order": r.STYLE_ORDER, "lookOrder": r.LOOK_ORDER, "names": r.STYLE_NAMES, "pickAlias": r.PICK_ALIAS,
             "sets": {k: sl(getattr(r, k)) for k in DETECTION_SETS},
         },
         "tap": {"pairs": {k: [list(p) for p in v] for k, v in r.TAP_PAIRS.items()}, "labels": r.TAP_LABEL,

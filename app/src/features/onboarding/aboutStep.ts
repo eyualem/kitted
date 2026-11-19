@@ -7,11 +7,12 @@
 import type { KittedStore } from '@/data/store';
 import type { AgeBand, ProfileRow } from '@/data/types';
 import { t, type StringKey } from '@/i18n/en';
-import { ABOUT_KEY, BASICS_KEY, isAgeBand, isUnderAge, loadDraft, LOOKS_KEY, type AboutDraft, type AgeChoice } from './basics';
+import { ABOUT_KEY, BASICS_KEY, GAME_DRAFT_KEY, isAgeBand, isUnderAge, loadDraft, LOOKS_KEY, type AboutDraft, type AgeChoice } from './basics';
 import { completeOnboarding } from './complete';
 import { postFirstCheckOffer } from './firstCheckOffer';
 import { picksToStyles } from './looks';
 import { clearResumeStep } from './resume';
+import { endStyleGame } from './styleGameSession';
 
 export { ABOUT_KEY, AGE_CHOICES, EMPTY_ABOUT, isAgeBand, parseAbout, type AboutDraft, type AgeChoice } from './basics';
 
@@ -102,5 +103,8 @@ export async function finishSetup(store: KittedStore, nowMs: number, ids: (prefi
   await store.deleteKv(LOOKS_KEY);
   await store.deleteKv(BASICS_KEY);
   await store.deleteKv(ABOUT_KEY);
+  // The style game's results draft and the game in memory go (T113); his Not me's (looks.notMe) stay with his profile.
+  await store.deleteKv(GAME_DRAFT_KEY);
+  endStyleGame();
   await clearResumeStep(store);
 }

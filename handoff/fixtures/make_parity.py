@@ -278,7 +278,7 @@ def main():
 
     n_real = 0
     fixes_occ = {}
-    for fx in glob.glob(os.path.join(KEMPT, "inputs/*/fixes.csv")):
+    for fx in glob.glob(os.path.join(K.DATA, "inputs/*/fixes.csv")):
         for line in open(fx).read().splitlines()[1:]:
             parts = line.split(",")
             if len(parts) >= 3 and parts[2]:
@@ -373,7 +373,7 @@ def main():
                 "not_rated, detected_styles (same order), style_label exactly; `ask` (ask_question with the same config) exactly; raw_unrounded / credit_unrounded / mistakes_unrounded exactly as Double (tolerance 1e-9 allowed); "
                 "raw_score / credit_points / mistake_points are Python round(x, 3/2/2) values, compare within 0.0005/0.005. "
                 "styles are ordered [name, weight] pairs: iterate them in this order. Readings may lack keys or carry unknown values on purpose.",
-        "rubric_sha256": hashlib.sha256(open(os.path.join(KEMPT, "extraction-test/rubric.py"), "rb").read()).hexdigest(),
+        "rubric_sha256": hashlib.sha256(open(rubric.__file__, "rb").read()).hexdigest(),   # the file actually imported
         "counts": {"real_runs_read": n_real, "unique_real_readings": n_unique_real, "council_readings": n_council,
                    "demo_and_edge_readings": n_before_fuzz - n_unique_real - n_council,
                    "fuzz_readings": len(readings) - n_before_fuzz, "readings": len(readings), "cases": len(cases),

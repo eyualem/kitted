@@ -88,10 +88,10 @@ export interface Reading {
 }
 
 // ---------------------------------------------------------------- profile inputs
-/** The 7 styles the rubric detects (v4). Old onboarding keys still accepted as picks: preppy / old_money -> classic_prep,
- *  gorpcore -> outdoor. */
+/** The 8 looks (v4's 7 plus Tailored, T94). Scoring reads only the 7 (`detectStyles`); Tailored is a name
+ *  (`detectLooks`). Old onboarding keys still accepted as picks: preppy / old_money -> classic_prep, gorpcore -> outdoor. */
 export type DetectedStyle =
-  | "vintage_sport" | "outdoor" | "workwear" | "streetwear" | "classic_prep" | "minimalist" | "smart_casual";
+  | "vintage_sport" | "outdoor" | "workwear" | "streetwear" | "tailored" | "classic_prep" | "minimalist" | "smart_casual";
 export type StyleName = DetectedStyle | "old_money" | "preppy" | "gorpcore";
 /** His picks: ORDERED [name, weight] pairs (the order he tapped them). Since rubric v4 they never change a score;
  *  they only choose the card label when two detected styles both fit. */
@@ -294,6 +294,8 @@ export interface RubricData {
   /** Style detection (rubric v4): the fixed label order, card names, old pick keys and every set the detector reads. */
   styles: {
     order: DetectedStyle[];
+    /** T94: the 8 looks' fixed order (the name only; `order` stays the 7 scoring looks). */
+    lookOrder: DetectedStyle[];
     names: Record<DetectedStyle, string>;
     pickAlias: Record<string, string>;
     sets: Record<string, string[]>;

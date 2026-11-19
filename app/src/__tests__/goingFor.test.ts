@@ -67,7 +67,7 @@ describe('the pre-pick (02 "Going for")', () => {
 
   it('the tiles are his picks (none: the setup screen\'s first three), More holds the rest', () => {
     expect(lookTiles(picksOf(PROFILE_STYLES))).toEqual({
-      tiles: ['smart_casual', 'workwear'], more: ['streetwear', 'minimalist', 'classic_prep', 'outdoor', 'vintage_sport'],
+      tiles: ['smart_casual', 'workwear'], more: ['streetwear', 'minimalist', 'classic_prep', 'tailored', 'outdoor', 'vintage_sport'],
     });
     expect(lookTiles([]).tiles).toEqual(['streetwear', 'minimalist', 'smart_casual']);
   });

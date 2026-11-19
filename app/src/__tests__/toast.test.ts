@@ -99,6 +99,10 @@ describe('U3 · which Undo gets which window', () => {
     'features/closet/pieceActions.ts · toast: (text, undo)': true, // merge, Not this piece, It's another piece
     'features/closet/pieceActions.ts · editToast': true, // a "What it is" change
     'features/morning/SwapSheet.tsx · swap.done': true, // Swap one rewrites the card, and the piece stays out of it (#377)
+    // The style game's results (T113, technical default 11): the app's 5 s toast, since Back also undoes them.
+    'features/onboarding/GameResults.tsx · game.results.removed': false, // × on a row
+    'features/onboarding/AddLookSheet.tsx · game.results.swapped': false, // a full list's in-and-out
+    'features/onboarding/styleGameSession.ts · last.text': false, // demo screens 306 and 307 (the held toast)
   };
   it('removals and rewrites keep 8 s; the rest are 5 s', () => {
     const seen: Record<string, boolean> = {};
