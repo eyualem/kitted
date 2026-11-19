@@ -34,8 +34,9 @@ export const NO_FINISH: FinishState = {
 
 /** After a check changes, wait this long before the moves card: the score reveal finishes first (the save offer's 4 s). */
 export const FINISH_SETTLE_MS = 4_000;
-/** The paywall opens this long after the moves card lands, so he sees the card first. */
-export const PAYWALL_AFTER_MS = 2_500;
+/** The paywall opens this long after the moves card is posted, so he sees the card first: 2.5 s on screen, after Kit's typing
+ *  beat (0.9 s of dots + 0.6 s before the card, stylist/arrival.ts BEAT; T116). */
+export const PAYWALL_AFTER_MS = 4_000;
 
 const STEPS: readonly FinishStep[] = ['waiting', 'moves', 'paywall', 'done', 'skipped'];
 const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFinite(v) ? v : null);

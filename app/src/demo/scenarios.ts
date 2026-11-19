@@ -62,6 +62,9 @@ export interface ScreenScenario {
   /** Kit's first-check offer (T39, OS5): setup finished through About you (no agreement), then the card as is, after
    *  Later, after Not now on the camera's agreement, or after the agreement and one scored check. */
   offer?: 'open' | 'later' | 'notNow' | 'checked';
+  /** Kit's rows are new to him (T116): the thread's "seen until" starts at 0 (`true`), or just after setup ('afterSetup': the hello
+   *  is old, what follows is new), so the hello and the first-moves line play their typing beat. */
+  fresh?: true | 'afterSetup';
   /** The style game in setup (T113): the session as set by seedStyleGameForDemo (a fixed deal, his answers, his changes). */
   styleGame?: StyleGameDemo;
   /** Fields written over the scenario's profile (T39: his name and age band on Style profile). */
@@ -369,6 +372,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   // ("From your first check", each piece New), and Closet once that visit is over.
   { n: 285, name: 'Closet · first visit', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:44:00', href: '/closet', offer: 'checked' },
   { n: 286, name: 'Closet · after the first visit', id: 'C1', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:46:00', href: '/closet', offer: 'checked' },
+  // Kit types before it speaks (T116, specs/setup-and-you.md SY2.12–SY2.13): the hello after setup, and the line after his first score.
+  { n: 287, name: 'Stylist · Kit types, then the hello', id: 'S1o', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:00', href: '/stylist', offer: 'open', fresh: true },
+  { n: 288, name: 'Stylist · Kit types, then the optional step', id: 'S14', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: { steps: ['later'] }, fresh: 'afterSetup' },
   // The morning card waits for his first check (founder, Nov 11): Stylist after Agree on the camera, check not done yet, with the morning
   // card allowed (index.ts): Kit's offer is the only card.
   { n: 290, name: 'Stylist · agreed, no check yet', id: 'S1o', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:41:30', href: '/stylist', offer: 'checked' },
