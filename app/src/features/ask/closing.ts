@@ -11,9 +11,11 @@ export interface ClosingBlock {
   refused: boolean;
   /** "Can I wear…": the model's own yes / no / depends (J5), checked against the rules' verdict. */
   verdict: 'yes' | 'no' | 'depends' | null;
+  /** The follow-up taps as the model wrote them (raw, null when absent): cards.ts `checkFollowUps` decides which stay. */
+  followUps: unknown;
 }
 
-export const EMPTY_BLOCK: ClosingBlock = { card: null, remember: null, need: null, refused: false, verdict: null };
+export const EMPTY_BLOCK: ClosingBlock = { card: null, remember: null, need: null, refused: false, verdict: null, followUps: null };
 
 /** The JSON of a block, or null when it isn't one (not JSON, not an object, none of the four keys). */
 export function parseClosing(raw: string): ClosingBlock | null {
@@ -27,9 +29,9 @@ export function parseClosing(raw: string): ClosingBlock | null {
   }
   if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
   const o = v as Record<string, unknown>;
-  if (!['card', 'remember', 'need', 'refused'].some((k) => k in o)) return null;
+  if (!['card', 'remember', 'need', 'refused', 'followUps'].some((k) => k in o)) return null;
   const verdict = o.verdict === 'yes' || o.verdict === 'no' || o.verdict === 'depends' ? o.verdict : null;
-  return { card: o.card ?? null, remember: o.remember ?? null, need: o.need ?? null, refused: o.refused === true, verdict };
+  return { card: o.card ?? null, remember: o.remember ?? null, need: o.need ?? null, refused: o.refused === true, verdict, followUps: o.followUps ?? null };
 }
 
 /**

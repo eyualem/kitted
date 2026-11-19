@@ -2,7 +2,7 @@
 
 **Approved by the founder:** 2026-11-13
 
-After this, a guy who dresses sharp on purpose finds a look for him: setup, You and the style game show an 8th look, Tailored, and a suit or a blazer with dress trousers reads as Tailored on his card. No score changes: only the name the card shows.
+After this, a guy who dresses sharp on purpose finds a look for him: setup, You and the style game show an 8th look, Tailored, and a suit or a blazer with dress trousers reads as Tailored on his card. No score changes: only the name the card shows. *(Since scoring v16, the founder's taste rules follow the outfit's graded look, Tailored included; the founder's yes, Nov 17.)*
 
 **Part of:** `specs.md` → F1 (Onboarding, "Tap 1 to 3 looks"), F2 (the result card's "Reads as"), F9.2 (picked looks order the fixes, never a score). The scoring rules in plain words live in `rubric/v5-styles.md`, which gains the Tailored section in the build (T94). The style game's own spec (after the founder's test, plan.md Y30) owns how the game uses the 8 looks; this spec only says Tailored is one of them.
 

@@ -162,7 +162,7 @@ export function createAskOpenAI(opts: ProviderOptions): AnswerSource {
       }
       const { rest, block } = split.end();
       if (rest) yield { type: 'delta', text: rest };
-      yield { type: 'done', card: block.card, remember: block.remember, need: block.need, refused: block.refused, verdict: block.verdict, blockFound: block !== EMPTY_BLOCK };
+      yield { type: 'done', card: block.card, remember: block.remember, need: block.need, refused: block.refused, verdict: block.verdict, blockFound: block !== EMPTY_BLOCK, ...(block.followUps !== null ? { followUps: block.followUps } : {}) };
     },
   };
 }
@@ -240,7 +240,7 @@ export function createAskAnthropic(opts: ProviderOptions): AnswerSource {
       }
       const { rest, block } = split.end();
       if (rest) yield { type: 'delta', text: rest };
-      yield { type: 'done', card: block.card, remember: block.remember, need: block.need, refused: block.refused, verdict: block.verdict, blockFound: block !== EMPTY_BLOCK };
+      yield { type: 'done', card: block.card, remember: block.remember, need: block.need, refused: block.refused, verdict: block.verdict, blockFound: block !== EMPTY_BLOCK, ...(block.followUps !== null ? { followUps: block.followUps } : {}) };
     },
   };
 }

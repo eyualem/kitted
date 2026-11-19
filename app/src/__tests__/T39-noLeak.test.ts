@@ -184,7 +184,17 @@ describe('OS4.7 · no request carries his age band or his name', () => {
     await runAll(store, serverTransport({ base: BASE, fetch: srv.fetch, token: async () => 'TOKEN', tzMinutes: () => -240 }));
     const routes = new Set(srv.calls.map((c) => c.route));
     expect([...routes].sort()).toEqual(['ask', 'closet', 'look', 'read']);
-    expect(srv.calls.filter((c) => c.route === 'look').length).toBe(2);
+    // T69: p01b's chinos make the leg-width look W a third look call; like U and L it sends one face-hidden close-up
+    // only, and it's L's (the lower one): never the upload, never anything else
+    const looks = srv.calls.filter((c) => c.route === 'look');
+    expect(looks.length).toBe(3);
+    const imagesOf = (body: string) => ((JSON.parse(body) as { contents: { parts: { inline_data?: { data: string } }[] }[] }).contents[0]!.parts)
+      .filter((x) => x.inline_data).map((x) => x.inline_data!.data);
+    const armOf = (body: string) => {
+      const keys = Object.keys((JSON.parse(body) as { generationConfig: { responseSchema: { properties: object } } }).generationConfig.responseSchema.properties);
+      return keys.includes('knee') ? 'W' : keys.includes('under_present') ? 'U' : 'L';
+    };
+    expect(looks.map((c) => [armOf(c.body), imagesOf(c.body)]).sort()).toEqual([['L', ['low']], ['U', ['up']], ['W', ['low']]]);
     expect(srv.calls.filter((c) => c.route === 'ask').length).toBe(3);
     expect(leaks(srv.calls)).toEqual([]);
 

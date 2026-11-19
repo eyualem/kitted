@@ -19,6 +19,7 @@ Rule 7: these are made-up readings with no person in them (no age, no picks unle
 Readings use only values of the live reading (schema.json), except cases marked `future`, which name the values the
 reading can't produce yet (the rule exists in the engine but can't fire on a live check).
 """
+import copy
 import json
 import re
 import sys
@@ -38,10 +39,12 @@ SCHEMA = json.loads((HERE / "schema.json").read_text())
 APP_OCCASIONS = {"everyday", "class", "date", "going_out", "interview", "event", "gym", "home"}   # app/src/data/types.ts
 FUTURE_VALUES = {"trail_shoe", "vest", "track_jacket", "track_pants", "work_pants", "technical_pants", "denim_shirt"}
 BANDS = [(5.5, "Needs a fix"), (6.5, "Getting there"), (7.5, "Put together"), (8.5, "Sharp"), (10.0, "Dialed in")]
+# v16 (T69): 3.0-9.5 in six bands; 3-4.5 has its own word (the founder's "Start fresh", Q-W1)
+BANDS_V16 = [(4.5, "Start fresh"), (5.5, "Needs a fix"), (6.5, "Getting there"), (7.5, "Put together"), (8.5, "Sharp"), (9.5, "Dialed in")]
 
 
-def band_of(x):
-    return next(name for top, name in BANDS if x <= top)
+def band_of(x, c=None):
+    return next(name for top, name in (BANDS_V16 if c and c.get("engine") == "v16" else BANDS) if x <= top)
 
 
 # --------------------------------------------------------------------------------------------- garments and readings
@@ -124,10 +127,17 @@ CASES = []
 
 
 def case(cid, rule, what, reading, expect, occasion="everyday", styles=None, boldness="a_little", second_look=None,
-         vs=None, future=None, kd=None):
-    CASES.append({"id": cid, "rule": rule, "what": what, "reading": reading, "occasion": occasion,
-                  "styles": [list(p) for p in (styles or [])], "boldness": boldness, "second_look": second_look,
-                  "expect": expect, "vs": vs, "future": sorted(future or []), "kd": kd})
+         vs=None, future=None, kd=None, engine="v15", season=None, graded_look=None):
+    c = {"id": cid, "rule": rule, "what": what, "reading": reading, "occasion": occasion,
+         "styles": [list(p) for p in (styles or [])], "boldness": boldness, "second_look": second_look,
+         "expect": expect, "vs": vs, "future": sorted(future or []), "kd": kd}
+    if engine != "v15":                       # T69: a v16 case names its engine, season and graded look (v15's stay as they were)
+        c.update(engine=engine, season=season, graded_look=graded_look)
+    CASES.append(c)
+
+
+def case16(cid, rule, what, reading, expect, **kw):
+    case(cid, rule, what, reading, expect, engine="v16", **kw)
 
 
 F = lambda check, part=None, points=None, line=None: {k: v for k, v in (("check", check), ("part", part), ("points", points),
@@ -1631,6 +1641,240 @@ case("GEN-2-slim", "GEN-2", "an oversized tee over slim jeans with no style: the
      {"label": None, "fired": [F(PB1, "proportions", -1.5)], "not_fired": [F("PF5_big_top_skinny_leg")], "band": "Getting there"})
 
 
+# ===== Tailored (TLR; T94, specs/tailored.md) ========================================================================
+# The cases above whose outfit meets TL1 (a tailored jacket and dress trousers, nothing on the never-list, no roominess
+# 5) now read as Tailored, and the "reads as" line names it where it said "a matching suit", "reads as smart casual"
+# or "reads as classic prep" (TL2). Name only: every number they assert stays as it was (TL3).
+MEETS_TL1 = ["PRO-7-tailored", "PRO-7-untucked", "PRO-10-hem", "PRO-13-fitted-blazer", "PRO-13-blazer", "PRO-14-blazer",
+             "FIT-1-ceiling", "FIT-2-tailored", "FIT-5-worst", "COL-3-near", "COL-12-suit", "COL-13-tailored", "SHO-5-casual",
+             "SHO-7-suit", "STY-2-suit", "STY-4-covered-suit", "STY-5-blazer", "STY-10-plain", "CON-6-tee-blazer",
+             "OCC-2-derby", "OCC-2-over", "OCC-4-sneakers", "OCC-4-everyday", "OCC-7-blazer", "OCC-7-suitjacket",
+             "MIN-3-blazer", "PRP-3-tailored", "SMC-2-suit", "SMC-5-interview"]
+_by_id = {c["id"]: c for c in CASES}
+assert set(MEETS_TL1) <= set(_by_id), sorted(set(MEETS_TL1) - set(_by_id))
+for _cid in MEETS_TL1:
+    _e = _by_id[_cid]["expect"]
+    _e["label"] = "tailored"
+    _e["detected_has"] = list(dict.fromkeys(_e.get("detected_has", []) + ["tailored"]))
+    _e["fired"] = _e.get("fired", []) + [F("H1_reads_as_style", "cohesion", 0.5, "reads as tailored")]
+
+TL_SHIRT = top("dress_shirt", "white", tucked="full")
+TL_SUIT = Rd(TL_SHIRT, outer("suit_jacket", "charcoal"), bottom("suit_trousers", "charcoal", "straight", "no_break"), shoe("derby", "black"))
+TL_BLZ = Rd(TL_SHIRT, outer("blazer", "navy"), TROUSERS, LOAFER)
+TL_MIN_TIE = Rd(TEE, outer("unstructured_blazer", "navy"), bottom("trousers", "black", "straight"), LOAFER_BK)
+TL_SLEEVES = Rd(TL_SHIRT, outer("blazer", "navy", sleeve_end="covers_hand"), bottom("trousers", "grey", "straight", "no_break"),
+                shoe("canvas_sneaker", "red"))
+H1_TL = F("H1_reads_as_style", "cohesion", 0.5, "reads as tailored")
+
+case("TLR-1-blazer", "TLR-1", "a navy blazer over a tucked white dress shirt, grey trousers and brown loafers: Tailored",
+     TL_BLZ, {"detected_has": ["tailored", "classic_prep", "smart_casual"], "label": "tailored", "fired": [H1_TL], "band": "Sharp"})
+case("TLR-1-clean-sneakers", "TLR-1", "the same with white leather sneakers (a home piece): still Tailored",
+     Rd(TL_SHIRT, outer("blazer", "navy"), TROUSERS, WLS), {"detected_has": ["tailored"], "label": "tailored", "band": "Sharp"})
+case("TLR-1-two-slots", "TLR-1", "a charcoal suit with the shoes out of the photo: jacket and trousers are enough",
+     Rd(*TL_SUIT["garments"], shoes_visible=False), {"detected_has": ["tailored"], "label": "tailored", "band": "Put together"})
+case("TLR-2-suit", "TLR-2", "a charcoal suit over a white dress shirt with black derbies: a matching suit always meets it",
+     TL_SUIT, {"detected_has": ["tailored"], "label": "tailored", "fired": [H1_TL], "band": "Sharp"})
+case("TLR-2-no-jacket", "TLR-2", "a grey sweater, grey trousers and loafers: no tailored jacket, so minimal as before",
+     Rd(top("sweater", "grey"), bottom("trousers", "grey", "straight"), LOAFER),
+     {"detected_lacks": ["tailored"], "label": "minimalist", "band": "Put together"})
+case("TLR-2-overcoat", "TLR-2", "the same under a camel overcoat: an overcoat isn't a tailored jacket",
+     Rd(top("sweater", "grey"), outer("overcoat", "tan_camel"), bottom("trousers", "grey", "straight"), LOAFER),
+     {"detected_lacks": ["tailored"], "band": "Put together"})
+case("TLR-2-top-half", "TLR-2", "the suit with only the top half in the photo: no trousers in view, not Tailored",
+     Rd(*TL_SUIT["garments"], framing="upper_only"), {"detected_lacks": ["tailored"], "label": None, "band": "Put together"})
+case("TLR-3-chinos", "TLR-3", "a navy blazer over a white oxford with khaki chinos and loafers: classic prep, never Tailored",
+     Rd(top("oxford_shirt", "white"), outer("blazer", "navy"), CHINOS, LOAFER),
+     {"detected_lacks": ["tailored"], "label": "classic_prep", "fired": [F("H1_reads_as_style", "cohesion", 0.5, "reads as classic prep")],
+      "band": "Put together"})
+case("TLR-3-jeans", "TLR-3", "a navy blazer over a white tee with dark straight jeans and loafers: never Tailored",
+     Rd(TEE, outer("blazer", "navy"), DJEANS, LOAFER), {"detected_lacks": ["tailored"], "label": "classic_prep", "band": "Put together"})
+case("TLR-3-chunky", "TLR-3", "the Tailored blazer outfit with chunky sneakers: never Tailored, smart casual as before",
+     Rd(TL_SHIRT, outer("blazer", "navy"), TROUSERS, CHUNKY),
+     {"detected_lacks": ["tailored"], "label": "smart_casual", "fired": [F("H1_reads_as_style", "cohesion", 0.5, "reads as smart casual")],
+      "band": "Put together"})
+case("TLR-3-hoodie", "TLR-3", "a hoodie under a navy blazer with grey trousers and loafers: never Tailored",
+     Rd(top("hoodie", "grey"), outer("blazer", "navy"), TROUSERS, LOAFER),
+     {"detected_lacks": ["tailored"], "label": "classic_prep", "band": "Put together"})
+case("TLR-3-roomy", "TLR-3", "the Tailored blazer outfit with the trousers at roominess 5: never Tailored",
+     Rd(TL_SHIRT, outer("blazer", "navy"), mod(TROUSERS, volume=5), LOAFER),
+     {"detected_lacks": ["tailored"], "label_in": ["classic_prep", "smart_casual", None], "band_in": ["Getting there", "Put together", "Sharp"]})
+case("TLR-4-picks", "TLR-4", "the blazer outfit with smart casual as his pick: Tailored wins before his picks",
+     TL_BLZ, {"label": "tailored", "detected_has": ["tailored", "smart_casual"], "fired": [H1_TL], "band": "Sharp"},
+     styles=[("smart_casual", 1.0)])
+case("TLR-4-prep-marker", "TLR-4", "a pink oxford under a navy blazer with grey trousers and loafers, classic prep picked: still Tailored",
+     Rd(top("oxford_shirt", "pink"), outer("blazer", "navy"), TROUSERS, LOAFER),
+     {"label": "tailored", "detected_has": ["tailored", "classic_prep"], "fired": [H1_TL], "band": "Put together"},
+     styles=[("classic_prep", 1.0)])
+case("TLR-4-minimal-pick", "TLR-4", "a tee under an unstructured blazer with black trousers and loafers reads minimal and Tailored: his minimal pick names it",
+     TL_MIN_TIE, {"detected_has": ["tailored", "minimalist"], "label": "minimalist", "band": "Put together"}, styles=[("minimalist", 1.0)])
+case("TLR-4-order", "TLR-4", "the same with no picks: the fixed order puts Tailored before minimal",
+     TL_MIN_TIE, {"detected_has": ["tailored", "minimalist"], "label": "tailored", "fired": [H1_TL], "band": "Put together"})
+case("TLR-5-suit", "TLR-5", "the charcoal suit keeps what it earned as a suit: +0.5 reads as, +0.5 worn properly, nothing more",
+     TL_SUIT, {"overall": 8.0, "part": {"cohesion": {"score": 8.0}}, "fired": [H1_TL, F("H2_suit", "cohesion", 0.5)], "label": "tailored",
+               "band": "Sharp"})
+case("TLR-5-blazer", "TLR-5", "the blazer outfit keeps what it earned as smart casual: the same +0.5 and +0.5, renamed",
+     TL_BLZ, {"overall": 8.0, "part": {"cohesion": {"score": 8.0}}, "label": "tailored",
+              "fired": [H1_TL, F("H2_clear_top_to_toe", "cohesion", 0.5, "clearly tailored top to toe")], "band": "Sharp"})
+case("TLR-5-picks", "TLR-5", "the same with Tailored picked: no number moves",
+     TL_BLZ, {"label": "tailored", "band": "Sharp"}, styles=[("tailored", 1.0)],
+     vs={"case": "TLR-5-blazer", "parts": {"proportions": 0.0, "fit": 0.0, "color": 0.0, "shoes": 0.0, "cohesion": 0.0}, "overall": 0.0})
+case("TLR-5-no-look", "TLR-5", "a blazer, dress shirt and trousers with trail shoes read as no look before: now Tailored, with no new credit",
+     Rd(TL_SHIRT, outer("blazer", "navy"), TROUSERS, shoe("trail_shoe", "grey")),
+     {"label": "tailored", "not_fired": [F("H1_reads_as_style"), F("H2_clear_top_to_toe")], "overall": 7.0, "band": "Put together"},
+     future=["trail_shoe"])
+case("TLR-5-suit-not-tailored", "TLR-5", "a charcoal suit with chunky sneakers isn't Tailored: it keeps +0.5 as a matching suit (founder, option 1)",
+     Rd(*TL_SUIT["garments"][:3], CHUNKY),
+     {"label": None, "detected_lacks": ["tailored"], "fired": [F("H1_reads_as_style", "cohesion", 0.5, "a matching suit")],
+      "band": "Put together"})
+case("TLR-6-lead", "TLR-6", "blazer sleeves over the hands with red canvas sneakers, Tailored picked: the sleeve fix leads",
+     TL_SLEEVES, {"fix_order": ["fit_better", "shoes_loafers"], "label": "tailored", "overall": 6.5, "band": "Getting there"}, styles=[("tailored", 1.0)])
+case("TLR-6-no-pick", "TLR-6", "the same with no picks: the bigger gain first, as before",
+     TL_SLEEVES, {"fix_order": ["shoes_loafers", "fit_better"], "label": "tailored", "overall": 6.5, "band": "Getting there"})
+case("TLR-6-second-pick", "TLR-6", "Tailored as his second pick behind streetwear: the sleeve fix still leads",
+     TL_SLEEVES, {"fix_order": ["fit_better", "shoes_loafers"], "label": "tailored", "overall": 6.5, "band": "Getting there"},
+     styles=[("streetwear", 0.5), ("tailored", 0.5)])
+case("TLR-6-class", "TLR-6", "a wrinkled shirt too: the free steam stays ahead of the sleeve fix (the lead is within a class)",
+     Rd(top("dress_shirt", "white", tucked="full", condition="wrinkled"), outer("blazer", "navy", sleeve_end="covers_hand"), TROUSERS, LOAFER),
+     {"fix_order": ["steam", "fit_better"], "label": "tailored", "band": "Put together"}, styles=[("tailored", 1.0)])
+case("TLR-6-no-jacket", "TLR-6", "overcoat sleeves over the hands: not a tailored jacket, so no lead",
+     Rd(top("sweater", "grey"), outer("overcoat", "tan_camel", sleeve_end="covers_hand"), TROUSERS, shoe("canvas_sneaker", "red")),
+     {"fix_order": ["shoes_loafers", "fit_better"], "band": "Getting there"}, styles=[("tailored", 1.0)])
+
+
+# ===== v16 (T69, #484/#487): every number is the engine's (v16_paper.py, results/v16/), checked against the doc line ====
+def _from(cid):
+    return copy.deepcopy(next(c for c in CASES if c["id"] == cid)["reading"])
+
+
+def _ctx(cid):
+    c = next(x for x in CASES if x["id"] == cid)
+    return {"occasion": c["occasion"], "styles": c["styles"], "second_look": c["second_look"]}
+
+
+TL11 = Rd(outer("suit_jacket", "charcoal"), top("dress_shirt", "white"), bottom("suit_trousers", "charcoal", "straight"), shoe("derby"))
+case16('SCO-1-v16-plain', 'SCO-1', 'v16: plain basics land at 7.0, cool or warm', Rd(TEE, DJEANS, WLS), dict({'overall': 7.0, 'band': 'Put together'}, **{}), occasion='everyday')
+case16('SCO-1-v16-plain-warm', 'SCO-1', 'v16: the same plain basics on a warm day: 7.0', Rd(TEE, DJEANS, WLS), dict({'overall': 7.0, 'band': 'Put together'}, **{}), occasion='everyday', season='warm')
+case16('SCO-2-v16-boxy', 'SCO-2', 'v16: a boxy white tee tucked into charcoal wide trousers with black loafers: lifts stack to 8.5', Rd(top('tee', 'white', 4, tucked='full'), WTROUSERS, LOAFER_BK), dict({'overall': 8.5, 'band': 'Sharp'}, **{'fired': [F('PR1_waist_break', 'proportions')]}), occasion='everyday')
+case16('SCO-2-v16-fitfault', 'SCO-2', "v16: the same tuck over slim trousers: a shape fault, the lifts can't lift it (held by H1)", Rd(top('tee', 'white', 4, tucked='full'), bottom('trousers', 'charcoal', 'slim'), LOAFER_BK), dict({'overall': 5.5, 'band': 'Needs a fix'}, **{'fired': [F('PN1_narrow_leg')]}), occasion='everyday')
+case16('SCO-2-v16-top', 'SCO-2', 'v16: a boxy black tee tucked into wide trousers, a burgundy cardigan, black loafers: four lifts in one look, raw clamped at 9.5, shows 9.0 (Q-F1)', Rd(top('tee', 'black', 4, tucked='full'), outer('cardigan', 'burgundy'), WTROUSERS, LOAFER_BK), dict({'overall': 9.0, 'band': 'Dialed in'}, **{}), occasion='everyday')
+case16('SCO-3-v16-nofloor', 'SCO-3', "v16: the messy outfit at Everyday isn't lifted to 5.0 any more", LOW, dict({'overall': 4.5, 'band': 'Start fresh'}, **{'floored': False}), occasion='everyday')
+case16('SCO-3-v16-bottom', 'SCO-3', 'v16: a stained bright oversized hoodie over skinny yellow joggers and purple slides at a date: never under 3.0', Rd(mod(top('hoodie', 'red', 5), condition='stained'), bottom('joggers', 'yellow', 'skinny', 'cuffed'), shoe('slides_sandals', 'purple')), dict({'overall': 4.5, 'band': 'Start fresh'}, **{'floored': False}), occasion='date')
+case16('SCO-4-v16-none', 'SCO-4', 'v16: a grey sweater over charcoal wide trousers with loafers, no picks', Rd(top('sweater', 'grey'), WTROUSERS, LOAFER), dict({'overall': 8.0, 'band': 'Sharp'}, **{}), occasion='everyday')
+case16('SCO-4-v16-picks', 'SCO-4', 'v16: the same with Smart casual picked, his taste rules on: no number moves', Rd(top('sweater', 'grey'), WTROUSERS, LOAFER), dict({'overall': 8.0, 'band': 'Sharp'}, **{}), occasion='everyday', styles=[['smart_casual', 1.0]], vs={'case': 'SCO-4-v16-none', 'parts': {k: 0.0 for k in P.PART_ORDER}, 'overall': 'same'})
+case16('SCO-7-v16-print', 'SCO-7', 'v16: a big loud floral on a tee with dark jeans: the Color charge counts at full strength, 6.0', Rd(top('tee', 'red', pattern='floral', pattern_scale='large'), DJEANS, WLS), dict({'overall': 6.0, 'band': 'Getting there'}, **{'fired': [F('CL1_loud_print', 'color')]}), occasion='everyday')
+case16('SCO-7-v16-skinny', 'SCO-7', 'v16: skinny jeans under a fitted tee: 5.5 (the fault, then his skinny-leg charge; Q-F2)', Rd(top('tee', 'white', 2), SKJEANS, WLS), dict({'overall': 5.5, 'band': 'Needs a fix'}, **{'fired': [F('PN1_narrow_leg', 'proportions')]}), occasion='everyday')
+case16('SCO-8-sink', 'SCO-8', 'a grey hoodie over black skinny jeans, white leather sneakers: one sinking fault caps it at 5.5', Rd(top('hoodie', 'grey'), SKJEANS, WLS), dict({'overall': 5.5, 'band': 'Needs a fix'}, **{}), occasion='everyday')
+case16('SCO-8-two-holds', 'SCO-8', 'an oversized tee over slim black jeans with chunky sneakers: two holding faults, 6.0', Rd(top('tee', 'white', 4), SLJEANS, CHUNKY), dict({'overall': 6.0, 'band': 'Getting there'}, **{}), occasion='everyday')
+case16('SCO-8-two-sinks', 'SCO-8', 'the messy outfit: two sinking faults (oversized over skinny, three brights): a redo, 4.5', LOW, dict({'overall': 4.5, 'band': 'Start fresh'}, **{}), occasion='everyday')
+case16('SCO-9-tank-cool', 'SCO-9', 'a white tank top alone with dark jeans on a cool day: charged', Rd(top('tank_top', 'white'), DJEANS, WLS), dict({'overall': 6.0, 'band': 'Getting there'}, **{'fired': [F('TK1_tank_alone')]}), occasion='everyday')
+case16('SCO-9-tank-warm', 'SCO-9', 'the same on a warm day: no charge', Rd(top('tank_top', 'white'), DJEANS, WLS), dict({'overall': 7.0, 'band': 'Put together'}, **{'not_fired': [F('TK1_tank_alone')]}), occasion='everyday', season='warm', vs={'case': 'SCO-9-tank-cool', 'overall': 'up'})
+case16('SCO-9-puffer-warm', 'SCO-9', 'a black puffer over a white tee on a warm day: a heavy layer costs 0.5', Rd(TEE, outer('puffer', 'black'), DJEANS, WLS), dict({'overall': 6.5, 'band': 'Getting there'}, **{}), occasion='everyday', season='warm')
+case16('SCO-9-puffer-cool', 'SCO-9', 'the same puffer on a cool day: no cost', Rd(TEE, outer('puffer', 'black'), DJEANS, WLS), dict({'overall': 7.0, 'band': 'Put together'}, **{}), occasion='everyday', vs={'case': 'SCO-9-puffer-warm', 'overall': 'up'})
+case16('SCO-10-over', 'SCO-10', "the curve over 7: the four-lift outfit's raw 9.5 shows 8.75, rounded 9.0", Rd(top('tee', 'black', 4, tucked='full'), outer('cardigan', 'burgundy'), WTROUSERS, LOAFER_BK), dict({'overall': 9.0, 'band': 'Dialed in'}, **{}), occasion='everyday')
+case16('SCO-10-under', 'SCO-10', "the curve under 7: the tank alone's raw 6.075 shows 5.98, rounded 6.0", Rd(top('tank_top', 'white'), DJEANS, WLS), dict({'overall': 6.0, 'band': 'Getting there'}, **{}), occasion='everyday')
+case16('LFT-1-tuck-wide', 'LFT-1', 'a tee tucked into wide jeans: a deliberate shape, a lift', Rd(top('tee', 'white', tucked='full'), WJEANS, WLS), dict({'overall': 8.0, 'band': 'Sharp'}, **{'fired': [F('PR1_waist_break', 'proportions')]}), occasion='everyday')
+case16('LFT-1-tuck-straight', 'LFT-1', 'a tee tucked into straight jeans: the smaller lift (one lift, halved: [LFT-S])', Rd(top('tee', 'white', tucked='full'), DJEANS, WLS), dict({'overall': 7.5, 'band': 'Put together'}, **{'fired': [F('PR1_waist_break', 'proportions')]}), occasion='everyday')
+case16('LFT-2-cool', 'LFT-2', 'a black bomber over a tee with wide jeans on a cool day: a short layer over a full leg', Rd(TEE, outer('bomber', 'black'), WJEANS, WLS), dict({'overall': 8.0, 'band': 'Sharp'}, **{'fired': [F('PR2_short_layer', 'proportions')]}), occasion='everyday')
+case16('LFT-2-warm', 'LFT-2', "the same on a warm day: the layer isn't a lift (the silhouette is)", Rd(TEE, outer('bomber', 'black'), WJEANS, WLS), dict({'overall': 8.0, 'band': 'Sharp'}, **{}), occasion='everyday', season='warm')
+case16('LFT-3-cool', 'LFT-3', 'an open olive overshirt over a white tee with khaki chinos, cool: a lift', Rd(TEE, outer('overshirt', 'olive', length='mid_fly'), CHINOS, WLS), dict({'overall': 7.5, 'band': 'Put together'}, **{}), occasion='everyday')
+case16('LFT-3-warm-camp', 'LFT-3', 'an open navy camp-collar shirt over a tee on a warm day: a light open shirt still counts', Rd(TEE, outer('camp_collar_shirt', 'navy', length='mid_fly'), CHINOS, WLS), dict({'overall': 7.5, 'band': 'Put together'}, **{}), occasion='everyday', season='warm')
+case16('LFT-4s-warm', 'LFT-4s', 'a cream tee with khaki chinos on a warm day: light and tonal', Rd(top('tee', 'off_white_cream'), bottom('chinos', 'khaki_beige', 'straight'), WLS), dict({'overall': 7.5, 'band': 'Put together'}, **{}), occasion='everyday', season='warm')
+case16('LFT-5-accent', 'LFT-5', 'a burgundy sweater on black jeans and white sneakers: one accent on a calm base', Rd(top('sweater', 'burgundy'), bottom('jeans', 'black', 'straight'), WLS), dict({'overall': 7.5, 'band': 'Put together'}, **{'fired': [F('CP2_quiet_accent', 'color')]}), occasion='everyday')
+case16('LFT-6-pickup', 'LFT-6', 'a black tee, dark jeans, black low sneakers: the shoes pick up the tee', Rd(top('tee', 'black'), DJEANS, shoe('low_profile_sneaker', 'black')), dict({'overall': 7.0, 'band': 'Put together'}, **{}), occasion='everyday')
+case16('LFT-7-smart', 'LFT-7', 'a white tee with grey trousers and white sneakers: one smart piece with casual ones', Rd(TEE, TROUSERS, WLS), dict({'overall': 7.5, 'band': 'Put together'}, **{}), occasion='everyday')
+case16('LFT-S-one', 'LFT-S', 'one lift alone counts at half: the tee tucked into straight jeans stays 7.5', Rd(top('tee', 'white', tucked='full'), DJEANS, WLS), dict({'overall': 7.5, 'band': 'Put together'}, **{}), occasion='everyday')
+case16('SL-1-warm', 'SL-1', "a fitted tee over wide grey trousers on a warm day: summer's shape", Rd(top('tee', 'white', 2), bottom('trousers', 'grey', 'wide'), WLS), dict({'overall': 8.5, 'band': 'Sharp'}, **{}), occasion='everyday', season='warm')
+case16('SL-1-cool', 'SL-1', 'the same on a cool day: no summer shape', Rd(top('tee', 'white', 2), bottom('trousers', 'grey', 'wide'), WLS), dict({'overall': 8.0, 'band': 'Sharp'}, **{}), occasion='everyday', vs={'case': 'SL-1-warm', 'overall': 'down'})
+case16('STY-13-knit', 'STY-13', 'a navy cardigan over a grey sweater: knit on knit', Rd(top('sweater', 'grey'), outer('cardigan', 'navy'), DJEANS, WLS), dict({'overall': 6.5, 'band': 'Getting there'}, **{'fired': [F('X_knit_on_knit')]}), occasion='everyday')
+case16('STY-13-one', 'STY-13', 'the cardigan over a tee: one knit, no charge', Rd(TEE, outer('cardigan', 'navy'), DJEANS, WLS), dict({'overall': 7.5, 'band': 'Put together'}, **{'not_fired': [F('X_knit_on_knit')]}), occasion='everyday', vs={'case': 'STY-13-knit', 'overall': 'up'})
+case16('TST-0-suit', 'TST-0', 'a charcoal suit, white dress shirt, black derbies: graded as Tailored (TL1.1)', TL11, dict({'overall': 7.0, 'band': 'Put together'}, **{}), occasion='everyday')
+case16('TST-0-graded', 'TST-0', 'the boxy tee outfit graded as Tailored: the taste rules follow the graded look (wide legs are off in tailored)', Rd(top('tee', 'white', 4, tucked='full'), WTROUSERS, LOAFER_BK), dict({'overall': 8.0, 'band': 'Sharp'}, **{}), occasion='everyday', graded_look='tailored', vs={'case': 'SCO-2-v16-boxy', 'overall': 'down'})
+case16('TST-mix', 'TST-mix', 'graded as streetwear and tailored: the friendliest size wins (8.5, as streetwear)', Rd(top('tee', 'white', 4, tucked='full'), WTROUSERS, LOAFER_BK), dict({'overall': 8.5, 'band': 'Sharp'}, **{}), occasion='everyday', graded_look=['streetwear', 'tailored'], vs={'case': 'SCO-2-v16-boxy', 'overall': 'same'})
+case16('TST-a-wide', 'TST-a', 'a tee over wide dark jeans: wide legs, his plus', Rd(TEE, bottom('jeans', 'denim_dark', 'wide'), WLS), dict({'overall': 8.0, 'band': 'Sharp'}, **{}), occasion='everyday')
+case16('TST-a-relaxed', 'TST-a', 'the same with relaxed jeans: half (and the silhouette at half)', Rd(TEE, bottom('jeans', 'denim_dark', 'relaxed'), WLS), dict({'overall': 8.0, 'band': 'Sharp'}, **{}), occasion='everyday')
+case16('TST-c-roomy', 'TST-c', 'a tee over roomy khaki shorts: roomy shorts, his plus', Rd(TEE, bottom('shorts', 'khaki_beige', 'relaxed', 'na', volume=4), WLS), dict({'overall': 8.0, 'band': 'Sharp'}, **{}), occasion='everyday')
+case16('TST-e-hem', 'TST-e', 'wide jeans whose hem covers most of the shoe (look L): his plus', Rd(TEE, WJEANS, WLS), dict({'overall': 8.0, 'band': 'Sharp'}, **{}), occasion='everyday', second_look={'covers_shoe': 'mostly'})
+case16('TST-j-long', 'TST-j', 'an untucked tee ending below the crotch, no jacket: a small charge', Rd(top('tee', 'white', length='below_crotch'), DJEANS, WLS), dict({'overall': 7.0, 'band': 'Put together'}, **{}), occasion='everyday')
+case16('TST-sk-skinny', 'TST-sk', 'skinny jeans cost more in every look: 5.5', Rd(top('tee', 'white', 2), SKJEANS, WLS), dict({'overall': 5.5, 'band': 'Needs a fix'}, **{}), occasion='everyday')
+case16('TST-SIL-wide', 'TST-SIL', 'a tee over wide charcoal trousers with black loafers: a strong silhouette', Rd(TEE, WTROUSERS, LOAFER_BK), dict({'overall': 8.0, 'band': 'Sharp'}, **{}), occasion='everyday')
+case16('TST-leg-wide', 'TST-leg', 'plain straight jeans the leg-width look says hang away: read wide (8.0)', Rd(TEE, DJEANS, WLS), dict({'overall': 8.0, 'band': 'Sharp'}, **{}), occasion='everyday', second_look={'knee': 'hangs_away', 'opening': 'about_the_same'}, vs={'case': 'SCO-1-v16-plain', 'overall': 1.0})
+case16('TST-leg-straight', 'TST-leg', 'the same jeans the look says skim and match the shoe: stays straight (7.0)', Rd(TEE, DJEANS, WLS), dict({'overall': 7.0, 'band': 'Put together'}, **{}), occasion='everyday', second_look={'knee': 'skims', 'opening': 'about_the_same'}, vs={'case': 'SCO-1-v16-plain', 'overall': 'same'})
+case16('TST-st-oxford', 'TST-st', 'a white oxford with grey trousers and brown loafers scores as a dress shirt', Rd(top('oxford_shirt', 'white'), TROUSERS, LOAFER), dict({'overall': 6.5, 'band': 'Getting there'}, **{}), occasion='everyday')
+case16('TST-st-dress', 'TST-st', 'the same with a dress shirt: identical', Rd(top('dress_shirt', 'white'), TROUSERS, LOAFER), dict({'overall': 6.5, 'band': 'Getting there'}, **{}), occasion='everyday', vs={'case': 'TST-st-oxford', 'parts': {k: 0.0 for k in P.PART_ORDER}, 'overall': 'same'})
+case16('TST-sd-warm', 'TST-sd', 'slides with a tee and dark jeans on a warm casual day: no extra charge', Rd(TEE, DJEANS, SLIDES), dict({'overall': 7.0, 'band': 'Put together'}, **{}), occasion='everyday', season='warm')
+case16('TST-sd-cool', 'TST-sd', 'the same on a cool day: they cost', Rd(TEE, DJEANS, SLIDES), dict({'overall': 5.5, 'band': 'Needs a fix'}, **{}), occasion='everyday', vs={'case': 'TST-sd-warm', 'overall': 'down'})
+case16('TST-sd-blazer', 'TST-sd', 'slides with a blazer on a warm day: still charged (a tailored piece)', Rd(TEE, outer('blazer', 'navy'), DJEANS, SLIDES), dict({'overall': 5.0, 'band': 'Needs a fix'}, **{}), occasion='everyday', season='warm', vs={'case': 'TST-sd-warm', 'overall': 'down'})
+case16('TST-rn-casual', 'TST-rn', 'running shoes with a tee and jeans: no charge beyond the part', Rd(TEE, DJEANS, RUNNER), dict({'overall': 7.0, 'band': 'Put together'}, **{}), occasion='everyday')
+case16('TST-rn-blazer', 'TST-rn', 'running shoes under a blazer: charged', Rd(TEE, outer('blazer', 'navy'), DJEANS, RUNNER), dict({'overall': 6.0, 'band': 'Getting there'}, **{}), occasion='everyday', vs={'case': 'TST-rn-casual', 'overall': 'down'})
+case16('STY-3-v16-wide', 'STY-3', 'v16: a blazer with wide jeans: no charge any more (suit.9)', _from('STY-3-wide'), dict({'overall': 8.0, 'band': 'Sharp'}, **{'not_fired': [F('H3_another_world')]}), **_ctx('STY-3-wide'))
+case16('STY-3-v16-wash', 'STY-3', 'v16: a blazer with light-wash jeans: no charge', _from('STY-3-wash'), dict({'overall': 7.0, 'band': 'Put together'}, **{'not_fired': [F('H3_another_world')]}), **_ctx('STY-3-wash'))
+case16('STY-9-v16-cool', 'STY-9', 'v16: the tank alone on a cool day is charged', _from('STY-9-tank'), dict({'overall': 6.0, 'band': 'Getting there'}, **{'fired': [F('TK1_tank_alone')]}), **_ctx('STY-9-tank'))
+case16('STY-9-v16-warm', 'STY-9', 'v16: the tank alone on a warm day is fine', _from('STY-9-tank'), dict({'overall': 7.0, 'band': 'Put together'}, **{'not_fired': [F('TK1_tank_alone')]}), **_ctx('STY-9-tank'), season='warm')
+case16('COL-2-v16-neutral', 'COL-2', 'v16: a red sweater and yellow chinos with neutral pieces beside them: a tip, not a charge', _from('COL-2-bright'), dict({'overall': 7.0, 'band': 'Put together'}, **{'not_fired': [F('CC2_bright_clash')]}), **_ctx('COL-2-bright'))
+case16('COL-2-v16-alone', 'COL-2', 'v16: a red tee over bright green chinos and red sneakers, no neutral beside them: charged (held by H3)', Rd(top('tee', 'red'), bottom('chinos', 'green', 'straight', saturation='bright'), shoe('canvas_sneaker', 'red')), dict({'overall': 6.5, 'band': 'Getting there'}, **{'fired': [F('CC2_bright_clash')]}), occasion='everyday')
+case16('COL-12-v16-cool', 'COL-12', 'v16: the cream oxford over khaki chinos on a cool day: light on light', _from('COL-12-cream'), dict({'overall': 6.5, 'band': 'Getting there'}, **{'fired': [F('CL2_light_on_light', 'color')]}), **_ctx('COL-12-cream'))
+case16('COL-12-v16-warm', 'COL-12', 'v16: the same on a warm day: not charged', _from('COL-12-cream'), dict({'overall': 7.5, 'band': 'Put together'}, **{'not_fired': [F('CL2_light_on_light')]}), **_ctx('COL-12-cream'), season='warm', vs={'case': 'COL-12-v16-cool', 'overall': 'up'})
+
+# the dealbreakers (v16_paper.SINKS_HOLDS / SPARED / DEPENDS): each row at its cap, the spared versions under none
+_GYM = bottom("athletic_shorts", "black", "relaxed", "na")
+_PLAIN_SHORTS = bottom("shorts", "khaki_beige", "relaxed", "na")
+_SWEATS = bottom("sweatpants", "grey", "relaxed", "cuffed")
+_MOSTLY = {"covers_shoe": "mostly"}
+_B16 = lambda x: next(n for t, n in BANDS_V16 if x <= t)  # noqa: E731
+for _rid, _what, _rd, _sl, _cap in [
+        ("S1", "a grey hoodie over black skinny jeans, white leather sneakers", Rd(top("hoodie", "grey"), SKJEANS, WLS), None, 5.5),
+        ("S2", "an oversized white tee over black skinny jeans", Rd(top("tee", "white", 4), SKJEANS, WLS), None, 5.5),
+        ("S4", "a red tee, yellow chinos, purple sneakers", Rd(top("tee", "red"), bottom("chinos", "yellow", "straight"), shoe("canvas_sneaker", "purple")), None, 4.5),
+        ("S6", "a navy blazer over a tee with grey sweatpants", Rd(outer("blazer", "navy"), TEE, _SWEATS, WLS), None, 5.5),
+        ("S8", "derbies with gym shorts and a tee", Rd(TEE, _GYM, DERBY), None, 5.5),
+        ("S8", "derbies with sweatpants and a tee", Rd(TEE, _SWEATS, DERBY), None, 5.5),
+        ("S9", "a clear stain on the tee", Rd(mod(TEE, condition="stained"), DJEANS, WLS), None, 5.5),
+        ("H7", "straight jeans that pile up over the sneakers (the shoe close-up says mostly): a tip, no cap (Y34)", Rd(TEE, DJEANS, WLS), _MOSTLY, 7.0),
+        ("H1", "an oversized white tee over black slim jeans", Rd(top("tee", "white", 4), SLJEANS, WLS), None, 6.5),
+        ("H3", "a red tee over bright green chinos, red canvas sneakers (no neutral beside them)",
+         Rd(top("tee", "red"), bottom("chinos", "green", "straight", saturation="bright"), shoe("canvas_sneaker", "red")), None, 6.5),
+        ("H4", "a black sweater with skinny joggers", Rd(top("sweater", "black"), bottom("joggers", "black", "skinny", "cuffed"), WLS), None, 6.5),
+        ("H8", "a tee that clearly pulls", Rd(mod(TEE, strain="clear"), DJEANS, WLS), None, 6.5),
+        ("H10", "chunky sneakers under black slim jeans", Rd(TEE, SLJEANS, CHUNKY), None, 6.0),
+        ("H11", "grey trousers with chunky sneakers", Rd(top("oxford_shirt", "white"), TROUSERS, CHUNKY), None, 6.5)]:
+    case16(f"DB-{_rid}-{len([c for c in CASES if c['rule'] == 'DB-' + _rid]) + 1}", "DB-" + _rid, _what, _rd,
+           {"overall": _cap, "band": _B16(_cap)}, second_look=_sl)
+for _rid, _what, _rd, _sl, _ov in [
+        ("S6", "an overcoat over a tee with grey sweatpants (spared)", Rd(outer("overcoat", "black"), TEE, _SWEATS, WLS), None, 7.5),
+        ("S8", "loafers with plain sweatpants (spared)", Rd(TEE, _SWEATS, LOAFER_BK), None, 6.5),
+        ("S9", "a stain on jeans ripped by design (spared)", Rd(TEE, mod(DJEANS, condition="stained", distressed_by_design=True), WLS), None, 6.0),
+        ("H7", "wide jeans stacking on the sneakers (a soft stack, spared)", Rd(TEE, WJEANS, WLS), _MOSTLY, 8.0),
+        ("H3", "a red tee over bright blue chinos with black sneakers and a navy jacket (calmed, spared)",
+         Rd(top("tee", "red"), bottom("chinos", "blue", "straight", saturation="bright"), outer("bomber", "navy"), shoe("canvas_sneaker", "black")), None, 7.0),
+        ("H1", "a fleece over slim cargos (outdoor, spared)", Rd(outer("fleece", "green", 4), TEE, bottom("cargos", "olive", "slim"), shoe("trail_shoe", "grey")), None, 7.0)]:
+    case16(f"DB-{_rid}-spared", "DB-" + _rid, _what, _rd, {"overall": _ov, "band": _B16(_ov)}, second_look=_sl,
+           future=["trail_shoe"] if _rid == "H1" else None)
+for _rid, _what, _base, _weak, _strong, (_b, _w, _s) in [
+        ("S5", "a blazer with gym shorts", Rd(TEE, outer("blazer", "navy"), _GYM, WLS),
+         Rd(top("graphic_tee", "red", pattern_scale="large"), outer("blazer", "navy"), _GYM, WLS),
+         Rd(top("tee", "green", saturation="muted"), outer("blazer", "navy"), _GYM, WLS), (7.0, 5.5, 6.5)),
+        ("S7", "a leather jacket with gym shorts", Rd(TEE, outer("leather_jacket", "black"), _GYM, WLS),
+         Rd(top("graphic_tee", "red", pattern_scale="large"), outer("leather_jacket", "black"), _GYM, WLS),
+         Rd(top("tee", "green", saturation="muted"), outer("leather_jacket", "black"), _GYM, WLS), (7.0, 5.5, 7.0)),
+        ("H6", "a blazer with plain shorts", Rd(TEE, outer("blazer", "navy"), _PLAIN_SHORTS, WLS),
+         Rd(top("graphic_tee", "red", pattern_scale="large"), outer("blazer", "navy"), _PLAIN_SHORTS, WLS),
+         Rd(top("tee", "green", saturation="muted"), outer("blazer", "navy"), _PLAIN_SHORTS, WLS), (7.0, 5.5, 7.0))]:
+    case16(f"DB-X-{_rid}", "DB-X", f"depends ({_rid}): {_what}, never above 7.0", _base, {"overall": _b, "band": _B16(_b)})
+    case16(f"DB-X-{_rid}-strong", "DB-X", f"depends ({_rid}): {_what} with a quiet accent", _strong, {"overall": _s, "band": _B16(_s)})
+    case16(f"DB-X-{_rid}-weak", "DB-X", f"depends ({_rid}): {_what} with a loud print: below the quiet one", _weak,
+           {"overall": _w, "band": _B16(_w)}, vs={"case": f"DB-X-{_rid}-strong", "overall": "down"})
+
+# T94 x T69 (the merge, Nov 18): v16's card carries the 8-look name as v15's does, so a v16 case whose outfit meets TL1
+# reads as Tailored and declares it, as MEETS_TL1 does above (T94's check below, TL2). Adds a label only; every number
+# stays T69's.
+for _cid in ["TST-0-suit"]:
+    _e = next(c for c in CASES if c["id"] == _cid)["expect"]
+    _e["label"] = "tailored"
+    # T94's test writer (Disputes 4): the same as MEETS_TL1 asks of every Tailored outfit: the look, and the line that names it
+    _e["detected_has"] = list(dict.fromkeys(_e.get("detected_has", []) + ["tailored"]))
+    _e["fired"] = _e.get("fired", []) + [F("H1_reads_as_style", "cohesion", 0.5, "reads as tailored")]
+
+
 # --------------------------------------------------------------------------------------------- checking
 def schema_problems(reading, future):
     props = SCHEMA["properties"]["garments"]["items"]["properties"]
@@ -1649,12 +1893,26 @@ def schema_problems(reading, future):
 
 
 def run(c):
+    if c.get("engine") == "v16":
+        return P.score_parts(c["reading"], c["occasion"], dict(c["styles"]), c["second_look"], c["boldness"], engine="v16",
+                             season=c.get("season"), graded_look=c.get("graded_look"))
     return P.score_parts(c["reading"], c["occasion"], dict(c["styles"]), c["second_look"], c["boldness"])
 
 
 def fix_next_level(c):
     """The fix engine's Next level / tip line for the case (no closet, not a warm day, not the first check)."""
+    if c.get("engine") == "v16":
+        return PF.suggest_parts_fixes(c["reading"], c["occasion"], dict(c["styles"]), c["boldness"], c["second_look"],
+                                      engine="v16", season=c.get("season"))["next_level"]
     return PF.suggest_parts_fixes(c["reading"], c["occasion"], dict(c["styles"]), c["boldness"], c["second_look"])["next_level"]
+
+
+def fix_order(c):
+    """T94: the fix engine's fixes for the case, in order (ids), on the case's own engine (as fix_next_level)."""
+    if c.get("engine") == "v16":
+        return [x["id"] for x in PF.suggest_parts_fixes(c["reading"], c["occasion"], dict(c["styles"]), c["boldness"], c["second_look"],
+                                                       engine="v16", season=c.get("season"))["fixes"]]
+    return [x["id"] for x in PF.suggest_parts_fixes(c["reading"], c["occasion"], dict(c["styles"]), c["boldness"], c["second_look"])["fixes"]]
 
 
 def reasons(r, part=None):
@@ -1690,10 +1948,10 @@ def check(c, r, results):
         bad.append(f"overall {ov} != {e['overall']}")
     if "overall_max" in e and ov > e["overall_max"] + EPS:
         bad.append(f"overall {ov} > {e['overall_max']}")
-    if "band" in e and band_of(ov) != e["band"]:
-        bad.append(f"band {band_of(ov)} ({ov}) != {e['band']}")
-    if "band_in" in e and band_of(ov) not in e["band_in"]:
-        bad.append(f"band {band_of(ov)} ({ov}) not in {e['band_in']}")
+    if "band" in e and band_of(ov, c) != e["band"]:
+        bad.append(f"band {band_of(ov, c)} ({ov}) != {e['band']}")
+    if "band_in" in e and band_of(ov, c) not in e["band_in"]:
+        bad.append(f"band {band_of(ov, c)} ({ov}) not in {e['band_in']}")
     for f in e.get("fired", []):
         hits = [x for _, x in reasons(r, f.get("part")) if x["check"] == f["check"]]
         if not hits:
@@ -1760,6 +2018,10 @@ def check(c, r, results):
             bad.append(f"fix tip line {(nl or {}).get('line')} lacks '{e['fix_tip_line']}'")
         if "fix_tip_lacks" in e and (nl or {}).get("id") == e["fix_tip_lacks"]:
             bad.append(f"fix tip {e['fix_tip_lacks']} shown")
+    if "fix_order" in e:                                            # T94 (TLR-6): the fixes, in order
+        got = fix_order(c)
+        if got != e["fix_order"]:
+            bad.append(f"fixes {got} != {e['fix_order']}")
     vs = c.get("vs")
     if vs:
         b = results[vs["case"]]
@@ -1787,6 +2049,8 @@ def snapshot(r, c=None):
            "detected_styles": r["detected_styles"], "style_label": r["style_label"]}
     if c is not None and ({"fix_tip", "fix_tip_lacks"} & set(c["expect"])):
         out["next_level"] = fix_next_level(c)                       # v10: the TS checks the tip line equals Python's
+    if c is not None and "fix_order" in c["expect"]:
+        out["fix_order"] = fix_order(c)                              # T94: the TS checks the order equals Python's
     return out
 
 
@@ -1817,12 +2081,23 @@ def main():
         if bad:
             fails += 1
             print(f"{tag} {c['rule']} {c['id']}: {c['what']}\n     " + "\n     ".join(bad))
-    rules = sorted({c["rule"] for c in CASES})
-    doc = set(re.findall(r"\*\*\[([A-Z]{3}-\d+)\]", DOC.read_text()))
-    if doc != set(rules):
+    undeclared_tl = [c["id"] for c in CASES if results[c["id"]].get("style_label") == "tailored"
+                     and c["expect"].get("label") != "tailored"]
+    if undeclared_tl:
         fails += 1
-        print(f"FAIL the doc and the cases disagree: rules with no case {sorted(doc - set(rules))}, "
-              f"cases for rules not in the doc {sorted(set(rules) - doc)}")
+        print(f"FAIL these cases read as Tailored but don't say so (T94, TL2): {undeclared_tl}")
+    rules = sorted({c["rule"] for c in CASES})
+    text = DOC.read_text()
+    doc = set(re.findall(r"\*\*\[([A-Z]{3}-\d+)\]", text))
+    main_ids = {r for r in rules if re.fullmatch(r"[A-Z]{3}-\d+", r)}   # T69: sub-IDs (DB-S1, TST-a, LFT-4s) checked below
+    if doc != main_ids:
+        fails += 1
+        print(f"FAIL the doc and the cases disagree: rules with no case {sorted(doc - main_ids)}, "
+              f"cases for rules not in the doc {sorted(main_ids - doc)}")
+    loose = sorted(r for r in rules if f"**[{r}]" not in text)
+    if loose:
+        fails += 1
+        print(f"FAIL cases for rules not in the doc: {loose}")
     print(f"{len(CASES) - fails}/{len(CASES)} cases pass, {len(rules)} rule IDs covered")
     if fails:
         return 1
@@ -1830,7 +2105,7 @@ def main():
     out = {"about": "Rules conformance: one or more made-up outfits per rule ID in rubric/v5-styles.md. Generated by "
                     "extraction-test/rules_conformance.py from parts_proto.py; read by "
                     "app/packages/kitted-core/test/rulesConformance.test.ts. Never edit by hand.",
-           "parts_version": data["version"], "engine": data["engine"], "bands": BANDS,
+           "parts_version": data["version"], "engine": data["engine"], "bands": BANDS, "bands_v16": BANDS_V16,
            "counts": {"cases": len(CASES), "rules": len(rules)}, "rules": rules,
            "cases": [dict(c, python=snapshot(results[c["id"]], c)) for c in CASES]}
     OUT.write_text(json.dumps(out, indent=1) + "\n")

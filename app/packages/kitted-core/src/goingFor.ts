@@ -16,7 +16,7 @@
 // No number is shown for it. Pure; no picks reach a score here (every scoreParts call passes styles: []).
 
 import { garmentName } from "./names";
-import { defaultParts, type PartsEngine, type PartsScored, type SecondLookInput } from "./parts";
+import { defaultParts, type PartsEngine, type PartsScored, type Season, type SecondLookInput } from "./parts";
 import { applyPartsFix } from "./partsCheck";
 import { PARTS_FIXES_DATA } from "./partsFixesData";
 import type { PartsFixCandidate, PartsFixCatalog, PartsFixEdit } from "./partsFixes";
@@ -55,6 +55,8 @@ export interface GoingForOptions {
   closet?: readonly ClosetItem[];
   /** A warm day: no added layer and no boots (#162). */
   warm?: boolean;
+  /** v16: the card's season, so the move is scored as the card scores it. */
+  season?: Season;
 }
 
 export interface GoingForEngines {
@@ -82,7 +84,7 @@ export function goingForAdvice(reading: Reading, going: DetectedStyle | null, op
   const CAT = engines.catalog ?? PARTS_FIXES_DATA;
   const occasion = opts.occasion ?? "everyday";
   if (CAT.rules.loungeOccasions.includes(occasion)) return null;
-  const score = (r: Reading) => PE.scoreParts(r, { occasion, boldness: opts.boldness ?? "a_little", styles: [], secondLook: opts.secondLook ?? null });
+  const score = (r: Reading) => PE.scoreParts(r, { occasion, boldness: opts.boldness ?? "a_little", styles: [], secondLook: opts.secondLook ?? null, season: opts.season ?? null });
   const b = score(reading);
   if (b.overall === null) return null;
   const base = b as PartsScored;
@@ -102,7 +104,8 @@ function pullingPiece(reading: Reading, going: DetectedStyle, base: PartsScored,
   const main = scored.filter((g) => inList(g.category, MAIN));
   if (main.length === 0) return null;
   const outfit = RE.helpers.outfit(main);
-  const reads = (gs: readonly Garment[]) => RE.detectStyles(gs, []).detected.includes(going);
+  // T94: the 8 looks, so Going for Tailored works; for the 7 others the membership is detectStyles' exactly.
+  const reads = (gs: readonly Garment[]) => RE.detectLooks(gs, []).detected.includes(going);
   // Where a scored garment sits in the reading (prepare() drops unsure pieces and may re-file an open shirt as a layer).
   const indexOf = (g: Garment): number => reading.garments.findIndex((x) => nv(x.subcategory) === nv(g.subcategory)
     && nv(x.color_family) === nv(g.color_family) && (x.category === g.category || has(g, "recategorized")));

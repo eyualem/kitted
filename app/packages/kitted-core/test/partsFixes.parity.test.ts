@@ -4,7 +4,7 @@
 // (regenerate with make_parts_fixes.py after a Python or catalog change).
 import { describe, expect, it } from "vitest";
 import {
-  deepEqual, PARTS_DATA, PARTS_FIXES_DATA, suggestPartsFixes, type ClosetItem, type PartsFixSuggestions, type Reading,
+  applyPartsFix, createParts, deepEqual, PARTS_DATA, PARTS_FIXES_DATA, partsDataFor, partsFixAsFix, suggestPartsFixes, type ClosetItem, type PartsFixSuggestions, type Reading,
   type SecondLookInput, type Styles,
 } from "../src/index";
 import { loadJSON } from "./helpers";
@@ -19,6 +19,10 @@ interface FixCase {
   first_check: boolean;
   /** His picks for this case (else the fixture's profile). */
   styles?: [string, number][];
+  /** T69: a v16 case is tagged (tune or engine "v16") and carries its season ("warm", or cool as null/absent). */
+  tune?: string;
+  engine?: string;
+  season?: "warm" | null;
   expected: Record<string, unknown> & { fixes: number[]; smaller_step: number | null };
 }
 interface FixParity {
@@ -42,11 +46,17 @@ const readingOf = (id: string): Reading => {
   return r;
 };
 
+/** T69: v15's cases score on v15's tune (with v16 bundled), the v16 cases on the bundled engine with their season. */
+const V15 = createParts(partsDataFor(true, true, false));
+const V16 = createParts(PARTS_DATA);
+const isV16 = (c: FixCase) => c.tune === "v16" || c.engine === "v16";
+
 function run(c: FixCase): PartsFixSuggestions {
   return suggestPartsFixes(readingOf(c.reading), {
     occasion: c.occasion, styles: (c.styles ?? F.profile) as Styles, boldness: F.boldness, secondLook: c.second_look,
     closet: c.closet === "seed" ? F.closet : [], warm: c.warm, firstCheck: c.first_check,
-  });
+    ...(isV16(c) ? { season: c.season ?? null } : {}),
+  }, { parts: isV16(c) ? V16 : V15 });
 }
 
 /** TS result -> parts_fixes.suggest_parts_fixes()'s dict (edits are checked against the catalog separately). */
@@ -97,6 +107,39 @@ describe("parts fix engine parity (parts_fixes.py)", () => {
     }
     expect(bad).toEqual([]);
   }, 180_000);
+
+  it("T69-G3 · every v16 fix case, cool and warm", () => {
+    const v16 = F.cases.filter(isV16);
+    expect(v16.length).toBeGreaterThan(1000);
+    expect(new Set(v16.map((c) => c.season ?? null))).toEqual(new Set([null, "warm"]));
+    // a warm case is a warm day: its season and the fix engine's warm rule agree
+    for (const c of v16) expect([c.src, c.warm]).toEqual([c.src, c.season === "warm"]);
+    expect(v16.some((c) => c.closet === "seed")).toBe(true);
+    const bad: string[] = [];
+    const BOOTS = new Set(["chelsea_boot", "work_boot"]);
+    const outers = (r: Reading) => r.garments.filter((g) => g.category === "outerwear").length;
+    const boots = (r: Reading) => r.garments.some((g) => g.category === "footwear" && BOOTS.has(String(g.subcategory)));
+    let withFixes = 0;
+    for (const c of v16) {
+      const m = mismatch(c);
+      if (m) bad.push(m);
+      const r = run(c);
+      if (r.fixes.length) withFixes++;
+      for (const f of r.fixes) {
+        // never a fix whose rounded v16 score doesn't rise
+        if (!(f.gain >= 0.5) || f.to !== (r.baseOverall ?? NaN) + f.gain) bad.push(`${c.src}: ${f.id} gain ${f.gain} to ${f.to} base ${r.baseOverall}`);
+        if (c.warm) {
+          const reading = readingOf(c.reading);
+          const after = applyPartsFix(reading, partsFixAsFix(f), { closet: c.closet === "seed" ? F.closet : [] });
+          if (after && outers(after) > outers(reading)) bad.push(`${c.src} [warm]: ${f.id} adds a layer`);
+          if (after && boots(after) && !boots(reading)) bad.push(`${c.src} [warm]: ${f.id} puts on boots`);
+        }
+      }
+      if (bad.length > 20) break;
+    }
+    expect(bad).toEqual([]);
+    expect(withFixes).toBeGreaterThan(100);
+  }, 300_000);
 
   it("each fix carries its catalog edits", () => {
     const byId = new Map(PARTS_FIXES_DATA.candidates.map((c) => [c.id, c.edits]));

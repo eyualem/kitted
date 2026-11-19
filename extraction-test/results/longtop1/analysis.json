@@ -1,0 +1,737 @@
+{
+ "photos": 62,
+ "calls": 186,
+ "errors": 0,
+ "spent_usd": 0.4033,
+ "cents_per_call": 0.2168,
+ "steady": 54,
+ "steady_pct": 87.1,
+ "clear_yes": 9,
+ "clear_not": 39,
+ "borderline": 14,
+ "recall_yes": "4/9",
+ "recall_yes_pct": 44.4,
+ "recall_yes_runs": "13/27",
+ "precision_yes_clear": "4/7",
+ "false_yes_on_clear_not": "3/39",
+ "false_yes_pct": 7.7,
+ "false_yes_runs": "9/117",
+ "accuracy_clear": "40/48",
+ "accuracy_clear_pct": 83.3,
+ "borderline_called_yes": "2/14",
+ "steady_by_label": {
+  "yes": "6/9",
+  "no": "30/31",
+  "not_applicable": "8/8",
+  "borderline": "10/14"
+ },
+ "answers_by_label": {
+  "yes": {
+   "yes": 13,
+   "no": 14
+  },
+  "no": {
+   "no": 68,
+   "yes": 9,
+   "not_applicable": 16
+  },
+  "not_applicable": {
+   "not_applicable": 21,
+   "no": 3
+  },
+  "borderline": {
+   "no": 34,
+   "not_applicable": 2,
+   "yes": 6
+  }
+ },
+ "per_photo": [
+  {
+   "id": "pin-033",
+   "label": "yes",
+   "answers": [
+    "yes",
+    "yes",
+    "yes"
+   ],
+   "steady": true,
+   "majority": "yes"
+  },
+  {
+   "id": "pin-038",
+   "label": "yes",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "pin-070",
+   "label": "yes",
+   "answers": [
+    "no",
+    "no",
+    "yes"
+   ],
+   "steady": false,
+   "majority": "no"
+  },
+  {
+   "id": "pin-071",
+   "label": "yes",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "pin-031",
+   "label": "yes",
+   "answers": [
+    "yes",
+    "yes",
+    "yes"
+   ],
+   "steady": true,
+   "majority": "yes"
+  },
+  {
+   "id": "pin-074",
+   "label": "yes",
+   "answers": [
+    "yes",
+    "no",
+    "yes"
+   ],
+   "steady": false,
+   "majority": "yes"
+  },
+  {
+   "id": "stock-s02-before_studio",
+   "label": "yes",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "k6Gig6r7BSQ__before-longer-tee-10-47",
+   "label": "yes",
+   "answers": [
+    "yes",
+    "yes",
+    "yes"
+   ],
+   "steady": true,
+   "majority": "yes"
+  },
+  {
+   "id": "wIib9hzVUuw__o1-before-04-10",
+   "label": "yes",
+   "answers": [
+    "yes",
+    "no",
+    "no"
+   ],
+   "steady": false,
+   "majority": "no"
+  },
+  {
+   "id": "phone-5a9049",
+   "label": "borderline",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "phone-7f14a4",
+   "label": "borderline",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-025",
+   "label": "borderline",
+   "answers": [
+    "not_applicable",
+    "no",
+    "no"
+   ],
+   "steady": false,
+   "majority": "no"
+  },
+  {
+   "id": "ig-027",
+   "label": "borderline",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-090",
+   "label": "borderline",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "rd-015",
+   "label": "borderline",
+   "answers": [
+    "no",
+    "yes",
+    "yes"
+   ],
+   "steady": false,
+   "majority": "yes"
+  },
+  {
+   "id": "stock-s11-before_street",
+   "label": "borderline",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "stock-s26-before_mirror",
+   "label": "borderline",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "pin-059",
+   "label": "borderline",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "pin-052",
+   "label": "borderline",
+   "answers": [
+    "yes",
+    "yes",
+    "yes"
+   ],
+   "steady": true,
+   "majority": "yes"
+  },
+  {
+   "id": "-V2bE8nDsdo__outfit05-03-37",
+   "label": "borderline",
+   "answers": [
+    "not_applicable",
+    "no",
+    "no"
+   ],
+   "steady": false,
+   "majority": "no"
+  },
+  {
+   "id": "wIib9hzVUuw__o4-before-09-30",
+   "label": "borderline",
+   "answers": [
+    "yes",
+    "no",
+    "no"
+   ],
+   "steady": false,
+   "majority": "no"
+  },
+  {
+   "id": "wIib9hzVUuw__o3-before-07-26",
+   "label": "borderline",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "rd-014",
+   "label": "borderline",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-087",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-023",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-030",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-127",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-103",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "rd-001",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "rd-018",
+   "label": "no",
+   "answers": [
+    "yes",
+    "yes",
+    "yes"
+   ],
+   "steady": true,
+   "majority": "yes"
+  },
+  {
+   "id": "phone-8ad378",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "phone-403ade",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "pin-022",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "pin-039",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "pin-040",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "mirror-m01",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "k6Gig6r7BSQ__after-shorter-tee-10-47",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "-V2bE8nDsdo__outfit01-02-44",
+   "label": "no",
+   "answers": [
+    "yes",
+    "yes",
+    "yes"
+   ],
+   "steady": true,
+   "majority": "yes"
+  },
+  {
+   "id": "-V2bE8nDsdo__outfit06-04-04",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "wIib9hzVUuw__o4-after-10-02",
+   "label": "no",
+   "answers": [
+    "yes",
+    "yes",
+    "yes"
+   ],
+   "steady": true,
+   "majority": "yes"
+  },
+  {
+   "id": "ig-062",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-060",
+   "label": "no",
+   "answers": [
+    "no",
+    "not_applicable",
+    "no"
+   ],
+   "steady": false,
+   "majority": "no"
+  },
+  {
+   "id": "phone-0d39d6",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "phone-1f1997",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "phone-6b14db",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-018",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-034",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-050",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-111",
+   "label": "no",
+   "answers": [
+    "not_applicable",
+    "not_applicable",
+    "not_applicable"
+   ],
+   "steady": true,
+   "majority": "not_applicable"
+  },
+  {
+   "id": "rd-006",
+   "label": "no",
+   "answers": [
+    "not_applicable",
+    "not_applicable",
+    "not_applicable"
+   ],
+   "steady": true,
+   "majority": "not_applicable"
+  },
+  {
+   "id": "pin-010",
+   "label": "no",
+   "answers": [
+    "not_applicable",
+    "not_applicable",
+    "not_applicable"
+   ],
+   "steady": true,
+   "majority": "not_applicable"
+  },
+  {
+   "id": "ig-013",
+   "label": "no",
+   "answers": [
+    "not_applicable",
+    "not_applicable",
+    "not_applicable"
+   ],
+   "steady": true,
+   "majority": "not_applicable"
+  },
+  {
+   "id": "ig-037",
+   "label": "no",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-064",
+   "label": "no",
+   "answers": [
+    "not_applicable",
+    "not_applicable",
+    "not_applicable"
+   ],
+   "steady": true,
+   "majority": "not_applicable"
+  },
+  {
+   "id": "rd-002",
+   "label": "not_applicable",
+   "answers": [
+    "not_applicable",
+    "not_applicable",
+    "not_applicable"
+   ],
+   "steady": true,
+   "majority": "not_applicable"
+  },
+  {
+   "id": "stock-s07-before_studio",
+   "label": "not_applicable",
+   "answers": [
+    "no",
+    "no",
+    "no"
+   ],
+   "steady": true,
+   "majority": "no"
+  },
+  {
+   "id": "ig-128",
+   "label": "not_applicable",
+   "answers": [
+    "not_applicable",
+    "not_applicable",
+    "not_applicable"
+   ],
+   "steady": true,
+   "majority": "not_applicable"
+  },
+  {
+   "id": "pin-046",
+   "label": "not_applicable",
+   "answers": [
+    "not_applicable",
+    "not_applicable",
+    "not_applicable"
+   ],
+   "steady": true,
+   "majority": "not_applicable"
+  },
+  {
+   "id": "stock-s21-before_phone",
+   "label": "not_applicable",
+   "answers": [
+    "not_applicable",
+    "not_applicable",
+    "not_applicable"
+   ],
+   "steady": true,
+   "majority": "not_applicable"
+  },
+  {
+   "id": "phone-ebe23f",
+   "label": "not_applicable",
+   "answers": [
+    "not_applicable",
+    "not_applicable",
+    "not_applicable"
+   ],
+   "steady": true,
+   "majority": "not_applicable"
+  },
+  {
+   "id": "mirror-m09",
+   "label": "not_applicable",
+   "answers": [
+    "not_applicable",
+    "not_applicable",
+    "not_applicable"
+   ],
+   "steady": true,
+   "majority": "not_applicable"
+  },
+  {
+   "id": "ig-059",
+   "label": "not_applicable",
+   "answers": [
+    "not_applicable",
+    "not_applicable",
+    "not_applicable"
+   ],
+   "steady": true,
+   "majority": "not_applicable"
+  }
+ ],
+ "pass": {
+  "steady>=90%": false,
+  "recall_yes>=80%": false,
+  "false_yes<10%": true
+ }
+}

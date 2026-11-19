@@ -6,7 +6,7 @@
 // Profile (CLAUDE.md rule 6): no photo is used here. The age band is the one he taps (never estimated); the looks are
 // the ones tapped in the test (or the stated drafts), the occasion everyday.
 import {
-  advance, allNodes, allTexts, byId, everyString, flat, flush, getId, idsInOrder, mockT39, mount, press, setUpT39Tests, T0, textAt, textOf, themeFor, typeIn, type Node,
+  advance, allTexts, byId, everyString, flat, flush, getId, idsInOrder, mockT39, mount, press, setUpT39Tests, T0, textAt, textOf, themeFor, typeIn, type Node,
 } from '@/testing/t39ScreenMocks';
 import { isHiddenFromAccessibility, screen, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
@@ -16,25 +16,32 @@ import { getAgeBlocked, setAgeBlocked } from '@/data/secure';
 import type { ProfileRow } from '@/data/types';
 import OnboardingConsent from '@/app/onboarding/consent';
 import { looksReply } from '@/features/onboarding/basics';
-import { BasicsScreen } from '@/features/onboarding/BasicsScreen';
+import { BasicsScreen, FOCUS_AFTER_PUSH_MS } from '@/features/onboarding/BasicsScreen';
 import { ConsentScreen } from '@/features/onboarding/ConsentScreen';
 import { ExampleCheckScreen } from '@/features/onboarding/ExampleCheckScreen';
-import { LOOKS, picksToStyles } from '@/features/onboarding/looks';
+import { picksToStyles } from '@/features/onboarding/looks';
 import { ONBOARDING_STEPS, OnboardingNav } from '@/features/onboarding/OnboardingNav';
-import { PickLooksScreen } from '@/features/onboarding/PickLooksScreen';
+import { StyleGameScreen } from '@/features/onboarding/StyleGameScreen';
+import { endStyleGame } from '@/features/onboarding/styleGameSession';
+import { playStyleGame, pressId, seedRandom, setUpGame, TEACH } from '@/testing/styleGameTestKit';
 import { WelcomeScreen } from '@/features/onboarding/WelcomeScreen';
-import { styleLabel } from '@/features/morning/copy';
 import { getGate } from '@/state/appGate';
 
 const life = setUpT39Tests();
 
 // ── The words (TESTING.md, exact) ─────────────────────────────────────────────────────────────────────────────────
 const OLD_LOOKS_PROMPT = 'Which of these would you actually wear? Tap up to 3.';
-const LOOKS_TITLE = "What's your style?"; // founder, Nov 11 (#448)
-const LOOKS_LINE = "Pick up to 3 looks you like. Today's outfit comes next.";
+// T113: Looks is the style game (specs/style-game.md SG1); the grid's "What's your style?" is gone.
+const GAME_TITLE = 'Is this your style?'; // #503 (was "Me or not me?")
+const RESULTS_TITLE = "Here's your style";
+/** Seed 42; he says Me to Streetwear, Vintage sport, Outdoor and Workwear and prefers them in that order. */
+const SV = ['streetwear', 'vintage_sport', 'outdoor', 'workwear'];
 const ABOUT_TITLE = 'About you';
 const NAME_Q = 'What should Kit call you?';
-const NAME_PLACEHOLDER = 'First name (optional)';
+const NAME_PLACEHOLDER = 'First name'; // #506 (was "First name (optional)")
+const NAME_HINT = 'Add your first name to go on.'; // #506
+const SKIP = 'Skip'; // #506
+const SKIP_HINT = 'Goes on without a name.'; // #506
 const AGE_Q = 'How old are you?';
 const FOOTNOTE = 'Stays on your phone. It never changes your score.';
 const HINT = 'Pick your age to go on.';
@@ -59,6 +66,7 @@ const LOOKS_AX = [{ scheme: 'light' as const, ax: false }, { scheme: 'dark' as c
 const isDisabled = (n: Node) => (n.props.accessibilityState as { disabled?: boolean } | undefined)?.disabled === true || n.props['aria-disabled'] === true;
 const isSelected = (n: Node) => (n.props.accessibilityState as { selected?: boolean } | undefined)?.selected === true || n.props['aria-selected'] === true;
 const continueBtn = () => within(getId('about-continue') as never).getByRole('button') as unknown as Node;
+const skipBtn = () => within(getId('about-skip') as never).getByRole('button') as unknown as Node;
 const rowLabel = (id: string, label: string) => getId(id).queryAll((x) => x.type === 'Text' && textOf(x) === label)[0]!;
 const bubbles = () => [(StylistMessage as unknown as jest.Mock).mock.calls.length, (UserBubble as unknown as jest.Mock).mock.calls.length, screen.queryAllByTestId('mock-stylist-message').length, screen.queryAllByTestId('mock-user-bubble').length];
 const pushes = () => (router.push as jest.Mock).mock.calls.map((c) => (typeof c[0] === 'string' ? c[0] : String((c[0] as { pathname?: string }).pathname)));
@@ -68,7 +76,6 @@ const kvJson = async (k: string) => {
   return v === null ? null : (JSON.parse(v) as unknown);
 };
 const profile = async () => (await mockT39.store.profile.get('me')) as ProfileRow | null;
-const tile = (i: number) => screen.getAllByLabelText(new RegExp(`^${styleLabel(LOOKS[i]!.style)}`))[0]!;
 
 /** About you's drafts: his looks from Looks, and an About you draft when given. */
 async function drafts(o: { looks?: string[]; about?: { age: string | null; name: string } | string; basics?: object } = {}) {
@@ -97,13 +104,27 @@ describe('OS3.1 · setup screens are plain', () => {
         mockT39.theme = themeFor(look);
         mockT39.accounts = accounts;
 
-        // Looks.
+        // Looks (the style game): card 1, then Here's your style.
         jest.clearAllMocks();
-        let r = await mount(<PickLooksScreen />);
+        endStyleGame();
+        // A fresh install: card 1 with its teaching overlay (SG1.4) must be plain too.
+        await setUpGame(mockT39.store, { seed: 42, me: [], cards: 0, taught: false });
+        let r = await mount(<StyleGameScreen />);
+        expect(screen.getAllByText(TEACH)).toHaveLength(1);
         expect([tag, 'looks', bubbles()]).toEqual([tag, 'looks', [0, 0, 0, 0]]);
         expectNoBubbleWords({ looksScreen: true });
-        expect(textAt('looks-title')).toBe(LOOKS_TITLE);
+        expect(textAt('game-title')).toBe(GAME_TITLE);
         await r.unmount();
+        jest.clearAllMocks();
+        endStyleGame();
+        await setUpGame(mockT39.store, { seed: 42, me: SV, prefer: SV });
+        r = await mount(<StyleGameScreen />);
+        expect([tag, 'looks results', bubbles()]).toEqual([tag, 'looks results', [0, 0, 0, 0]]);
+        expectNoBubbleWords({ looksScreen: true });
+        expect(textAt('results-title')).toBe(RESULTS_TITLE);
+        await r.unmount();
+        endStyleGame();
+        await mockT39.store.wipe();
 
         // About you on open (no drafts at all).
         jest.clearAllMocks();
@@ -143,7 +164,7 @@ describe('OS3.1 · setup screens are plain', () => {
         await r.unmount();
       }
     }
-    // 4 looks × 2 account states × 4 screens: 32 mounts, past jest's 5 s default when the suite runs in parallel.
+    // 4 looks × 2 account states × 5 screens: 40 mounts, past jest's 5 s default when the suite runs in parallel.
   }, 30_000);
 
   it("OS3.1 · the agreement's intro is plain text (camera and sheet)", async () => {
@@ -160,18 +181,27 @@ describe('OS3.1 · setup screens are plain', () => {
 
 // ── OS3.2 · Welcome → Looks → About you → Stylist ─────────────────────────────────────────────────────────────────
 describe('OS3.2 · three steps, no agreement', () => {
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('OS3.2 · each step goes to the next and About you ends in Stylist', async () => {
-    // Looks: one tile, Continue · 1 of 3.
-    let r = await mount(<PickLooksScreen />);
-    await press(tile(0));
-    await press(screen.getByText('Continue · 1 of 3'));
+    // Looks (the style game, T113): Me on card 1 (seed 42: Workwear), Not me on the rest, Continue.
+    endStyleGame();
+    const random = jest.spyOn(Math, 'random').mockReturnValue(seedRandom(42)());
+    let r = await mount(<StyleGameScreen />);
+    expect(await playStyleGame({ me: 1 })).toBe(9); // the overlay's tap (SG1.4), then 8 cards
+    expect(textAt('results-title')).toBe(RESULTS_TITLE);
+    expect(router.push).not.toHaveBeenCalled();
+    await pressId('results-continue');
     expect(await mockT39.store.getKv('onboarding.step')).toBe('basics');
+    expect(await kvJson('onboarding.looks')).toEqual(['workwear']);
     expect(router.push).toHaveBeenCalledWith('/onboarding/basics');
+    expect(pushes()).toEqual(['/onboarding/basics']);
     await r.unmount();
+    random.mockRestore();
 
-    // About you: 22–25, Continue → onboarded, to "/" (Stylist), never the agreement or the camera.
+    // About you: a name, 22–25, Continue → onboarded, to "/" (Stylist), never the agreement or the camera.
     jest.clearAllMocks();
     r = await mount(<BasicsScreen />);
+    await typeIn(getId('about-name-input'), 'Alex');
     await press(getId('age-22-25'));
     await press(continueBtn());
     await advance(5000);
@@ -181,7 +211,8 @@ describe('OS3.2 · three steps, no agreement', () => {
     expect(pushes().filter((p) => p === '/onboarding/consent' || p.startsWith('/camera'))).toEqual([]);
     expect(pushes()).toEqual([]);
     await r.unmount();
-  });
+    endStyleGame();
+  }, 20000);
 
   it('OS3.2 · the bar has 3 segments', async () => {
     const { colors } = themeFor();
@@ -222,59 +253,12 @@ describe('OS3.2 · three steps, no agreement', () => {
   });
 });
 
-// ── OS3.3 · Looks ─────────────────────────────────────────────────────────────────────────────────────────────────
-describe('OS3.3 · Looks has a title and a line', () => {
-  it('OS3.3 · the title and the line', async () => {
-    for (const look of LOOKS_AX) {
-      mockT39.theme = themeFor(look);
-      const r = await mount(<PickLooksScreen />);
-      const title = getId('looks-title');
-      expect(textOf(title)).toBe(LOOKS_TITLE);
-      expect(title.props.accessibilityRole).toBe('header');
-      expect(textAt('looks-line')).toBe(LOOKS_LINE);
-      // Directly after the title, in reading order.
-      const texts = allNodes().filter((n) => n.type === 'Text' && typeof n.props.testID === 'string').map((n) => n.props.testID as string);
-      expect(texts.indexOf('looks-line')).toBe(texts.indexOf('looks-title') + 1);
-      expect(allTexts().filter((x) => x.includes(OLD_LOOKS_PROMPT))).toEqual([]);
-      await r.unmount();
-    }
-  });
-
-  it('OS3.3 · the tiles, Something else? and Continue behave as before, and there is no Not sure (#449)', async () => {
-    let r = await mount(<PickLooksScreen />);
-    // Nothing picked, no words: Continue is off.
-    const cont = () => screen.getByRole('button', { name: /^Continue/ }) as unknown as Node;
-    expect(isDisabled(cont())).toBe(true);
-    expect(screen.queryByText('Pick by name instead')).toBeNull();
-    // No way past Looks without a pick or his words (founder, Nov 11; setup is 7 taps to the camera).
-    expect(screen.queryByText('Not sure')).toBeNull();
-    expect(bubbles()).toEqual([0, 0, 0, 0]);
-
-    await press(tile(0));
-    await press(tile(1));
-    expect(Haptics.selectionAsync).toHaveBeenCalledTimes(2);
-    expect(screen.getByText('Continue · 2 of 3')).toBeTruthy();
-    await press(tile(2));
-    expect(screen.getByText('Continue · 3 of 3')).toBeTruthy();
-    // A 4th: the warning buzz once, "Up to 3.", picks unchanged.
-    await press(tile(3));
-    expect(Haptics.notificationAsync).toHaveBeenCalledTimes(1);
-    expect(Haptics.notificationAsync).toHaveBeenCalledWith('warning');
-    expect(Haptics.selectionAsync).toHaveBeenCalledTimes(3);
-    expect(screen.getByText('Up to 3.')).toBeTruthy();
-    expect(screen.getByText('Continue · 3 of 3')).toBeTruthy();
-    await press(screen.getByText('Continue · 3 of 3'));
-    expect(await kvJson('onboarding.looks')).toEqual([LOOKS[0]!.style, LOOKS[1]!.style, LOOKS[2]!.style]);
-    await r.unmount();
-
-    // Something else? opens the field.
-    await mockT39.store.wipe();
-    r = await mount(<PickLooksScreen />);
-    await press(screen.getByLabelText('Something else. Describe your style in your own words.'));
-    expect(screen.getByPlaceholderText('Like skater, or all black')).toBeTruthy();
-    await r.unmount();
-  });
-});
+// ── OS3.3 · Looks: retired by T113 ────────────────────────────────────────────────────────────────────────────────
+// `OS3.3 · the title and the line` and `OS3.3 · the tiles, Something else? and Continue behave as before` tested the
+// tile grid ("What's your style?", the tiles, "Continue · n of 3", "Something else?"). specs/style-game.md replaces that
+// grid ("Changes to other specs": OS3's Looks bullet gives way to the game), so they are retired, not rewritten. What
+// they guarded is now SG1–SG7 in T113-styleGameScreens.test.tsx: the title as a header (SG1.1), Continue off with no
+// look and no words (SG3.2), no way past Looks without one (SG3.2, SG6.1), his own words (SG5.1), and the haptics.
 
 // ── OS4.1 · About you on open ─────────────────────────────────────────────────────────────────────────────────────
 describe('OS4.1 · About you', () => {
@@ -283,7 +267,7 @@ describe('OS4.1 · About you', () => {
       mockT39.theme = themeFor(look);
       const r = await mount(<BasicsScreen />);
       const order = idsInOrder();
-      const want = ['about-title', 'about-name-label', 'about-name-input', 'about-age-label', 'about-age-list', ...ROWS.map((x) => x.id), 'about-footnote', 'about-hint', 'about-continue'];
+      const want = ['about-title', 'about-name-label', 'about-name-input', 'about-age-label', 'about-age-list', ...ROWS.map((x) => x.id), 'about-footnote', 'about-hint', 'about-continue', 'about-skip'];
       const at = want.map((id) => order.indexOf(id));
       expect([look, at.every((i) => i >= 0), at.every((i, k) => k === 0 || i > at[k - 1]!)]).toEqual([look, true, true]);
 
@@ -304,10 +288,13 @@ describe('OS4.1 · About you', () => {
         expect([row.id, rowLabel(row.id, row.label).props.weight]).toEqual([row.id, '400']);
       }
       expect(textAt('about-footnote')).toBe(FOOTNOTE);
-      expect(textAt('about-hint')).toBe(HINT);
+      // #506: the name is asked first, so its hint shows first; Skip is there but waits for an age.
+      expect(textAt('about-hint')).toBe(NAME_HINT);
       expect(isHiddenFromAccessibility(getId('about-hint') as never)).toBe(true);
       const btn = continueBtn();
-      expect([textOf(btn), isDisabled(btn), btn.props.accessibilityHint]).toEqual(['Continue', true, HINT]);
+      expect([textOf(btn), isDisabled(btn), btn.props.accessibilityHint]).toEqual(['Continue', true, NAME_HINT]);
+      const skip = skipBtn();
+      expect([textOf(skip), isDisabled(skip), skip.props.accessibilityHint]).toEqual([SKIP, true, HINT]);
       // Not present on About you.
       expect(everyString().filter((x) => /Birth year|^Choose$|Kitted is for 18 and up|Pick your birth year to go on/.test(x))).toEqual([]);
       // Only the name and the age are asked: no height, build or fit (BY1's promise, retired into this test).
@@ -325,8 +312,10 @@ describe('OS4.1 · About you', () => {
     expect(ROWS.filter((x) => byId(`${x.id}-check`)).map((x) => x.id)).toEqual(['age-22-25']);
     expect(rowLabel('age-22-25', '22–25').props.weight).toBe('600');
     expect(Haptics.selectionAsync).toHaveBeenCalledTimes(1);
-    expect(byId('about-hint')).toBeNull();
-    expect([isDisabled(continueBtn()), continueBtn().props.accessibilityHint]).toEqual([false, undefined]);
+    // #506: an age without a name: Continue still waits for the name; Skip goes on.
+    expect(textAt('about-hint')).toBe(NAME_HINT);
+    expect([isDisabled(continueBtn()), continueBtn().props.accessibilityHint]).toEqual([true, NAME_HINT]);
+    expect([isDisabled(skipBtn()), skipBtn().props.accessibilityHint]).toEqual([false, SKIP_HINT]);
     expect(await kvJson('onboarding.about')).toEqual({ age: '22-25', name: '' });
     // Nothing saved to the profile before Continue.
     expect(await profile()).toBeNull();
@@ -337,6 +326,62 @@ describe('OS4.1 · About you', () => {
     expect(byId('age-26-30-check')).not.toBeNull();
     expect(rowLabel('age-22-25', '22–25').props.weight).toBe('400');
     expect(await kvJson('onboarding.about')).toEqual({ age: '26-30', name: '' });
+    expect(await profile()).toBeNull();
+
+    // #506: a name and an age: no hint, Continue on, Skip gone; spaces only count as no name.
+    await typeIn(getId('about-name-input'), 'Alex');
+    expect([byId('about-hint'), byId('about-skip')]).toEqual([null, null]);
+    expect([isDisabled(continueBtn()), continueBtn().props.accessibilityHint]).toEqual([false, undefined]);
+    await typeIn(getId('about-name-input'), '   ');
+    expect([textAt('about-hint'), isDisabled(continueBtn()), isDisabled(skipBtn())]).toEqual([NAME_HINT, true, false]);
+    expect(await profile()).toBeNull();
+  });
+
+  it('OS4.1 · an empty name field gets focus once the push is over (not with a saved name, not on Restore)', async () => {
+    const { TextInput } = jest.requireActual<typeof import('react-native')>('react-native');
+    const proto = (TextInput as unknown as { prototype?: { focus?: () => void } }).prototype;
+    expect(typeof proto?.focus).toBe('function');
+    const focus = jest.spyOn(proto as { focus: () => void }, 'focus');
+    await drafts();
+    let r = await mount(<BasicsScreen />);
+    // Not mid-push: only once the slide is over.
+    expect(focus).not.toHaveBeenCalled();
+    await advance(FOCUS_AFTER_PUSH_MS - 100);
+    expect(focus).not.toHaveBeenCalled();
+    await advance(150);
+    expect(focus).toHaveBeenCalledTimes(1);
+    await advance(5000);
+    expect(focus).toHaveBeenCalledTimes(1);
+    await r.unmount();
+    focus.mockClear();
+    // A saved name (a reopen mid-setup): no keyboard, so the ages stay in view.
+    await drafts({ about: { age: null, name: 'Alex' } });
+    r = await mount(<BasicsScreen />);
+    await advance(FOCUS_AFTER_PUSH_MS + 50);
+    expect(focus).not.toHaveBeenCalled();
+    await r.unmount();
+    // Spaces only is no name: focus.
+    await drafts({ about: { age: null, name: '   ' } });
+    r = await mount(<BasicsScreen />);
+    await advance(FOCUS_AFTER_PUSH_MS + 50);
+    expect(focus).toHaveBeenCalledTimes(1);
+    await r.unmount();
+    focus.mockClear();
+    mockT39.params = { restore: '214,38,61' };
+    r = await mount(<BasicsScreen />);
+    await advance(FOCUS_AFTER_PUSH_MS + 50);
+    expect(focus).not.toHaveBeenCalled();
+    await r.unmount();
+    focus.mockRestore();
+  });
+
+  it('OS4.1 · with a name and no age, the hint asks for the age', async () => {
+    await drafts();
+    await mount(<BasicsScreen />);
+    await typeIn(getId('about-name-input'), 'Alex');
+    expect([textAt('about-hint'), isDisabled(continueBtn()), continueBtn().props.accessibilityHint, byId('about-skip')]).toEqual([HINT, true, HINT, null]);
+    await press(continueBtn());
+    expect([router.replace, router.push].map((f) => (f as jest.Mock).mock.calls.length)).toEqual([0, 0]);
     expect(await profile()).toBeNull();
   });
 
@@ -391,7 +436,7 @@ describe('OS4.1 · About you', () => {
 
 // ── OS4.2 · the name is optional, trimmed and cut ─────────────────────────────────────────────────────────────────
 describe('OS4.2 · the name', () => {
-  it('OS4.2 · a blank name goes on; a name is saved trimmed and cut', async () => {
+  it('OS4.2 · a blank name goes on only by Skip; a name is saved trimmed and cut', async () => {
     const cases: { typed: string | null; name: string | null }[] = [
       { typed: null, name: null },
       { typed: '  Alex ', name: 'Alex' },
@@ -406,8 +451,12 @@ describe('OS4.2 · the name', () => {
       expect(getId('about-name-input').props.maxLength).toBe(30);
       if (c.typed !== null) await typeIn(getId('about-name-input'), c.typed);
       await press(getId('age-22-25'));
-      expect([c.typed, isDisabled(continueBtn())]).toEqual([c.typed, false]);
-      await press(continueBtn());
+      // #506: no name → Continue off, Skip on; a name → Continue on, no Skip.
+      const blank = c.name === null;
+      expect([c.typed, isDisabled(continueBtn()), byId('about-skip') === null]).toEqual([c.typed, blank, !blank]);
+      if (blank) await press(continueBtn());
+      expect([c.typed, await profile()]).toEqual([c.typed, null]);
+      await press(blank ? skipBtn() : continueBtn());
       const p = await profile();
       expect([c.typed, p?.name, p?.ageBand]).toEqual([c.typed, c.name, '22-25']);
       expect(router.replace).toHaveBeenCalledWith('/');
@@ -448,6 +497,7 @@ describe('OS4.3 · About you saves the band and lands in Stylist', () => {
     const err = jest.spyOn(console, 'error').mockImplementation(() => {});
     s.profile.put = jest.fn(() => Promise.reject(new Error('disk full'))) as never;
     await mount(<BasicsScreen />);
+    await typeIn(getId('about-name-input'), 'Alex');
     await press(getId('age-22-25'));
     await press(continueBtn());
     await advance(1000);
@@ -476,15 +526,18 @@ describe('OS4.4 · Under 18', () => {
     await drafts();
     await mount(<BasicsScreen />);
     await press(getId('age-under18'));
-    await press(continueBtn());
+    // #506: with no name, Skip is the way on; it asks the same as Continue.
+    await press(skipBtn());
     expect(life.alert).toHaveBeenCalledTimes(1);
     const [title, message, buttons] = life.alert.mock.calls[0]! as [string, string, Button[]];
     expect([title, message]).toEqual(['Under 18?', 'Kitted is for ages 18 and up.']);
     expect(buttons.map((b) => ({ text: b.text, style: b.style }))).toEqual([{ text: 'Change', style: 'cancel' }, { text: "That's right", style: 'destructive' }]);
     expect(typeof buttons[1]!.onPress).toBe('function');
-    // One alert per tap.
+    // One alert per tap; with a name, Continue asks the same.
+    await typeIn(getId('about-name-input'), 'Alex');
     await press(continueBtn());
     expect(life.alert).toHaveBeenCalledTimes(2);
+    expect(life.alert.mock.calls[1]!.slice(0, 2)).toEqual(['Under 18?', 'Kitted is for ages 18 and up.']);
     expect(everyString().filter((x) => /^Born in /.test(x))).toEqual([]);
   });
 
@@ -492,7 +545,7 @@ describe('OS4.4 · Under 18', () => {
     await drafts();
     await mount(<BasicsScreen />);
     await press(getId('age-under18'));
-    await press(continueBtn());
+    await press(skipBtn());
     // The alert's buttons are taken before the mocks are cleared (clearing empties the Alert spy too).
     const change = alertButtons()[0]!;
     expect({ text: change.text, style: change.style }).toEqual({ text: 'Change', style: 'cancel' });
@@ -511,7 +564,7 @@ describe('OS4.4 · Under 18', () => {
     await drafts();
     await mount(<BasicsScreen />);
     await press(getId('age-under18'));
-    await press(continueBtn());
+    await press(skipBtn());
     alertButtons()[1]!.onPress!();
     await flush();
     await advance(5000);
@@ -527,6 +580,7 @@ describe('OS4.4 · Under 18', () => {
 
 // ── OS4.5 · no "18" before the pick ───────────────────────────────────────────────────────────────────────────────
 describe('OS4.5 · the only 18s before a pick', () => {
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('OS4.5 · the only 18s before the pick are two choices', async () => {
     const with18 = () => everyString().filter((x) => x.includes('18'));
     for (const ax of [false, true]) {
@@ -543,9 +597,26 @@ describe('OS4.5 · the only 18s before a pick', () => {
         expect([ax, mode, with18()]).toEqual([ax, mode, []]);
         await r.unmount();
       }
-      let r = await mount(<PickLooksScreen />);
+      // Looks (the style game, T113): card 1, the this-or-that and Here's your style.
+      endStyleGame();
+      await setUpGame(mockT39.store, { seed: 42, me: [], cards: 0, taught: false });
+      let r = await mount(<StyleGameScreen />);
+      expect(screen.getAllByText(TEACH)).toHaveLength(1);
       expect([ax, 'looks', with18()]).toEqual([ax, 'looks', []]);
       await r.unmount();
+      endStyleGame();
+      await setUpGame(mockT39.store, { seed: 42, me: SV, rounds: 0 });
+      r = await mount(<StyleGameScreen />);
+      expect(byId('rank-title')).not.toBeNull();
+      expect([ax, 'looks ranking', with18()]).toEqual([ax, 'looks ranking', []]);
+      await r.unmount();
+      endStyleGame();
+      await setUpGame(mockT39.store, { seed: 42, me: SV, prefer: SV });
+      r = await mount(<StyleGameScreen />);
+      expect(textAt('results-title')).toBe(RESULTS_TITLE);
+      expect([ax, 'looks results', with18()]).toEqual([ax, 'looks results', []]);
+      await r.unmount();
+      endStyleGame();
 
       await mockT39.store.wipe();
       r = await mount(<BasicsScreen />);
@@ -555,14 +626,18 @@ describe('OS4.5 · the only 18s before a pick', () => {
       expect(everyString().filter((x) => /18 and up|18\+|ages 18/.test(x))).toEqual([]);
       await r.unmount();
     }
-  });
+  }, 20000);
 });
 
 // ── F1.1 · nothing opens the camera ───────────────────────────────────────────────────────────────────────────────
 describe('F1.1 · no camera, account or paywall in setup', () => {
+  // A walk through many renders: under the full suite's parallel load it has run past jest's 5 s (verify round 1, T3).
   it('F1.1 · nothing opens the camera before Check my fit', async () => {
+    // T113: Looks is the style game (specs/style-game.md). A fixed deal (seed 42); Me on the first 3 cards.
+    const random = jest.spyOn(Math, 'random').mockReturnValue(seedRandom(42)());
     for (const accounts of [false, true]) {
       await mockT39.store.wipe();
+      endStyleGame();
       jest.clearAllMocks();
       mockT39.accounts = accounts;
       let r = await mount(<WelcomeScreen />);
@@ -572,13 +647,15 @@ describe('F1.1 · no camera, account or paywall in setup', () => {
       expect(pushes()).toEqual(['/onboarding/looks']);
       await r.unmount();
 
-      r = await mount(<PickLooksScreen />);
-      await press(tile(0));
-      await press(screen.getByText('Continue · 1 of 3'));
+      r = await mount(<StyleGameScreen />);
+      await playStyleGame({ me: 3 });
+      expect(textAt('results-title')).toBe("Here's your style");
+      await pressId('results-continue');
       await advance(5000);
       await r.unmount();
 
       r = await mount(<BasicsScreen />);
+      await typeIn(getId('about-name-input'), 'Alex');
       await press(getId('age-22-25'));
       await press(continueBtn());
       await advance(5000);
@@ -588,7 +665,9 @@ describe('F1.1 · no camera, account or paywall in setup', () => {
       expect([accounts, replaces()]).toEqual([accounts, ['/']]);
       expect([...pushes(), ...replaces()].filter((p) => /camera|paywall|sign-in|consent/.test(p))).toEqual([]);
     }
-  });
+    random.mockRestore();
+    endStyleGame();
+  }, 20000);
 });
 
 // ── F1.2 · nothing picked, then the stop ──────────────────────────────────────────────────────────────────────────
@@ -599,7 +678,7 @@ describe('F1.2 · the age question', () => {
     await mount(<BasicsScreen />);
     expect(ROWS.map((x) => isSelected(getId(x.id)))).toEqual([false, false, false, false, false]);
     await press(getId('age-under18'));
-    await press(continueBtn());
+    await press(skipBtn());
     const buttons = life.alert.mock.calls[0]![2] as { text: string; onPress?: () => void }[];
     buttons.find((b) => b.text === "That's right")!.onPress!();
     await flush();
@@ -612,7 +691,7 @@ describe('F1.2 · the age question', () => {
 
 // ── SY4.1 · the name comes first and is optional ──────────────────────────────────────────────────────────────────
 describe('SY4.1 · the name field', () => {
-  it('SY4.1 · the name comes first and is optional', async () => {
+  it('SY4.1 · the name comes first and is optional, by a small Skip', async () => {
     await drafts();
     let r = await mount(<BasicsScreen />);
     const order = idsInOrder();
@@ -622,9 +701,18 @@ describe('SY4.1 · the name field', () => {
     const input = getId('about-name-input');
     expect({ textContentType: input.props.textContentType, autoComplete: input.props.autoComplete, autoCapitalize: input.props.autoCapitalize })
       .toEqual({ textContentType: 'givenName', autoComplete: 'given-name', autoCapitalize: 'words' });
-    expect(everyString().filter((x) => /\bSkip\b/.test(x))).toEqual([]);
+    // #506 (replacing "No Skip button"): Skip sits under Continue, and with an age it goes on without a name.
+    // Every string that says Skip is that button's own (its words and its label), and it's drawn once.
+    expect(new Set(everyString().filter((x) => /\bSkip\b/.test(x)))).toEqual(new Set([SKIP]));
+    expect(screen.getAllByText(SKIP)).toHaveLength(1);
+    const order2 = idsInOrder();
+    expect(order2.indexOf('about-continue')).toBeLessThan(order2.indexOf('about-skip'));
     await press(getId('age-18-21'));
-    expect(isDisabled(continueBtn())).toBe(false);
+    expect([isDisabled(continueBtn()), isDisabled(skipBtn())]).toEqual([true, false]);
+    await press(skipBtn());
+    await advance(5000);
+    expect(router.replace).toHaveBeenCalledWith('/');
+    expect([(await profile())?.name, (await profile())?.ageBand]).toEqual([null, '18-21']);
     await r.unmount();
 
     // No name field on Restore.
@@ -633,6 +721,10 @@ describe('SY4.1 · the name field', () => {
     expect(byId('about-name-input')).toBeNull();
     expect(byId('about-name-label')).toBeNull();
     expect(byId('about-age-list')).not.toBeNull();
+    // Restore asks the age only: no Skip, no name hint; an age turns Continue on.
+    expect([byId('about-skip'), textAt('about-hint')]).toEqual([null, HINT]);
+    await press(getId('age-22-25'));
+    expect([isDisabled(continueBtn()), byId('about-hint')]).toEqual([false, null]);
     // The same age list as setup, and no height, build or fit (BY1's "one layout in both paths").
     expect(ROWS.map((x) => [x.id, getId(x.id).props.accessibilityRole, textOf(getId(x.id))])).toEqual(ROWS.map((x) => [x.id, 'radio', x.label]));
     expect(everyString().filter((x) => NOT_ASKED.test(x))).toEqual([]);

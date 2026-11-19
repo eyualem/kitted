@@ -7,7 +7,7 @@ import type { FitCheckRow } from '@/data/types';
 import type { Clock } from '@/services/clock';
 import { isOwned } from '@/features/closet/profile';
 import { getStarterMarks } from '@/features/finish/service';
-import { buildCard, cardSpoken, correctCard } from './cards';
+import { askedAgain, buildCard, cardSpoken, correctCard, shownKeysToday } from './cards';
 import { displayScore } from '@/design-system/score';
 import { weekdayName } from '@/i18n/format';
 import { t } from '@/i18n/en';
@@ -71,6 +71,8 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
       },
       card: async (raw, gate) => correct ?? buildCard(raw, {
         handles: ctx.handles, closet: snap.closet, checks: snap.checks, styles: snap.profile?.styles ?? null, starterMarks: marks, gate,
+        // The same outfit isn't drawn twice in one chat day unless he asks again (KC2.6).
+        shownToday: askedAgain(question) ? new Set<string>() : shownKeysToday(snap.chat, today, snap.zone),
       }),
       remember: (raw, at) => applyRemember(raw, at, { store, clock, ids: deps.ids }),
       speak: (card) => cardSpoken(card, {

@@ -11,7 +11,7 @@
 
 import { type KnownPiece } from "./closetIdentity";
 import { askWithClosetBy } from "./known";
-import { scoreParts, type PartsOptions } from "./parts";
+import { defaultParts, type PartsEngine, type PartsOptions } from "./parts";
 import { defaultRubric } from "./rubric";
 import { RUBRIC_DATA } from "./rubricData";
 import { applyTapAnswer } from "./tap";
@@ -24,11 +24,13 @@ const H = defaultRubric.helpers;
 const kindOf = (sub: unknown): ShoeKind | null => SHOES.order.find((k) => SHOES.kinds[k].includes(sub as string)) ?? null;
 
 /** The parts engine's rounded score for a reading (null when it can't be scored). */
-export const partsOverall = (reading: Reading, opts: PartsOptions = {}): number | null => scoreParts(reading, opts).overall;
+/** `engine` defaults to the switch's (a stored check passes its own, partsEngineFor). */
+export const partsOverall = (reading: Reading, opts: PartsOptions = {}, engine: PartsEngine = defaultParts): number | null =>
+  engine.scoreParts(reading, opts).overall;
 
 const at = (i: number) => ({ garmentIndex: i, field: "subcategory" as const });
 
-function shoeQuestion(reading: Reading, i: number, base: number, opts: PartsOptions): TapQuestion | null {
+function shoeQuestion(reading: Reading, i: number, base: number, opts: PartsOptions, engine: PartsEngine): TapQuestion | null {
   const g = reading.garments[i]!;
   const sub = g.subcategory as string;
   const cert = g.certainty;
@@ -40,7 +42,7 @@ function shoeQuestion(reading: Reading, i: number, base: number, opts: PartsOpti
   const options: TapOption[] = [];
   for (const k of kinds) {
     const v = H.kindPick(reading, i, k);
-    const s = partsOverall(applyTapAnswer(reading, at(i), v), opts);
+    const s = partsOverall(applyTapAnswer(reading, at(i), v), opts, engine);
     if (s === null) return null;
     options.push({ value: v, label: SHOES.labels[k], score: s, group: k });
   }
@@ -57,8 +59,8 @@ function shoeQuestion(reading: Reading, i: number, base: number, opts: PartsOpti
 }
 
 /** rubric.askQuestion with the parts engine's swing. Same candidates, order and Skip; the option scores are parts scores. */
-export function askQuestionParts(reading: Reading, opts: PartsOptions = {}): TapQuestion | null {
-  const base = partsOverall(reading, opts);
+export function askQuestionParts(reading: Reading, opts: PartsOptions = {}, engine: PartsEngine = defaultParts): TapQuestion | null {
+  const base = partsOverall(reading, opts, engine);
   if (base === null) return null;
   const scene: Scene = (truthy(reading.scene) ? reading.scene : {}) as Scene;
   const shoesVisible = truthy(has(scene, "shoes_visible") ? scene.shoes_visible : true);
@@ -78,7 +80,7 @@ export function askQuestionParts(reading: Reading, opts: PartsOptions = {}): Tap
         if (g.subcategory === "jeans" && (a === "jeans" || b === "jeans") && String(g.color_family ?? "").startsWith("denim")) continue;
         if (g.subcategory !== a && g.subcategory !== b) continue;
         const other = g.subcategory === a ? b : a;
-        const sAlt = partsOverall(applyTapAnswer(reading, at(i), other), opts);
+        const sAlt = partsOverall(applyTapAnswer(reading, at(i), other), opts, engine);
         if (sAlt === null) continue;
         const swing = sAlt - base;
         const doubt = H.tapDoubt(reading, g, a, b);
@@ -97,7 +99,7 @@ export function askQuestionParts(reading: Reading, opts: PartsOptions = {}): Tap
       }
     }
     if (cat === "footwear" && shoesVisible && scene.framing !== "upper_only" && !SHOES.skipOccasions.includes(occ)) {
-      const q = shoeQuestion(reading, i, base, opts);
+      const q = shoeQuestion(reading, i, base, opts, engine);
       if (q && better(q)) best = q;
     }
   });
@@ -105,6 +107,6 @@ export function askQuestionParts(reading: Reading, opts: PartsOptions = {}): Tap
 }
 
 /** askWithCloset for a parts-scored check: the parts question above, or "Your {piece}?" judged by the parts swing. */
-export function askWithClosetParts(reading: Reading, opts: PartsOptions = {}, known: readonly KnownPiece[] = []): TapQuestion | null {
-  return askWithClosetBy(reading, opts, known, askQuestionParts, partsOverall);
+export function askWithClosetParts(reading: Reading, opts: PartsOptions = {}, known: readonly KnownPiece[] = [], engine: PartsEngine = defaultParts): TapQuestion | null {
+  return askWithClosetBy(reading, opts, known, (r, o) => askQuestionParts(r, o, engine), (r, o) => partsOverall(r, o, engine));
 }

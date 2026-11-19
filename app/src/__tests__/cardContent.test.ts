@@ -7,6 +7,11 @@ import { evaluateCheck } from '@/features/fitcheck/scoring';
 import { garmentLabel, readingPill, whatIRead } from '@/features/fitcheck/labels';
 import { t } from '@/i18n/en';
 import type { OccasionKey } from '@/data/types';
+import { setRescoreV16 as setRescoreV16T69 } from '@kitted/core';
+// T69 (#484, #487): this file tests "Reads as" with v15's detection (v16's steady-class swap, [TST-st], moves s10). v15 still scores every check stored before T69 (and is the third
+// switch's rollback), so the file is pinned to it; v16's card, rows and numbers are in the T69-*.test.ts files.
+beforeAll(() => setRescoreV16T69(false));
+afterAll(() => setRescoreV16T69(true));
 
 const STYLES = expected.profile.styles as unknown as Styles;
 const closet = seed.scenarios.full.closet as unknown as ClosetItem[];
@@ -77,10 +82,10 @@ describe('summaries', () => {
 describe('"Reads as" (02 "S6s", #85): the look the card names, from core styleLabel, on every re-score', () => {
   const readsAs = (id: string, styles: Styles = []) =>
     evaluateCheck({ reading: r(id), occasion: 'everyday', styles, boldness: null, closet: [], firstCheck: false }).row.details.readsAs;
-  it('the demo set with no picks: minimal, smart casual or none', () => {
+  it('the demo set with no picks: minimal, smart casual, tailored (T94: the navy suit) or none', () => {
     expect(['p01a', 'p01b', 's25', 's14'].map((id) => readsAs(id))).toEqual(['minimalist', 'minimalist', 'minimalist', 'minimalist']);
     expect(['s10', 's15', 's22'].map((id) => readsAs(id))).toEqual(['smart_casual', 'smart_casual', 'smart_casual']);
-    expect(['s05', 's09', 's12', 's13', 's24'].map((id) => readsAs(id))).toEqual([null, null, null, null, null]);
+    expect(['s05', 's09', 's12', 's13', 's24'].map((id) => readsAs(id))).toEqual([null, 'tailored', null, null, null]);
   });
   it('a pick breaks a tie between two looks that both fit (p01b: minimal and smart casual)', () => {
     expect(readsAs('p01b', [['smart_casual', 1]])).toBe('smart_casual');

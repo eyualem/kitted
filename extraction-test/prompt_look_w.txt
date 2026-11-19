@@ -1,0 +1,15 @@
+This is a close-up of one person's legs and shoes, cut from an outfit photo. Describe only how wide the pants are, not the person or their body. If the two legs differ, describe the leg you can see best.
+
+knee: at the knee, the pant fabric
+- clings: lies flat on the leg all the way round; the knee's shape shows through
+- skims: touches the leg at the front or side but doesn't hug it
+- hangs_away: a clear gap of air between fabric and leg on both sides; the fabric falls in a column or folds
+- not_visible: the knee is hidden or out of frame
+
+opening: at the hem, the width of the leg opening compared with the shoe below it
+- narrower: the opening is narrower than the shoe; the shoe sticks out on both sides
+- about_the_same: the opening is about as wide as the shoe
+- wider: the opening is clearly wider than the shoe, or covers most of it from the side
+- not_visible: the hem or the shoes are hidden or out of frame
+
+Return only JSON that matches the schema.

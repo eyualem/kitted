@@ -4,6 +4,12 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { CASUAL_FITS_V14, defaultParts, HOODIE_LAYER_V15, partsDataFor, scoreParts, setHoodieLayerV15, suggestPartsFixes, type Reading } from "../src";
 import fixture from "../../../src/__tests__/fixtures/oct28-hoodie-recheck.json";
+import { afterAll as afterAllT69 } from "vitest";
+import { setRescoreV16 as setRescoreV16T69 } from "../src/index";
+// T69 (#484, #487): this file tests the v15 hoodie-layer switch and its v14 rollback. That engine still ships as the third switch's rollback and scores
+// every check stored before T69, so the file is pinned to v15; v16's own behaviour is in the T69 tests.
+setRescoreV16T69(false);
+afterAllT69(() => setRescoreV16T69(true));
 
 const FIRST = fixture.first as unknown as Reading;
 const RECHECK = fixture.recheck as unknown as Reading;

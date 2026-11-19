@@ -287,11 +287,13 @@ export const opacity = { pressed: 0.82, disabled: 0.4 } as const;
 // ---------------------------------------------------------------------------------------
 // Score words (03 §6, ruling 24). Thresholds apply to the score ROUNDED to the nearest 0.5.
 
-export type ScoreWord = 'Needs a fix' | 'Getting there' | 'Put together' | 'Sharp' | 'Dialed in';
+/** 'Redo' is the key for the 3–4.5 word (copy key score.word.redo, shown as "Start fresh"; the founder's call, Nov 17). */
+export type ScoreWord = 'Redo' | 'Needs a fix' | 'Getting there' | 'Put together' | 'Sharp' | 'Dialed in';
 
 /** Ascending. A rounded score gets the word of the last band whose `min` it reaches. */
 export const scoreBands: readonly { min: number; word: ScoreWord; label: string }[] = [
-  { min: -Infinity, word: 'Needs a fix', label: '5.5 and under' },
+  { min: -Infinity, word: 'Redo', label: '3–4.5' },
+  { min: 5.0, word: 'Needs a fix', label: '5–5.5' },
   { min: 6.0, word: 'Getting there', label: '6–6.5' },
   { min: 7.0, word: 'Put together', label: '7–7.5' },
   { min: 8.0, word: 'Sharp', label: '8–8.5' },

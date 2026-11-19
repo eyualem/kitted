@@ -17,6 +17,11 @@ import { createQuota } from '@/services/quota';
 import { createMockReadingSource } from '@/services/readingSource/mock';
 import { demoReadingById } from '@/services/readingSource/demoReadings';
 import { realScheduler } from '@/services/scheduler';
+import { setRescoreV16 as setRescoreV16T69 } from '@kitted/core';
+// T69 (#484, #487): this file tests v15's parts card (the average, the piled-problems row, its numbers and fixes). v15 still scores every check stored before T69 (and is the third
+// switch's rollback), so the file is pinned to it; v16's card, rows and numbers are in the T69-*.test.ts files.
+beforeAll(() => setRescoreV16T69(false));
+afterAll(() => setRescoreV16T69(true));
 
 const at = (iso: string) => Date.parse(iso);
 const STYLES = seed.scenarios.firstRun.onboardingAnswers.styles as unknown as [string, number][];

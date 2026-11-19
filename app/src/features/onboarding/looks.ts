@@ -28,7 +28,8 @@ export const LOOKS: readonly Look[] = [
     // Not a graphic tee: the closet's print mark reads as a missing picture at this size.
     [top('crew', '#1E1F23', { fit: 'relaxed', details: { ...RIB } }),
       bottom('cargos', '#5B5E44', { fit: 'wide', hem: 'full_break' }),
-      shoe('sneaker', '#B5332E', { chunky: true, sole: WHITE_SOLE, laceColor: '#FFFFFF' })],
+      // Black, not red (#486, style-game fairness): red chunky sneakers were the loudest piece; black keeps the shape.
+      shoe('sneaker', '#26272B', { chunky: true, sole: WHITE_SOLE, laceColor: '#F2F1EC' })],
   ] },
   { style: 'minimalist', outfits: [
     [top('crew', '#E8E1D3', { fit: 'relaxed', details: { ...RIB } }),
@@ -54,6 +55,11 @@ export const LOOKS: readonly Look[] = [
       bottom('chinos', '#C9AE80', { fit: 'slim', hem: 'no_break', pattern: { type: 'twill' } }),
       shoe('sneaker', '#F6F5F1', { sole: WHITE_SOLE })],
   ] },
+  // Tailored (specs/tailored.md TL4, T94): a charcoal suit with black derbies; a navy suit with white leather sneakers.
+  { style: 'tailored', outfits: [
+    [top('blazer', '#3A3D44', { fit: 'regular' }), bottom('trousers', '#3A3D44', { fit: 'straight', hem: 'no_break' }), shoe('derby', '#1C1B1D')],
+    [top('blazer', '#1F2A44', { fit: 'regular' }), bottom('trousers', '#1F2A44', { fit: 'straight', hem: 'slight_break' }), shoe('sneaker', '#F6F5F1', { sole: WHITE_SOLE })],
+  ] },
   { style: 'workwear', outfits: [
     [top('overshirt', '#B08A55', { fit: 'relaxed', pattern: { type: 'twill' }, details: { chestPockets: 2, flaps: true } }),
       bottom('jeans', '#28344F', { fit: 'straight', hem: 'cuffed', wash: 'rinse', pattern: { type: 'twill' } }),
@@ -63,10 +69,12 @@ export const LOOKS: readonly Look[] = [
       shoe('work_boot', '#7C716B', { pattern: { type: 'suede' }, sole: '#A59C92' })],
   ] },
   { style: 'outdoor', outfits: [
-    [top('jacket', '#4F5B3A', { fit: 'relaxed', details: { fullZip: true } }),
+    // A slate-blue shell (#486): the olive zip jacket read as a field jacket or a bomber.
+    [top('jacket', '#3D5A73', { fit: 'relaxed', details: { fullZip: true } }),
       bottom('cargos', '#8A8C8F', { fit: 'relaxed', hem: 'slight_break' }),
       shoe('runner', '#5C5F63', { chunky: true, sole: '#D9D6CF' })],
-    [top('crew', '#D8D2C2', { fit: 'relaxed', pattern: { type: 'heather' }, details: { ribHem: true } }),
+    // A heather zip pullover, read as a fleece (#486): the plain cream crew was outdoor in nothing.
+    [top('quarter_zip', '#D8D2C2', { fit: 'relaxed', pattern: { type: 'heather' }, details: { ribHem: false } }),
       bottom('cargos', '#3F4134', { fit: 'relaxed', hem: 'cuffed' }),
       shoe('runner', '#C46A2C', { chunky: true, sole: '#2A2A2A' })],
   ] },
