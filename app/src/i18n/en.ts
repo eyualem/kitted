@@ -560,6 +560,8 @@ const addedInBuild = {
   'ask.card.colorsFor': 'Colors for the {piece}',
   'ask.card.goesWith': 'Goes with {color}',
   'ask.card.add.ask': 'Want me to add this to your closet?',
+  'ask.card.addKind': 'What kind of piece is it?',
+  'ask.card.addColor': 'What color is it?',
   'ask.card.add': 'Add',
   'ask.card.noThanks': 'No thanks',
   'ask.card.added': 'Added to Closet',

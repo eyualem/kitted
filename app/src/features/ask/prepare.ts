@@ -18,6 +18,7 @@ import { t } from '@/i18n/en';
 import { buildStylistContext } from './context';
 import { allowedForCard, allowedScores, buildEvidence, colorEvidence, parseLookup, routeOfLookup, shownCardLines, type EvidenceDeps } from './evidence';
 import { pricesIn } from './gate';
+import { planAdd } from './addCard';
 import { applyRemember } from './memory';
 import type { Prepared } from './pipeline';
 import { systemPrompt, userPrompt, type AppSwitches } from './prompt';
@@ -32,19 +33,32 @@ export interface PrepareDeps {
   log?: (line: string) => void;
 }
 
+/** What the pipeline knows of the question beyond its words: the card his tap answered, and when he asked. */
+export interface PrepareMeta {
+  tapOf?: string | null;
+  at?: number;
+}
+
 /** Which switchable parts of the app are live right now, read from the real switches (never a copy of a constant). */
 function liveSwitches(): AppSwitches {
   return { outfits: outfitsOn(), share: SHARE_CARD_BUILT, paywall: paywallOn(), accounts: settingsAccountOn() || accountsOn(), notifications: notificationsOn() };
 }
 
-export function createPrepare(deps: PrepareDeps): (question: string) => Promise<Prepared> {
+export function createPrepare(deps: PrepareDeps): (question: string, meta?: PrepareMeta) => Promise<Prepared> {
   const { store, clock } = deps;
-  return async (question) => {
-    const snap = await loadStylistSnapshot(store, clock);
-    const ctx = buildStylistContext(snap, question, { shownCards: shownCardLines(snap) });
+  return async (question, meta) => {
+    let snap = await loadStylistSnapshot(store, clock);
+    let ctx = buildStylistContext(snap, question, { shownCards: shownCardLines(snap) });
     const today = dayKey(snap.nowMs, snap.zone);
     const dayOf = (c: FitCheckRow) => ({ dow: localParts(c.createdAt, snap.zone).dow, today: c.dayKey === today });
     const route = routeQuestion(question, { closet: snap.closet, checks: snap.checks, context: ctx, dayOf });
+    // T106 (KC4): his mention or "add it", read by code before Kit answers. An explicit add is written here, so the pack
+    // and the gate below already know the piece.
+    const plan = await planAdd({ question, read: route.add ?? null, tapOf: meta?.tapOf ?? null, at: meta?.at ?? snap.nowMs, zone: snap.zone, store, deps: { store, clock, ids: deps.ids } });
+    if (plan.didAdd) {
+      snap = await loadStylistSnapshot(store, clock);
+      ctx = buildStylistContext(snap, question, { shownCards: shownCardLines(snap) });
+    }
     const marks = await getStarterMarks(store);
     const evDeps: EvidenceDeps = {
       readingOf: async (id) => (id ? (await store.readings.get(id))?.reading ?? null : null),
@@ -52,6 +66,7 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
     };
     // An unsure route sends the pack alone; the model may ask for one lookup (R3).
     const ev = route.sure ? await buildEvidence(route, snap, ctx, evDeps) : { text: '', kind: route.kind };
+    if (plan.evidence) ev.text = [ev.text, plan.evidence].filter(Boolean).join('\n');
     // "That score is wrong" about today's check (09 §20.8 G19): the answer gets its Not quite right?, and the model is
     // told the button is there so it can point to it.
     const correct = correctCard(route, ctx.handles, snap.checks, today);
@@ -72,6 +87,7 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
       pieces: gatePieces,
       allowedPrices: new Set([...pricesIn(ctx.text), ...pricesIn(ev.text)]),
       outfitsOn: outfitsOn(),
+      ...(plan.didAdd ? { didAdd: true } : {}),
       ...(col ? { allowedColors: col.allowed, ownColors: col.own } : {}),
     };
     return {
@@ -90,13 +106,21 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
           gate: { ...baseGate, allowedScores: allowedScores(ctx.text, ev2.text), allowedPrices: new Set([...pricesIn(ctx.text), ...pricesIn(ev2.text)]) },
         };
       },
-      card: async (raw, gate) => correct ?? buildCard(raw, {
+      rollback: plan.rollback,
+      payloadFor: (card) => (card && card === plan.card && plan.payload ? plan.payload : {}),
+      card: async (raw, gate) => {
+        // The add card (T106) is the code's, never the model's. A mention yields to a real card the model made for a
+        // question that came with it (one card per answer, KC1.2).
+        if (plan.card && !plan.yieldsToModel) return plan.card;
+        const made = correct ?? buildCard(raw, {
         handles: ctx.handles, closet: snap.closet, checks: snap.checks, styles: snap.profile?.styles ?? null, starterMarks: marks, gate,
         // KC3.3: a colors card is checked against the list even when the question wasn't detected as one.
         allowedColors: gate.allowedColors ?? allowedForCard(raw, snap, ctx, evDeps),
         // The same outfit isn't drawn twice in one chat day unless he asks again (KC2.6).
         shownToday: askedAgain(question) ? new Set<string>() : shownKeysToday(snap.chat, today, snap.zone),
-      }),
+        });
+        return plan.card && (!made || made.type === 'link') ? plan.card : made;
+      },
       remember: (raw, at) => applyRemember(raw, at, { store, clock, ids: deps.ids }),
       speak: (card) => cardSpoken(card, {
         nameOf: (id) => snap.closet.find((c) => c.id === id && !c.isDeleted)?.name ?? null,

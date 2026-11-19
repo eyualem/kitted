@@ -43,6 +43,10 @@ export interface Prepared {
   card?: (raw: unknown, gate: GateContext) => Promise<AskCard | null>;
   /** The model's remember, checked and saved (C4); the saved fact's id for "Saved · Undo", or null. */
   remember?: (raw: unknown, answerAt: number) => Promise<{ factId: string; itemId?: string } | null>;
+  /** T106: takes back a piece the code added before the answer, when the answer then failed or was refused. */
+  rollback?: (() => Promise<void>) | undefined;
+  /** T106: extra payload for Kit's row, by the card it shows (the add card's tap question keeps what it waits for). */
+  payloadFor?: (card: AskCard | null) => Record<string, unknown>;
   /** For the log: the router's kind (never his words). */
   kind?: string;
   /** The rules' verdict on the outfit he asked about (J5); an answer whose own verdict says the opposite loses its
@@ -67,7 +71,7 @@ export interface AskDeps {
   /** Picked per question (the demo's seeded answers, "coming soon", or the real model once CHAT_LIVE is on). */
   source: () => AnswerSource | Promise<AnswerSource>;
   /** The pack, route, evidence and prompt for a question (C2–C4). Without it: no prompt, nothing may be scored. */
-  prepare?: (question: string) => Promise<Prepared>;
+  prepare?: (question: string, meta?: { tapOf?: string | null; at?: number }) => Promise<Prepared>;
   /** The 6 s / 20 s first-word timers (07 §6.4). Without it: no timers (tests that don't test them). */
   scheduler?: Pick<Scheduler, 'setTimer' | 'clearTimer'>;
   /** His agreement to send to Google (mayUpload): questions go to the AI too (02 S26). */
@@ -258,7 +262,7 @@ export function createAsk(deps: AskDeps) {
     let gate: GateContext = NO_PREP.gate;
     const dropped: GateRule[] = [];
     try {
-      prep = deps.prepare ? await deps.prepare(question.text ?? '') : NO_PREP;
+      prep = deps.prepare ? await deps.prepare(question.text ?? '', { tapOf: typeof question.payload.tapOf === 'string' ? question.payload.tapOf : null, at: question.createdAt }) : NO_PREP;
       gate = prep.gate;
       const source = await deps.source();
       let r = await call(source, question, prep.prompt, gate, false, o.tap === true);
@@ -285,6 +289,8 @@ export function createAsk(deps: AskDeps) {
     const answer = text.trim();
     if (!failed && !done) failed = 'noDone';
     if (!failed && !answer) failed = dropped.length ? 'gated' : 'empty';
+    // An explicit add was written before the words; if no answer reached him with its `Added to Closet` card, it goes back.
+    if (failed || done?.refused) await prep.rollback?.().catch(() => {});
     const at = replaces?.createdAt ?? Math.max(clock.nowMs(), question.createdAt + 1);
     try {
       if (failed === 'gated' && dropped.some((rule) => BODY_RULES.has(rule))) {
@@ -343,6 +349,7 @@ export function createAsk(deps: AskDeps) {
       await store.chat.put(row(id, at, 'stylist', shown, {}, {
         answerTo: question.id, ...(done.refused ? { askRefused: true as const } : {}), ...(card ? { askCard: card } : {}),
         ...(followUps.length ? { followUps } : {}),
+        ...(prep.payloadFor?.(card) ?? {}),
         ...(saved ? { savedFact: saved.factId, ...(saved.itemId ? { savedPiece: saved.itemId } : {}) } : {}),
       }));
       if (counted) {
