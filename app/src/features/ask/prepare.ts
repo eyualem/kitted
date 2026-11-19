@@ -5,17 +5,22 @@ import { dayKey, localParts } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
 import type { FitCheckRow } from '@/data/types';
 import type { Clock } from '@/services/clock';
+import { SHARE_CARD_BUILT } from '@/config/features';
+import { accountsOn, settingsAccountOn } from '@/features/account/account';
+import { outfitsOn } from '@/features/closet/outfitsSwitch';
 import { isOwned } from '@/features/closet/profile';
+import { notificationsOn, paywallOn } from '@/features/paywall/switch';
 import { getStarterMarks } from '@/features/finish/service';
 import { askedAgain, buildCard, cardSpoken, correctCard, shownKeysToday } from './cards';
 import { displayScore } from '@/design-system/score';
 import { weekdayName } from '@/i18n/format';
 import { t } from '@/i18n/en';
 import { buildStylistContext } from './context';
-import { allowedScores, buildEvidence, parseLookup, routeOfLookup, type EvidenceDeps } from './evidence';
+import { allowedForCard, allowedScores, buildEvidence, colorEvidence, parseLookup, routeOfLookup, shownCardLines, type EvidenceDeps } from './evidence';
+import { pricesIn } from './gate';
 import { applyRemember } from './memory';
 import type { Prepared } from './pipeline';
-import { systemPrompt, userPrompt } from './prompt';
+import { systemPrompt, userPrompt, type AppSwitches } from './prompt';
 import { routeQuestion } from './router';
 import { loadStylistSnapshot } from './snapshot';
 
@@ -27,11 +32,16 @@ export interface PrepareDeps {
   log?: (line: string) => void;
 }
 
+/** Which switchable parts of the app are live right now, read from the real switches (never a copy of a constant). */
+function liveSwitches(): AppSwitches {
+  return { outfits: outfitsOn(), share: SHARE_CARD_BUILT, paywall: paywallOn(), accounts: settingsAccountOn() || accountsOn(), notifications: notificationsOn() };
+}
+
 export function createPrepare(deps: PrepareDeps): (question: string) => Promise<Prepared> {
   const { store, clock } = deps;
   return async (question) => {
     const snap = await loadStylistSnapshot(store, clock);
-    const ctx = buildStylistContext(snap, question);
+    const ctx = buildStylistContext(snap, question, { shownCards: shownCardLines(snap) });
     const today = dayKey(snap.nowMs, snap.zone);
     const dayOf = (c: FitCheckRow) => ({ dow: localParts(c.createdAt, snap.zone).dow, today: c.dayKey === today });
     const route = routeQuestion(question, { closet: snap.closet, checks: snap.checks, context: ctx, dayOf });
@@ -46,6 +56,9 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
     // told the button is there so it can point to it.
     const correct = correctCard(route, ctx.handles, snap.checks, today);
     if (correct) ev.text = [ev.text, 'Under your answer the app shows a "Not quite right?" button for this check: it lets him fix a piece the photo read wrong, and the check is scored again from that.'].filter(Boolean).join('\n');
+    // KC3.3: the colors the rules would not mark down, for a color question; the gate and the card check read the same list.
+    const col = colorEvidence(question, route, snap, ctx, evDeps);
+    if (col) ev.text = [ev.text, col.text].filter(Boolean).join('\n');
     deps.log?.(`route · ${route.kind}${route.sure ? '' : ' (unsure)'} · ${route.pieces.length} pieces${route.check ? ' · a check' : ''}${ev.text ? ' · evidence' : ''}`);
     const owned = snap.closet.filter((c) => isOwned(c) && !c.isDeleted && !c.mergedInto);
     const gatePieces = owned.map((c) => {
@@ -53,11 +66,19 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
       const str = (k: string) => (typeof g[k] === 'string' ? String(g[k]) : '');
       return { name: c.name, category: str('category'), subcategory: str('subcategory'), color: str('color_family'), leg: str('leg_shape') };
     });
+    const baseGate = {
+      allowedScores: allowedScores(ctx.text, ev.text),
+      pieceNames: snap.closet.map((c) => c.name),
+      pieces: gatePieces,
+      allowedPrices: new Set([...pricesIn(ctx.text), ...pricesIn(ev.text)]),
+      outfitsOn: outfitsOn(),
+      ...(col ? { allowedColors: col.allowed, ownColors: col.own } : {}),
+    };
     return {
       kind: route.kind,
       ...(ev.verdict ? { verdict: ev.verdict } : {}),
-      prompt: { system: systemPrompt(route.kind), user: userPrompt(ctx.text, ev.text, question) },
-      gate: { allowedScores: allowedScores(ctx.text, ev.text), pieceNames: snap.closet.map((c) => c.name), pieces: gatePieces },
+      prompt: { system: systemPrompt(route.kind, liveSwitches()), user: userPrompt(ctx.text, ev.text, question) },
+      gate: baseGate,
       lookup: async (need) => {
         const l = parseLookup(need, ctx.handles);
         if (!l) return null;
@@ -65,12 +86,14 @@ export function createPrepare(deps: PrepareDeps): (question: string) => Promise<
         const ev2 = await buildEvidence(r, snap, ctx, evDeps);
         if (!ev2.text) return null;
         return {
-          prompt: { system: systemPrompt(r.kind), user: userPrompt(ctx.text, ev2.text, question) },
-          gate: { allowedScores: allowedScores(ctx.text, ev2.text), pieceNames: snap.closet.map((c) => c.name), pieces: gatePieces },
+          prompt: { system: systemPrompt(r.kind, liveSwitches()), user: userPrompt(ctx.text, ev2.text, question) },
+          gate: { ...baseGate, allowedScores: allowedScores(ctx.text, ev2.text), allowedPrices: new Set([...pricesIn(ctx.text), ...pricesIn(ev2.text)]) },
         };
       },
       card: async (raw, gate) => correct ?? buildCard(raw, {
         handles: ctx.handles, closet: snap.closet, checks: snap.checks, styles: snap.profile?.styles ?? null, starterMarks: marks, gate,
+        // KC3.3: a colors card is checked against the list even when the question wasn't detected as one.
+        allowedColors: gate.allowedColors ?? allowedForCard(raw, snap, ctx, evDeps),
         // The same outfit isn't drawn twice in one chat day unless he asks again (KC2.6).
         shownToday: askedAgain(question) ? new Set<string>() : shownKeysToday(snap.chat, today, snap.zone),
       }),

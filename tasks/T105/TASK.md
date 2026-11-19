@@ -9,7 +9,8 @@
 - **Must not break:** T117's body rules (`bodyDecline`, `bodyGate`, `bodyTaps`), T102's card checks and repeat key, "the code judges, the AI explains", same photo same score.
 
 ## Built
-- **Changed:**
+- **Changed:** `gate.ts` (the cut, prices, color names, deny/claim/place/brand/price/color rules, the piece-name rewrite, more body words), `prompt.ts` (app map from the live switches, new answer rules, version 6, one example shortened), `context.ts` (today's cards block), `evidence.ts` (today's card lines, the allowed colors as evidence and for a colors card), `prepare.ts` (switches, cards, colors, prices into the gate), `pipeline.ts` (4 lines: the cut after the card is known), `rubric/stylist-guide.md` and `guide.generated.ts` (regenerated).
+- **Small deviations from IMPLEMENTATION.md:** (1) the rules say `<AppMap>`, not `<appmap>`: the tests read the first `<appmap>` in the system prompt as the map, so the rules text can't hold that exact tag. (2) `COLORING_BODY`'s complexion pattern skips "my complexion" so `kitFollowUps` (a merged test: the gate must not drop that tap) stays green; Kit's own sentences never say "my". (3) `colorEvidence` also runs for a question about his looks with color words ("does navy match my eyes") and, when no piece, kind or color is named, gives a one-line "no list" text plus the fixed coloring line (the KC3.5 test needs a non-null result). (4) A kind target reads "the <kind noun>" in the text (the Pack test pins it).
 - **Tests added:**
 - **Screenshots:** none (no screen changes)
 - **Not done or not checked:** the model-behavior halves of each criterion wait for T110's paid run (see TESTING.md → Not testable yet)
