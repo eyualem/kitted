@@ -44,9 +44,27 @@ So the literal words `Not the same` exist only on the Added sheet. On the card t
 | `Saved as its own piece: {item}.` · `Change` | after a new piece | existing (`closet.piece.splitOff`), now also used on the card |
 | `Tops`, `Bottoms`, `Shoes`, `Jackets and layers` | the grid's title | existing |
 | `Kept as a new piece.` | answers already given before this change | existing, kept so old answers still read |
+| `Something else` | the kind step's last row; opens the slot's full list of kinds (same title, Back returns to the 4) | **new** |
 | VoiceOver: `Back`; a tile's hint `Picks it`; `Selected` | | **new**, small |
 
 No emoji, no all-caps, no exclamation marks.
+
+## The new-piece path, step by step (page 2 of `design.html`)
+Frames: `design.html?page=2` (add `&theme=dark`), strips in `shots/new-piece-path-light.png` and `new-piece-path-dark.png`.
+1. **The card** with `Not the same`; nothing saved.
+2. **The sheet**, his tops first; he taps `It's a new piece` under them.
+3. **`What kind of piece is it?`** with the 4 nearest kinds (the read kind first) and, as the last row, **`Something else`**. I added this because 4 kinds will sometimes miss.
+4. **`Something else`** opens the slot's full list in the same sheet (same title, Back returns to the 4), drawn in the piece's color, 3 across. It should be the list `What it is → Kind` already uses on the piece page, so there is one list per slot, not three. If the founder prefers, the alternative is to skip this and rely on changing the kind later on the piece page; I recommend the row, because it keeps him from leaving the sheet to fix a wrong kind.
+5. **A kind tapped.** The tapped kind is selected and the rest dim and stop taking taps (the double-tap guard). The write is local, so the saving state is a blink and the sheet closes when it lands. If the write fails the sheet stays open with the selection cleared (no new words drawn; a failure line, if wanted, reuses the app's existing could-not-save wording).
+6. **Back on the card:** `Saved as its own piece: grey sweater.` · `Change`.
+7. **`Change`** works as it does today: the question comes back with his earlier answer marked (`Not the same` selected). Nothing is undone yet. Tapping `Not the same` again reopens the sheet, and the earlier answer is replaced only when he picks something new there (a piece, or another kind). `Yes, same one` and `It's my {item}` answer at once, replacing it.
+8. **In Closet** the piece is a **solid** tile (not the dashed "no photo" one), because it came from his photo (`isPhotographed`); dashed stays for pieces he only described in chat. It is named `Grey sweater` (the confirmed kind), leads its section (newest first), and has no `New` mark (that is only for his first Closet visit).
+
+New pass/fail checks:
+- **NS14** The kind step's last row is `Something else`; it opens the slot's full list of kinds, the same list the piece page's `What it is → Kind` offers for that slot, with Back to the 4.
+- **NS15** After a kind is tapped, the other kinds stop taking taps until the write lands or fails; a failed write leaves the sheet open with nothing selected and nothing saved.
+- **NS16** `Change` on the new-piece line shows the question with `Not the same` marked and changes nothing; the earlier save is replaced only by a new choice.
+- **NS17** The new piece appears in Closet as a solid (photographed) tile, named with the confirmed kind, first in its section.
 
 ## States
 Opening (the same slot's pieces load from the phone, so none) · pick list · a piece selected with its comparison · kind step · empty (straight to the kind step) · saving (the tap is guarded against a double tap; the sheet closes on the write) · closed without choosing · the piece or check was removed meanwhile (the existing `Gone` sheet). Largest text: the grid is 2 across, the kind options 1 across, the comparison pictures stack, and the sheet opens at large only.
