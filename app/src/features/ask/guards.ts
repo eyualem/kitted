@@ -6,7 +6,7 @@
 //     old?", "Is my stomach ok?", "Do you like my face?"). A clothes question with a body word in it ("Am I too skinny
 //     for oversized stuff?", "Do I look old in this jacket?") goes to the model, which answers the clothes part
 //     (07 §2.2). "this", "that", "it" are not garments: "in this" after an attractiveness ask ("Am I good looking in
-//     this?") still refuses; after any other ("Do I look fat in this?") the model answers (T115).
+//     this?") still refuses; after any other ("Do I look fat in this?") the model answers (T117).
 
 /** Lowercase, straight apostrophes, no punctuation but the apostrophe, one space between words. */
 export function normalizeQuestion(text: string): string {
@@ -43,7 +43,7 @@ const BODY_PARTS = "(?:face|body|looks|physique|jawline|appearance|smile|hair|ha
 const PART_VERDICT = "(?: (?:too )?(?:good|bad|ok|okay|fine|alright|normal|weird|attractive|ugly|big|showing|noticeable|visible|receding|thinning))?";
 /** His age or a plain verdict on him, with no garment: "Do I look old?", "Do I look 30?", "Do I look good?". */
 const AGE_OR_VERDICT = "(?:(?:too )?(?:old|older|young|younger|good|bad|my age)|(?:about |like )?\\d{1,2})";
-/** Attractiveness words: only these may take an "in this / in that / in it" tail (T115). */
+/** Attractiveness words: only these may take an "in this / in that / in it" tail (T117). */
 const ATTRACT = "(?:ugly|hot|attractive|unattractive|good looking|handsome|cute|sexy)";
 const IN_THIS = "(?: in (?:this|that|it))?";
 const whole = (core: string) => new RegExp(`^${LEAD}(?:${core})${TAIL}$`);

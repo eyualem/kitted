@@ -66,6 +66,10 @@ export interface RubricEngine {
   askQuestion(reading: Reading, opts?: ScoreOptions, shoes?: boolean): TapQuestion | null;
   /** rubric.detect_styles on already-scored garments (see scoredGarments). */
   detectStyles(garments: readonly Garment[], picks?: Styles | null): DetectedStyles;
+  /** T94: the 8 looks (the 7 plus Tailored) and TL2's label, on already-scored garments. */
+  detectLooks(garments: readonly Garment[], picks?: Styles | null): DetectedStyles;
+  /** T94: TL1 on already-scored garments. */
+  isTailored(garments: readonly Garment[]): boolean;
   /** The garments score() judges: filtered, leg aliases normalized, open shirts over a top re-filed as layers. */
   scoredGarments(reading: Reading): Garment[];
   /** rubric.bands_for: the default band first, then each detected style's band (leg as LEG_ORDER indices). */
@@ -218,6 +222,10 @@ export function createRubric(data: RubricData): RubricEngine {
   const PREP_HOME_SHOES = D("PREP_HOME_SHOES"), PREP_VETO = D("PREP_VETO"), PREP_CASUAL_TOPS = D("PREP_CASUAL_TOPS");
   const SC_ANCHOR_UP = D("SC_ANCHOR_UP"), SC_HOME_UP = D("SC_HOME_UP"), SC_ANCHOR_SHOES = D("SC_ANCHOR_SHOES"), SC_VETO = D("SC_VETO");
   const JEANS_FAMILY = D("JEANS_FAMILY"), DARK_NONDENIM = D("DARK_NONDENIM");
+  // T94: Tailored, the 8th look: a name only (never in STYLE_ORDER, so no number can read it). TL_SIGNATURE_UP = TL_JACKET.
+  const TL_JACKET = D("TL_JACKET"), TL_TROUSERS = D("TL_TROUSERS"), TL_NEVER = D("TL_NEVER"), TL_HOME_UP = D("TL_HOME_UP");
+  const TL_SIGNATURE_SHOES = D("TL_SIGNATURE_SHOES"), TL_HOME_SHOES = D("TL_HOME_SHOES");
+  const LOOK_ORDER = data.styles.lookOrder;
 
   const R = {
     F4: rule("F4_pooling"), F4d: rule("F4_hem_drags_over_slides"), F4b: rule("F4b_full_break_narrow_leg"), F7: rule("F7_care"),
@@ -471,6 +479,16 @@ export function createRubric(data: RubricData): RubricEngine {
   const gateSc: Gate = (c, slots, total) =>
     ((slots.get("upper") ?? 0) > 0 || (slots.get("bottom") ?? 0) === 2) && total >= (c.shoes ? 4 : 3);
 
+  // T94 (TL1): signature 2 (the jacket, dress trousers, the dressy shoes), home 1; nothing against it (the never-list vetoes).
+  const roleTailored: Role = (g) => {
+    const s = g.subcategory, cat = g.category;
+    if (cat === "top" || cat === "outerwear") return [TL_JACKET.has(s) ? 2 : TL_HOME_UP.has(s) ? 1 : 0, 0];
+    if (cat === "bottom") return [TL_TROUSERS.has(s) ? 2 : 0, 0];
+    return [TL_SIGNATURE_SHOES.has(s) ? 2 : TL_HOME_SHOES.has(s) ? 1 : 0, 0];
+  };
+  // The framework's entry calls the one definition (isTailored below), so evaluate("tailored", c) always equals it.
+  const vetoTailored: Veto = (c) => !isTailoredOutfit(c);
+
   const STYLES: Record<DetectedStyle, { role: Role; veto: Veto; gate?: Gate; bonus?: (c: Outfit) => readonly [number, boolean] }> = {
     streetwear: { role: roleStreet, veto: vetoStreet, gate: gateStreet },
     workwear: { role: roleWork, veto: vetoWork },
@@ -479,7 +497,19 @@ export function createRubric(data: RubricData): RubricEngine {
     minimalist: { role: roleMin, veto: vetoMin, bonus: bonusMin },
     classic_prep: { role: rolePrep, veto: vetoPrep },
     smart_casual: { role: roleSc, veto: vetoSc, gate: gateSc },
+    tailored: { role: roleTailored, veto: vetoTailored }, // never in STYLE_ORDER; detection is isTailored
   };
+
+  /** rubric.is_tailored (specs/tailored.md TL1), the one definition (log #495): among the main pieces a tailored jacket
+   *  and dress trousers, nothing on the never-list (T69's TL_NEVER), nothing at roominess 5. Called by detectLooks (the
+   *  names) and by parts.ts gradedLooks (the look v16's taste rules follow). */
+  function isTailoredOutfit(c: Outfit): boolean {
+    return anyIn(c.subs, TL_JACKET) && anyIn(c.subs, TL_TROUSERS) && !anyIn(c.subs, TL_NEVER) && c.main.every((g) => vol(g, 3) < 5);
+  }
+
+  function isTailored(garments: readonly Garment[]): boolean {
+    return isTailoredOutfit(outfitOf(garments));
+  }
 
   function evaluate(style: DetectedStyle, c: Outfit): boolean {
     const st = STYLES[style];
@@ -515,8 +545,13 @@ export function createRubric(data: RubricData): RubricEngine {
     return c.outer.some((o) => SEPARATE_JACKETS.has(o.subcategory)) && (c.bsub === "chinos" || c.bsub === "jeans");
   }
 
-  function label(detected: readonly DetectedStyle[], c: Outfit, picks: Map<string, number>): DetectedStyle | null {
+  function label(detected: readonly DetectedStyle[], c: Outfit, picks: Map<string, number>,
+    order: readonly DetectedStyle[] = STYLE_ORDER): DetectedStyle | null {
     const cs = new Set<DetectedStyle>(detected);
+    if (cs.has("tailored")) { // TL2: Tailored wins over smart casual and prep, whatever his picks
+      cs.delete("smart_casual");
+      cs.delete("classic_prep");
+    }
     const drop = (loser: DetectedStyle, winner: DetectedStyle) => {
       if (cs.has(loser) && cs.has(winner)) cs.delete(loser);
     };
@@ -541,7 +576,7 @@ export function createRubric(data: RubricData): RubricEngine {
     if (cs.has("minimalist") && cs.has("classic_prep") && families(c.main).size <= 2 && LOOSE.includes(c.leg)) {
       drop("classic_prep", "minimalist");
     }
-    const ranked = STYLE_ORDER.filter((s) => cs.has(s));
+    const ranked = order.filter((s) => cs.has(s));
     if (ranked.length > 1 && picks.size > 0) {
       const pw = new Map<string, number>();
       for (const [k0, v] of picks) {
@@ -565,6 +600,16 @@ export function createRubric(data: RubricData): RubricEngine {
 
   function detectStyles(garments: readonly Garment[], picks?: Styles | null): DetectedStyles {
     return detectWith(outfitOf(garments), stylesMap(picks));
+  }
+
+  /** rubric.detect_looks (T94): the 7 exactly as detectStyles, plus Tailored, in LOOK_ORDER; TL2's label. Names only. */
+  function looksWith(c: Outfit, picks: Map<string, number>): DetectedStyles {
+    const detected = LOOK_ORDER.filter((s) => (s === "tailored" ? isTailoredOutfit(c) : evaluate(s, c)));
+    return { detected, label: label(detected, c, picks, LOOK_ORDER) };
+  }
+
+  function detectLooks(garments: readonly Garment[], picks?: Styles | null): DetectedStyles {
+    return looksWith(outfitOf(garments), stylesMap(picks));
   }
 
   /** v4.1 (#186): wide legs aren't "too wide" when they're jeans or cargos, or when the top half is close or short
@@ -672,7 +717,8 @@ export function createRubric(data: RubricData): RubricEngine {
 
     // ---- what the outfit is going for (detected in code; widens what's allowed, never adds a penalty)
     const outfit = outfitOf(garments);
-    const { detected: det, label: styleLabel } = detectWith(outfit, picks);
+    const { detected: det } = detectWith(outfit, picks);
+    const looks = looksWith(outfit, picks);
     const occFirst = OCCASION_FIRST.has(occasion);
     const street = det.includes("streetwear");
     const vintage = det.includes("vintage_sport");
@@ -1017,8 +1063,8 @@ export function createRubric(data: RubricData): RubricEngine {
       advice,
       partial: notRated.length > 0,
       notRated,
-      detectedStyles: det,
-      styleLabel,
+      detectedStyles: looks.detected, // T94: the outputs name the 8 looks; every number above read detectWith (the 7)
+      styleLabel: looks.label,
     };
   }
 
@@ -1157,7 +1203,7 @@ export function createRubric(data: RubricData): RubricEngine {
   };
 
   return {
-    data, score, askQuestion, detectStyles, scoredGarments, bandsFor, bandSteps, formality, fam, isBright, legIndex,
+    data, score, askQuestion, detectStyles, detectLooks, isTailored, scoredGarments, bandsFor, bandSteps, formality, fam, isBright, legIndex,
     legOrder: LEG_ORDER, occasionTarget, neutrals: NEUTRALS, loungeOk: LOUNGE_OK, helpers,
   };
 }
@@ -1211,6 +1257,16 @@ export function askQuestion(reading: Reading, opts: ScoreOptions = {}, shoes = t
 /** rubric.detect_styles() on a reading: what it reads as, and the card label (null = the general standard). */
 export function detectStyles(reading: Reading, picks?: Styles | null): DetectedStyles {
   return defaultRubric.detectStyles(defaultRubric.scoredGarments(reading), picks);
+}
+
+/** T94: the 8 looks on a reading (like detectStyles), with TL2's label. */
+export function detectLooks(reading: Reading, picks?: Styles | null): DetectedStyles {
+  return defaultRubric.detectLooks(defaultRubric.scoredGarments(reading), picks);
+}
+
+/** T94: TL1 on already-scored garments. */
+export function isTailored(garments: readonly Garment[]): boolean {
+  return defaultRubric.isTailored(garments);
 }
 
 export function isScored(r: RubricResult): r is import("./types").ScoredResult {

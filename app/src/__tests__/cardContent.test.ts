@@ -82,10 +82,10 @@ describe('summaries', () => {
 describe('"Reads as" (02 "S6s", #85): the look the card names, from core styleLabel, on every re-score', () => {
   const readsAs = (id: string, styles: Styles = []) =>
     evaluateCheck({ reading: r(id), occasion: 'everyday', styles, boldness: null, closet: [], firstCheck: false }).row.details.readsAs;
-  it('the demo set with no picks: minimal, smart casual or none', () => {
+  it('the demo set with no picks: minimal, smart casual, tailored (T94: the navy suit) or none', () => {
     expect(['p01a', 'p01b', 's25', 's14'].map((id) => readsAs(id))).toEqual(['minimalist', 'minimalist', 'minimalist', 'minimalist']);
     expect(['s10', 's15', 's22'].map((id) => readsAs(id))).toEqual(['smart_casual', 'smart_casual', 'smart_casual']);
-    expect(['s05', 's09', 's12', 's13', 's24'].map((id) => readsAs(id))).toEqual([null, null, null, null, null]);
+    expect(['s05', 's09', 's12', 's13', 's24'].map((id) => readsAs(id))).toEqual([null, 'tailored', null, null, null]);
   });
   it('a pick breaks a tie between two looks that both fit (p01b: minimal and smart casual)', () => {
     expect(readsAs('p01b', [['smart_casual', 1]])).toBe('smart_casual');

@@ -12,9 +12,13 @@ name: T39 · setup, offer and Style profile screens
     env:
       SCREEN: "2"
 - extendedWaitUntil:
-    visible: "What's your style\\?"
+    visible: "Is this your style\\?"
     timeout: 90000
-- assertVisible: "Pick up to 3 looks you like\\. Today's outfit comes next\\."
+# T113: screen 2 is the style game's card 1 (seed 42); the grid's title and line are gone.
+- assertVisible: "One outfit at a time\\."
+- assertNotVisible: "Me or not me\\?"
+- assertVisible: "Outfit 1 of 8, view 1 of 2\\. .*"
+- assertNotVisible: "What's your style\\?"
 - assertNotVisible: "Kit: .*"
 - assertNotVisible: "Pick by name instead"
 - assertVisible: "Step 2 of 3"
@@ -39,6 +43,11 @@ name: T39 · setup, offer and Style profile screens
 - assertVisible:
     text: "Continue"
     enabled: false
+# #506: a small Skip that waits for an age (the hint is hidden from VoiceOver; the render tests check it).
+- assertVisible:
+    text: "Skip"
+    enabled: false
+- assertNotVisible: "First name \\(optional\\)"
 - assertNotVisible: "Kit: .*"
 - assertNotVisible: "Birth year"
 - assertNotVisible: "Kitted is for 18 and up\\. It never changes your score\\."
@@ -61,6 +70,8 @@ name: T39 · setup, offer and Style profile screens
     text: "Continue"
     enabled: true
 - assertNotVisible: "Pick your age to go on\\."
+# #506: with a name (Alex) there's no Skip.
+- assertNotVisible: "Skip"
 
 # 136 · Restore
 - runFlow:
@@ -75,6 +86,8 @@ name: T39 · setup, offer and Style profile screens
 - assertNotVisible: "What should Kit call you\\?"
 - assertNotVisible: "Kit: .*"
 - assertNotVisible: "Step .* of .*"
+# #506: Restore asks the age only, so no Skip.
+- assertNotVisible: "Skip"
 
 # 280 · Kit's offer
 - runFlow:

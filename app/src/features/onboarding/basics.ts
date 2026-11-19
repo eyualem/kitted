@@ -12,6 +12,10 @@ import { picksToStyles } from './looks';
 export const LOOKS_KEY = 'onboarding.looks';
 export const OTHER_STYLE_KEY = 'onboarding.otherStyle';
 export const BASICS_KEY = 'onboarding.basics';
+/** SG8 (T113): the looks he said Not me to (a JSON array of look keys), saved on Continue, kept after setup, synced. */
+export const NOT_ME_KEY = 'looks.notMe';
+/** The style game's results draft (local): written while he is on Here's your style, so a close reopens it (SG8). */
+export const GAME_DRAFT_KEY = 'onboarding.styleGame';
 
 export type FitPref = 'fitted' | 'regular' | 'relaxed';
 export const FITS: readonly FitPref[] = ['fitted', 'regular', 'relaxed'];

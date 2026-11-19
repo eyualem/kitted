@@ -21,6 +21,8 @@ interface Expect {
   cond_deduction?: number; cond_tips?: string[]; floored?: boolean; bonus?: number; penalty?: number;
   /** v10: the fix engine's Next level / tip line (no points): its id, a substring of its line, or an id it must not be. */
   fix_tip?: string; fix_tip_line?: string; fix_tip_lacks?: string;
+  /** T94 (TLR-6): the fix engine's fixes for the case, their ids in order. */
+  fix_order?: string[];
 }
 interface Case {
   id: string; rule: string; what: string; reading: Reading; occasion: string; styles: [string, number][];
@@ -30,7 +32,7 @@ interface Case {
   vs: { case: string; parts?: Record<string, number>; overall?: number | "up" | "down" | "same" } | null;
   future: string[]; kd: string | null;
   python: { overall: number | null; reason?: string; raw_score?: number; parts?: Record<string, number | null>;
-    detected_styles?: string[]; style_label?: string | null; next_level?: { id: string; line: string } | null };
+    detected_styles?: string[]; style_label?: string | null; next_level?: { id: string; line: string } | null; fix_order?: string[] };
 }
 interface Conformance { parts_version: string; engine: string; bands: [number, string][]; counts: { cases: number; rules: number };
   /** T69: v16's band table (3-4.5 has its own word). */
@@ -54,6 +56,10 @@ const results = new Map<string, PartsResult>(D.cases.map((c) => [c.id, run(c)]))
 
 /** The fix engine's Next level / tip line for a case (no closet, not a warm day, not the first check). */
 const fixNextLevel = (c: Case) => suggestPartsFixes(c.reading, optsOf(c), { parts: isV16(c) ? V16 : V15 }).nextLevel;
+
+/** T94: the fix engine's fixes for a case, in order (ids). */
+// on the case's own engine, like fixNextLevel (T94 after T69, Disputes 4: the default engine is v16 now)
+const fixOrder = (c: Case) => suggestPartsFixes(c.reading, optsOf(c), { parts: isV16(c) ? V16 : V15 }).fixes.map((f) => f.id);
 
 const partsOf = (r: PartsResult): [string, PartResult][] => Object.entries(r.parts ?? {}) as [string, PartResult][];
 const reasons = (r: PartsResult, part?: string) =>
@@ -121,6 +127,10 @@ function check(c: Case, r: PartsResult): string[] {
       bad.push(`fix tip line ${nl?.line} lacks '${e.fix_tip_line}'`);
     if (e.fix_tip_lacks !== undefined && nl?.id === e.fix_tip_lacks) bad.push(`fix tip ${e.fix_tip_lacks} shown`);
   }
+  if (e.fix_order !== undefined) {
+    const got = fixOrder(c);
+    if (JSON.stringify(got) !== JSON.stringify(e.fix_order)) bad.push(`fixes ${JSON.stringify(got)} != ${JSON.stringify(e.fix_order)}`);
+  }
   if (c.vs) {
     const b = results.get(c.vs.case)!;
     for (const [k, d] of Object.entries(c.vs.parts ?? {})) {
@@ -164,7 +174,10 @@ describe("rules conformance (rubric/v5-styles.md)", () => {
     expect(need.filter((r) => !v16Rules.has(r))).toEqual([]);
     expect(new Set(v16.map((c) => c.season ?? null))).toEqual(new Set([null, "warm"]));
     // the v15 cases are all still there, on their own engine (their numbers: v15Unchanged.test.ts)
-    expect(D.cases.filter((c) => !isV16(c)).length).toBe(501);
+    // T94 (merged after T69, Disputes 4): T69's 501 v15 cases, plus T94's 26 Tailored (TLR-*) cases on v15
+    expect(D.cases.filter((c) => !isV16(c) && !c.rule.startsWith("TLR-")).length).toBe(501);
+    expect(D.cases.filter((c) => !isV16(c) && c.rule.startsWith("TLR-")).length).toBe(26);
+    expect(D.cases.filter((c) => !isV16(c)).length).toBe(527);
     expect(D.cases.filter((c) => c.engine !== undefined && c.engine !== "v15" && c.engine !== "v16")).toEqual([]);
     // v16's bands: 3-4.5 has its own word, then the five of today
     expect(D.bands_v16?.map(([top]) => top).slice(0, 5)).toEqual([4.5, 5.5, 6.5, 7.5, 8.5]);
@@ -226,6 +239,7 @@ describe("rules conformance (rubric/v5-styles.md)", () => {
           const nl = fixNextLevel(c);
           expect(nl === null ? null : { id: nl.id, line: nl.line }).toEqual(c.python.next_level === null ? null : { id: c.python.next_level.id, line: c.python.next_level.line });
         }
+        if (c.python.fix_order !== undefined) expect(fixOrder(c)).toEqual(c.python.fix_order);
       }
     });
   }

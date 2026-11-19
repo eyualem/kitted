@@ -34,13 +34,14 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 K = HERE.parent
+DATA = Path(os.environ.get("KITTED_DATA", K))   # git-ignored inputs/ and phone pulls (main checkout; T94's path fix)
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE / "rubrics"))
 import rubric as R  # noqa: E402  v4.1, the live rubric
 import parts_proto as P  # noqa: E402
 
 CORPUS = Path("results/parts1/corpus.json")
-PULL = K / "screenshots/phone/20261010-185554/SQLite/kitted.db"
+PULL = DATA / "screenshots/phone/20261010-185554/SQLite/kitted.db"
 OUT = HERE / "results" / "parts1"
 PROFILE = R.parse_styles("minimalist:0.5,smart_casual:0.5")      # the stated test profile (b1's)
 BOLD = "a_little"
@@ -127,7 +128,7 @@ def person_map():
 
 
 PERSON = person_map()
-TRUTH_SHOE = {r["photo"]: r["truth_type"] for r in csv.DictReader(open(K / "inputs/phone-oct8/truth.csv"))
+TRUTH_SHOE = {r["photo"]: r["truth_type"] for r in csv.DictReader(open(DATA / "inputs/phone-oct8/truth.csv"))
               if r["slot"] == "footwear" and r["truth_type"]}
 
 
@@ -365,12 +366,12 @@ def main():
 
     # =========================== (c) JUDGE PILOT
     say("\n(c) AGAINST THE JUDGE PILOT (panel = median of 5 judges' weighted totals; parts = median of judges)")
-    man = json.load(open(K / "inputs/judge-pilot/manifest.json"))
+    man = json.load(open(DATA / "inputs/judge-pilot/manifest.json"))
     W = {"fit": .25, "proportion": .25, "color": .15, "shoes": .15, "cohesion": .15, "condition": .05}
     judges = {}
-    for f in sorted(os.listdir(K / "inputs/judge-pilot")):
+    for f in sorted(os.listdir(DATA / "inputs/judge-pilot")):
         if f.startswith("judge-") and f.endswith(".csv"):
-            judges[f[6:-4]] = {r["id"]: r for r in csv.DictReader(open(K / "inputs/judge-pilot" / f))}
+            judges[f[6:-4]] = {r["id"]: r for r in csv.DictReader(open(DATA / "inputs/judge-pilot" / f))}
 
     def num(v):
         try:

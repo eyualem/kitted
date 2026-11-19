@@ -7,7 +7,7 @@ export const RUBRIC_DATA: RubricData = {
  "engine": 5,
  "minAppBuild": 1,
  "source": "extraction-test/rubric.py",
- "rubricSha256": "0da19bc2ee0e178e816565c131c9107dae00a6a676761f18206f9b58f676a9a5",
+ "rubricSha256": "c8d308d74134142c831af8d1311799f343e47ef6d209d7c302961fb634bb1b6b",
  "config": {
   "minAge": 18,
   "freeChecksPerDay": 1,
@@ -453,11 +453,22 @@ export const RUBRIC_DATA: RubricData = {
    "minimalist",
    "smart_casual"
   ],
+  "lookOrder": [
+   "vintage_sport",
+   "outdoor",
+   "workwear",
+   "streetwear",
+   "tailored",
+   "classic_prep",
+   "minimalist",
+   "smart_casual"
+  ],
   "names": {
    "vintage_sport": "vintage sport",
    "outdoor": "outdoor",
    "workwear": "workwear",
    "streetwear": "streetwear",
+   "tailored": "tailored",
    "classic_prep": "classic prep",
    "minimalist": "minimal",
    "smart_casual": "smart casual"
@@ -790,6 +801,55 @@ export const RUBRIC_DATA: RubricData = {
     "black",
     "charcoal",
     "navy"
+   ],
+   "TL_JACKET": [
+    "blazer",
+    "sport_coat",
+    "suit_jacket",
+    "unstructured_blazer"
+   ],
+   "TL_TROUSERS": [
+    "suit_trousers",
+    "trousers"
+   ],
+   "TL_NEVER": [
+    "athletic_shorts",
+    "basketball_sneaker",
+    "cargos",
+    "chinos",
+    "chunky_sneaker",
+    "fleece",
+    "graphic_tee",
+    "hoodie",
+    "jeans",
+    "jersey",
+    "joggers",
+    "performance_runner",
+    "shorts",
+    "slides_sandals",
+    "sweatpants",
+    "sweatshirt",
+    "tank_top",
+    "track_pants",
+    "work_boot"
+   ],
+   "TL_HOME_UP": [
+    "dress_shirt",
+    "knit_polo",
+    "overcoat",
+    "oxford_shirt",
+    "sweater",
+    "tee"
+   ],
+   "TL_SIGNATURE_SHOES": [
+    "chelsea_boot",
+    "derby",
+    "dress_shoe",
+    "loafer"
+   ],
+   "TL_HOME_SHOES": [
+    "low_profile_sneaker",
+    "white_leather_sneaker"
    ]
   }
  },

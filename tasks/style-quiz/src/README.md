@@ -16,6 +16,7 @@ private preview link.
 | `logic.js` | the 8 looks' names and lines, the order the cards come in, how each game (A bracket, B threes, D Me / Not me + rank) turns taps into a top 3 | the fairness work (`style-game-fair` in plan.md) |
 | `drawings.ts` → `drawings.json` | each look's two outfits, drawn by the app's own code (`app/src/features/onboarding/looks.ts` and `closet/flats.ts`), plus Tailored's two suits | the fairness work |
 | `../quiz_sim.py` | the $0 simulation of each game | the fairness work |
+| `../flow_sim.py` | the $0 flow test: each kind of person and each slip, through to what he saves on the results screen, with and without the safety nets (`--quick` while iterating) | the flow test (`style-flow-test`, T111) |
 | `page.html` | the page's CSS (the app's colors as tokens, light and dark) and the words around the phones | the design work (`style-game-design`) |
 | `views.js` | every screen inside the phones, the gestures (swipe, drag), the page's tabs and theme switch | the design work |
 

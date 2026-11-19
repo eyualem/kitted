@@ -1,4 +1,4 @@
-# T115 · Testing contract (strict)
+# T117 · Testing contract (strict)
 
 Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 

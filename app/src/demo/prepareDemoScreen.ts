@@ -13,6 +13,7 @@ import type { OccasionKey, StyleKey } from '@/data/types';
 import { WEATHER_PERMISSION_KV } from '@/services/weather';
 import { completeOnboarding, giveConsent } from '@/features/onboarding/complete';
 import { finishSetup, saveAbout } from '@/features/onboarding/aboutStep';
+import { endStyleGame, seedStyleGameForDemo } from '@/features/onboarding/styleGameSession';
 import { LOOKS_KEY } from '@/features/onboarding/basics';
 import { declineAgreement, tapLater } from '@/features/onboarding/firstCheckOffer';
 import { picksToStyles } from '@/features/onboarding/looks';
@@ -324,6 +325,12 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   // T39: after the agreement, the first check the story screens 150–162 use.
   283: { steps: [FIRST_CHECK] },
   291: { steps: [FIRST_CHECK] },
+  // T94: a navy suit (s09). 294: the card, Going for his first pick (minimal) says what it reads as; 295: How I scored;
+  // 296: the wait, with Tailored his first pick from setup.
+  294: { steps: [GF_LOOKS, { at: '2026-10-22T07:42:00', do: 'check', photoId: 's09', occasion: 'everyday' }] },
+  295: { steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 's09', occasion: 'everyday' }] },
+  296: { steps: [{ at: '2026-10-22T07:41:00', do: 'looks', styles: ['tailored', 'classic_prep', 'minimalist'] },
+    { at: '2026-10-22T07:42:00', do: 'check', photoId: 's09', occasion: 'everyday', hold: 0.86 }] },
   // T35 (SY2.8): Closet right after that first check (its first visit), and Closet once that visit is over.
   285: { steps: [FIRST_CHECK] },
   286: { steps: [FIRST_CHECK, { at: '2026-10-22T07:45:00', do: 'firstVisitDone' }] },
@@ -366,6 +373,8 @@ async function playStory(sc: ScreenScenario): Promise<void> {
   setTimerOverride({});
   liveAnswer.clear();
   await store.wipe();
+  // The style game lives in memory (T113): every demo screen starts without one, or with its own below.
+  endStyleGame();
   for (const k of Object.keys(demoLinkIds)) delete demoLinkIds[k];
   const story = STORY[sc.n] ?? { steps: [] };
   const args = getDemoArgs();
@@ -388,6 +397,8 @@ async function playStory(sc: ScreenScenario): Promise<void> {
   }
   // T39: About you's draft (screen 4), and his name and band on Style profile (284).
   if (sc.about) await saveAbout(store, sc.about);
+  // T113: the style game's session for its demo screens (2, 320–333).
+  if (sc.styleGame) await seedStyleGameForDemo(store, sc.styleGame);
   if (sc.profilePatch) {
     const p = await store.profile.get('me');
     if (p) await store.profile.put({ ...p, ...sc.profilePatch });

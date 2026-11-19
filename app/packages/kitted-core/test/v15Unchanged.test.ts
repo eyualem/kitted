@@ -16,10 +16,48 @@ import { join } from "node:path";
 import { FIXTURES, loadJSON } from "./helpers";
 import { canon, R, sha256, stripDefaults } from "./t69";
 
+// T69's whole-case pins at a2480b09 (before T69 and T94); since T94 the check below uses NAMES15* and H94*.
 const H15P = "a8b3c28cd3981000874d85db4c1749505f587ae671eff9de1b64db1a2c2358b9"; // 12,021 cases at a2480b09
 const H15F = "e427e6b26b34fa264d70c742837b0be106d029b416e5718ccab9b8acf8754251"; // 30,412 cases
 const H15C = "60dac8e76a6aa7a02b903becbc9f9ec60bfb55918c6bb3b52e1e8ce165313dbe"; // 501 cases
 const N15P = 12021, N15F = 30412, N15C = 501;
+// T94 (Tailored, merged after T69; T94's TESTING.md Disputes 4). T94 renames looks in v15 outputs (TL2: "reads as
+// tailored", style_label "tailored", "tailored" among the detected looks) and adds v15 cases (a Tailored picks variant,
+// 26 TLR conformance cases), so the hashes above, taken over whole cases, can't hold. Two hashes keep the guarantee:
+// - NAMES: the same pre-T69 v15 cases (T94's additions left out) with every look name masked, "tailored" dropped from the
+//   look lists and the label left out, hash to what a2480b09's do under the same mask: no number, check, tip or other
+//   word of v15 moved, through T69 and T94 together;
+// - H94: every v15 case, exactly, hashes to what T94's fixtures gave before T69 merged (27f02eed): merging T69 changed
+//   nothing of v15, names included.
+// Computed by T94's test writer from `git show a2480b09:` and `git show 27f02eed:` with the code below (Nov 18).
+const NAMES15P = "53399894a827d7106bee844110b6bdce3e22109a42735601858828c657b80351";
+const NAMES15F = "1b2c57761080eb70e1e226096112737efc12fd159329a78a5781cef0a4457dfd";
+const NAMES15C = "0d5bd01f7a84f64a4b4fec5377e77568f912ac5769af4524dd982f82800aa7cf";
+const H94P = "fe3224095ca0260933b7d924f3ab018f18875181999fb567ffae497432464e26"; // 12,549 cases at 27f02eed
+const H94F = "ffb0af816c90fd9f24c74d51197753b93fa82f2c86a01bb05d981c263ec8ea60"; // 31,183 cases
+const H94C = "35e224e3749de02014feafdbf355601393f585100d13b616cc9248759aa5cdf6"; // 527 cases
+const N94P = 12549, N94F = 31183, N94C = 527;
+const LOOK_WORDS = /\b(vintage sport|outdoor|workwear|streetwear|tailored|classic prep|minimal|smart casual)\b/g;
+/** The look names masked (see above). */
+function maskNames(x: unknown, key?: string): unknown {
+  if (Array.isArray(x)) {
+    if (key === "detected_styles" || key === "detected_has") return x.filter((s) => s !== "tailored");
+    if (key === "fired") return x.filter((f) => !((f as { check?: string }).check === "H1_reads_as_style" && (f as { line?: string }).line === "reads as tailored")).map((v) => maskNames(v));
+    return x.map((v) => maskNames(v));
+  }
+  if (x !== null && typeof x === "object") {
+    const o: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(x as Record<string, unknown>)) {
+      if (k === "style_label" || (k === "label" && v === "tailored")) continue;
+      const m = maskNames(v, k);
+      if ((k === "detected_has" || k === "fired") && Array.isArray(m) && m.length === 0 && Array.isArray(v) && v.length > 0) continue;
+      o[k] = m;
+    }
+    return o;
+  }
+  return typeof x === "string" ? x.replace(/a matching suit/g, "reads as <look>").replace(LOOK_WORDS, "<look>") : x;
+}
+const tailoredPick = (c: object) => (((c as { styles?: unknown }).styles as [string, number][] | undefined) ?? []).some(([k]) => k === "tailored");
 // parts.json's tune at a2480b09 (v15, parts data 1.14.0)
 const TUNE15 = {"pr1":1.5,"pr1_mirror_short":0.5,"pr1b":0.5,"pr2":1.5,"pr3":1,"prop_cap":2.5,"h1":0.5,"h2":0.5,"h2_suit":0.5,"h4":0,"cp1":0,"cp2":0.5,"cp5":0.5,"lightness":true,"color_cap":2,"suit_shoe":true,"earned":{"over":7.5,"rate":0.5,"cap":0.25,"gate":[6.5,7]},"solid_line":true,"pr4":1,"pr4_shoes":["basketball_sneaker","canvas_sneaker","chunky_sneaker","low_profile_sneaker","retro_runner"],"h4_graphic_street":false,"sw2":0.5,"pr4_legs":["relaxed","wide"],"pr4_signature_v3":false,"pr5":1,"pr5_layers":["chore_coat"],"pr5_bottoms":["cargos","jeans","work_pants"],"pr5_shoes":["chelsea_boot","suede_chukka","work_boot"],"pr6":0.5,"pr6_layers":["fleece","rain_jacket","shell_jacket"],"pr6_shoes":["trail_shoe"],"short_layers_extra":["track_jacket"],"sc_pair":true,"h2_pick_free":true,"sx":3,"sx_street_tops":["graphic_tee"],"sx_dressy":["blazer","cardigan","chinos","derby","dress_shirt","dress_shoe","knit_polo","loafer","overcoat","oxford_shirt","polo","rugby_shirt","sport_coat","suit_jacket","suit_trousers","trousers","unstructured_blazer"],"sx_min_dressy":2,"sx_quiet":{"minimalist":4,"smart_casual":3,"classic_prep":3},"pb":1.5,"pb_roomy_full":["minimalist","outdoor","streetwear","vintage_sport","workwear"],"pb_roomy_narrow":["outdoor"],"pb_wide_ok":["minimalist","outdoor","streetwear","vintage_sport","workwear"],"h2_any":true,"occ_target":{"event":[3,4]},"cond_clear_only":true,"sk1_soft":0.5,"lounge_style":0.5,"weights":{"proportions":0.3,"fit":0.15,"color":0.2,"shoes":0.15,"cohesion":0.2},"pr1_ribbed_loose":true,"pr2b":1,"penalty":{"under":6.5,"rate":0.5,"cap":1},"ff5_roomy":true,"ff7_loose":true,"pn_narrow":1,"pn_skinny":1,"pn_rip":0.5,"pr1_loose":1.5,"pr1_straight":0.5,"sd3_off":true,"sw3_off":true,"sk2_runner":5,"cl1":1.5,"tk1":2,"int_top":6,"int_hoodie":5,"dd_same":1,"gt1":1.5,"cl1_own":true,"pn_slim_soft":true,"cp1_dark":0.5,"h3_base_covered":true,"pn_lounge_skinny":2,"cl1_scale":true,"pn_fitted_vol":2,"ll1":1,"wr_look":true,"wr_half":0.2,"wr_knit_tailored":0.2,"wr_knit_clean":0.2,"sh_prop":true,"sh_shape":1,"sh_layer":1,"sh_cap":1.5,"sh_roomy_fitted":1.5,"sh_fitted":1,"sd1_any_sneaker":true,"goes_together":0.5,"tracksuit":0.5,"gym_runner_unheld":true,"sweatsuit_sign":true,"sweatsuit_shape":1,"look_sign":true,"kit_cap":6,"kit_fit_rate":0.5,"sw1_blocks_credit":true,"pr1_tucked_layer":true,"peek_clearly_only":true,"hl":1.5,"cp8":0.5};
 // parts_proto._OFF16 (v16 off; T69's top-of-scale knobs at their defaults)
@@ -41,8 +79,11 @@ describe("v15 byte-identical (T69-G2)", () => {
     };
     const v15p = P.cases.filter((c) => !c.tune).map((c) => ({ ...stripDefaults(c, [["season"], ["graded_look"]]), expected: expand(c.expected),
       reading_value: P.readings[c.reading] ?? RP[c.reading] }));
-    expect(v15p.length).toBe(N15P);
-    expect(sha256(canon(v15p))).toBe(H15P);
+    expect(v15p.length).toBe(N94P);
+    expect(sha256(canon(v15p))).toBe(H94P);
+    const pre94p = v15p.filter((c) => !tailoredPick(c)).map((c) => maskNames(c));
+    expect(pre94p.length).toBe(N15P);
+    expect(sha256(canon(pre94p))).toBe(NAMES15P);
 
     const F = loadJSON<{ pool: unknown[]; readings: Record<string, Reading>;
       cases: (Record<string, unknown> & { reading: string; tune?: string; engine?: string; expected: { fixes: number[]; smaller_step: number | null } })[] }>("parts_fixes.json");
@@ -51,15 +92,21 @@ describe("v15 byte-identical (T69-G2)", () => {
       expected: { ...c.expected, fixes: c.expected.fixes.map((i) => F.pool[i]), smaller_step: c.expected.smaller_step === null ? null : F.pool[c.expected.smaller_step] },
       reading_value: F.readings[c.reading] ?? RP[c.reading],
     }));
-    expect(v15f.length).toBe(N15F);
-    expect(sha256(canon(v15f))).toBe(H15F);
+    expect(v15f.length).toBe(N94F);
+    expect(sha256(canon(v15f))).toBe(H94F);
+    const pre94f = v15f.filter((c) => !tailoredPick(c)).map((c) => maskNames(c));
+    expect(pre94f.length).toBe(N15F);
+    expect(sha256(canon(pre94f))).toBe(NAMES15F);
     // the v16 fix cases are there too (after the v15 ones), so the slice above isn't the whole file by accident
     expect(F.cases.length).toBeGreaterThan(N15F);
 
     const C = loadJSON<{ cases: (Record<string, unknown> & { engine?: string })[] }>("rules_conformance.json");
     const v15c = C.cases.filter((c) => (c.engine ?? "v15") === "v15").map((c) => stripDefaults(c, [["engine", "v15"], ["season"], ["graded_look"]]));
-    expect(v15c.length).toBe(N15C);
-    expect(sha256(canon(v15c))).toBe(H15C);
+    expect(v15c.length).toBe(N94C);
+    expect(sha256(canon(v15c))).toBe(H94C);
+    const pre94c = v15c.filter((c) => !String(c["rule"]).startsWith("TLR-")).map((c) => maskNames(c));
+    expect(pre94c.length).toBe(N15C);
+    expect(sha256(canon(pre94c))).toBe(NAMES15C);
     expect(C.cases.length).toBeGreaterThan(N15C);
   }, 180_000);
 

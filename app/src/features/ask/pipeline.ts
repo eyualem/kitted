@@ -21,7 +21,7 @@ import { isBodyRating, isDistress, isUnderage } from './guards';
 import { liveAnswer as defaultLive } from './live';
 import type { AnswerEvent, AnswerSource } from './source';
 
-/** The gate rules about his body: a reply they (with any others) empty is a reply about him, not a failure (T115). */
+/** The gate rules about his body: a reply they (with any others) empty is a reply about him, not a failure (T117). */
 const BODY_RULES: ReadonlySet<GateRule> = new Set<GateRule>(['body', 'build', 'height']);
 
 /** No first word by then: "Taking longer…" (07 §6.4). */
@@ -288,7 +288,7 @@ export function createAsk(deps: AskDeps) {
     const at = replaces?.createdAt ?? Math.max(clock.nowMs(), question.createdAt + 1);
     try {
       if (failed === 'gated' && dropped.some((rule) => BODY_RULES.has(rule))) {
-        // Every sentence dropped and at least one by a body rule (T115, KC11.2): it was a reply about him, so the phone's
+        // Every sentence dropped and at least one by a body rule (T117, KC11.2): it was a reply about him, so the phone's
         // own refusal, stored the same way (no Retry, not counted, no taps), in the failed line's place on a Retry.
         const id = replaces?.id ?? ids('M');
         await store.chat.put(row(id, at, 'stylist', t('ask.refuseFace'), {}, { askRefused: true }));

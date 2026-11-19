@@ -1,6 +1,6 @@
-# T115 · Nothing about his body: the question gate, Kit's sentence gate, the decline, the follow-up taps
+# T117 · Nothing about his body: the question gate, Kit's sentence gate, the decline, the follow-up taps
 
-**Size:** strict (the hard line: never rate faces, bodies, weight or skin) · **From:** `plan.md` → T115 · **Spec:** `specs/kit-stylist-chat.md` → KC11.2 ("nothing about his body: 100%"), KC1.3 (taps about clothes), KC3.5 (skin) · **Lane:** Kit's stylist chat
+**Size:** strict (the hard line: never rate faces, bodies, weight or skin) · **From:** `plan.md` → T117 · **Spec:** `specs/kit-stylist-chat.md` → KC11.2 ("nothing about his body: 100%"), KC1.3 (taps about clothes), KC3.5 (skin) · **Lane:** Kit's stylist chat
 
 ## What changes
 - **Goal:** a typed question that is only about him ("Do I look old?", "Is my stomach ok?", "Do you like my face?") gets `I rate outfits, never people.` on the phone, nothing sent, not counted; Kit's reply loses more body shapes before he sees them; a reply the body rules empty shows that same line instead of "I couldn't answer that" with Retry; a follow-up tap where he is the subject of look/seem/feel/am stays only with a clothes verdict ("Do I look good in this coat?" stays, "Do I look chunky in this coat?" goes). Clothes questions stay answered.
@@ -56,7 +56,10 @@ Defects: none open.
 
 Small things for later (never blocking):
 - The new tap rule drops some harmless first-person taps that main kept: "I'm looking for boots", "Am I missing a jacket?", "Do I look off in this tee?", "I'm unsure about this shirt". "I'm / am I" followed by anything not on the clothes-verdict list counts as a body tap. It fails safe (the tap just does not show; Kit writes others, and most of these were rare). Worth adding "looking", "missing", "wearing" to the skip list if the live run (T110) shows taps vanishing.
-- Taps over 30 characters drop by the old length rule ("Do I look good with white sneakers?"), unrelated to T115.
+- Taps over 30 characters drop by the old length rule ("Do I look good with white sneakers?"), unrelated to T117.
 - "I feel cold in this jacket" and "Do I look cold in this tee?" are kept (cold is on the allowlist); fine.
 
 **Verdict: Ready.**
+
+## Renumbered
+Built as T115; main gave T115 to another task while this PR was open, so this task is T117 (Nov 18, at the merge with main; DECISIONS-LOG #508, was #495). The three locked test files' header comments still say "T115" and `tasks/T115/TESTING.md`: they mean this task and `tasks/T117/TESTING.md`. They were left as locked.

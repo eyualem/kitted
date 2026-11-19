@@ -195,6 +195,10 @@
   .solo { width: 300px; margin: 0 auto; border: 1px solid var(--a-line); background: var(--a-surface); border-radius: 18px; padding: 10px; position: relative; box-shadow: var(--a-shadow);
           touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; transition: transform .24s ease, opacity .24s ease; }
   .solo .art { background: var(--a-surface2); border-radius: 12px; padding: 24px 0 14px; display: flex; justify-content: center; }
+  /* The card's two outfits (T111): two dots at its top, like a dating card's photos; a tap shows the other one */
+  .solo .pg { position: absolute; top: 16px; left: 0; right: 0; display: flex; justify-content: center; gap: 5px; z-index: 1; pointer-events: none; }
+  .solo .pg i { width: 18px; height: 3px; border-radius: 2px; background: var(--a-faint); opacity: .5; }
+  .solo .pg i.on { background: var(--a-ink); opacity: .85; }
   .solo.drag { transition: none; cursor: grabbing; }
   .solo.fly-r { transform: translateX(440px) rotate(14deg); opacity: 0; }
   .solo.fly-l { transform: translateX(-440px) rotate(-14deg); opacity: 0; }
@@ -341,6 +345,7 @@
           <li>Every look is judged on its own, so two looks he loves can't knock each other out in round 1, and a look he dislikes rarely sneaks into his top 3.</li>
           <li>About 3 more taps than A. If he says Not me to all 8: "Nothing clicked yet", with Play again and his own words; Continue waits for a look or his words (your Nov 11 rule).</li>
         </ul>
+        <p><span class="k">Safety nets, Nov 18.</span> Tested with every kind of person and every kind of slip (<code>flow_sim.py</code>). Two small ones made the cut: <b>tap the card to see the look's other outfit</b> (the two dots at its top), for when one drawing misses a look he loves; and <b>Add a look stays when he has 3</b>, taking #3's place with an Undo note. A third is words only: a results line that says it can be off and how to fix it (pick it below). Back already undoes the last card.</p>
       </div>
       <details class="notes more">
         <summary>Words for you to pick (A, C and D)</summary>

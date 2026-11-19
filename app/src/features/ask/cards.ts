@@ -598,7 +598,7 @@ const I_ALLOWED: readonly RegExp[] = [
   /^should i size (?:up|down)$/,
 ];
 
-// He as the subject of look / seem / feel / am (T115, KC1.3): an allowlist of clothes verdicts, never a longer list of bad
+// He as the subject of look / seem / feel / am (T117, KC1.3): an allowlist of clothes verdicts, never a longer list of bad
 // words (T102's lesson). "Do I look good in this coat?" stays, "Do I look chunky in this coat?" goes.
 /** The verbs that make him the subject: "do I look", "I seem", "I feel", "I appear". */
 const SELF_LINK = new Set(['look', 'looks', 'looking', 'seem', 'seems', 'feel', 'feels', 'feeling', 'appear']);
@@ -654,7 +654,7 @@ function aboutHim(text: string): boolean {
   if (!w.every((x, i) => (x !== 'me' || NEUTRAL_ME.has(w[i - 1] ?? '')) && x !== 'mine' && x !== 'myself')) return true;
   const ahead = (i: number) => MY_CLOTHES.has(w[i + 1] ?? '') || w.slice(i + 1, i + 4).some((x) => GARMENTS.has(x));
   if (!w.every((x, i) => x !== 'my' || ahead(i))) return true;
-  // He as the subject: only a clothes verdict may follow, checked before the garment keep (T115).
+  // He as the subject: only a clothes verdict may follow, checked before the garment keep (T117).
   const self = selfVerdict(w);
   if (self === 'body') return true;
   if (self === 'dressed') return false;
