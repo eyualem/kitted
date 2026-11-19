@@ -141,8 +141,19 @@ const AI_STYLIST = /\bai[-\s]+stylist\b/i;
 
 // A body word aimed at him: "your face", "you're too skinny", "your weight". Clothes words ("skinny jeans", "a slim
 // fit", "the shoulders") are fine: the rule needs "you/your" and a body word that isn't about a garment.
-const YOUR_BODY = /\byour\s+(?:body|build|frame|figure|physique|height|weight|face|skin|hair|belly|stomach|gut|chest|arms|legs|waist(?!band| size)|hips|muscles|shape)\b/i;
-const YOU_ARE_BODY = /\byou(?:'re|\s+are|\s+look|\s+seem)\s+(?:(?:a\s+bit|kind\s+of|quite|really|very|so|too|pretty)\s+)?(?:fat|overweight|chubby|heavy|big|bigger|skinny|thin|slim|scrawny|lanky|tall|short|small|muscular|athletic|broad|stocky|ugly|handsome|attractive|good[-\s]looking)\b/i;
+const YOUR_BODY = /\byour\s+(?:body|build|frame|figure|physique|height|weight|face|skin|hair|hairline|belly|stomach|gut|tummy|chest|arms|legs|thighs|calves|butt|neck|chin|jaw|jawline|waist(?!band| size)|hips|muscles|shape|age|coloring|colouring|complexion|undertones?)\b/i;
+// Said of him: size, build, age or looks, with up to three modifiers ("you're not too skinny", "it makes you look
+// taller", "you look about 25", "you look older in the grey"). "You look good / great / sharp" are not in it.
+const YOU_ARE_BODY = /\byou(?:'re|\s+are|\s+look|\s+seem|\s+appear)\s+(?:(?:not|a\s+bit|a\s+little|kind\s+of|quite|really|very|so|too|pretty|way|much|even|a\s+lot|about|around|like)\s+){0,3}(?:fat|fatter|overweight|chubby|heavy|heavier|big|bigger|skinny|skinnier|thin|thinner|slim|slimmer|scrawny|lanky|tall|taller|short|shorter|small|smaller|muscular|athletic|broad|broader|wide|wider|lean|leaner|stocky|ugly|handsome|attractive|good[-\s]looking|old(?![-\s](?:school|fashioned|money))|older|young|younger|boyish|mature|(?:1\d|[2-9]\d)(?!\d|[.,]\d|['’"”/]|\s*(?:%|percent|inch|inches|cm|mm|lbs?|kg|bucks|dollars|out\s+of|minutes?)))\b/i;
+// What a cut does to a part of him: "it hides the gut", "it slims your belly", "a cap hides a receding hairline".
+// Garment parts ("hides the belt", "hides the waistband") don't count.
+const HIDES_BODY = /\b(?:hides?|hid|hiding|conceals?|concealing|disguises?|masks?|slims?|slimming|flatters?|flattering|minimi[sz]es?|camouflages?)\s+(?:the\s+|your\s+|a\s+|any\s+|that\s+|some\s+)?(?:(?!my\b)[a-z]+\s+)?(?:gut|belly|stomach|tummy|thighs?|hips|waist|arms|hairline|love\s+handles|muffin\s+top|butt|chin|double\s+chin|neck|frame|figure|build|body|weight|pounds|bald\s+spot)\b/i;
+// Skin by its color: never about a garment, so no "you" needed ("Pale skin suits orange."; "pale blue" stays).
+const SKIN_COLOR = /\b(?:pale|fair|dark|darker|light|lighter|olive|tan|tanned|brown|black|white|warm|cool|deep|medium|rosy|ruddy)[-\s]+(?:skin|skinned)\b/i;
+// What girls or women like in a guy: Kit never speaks for who finds him attractive ("Women's sizes" is fine).
+const GIRLS_LIKE = /\b(?:girls|women|ladies|chicks|a\s+girl|a\s+woman)\s+(?:(?:tend\s+to|usually|always|really|often|generally|will|would|do|all)\s+){0,2}(?:like|likes|love|loves|prefer|prefers|notice|notices|dig|digs|go\s+for|want|wants|are\s+into|find|finds|think|swoon|fall\s+for)\b/i;
+// A number on him rather than the outfit: "You're a 7 on looks."
+const LOOKS_NUMBER = /\b(?:10|\d)(?:\.\d)?\s*(?:\/\s*10\s*|out\s+of\s+10\s*)?(?:on|for|in)\s+(?:looks|attractiveness|your\s+looks|your\s+face|face|physique)\b/i;
 const BODY_WORD = /\b(?:fat|overweight|chubby|obese|belly|beer gut|love handles|scrawny|lanky|ugly|handsome|attractive|physique|body type|pounds|lbs|kilos)\b/i;
 const MENTIONS_HIM = /\b(?:you|your|you're|yourself)\b/i;
 // His build or height said back ("for your build", "since you're tall", "at 6'1", "as a bigger guy").
@@ -204,6 +215,7 @@ export function checkSentence(sentence: string, ctx: GateContext): GateRule | nu
   if (BRAND.test(sentence)) return 'brand';
   if (BUILD_BACK.test(sentence)) return 'build';
   if (YOUR_BODY.test(sentence) || YOU_ARE_BODY.test(sentence) || (MENTIONS_HIM.test(sentence) && BODY_WORD.test(sentence))) return 'body';
+  if (HIDES_BODY.test(sentence) || SKIN_COLOR.test(sentence) || GIRLS_LIKE.test(sentence) || LOOKS_NUMBER.test(sentence)) return 'body';
   if (HEIGHT.test(sentence)) return 'height';
   if (scoresSaid(sentence).some((s) => !ctx.allowedScores.has(s))) return 'score';
   if (pieceFactClash(sentence, ctx.pieces)) return 'fact';

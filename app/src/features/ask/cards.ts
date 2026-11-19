@@ -491,7 +491,7 @@ const BODY_PARTS = new Set([
 /** Words that measure him or a garment (his weight, a hat's shape). A body word only when no garment is in the tap. */
 const BODY_TRAITS = new Set(['weight', 'build', 'shape', 'frame', 'height']);
 /** Two-word body phrases, a body word whenever he is in the tap. */
-const BODY_PHRASES = ['love handles', 'pear shaped', 'apple shaped', 'body type', 'dad bod', 'beer belly', 'baby face'];
+const BODY_PHRASES = ['love handles', 'pear shaped', 'apple shaped', 'body type', 'dad bod', 'beer belly', 'baby face', 'muffin top', 'double chin'];
 /** Words that describe a body, a size or an age. A body word only when they describe him (see `bodyTap`). */
 const BODY_ADJ = new Set([
   'tall', 'taller', 'short', 'shorter', 'thin', 'thinner', 'skinny', 'skinnier', 'fat', 'fatter', 'heavy', 'heavier', 'bulky', 'old', 'older',
@@ -598,11 +598,50 @@ const I_ALLOWED: readonly RegExp[] = [
   /^should i size (?:up|down)$/,
 ];
 
+// He as the subject of look / seem / feel / am (T117, KC1.3): an allowlist of clothes verdicts, never a longer list of bad
+// words (T102's lesson). "Do I look good in this coat?" stays, "Do I look chunky in this coat?" goes.
+/** The verbs that make him the subject: "do I look", "I seem", "I feel", "I appear". */
+const SELF_LINK = new Set(['look', 'looks', 'looking', 'seem', 'seems', 'feel', 'feels', 'feeling', 'appear']);
+/** Words that may sit between the verb and its verdict ("too formal", "a bit overdressed", "warm enough"). */
+const VERDICT_SKIP = new Set(['too', 'a', 'bit', 'little', 'so', 'really', 'very', 'kind', 'kinda', 'of', 'more', 'less', 'over', 'under']);
+/** Verdicts on how he's dressed: fine in a tap that names a garment ("Do I look ok in this shirt?"). */
+const CLOTHES_VERDICT = new Set([
+  'good', 'ok', 'okay', 'alright', 'fine', 'right', 'sharp', 'clean', 'polished', 'put', 'presentable', 'smart', 'formal', 'casual',
+  'dressy', 'warm', 'cold', 'cool', 'comfortable', 'comfy', 'matched', 'coordinated', 'underdressed', 'overdressed', 'dressed',
+]);
+/** Verdicts about clothes on their own, kept even with no garment named ("Am I dressed right for it?"). */
+const DRESSED = new Set(['dressed', 'overdressed', 'underdressed']);
+
+/**
+ * Each place he is the subject of look, seem, feel or am ("do I look", "I feel", "am I", "I'm", "I am"): 'body' when any
+ * of them is followed by something other than a clothes verdict, else 'dressed' when one says how he's dressed, else
+ * 'verdict' when there was one, else null (he is never that subject).
+ */
+function selfVerdict(w: readonly string[]): 'body' | 'dressed' | 'verdict' | null {
+  let found: 'dressed' | 'verdict' | null = null;
+  for (let i = 0; i < w.length; i++) {
+    let k = -1;
+    if (w[i] === 'i' && SELF_LINK.has(w[i + 1] ?? '')) k = i + 2;
+    else if ((w[i] === 'am' && w[i + 1] === 'i') || (w[i] === 'i' && w[i + 1] === 'am')) k = i + 2;
+    else if (w[i] === "i'm" || w[i] === 'im') k = i + 1;
+    if (k < 0) continue;
+    if (w[i] !== 'i' || w[i + 1] === 'am') while (k < w.length && SELF_LINK.has(w[k]!)) k++; // "am I looking", "I'm feeling"
+    while (k < w.length && VERDICT_SKIP.has(w[k]!)) k++;
+    const v = w[k] ?? '';
+    if (!CLOTHES_VERDICT.has(v)) return 'body';
+    if (DRESSED.has(v)) found = 'dressed';
+    else found ??= 'verdict';
+  }
+  return found;
+}
+
 /**
  * True when a tap that mentions him (I, I'm, I'd, me, my, mine, myself) is about him rather than his clothes. Dropped
  * when it rates him or has others judge him (RATES_HIM, "best side"), names his face, hair or a body mod (FACE_HAIR,
  * BODY_MOD), has a "me" that isn't neutral ("is it me or", unlike "show me", "on me") or "mine"/"myself", or has a "my"
- * with no garment within three words and no MY_CLOTHES word right after it. Otherwise kept when it names a garment (or
+ * with no garment within three words and no MY_CLOTHES word right after it. Where he is the subject of look, seem, feel
+ * or am, dropped unless a clothes verdict follows (`selfVerdict`); "Am I dressed right?" is kept as it stands. Otherwise
+ * kept when it names a garment (or
  * "my <clothes word>"). With none: dropped on an appearance word (LOOKS_OF_HIM, a number after "look"); a "me" tap is
  * kept; an "I" tap is kept only when it is one of the I_ALLOWED phrasings ("What should I buy first?", "I'd go darker").
  */
@@ -615,6 +654,10 @@ function aboutHim(text: string): boolean {
   if (!w.every((x, i) => (x !== 'me' || NEUTRAL_ME.has(w[i - 1] ?? '')) && x !== 'mine' && x !== 'myself')) return true;
   const ahead = (i: number) => MY_CLOTHES.has(w[i + 1] ?? '') || w.slice(i + 1, i + 4).some((x) => GARMENTS.has(x));
   if (!w.every((x, i) => x !== 'my' || ahead(i))) return true;
+  // He as the subject: only a clothes verdict may follow, checked before the garment keep (T117).
+  const self = selfVerdict(w);
+  if (self === 'body') return true;
+  if (self === 'dressed') return false;
   if (w.some((x) => GARMENTS.has(x) || x === 'my')) return false;
   if (w.some((x) => LOOKS_OF_HIM.has(x)) || /\blook(?:s|ing)?\s+(?:like\s+)?(?:about\s+)?\d/.test(t)) return true;
   if (!w.some((x) => I_FORMS.has(x))) return false;
