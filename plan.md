@@ -116,7 +116,7 @@ Spec: `specs/limits-and-spend.md` (interview: T20)
 Lane files: `firebase/`
 
 - [ ] **T20** · Write the limits-and-spend spec with you: how free checks are counted so a wipe can't reset them, and the pause card's words · *done: your yes · files: `specs/limits-and-spend.md`*
-- [ ] **T21** · Server limits: 7 free checks per phone and account for life, 3 questions, Pro 5 + 30 per person (not one switch for everyone), declined questions not counted · *after T20 · checks: F10.1, F10.6, F5.2 · files: `firebase/functions/src/api/{limits,store,handler}.ts`*
+- [~] admiring-sanderson-458525 (first slice only, **T21a**) · **T21** · **T21a, built ahead of T20 because accounts can't go on without it (T41 reviewer, Nov 19):** the server also counts each day per phone, not only per account, so signing out and getting a new guest ID doesn't reset the day (the app sends its Keychain device ID; the server stores only a hash of it plus counts; `requireDevice` in `server/config`, off until the build that sends it is out); the rest of T21 waits for T20 · Server limits: 7 free checks per phone and account for life, 3 questions, Pro 5 + 30 per person (not one switch for everyone), declined questions not counted · *after T20 · checks: F10.1, F10.6, F5.2 · files: `firebase/functions/src/api/{limits,store,handler}.ts`*
 - [ ] **T22** · The spend cap: $25 to start, pauses free checks only, resets at 4 am, keeps the photo, alerts you · *after T21 · checks: F15.1, F15.2 · files: `firebase/functions/src/api/`*
 - [ ] **T23** · The server lock (App Check): the app sends proof it's the real app, and the server refuses anything else · *after T80 · checks: F15.3 · files: `firebase/`, `app/src/services/server/`, package.json*
 - [x] 2026-11-08, deployed · **T25** · Deploy the beta's limits to the live server, then check live that it really answers `beta`: one real question from a fresh guest account (about 0.01¢) reads the tier the server sends back. If it says `pro`, the live `server/config` was set by hand, and it's changed to `beta` only with your OK · *after T14 · checks: FP7.1 on the live server · files: none (deploy only)*
@@ -284,6 +284,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-19 · admiring-sanderson-458525 (control's task): planned the sign-out gap: signing out then using Kit gave a brand-new guest with zero counts; the plan counts each day per phone as well (T21a); waiting for your go
 - 2026-11-19 · oversized-tee-half-sleeve (control's task, tiny): the oversized tee's sleeves are now half sleeves, low at the dropped shoulder, wide and loose to about the elbow, a level hemmed opening (DECISIONS-LOG #519, PR #161).
 - 2026-11-19 · tier-refresh (your "Yes, fix it"): your phone kept showing the 3-check limit after your account was raised to 50, because the app only hears its limits from server answers and had stopped asking; now, at a limit, it asks the server once (no AI call) and lets you through if the server allows; log #518
 - 2026-11-19 · oversized-tee (control's task, tiny): his "Oversized tee" tile now draws oversized (dropped shoulders, boxy body, longer hem, sleeves toward the elbow) because the name says so; a plain tee is unchanged (DECISIONS-LOG #517, PR #158).
