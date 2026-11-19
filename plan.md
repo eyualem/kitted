@@ -284,6 +284,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
+- 2026-11-19 · shoulder-fit-tools (research, $0): which free tools could tell when a jacket's shoulders don't fit; the best first try is Apple Vision, already in the app (no new package), and a $0 Mac test with a pass bar is in `reports/2026-11-19-shoulder-fit-tools.md`; nothing installed or run.
 - 2026-11-19 · oversized-tee-half-sleeve (control's task, tiny): the oversized tee's sleeves are now half sleeves, low at the dropped shoulder, wide and loose to about the elbow, a level hemmed opening (DECISIONS-LOG #519, PR #161).
 - 2026-11-19 · tier-refresh (your "Yes, fix it"): your phone kept showing the 3-check limit after your account was raised to 50, because the app only hears its limits from server answers and had stopped asking; now, at a limit, it asks the server once (no AI call) and lets you through if the server allows; log #518
 - 2026-11-19 · oversized-tee (control's task, tiny): his "Oversized tee" tile now draws oversized (dropped shoulders, boxy body, longer hem, sleeves toward the elbow) because the name says so; a plain tee is unchanged (DECISIONS-LOG #517, PR #158).
