@@ -828,7 +828,7 @@ Use `now=2026-10-22T12:20:00` (deep link) / `-demoNow 2026-10-22T12:20:00` (laun
 | S4 | Black Chelsea boots | chelsea_boot/black | #1F1B18 | |
 | L1 | Navy overshirt | overshirt/navy | #273250 | s07 |
 | L2 | Olive overshirt | overshirt/olive | #5B6440 | added Oct 21 via "I bought something" |
-| L3 | Denim jacket | denim_jacket/denim_mid | #5D7393 | **not photographed** (dashed tile, "· no photo"), s08 |
+| L3 | Denim jacket | denim_jacket/denim_mid | #5D7393 | **not photographed** (solid tile, `No photo yet` since Nov 19), s08 |
 
 `closetGridOrder` starts with the mockup's six: Olive overshirt, White tee, Navy crewneck, Dark jeans, White sneakers, Denim jacket.
 

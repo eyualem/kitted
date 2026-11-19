@@ -1,5 +1,6 @@
-// A closet tile (C1 grid, S11 rows, the duplicate question): the detailed graphic on the tile color, ghosted
-// (dashed edge, faded) for a piece he only described. One VoiceOver element: the name and what's drawn.
+// A closet tile (C1 grid, S11 rows, the duplicate question): the detailed graphic on the tile color. A piece he owns
+// but hasn't photographed is drawn the same, solid, with `No photo yet` under its name (a dashed tile means a piece he
+// doesn't own, in Kit's cards). One VoiceOver element: the name and what's drawn.
 import { Pressable, View } from 'react-native';
 import { CONTROL_TEXT_MAX_SCALE, KText, opacity, useTheme } from '@/design-system';
 import type { ClosetItemRow } from '@/data/types';
@@ -38,29 +39,38 @@ export interface ClosetTileProps {
 export function ClosetTile({ item, size, aspect = 1, radius, scale = 0.8, dim, label, onPress, onLongPress, longPressLabel, delayLongPress, actions: own, accessibilityHint, decorative, isNew }: ClosetTileProps) {
   const { colors } = useTheme();
   const spec = artSpec(item);
-  const ghost = item.isPhotographed === false;
+  const noPhoto = item.isPhotographed === false;
   const h = Math.round(size * aspect);
   // Shoes get a bigger box than tops and pants, so they look as large (§7 C4).
   const art = tileArtBox(spec.shape, size, h, scale);
-  const a11yLabel = isNew ? t('closet.new.a11y', { name: spec.a11y }) : spec.a11y;
+  // The line shows only where the tile carries its name; the small thumbnails in rows have none.
+  const showNoPhoto = noPhoto && !!label;
+  const named = showNoPhoto ? `${spec.a11y}, ${t('closet.tile.noPhoto').toLowerCase()}` : spec.a11y;
+  const a11yLabel = isNew ? t('closet.new.a11y', { name: named }) : named;
   const body = (
     <View style={{ width: size, gap: label ? 6 : 0 }}>
       <View
         style={{
           width: size, height: h, borderRadius: radius ?? Math.round(size * 0.16), borderCurve: 'continuous', alignItems: 'center', justifyContent: 'center',
-          backgroundColor: ghost ? 'transparent' : colors.surface2, borderWidth: ghost ? 1.5 : 0, borderStyle: ghost ? 'dashed' : 'solid',
-          borderColor: colors.inkFaint, opacity: dim ? 0.4 : 1,
+          backgroundColor: colors.surface2, opacity: dim ? 0.4 : 1,
         }}
       >
-        <View style={{ opacity: ghost ? 0.5 : 1, transform: [{ translateY: art.dy }] }}>
+        <View style={{ transform: [{ translateY: art.dy }] }}>
           <GarmentArt spec={spec} size={art.size} />
         </View>
         {isNew ? <NewMark /> : null}
       </View>
       {label ? (
-        <KText role="miniLabel" numberOfLines={2}>
-          {label}
-        </KText>
+        <View style={{ gap: 2 }}>
+          <KText role="miniLabel" numberOfLines={2}>
+            {label}
+          </KText>
+          {showNoPhoto ? (
+            <KText variant="caption2" color="ink2" numberOfLines={2}>
+              {t('closet.tile.noPhoto')}
+            </KText>
+          ) : null}
+        </View>
       ) : null}
     </View>
   );

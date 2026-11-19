@@ -303,7 +303,7 @@ export function useKittedFonts() {
 - **Between sections of a card:** a `<Seam />` (dashed), never a hairline.
 - **Chips:** 1 pt `kLine`. Selected = ink fill + ink border. Accent = copper border on `kAccentSoft`.
 - **Plan row:** 1.5 pt `kLine`; selected = 1.5 pt `kInk` + checkmark.
-- **Ghost tile** (an item he mentioned but hasn't photographed): 1.5 pt dashed `kInkFaint`, no fill, glyph at 50%, plus the text "· no photo".
+- **Ghost tile** (a piece he would need, drawn in Kit's cards, `You'd need`): 1.5 pt dashed `kInkFaint`, no fill. *Changed Nov 19 (founder): an item he owns but hasn't photographed is no longer a ghost tile; it is a solid tile with `No photo yet` under its name.*
 - **Look selected (onboarding):** a 2.5 pt `kBg` gap, then a 2.5 pt `kInk` ring, plus a 24 pt ink check badge.
 
 ### 4.4 Shadows (light mode only)
@@ -533,7 +533,7 @@ Components marked **[RN]** are already built in `ts/design-system/components/` (
 **ClosetTile** (`.grid3 .tile`, `.minilabel`)
 - **Anatomy:** a `kSurface2` tile (radius 18, aspect 1 : 0.92), with the garment cut-out at 62% (or a plain crop, or the item's category symbol in its color), and a `.footnote` ink2 label under it.
 - **Layout:** 3 columns, 8 pt gap, 10 pt row gap → 2 columns → 1 column at AX sizes.
-- **Ghost state:** an item he mentioned but hasn't photographed (dashed, §4.3).
+- **Ghost state:** a piece he would need, in Kit's cards (dashed, §4.3). A piece he owns without a photo is a solid tile with `No photo yet` (Nov 19).
 - **Outfit cards:** 4 tiles in a row (`.outfit4`, aspect 1), or the hero strip (`.outfit-hero`: square-ish tiles with 1 pt `kLine` gaps and no radius, flush to the card top).
 
 **CalendarMonth** (`.cal`)
