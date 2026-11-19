@@ -4,8 +4,8 @@
 // Outfits never carry a predicted score (R5). Pieces mentioned in chat (source 'chat') are used in outfits but never
 // in a "+N outfits" count (07 §4).
 import {
-  addDays, dayKey, daysBetween, localParts, pickOutfit, seasonNeeds, weatherNeeds,
-  type ClosetItem, type DayWeather, type IdeaReason, type PastUse, type PickHistory, type Reading,
+  addDays, allowedColors, COLOR_CHOICES, dayKey, daysBetween, G, localParts, pickOutfit, seasonNeeds, weatherNeeds,
+  type AllowedColorsInput, type ClosetItem, type ColorFamily, type DayWeather, type Garment, type IdeaReason, type PastUse, type PickHistory, type Reading,
 } from '@kitted/core';
 import { OCCASIONS, type CardOccasion, type ClosetItemRow, type FitCheckRow, type OccasionKey } from '@/data/types';
 import { displayScore } from '@/design-system/score';
@@ -13,15 +13,17 @@ import { isAwaitingAnswer, isOwned } from '@/features/closet/profile';
 import { overallFor, scoreOptions } from '@/features/fitcheck/scoring';
 import { starterGain } from '@/features/finish/gains';
 import { starterList } from '@/features/finish/packs';
-import { ownership } from '@/features/finish/starter';
+import { catalogRow, ownership } from '@/features/finish/starter';
 import { whyLine } from '@/features/morning/copy';
 import { HISTORY_DAYS, historyFor, ideaId, scoringOccasion, slotAt } from '@/features/morning/service';
 import { occasionLabel } from '@/features/stylist/thread';
 import { asBudget } from '@/features/you/profile';
 import { fullCheckLines, oneLine, type StylistContext, type StylistSnapshot } from './context';
-import { storedCard } from './cards';
+import { colorName, kindNoun, slotOfKind, storedCard, type AskCard } from './cards';
 import { avoidedIds, avoidsPhrase, judgeOutfit, judgementLines } from './judge';
-import { scoresIn } from './gate';
+import { colorsNamed, scoresIn } from './gate';
+import { garmentOf } from './memory';
+import { t } from '@/i18n/en';
 import type { AskKind } from './prompt';
 import type { Route } from './router';
 
@@ -39,6 +41,8 @@ export interface EvidenceDeps {
   readingOf: (readingId: string | null) => Promise<Reading | null>;
   /** Starter rows he marked as owned with no closet piece (kv), for "what to buy". */
   starterMarks: readonly string[];
+  /** T105 KC3.3: the colors the rules would not mark down (core's `allowedColors` by default); a stand-in in tests. */
+  allowedColors?: (input: AllowedColorsInput) => ColorFamily[];
 }
 
 /** A lookup the model asked for in its closing block (R3), in the router's terms. */
@@ -285,4 +289,245 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
 /** Every score the model may say: the pack's and the evidence's (gate.ts). */
 export function allowedScores(pack: string, evidence: string): Set<string> {
   return new Set([...scoresIn(pack), ...scoresIn(evidence)]);
+}
+
+// ---------------------------------------------------------------- T105 (tasks/T105/IMPLEMENTATION.md)
+const SLOT_WORD: Record<string, string> = { top: 'tops', bottom: 'bottoms', shoes: 'shoes', outer: 'outerwear', accessory: 'accessories' };
+const CATEGORY_SLOT: Record<string, string> = { top: 'top', bottom: 'bottom', footwear: 'shoes', outerwear: 'outer', accessory: 'accessory' };
+const SLOT_CATEGORY: Record<string, string> = { top: 'top', bottom: 'bottom', shoes: 'footwear', outer: 'outerwear', accessory: 'accessory' };
+
+/** Lines for the cards Kit showed today, oldest first, the newest 8 (KC6.3). Names are his pieces' names now. */
+export function shownCardLines(s: StylistSnapshot): string[] {
+  const today = dayKey(s.nowMs, s.zone);
+  const nameOf = (id: string): string | null => {
+    const c = s.closet.find((x) => x.id === id);
+    return c && isOwned(c) && !c.isDeleted ? c.name : null;
+  };
+  const lines: string[] = [];
+  const rows = s.chat
+    .filter((m) => m.role === 'stylist' && dayKey(m.createdAt, s.zone) === today)
+    .sort((a, b) => a.createdAt - b.createdAt || a.id.localeCompare(b.id));
+  for (const m of rows) {
+    const c = storedCard(m.payload?.askCard);
+    if (!c) continue;
+    const line = cardLine(c, nameOf);
+    if (line) lines.push(oneLine(line, 200));
+  }
+  return lines.slice(-8);
+}
+
+function cardLine(c: AskCard, nameOf: (id: string) => string | null): string | null {
+  switch (c.type) {
+    case 'outfit': {
+      const occ = lower(occasionLabel(c.occasion));
+      const needs = (c.needs ?? []).map((p) => p.name);
+      if (c.example) return `- Example outfit for ${occ} (none of it his): ${needs.join(', ')}`;
+      const his = c.itemIds.map(nameOf).filter((n): n is string => !!n);
+      return `- Outfit for ${occ}: ${his.join(', ')}${needs.length ? `; he'd need: ${needs.join(', ')}` : ''}`;
+    }
+    case 'options': {
+      const parts = c.options.map((e) => {
+        if ('piece' in e) return `${e.piece.name} (he'd need)`;
+        const n = nameOf(e.itemId);
+        return n ? `${n} (his)` : null;
+      }).filter((x): x is string => !!x);
+      return `- Options for ${SLOT_WORD[c.slot] ?? c.slot}: ${parts.join(', ')}`;
+    }
+    case 'colors': {
+      const names = c.families.map((f) => colorName(f)).filter((n): n is string => !!n).join(', ');
+      if (c.about === 'piece') return `- Colors for the ${kindNoun(c.kind)}: ${names}`;
+      const goes = colorName(c.goesWith);
+      return `- Colors that go with ${goes ? lower(goes) : c.goesWith}: ${names}`;
+    }
+    case 'buy': {
+      const row = catalogRow(c.starterId);
+      if (!row) return null;
+      return `- Next buy: ${lower(row.pick?.name ?? row.name)}`;
+    }
+    case 'add':
+      return `- Add card: ${c.piece.name} (${c.outcome === 'asked' ? 'asked' : c.outcome === 'added' ? 'added to his closet' : 'he said no thanks'})`;
+    case 'changed':
+      return `- Changed piece: ${c.after.name} (${c.undone ? 'change undone' : `was ${c.before.name}`})`;
+    default:
+      return null;
+  }
+}
+
+// ---------------------------------------------------------------- the allowed colors as evidence (KC3.3, KC3.5)
+export interface ColorEvidence {
+  /** The <evidence> lines. */
+  text: string;
+  /** Families Kit may name; null = no list (the sentence rule is off). */
+  allowed: ReadonlySet<string> | null;
+  /** Families of his owned pieces plus colors named in his question. */
+  own: ReadonlySet<string>;
+}
+
+const COLOR_QUESTION = /\b(?:colou?rs?|shades?)\b/i;
+const GOES_WITH = /\b(?:go|goes|pair|pairs|work|works|match|matches)\s+with\s+(?:(?:a|an|some|the)\s+)?([a-z-]+(?:\s+[a-z-]+)?)/i;
+const GARMENT_WORD = /\b(?:jeans|chinos?|trousers|pants|cargos?|joggers|shorts|tees?|t-shirts?|shirts?|oxfords?|sweaters?|sweatshirts?|hoodies?|cardigans?|polos?|overshirts?|jackets?|coats?|blazers?|bombers?|sneakers|runners|loafers|boots|shoes|belts?|watch(?:es)?|caps?|beanies?|tops?|bottoms?|pieces?|outfits?)\b/i;
+const COLORING_WORD = /\b(?:skin|hair|eyes?|complexion|undertones?)\b/i;
+const ACCESSORY_WORD = /\b(?:belts?|watch(?:es)?|caps?|beanies?|hats?)\b/i;
+
+/** A question about colors: the word "color", "colour" or "shade", or "what goes with olive?" (a color and no piece). */
+export const isColorQuestion = (question: string): boolean => {
+  if (COLOR_QUESTION.test(question)) return true;
+  const m = GOES_WITH.exec(question);
+  if (!m) return false;
+  const phrase = m[1]!.trim();
+  if (/^(?:my|your|his|our|that|this|these|those)\b/i.test(phrase)) return false;
+  return colorsNamed(phrase.split(/\s+/).slice(0, 2).join(' ')).length > 0 && !GARMENT_WORD.test(phrase);
+};
+
+/** A color question about his looks: skin, hair, eyes, complexion or undertone next to a color. */
+export const mentionsColoring = (question: string): boolean => COLORING_WORD.test(question) && (isColorQuestion(question) || colorsNamed(question).length > 0);
+
+const paletteOrder = (families: Iterable<string>): string[] => {
+  const set = new Set(families);
+  return COLOR_CHOICES.filter((f) => set.has(f));
+};
+const namesOf = (families: Iterable<string>): string => paletteOrder(families).map((f) => colorName(f) ?? f).join(', ');
+
+interface Target {
+  /** What the list is for, in words. */
+  words: string;
+  piece: Garment | null;
+  /** His row when the target is one of his pieces. */
+  row: ClosetItemRow | null;
+  /** A named color (the general case). */
+  named: string | null;
+}
+
+interface Source { handles: readonly string[]; kindWords: string | null; colorWords: string | null }
+
+function targetOf(src: Source, s: StylistSnapshot, ctx: Pick<StylistContext, 'handles'>): Target | null {
+  const row = src.handles[0] ? s.closet.find((c) => c.id === ctx.handles[src.handles[0]!] && isOwned(c) && !c.isDeleted) ?? null : null;
+  if (row) return String(row.slot) === 'accessory' || String(row.garment.category) === 'accessory' ? null : { words: row.name, piece: row.garment, row, named: null };
+  if (src.kindWords) {
+    if (ACCESSORY_WORD.test(src.kindWords)) return null;
+    const g = garmentOf(src.kindWords);
+    if (g) return { words: `the ${kindNoun(String(g.subcategory))}`, piece: g, row: null, named: null };
+  }
+  if (src.colorWords) {
+    const named = colorsNamed(src.colorWords)[0];
+    if (named) return { words: `what goes with ${colorName(named) ?? named}`, piece: null, row: null, named };
+  }
+  return null;
+}
+
+/** The pieces of the outfit around the target: the newest outfit card shown today that holds it, else today's newest scored check. */
+function contextOutfit(tg: Target, s: StylistSnapshot): { others: Garment[]; occasion?: string } {
+  const today = dayKey(s.nowMs, s.zone);
+  const slot = tg.row ? String(tg.row.slot) : CATEGORY_SLOT[String(tg.piece?.category)] ?? '';
+  const live = (id: string) => s.closet.find((c) => c.id === id && isOwned(c) && !c.isDeleted) ?? null;
+  type Entry = { id: string | null; slot: string; garment: Garment };
+  const entriesOf = (c: Extract<AskCard, { type: 'outfit' }>): Entry[] => {
+    const out: Entry[] = [];
+    for (const id of c.itemIds) {
+      const r = live(id);
+      if (r) out.push({ id: r.id, slot: String(r.slot), garment: r.garment });
+    }
+    for (const p of c.needs ?? []) {
+      const sl = slotOfKind(p.kind);
+      if (sl) out.push({ id: null, slot: sl, garment: G(SLOT_CATEGORY[sl] ?? sl, p.kind, p.color) });
+    }
+    return out;
+  };
+  const cards = s.chat
+    .filter((m) => m.role === 'stylist' && dayKey(m.createdAt, s.zone) === today)
+    .sort((a, b) => b.createdAt - a.createdAt || b.id.localeCompare(a.id))
+    .map((m) => storedCard(m.payload?.askCard))
+    .filter((c): c is Extract<AskCard, { type: 'outfit' }> => !!c && c.type === 'outfit' && !c.example);
+  for (const c of cards) {
+    const entries = entriesOf(c);
+    const holds = tg.row ? entries.some((e) => e.id === tg.row!.id) : entries.some((e) => e.slot === slot);
+    if (holds) return { others: entries.filter((e) => e.slot !== slot && e.id !== tg.row?.id).map((e) => e.garment) };
+  }
+  const check = [...s.checks]
+    .filter((c) => c.dayKey === today && c.status === 'scored')
+    .sort((a, b) => b.createdAt - a.createdAt)[0];
+  if (check) {
+    const others = check.itemIds.map(live).filter((r): r is ClosetItemRow => !!r && String(r.slot) !== slot && r.id !== tg.row?.id).map((r) => r.garment);
+    if (others.length) return { others, occasion: check.occasion };
+  }
+  return { others: [] };
+}
+
+type ColorsFn = NonNullable<EvidenceDeps['allowedColors']>;
+
+/** The list for a target: one call, or two for a named color (the union of both pairings, D8). A throw is an empty list. */
+function listFor(tg: Target, s: StylistSnapshot, extraRoute: readonly Garment[], fn: ColorsFn): ColorFamily[] {
+  const safe = (input: AllowedColorsInput): ColorFamily[] => {
+    try {
+      return fn(input);
+    } catch {
+      return [];
+    }
+  };
+  if (tg.named) {
+    const asTee = safe({ others: [G('top', 'tee', tg.named)], piece: G('bottom', 'jeans', 'unknown') });
+    const asJeans = safe({ others: [G('bottom', 'jeans', tg.named)], piece: G('top', 'tee', 'unknown') });
+    return paletteOrder([...asTee, ...asJeans]) as ColorFamily[];
+  }
+  const around = contextOutfit(tg, s);
+  const input: AllowedColorsInput = { others: [...around.others, ...extraRoute], piece: tg.piece!, ...(around.occasion ? { occasion: around.occasion } : {}) };
+  return safe(input);
+}
+
+function extraPieces(handles: readonly string[], s: StylistSnapshot, ctx: Pick<StylistContext, 'handles'>, tg: Target): Garment[] {
+  return handles.slice(1)
+    .map((h) => s.closet.find((c) => c.id === ctx.handles[h] && isOwned(c) && !c.isDeleted))
+    .filter((r): r is ClosetItemRow => !!r && r.id !== tg.row?.id && String(r.slot) !== (tg.row ? String(tg.row.slot) : ''))
+    .map((r) => r.garment);
+}
+
+/**
+ * KC3.3: the colors the rules would not mark down, as evidence for a color question (null when it isn't one, or
+ * there is no piece, kind or color to ask about). KC3.5 adds the fixed line when he asks about his looks.
+ */
+export function colorEvidence(question: string, route: Route, s: StylistSnapshot, ctx: Pick<StylistContext, 'handles'>, deps: Pick<EvidenceDeps, 'allowedColors'> = {}): ColorEvidence | null {
+  const coloring = mentionsColoring(question);
+  if (!isColorQuestion(question) && !coloring) return null;
+  const fn: ColorsFn = deps.allowedColors ?? allowedColors;
+  const owned = s.closet.filter((c) => isOwned(c) && !c.isDeleted && !c.mergedInto);
+  const ownFamilies = owned.map((c) => String(c.garment.color_family ?? '')).filter((f) => (COLOR_CHOICES as readonly string[]).includes(f));
+  const own = new Set<string>([...ownFamilies, ...colorsNamed(question)]);
+  const target = targetOf({ handles: route.pieces, kindWords: question, colorWords: question }, s, ctx);
+  const lines: string[] = [];
+  let allowed: ReadonlySet<string> | null = null;
+  if (target) {
+    const list = listFor(target, s, extraPieces(route.pieces, s, ctx, target), fn);
+    allowed = new Set(list);
+    if (list.length === 0) lines.push(`Allowed colors for ${target.words}: not available; name only the colors of his own pieces`);
+    else if (list.length >= COLOR_CHOICES.length) lines.push(`Allowed colors for ${target.words}: any of the ${COLOR_CHOICES.length} colors (nothing in the outfit limits it)`);
+    else lines.push(`Allowed colors for ${target.words} (the rules would not mark these down in this outfit; name only these and the colors of his own pieces): ${namesOf(list)}`);
+  } else if (!coloring) {
+    return null;
+  } else {
+    lines.push('No piece, kind or color is named, so there is no allowed-colors list for this question.');
+  }
+  if (coloring) {
+    lines.push(`He asked about colors for his looks. Start with "${t('ask.refuseFace')}" then name only colors that go with his own pieces: ${namesOf(ownFamilies)}`);
+  }
+  return { text: lines.join('\n'), allowed, own };
+}
+
+/**
+ * KC3.3's card rule: the list for a model `colors` block, whatever the question's wording was. Any other card, or one
+ * with nothing to ask about, is null.
+ */
+export function allowedForCard(raw: unknown, s: StylistSnapshot, ctx: Pick<StylistContext, 'handles'>, deps: Pick<EvidenceDeps, 'allowedColors'> = {}): ReadonlySet<string> | null {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+  const o = raw as Record<string, unknown>;
+  if (o.type !== 'colors') return null;
+  const piece = typeof o.piece === 'string' ? o.piece : null;
+  const handle = piece && /^P\d+$/.test(piece) ? piece : null;
+  const src: Source = {
+    handles: handle ? [handle] : [],
+    kindWords: piece && !handle ? piece : null,
+    colorWords: typeof o.goesWith === 'string' ? o.goesWith : null,
+  };
+  const target = targetOf(src, s, ctx);
+  if (!target) return null;
+  return new Set(listFor(target, s, [], deps.allowedColors ?? allowedColors));
 }

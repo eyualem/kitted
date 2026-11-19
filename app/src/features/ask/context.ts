@@ -149,7 +149,7 @@ export function fullCheckLines(
   return out;
 }
 
-export function buildStylistContext(s: StylistSnapshot, question: string): StylistContext {
+export function buildStylistContext(s: StylistSnapshot, question: string, extra?: { shownCards?: readonly string[] }): StylistContext {
   const { zone, nowMs } = s;
   const today = dayKey(nowMs, zone);
   const handles: Record<string, string> = {};
@@ -261,6 +261,8 @@ export function buildStylistContext(s: StylistSnapshot, question: string): Styli
   if (chat.length && chat[chat.length - 1] === `He: ${q}`) chat.pop();
   const turns = chat.slice(-MAX_TURNS);
   if (turns.length) push('', "Today's chat so far:", ...turns);
+  // T105 KC6.3: the cards Kit drew today, so it never says they're missing or contradicts them.
+  if (extra?.shownCards?.length) push('', "Cards you showed him today (he can still see them; never contradict them or say they're missing):", ...extra.shownCards);
 
   push('', `His question: ${q}`);
   const text = lines.join('\n');

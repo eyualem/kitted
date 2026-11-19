@@ -16,7 +16,7 @@ import type { Clock } from '@/services/clock';
 import { questionLimitText, type QuotaService } from '@/services/quota';
 import type { Scheduler } from '@/services/scheduler';
 import { checkFollowUps, type AskCard } from './cards';
-import { createSentenceStream, type GateContext, type GateRule } from './gate';
+import { createSentenceStream, cutAnswer, DRAWN_CARD_TYPES, type GateContext, type GateRule } from './gate';
 import { isBodyRating, isDistress, isUnderage } from './guards';
 import { liveAnswer as defaultLive } from './live';
 import type { AnswerEvent, AnswerSource } from './source';
@@ -335,10 +335,12 @@ export function createAsk(deps: AskDeps) {
       // 0 to 3 follow-up taps (KC1.3): never under a refusal, a clash, or a tap question (two rows of taps).
       const followUps = done.refused || clash || card?.type === 'ask' ? [] : checkFollowUps(done.followUps, { question: question.text ?? '', gate });
       const saved = done.refused || !prep.remember ? null : await prep.remember(done.remember, at).catch(() => null);
+      // KC1.1: cut at a sentence end (40 words with a drawn card, 60 without); the card is known only now, after the words streamed.
+      const shown = cutAnswer(answer, !!card && DRAWN_CARD_TYPES.has(card.type));
       // The live row keeps showing the words until the thread has this row (live.ts).
-      live.finish(id, answer, at, question.id);
+      live.finish(id, shown, at, question.id);
       if (replaces) await store.chat.delete(replaces.id);
-      await store.chat.put(row(id, at, 'stylist', answer, {}, {
+      await store.chat.put(row(id, at, 'stylist', shown, {}, {
         answerTo: question.id, ...(done.refused ? { askRefused: true as const } : {}), ...(card ? { askCard: card } : {}),
         ...(followUps.length ? { followUps } : {}),
         ...(saved ? { savedFact: saved.factId, ...(saved.itemId ? { savedPiece: saved.itemId } : {}) } : {}),
@@ -349,7 +351,7 @@ export function createAsk(deps: AskDeps) {
       }
       log(`${counted ? 'answered · counted' : done.refused ? 'answered · refused' : o.tap ? 'answered · a tap' : 'answered · not counted'}${prep.kind ? ` · ${prep.kind}` : ''}${card ? ` · card ${card.type}` : ''}${saved ? ' · saved' : ''}`);
       // Read once, complete, with its card and the saved line (07 §6.1, P2).
-      const spoken = [answer, prep.speak?.(card) ?? null, saved ? t('ask.saved') : null].filter(Boolean).join(' ');
+      const spoken = [shown, prep.speak?.(card) ?? null, saved ? t('ask.saved') : null].filter(Boolean).join(' ');
       deps.onAnswered?.(spoken.endsWith('.') || spoken.endsWith('?') ? spoken : `${spoken}.`);
       await deps.afterAnswer?.({ kind: prep.kind ?? null, at, refused: done.refused === true, uncounted: done.uncounted === true }).catch((e: unknown) => log(`afterAnswer failed · ${String(e)}`));
       return { kind: 'answered', messageId: id, counted };
