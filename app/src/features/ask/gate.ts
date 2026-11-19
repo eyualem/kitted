@@ -7,7 +7,9 @@
 // words ("elevate", "drip", "vibe") drop their sentence; an opener before a comma ("Absolutely, …") is cut off the first
 // sentence. Markup (**, #, bullets, backticks) never shows: the answer's look is drawn by code (L3).
 
-export type GateRule = 'emoji' | 'unlimited' | 'aiStylist' | 'brand' | 'creator' | 'body' | 'build' | 'height' | 'score' | 'filler' | 'banned' | 'handle' | 'fact';
+import { COLOR_CHOICES } from '@kitted/core';
+
+export type GateRule = 'emoji' | 'unlimited' | 'aiStylist' | 'brand' | 'creator' | 'body' | 'build' | 'height' | 'score' | 'filler' | 'banned' | 'handle' | 'fact' | 'price' | 'color' | 'deny' | 'claim' | 'place';
 
 export interface GateContext {
   /** Every score that may be said: the one-decimal numbers in the pack and the evidence ("7.0", "7.5"). */
@@ -16,6 +18,18 @@ export interface GateContext {
   pieceNames?: readonly string[];
   /** His owned pieces' facts, for the fact rule (#311): "your straight jeans" when his jeans are slim is dropped. */
   pieces?: readonly GatePiece[];
+  /** T105 KC8.1: dollar amounts in the pack and the evidence ("115", "30", "60"); absent = none. */
+  allowedPrices?: ReadonlySet<string>;
+  /** T105 KC3.3: color families Kit may name; null, absent or empty = the sentence rule is off. */
+  allowedColors?: ReadonlySet<string> | null;
+  /** T105 KC3.3: families his sentences may name besides the list. */
+  ownColors?: ReadonlySet<string>;
+  /** T105 KC6.2: Closet's Outfits view is live (absent = false). */
+  outfitsOn?: boolean;
+  /** T105 KC1.4: the code added a piece before this answer (T106 sets it). */
+  didAdd?: boolean;
+  /** T105 KC1.4: the code changed a piece before this answer (T107 sets it). */
+  didChange?: boolean;
 }
 
 export interface GatePiece {
@@ -55,23 +69,64 @@ export function pieceFactClash(sentence: string, pieces: readonly GatePiece[] = 
     const legs = words.filter((w) => LEG_GROUP[w]);
     const colors = words.filter((w) => COLOR_FAMILIES[w]);
     if (legs.length === 0 && colors.length === 0) continue;
-    // Only describing words may sit between "your" and the noun ("the jeans with the boots" isn't one).
-    if (words.some((w) => !LEG_GROUP[w] && !COLOR_FAMILIES[w] && !FILLER_WORDS.has(w))) continue;
-    let noun = m[3]!.toLowerCase();
-    if (!NOUN_KIND[noun]) noun = noun.replace(/s$/, '');
-    const kind = NOUN_KIND[noun];
-    if (!kind) continue;
-    const mine = pieces.filter((p) => p.category === kind.category && (!kind.sub || kind.sub.test(p.subcategory) || kind.sub.test(p.name.toLowerCase())));
+    const mine = piecesOfKind(m[3]!, pieces);
     if (mine.length === 0) continue; // not a piece he owns: buying advice, or nothing to check against
-    const fits = (p: GatePiece) => {
-      const name = p.name.toLowerCase();
-      const legOk = legs.every((w) => LEG_GROUP[p.leg] === LEG_GROUP[w] || name.includes(w));
-      const colorOk = colors.every((w) => COLOR_FAMILIES[w]!.includes(p.color) || name.includes(w));
-      return legOk && colorOk;
-    };
-    if (!mine.some(fits)) return true;
+    // Only describing words may sit between "your" and the noun ("the jeans with the boots" isn't one); a word of
+    // the piece's own name ("work", "chelsea") describes it too (T105).
+    const nameWords = nameWordsOf(mine);
+    if (words.some((w) => !LEG_GROUP[w] && !COLOR_FAMILIES[w] && !FILLER_WORDS.has(w) && !nameWords.has(w))) continue;
+    if (!mine.some((p) => fitsPiece(p, legs, colors))) return true;
   }
   return false;
+}
+
+/** His owned pieces a kind noun ("boots", "jeans") names. */
+function piecesOfKind(rawNoun: string, pieces: readonly GatePiece[]): GatePiece[] {
+  let noun = rawNoun.toLowerCase();
+  if (!NOUN_KIND[noun]) noun = noun.replace(/s$/, '');
+  const kind = NOUN_KIND[noun];
+  if (!kind) return [];
+  return pieces.filter((p) => p.category === kind.category && (!kind.sub || kind.sub.test(p.subcategory) || kind.sub.test(p.name.toLowerCase())));
+}
+
+const nameWordsOf = (mine: readonly GatePiece[]): Set<string> => {
+  const out = new Set<string>();
+  for (const p of mine) for (const w of p.name.toLowerCase().split(/[^a-z]+/)) if (w) out.add(w);
+  return out;
+};
+
+/** Do the leg and color words fit this piece (its facts, or a word in its name)? */
+function fitsPiece(p: GatePiece, legs: readonly string[], colors: readonly string[]): boolean {
+  const name = p.name.toLowerCase();
+  const legOk = legs.every((w) => LEG_GROUP[p.leg] === LEG_GROUP[w] || name.includes(w));
+  const colorOk = colors.every((w) => COLOR_FAMILIES[w]!.includes(p.color) || name.includes(w));
+  return legOk && colorOk;
+}
+
+/**
+ * KC5.2: "your dark brown work boots" when his only boots are "Black work boots" → "your black work boots". Only a
+ * wrong color is rewritten, and only when exactly one piece of that kind is his and the legs agree; anything else
+ * (two pieces of the kind, a leg clash, a color that fits) is left for the `fact` rule.
+ */
+export function rewritePieceNames(sentence: string, pieces: readonly GatePiece[] = []): string {
+  if (pieces.length === 0) return sentence;
+  return sentence.replace(PIECE_NOUN, (match: string, det: string, rawWords: string, noun: string) => {
+    // Only "your …" is his piece. "the/those/that white sneakers" is often one he'd buy ("Swap them for the white
+    // sneakers"), so renaming it to his black pair would say nonsense (T105 review): the fact rule handles those.
+    if (det.toLowerCase() !== 'your') return match;
+    const words = rawWords.toLowerCase().trim().split(/\s+/);
+    const legs = words.filter((w) => LEG_GROUP[w]);
+    const colors = words.filter((w) => COLOR_FAMILIES[w]);
+    if (colors.length === 0) return match;
+    const mine = piecesOfKind(noun, pieces);
+    if (mine.length !== 1) return match;
+    const p = mine[0]!;
+    const nameWords = nameWordsOf(mine);
+    if (words.some((w) => !LEG_GROUP[w] && !COLOR_FAMILIES[w] && !FILLER_WORDS.has(w) && !nameWords.has(w))) return match;
+    if (!fitsPiece(p, legs, [])) return match; // a leg clash is the fact rule's
+    if (fitsPiece(p, legs, colors)) return match; // nothing is wrong
+    return `${det} ${p.name.charAt(0).toLowerCase()}${p.name.slice(1)}`;
+  });
 }
 
 /** The pack's handles never show ("your olive overshirt (P13)" → "your olive overshirt"; seen live, #310). */
@@ -133,15 +188,26 @@ const BRANDS = [
   'kith', 'dickies', 'red wing', 'clarks', 'allen edmonds', 'cole haan', 'blundstones?', 'birkenstocks?', 'crocs',
   'common projects', 'everlane', 'j\\.? ?crew', 'banana republic', 'old navy', 'massimo dutti', 'asos', 'shein', 'temu',
   'amazon', 'walmart', 'nordstrom', "macy'?s", 'target\\.com', 'gucci', 'prada', 'louis vuitton', 'balenciaga', 'supreme',
+  // T105 KC8.1: more shops and common product brands.
+  'etsy', 'ebay', 'depop', 'grailed', 'poshmark', 'thredup', 'mercari', 'urban outfitters', 'costco', "kohl'?s", 'jcpenney', 'dsw',
+  'foot locker', 'ssense', 'farfetch', 'mr\\.? porter', 'todd snyder', 'buck mason', 'bonobos', 'suitsupply', 'casio', 'g-shock',
+  'seiko', 'timex', 'ray-ban', 'oakley', 'burberry', 'dior', 'rolex', 'tiffany', 'cartier', 'brooks brothers', 'anthropologie', 'primark',
 ];
 const BRAND = new RegExp(`(?:^|[^\\w'])(?:${BRANDS.join('|')})(?![\\w'])`, 'i');
+// A link: a scheme, www., or a name ending in a web suffix.
+const LINK = /https?:\/\/|\bwww\.|\b[a-z0-9-]+\.(?:com|net|org|co|shop|store)\b/i;
+// Words that are also everyday words count only capitalised, after a pointing word ("try Target", "at Gap").
+const AMBIGUOUS_SHOP = /\b(?:[Aa]t|[Ff]rom|[Tt]ry|[Oo]n|[Cc]heck|[Hh]ead\s+to|[Ss]hop\s+at)\s+(?:Target|Gap|Express|Guess|Champion|Boss)\b/;
 const CREATOR = /\b(?:tim dessaint|dessaint|wanhee(?: kim)?|jaye alexander|frugal aesthetic)\b/i;
 const UNLIMITED = /\bunlimited\b/i;
 const AI_STYLIST = /\bai[-\s]+stylist\b/i;
 
 // A body word aimed at him: "your face", "you're too skinny", "your weight". Clothes words ("skinny jeans", "a slim
 // fit", "the shoulders") are fine: the rule needs "you/your" and a body word that isn't about a garment.
-const YOUR_BODY = /\byour\s+(?:body|build|frame|figure|physique|height|weight|face|skin|hair|hairline|belly|stomach|gut|tummy|chest|arms|legs|thighs|calves|butt|neck|chin|jaw|jawline|waist(?!band| size)|hips|muscles|shape|age|coloring|colouring|complexion|undertones?)\b/i;
+const YOUR_BODY = /\byour\s+(?:body|build|frame|figure|physique|height|weight|face|skin|hair|hairline|belly|stomach|gut|tummy|chest|arms|legs|thighs|calves|butt|neck|chin|jaw|jawline|waist(?!band| size)|hips|muscles|shape|age|coloring|colouring|complexion|undertones?|eyes?|eye\s+colou?r)\b/i;
+// T105 KC3.5: color talk about him (skin tone, undertones, complexion, eye or hair color, brown eyes).
+// ("my complexion" is his own word, in a follow-up tap the card check already drops; Kit's own sentence never says "my".)
+const COLORING_BODY = /\b(?:skin\s+tones?|undertones?|(?:(?!my\b)[a-z']+\s+)complexion|eye\s+colou?r|hair\s+colou?r|(?:brown|blue|green|hazel|grey|gray)\s+eyes)\b/i;
 // Said of him: size, build, age or looks, with up to three modifiers ("you're not too skinny", "it makes you look
 // taller", "you look about 25", "you look older in the grey"). "You look good / great / sharp" are not in it.
 const YOU_ARE_BODY = /\byou(?:'re|\s+are|\s+look|\s+seem|\s+appear)\s+(?:(?:not|a\s+bit|a\s+little|kind\s+of|quite|really|very|so|too|pretty|way|much|even|a\s+lot|about|around|like)\s+){0,3}(?:fat|fatter|overweight|chubby|heavy|heavier|big|bigger|skinny|skinnier|thin|thinner|slim|slimmer|scrawny|lanky|tall|taller|short|shorter|small|smaller|muscular|athletic|broad|broader|wide|wider|lean|leaner|stocky|ugly|handsome|attractive|good[-\s]looking|old(?![-\s](?:school|fashioned|money))|older|young|younger|boyish|mature|(?:1\d|[2-9]\d)(?!\d|[.,]\d|['’"”/]|\s*(?:%|percent|inch|inches|cm|mm|lbs?|kg|bucks|dollars|out\s+of|minutes?)))\b/i;
@@ -212,10 +278,21 @@ export function checkSentence(sentence: string, ctx: GateContext): GateRule | nu
   if (UNLIMITED.test(sentence)) return 'unlimited';
   if (AI_STYLIST.test(sentence)) return 'aiStylist';
   if (CREATOR.test(sentence)) return 'creator';
-  if (BRAND.test(sentence)) return 'brand';
+  if (BRAND.test(sentence) || LINK.test(sentence) || AMBIGUOUS_SHOP.test(sentence)) return 'brand';
+  if (DENY.test(sentence)) return 'deny';
+  if (CLAIM_ADD.test(sentence) && !ctx.didAdd) return 'claim';
+  if (CLAIM_CHANGE.test(sentence) && !ctx.didChange) return 'claim';
+  if (PLACE_BUY.test(sentence) || (!ctx.outfitsOn && PLACE_OUTFITS.test(sentence))) return 'place';
+  if (PRICE_PIECE.test(sentence)) {
+    const allowed = ctx.allowedPrices;
+    for (const p of pricesIn(sentence)) if (!allowed || !allowed.has(p)) return 'price';
+  }
+  if (ctx.allowedColors && ctx.allowedColors.size > 0) {
+    for (const c of colorsNamed(sentence)) if (!ctx.allowedColors.has(c) && !ctx.ownColors?.has(c)) return 'color';
+  }
   if (BUILD_BACK.test(sentence)) return 'build';
   if (YOUR_BODY.test(sentence) || YOU_ARE_BODY.test(sentence) || (MENTIONS_HIM.test(sentence) && BODY_WORD.test(sentence))) return 'body';
-  if (HIDES_BODY.test(sentence) || SKIN_COLOR.test(sentence) || GIRLS_LIKE.test(sentence) || LOOKS_NUMBER.test(sentence)) return 'body';
+  if (COLORING_BODY.test(sentence) || HIDES_BODY.test(sentence) || SKIN_COLOR.test(sentence) || GIRLS_LIKE.test(sentence) || LOOKS_NUMBER.test(sentence)) return 'body';
   if (HEIGHT.test(sentence)) return 'height';
   if (scoresSaid(sentence).some((s) => !ctx.allowedScores.has(s))) return 'score';
   if (pieceFactClash(sentence, ctx.pieces)) return 'fact';
@@ -268,7 +345,7 @@ export function createSentenceStream(ctx: GateContext) {
   const pass = (raw: string): string => {
     let sentence = stripMarkup(raw);
     if (shown === '') sentence = trimOpener(sentence.replace(/^\s+/, ''));
-    sentence = lowerNames(stripHandles(sentence), ctx.pieceNames);
+    sentence = rewritePieceNames(lowerNames(stripHandles(sentence), ctx.pieceNames), ctx.pieces);
     const rule = sentence.trim() ? checkSentence(sentence, ctx) : null;
     if (rule) {
       dropped.push(rule);
@@ -313,3 +390,87 @@ export function createSentenceStream(ctx: GateContext) {
     dropped,
   };
 }
+
+// ---------------------------------------------------------------- T105 (tasks/T105/IMPLEMENTATION.md)
+/** The cards that count as "a card" for the 40-word limit: the ones that draw a picture or a piece (D1). */
+export const DRAWN_CARD_TYPES: ReadonlySet<string> = new Set(['outfit', 'options', 'colors', 'add', 'changed', 'buy']);
+
+/** Whitespace-separated tokens that hold a letter or a digit ("button-up" and "7.5" are one; a lone dash is none). */
+export function wordCount(s: string): number {
+  let n = 0;
+  for (const w of s.split(/\s+/)) if (/[A-Za-z0-9\u00C0-\u024F]/.test(w)) n++;
+  return n;
+}
+
+/**
+ * KC1.1: the longest prefix of whole sentences that fits: with a drawn card two sentences and 40 words, without 60
+ * words. The first sentence is always kept whole (the 15-word first line is asked of the model, never cut into).
+ */
+export function cutAnswer(text: string, withCard: boolean): string {
+  const t = text.trim();
+  const maxWords = withCard ? 40 : 60;
+  const maxSentences = withCard ? 2 : Infinity;
+  let kept = 0;
+  let count = 0;
+  let from = 0;
+  while (from < t.length) {
+    let end = sentenceEnd(t, from);
+    if (end < 0) end = t.length;
+    if (t.slice(from, end).trim() === '') { from = end; continue; } // a line break after a full stop
+    const upto = t.slice(0, end).trimEnd();
+    if (count > 0 && (count >= maxSentences || wordCount(upto) > maxWords)) break;
+    kept = upto.length;
+    count++;
+    from = end;
+  }
+  return t.slice(0, kept);
+}
+
+/** Dollar amounts a text holds, as digits: "$115" → "115", "$30–60" → "30" and "60", "90 dollars", "90 bucks" → "90". */
+export function pricesIn(text: string): Set<string> {
+  const out = new Set<string>();
+  const num = (raw: string) => raw.replace(/,/g, '').split('.')[0]!;
+  for (const m of allMatches(/\$\s?(\d[\d,]*(?:\.\d+)?)(?:\s*[–—-]\s*\$?\s?(\d[\d,]*(?:\.\d+)?))?/g, text)) {
+    out.add(num(m[1]!));
+    if (m[2]) out.add(num(m[2]));
+  }
+  for (const m of allMatches(/\b(\d[\d,]*)\s*(?:dollars?|bucks?)\b/gi, text)) out.add(num(m[1]!));
+  return out;
+}
+
+// Color words, multi-word first; each match is blanked so "light blue" is never also "blue". "denim", "gold" and
+// "silver" are absent on purpose (a fabric and metals, KC9.2); the denim washes only as "light/mid/dark denim".
+const COLOR_WORDS: readonly (readonly [RegExp, string])[] = [
+  [/\boff[-\s]white\b/gi, 'off_white_cream'], [/\bcream\b/gi, 'off_white_cream'],
+  [/\blight\s+gr[ae]y\b/gi, 'light_grey'], [/\bdark\s+gr[ae]y\b/gi, 'charcoal'], [/\bcharcoal\b/gi, 'charcoal'],
+  [/\bnavy(?:\s+blue)?\b/gi, 'navy'], [/\bdark\s+blue\b/gi, 'navy'], [/\blight\s+blue\b/gi, 'light_blue'],
+  [/\blight\s+denim\b/gi, 'denim_light'], [/\bmid\s+denim\b/gi, 'denim_mid'], [/\bdark\s+denim\b/gi, 'denim_dark'],
+  [/\bgr[ae]y\b/gi, 'grey'], [/\bwhite\b/gi, 'white'], [/\bblack\b/gi, 'black'], [/\bblue\b/gi, 'blue'],
+  [/\bolive\b/gi, 'olive'], [/\bgreen\b/gi, 'green'], [/\bsage\b/gi, 'sage'],
+  [/\bkhaki\b/gi, 'khaki_beige'], [/\bbeige\b/gi, 'khaki_beige'], [/\btan\b/gi, 'tan_camel'], [/\bcamel\b/gi, 'tan_camel'],
+  [/\bbrown\b/gi, 'brown'], [/\bburgundy\b/gi, 'burgundy'], [/\bred\b/gi, 'red'], [/\borange\b/gi, 'orange'],
+  [/\byellow\b/gi, 'yellow'], [/\bpink\b/gi, 'pink'], [/\bpurple\b/gi, 'purple'],
+];
+
+/** The color families a sentence names, in palette order, no duplicates (KC3.3). */
+export function colorsNamed(sentence: string): string[] {
+  const found = new Set<string>();
+  let rest = sentence;
+  for (const [re, family] of COLOR_WORDS) {
+    re.lastIndex = 0;
+    if (re.test(rest)) found.add(family);
+    re.lastIndex = 0;
+    rest = rest.replace(re, ' ');
+  }
+  return COLOR_CHOICES.filter((c) => found.has(c));
+}
+
+// ---- the T105 sentence rules
+const CAN_NOT = "(?:can['’]?t|cannot|unable\\s+to|not\\s+able\\s+to)";
+const DENY = new RegExp(
+  `\\b${CAN_NOT}\\s+(?:\\w+\\s+){0,2}?(?:(?:add|save|put)\\b[^.!?]*\\b(?:closet|wardrobe|pieces?|items?)|(?:change|update|fix|rename|correct|edit)\\b[^.!?]*\\b(?:closet|pieces?|colou?rs?|names?)|show\\b[^.!?]*\\b(?:outfits?|examples?))\\b`, 'i');
+const CLAIM_ADD = /\b(?:I(?:\s+have|['’]ve)?\s+(?:just\s+)?added|(?:it|that)(?:['’]s|\s+is)\s+(?:now\s+)?added)\b[^.!?]*\b(?:closet|wardrobe)\b/i;
+const CLAIM_CHANGE = /\bI(?:\s+have|['’]ve)?\s+(?:just\s+)?(?:changed|updated|renamed|corrected|fixed|redrew)\s+(?:your|the|that|it)\b/i;
+const PLACE_BUY = /\b(?:next[-\s]buy|buy[-\s]next|best[-\s]buy)\s+(?:section|tab|screen|page|list|view|menu)\b/i;
+const PLACE_OUTFITS = /\boutfits?\s+(?:tab|view|section|screen|page)\b/i;
+const PRICE_PIECE = /\b(?:jeans|chinos|trousers|pants|tees?|shirts?|sweaters?|hoodies?|jackets?|coats?|overshirts?|sneakers|boots|loafers|shoes|belts?|watch(?:es)?|caps?|beanies?|pairs?|pieces?)\b/i;

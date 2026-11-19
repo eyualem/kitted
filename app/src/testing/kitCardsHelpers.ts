@@ -6,7 +6,7 @@ import type { ChatMessage, ClosetItemRow } from '@/data/types';
 import type { CardInput } from '@/features/ask/cards';
 import { buildStylistContext } from '@/features/ask/context';
 import type { GateContext } from '@/features/ask/gate';
-import { createAsk } from '@/features/ask/pipeline';
+import { createAsk, type AskDeps } from '@/features/ask/pipeline';
 import { createPrepare } from '@/features/ask/prepare';
 import { loadStylistSnapshot } from '@/features/ask/snapshot';
 import type { AnswerEvent, AnswerRequest, AnswerSource } from '@/features/ask/source';
@@ -93,7 +93,7 @@ type HandleOf = (rowId: string) => string;
 export async function harness(
   rows: readonly ClosetItemRow[],
   reply: (question: string, h: HandleOf, req: AnswerRequest) => AnswerEvent[],
-  o: { chat?: readonly ChatMessage[]; isPro?: boolean; setup?: (store: ReturnType<typeof createMemoryStore>, clock: ReturnType<typeof manualClock>) => Promise<void> } = {},
+  o: { chat?: readonly ChatMessage[]; isPro?: boolean; askDeps?: Partial<AskDeps>; setup?: (store: ReturnType<typeof createMemoryStore>, clock: ReturnType<typeof manualClock>) => Promise<void> } = {},
 ) {
   const store = createMemoryStore();
   const clock = manualClock(NOW, US_EASTERN);
@@ -118,7 +118,7 @@ export async function harness(
     },
   };
   const make = () => createAsk({
-    store, quota, clock, ids, source: () => source, prepare: createPrepare({ store, clock, ids }), consent: async () => true, openConsent: () => {}, tryPro: () => false,
+    store, quota, clock, ids, source: () => source, prepare: createPrepare({ store, clock, ids }), consent: async () => true, openConsent: () => {}, tryPro: () => false, ...o.askDeps,
   });
   const ask = make();
   const run = async (q: string, via: ReturnType<typeof createAsk> = ask) => {
