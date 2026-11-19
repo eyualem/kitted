@@ -55,6 +55,19 @@ Written by the reviewer.
 **Verdict: not ready** (one code defect). Nothing was run beyond the probe; `npm run check` was the session's.
 
 
+### Round 2 (normal mode; the fix commit 7579e28c only; a throwaway probe test run and deleted)
+
+**Criteria**
+- Defect 1 (rewrite after the/those/that): closed. Probed with one owned "Black sneakers": "Try the white sneakers instead." and "Swap your black sneakers for the white sneakers." come back unchanged from `rewritePieceNames` (the fact rule still flags the "the white sneakers" part, so the sentence is dropped as it was before T105, the safe outcome).
+- KC5.2 for "your <wrong color> <kind>": still met. "Wear your white sneakers.", "Your white sneakers look right." and "Wear YOUR white sneakers." become "...your/Your/YOUR black sneakers..." (capital kept). `kitWordsGate.test.ts` and the probe: 61 passed.
+- Test edits: not weakened. The one changed case ("The brown boots disappear..." to "Your brown boots disappear...", in both the table and the stream test) encoded the bug and still checks the KC5.2 rewrite; two cases were added to the "unchanged" list ("Try the brown boots instead.", "Swap your sneakers for the white sneakers."). No `.only` or `.skip`. The stream test's expected text changed only in the third sentence's first word.
+
+**Defects**: none open.
+
+**Small things (never block)**: a "the/those/these/that <wrong color> <piece he owns>" sentence is dropped, not corrected, even when it did mean his piece ("The brown boots look good" with black boots owned); one sentence lost, never wrong words. The three round 1 notes above stay open.
+
+**Verdict: ready.**
+
 ## Fix round 1 (coordinator)
 - Review defect 1 fixed: `rewritePieceNames` now rewrites only after "your" (`gate.ts`). "the/those/that white sneakers" can be a piece he'd buy, so those go to the `fact` rule as before.
 - Two committed tests changed to match: the "The brown boots disappear…" cases now start with "Your"; added "Try the brown boots instead." and "Swap your sneakers for the white sneakers." as unchanged. No test was weakened for a wrong reason: the old case encoded the bug.
