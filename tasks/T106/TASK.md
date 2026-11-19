@@ -29,3 +29,36 @@
 - iOS Simulator, light (demo screens 405, `-demoLatency 0`, real store): `shots/01-add-asking-light.png`, tap Add → `shots/02-add-added-light.png`, Closet afterward shows the piece → `shots/03-closet-after-add-light.png`, No thanks → `shots/04-add-not-added-light.png`.
 - **Not verified in the Simulator:** a live model answer (no paid run, T110 does that), the colour tap question and the explicit "add it" card on screen (covered by the pipeline tests only), Undo and I have one on a device, dark mode and largest text (no colors or layout changed).
 - Closet's dashed tile: unchanged, finding in the PR.
+
+## Review
+
+### Round 1 · normal · **not ready** (2 code defects)
+
+Read: plan line, spec KC4.1–KC4.9 and KC2.10, TASK.md What changes, the `app/src` diff, the 4 screenshots, then Built. Did not re-run the Simulator or `npm run check`.
+
+**Criteria**
+- KC4.1 (same kind and color: no card, closet name used): done (`ownedSame`, evidence line; tested).
+- KC4.2 (mention shows the card, nothing written): done; screenshot 01 shows the card, test checks the closet is unchanged.
+- KC4.3 (Add writes one chat piece, Undo removes it): done for a single tap on a single card. Not done across cards (defect 1).
+- KC4.4 (No thanks writes nothing, never offered again): done (declined outcome; "add it" still adds).
+- KC4.5 (add it before Kit answers, card shows Added · Undo): done, including rollback if the answer fails or is refused.
+- KC4.6 (Kit never says "I can't add", never claims "added" unless code did): done as far as T105's gate goes. The gate's `DENY` and `CLAIM_ADD` regexes are narrow (see small things). The model can no longer write a piece: `owns_unphotographed` is dropped in `parseRemember`, and the only writers are `planAdd` (explicit ask), `cardActions.add` and `cardActions.haveOne`.
+- KC4.7 (kind unclear: tap question, no card): partly. The kind question shows, but a tap on a kind with no color in his words dead-ends (defect 2).
+- KC4.8 (once per chat day): done for the same day; see defect 1 for the next day.
+- KC4.9 (no question used): done (local writes only; test checks the quota).
+- KC2.10 (I have one adds as Add does): done, with the Undo toast. No guard against a double tap (small things).
+- Nov 19 message replayed: done. The denial is dropped, nothing is saved from the model's block, the color is asked, and the tap adds one "Grey tee" without using a question.
+
+**Defects**
+1. **code** · `app/src/features/ask/cardActions.ts`, `add` (about lines 45-52): it never checks whether the closet already has that kind and color, so an older "asked" card can add a second copy. Two ways to get there. (a) He says "I have a white tee" (card stays on Add), then "add it": `planAdd` adds the piece and shows a new Added card, but the first card still reads Add. Tapping it writes a duplicate. The test `"add it" right after a mention` never taps the old card. (b) Day 1 card left unanswered, day 2 "I have a white tee": `seen` only blocks declined cards or the same day, so a second card shows, and Add on both writes two. Fix: in `add`, look up `ownedSame` first and, if a piece exists, link the card to it as Added instead of writing; or when "add it" adds a piece, update the matching "asked" card. A test should tap the old card after "add it".
+2. **code** · `app/src/features/ask/addCard.ts`, tap branch of `planAdd` (about lines 92-99): after the kind question, a tap such as "Hoodie" with no color in his original words gives `color = null`, so it returns `NO_PLAN` and the add silently ends. Kit just answers a message that reads "Hoodie". It should go on to the `What color is it?` tap question. The test named "the tap and a color finish it" never taps the kind. Add a test: `add it`, tap a kind, expect the color question, tap a color, expect one piece.
+
+**Small things worth a later look (never block)**
+- `cardActions.add` and `haveOne` are read-then-write, so two quick concurrent taps could both pass the `outcome === 'asked'` check. Fine if the button disables on press; unchecked here.
+- If `prepare` throws after an explicit add was written (for example in `buildEvidence`), `prep` stays `NO_PREP`, so no rollback runs. The piece stays with an error row and no Undo. A retry then says "already has" and shows no card. Rare, and he did ask for it.
+- `DENY` misses forms like "I can't add that" (no closet/piece word) and "I won't be able to add it"; `CLAIM_ADD` misses "Done, it's in your closet" and "Saved it". The evidence lines and prompt rule cover the usual case. A live check in T110 would tell.
+- "add it" with no kind picks the latest asked or declined card of the day, however many messages ago. That is his explicit word, but it can surprise.
+- Screenshot 01 is a seeded demo card, so it shows the card drawing and not the code path. The color and kind tap questions have no screenshot (the TASK.md already says so).
+- `askC4` and `kitWordsPrompt` test updates look like honest follow-ups to the intended change (a dropped key, the prompt version), not weakened tests. No `.only` or `.skip` seen.
+
+**Hard lines:** nothing rates a face, body or skin; nothing new leaves the phone; no emoji, ranks or streaks; the new words are the two tap questions only (`What kind of piece is it?`, `What color is it?`), which match the TASK.md and look right for the spec's tap-question rule, but they are words users read, so the founder should OK them.
