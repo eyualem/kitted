@@ -12,7 +12,11 @@ import type { KittedStore } from '@/data/store';
 
 export const SERVER_TIER_KV = 'server.tier';
 
-export type ServerTier = 'free' | 'pro' | 'beta';
+export type ServerTier = 'free' | 'pro' | 'beta' | 'founder';
+/** What the screens see: `founder` (the server's higher limits for his own account) is the beta everywhere but in the
+ *  numbers, so there is no "Pro" wording and no paywall because of it. */
+export type DisplayTier = Exclude<ServerTier, 'founder'>;
+export const displayTier = (t: ServerTier): DisplayTier => (t === 'founder' ? 'beta' : t);
 
 /** The last tier read from the store or recorded from an answer; null before either. */
 let known: ServerTier | null = null;
@@ -28,7 +32,7 @@ function setKnown(tier: ServerTier) {
 }
 
 export function parseTier(v: unknown): ServerTier | null {
-  return v === 'free' || v === 'pro' || v === 'beta' ? v : null;
+  return v === 'free' || v === 'pro' || v === 'beta' || v === 'founder' ? v : null;
 }
 
 export async function serverTier(store: Pick<KittedStore, 'getKv'>): Promise<ServerTier | null> {
@@ -48,9 +52,9 @@ export async function appTier(store: Pick<KittedStore, 'getKv'>): Promise<Server
   return (await serverTier(store)) ?? fallbackTier();
 }
 
-/** The same, synchronously: the last tier known in memory. */
-export function tierNow(): ServerTier {
-  return demoTier ?? known ?? fallbackTier();
+/** The same, synchronously: the last tier known in memory, as the screens see it. */
+export function tierNow(): DisplayTier {
+  return displayTier(demoTier ?? known ?? fallbackTier());
 }
 
 export function onTierChange(cb: () => void): () => void {
