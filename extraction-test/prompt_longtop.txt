@@ -1,0 +1,9 @@
+This is a photo of one person's outfit. The face is hidden on purpose. Describe only the clothes, not the person.
+
+The top is the outermost tee, shirt, polo, hoodie, sweatshirt or sweater on the upper body. A jacket, coat, blazer or vest is not the top: if one is worn, the top is the piece under it.
+
+Question: is the top worn untucked with its bottom hem hanging below the crotch, so it covers the bottom of the pants' fly, where the pant legs split? Judge the front of the hem, at the middle of the body.
+- yes: untucked, and the hem reaches the crotch or lower; the bottom of the fly is covered.
+- no: untucked, and the hem ends higher, at the waistband or belt or partway down the fly; the bottom of the fly shows below it.
+- not_applicable: the top is tucked in, or cropped above the waistband, or its hem can't be seen (under a closed jacket or coat, behind the arms or an object, or out of the photo).
+Return only JSON that matches the schema.

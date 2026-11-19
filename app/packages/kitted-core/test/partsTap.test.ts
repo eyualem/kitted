@@ -6,6 +6,12 @@ import {
   type KnownPiece, type Reading, type TapQuestion,
 } from "../src";
 import { loadJSON } from "./helpers";
+import { afterAll as afterAllT69 } from "vitest";
+import { setRescoreV16 as setRescoreV16T69 } from "../src/index";
+// T69 (#484, #487): this file tests the one quick tap's rules with v15's swings (v16 moves the swings; T69-F2.1g and T69-G8 cover v16's tap). That engine still ships as the third switch's rollback and scores
+// every check stored before T69, so the file is pinned to v15; v16's own behaviour is in the T69 tests.
+setRescoreV16T69(false);
+afterAllT69(() => setRescoreV16T69(true));
 
 interface PhoneCheck { photo: string; occasion: string; reading: Reading }
 const checks = loadJSON<PhoneCheck[]>("../../rubric/research/reading-accuracy/phone-checks-oct8.json");

@@ -11,6 +11,12 @@ import {
   applyPartsFix, partsFixAsFix, partsRecheckOutcome, scoreParts, suggestPartsFixes,
   type ClosetItem, type Garment, type Reading,
 } from "../src/index";
+import { afterAll as afterAllT69 } from "vitest";
+import { setRescoreV16 as setRescoreV16T69 } from "../src/index";
+// T69 (#484, #487): this file tests v15's fix and re-check numbers on his Oct 23 check (under v16 the sneaker swap isn't a fix). That engine still ships as the third switch's rollback and scores
+// every check stored before T69, so the file is pinned to v15; v16's own behaviour is in the T69 tests.
+setRescoreV16T69(false);
+afterAllT69(() => setRescoreV16T69(true));
 
 const base = {
   pattern: "solid", logo: "none", volume: 3, leg_shape: "na", hem: "na", tucked: "na", condition: "clean", certainty: "clear",

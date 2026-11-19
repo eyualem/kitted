@@ -10,7 +10,7 @@
 
 import { G, SLOT_TO_CLOSET } from "./names";
 import { fixTargets, type Fix } from "./fixes";
-import { CASUAL_FITS_V14, partsDataFor, scoreParts, type PartName, type PartsOptions, type PartsScored } from "./parts";
+import { defaultParts, type PartName, type PartsEngine, type PartsOptions, type PartsScored } from "./parts";
 import { PARTS_FIXES_DATA } from "./partsFixesData";
 import { defaultRubric } from "./rubric";
 import type { PartsFix, PartsFixEdit } from "./partsFixes";
@@ -19,7 +19,7 @@ import type { ClosetItem, FixEdit, FixTier, Garment, Reading, RuleId } from "./t
 import { clone, has } from "./util";
 
 /** The rubricVersion a parts-scored check stores ("parts-1.0.0"). */
-export const PARTS_RUBRIC_VERSION = `parts-${partsDataFor(CASUAL_FITS_V14).version}`;
+export { PARTS_RUBRIC_VERSION } from "./parts"; // live: follows setRescoreV16
 
 const TIER: Record<PartsFix["class"], FixTier> = { free: "adjust", closet: "swapFromCloset", own: "changeInto", tailor: "tailor" };
 const lowerFirst = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
@@ -211,9 +211,10 @@ function partsFixDone(fix: Fix, first: Reading, merged: Reading, closet?: readon
  *  counts only when that piece is in the photo. */
 export function partsRecheckOutcome(
   first: Reading, fixes: readonly Fix[], merged: Reading, opts: PartsOptions = {}, mergedOpts?: PartsOptions, closet?: readonly ClosetItem[],
+  engine: PartsEngine = defaultParts,
 ): RecheckOutcome | null {
-  const a = scoreParts(first, opts);
-  const b = scoreParts(merged, mergedOpts ?? opts);
+  const a = engine.scoreParts(first, opts);
+  const b = engine.scoreParts(merged, mergedOpts ?? opts);
   if (a.overall === null || b.overall === null) return null;
   const A = a as PartsScored;
   const B = b as PartsScored;

@@ -239,9 +239,10 @@ SC_VETO = {"hoodie", "sweatshirt", "graphic_tee", "jersey", "rugby_shirt", "flan
            "rain_jacket", "sweatpants", "joggers", "athletic_shorts", "cargos", "slides_sandals", "track_jacket", "track_pants",
            "technical_pants", "trail_shoe"}
 
-# --- tailored (T94, specs/tailored.md TL1): the 8th look, a NAME only. It is never in STYLE_ORDER, so no band, credit,
-# charge or fix gate (all read detect_styles) can see it; detect_looks adds it for the card's name, Going for and the
-# fix order for a Tailored pick (TL5). TL_NEVER is T69's never-list exactly.
+# --- tailored (specs/tailored.md TL1): the 8th look. It is never in STYLE_ORDER, so no band, credit, charge or fix gate
+# that reads detect_styles can see it. ONE definition of what counts (is_tailored below, with TL_JACKET, TL_TROUSERS and
+# T69's never-list TL_NEVER): parts_proto's graded look (T69: the taste rules follow it on v16) and detect_looks (T94:
+# the card's name, Going for, the fix order for a Tailored pick) both call it. Log #495.
 TL_JACKET = set(TAILORED_OUTER)
 TL_TROUSERS = {"suit_trousers", "trousers"}
 TL_NEVER = {"jeans", "chinos", "cargos", "sweatpants", "joggers", "shorts", "athletic_shorts", "track_pants",
@@ -504,14 +505,8 @@ def _role_tailored(g, c):
 
 
 def _veto_tailored(c):
-    if c.subs & TL_NEVER: return "a piece Tailored never takes"
-    if any((g.get("volume") or 3) >= 5 for g in c.main): return "roominess 5"
-    return None
-
-
-def _gate_tailored(c, slots, total):
-    """TL1's extra condition: a tailored jacket and dress trousers."""
-    return any(g.get("subcategory") in TL_JACKET for g in c.tops + c.outer) and c.bsub in TL_TROUSERS
+    """The framework's entry calls the one definition, so _evaluate("tailored", c) always equals is_tailored."""
+    return None if is_tailored(c.main) else "not Tailored (TL1)"
 
 
 STYLES = {   # role, veto, gate, bonus
@@ -522,17 +517,19 @@ STYLES = {   # role, veto, gate, bonus
     "minimalist": (_role_min, _veto_min, None, _bonus_min),
     "classic_prep": (_role_prep, _veto_prep, None, None),
     "smart_casual": (_role_sc, _veto_sc, _gate_sc, None),
-    "tailored": (_role_tailored, _veto_tailored, _gate_tailored, None),   # a name only: never in STYLE_ORDER (T94)
+    "tailored": (_role_tailored, _veto_tailored, None, None),   # never in STYLE_ORDER; detection is is_tailored
 }
 
 
 def is_tailored(garments):
-    """TL1 on the scored garments (no unsure pieces, no accessories): a tailored jacket among the tops and layers, the
-    bottom dress trousers, nothing on the never-list, no main piece at roominess 5. Written out on its own; it always
-    equals the framework's _evaluate("tailored", Outfit(garments)) (jacket 2 + trousers 2 pass TL1's points rule)."""
-    c = Outfit(garments)
-    return (any(g.get("subcategory") in TL_JACKET for g in c.tops + c.outer) and c.bsub in TL_TROUSERS
-            and not (c.subs & TL_NEVER) and not any((g.get("volume") or 3) >= 5 for g in c.main))
+    """specs/tailored.md TL1, the one definition (log #495): among the main pieces (tops, layers, bottom, shoes; no
+    unsure pieces, no accessories) a tailored jacket and dress trousers, nothing on the never-list, nothing at roominess
+    5. With a jacket and dress trousers in view TL1's points rule always passes (jacket 2 + trousers 2), so this needs
+    no points. Called by detect_looks (the names) and by parts_proto.graded_looks (the look v16's taste rules follow)."""
+    main = [g for g in garments if g.get("category") in SLOT]
+    subs = {g.get("subcategory") for g in main}
+    return (bool(subs & TL_JACKET) and bool(subs & TL_TROUSERS) and not subs & TL_NEVER
+            and all((g.get("volume") or 3) < 5 for g in main))
 
 
 def _evaluate(style, c):
@@ -617,7 +614,7 @@ def detect_looks(garments, picks=None):
     drops smart casual and prep first (TL2), then today's pairwise rules, then his picks among what's left, then
     LOOK_ORDER. Names only (the card's look, Going for, the fix order for a Tailored pick): no number reads it."""
     c = Outfit(garments)
-    det = [s for s in LOOK_ORDER if _evaluate(s, c)]
+    det = [s for s in LOOK_ORDER if (is_tailored(c.main) if s == "tailored" else _evaluate(s, c))]
     return {"detected": det, "label": _label(det, c, picks or {}, LOOK_ORDER)}
 
 

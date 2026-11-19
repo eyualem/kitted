@@ -486,8 +486,8 @@ export function createRubric(data: RubricData): RubricEngine {
     if (cat === "bottom") return [TL_TROUSERS.has(s) ? 2 : 0, 0];
     return [TL_SIGNATURE_SHOES.has(s) ? 2 : TL_HOME_SHOES.has(s) ? 1 : 0, 0];
   };
-  const vetoTailored: Veto = (c) => anyIn(c.subs, TL_NEVER) || c.main.some((g) => vol(g, 3) >= 5);
-  const gateTailored: Gate = (c) => [...c.tops, ...c.outer].some((g) => TL_JACKET.has(g.subcategory)) && TL_TROUSERS.has(c.bsub);
+  // The framework's entry calls the one definition (isTailored below), so evaluate("tailored", c) always equals it.
+  const vetoTailored: Veto = (c) => !isTailoredOutfit(c);
 
   const STYLES: Record<DetectedStyle, { role: Role; veto: Veto; gate?: Gate; bonus?: (c: Outfit) => readonly [number, boolean] }> = {
     streetwear: { role: roleStreet, veto: vetoStreet, gate: gateStreet },
@@ -497,14 +497,18 @@ export function createRubric(data: RubricData): RubricEngine {
     minimalist: { role: roleMin, veto: vetoMin, bonus: bonusMin },
     classic_prep: { role: rolePrep, veto: vetoPrep },
     smart_casual: { role: roleSc, veto: vetoSc, gate: gateSc },
-    tailored: { role: roleTailored, veto: vetoTailored, gate: gateTailored }, // a name only: never in STYLE_ORDER (T94)
+    tailored: { role: roleTailored, veto: vetoTailored }, // never in STYLE_ORDER; detection is isTailored
   };
 
-  /** rubric.is_tailored (TL1), written out on its own; it always equals evaluate("tailored", ...). */
+  /** rubric.is_tailored (specs/tailored.md TL1), the one definition (log #495): among the main pieces a tailored jacket
+   *  and dress trousers, nothing on the never-list (T69's TL_NEVER), nothing at roominess 5. Called by detectLooks (the
+   *  names) and by parts.ts gradedLooks (the look v16's taste rules follow). */
+  function isTailoredOutfit(c: Outfit): boolean {
+    return anyIn(c.subs, TL_JACKET) && anyIn(c.subs, TL_TROUSERS) && !anyIn(c.subs, TL_NEVER) && c.main.every((g) => vol(g, 3) < 5);
+  }
+
   function isTailored(garments: readonly Garment[]): boolean {
-    const c = outfitOf(garments);
-    return [...c.tops, ...c.outer].some((g) => TL_JACKET.has(g.subcategory)) && TL_TROUSERS.has(c.bsub)
-      && !anyIn(c.subs, TL_NEVER) && !c.main.some((g) => vol(g, 3) >= 5);
+    return isTailoredOutfit(outfitOf(garments));
   }
 
   function evaluate(style: DetectedStyle, c: Outfit): boolean {
@@ -600,7 +604,7 @@ export function createRubric(data: RubricData): RubricEngine {
 
   /** rubric.detect_looks (T94): the 7 exactly as detectStyles, plus Tailored, in LOOK_ORDER; TL2's label. Names only. */
   function looksWith(c: Outfit, picks: Map<string, number>): DetectedStyles {
-    const detected = LOOK_ORDER.filter((s) => evaluate(s, c));
+    const detected = LOOK_ORDER.filter((s) => (s === "tailored" ? isTailoredOutfit(c) : evaluate(s, c)));
     return { detected, label: label(detected, c, picks, LOOK_ORDER) };
   }
 

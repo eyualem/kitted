@@ -179,18 +179,19 @@ def main():
                                       **({"held_items": r["held_items"]} if r.get("held_items") else {})})
         return rid
 
-    def add(src, r, occ, sl, warm, closet, first=False, styles=None):
+    def add(src, r, occ, sl, warm, closet, first=False, styles=None, engine="v15", season=None):
         rid = ref(r)
         st = PROFILE if styles is None else styles
+        pre = "v16 " if engine == "v16" else ""          # T69: v16's coverage counts apart, so v15's stay as they were
         # _working must score the same as the reading itself, and picks never move the score
-        b0 = F._score(r, occ, dict(st), sl, BOLD)
-        b1 = F._score(F._working(r), occ, dict(st), sl, BOLD)
-        bn = F._score(r, occ, {}, sl, BOLD)
+        b0 = F._score(r, occ, dict(st), sl, BOLD, engine, season)
+        b1 = F._score(F._working(r), occ, dict(st), sl, BOLD, engine, season)
+        bn = F._score(r, occ, {}, sl, BOLD, engine, season)
         assert b0.get("overall") == b1.get("overall") and b0.get("raw_unrounded") == b1.get("raw_unrounded"), src
         assert b0.get("overall") == bn.get("overall") and b0.get("raw_unrounded") == bn.get("raw_unrounded"), src
-        exp = F.suggest_parts_fixes(r, occ, st, BOLD, sl, CLOSET if closet else [], warm, first)
+        exp = F.suggest_parts_fixes(r, occ, st, BOLD, sl, CLOSET if closet else [], warm, first, engine=engine, season=season)
         if styles is not None:
-            ref_exp = F.suggest_parts_fixes(r, occ, [], BOLD, sl, CLOSET if closet else [], warm, first)
+            ref_exp = F.suggest_parts_fixes(r, occ, [], BOLD, sl, CLOSET if closet else [], warm, first, engine=engine, season=season)
             assert ref_exp["base_overall"] == exp["base_overall"] and ref_exp["base_raw"] == exp["base_raw"], src
             lead = lambda e: e["fixes"][0]["id"] if e["fixes"] else None  # noqa: E731
             cov["picks: cards"] += 1
@@ -200,15 +201,15 @@ def main():
             if lead(exp) != lead(ref_exp):
                 PICK_LEADS.append((src, st, lead(ref_exp), lead(exp)))
         for f in exp["fixes"]:
-            cov["fix " + f["id"]] += 1
+            cov[pre + "fix " + f["id"]] += 1
         if exp["smaller_step"]:
-            cov["step " + exp["smaller_step"]["id"]] += 1
+            cov[pre + "step " + exp["smaller_step"]["id"]] += 1
         if exp["next_level"]:
-            cov["next " + exp["next_level"]["id"]] += 1
+            cov[pre + "next " + exp["next_level"]["id"]] += 1
         if exp["none_line"]:
-            cov["none " + exp["none_line"]] += 1
+            cov[pre + "none " + exp["none_line"]] += 1
         if exp["base_overall"] is None:
-            cov["(not scored)"] += 1
+            cov[pre + "(not scored)"] += 1
         exp["fixes"] = [intern(f) for f in exp["fixes"]]
         if exp["smaller_step"] is not None:
             exp["smaller_step"] = intern(exp["smaller_step"])
@@ -216,13 +217,17 @@ def main():
                 "closet": "seed" if closet else "empty", "first_check": first, "expected": exp}
         if styles is not None:
             case["styles"] = styles
+        if engine == "v16":                              # T69: tagged, with the card's season (warm == season "warm")
+            assert warm == (season == "warm"), src
+            case["tune"] = "v16"
+            case["season"] = season
         cases.append(case)
 
     # 1. real readings
     U = T.load_runs(os.path.join(ET, "results/look1/raw.json"), "U")
     L = T.load_runs(os.path.join(ET, "results/look1/raw.json"), "L")
     corpus = json.load(open(os.path.join(ET, "results/parts1/corpus.json")))
-    pull_path = MP.newest_pull()
+    pull_path = MP.pinned_pull()                  # T69 (Q-T6): the pull the v15 cases were made from
     T.PULL = pull_path
     pull = T.load_pull() if pull_path else {}
     real, ids = [], set()
@@ -285,6 +290,21 @@ def main():
                 add(f"picks:{pn}:fix-edge:{name}@{occ}", r, occ, sl, False, closet, False, st)
     n_picks = len(cases) - n_before_picks
 
+    # 5. T69: parts engine v16, the card's engine and season (warm = season "warm"), after every v15 case
+    n_before_v16 = len(cases)
+    for src, k, r, occ in uniq:
+        sl = T.second_look_for(k, U, L)
+        for o in OCCASIONS:
+            for season in (None, "warm"):
+                for closet in (False, True):
+                    add(f"v16:{src}|{k}@{o}", r, o, sl, season == "warm", closet, engine="v16", season=season)
+        add(f"v16:{src}|{k}@{occ}:first", r, occ, sl, False, False, True, engine="v16")
+    for name, r, occ, sl in fe:
+        for season in (None, "warm"):
+            for closet in (False, True):
+                add(f"v16:fix-edge:{name}@{occ}", r, occ, sl, season == "warm", closet, engine="v16", season=season)
+    n_v16 = len(cases) - n_before_v16
+
     must = ["fix " + c["id"] for c in F.CATALOG["candidates"]] + ["next " + n["id"] for n in F.CATALOG["nextLevel"]] + \
            ["none " + F.CATALOG["copy"]["noFixes"], "(not scored)"]
     # "Dialed in" (9+) can't happen yet: Fit tops out at 7 until the fit cues pass, so the best a reading reaches is 8.5
@@ -304,7 +324,7 @@ def main():
         "pull": os.path.relpath(pull_path, MP.DATA) if pull_path else None,
         "profile": PROFILE, "boldness": BOLD, "occasions": OCCASIONS, "closet": CLOSET,
         "counts": {"real_readings": len(uniq), "real_cases": n_real, "edge_readings": len(edges), "edge_cases": n_edge,
-                   "fix_edge_readings": len(fe), "picks_cases": n_picks, "cases": len(cases), "own_readings": len(readings), "pool": len(pool)},
+                   "fix_edge_readings": len(fe), "picks_cases": n_picks, "v16_cases": n_v16, "cases": len(cases), "own_readings": len(readings), "pool": len(pool)},
         "coverage": dict(sorted(cov.items())),
         "pool": pool, "readings": readings, "cases": cases,
     }

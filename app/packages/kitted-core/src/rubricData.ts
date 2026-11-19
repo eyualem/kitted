@@ -7,7 +7,7 @@ export const RUBRIC_DATA: RubricData = {
  "engine": 5,
  "minAppBuild": 1,
  "source": "extraction-test/rubric.py",
- "rubricSha256": "9b50859c4f771f8b9c3f1ed6807c84a677c3bd7507fb2207d99fd2dd84d5553c",
+ "rubricSha256": "c8d308d74134142c831af8d1311799f343e47ef6d209d7c302961fb634bb1b6b",
  "config": {
   "minAge": 18,
   "freeChecksPerDay": 1,

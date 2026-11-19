@@ -208,6 +208,55 @@ export interface PartsTune {
   /** COL-13: the one outer layer in the bottoms' color family (not NO_TIE_IN, not bright, not sweats or tailoring), with a top
    *  of another family between them, earns this on Color. */
   cp8: number;
+  // ---- v16 (T69, #484; off in v1-v15, parts_proto._OFF16)
+  v16: boolean;
+  v16_color: boolean;
+  sty3_off: boolean;
+  v16_alpha: number;
+  v16_beta: number;
+  curve: [number, number, number];
+  v16_knit: number;
+  v16_h9_cap: boolean;
+  v16_h7_cap: number;
+  taste: V16Taste | null;
+  /** What-if knobs (tasks/T69/top-of-scale.md), off by default: the raw score's upper clamp, a steeper curve above a knee,
+   *  and a higher stacking ceiling for an outfit with nothing off. */
+  raw_cap: number;
+  curve_knee: [number, number] | null;
+  stack_clean: Record<string, number> | null;
+}
+
+/** TUNE["v16"]["taste"]: every key parts_proto reads, including the what-if knobs that are off by default. */
+export interface V16Taste {
+  leg_look_mode?: "tiebreak" | "replace" | "off";
+  leg_look_global?: boolean;
+  steady_map?: Record<string, string>;
+  other_shoe_real?: boolean;
+  lift_off?: string[];
+  h7_tip?: boolean;
+  long_top?: number;
+  long_top_read?: "reading" | "ruler";
+  shorts?: number;
+  one_lift?: number;
+  one_lift_mode?: "first";
+  stack_prehalf?: boolean;
+  relaxed_factor?: number;
+  leg_slim?: number;
+  leg_skinny?: number;
+  leg_wide?: number;
+  color?: number;
+  sandals_warm?: boolean;
+  runners_casual?: boolean;
+  sil?: number;
+  sil_mode?: "alone" | "single" | "top_up" | "shape";
+  sil_line?: number;
+  sil_tonal?: number;
+  hem_plus?: number;
+  shorts_wide?: number;
+  shorts_above?: number;
+  accent_by_look?: boolean;
+  accent_agree?: boolean;
+  pn1_look?: boolean;
 }
 
 interface Range { points: number; from: number; to: number }
@@ -311,6 +360,23 @@ export interface PartsData {
   rollback?: { engine: string; label: string; version: string; tune: PartsTune };
   /** v15: what the second switch (HOODIE_LAYER_V15) rolls back to: v14's engine, label, version and tune. */
   rollback14?: { engine: string; label: string; version: string; tune: PartsTune };
+  /** The tables v16 reads (make_parts_json.py writes them all). */
+  v16?: {
+    lifts: Record<string, [string, number | null, boolean]>;
+    liftNames: Record<string, string>;
+    owns: Record<string, string[]>;
+    unsteady: string[];
+    unread: Record<string, string>;
+    tasteByLook: Record<string, Record<string, number | "2nd">>;
+    l5ByLook: Record<string, number>;
+    tlJacket: string[];
+    tlNever: string[];
+    proPieces: string[];
+    sets: Record<"OPEN_LAYERS" | "LIGHT_SHIRTS" | "UNDER_TEES" | "KNIT_LAYERS" | "HEAVY_LAYERS" | "SUMMER_TOPS" | "SUMMER_BOTTOMS", string[]>;
+    smart: number;
+  };
+  /** T69: what the third switch (RESCORE_V16) rolls back to: v15's engine, label, version and tune. */
+  rollback15?: { engine: string; label: string; version: string; tune: PartsTune };
 }
 
 /** A check that moved a part. `points` is Python's round(delta, 3). */
@@ -359,6 +425,12 @@ export interface SecondLookInput {
   under_present?: unknown;
   under_shows?: unknown;
   covers_shoe?: unknown;
+  pant_end?: unknown;
+  /** look W (the leg width): "clings" | "skims" | "hangs_away" | "not_visible", and "narrower" | "about_the_same" | "wider" | "not_visible". */
+  knee?: unknown;
+  opening?: unknown;
+  shorts_end?: unknown;
+  long_top?: unknown;
   [extra: string]: unknown;
 }
 
@@ -368,6 +440,37 @@ export interface PartsOptions {
   styles?: Styles | null;
   boldness?: string;
   secondLook?: SecondLookInput | null;
+  /** T69 (stub, tasks/T69/IMPLEMENTATION.md → Interfaces): v16 only. */
+  season?: Season;
+  /** T69 (stub): v16 only, the look(s) the taste rules follow. */
+  gradedLook?: string | readonly string[] | null;
+}
+
+/** T69 (stub): v16's temperature band: "warm", or cool as null/undefined. */
+export type Season = "warm" | null;
+
+/** T69 (stub): parts_proto's result["v16"], camelCased (tasks/T69/IMPLEMENTATION.md → Interfaces). */
+export interface PartsV16 {
+  season: "warm" | "cool";
+  lifts: { id: string; size: number; line: string; layer: boolean }[];
+  liftSum: number;
+  minor: number;
+  faultDrop: number;
+  heavyLayer: [number, string] | null;
+  caps: { cap: number; id: string; kind: "sink" | "hold" | "clash"; line: string }[];
+  stackCeiling: number;
+  oneLook: boolean;
+  heldBy: string | null;
+  raw: number;
+  rawUnclamped: number;
+  condDeduction: number;
+  curved: number;
+  owned: string[];
+  ceiling: number;
+  depends: [string, number, number] | null;
+  unread: Record<string, string>;
+  taste: { points: number; id: string; line: string }[];
+  gradedLook: string[];
 }
 
 export interface PartsLowest {
@@ -403,6 +506,8 @@ export interface PartsScored {
   styleLabel: DetectedStyle | null;
   notRated: NotRated[];
   partial: boolean;
+  /** T69 (stub): present only when the engine is v16. */
+  v16?: PartsV16;
 }
 
 export interface PartsUnscored {
@@ -500,6 +605,10 @@ interface PartsOutfit {
   occasion: string;
   /** v14: the full kit's hold was set (scoreParts lowers it by what Fit or Proportions lost). */
   kitHold?: boolean;
+  /** v16: "warm", or null (cool: mild and cold); the look(s) the taste rules follow; stacking lifts before halving. */
+  season?: string | null;
+  graded?: Set<string>;
+  stackN?: number | null;
 }
 
 // ================================================================= the engine
@@ -984,7 +1093,18 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     else if (families.size >= C.busy.familiesAtLeast && nAcc >= C.busy.accentsAtLeast) p.add(-C.busy.points, "a few too many colors", "CC1_busy");
     const bright = main.filter((g) => isBright(g));
     if (new Set(bright.map(fam)).size >= C.brightClash.familiesAtLeast) {
-      p.add(boldness === "bold" || street ? -C.brightClash.boldOrStreet : -C.brightClash.points, "two bright colors fighting", "CC2_bright_clash");
+      let amt = boldness === "bold" || street ? -C.brightClash.boldOrStreet : -C.brightClash.points;
+      if (t.v16_color) { // v16 (H3, rulebook "When a risky color works"): calmed by a neutral piece, no loud print, no third color
+        const bf = new Set<unknown>(bright.map(fam));
+        const calm = o.main.some((g) => !isBright(g) && NEUTRALS.has(nv(g.color_family)));
+        const loud = main.some((g) => loudPrint(g));
+        const third = colored.some((g) => !NEUTRALS.has(nv(g.color_family)) && !bf.has(fam(g)));
+        if (calm && !loud && !third) {
+          p.tip("two bright colors, calmed by the neutral pieces around them", "CC2_calmed");
+          amt = 0.0;
+        }
+      }
+      if (amt) p.add(amt, "two bright colors fighting", "CC2_bright_clash");
     }
     const jacket = o.outers.find((x) => SEPARATE_JACKETS.has(x.subcategory)) ?? null;
     const B = o.bottom;
@@ -1027,7 +1147,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
         p.add(-t.cl1, `the big, loud ${kind} on the ${what} takes over the outfit`, "CL1_loud_print");
       }
     }
-    if (truthy(t.ll1)) { // v12 COL-12: light on light (0 in v1-v11)
+    if (truthy(t.ll1) && !(t.v16 && o.season === "warm")) { // v12 COL-12 (v16: not on a warm day, color.11): light on light (0 in v1-v11)
       const up = o.outers.length > 0 ? o.outers[0]! : o.top;
       const Bc = o.bottom;
       if (up !== null && Bc !== null && LIGHT_NEUTRALS.has(nv(up.color_family)) && LIGHT_NEUTRALS.has(nv(Bc.color_family))
@@ -1296,7 +1416,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const B = o.bottom;
     let h3 = 0.0;
     let h3Line = "";
-    if (o.outers.some((x) => TAILORED.has(x.subcategory)) && B && B.subcategory === "jeans" && (
+    if (!t.sty3_off && o.outers.some((x) => TAILORED.has(x.subcategory)) && B && B.subcategory === "jeans" && (
       LOOSE.has(nv(B.leg_shape)) || B.color_family === "denim_light" || B.color_family === "denim_mid" || truthy(B.distressed_by_design))) {
       h3 = CO.jacketJeans;
       h3Line = "the tailored jacket and the loose or washed jeans come from different worlds";
@@ -1326,7 +1446,8 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
       p.add(-t.gt1, "an oversized graphic tee fights the tailored jacket; a fitted plain tee works under it", "GT1_graphic_under_tailoring");
     }
     // v8: TK1 a tank top as the only top, out of the house (under a collared shirt it's refiled a vest)
-    if (truthy(t.tk1) && o.outers.length === 0 && o.tops.length === 1 && o.tops[0]!.subcategory === "tank_top" && !LOUNGE_OK.has(o.occasion)) {
+    if (truthy(t.tk1) && o.outers.length === 0 && o.tops.length === 1 && o.tops[0]!.subcategory === "tank_top" && !LOUNGE_OK.has(o.occasion)
+        && !(t.v16 && o.season === "warm")) { // v16: a tank is summer's own top (season.3)
       p.add(-t.tk1, "a tank top on its own reads gym or undershirt", "TK1_tank_alone");
     }
     // H5: too many statements (v4 B1's focal count, his boldness allowance)
@@ -1568,6 +1689,527 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     return { avg, x: pyMax(data.final.min, pyMin(data.final.max, x)), floored, wsum };
   }
 
+  // ---------------------------------------------------------------- v16 (T69, #484): the step after the parts
+  // parts_proto.py "v16": lifts that stack to a ceiling, dealbreaker caps, the season, his taste rules by the look the
+  // outfit is graded as, a fixed curve, 3.0 to 9.5. Same operation order as Python wherever a float is summed.
+  const V = data.v16;
+  const V16_LIFTS = V ? V.lifts : {};
+  const V16_OWNS = new Map<string, Set<string>>(Object.entries(V ? V.owns : {}).map(([k, v]) => [k, new Set(v)]));
+  const V16_UNSTEADY = new Set<string>(V ? V.unsteady : []);
+  const V16_LIFT_SETS = (name: string): Set<unknown> => tset(V ? V.sets[name as keyof typeof V.sets] : []);
+  const OPEN_LAYERS = V16_LIFT_SETS("OPEN_LAYERS"), LIGHT_SHIRTS = V16_LIFT_SETS("LIGHT_SHIRTS"), UNDER_TEES = V16_LIFT_SETS("UNDER_TEES");
+  const KNIT_LAYERS = V16_LIFT_SETS("KNIT_LAYERS"), HEAVY_LAYERS = V16_LIFT_SETS("HEAVY_LAYERS"), SUMMER_TOPS = V16_LIFT_SETS("SUMMER_TOPS");
+  const SUMMER_BOTTOMS = V16_LIFT_SETS("SUMMER_BOTTOMS");
+  const SMART = V ? V.smart : 4.0;
+  const PRO_PIECES = tset(V ? V.proPieces : []);
+
+  /** A subcategory for a reason line (Python's `.replace("_", " ")`; a missing one never throws here). */
+  const sname = (g: Garment | null | undefined): string => replaceAll(String(g?.subcategory ?? ""), "_", " ");
+  /** Python str() of a value that may be None. */
+  const pyStr = (v: unknown): string => (isNone(v) ? "None" : String(v));
+  const leg3 = (g: Garment): number => or(g.volume, 3) as number;
+
+  type V16Lift = [string, number, string, boolean];
+  type V16Cap = [number, string, "sink" | "hold" | "clash", string];
+  type V16Item = [number, string, string];
+
+  /** parts_proto.graded_looks: the look(s) the taste rules follow (never his profile picks). */
+  function gradedLooks(o: PartsOutfit, gradedLook: PartsOptions["gradedLook"]): Set<string> {
+    let g: Set<string>;
+    const given = typeof gradedLook === "string" ? gradedLook !== "" : !!gradedLook && gradedLook.length > 0;
+    if (given) {
+      g = typeof gradedLook === "string" ? new Set([gradedLook]) : new Set(gradedLook as readonly string[]);
+    } else {
+      g = new Set<string>(o.det);
+      if (rubric.isTailored(o.main)) { // the one definition of TL1 (rubric.is_tailored, log #495)
+        g.delete("smart_casual");
+        g.delete("classic_prep");
+        g.add("tailored");
+      }
+    }
+    return g.size > 0 ? g : new Set(["none"]);
+  }
+
+  const lookVals = (rule: string, looks: Set<string>): (number | "2nd")[] => {
+    const row = V ? V.tasteByLook[rule] : undefined;
+    return Array.from(looks).map((lk) => (row === undefined ? 1 : lk in row ? row[lk]! : 1));
+  };
+  const numMax = (xs: (number | "2nd")[]): number => maxOf(xs as number[]);
+
+  /** The leg-width look's class for the taste rules ("wide" | "slim" | "straight"). */
+  function lookClass(lw: [unknown, unknown]): "wide" | "slim" | "straight" {
+    const a = nv(lw[0]), b = nv(lw[1]);
+    if (a === "hangs_away" || b === "hangs_away" || a === "wider" || b === "wider") return "wide";
+    if ((a === "clings" || a === null || a === "not_visible") && (b === "narrower" || b === null || b === "not_visible")) return "slim";
+    return "straight";
+  }
+  const lookSeen = (lw: [unknown, unknown]): boolean => lw.some((x) => truthy(x) && x !== "not_visible");
+
+  function v16Lifts(o: PartsOutfit, parts: Record<PartName, Part>, sl: SecondLook): V16Lift[] {
+    const warm = o.season === "warm";
+    const best = new Map<string, [number, string, boolean]>();
+    const put = (lid: string, size: number, line: string, layer = false): void => {
+      if (size > (best.has(lid) ? best.get(lid)![0] : 0)) best.set(lid, [size, line, layer]);
+    };
+    for (const k of ORDER) {
+      for (const r of parts[k].reasons) {
+        const m = V16_LIFTS[r.check];
+        if (m === undefined || r.points <= 0) continue;
+        const [lid, size0, layer] = m;
+        let size = size0;
+        if (size === null) { // a tuck over a loose leg is big; "at the belt" is a weak read: 0.5
+          const tucked = [...o.tops, ...o.outers].some((g) => g.tucked === "full");
+          size = r.points >= 1.5 && tucked ? 1.0 : 0.5;
+        }
+        put(lid, size, r.line, layer);
+      }
+    }
+    const T = o.top, O = o.outer, B = o.bottom, S = o.shoes;
+    const leg = B ? nv(B.leg_shape) : null;
+    const propFault = parts.proportions.reasons.some((r) => r.points < 0);
+    const colorFault = parts.color.reasons.some((r) => r.points < 0);
+    // L3: an open layer over a tee
+    if (o.outers.length === 1 && OPEN_LAYERS.has(nv(O!.subcategory)) && earns(O) && O!.tucked !== "full"
+        && o.tops.length > 0 && o.tops.every((g) => UNDER_TEES.has(nv(g.subcategory)))
+        && o.tops.every((g) => fam(g) !== fam(O)) && !truthy(sl.peek) && !best.has("L2")) {
+      const light = LIGHT_SHIRTS.has(nv(O!.subcategory));
+      put("L3", 0.5, `the open ${sname(O)} over the ${sname(o.tops[0])} adds a layer`, !light);
+    }
+    // L6: black or navy picked up subtly by the shoes
+    if (S !== null && (S.color_family === "black" || S.color_family === "navy") && earns(S) && !best.has("L6") && !colorFault) {
+      const c = S.color_family;
+      const up = [...o.tops, ...o.outers].filter((g) => g.color_family === c);
+      if (up.length === 1 && B !== null && B.color_family !== c && o.tops.length + o.outers.length >= 1) {
+        put("L6", 0.25, `the ${c} shoes pick up the ${c} ${sname(up[0])}`);
+      }
+    }
+    // L7b: one smart piece with casual ones
+    const cohesionNeg = parts.cohesion.reasons.filter((r) => r.points < 0).map((r) => r.check);
+    const covered = o.outers.length > 0 || o.tops.some((g) => COVER_TOPS.has(nv(g.subcategory)));
+    const clothes = o.main.filter((g) => g.category !== "footwear" && !(covered && g.category === "top" && BASE_TOPS.has(nv(g.subcategory))));
+    const f = clothes.map((g) => formality(g));
+    const lounge = B !== null && LOUNGE_BOTTOMS.has(nv(B.subcategory));
+    const subs = new Set<unknown>(o.main.map((g) => nv(g.subcategory)));
+    const suit = subs.has("suit_jacket") && subs.has("suit_trousers");
+    const casual = o.main.filter((g) => g.category !== "footwear" && formality(g) <= 2);
+    if (clothes.length >= 2 && maxOf(f) >= SMART && casual.length > 0 && maxOf(f) - minOf(f) <= 2.5 && !lounge && !suit
+        && cohesionNeg.length === 0 && !best.has("L7") && o.main.every((g) => earns(g))) {
+      let smart = clothes[0]!;
+      for (const g of clothes) if (formality(g) > formality(smart)) smart = g;
+      const verb = smart.category === "bottom" ? "dress up" : "dresses up";
+      put("L7b", 0.5, `the ${sname(smart)} ${verb} the casual pieces: one smart piece, done right`);
+    }
+    if (warm) {
+      // SL1: a fitted tee or a tank over loose trousers
+      if (o.outers.length === 0 && T !== null && o.tops.length === 1 && SUMMER_TOPS.has(nv(T.subcategory))
+          && (leg3(T) <= 2 || T.subcategory === "tank_top") && LOOSE.has(leg) && B !== null && SUMMER_BOTTOMS.has(nv(B.subcategory))
+          && !propFault && earns(T) && (best.has("L1") ? best.get("L1")![0] : 0) < 0.75) {
+        best.delete("L1");
+        put("SL1", 0.75, "a fitted top over loose trousers: summer's shape");
+      }
+      // L4s: a light tonal outfit
+      const up = o.outers.length > 0 ? o.outers[0]! : T;
+      const lightOk = (c: unknown): boolean => LIGHT_NEUTRALS.has(c) || c === "light_grey";
+      if (up !== null && B !== null && lightOk(nv(up.color_family)) && lightOk(nv(B.color_family)) && !colorFault
+          && !o.main.some((g) => g.category !== "footwear" && LL_DARK.has(nv(g.color_family)))) {
+        put("L4s", 0.5, "light, tonal and clean: a summer look");
+      }
+      for (const [k, v] of Array.from(best)) if (v[2]) best.delete(k); // layer lifts count on cool days only
+    }
+    return Array.from(best.keys()).sort().map((k) => [k, best.get(k)![0], best.get(k)![1], best.get(k)![2]] as V16Lift);
+  }
+
+  function v16Caps(o: PartsOutfit, parts: Record<PartName, Part>, slRaw: SecondLookInput | null | undefined, occasion: string): V16Cap[] {
+    const out: V16Cap[] = [];
+    const B = o.bottom, S = o.shoes;
+    const bsub = B ? nv(B.subcategory) : null;
+    const leg = B ? nv(B.leg_shape) : null;
+    const sSub = S ? nv(S.subcategory) : null;
+    const uppers = [...o.tops, ...o.outers];
+    const lounge = LOUNGE_BOTTOMS.has(bsub);
+    // S1 / S2
+    if (B !== null && leg === "skinny" && !lounge && !SHORTS.has(bsub)) {
+      const hood = uppers.find((g) => HOODIES.has(nv(g.subcategory)));
+      const big = uppers.find((g) => leg3(g) >= 4);
+      if (hood !== undefined) out.push([5.5, "S1", "sink", `the ${pyStr(hood.subcategory)} over skinny ${pyStr(bsub)}: a straight leg fixes it`]);
+      else if (big !== undefined) out.push([5.5, "S2", "sink", `the oversized ${sname(big)} over skinny ${pyStr(bsub)}: a straight or wider leg fixes it`]);
+    }
+    // S4: three or more bright colors
+    const br = new Set<unknown>(o.main.filter((g) => isBright(g)).map(fam));
+    if (br.size >= 3) out.push([4.5, "S4", "sink", "three bright colors at once: keep one, make the rest neutral"]);
+    // S6
+    if ((bsub === "sweatpants" || bsub === "joggers") && o.outers.some((g) => SEPARATE_JACKETS.has(nv(g.subcategory)))) {
+      out.push([5.5, "S6", "sink", `a blazer with ${bsub}: two worlds that don't meet`]);
+    }
+    // S8
+    if (lounge && (sSub === "dress_shoe" || sSub === "derby" || (sSub === "loafer" && bsub === "athletic_shorts"))) {
+      out.push([5.5, "S8", "sink", `${replaceAll(String(sSub), "_", " ")}s with ${replaceAll(String(bsub), "_", " ")}`]);
+    }
+    // S9
+    const st = o.main.find((g) => g.category !== "footwear" && g.condition === "stained" && g.certainty === "clear" && !truthy(g.distressed_by_design));
+    if (st !== undefined) out.push([5.5, "S9", "sink", `a stain on the ${sname(st)}`]);
+    // H7
+    if (slRaw && slRaw.covers_shoe === "mostly" && B !== null && !LOOSE.has(leg) && !SHORTS.has(bsub)) {
+      const h7 = t.v16_h7_cap;
+      out.push([h7, "H7", h7 <= 5.5 ? "sink" : "hold", `the ${pyStr(bsub)} pile up over the shoes: a shorter hem fixes it`]);
+    }
+    // H1
+    const big = uppers.find((g) => leg3(g) >= 4);
+    if (big !== undefined && leg === "slim" && !lounge && !SHORTS.has(bsub) && !o.det.some((s) => PB_ROOMY_NARROW.has(s))) {
+      out.push([6.5, "H1", "hold", `the oversized ${sname(big)} over slim ${pyStr(bsub)}`]);
+    }
+    // H3
+    if (parts.color.reasons.some((r) => r.check === "CC2_bright_clash") && !parts.color.reasons.some((r) => r.check === "CC2s_shape_softens")) {
+      out.push([6.5, "H3", "hold", "two bright colors fighting"]);
+    }
+    // H4
+    if ((bsub === "joggers" || bsub === "sweatpants") && leg === "skinny" && !LOUNGE_OK.has(occasion)) out.push([6.5, "H4", "hold", `skinny ${bsub}`]);
+    // H8
+    const tight = uppers.find((g) => g.strain === "clear");
+    if (tight !== undefined) out.push([6.5, "H8", "hold", `the ${sname(tight)} pulls: a size up`]);
+    // H9
+    const slG = uppers.find((g) => g.sleeve_end === "covers_hand" && g.certainty === "clear"
+      && !SHORT_SLEEVE_TYPES.has(nv(g.subcategory)) && !RIBBED.has(nv(g.subcategory)) && g.subcategory !== "unstructured_blazer" && leg3(g) <= 3);
+    if (slG !== undefined && t.v16_h9_cap) out.push([6.5, "H9", "hold", `the ${sname(slG)}'s sleeves cover the hands`]);
+    // H10
+    if (BULKY.has(sSub) && NARROW.has(leg)) out.push([6.0, "H10", "hold", "chunky sneakers under narrow legs"]);
+    // H11
+    if ((bsub === "suit_trousers" || bsub === "trousers") && (BULKY.has(sSub) || RUNNER.has(sSub))) {
+      out.push([6.5, "H11", "hold", `${replaceAll(String(sSub), "_", " ")}s with ${replaceAll(String(bsub), "_", " ")}`]);
+    }
+    return out;
+  }
+
+  /** S5, S7, H6, H5: a clash charge on Style that grows when color or shape is also weak. [id, base, factor] or null. */
+  function v16Depends(o: PartsOutfit, parts: Record<PartName, Part>): [string, number, number] | null {
+    const B = o.bottom, S = o.shoes;
+    if (B === null || !SHORTS.has(nv(B.subcategory))) return null;
+    const gym = B.subcategory === "athletic_shorts";
+    const blazer = o.outers.some((g) => SEPARATE_JACKETS.has(nv(g.subcategory)));
+    const leather = o.outers.some((g) => g.subcategory === "leather_jacket");
+    let rid: string, base: number;
+    if (blazer) [rid, base] = gym ? ["S5", 2.0] : ["H6", 1.0];
+    else if (leather) {
+      [rid, base] = gym ? ["S7", 1.5] : ["H5", 0.75];
+      if (!gym && (B.color_family === "black" || B.color_family === "charcoal") && S !== null && BOOTS.has(nv(S.subcategory))) return null;
+    } else return null;
+    const neg = (k: PartName): boolean => parts[k].reasons.some((r) => r.points < 0);
+    const pos = (k: PartName): boolean => parts[k].reasons.some((r) => r.points > 0);
+    const weak = neg("color") || neg("proportions") || neg("fit");
+    const strong = pos("color") && pos("proportions") && !weak;
+    return [rid, base, weak ? 1.5 : strong ? 0.5 : 1.0];
+  }
+
+  function v16Curve(raw: number): number {
+    const [a, b, k] = t.curve;
+    const knee = t.curve_knee;
+    if (knee !== null && knee !== undefined && raw > knee[0] && knee[0] > k) return 7.0 + b * (knee[0] - k) + knee[1] * (raw - knee[0]);
+    return 7.0 + (raw < k ? a : b) * (raw - k);
+  }
+
+  /** Round 3: his taste rules, keyed by the look the outfit is graded as. Returns the lifts and caps after the rules,
+   *  the raw-score adjustments, and the part checks they waive. */
+  function v16Taste(o0: PartsOutfit, slRaw: SecondLookInput | null | undefined, liftsIn: V16Lift[], capsIn: V16Cap[],
+    parts: Record<PartName, Part>): { lifts: V16Lift[]; caps: V16Cap[]; items: V16Item[]; waived: Set<string> } {
+    const T = t.taste;
+    if (!T) return { lifts: liftsIn, caps: capsIn, items: [], waived: new Set() };
+    let lifts = liftsIn, caps = capsIn;
+    const looks = o0.graded ?? new Set(["none"]);
+    let o = o0; // may become a copy below
+    const lw: [unknown, unknown] = [slRaw?.knee, slRaw?.opening];
+    const mode = T.leg_look_mode ?? "tiebreak";
+    if (mode !== "off" && o.bottom !== null && !SHORTS.has(nv(o.bottom.subcategory)) && lookSeen(lw)) {
+      const cls = lookClass(lw);
+      const stored = nv(o.bottom.leg_shape);
+      let newLeg: unknown;
+      if (mode === "replace") newLeg = cls === "slim" && stored === "skinny" ? stored : cls;
+      else newLeg = stored === "straight" || stored === "relaxed" ? { wide: "relaxed", straight: "straight", slim: "slim" }[cls] : stored;
+      if (newLeg !== stored) o = { ...o, bottom: { ...o.bottom, leg_shape: newLeg as string } };
+    }
+    const items: V16Item[] = [];
+    const waived = new Set<string>();
+    let pendingSil: V16Lift | null = null;
+    const lkCls = lookSeen(lw) ? lookClass(lw) : null;
+    const pn1Waived = truthy(T.pn1_look) && (lkCls === "wide" || lkCls === "straight") && o0.bottom !== null
+      && o0.bottom.leg_shape !== "skinny" && o0.bottom.leg_shape !== "slim";
+    if (pn1Waived) waived.add("PN1_narrow_leg");
+    // SIL, a strong silhouette, as a lift of its own
+    if (truthy(T.sil)) {
+      const B = o.bottom, S = o.shoes;
+      const subB = B ? nv(B.subcategory) : null;
+      const legb = B ? nv(B.leg_shape) : null;
+      const ss = S ? nv(S.subcategory) : null;
+      const real = ss !== null && !SLIDES.has(ss) && !RUNNER.has(ss) && !(!T.other_shoe_real && ss === "other");
+      const full = SHORTS.has(subB) ? leg3(B!) >= 4 || LOOSE.has(legb) : LOOSE.has(legb);
+      const subs = new Set<unknown>(o.main.map((g) => nv(g.subcategory)));
+      const jk = o.outers.find((g) => g.subcategory === "suit_jacket");
+      const suitMatched = jk !== undefined && subB === "suit_trousers" && jk.color_family === B!.color_family;
+      const line = suitMatched && (legb === "straight" || legb === "slim") && (ss === "loafer" || ss === "derby" || ss === "dress_shoe" || ss === "chelsea_boot")
+        && subs.has("suit_jacket");
+      const longTop = [...o.tops, ...o.outers].some((g) => g.length === "below_crotch" && g.tucked !== "full" && g.tucked !== "half");
+      const shapeFault = (["fit", "proportions"] as PartName[]).some((k) => parts[k].reasons.some((r) => r.points < 0 && !(pn1Waived && r.check === "PN1_narrow_leg")));
+      const dealbreaker = caps.some((c) => c[2] === "sink" || c[2] === "hold");
+      if (((full && real) || line) && !longTop && !shapeFault && !dealbreaker) {
+        const cols = new Set<unknown>([...o.tops, ...o.outers, B!].map((g) => nv(g.color_family)));
+        const tonal = Array.from(cols).every((c) => !truthy(c) || NEUTRALS.has(c) || String(c).startsWith("denim"));
+        let size = T.sil! * (full ? 1.0 : (T.sil_line ?? 1.0)) + (tonal ? (T.sil_tonal ?? 0.0) : 0.0);
+        if (full && legb === "relaxed" && !SHORTS.has(subB)) size *= T.relaxed_factor ?? 1.0;
+        const what = full
+          ? `${SHORTS.has(subB) ? "roomy shorts" : pyStr(legb) + " " + replaceAll(String(subB), "_", " ")} over ${replaceAll(String(ss), "_", " ")}s`
+          : `a straight line down to the ${replaceAll(String(ss), "_", " ")}s`;
+        const sil: V16Lift = ["SIL", pyRound(size, 3), `a strong silhouette: ${what}` + (tonal ? ", all in neutrals" : ""), false];
+        const smode = T.sil_mode ?? "alone";
+        if (smode === "alone") {
+          if (lifts.length === 0) lifts = [sil];
+        } else if (smode === "single") {
+          pendingSil = lifts.length <= 1 ? sil : null;
+        } else if (smode === "top_up") {
+          pendingSil = sil;
+        } else {
+          const shape = lifts.filter((x) => x[0] === "L1" || x[0] === "SL1");
+          if (shape.length === 0 || maxOf(shape.map((x) => x[1])) < sil[1]) lifts = [...lifts.filter((x) => x[0] !== "L1" && x[0] !== "SL1"), sil];
+        }
+      }
+    }
+    // sandals and slides fine on a warm day; runners fine with casual pieces
+    const pro = o.main.some((g) => PRO_PIECES.has(nv(g.subcategory)));
+    if (T.sandals_warm && o.season === "warm" && !pro) {
+      waived.add("SK1_slides_out");
+      waived.add("SK1b_hem_drags");
+    }
+    if (T.runners_casual && !pro) waived.add("SK2_runners");
+    const off = new Set<string>(T.lift_off ?? []);
+    const outL: V16Lift[] = [];
+    for (const [a, b0, c, d] of lifts) {
+      let b = b0;
+      if (off.has(a)) continue;
+      if (a === "L5" && T.accent_agree) {
+        const B0 = o.bottom;
+        const cl = new Set<unknown>([...o.tops, ...o.outers, ...(B0 ? [B0] : [])].map((g) => nv(g.color_family)));
+        if (Array.from(cl).filter((x) => truthy(x) && !NEUTRALS.has(x) && !String(x).startsWith("denim")).length !== 1) continue;
+      }
+      if (a === "L5" && T.accent_by_look) {
+        const m = maxOf(Array.from(looks).map((lk) => (V!.l5ByLook[lk] ?? 1)));
+        if (!m) continue;
+        b = pyRound(b * m, 3);
+      } else if (a in (V ? V.tasteByLook : {})) {
+        const m = numMax(lookVals(a, looks));
+        if (!m) continue;
+        b = pyRound(b * m, 3);
+      }
+      outL.push([a, b, c, d]);
+    }
+    lifts = outL;
+    const stackN = lifts.filter((x) => x[1] >= 0.5).length;
+    if (T.one_lift_mode === "first" && (T.one_lift ?? 1.0) !== 1.0 && lifts.length > 0) {
+      let big = 0;
+      for (let i = 1; i < lifts.length; i++) if (lifts[i]![1] > lifts[big]![1]) big = i;
+      if (lifts[big]![0] !== "SIL") {
+        const [a, b, c, d] = lifts[big]!;
+        lifts = [...lifts.slice(0, big), [a, pyRound(b * T.one_lift!, 3), c, d], ...lifts.slice(big + 1)];
+      }
+    } else if (lifts.length === 1 && (T.one_lift ?? 1.0) !== 1.0 && lifts[0]![0] !== "SIL") {
+      const [a, b, c, d] = lifts[0]!;
+      lifts = [[a, pyRound(b * T.one_lift!, 3), c, d]];
+    }
+    o0.stackN = T.stack_prehalf ? stackN : null;
+    if (pendingSil !== null && T.sil_mode === "single") {
+      if (lifts.length === 0 || lifts[0]![1] < pendingSil[1]) lifts = [pendingSil];
+    } else if (pendingSil !== null) {
+      const have = sum(lifts.map((x) => x[1]));
+      if (pendingSil[1] > have) lifts = [...lifts, [pendingSil[0], pyRound(pendingSil[1] - have, 3), pendingSil[2], false]];
+    }
+    if (T.h7_tip) caps = caps.filter((c) => c[1] !== "H7");
+    const B = o.bottom;
+    const sub = B ? nv(B.subcategory) : null;
+    const leg = B ? nv(B.leg_shape) : null;
+    if (B !== null && SHORTS.has(sub)) {
+      if (T.shorts) items.push([-T.shorts, "T_shorts", "shorts"]);
+      if (T.shorts_wide && leg3(B) >= 4) {
+        const m = numMax(lookVals("shorts_wide", looks));
+        if (m) items.push([T.shorts_wide * m, "T_shorts_wide", "roomy shorts"]);
+      }
+      if (T.shorts_above && slRaw?.shorts_end === "above_knee") items.push([-T.shorts_above, "T_shorts_above", "shorts above the knee"]);
+    } else if (B !== null) {
+      if (leg === "relaxed" || leg === "wide") {
+        const m = numMax(lookVals("leg_wide", looks)) * (leg === "relaxed" ? (T.relaxed_factor ?? 1.0) : 1.0);
+        if (T.leg_wide && m) items.push([T.leg_wide * m, "T_leg", `${leg} legs`]);
+        const mh = numMax(lookVals("hem_plus", looks));
+        if (T.hem_plus && mh && slRaw && slRaw.covers_shoe === "mostly") items.push([T.hem_plus * mh, "T_hem", "a full hem over the shoe"]);
+      } else if ((leg === "skinny" || leg === "slim") && T[`leg_${leg}` as "leg_slim" | "leg_skinny"]) {
+        items.push([-(T[`leg_${leg}` as "leg_slim" | "leg_skinny"] as number), "T_leg", `${leg} legs`]);
+      }
+    }
+    if (T.color) {
+      const cols = new Set<unknown>([...o.tops, ...o.outers, ...(B ? [B] : [])].map((g) => nv(g.color_family)));
+      const n = pyMin(2, Array.from(cols).filter((c) => truthy(c) && !NEUTRALS.has(c) && !String(c).startsWith("denim")).length);
+      if (n) {
+        const charged = minOf(lookVals("color", looks).map((m) => (m === "2nd" ? pyMax(n - 1, 0) : n * m)));
+        if (charged) items.push([-T.color * charged, "T_color", `${n} color${n > 1 ? "s" : ""} beside the neutrals`]);
+      }
+    }
+    if (T.long_top && o.outers.length === 0 && o.tops.length > 0) {
+      const top = o.tops[0]!;
+      if (top.tucked !== "full" && top.tucked !== "half") {
+        const ruler = T.long_top_read === "ruler" ? slRaw?.long_top : null;
+        const long_ = !isNone(ruler) ? ruler : top.length === "below_crotch";
+        const m = minOf(lookVals("long_top", looks) as number[]);
+        if (truthy(long_) && m) items.push([-T.long_top * m, "T_long_top", "the top ends low"]);
+      }
+    }
+    return { lifts, caps, items, waived };
+  }
+
+  /** v16's step after the parts (parts_proto.v16_finish) and the result it builds (_v16_result). */
+  function v16Result(o: PartsOutfit, parts: Record<PartName, Part>, sl: SecondLook, slRaw: SecondLookInput | null | undefined,
+    cond: PartsCondition, occ: PartsOccasion, occasion: string, notRated: NotRated[], careOrStrain: boolean): PartsResult {
+    const warm = o.season === "warm";
+    // a strong shape softens a bright clash: halve CC2 when Proportions earned a credit and nothing is off in it
+    const cc2 = parts.color.reasons.find((r) => r.check === "CC2_bright_clash");
+    const prop = parts.proportions.reasons;
+    if (cc2 !== undefined && prop.some((r) => r.points > 0) && !prop.some((r) => r.points < 0)) {
+      parts.color.add(-cc2.points / 2, "the strong shape carries the two brights", "CC2s_shape_softens");
+    }
+    const knits = [...o.tops, ...o.outers].filter((g) => KNIT_LAYERS.has(nv(g.subcategory)));
+    if (knits.length >= 2 && t.v16_knit) {
+      parts.cohesion.add(-t.v16_knit, `the ${pyStr(knits[knits.length - 1]!.subcategory)} over the ${pyStr(knits[0]!.subcategory)}: `
+        + "knit on knit blurs together; a smooth layer over the knit adds depth", "X_knit_on_knit");
+    }
+    const dep = v16Depends(o, parts);
+    if (dep) {
+      const [rid, base, k] = dep;
+      const what = ({ S5: "a blazer with gym shorts", S7: "a leather jacket with gym shorts", H6: "a blazer with shorts", H5: "a leather jacket with shorts" } as Record<string, string>)[rid]!;
+      parts.cohesion.add(-base * k, `${what}: the two halves come from different worlds`, "X_" + rid);
+    }
+    const res = {} as Record<PartName, PartResult>;
+    for (const k of ORDER) {
+      const r = k === "cohesion" ? data.partRange.cohesion : data.partRange.default;
+      res[k] = parts[k].result(r[0], r[1]);
+    }
+    const live = new Map<PartName, PartResult>();
+    for (const k of ORDER) if (res[k].score !== null) live.set(k, res[k]);
+    let wsum = 0;
+    for (const k of live.keys()) wsum += WT[k];
+    const lifts0 = v16Lifts(o, parts, sl);
+    const liftChecks = new Set<string>(Object.keys(V16_LIFTS));
+    const caps0 = v16Caps(o, parts, slRaw, occasion);
+    const tt = v16Taste(o, slRaw, lifts0, caps0, parts);
+    const lifts = tt.lifts;
+    const caps = tt.caps;
+    let taste = tt.items;
+    const waived = tt.waived;
+    if (dep) { // a clash never reads sharp: held at 7.0; with a second fault it sinks, and the cap owns the charge
+      if (dep[2] === 1.5) caps.push([dep[0] !== "H5" ? 5.5 : 6.5, dep[0], dep[0] !== "H5" ? "sink" : "hold", "the clash, with a second fault"]);
+      else caps.push([7.0, dep[0], "clash", "the two halves come from different worlds"]);
+    }
+    const owned = new Set<string>();
+    for (const c of caps) if (c[2] !== "clash") for (const x of V16_OWNS.get(c[1]) ?? []) owned.add(x);
+    for (const x of V16_UNSTEADY) owned.add(x);
+    for (const x of waived) owned.add(x);
+    // faults: the worst part's charges at alpha, every other part's at beta; a charge a dealbreaker owns is left out
+    const negs: number[] = [];
+    for (const k of live.keys()) {
+      let sNeg = 0;
+      for (const r of parts[k].reasons) if (r.points < 0 && !owned.has(r.check)) sNeg += r.points;
+      negs.push(0 - sNeg);
+    }
+    negs.sort((a, b) => b - a);
+    const condDed = cond.deduction - (caps.some((c) => c[1] === "S9") ? pyMin(1.2, cond.deduction) : 0.0);
+    const drop = negs.length > 0 ? t.v16_alpha * negs[0]! + t.v16_beta * sum(negs.slice(1)) : 0.0;
+    let minorSum = 0;
+    for (const k of live.keys()) {
+      for (const r of parts[k].reasons) {
+        if (r.points > 0 && !liftChecks.has(r.check) && r.check !== "CC2s_shape_softens") minorSum += WT[k] / wsum * r.points;
+      }
+    }
+    const minor = minorSum;
+    const liftSum = sum(lifts.map((x) => x[1]));
+    let heavy: [number, string] | null = null;
+    if (warm) {
+      let hv: Garment | null = o.outers.find((g) => HEAVY_LAYERS.has(nv(g.subcategory))) ?? null;
+      if (hv === null && o.outers.length >= 2) hv = o.outers[0]!;
+      if (hv !== null) heavy = [0.5, `the ${sname(hv)} is a lot of layer for a warm day`];
+    }
+    let raw = 7.0 + liftSum + minor - drop - condDed - occ.deduction - (heavy ? heavy[0] : 0.0);
+    if (caps.some((c) => c[2] === "sink" || c[2] === "hold")) taste = taste.filter((x) => x[0] > 0);
+    raw += sum(taste.map((x) => x[0]));
+    const rawUnclamped = raw;
+    raw = clamp(raw, 3.0, t.raw_cap);
+    const shown = clamp(v16Curve(raw), 3.0, 9.5);
+    // the ceilings: the stacking rule, the occasion, the dealbreakers
+    const subs = new Set<unknown>(o.main.map((g) => nv(g.subcategory)));
+    const oneLook = o.det.length > 0 || (subs.has("suit_jacket") && subs.has("suit_trousers")) || lifts.some((x) => x[0] === "L7b");
+    let n = lifts.filter((x) => x[1] >= 0.5).length;
+    if (o.stackN !== null && o.stackN !== undefined) n = pyMax(n, o.stackN);
+    const anythingOff = Object.values(parts).some((p) => p.reasons.some((r) => r.points < 0 && !waived.has(r.check))) || cond.faults.length > 0 || caps.length > 0;
+    const allChecks = new Set<string>();
+    for (const p of Object.values(parts)) for (const r of p.reasons) allChecks.add(r.check);
+    const ownedLines = Array.from(owned).filter((x) => allChecks.has(x)).sort();
+    let stack: number;
+    if (n === 0) stack = 7.5;
+    else if (n === 1) stack = 8.0;
+    else if (n === 2 || !oneLook) stack = 8.5;
+    else if (n === 3 || anythingOff) stack = 9.0;
+    else stack = 9.5;
+    if (t.stack_clean && !anythingOff) {
+      const m = pyMin(n, 4), scl = t.stack_clean;
+      const cands = [stack, scl[String(m)] ?? stack];
+      if (oneLook) cands.push(scl[`${m}c`] ?? stack);
+      stack = maxOf(cands);
+    }
+    const ceilings: [number, string][] = [[stack, `${n} lift${n !== 1 ? "s" : ""}` + (oneLook && n >= 3 ? " in one look" : "")]];
+    if ((["fit", "proportions"] as PartName[]).some((k) => parts[k].reasons.some((r) => r.points < 0 && !owned.has(r.check)))) {
+      ceilings.push([7.5, "a fit or shape fault: lifts can't cover it"]);
+    }
+    if (occ.ceiling !== null) ceilings.push([occ.ceiling, "occasion"]);
+    const sinks = caps.filter((c) => c[2] === "sink");
+    const holds = caps.filter((c) => c[2] === "hold");
+    for (const c of caps) ceilings.push([c[0], c[1]]);
+    if (sinks.length >= 2) ceilings.push([4.5, "two sinking faults: a redo"]);
+    else if (holds.length >= 2) ceilings.push([6.0, "two holding faults"]);
+    let final = shown;
+    let heldBy: string | null = null;
+    for (const [c, why] of ceilings) {
+      if (c < final) {
+        final = c;
+        heldBy = why;
+      }
+    }
+    final = clamp(final, 3.0, 9.5);
+    // _v16_result
+    let lowK: PartName | null = null;
+    for (const k of live.keys()) {
+      if (lowK === null) {
+        lowK = k;
+        continue;
+      }
+      const a = live.get(k)!.score!, b = live.get(lowK)!.score!;
+      if (a < b || (a === b && -WT[k] < -WT[lowK])) lowK = k;
+    }
+    const lr = live.get(lowK!)!;
+    const neg = lr.reasons.filter((r) => r.points < 0);
+    const line = neg.length > 0 ? neg[0]!.line : lr.reasons.length > 0 ? lr.reasons[0]!.line : "nothing off";
+    const weightsUsed: Partial<Record<PartName, number>> = {};
+    for (const k of live.keys()) weightsUsed[k] = pyRound(WT[k] / wsum, 3);
+    return {
+      overall: roundHalf(final), rawScore: pyRound(final, 3), rawUnrounded: final, average: pyRound(raw, 3), averageUnrounded: raw,
+      earnedBonus: 0.0, piledPenalty: 0.0, version: data.label, engine: data.engine, parts: res,
+      naParts: ORDER.filter((k) => res[k].score === null), weightsUsed,
+      condition: cond, occasion: occ, floored: false, careOrStrain,
+      lowest: { part: lowK, score: lr.display!, line: `${data.partNames[lowK!]} ${pyG(lr.display!)}: ${line}` },
+      secondLook: sl, detectedStyles: o.looks, styleLabel: o.look, notRated, partial: notRated.length > 0, // T94: names
+      v16: {
+        season: warm ? "warm" : "cool",
+        lifts: lifts.map(([id, size, ln, layer]) => ({ id, size, line: ln, layer })),
+        liftSum: pyRound(liftSum, 3), minor: pyRound(minor, 3), faultDrop: pyRound(drop, 3), heavyLayer: heavy,
+        caps: caps.map(([cap, id, kind, ln]) => ({ cap, id, kind, line: ln })),
+        stackCeiling: stack, oneLook, heldBy, raw: pyRound(raw, 3), rawUnclamped: pyRound(rawUnclamped, 3), condDeduction: pyRound(condDed, 3),
+        curved: pyRound(shown, 3), owned: ownedLines, ceiling: minOf(ceilings.map((c) => c[0])), depends: dep,
+        unread: V ? V.unread : {}, taste: taste.map(([points, id, ln]) => ({ points, id, line: ln })), gradedLook: Array.from(o.graded ?? []).sort(),
+      },
+    };
+  }
+
   // ---------------------------------------------------------------- the entry point
   function scoreParts(reading: Reading, opts: PartsOptions = {}): PartsResult {
     const occasion = opts.occasion ?? "everyday";
@@ -1579,12 +2221,35 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const scene = prep.scene;
     if (scene.clothed !== "fully") return { overall: null, reason: "not_fully_clothed", parts: {}, naParts: [...ORDER] };
     if (prep.garments.length === 0) return { overall: null, reason: "nothing_readable", parts: {}, naParts: [...ORDER] };
-    const garments = refile(prep.garments);
+    let garments = refile(prep.garments);
+    const Tt: V16Taste = t.taste ?? {};
+    if (t.v16 && Tt.steady_map) { // round 7: classes the reader swaps on one photo score as one, where the rules allow it
+      const sm = Tt.steady_map;
+      const jacket = garments.some((g) => g.category === "outerwear" && TAILORED.has(nv(g.subcategory)));
+      garments = garments.map((g) => {
+        const sub = g.subcategory as string | null | undefined;
+        return sub !== null && sub !== undefined && Object.prototype.hasOwnProperty.call(sm, sub) && !(g.category === "bottom" && jacket)
+          ? { ...g, subcategory: sm[sub]! } : g;
+      });
+    }
+    const slIn = opts.secondLook;
+    if (t.v16 && Tt.leg_look_global && truthy(slIn)) { // round 5: the leg-width look settles the straight/relaxed zone for the whole score
+      const lw: [unknown, unknown] = [slIn!.knee, slIn!.opening];
+      if (lookSeen(lw)) {
+        const a = nv(lw[0]), b = nv(lw[1]);
+        const cls = a === "hangs_away" || b === "hangs_away" || a === "wider" || b === "wider" ? "relaxed"
+          : (a === "clings" || a === null || a === "not_visible") && (b === "narrower" || b === null || b === "not_visible") ? "slim" : "straight";
+        garments = garments.map((g) => (g.category === "bottom" && !SHORTS.has(nv(g.subcategory)) && (g.leg_shape === "straight" || g.leg_shape === "relaxed")
+          ? { ...g, leg_shape: cls } : g));
+      }
+    }
     const careTips = unsureCare(garments); // v7: condition reads count only when "clear"
     const o = outfit(garments, picks);
     o.mirror = truthy(scene.mirror_selfie);
     o.sx = styleClash(o); // v5's SX1, read by Style and (v6) Proportions
     o.occasion = occasion;
+    o.season = t.v16 ? (opts.season ?? null) : null; // v16: "warm", or cool (mild and cold; the default)
+    o.graded = gradedLooks(o, opts.gradedLook); // round 3: the look(s) the taste rules follow
 
     const col = color(o, boldness);
     o.colorFault = col.reasons.length > 0 && col.reasons.some((r) => r.points < 0);
@@ -1629,6 +2294,7 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
         occ.status = occ.lines[occ.lines.length - 1]!;
       }
     }
+    if (t.v16) return v16Result(o, parts, sl, opts.secondLook, cond, occ, occasion, prep.notRated, careOrStrain);
     const { avg, x, floored, wsum } = combine(ps, cond, occ, occasion, careOrStrain);
     const bonus = earnedBonus(ps);
     const penalty = piledPenalty(ps);
@@ -1676,14 +2342,22 @@ export const CASUAL_FITS_V14 = true;
  *  With CASUAL_FITS_V14 false, v13 wins (it never had the credit). Stored checks keep their scores until changed. */
 export const HOODIE_LAYER_V15 = true;
 
-/** The bundled data as the switches want it: v15 as generated, v14's tune (HOODIE_LAYER_V15 off), or v13's (CASUAL_FITS_V14 off). */
-export function partsDataFor(v14: boolean, v15: boolean = HOODIE_LAYER_V15): PartsData {
-  const rb = !v14 ? PARTS_DATA.rollback : !v15 ? PARTS_DATA.rollback14 : undefined;
+/** THE SWITCH for the rescoring (parts v16, #484). true (shipped): new checks score with v16. false: every default path
+ *  (the card, its fixes, the one quick tap, Going for, the chat's outfit judge, allowedColors) goes back to v15. A stored
+ *  check keeps its engine when edited (partsEngineFor). */
+export let RESCORE_V16: boolean = true;
+
+/** The bundled data as the switches want it: v16 (all on), v15 (v16 off), v14 (v15 off), v13 (v14 off). */
+export function partsDataFor(v14: boolean, v15: boolean = HOODIE_LAYER_V15, v16: boolean = RESCORE_V16): PartsData {
+  const rb = !v14 ? PARTS_DATA.rollback : !v15 ? PARTS_DATA.rollback14 : !v16 ? PARTS_DATA.rollback15 : undefined;
   if (!rb) return PARTS_DATA;
   return { ...PARTS_DATA, engine: rb.engine, label: rb.label, version: rb.version, tune: rb.tune };
 }
 
-let currentParts: PartsEngine = createParts(partsDataFor(CASUAL_FITS_V14, HOODIE_LAYER_V15));
+let currentParts: PartsEngine = createParts(partsDataFor(CASUAL_FITS_V14, HOODIE_LAYER_V15, RESCORE_V16));
+/** The rubricVersion a new parts check is stored with: "parts-2.0.0" (v16), "parts-1.14.0" with RESCORE_V16 off. Live: it
+ *  follows the switches (partsCheck.ts re-exports it). */
+export let PARTS_RUBRIC_VERSION: string = `parts-${currentParts.data.version}`;
 
 /** The parts engine every default path uses (partsData.ts = fixtures/parts.json on the bundled v4.1 rubric), as the
  *  switch picks it. A stable object, so `engines.parts ?? defaultParts` callers follow the switch. */
@@ -1696,10 +2370,29 @@ export const defaultParts: PartsEngine = {
 
 /** Tests only: flip the switches at run time (the app reads CASUAL_FITS_V14 and HOODIE_LAYER_V15). */
 export function setCasualFitsV14(on: boolean, v15: boolean = HOODIE_LAYER_V15): void {
-  currentParts = createParts(partsDataFor(on, v15));
+  currentParts = createParts(partsDataFor(on, v15, RESCORE_V16));
+  PARTS_RUBRIC_VERSION = `parts-${currentParts.data.version}`;
 }
 export function setHoodieLayerV15(on: boolean): void {
-  currentParts = createParts(partsDataFor(CASUAL_FITS_V14, on));
+  currentParts = createParts(partsDataFor(CASUAL_FITS_V14, on, RESCORE_V16));
+  PARTS_RUBRIC_VERSION = `parts-${currentParts.data.version}`;
+}
+/** Tests only. */
+export function setRescoreV16(on: boolean): void {
+  RESCORE_V16 = on;
+  currentParts = createParts(partsDataFor(CASUAL_FITS_V14, HOODIE_LAYER_V15, on));
+  PARTS_RUBRIC_VERSION = `parts-${currentParts.data.version}`;
+}
+
+let v15Stored: PartsEngine | null = null;
+/** The engine a stored parts check is scored with (#209: editing a check never moves it to another engine; [SCO-9]: a
+ *  stored score never changes): `parts-<bundled version>` (2.0.0) is v16; any other "parts-..." is v15. With RESCORE_V16
+ *  off, everything is the switch's engine. */
+export function partsEngineFor(rubricVersion: string): PartsEngine {
+  if (!RESCORE_V16) return currentParts;
+  if (rubricVersion === `parts-${PARTS_DATA.version}`) return currentParts;
+  if (v15Stored === null) v15Stored = createParts(partsDataFor(true, true, false));
+  return v15Stored;
 }
 
 /** parts_proto.score_parts() (engine v11) with the bundled data. Never mutates `reading`. */

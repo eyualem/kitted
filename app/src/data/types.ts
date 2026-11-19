@@ -2,7 +2,7 @@
 // ClosetItem); these wrap them with what the app stores. Times are epoch ms.
 
 import type {
-  ClosetItem, ConfirmedFields, DetectedStyle, Fix, Garment, GoingForAdvice, PartName, PartResult, PartsCondition, PartsOccasion, Reading, Styles, TapOption, TapQuestion,
+  ClosetItem, ConfirmedFields, DetectedStyle, Fix, Garment, GoingForAdvice, PartName, PartResult, PartsCondition, PartsOccasion, PartsV16, Reading, Styles, TapOption, TapQuestion,
 } from '@kitted/core';
 
 export type Role = 'user' | 'stylist';
@@ -222,7 +222,10 @@ export interface LookAnswerL {
   covers_shoe: 'no' | 'partly' | 'mostly' | 'no_shoes_visible';
 }
 
-export type LookArm = 'U' | 'L';
+export type LookArm = 'U' | 'L' | 'W';
+
+/** T69 (stub, tasks/T69/IMPLEMENTATION.md → Interfaces): the leg-width look W's answer (extraction-test/schema_look_w.json). */
+export interface LookAnswerW { knee: 'clings' | 'skims' | 'hangs_away' | 'not_visible'; opening: 'narrower' | 'about_the_same' | 'wider' | 'not_visible' }
 
 /** The second look as a check stores it: the raw answers (the engine reads only under_present + under_shows and
  *  covers_shoe; the rest failed look1's bars and never scores). An arm that was late, failed or not asked is null. */
@@ -230,6 +233,8 @@ export interface StoredSecondLook {
   version: string;
   u: LookAnswerU | null;
   l: LookAnswerL | null;
+  /** T69 (stub): the leg-width look; absent on checks from before it. */
+  w?: LookAnswerW | null;
   /** Taken from another check rather than read for this one: the same photo checked earlier ('samePhoto'), or a
    *  re-check arm that didn't come back carrying its first check's answer ('firstCheck'). */
   copied?: { from: string; why: 'samePhoto' | 'firstCheck'; arms: LookArm[] };
@@ -270,6 +275,8 @@ export interface StoredParts {
   /** The part with the most to gain (copper in the strip): the top fix's first raised part, else the smaller step's, else
    *  the next level's, else the lowest part under 7; null when nothing stands out. */
   gainPart: PartName | null;
+  /** Parts v16 (T69): the rescoring's steps, stored with the check. Absent on checks scored with v15. */
+  v16?: PartsV16;
 }
 
 export interface FitCheckRow {

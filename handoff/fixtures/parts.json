@@ -1,9 +1,9 @@
 {
- "version": "1.14.0",
- "engine": "v15",
- "label": "parts-proto-15 (Oct 28, 2026)",
+ "version": "2.0.0",
+ "engine": "v16",
+ "label": "parts-proto-16 (Nov 17, 2026)",
  "source": "extraction-test/rubrics/parts_proto.py",
- "sourceSha256": "42712d3c8af7e7b3bd1ea2e332d5e147385851d3b4db87062786f97a79653bca",
+ "sourceSha256": "46bb76d1a8a5e576543e6224798342aac47c2c43b595d2a41a9af7cf2b726082",
  "rubricVersion": "4.1.0",
  "weights": {
   "proportions": 0.3,
@@ -225,7 +225,53 @@
   "pr1_tucked_layer": true,
   "peek_clearly_only": true,
   "hl": 1.5,
-  "cp8": 0.5
+  "cp8": 0.5,
+  "v16": true,
+  "v16_color": true,
+  "sty3_off": true,
+  "v16_alpha": 0.5,
+  "v16_beta": 0.25,
+  "curve": [
+   1.1,
+   0.7,
+   7.0
+  ],
+  "v16_knit": 1.5,
+  "v16_h9_cap": false,
+  "v16_h7_cap": 5.5,
+  "taste": {
+   "leg_look_mode": "tiebreak",
+   "steady_map": {
+    "oxford_shirt": "dress_shirt",
+    "chelsea_boot": "dress_shoe"
+   },
+   "other_shoe_real": true,
+   "lift_off": [],
+   "h7_tip": true,
+   "long_top": 0.25,
+   "long_top_read": "reading",
+   "shorts": 0,
+   "one_lift": 0.5,
+   "leg_slim": 0,
+   "color": 0,
+   "sandals_warm": true,
+   "runners_casual": true,
+   "sil_mode": "alone",
+   "one_lift_mode": "first",
+   "stack_prehalf": true,
+   "relaxed_factor": 0.5,
+   "sil": 1.75,
+   "sil_line": 0.5,
+   "sil_tonal": 0.25,
+   "leg_skinny": 0.5,
+   "leg_wide": 0.75,
+   "hem_plus": 0.5,
+   "shorts_wide": 0.5,
+   "shorts_above": 0.5
+  },
+  "raw_cap": 9.5,
+  "curve_knee": null,
+  "stack_clean": null
  },
  "rollback": {
   "engine": "v13",
@@ -419,7 +465,24 @@
    "pr1_tucked_layer": false,
    "peek_clearly_only": false,
    "hl": 0.0,
-   "cp8": 0.0
+   "cp8": 0.0,
+   "v16": false,
+   "v16_color": false,
+   "sty3_off": false,
+   "v16_alpha": 0.5,
+   "v16_beta": 0.25,
+   "curve": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "v16_knit": 0.0,
+   "v16_h9_cap": false,
+   "v16_h7_cap": 5.5,
+   "taste": null,
+   "raw_cap": 9.5,
+   "curve_knee": null,
+   "stack_clean": null
   }
  },
  "rollback14": {
@@ -614,8 +677,582 @@
    "pr1_tucked_layer": true,
    "peek_clearly_only": true,
    "hl": 0.0,
-   "cp8": 0.0
+   "cp8": 0.0,
+   "v16": false,
+   "v16_color": false,
+   "sty3_off": false,
+   "v16_alpha": 0.5,
+   "v16_beta": 0.25,
+   "curve": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "v16_knit": 0.0,
+   "v16_h9_cap": false,
+   "v16_h7_cap": 5.5,
+   "taste": null,
+   "raw_cap": 9.5,
+   "curve_knee": null,
+   "stack_clean": null
   }
+ },
+ "rollback15": {
+  "engine": "v15",
+  "label": "parts-proto-15 (Oct 28, 2026)",
+  "version": "1.14.0",
+  "tune": {
+   "pr1": 1.5,
+   "pr1_mirror_short": 0.5,
+   "pr1b": 0.5,
+   "pr2": 1.5,
+   "pr3": 1.0,
+   "prop_cap": 2.5,
+   "h1": 0.5,
+   "h2": 0.5,
+   "h2_suit": 0.5,
+   "h4": 0.0,
+   "cp1": 0.0,
+   "cp2": 0.5,
+   "cp5": 0.5,
+   "lightness": true,
+   "color_cap": 2.0,
+   "suit_shoe": true,
+   "earned": {
+    "over": 7.5,
+    "rate": 0.5,
+    "cap": 0.25,
+    "gate": [
+     6.5,
+     7.0
+    ]
+   },
+   "solid_line": true,
+   "pr4": 1.0,
+   "pr4_shoes": [
+    "basketball_sneaker",
+    "canvas_sneaker",
+    "chunky_sneaker",
+    "low_profile_sneaker",
+    "retro_runner"
+   ],
+   "h4_graphic_street": false,
+   "sw2": 0.5,
+   "pr4_legs": [
+    "relaxed",
+    "wide"
+   ],
+   "pr4_signature_v3": false,
+   "pr5": 1.0,
+   "pr5_layers": [
+    "chore_coat"
+   ],
+   "pr5_bottoms": [
+    "cargos",
+    "jeans",
+    "work_pants"
+   ],
+   "pr5_shoes": [
+    "chelsea_boot",
+    "suede_chukka",
+    "work_boot"
+   ],
+   "pr6": 0.5,
+   "pr6_layers": [
+    "fleece",
+    "rain_jacket",
+    "shell_jacket"
+   ],
+   "pr6_shoes": [
+    "trail_shoe"
+   ],
+   "short_layers_extra": [
+    "track_jacket"
+   ],
+   "sc_pair": true,
+   "h2_pick_free": true,
+   "sx": 3.0,
+   "sx_street_tops": [
+    "graphic_tee"
+   ],
+   "sx_dressy": [
+    "blazer",
+    "cardigan",
+    "chinos",
+    "derby",
+    "dress_shirt",
+    "dress_shoe",
+    "knit_polo",
+    "loafer",
+    "overcoat",
+    "oxford_shirt",
+    "polo",
+    "rugby_shirt",
+    "sport_coat",
+    "suit_jacket",
+    "suit_trousers",
+    "trousers",
+    "unstructured_blazer"
+   ],
+   "sx_min_dressy": 2,
+   "sx_quiet": {
+    "minimalist": 4,
+    "smart_casual": 3,
+    "classic_prep": 3
+   },
+   "pb": 1.5,
+   "pb_roomy_full": [
+    "minimalist",
+    "outdoor",
+    "streetwear",
+    "vintage_sport",
+    "workwear"
+   ],
+   "pb_roomy_narrow": [
+    "outdoor"
+   ],
+   "pb_wide_ok": [
+    "minimalist",
+    "outdoor",
+    "streetwear",
+    "vintage_sport",
+    "workwear"
+   ],
+   "h2_any": true,
+   "occ_target": {
+    "event": [
+     3,
+     4
+    ]
+   },
+   "cond_clear_only": true,
+   "sk1_soft": 0.5,
+   "lounge_style": 0.5,
+   "weights": {
+    "proportions": 0.3,
+    "fit": 0.15,
+    "color": 0.2,
+    "shoes": 0.15,
+    "cohesion": 0.2
+   },
+   "pr1_ribbed_loose": true,
+   "pr2b": 1.0,
+   "penalty": {
+    "under": 6.5,
+    "rate": 0.5,
+    "cap": 1.0
+   },
+   "ff5_roomy": true,
+   "ff7_loose": true,
+   "pn_narrow": 1.0,
+   "pn_skinny": 1.0,
+   "pn_rip": 0.5,
+   "pr1_loose": 1.5,
+   "pr1_straight": 0.5,
+   "sd3_off": true,
+   "sw3_off": true,
+   "sk2_runner": 5.0,
+   "cl1": 1.5,
+   "tk1": 2.0,
+   "int_top": 6.0,
+   "int_hoodie": 5.0,
+   "dd_same": 1.0,
+   "gt1": 1.5,
+   "cl1_own": true,
+   "pn_slim_soft": true,
+   "cp1_dark": 0.5,
+   "h3_base_covered": true,
+   "pn_lounge_skinny": 2.0,
+   "cl1_scale": true,
+   "pn_fitted_vol": 2,
+   "ll1": 1.0,
+   "wr_look": true,
+   "wr_half": 0.2,
+   "wr_knit_tailored": 0.2,
+   "wr_knit_clean": 0.2,
+   "sh_prop": true,
+   "sh_shape": 1.0,
+   "sh_layer": 1.0,
+   "sh_cap": 1.5,
+   "sh_roomy_fitted": 1.5,
+   "sh_fitted": 1.0,
+   "sd1_any_sneaker": true,
+   "goes_together": 0.5,
+   "tracksuit": 0.5,
+   "gym_runner_unheld": true,
+   "sweatsuit_sign": true,
+   "sweatsuit_shape": 1.0,
+   "look_sign": true,
+   "kit_cap": 6.0,
+   "kit_fit_rate": 0.5,
+   "sw1_blocks_credit": true,
+   "pr1_tucked_layer": true,
+   "peek_clearly_only": true,
+   "hl": 1.5,
+   "cp8": 0.5,
+   "v16": false,
+   "v16_color": false,
+   "sty3_off": false,
+   "v16_alpha": 0.5,
+   "v16_beta": 0.25,
+   "curve": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "v16_knit": 0.0,
+   "v16_h9_cap": false,
+   "v16_h7_cap": 5.5,
+   "taste": null,
+   "raw_cap": 9.5,
+   "curve_knee": null,
+   "stack_clean": null
+  }
+ },
+ "v16": {
+  "lifts": {
+   "PR1_waist_break": [
+    "L1",
+    null,
+    false
+   ],
+   "PR1b_half_tuck": [
+    "L1",
+    0.5,
+    false
+   ],
+   "PR4_street_shape": [
+    "L1",
+    1.0,
+    false
+   ],
+   "PR3_tailored_line": [
+    "L1",
+    0.75,
+    false
+   ],
+   "PS1_shorts_shape": [
+    "L1",
+    0.75,
+    false
+   ],
+   "PR7_sweatsuit_shape": [
+    "L1",
+    0.5,
+    false
+   ],
+   "PR2_short_layer": [
+    "L2",
+    1.0,
+    true
+   ],
+   "PR2b_short_layer_read": [
+    "L2",
+    0.75,
+    true
+   ],
+   "PR2h_hoodie_layer": [
+    "L2",
+    0.75,
+    true
+   ],
+   "PR5_workwear_shape": [
+    "L2",
+    1.0,
+    true
+   ],
+   "PR6_outdoor_shape": [
+    "L2",
+    0.5,
+    true
+   ],
+   "PS1_shorts_layer": [
+    "L2",
+    0.75,
+    true
+   ],
+   "CP1_standout_color": [
+    "L5",
+    0.5,
+    false
+   ],
+   "CP1_toned_down": [
+    "L5",
+    0.5,
+    false
+   ],
+   "CP2_quiet_accent": [
+    "L5",
+    0.5,
+    false
+   ],
+   "CP5_tie_in": [
+    "L6",
+    0.25,
+    false
+   ],
+   "CP8_layer_tie_in": [
+    "L6",
+    0.25,
+    false
+   ],
+   "H2_clear_top_to_toe": [
+    "L7",
+    0.5,
+    false
+   ],
+   "H2_suit": [
+    "L7",
+    0.5,
+    false
+   ]
+  },
+  "liftNames": {
+   "SIL": "a strong silhouette (a full leg over a real shoe, or a straight line to a dressy shoe)",
+   "L1": "a deliberate shape (a waist, a tuck, the look's own silhouette)",
+   "L2": "a short layer over a full leg",
+   "L3": "an open layer over a tee",
+   "L4s": "a light tonal summer outfit",
+   "L5": "one accent on a calm base",
+   "L6": "a color picked up",
+   "L7": "one look top to toe",
+   "L7b": "one smart piece with casual ones",
+   "SL1": "a fitted top over loose trousers, summer's shape"
+  },
+  "owns": {
+   "S1": [
+    "PB1_roomier_than_look",
+    "PF5_big_top_skinny_leg",
+    "PF6_layer_over_skinny",
+    "PN1_narrow_leg"
+   ],
+   "S4": [
+    "CC1_busy",
+    "CC1_too_many_accents",
+    "CC2_bright_clash",
+    "H5_too_many_statements",
+    "SCol1_loud_vs_loud"
+   ],
+   "S6": [
+    "H3_another_world",
+    "SD3_too_dressy"
+   ],
+   "S8": [
+    "H3_another_world",
+    "SD3_too_dressy"
+   ],
+   "S9": [],
+   "H7": [
+    "FF7_pooling"
+   ],
+   "H1": [
+    "PB1_roomier_than_look",
+    "PN1_narrow_leg"
+   ],
+   "H3": [
+    "CC2_bright_clash"
+   ],
+   "H4": [
+    "PN1_narrow_leg"
+   ],
+   "H8": [
+    "FF6_strain"
+   ],
+   "H9": [
+    "FF1_sleeves_long",
+    "FF1_sleeves_tailored",
+    "FF5_roomy_sleeves",
+    "FF5_too_big"
+   ],
+   "H10": [
+    "SW1_chunky_narrow"
+   ],
+   "H11": [
+    "SD2_too_casual",
+    "SD4_chunky_under_tailoring",
+    "SK2_runners"
+   ],
+   "S2": [
+    "PB1_roomier_than_look",
+    "PF5_big_top_skinny_leg",
+    "PF6_layer_over_skinny",
+    "PN1_narrow_leg"
+   ],
+   "S5": [
+    "X_S5"
+   ],
+   "S7": [
+    "X_S7"
+   ],
+   "H6": [
+    "X_H6"
+   ],
+   "H5": [
+    "X_H5"
+   ]
+  },
+  "unsteady": [
+   "FF1_cuffs_ribbed",
+   "FF1_sleeves_long",
+   "FF1_sleeves_tailored",
+   "FF5_roomy_sleeves",
+   "FF5_too_big",
+   "FF7_pooling"
+  ],
+  "unread": {
+   "S3": "a top hanging past the crotch: the top-length read fails (#465); a tip only",
+   "H2": "a tee long in the body over baggy pants: the same top-length read",
+   "H7_no_closeup": "pooling: needs the shoe close-up (look L); the main read's hem isn't trusted",
+   "L4": "tonal range (one color, light to dark): needs a light/mid/dark read per piece",
+   "L8": "two or three textures: needs a fabric read",
+   "season.9": "bare ankles in winter: socks aren't read",
+   "season.5": "linen and summer fabric: fabric isn't read"
+  },
+  "tasteByLook": {
+   "leg_wide": {
+    "vintage_sport": 0.5,
+    "outdoor": 0.5,
+    "workwear": 0.5,
+    "streetwear": 1,
+    "tailored": 0,
+    "classic_prep": 0.5,
+    "minimalist": 1,
+    "smart_casual": 0.5,
+    "none": 0.5
+   },
+   "shorts_wide": {
+    "vintage_sport": 0.5,
+    "outdoor": 0.5,
+    "workwear": 0.5,
+    "streetwear": 1,
+    "tailored": 0,
+    "classic_prep": 0.5,
+    "minimalist": 1,
+    "smart_casual": 0.5,
+    "none": 0.5
+   },
+   "color": {
+    "vintage_sport": 0,
+    "outdoor": 0,
+    "workwear": "2nd",
+    "streetwear": 0,
+    "tailored": 1,
+    "classic_prep": "2nd",
+    "minimalist": 0.5,
+    "smart_casual": 1,
+    "none": 0.5
+   },
+   "hem_plus": {
+    "vintage_sport": 1,
+    "outdoor": 1,
+    "workwear": 1,
+    "streetwear": 1,
+    "tailored": 0,
+    "classic_prep": 0.5,
+    "minimalist": 1,
+    "smart_casual": 0.5,
+    "none": 1
+   },
+   "long_top": {
+    "vintage_sport": 0.5,
+    "streetwear": 0.5
+   }
+  },
+  "l5ByLook": {
+   "vintage_sport": 0,
+   "outdoor": 0,
+   "workwear": 0,
+   "streetwear": 0,
+   "tailored": 1,
+   "classic_prep": 0,
+   "minimalist": 1,
+   "smart_casual": 0.5,
+   "none": 0
+  },
+  "tlJacket": [
+   "blazer",
+   "sport_coat",
+   "suit_jacket",
+   "unstructured_blazer"
+  ],
+  "tlNever": [
+   "athletic_shorts",
+   "basketball_sneaker",
+   "cargos",
+   "chinos",
+   "chunky_sneaker",
+   "fleece",
+   "graphic_tee",
+   "hoodie",
+   "jeans",
+   "jersey",
+   "joggers",
+   "performance_runner",
+   "shorts",
+   "slides_sandals",
+   "sweatpants",
+   "sweatshirt",
+   "tank_top",
+   "track_pants",
+   "work_boot"
+  ],
+  "proPieces": [
+   "blazer",
+   "dress_shirt",
+   "sport_coat",
+   "suit_jacket",
+   "suit_trousers",
+   "trousers",
+   "unstructured_blazer"
+  ],
+  "sets": {
+   "OPEN_LAYERS": [
+    "camp_collar_shirt",
+    "cardigan",
+    "chore_coat",
+    "denim_shirt",
+    "flannel_shirt",
+    "overshirt",
+    "oxford_shirt"
+   ],
+   "LIGHT_SHIRTS": [
+    "camp_collar_shirt",
+    "denim_shirt",
+    "dress_shirt",
+    "oxford_shirt"
+   ],
+   "UNDER_TEES": [
+    "graphic_tee",
+    "tank_top",
+    "tee"
+   ],
+   "KNIT_LAYERS": [
+    "cardigan",
+    "quarter_zip",
+    "sweater"
+   ],
+   "HEAVY_LAYERS": [
+    "fleece",
+    "leather_jacket",
+    "overcoat",
+    "puffer"
+   ],
+   "SUMMER_TOPS": [
+    "knit_polo",
+    "polo",
+    "tank_top",
+    "tee"
+   ],
+   "SUMMER_BOTTOMS": [
+    "cargos",
+    "chinos",
+    "drawstring_trousers",
+    "jeans",
+    "suit_trousers",
+    "trousers"
+   ]
+  },
+  "smart": 4.0
  },
  "sets": {
   "TAILORED": [
