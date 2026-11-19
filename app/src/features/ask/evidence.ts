@@ -5,7 +5,7 @@
 // in a "+N outfits" count (07 §4).
 import {
   addDays, dayKey, daysBetween, localParts, pickOutfit, seasonNeeds, weatherNeeds,
-  type ClosetItem, type DayWeather, type IdeaReason, type PastUse, type PickHistory, type Reading,
+  type AllowedColorsInput, type ClosetItem, type ColorFamily, type DayWeather, type IdeaReason, type PastUse, type PickHistory, type Reading,
 } from '@kitted/core';
 import { OCCASIONS, type CardOccasion, type ClosetItemRow, type FitCheckRow, type OccasionKey } from '@/data/types';
 import { displayScore } from '@/design-system/score';
@@ -39,6 +39,8 @@ export interface EvidenceDeps {
   readingOf: (readingId: string | null) => Promise<Reading | null>;
   /** Starter rows he marked as owned with no closet piece (kv), for "what to buy". */
   starterMarks: readonly string[];
+  /** T105 KC3.3: the colors the rules would not mark down (core's `allowedColors` by default); a stand-in in tests. */
+  allowedColors?: (input: AllowedColorsInput) => ColorFamily[];
 }
 
 /** A lookup the model asked for in its closing block (R3), in the router's terms. */
@@ -285,4 +287,26 @@ export async function buildEvidence(route: Route, s: StylistSnapshot, ctx: Pick<
 /** Every score the model may say: the pack's and the evidence's (gate.ts). */
 export function allowedScores(pack: string, evidence: string): Set<string> {
   return new Set([...scoresIn(pack), ...scoresIn(evidence)]);
+}
+
+// ---------------------------------------------------------------- T105 stubs (tasks/T105/IMPLEMENTATION.md, Interfaces): not built
+export function shownCardLines(_s: StylistSnapshot): string[] {
+  throw new Error('T105: not built');
+}
+export interface ColorEvidence {
+  text: string;
+  allowed: ReadonlySet<string> | null;
+  own: ReadonlySet<string>;
+}
+export const isColorQuestion = (_question: string): boolean => {
+  throw new Error('T105: not built');
+};
+export const mentionsColoring = (_question: string): boolean => {
+  throw new Error('T105: not built');
+};
+export function colorEvidence(_question: string, _route: Route, _s: StylistSnapshot, _ctx: Pick<StylistContext, 'handles'>, _deps?: Pick<EvidenceDeps, 'allowedColors'>): ColorEvidence | null {
+  throw new Error('T105: not built');
+}
+export function allowedForCard(_raw: unknown, _s: StylistSnapshot, _ctx: Pick<StylistContext, 'handles'>, _deps?: Pick<EvidenceDeps, 'allowedColors'>): ReadonlySet<string> | null {
+  throw new Error('T105: not built');
 }

@@ -7,7 +7,7 @@
 // words ("elevate", "drip", "vibe") drop their sentence; an opener before a comma ("Absolutely, …") is cut off the first
 // sentence. Markup (**, #, bullets, backticks) never shows: the answer's look is drawn by code (L3).
 
-export type GateRule = 'emoji' | 'unlimited' | 'aiStylist' | 'brand' | 'creator' | 'body' | 'build' | 'height' | 'score' | 'filler' | 'banned' | 'handle' | 'fact';
+export type GateRule = 'emoji' | 'unlimited' | 'aiStylist' | 'brand' | 'creator' | 'body' | 'build' | 'height' | 'score' | 'filler' | 'banned' | 'handle' | 'fact' | 'price' | 'color' | 'deny' | 'claim' | 'place';
 
 export interface GateContext {
   /** Every score that may be said: the one-decimal numbers in the pack and the evidence ("7.0", "7.5"). */
@@ -16,6 +16,18 @@ export interface GateContext {
   pieceNames?: readonly string[];
   /** His owned pieces' facts, for the fact rule (#311): "your straight jeans" when his jeans are slim is dropped. */
   pieces?: readonly GatePiece[];
+  /** T105 KC8.1: dollar amounts in the pack and the evidence ("115", "30", "60"); absent = none. */
+  allowedPrices?: ReadonlySet<string>;
+  /** T105 KC3.3: color families Kit may name; null, absent or empty = the sentence rule is off. */
+  allowedColors?: ReadonlySet<string> | null;
+  /** T105 KC3.3: families his sentences may name besides the list. */
+  ownColors?: ReadonlySet<string>;
+  /** T105 KC6.2: Closet's Outfits view is live (absent = false). */
+  outfitsOn?: boolean;
+  /** T105 KC1.4: the code added a piece before this answer (T106 sets it). */
+  didAdd?: boolean;
+  /** T105 KC1.4: the code changed a piece before this answer (T107 sets it). */
+  didChange?: boolean;
 }
 
 export interface GatePiece {
@@ -312,4 +324,22 @@ export function createSentenceStream(ctx: GateContext) {
     },
     dropped,
   };
+}
+
+// ---------------------------------------------------------------- T105 stubs (tasks/T105/IMPLEMENTATION.md, Interfaces): not built
+export const DRAWN_CARD_TYPES: ReadonlySet<string> = new Set<string>();
+export function wordCount(_s: string): number {
+  throw new Error('T105: not built');
+}
+export function cutAnswer(_text: string, _withCard: boolean): string {
+  throw new Error('T105: not built');
+}
+export function pricesIn(_text: string): Set<string> {
+  throw new Error('T105: not built');
+}
+export function colorsNamed(_sentence: string): string[] {
+  throw new Error('T105: not built');
+}
+export function rewritePieceNames(_sentence: string, _pieces: readonly GatePiece[]): string {
+  throw new Error('T105: not built');
 }

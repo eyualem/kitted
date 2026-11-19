@@ -37,6 +37,19 @@ export function guideFor(kind: AskKind): string {
   return stripMarks([0, ...GUIDE_FOR[kind]].map((n) => sec.get(n)).filter((x): x is string => !!x).join('\n\n'));
 }
 
+// ---------------------------------------------------------------- T105 stubs (tasks/T105/IMPLEMENTATION.md, Interfaces): not built
+export const SHOP_LINE = '';
+export const NEXT_BUY_LINE = '';
+export interface AppSwitches { outfits: boolean; share: boolean; paywall: boolean; accounts: boolean; notifications: boolean }
+export const NO_SWITCHES: AppSwitches = { outfits: false, share: false, paywall: false, accounts: false, notifications: false };
+export interface AppMapLine { id: string; text: string }
+export function appMapLines(_sw: AppSwitches): AppMapLine[] {
+  throw new Error('T105: not built');
+}
+export function appMap(_sw: AppSwitches): string {
+  throw new Error('T105: not built');
+}
+
 /** Bumped whenever the system part's words change (rules, examples, the guide), so a cached prefix is never mixed. */
 export const PROMPT_VERSION = 5;
 
@@ -102,7 +115,7 @@ function examplesBlock(): string {
 }
 
 /** The system part: rules, the closing block's format, the examples, then the guide (trimmed for the kind). */
-export function systemPrompt(kind: AskKind = 'general'): string {
+export function systemPrompt(kind: AskKind = 'general', _switches: AppSwitches = NO_SWITCHES): string {
   return `${ANSWER_RULES}\n\n${CLOSING_FORMAT}\n\n${examplesBlock()}\n\n<guide>\n${guideFor(kind)}\n</guide>`;
 }
 

@@ -149,7 +149,7 @@ export function fullCheckLines(
   return out;
 }
 
-export function buildStylistContext(s: StylistSnapshot, question: string): StylistContext {
+export function buildStylistContext(s: StylistSnapshot, question: string, _extra?: { shownCards?: readonly string[] }): StylistContext {
   const { zone, nowMs } = s;
   const today = dayKey(nowMs, zone);
   const handles: Record<string, string> = {};
