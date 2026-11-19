@@ -146,14 +146,14 @@ export function NotSameSheet() {
   const run = (job: () => Promise<boolean>) => {
     if (busy) return;
     setBusy(true);
-    void job().then((ok) => {
-      if (ok) router.back();
-      else {
-        // A failed or refused write: the sheet stays open with nothing selected and nothing saved.
-        setSelectedId(null);
-        setKind(null);
-      }
-    }).finally(() => setBusy(false));
+    const fail = () => {
+      // A failed or refused write: the sheet stays open with nothing selected and nothing saved.
+      setSelectedId(null);
+      setKind(null);
+      setBusy(false);
+    };
+    // On success the sheet closes and stays busy (its piece may be folded away under it; no Gone flash).
+    void job().then((ok) => (ok ? router.back() : fail())).catch(fail);
   };
 
   // A piece he picked is the one it is.

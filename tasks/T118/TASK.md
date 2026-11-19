@@ -22,7 +22,17 @@
 CB4.1–CB4.17 (see the spec). Logic is covered by `notSame.test.ts` (CB4.2, 4.3, 4.6, 4.8, 4.14, the lines) and `closetService.test.ts` (CB4.5, 4.7, 4.10, 4.16, 4.17); the deck test covers CB4.1. Words, layout and VoiceOver are checked by screenshots / not verified (see Built).
 
 ## Built
-_(filled in at the end)_
+Everything in "What changes" above, on the iOS Simulator (iPhone 17e, a Metro on port 8082 from this worktree), screens 420–424 (`demo/scenarios.ts`).
+
+Screenshots in `tasks/T118/shots/`:
+- Light: `01-sheet-list`, `02-picked`, `03-kinds`, `04-all-kinds`, `05-card-after-kind` ("Saved as its own piece: tan trousers." · Change), `06-card-change` (`Not the same` marked), `07-empty` (straight to kinds, no Back), `11-matched-sheet`, `12-matched-after-pick` (the photo moved to the grey tee), `13-matched-after-new-piece` (the sneakers split off as a new piece).
+- Dark: `08-sheet-list`, `09-empty`. Largest text: `10-sheet-list-largest-light`.
+
+Tests: `notSame.test.ts` (pieces, order, exclusions, empty case, kinds, lines), the CB4 block in `closetService.test.ts` (pick, kind, Change, Undo with the never-ask-again mark restored, score unchanged), `closetDeck.test.tsx` (chip opens the sheet), `toast.test.ts` (the two new Undo toasts are 8 s). One full `npm run check` at the end.
+
+Review fix round (one): the reviewer found that Undo of a new piece with a kind left the two pieces marked "never ask again" (`kindUndo` was captured after that mark was added). Fixed in `revertAnswer`, with a `distinctFrom` assertion in the test. Also from the review: the sheet catches a thrown write (clears the selection) and stays busy after a successful write so it never flashes Gone as it closes.
+
+Not verified: VoiceOver (labels and hints are set, never run with VoiceOver on); the toast's Undo on the matched path on the Simulator (it reuses `restorePhoto`, which has its own tests); dark shots of the picked state, the full kind list and the card; the Maestro edit in `e2e/flows/T74-confirm-one-card.yaml` (written, not run); a phone.
 
 ## Review
 

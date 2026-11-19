@@ -309,6 +309,8 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   420: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'notSame' }] },
   421: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'notSame', empty: true }] },
   422: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'notSame', answer: 'pick' }] },
+  // 424: the Added sheet over the same story, whose matched pieces (the white tee, the shoes) offer `Not the same`.
+  424: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'notSame' }] },
   423: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'notSame', answer: 'kind' }] },
   // A photo on the wrong card (#289, 09-ui-review §8 W7): screen 96's story with the grey tee in the closet too, so the
   // white tee's page has two photos (p01b, p01a) and another top; each photo's long-press offers Not this piece and

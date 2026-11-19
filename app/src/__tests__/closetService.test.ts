@@ -872,6 +872,8 @@ describe('CB4 · What is it, then? (the answers)', () => {
     const undone = (await env.store.closet.get(ask.itemId))!;
     expect([undone.garment.subcategory, undone.confirmedFields, undone.name]).toEqual([before.garment.subcategory, before.confirmedFields, before.name]);
     expect((await env.row(id)).details.closetSummary!.asks![0]).toMatchObject({ answer: null, kind: null });
+    // The never-ask-again mark of the "new" answer goes with it, on both pieces (the reviewer's find).
+    expect([profileOfItem(undone).distinctFrom, profileOfItem((await env.store.closet.get('B1'))!).distinctFrom]).toEqual([[], []]);
   });
 
   it('CB4.16 · Change: a new answer replaces the earlier save (a kind, then a pick, then Yes)', async () => {

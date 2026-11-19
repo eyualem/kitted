@@ -423,6 +423,7 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 421, name: 'What is it, then? · nothing else like it', id: 'C1n', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/sheets/not-same/{check}/{obs}', under: '/stylist' },
   { n: 422, name: 'Card · saved as your piece', id: 'C1n', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/stylist' },
   { n: 423, name: 'Card · saved as its own piece', id: 'C1n', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/stylist' },
+  { n: 424, name: 'Added sheet · a matched piece', id: 'S11', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/sheets/added/{check}', under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

@@ -717,7 +717,12 @@ export function createClosetService(deps: ClosetServiceDeps) {
       await store.closetObs.patch(ask.obsId, { decision: 'ask', answeredAt: null });
       // The kind he confirmed in "What is it, then?" goes back to what it was (CB4).
       if (ask.kindUndo && f) {
-        await store.closet.patch(f.id, { garment: ask.kindUndo.garment, confirmedFields: ask.kindUndo.confirmedFields, profile: ask.kindUndo.profile, starterId: ask.kindUndo.starterId });
+        // The profile as it was before the kind, minus the never-ask-again mark this answer added (removed just above).
+        const was = ask.kindUndo.profile;
+        await store.closet.patch(f.id, {
+          garment: ask.kindUndo.garment, confirmedFields: ask.kindUndo.confirmedFields, starterId: ask.kindUndo.starterId,
+          profile: was ? { ...was, distinctFrom: was.distinctFrom.filter((x) => x !== ask.candidateId) } : was,
+        });
         await refreshItem(f.id);
       }
     }
