@@ -878,8 +878,14 @@ describe('KC2.2 · colors cards (the card side of KC3.3), buy cards and what the
       const input = await scenario();
       const why = 'It works with both of your chinos.';
       expect(checkSentence(why, GATE)).toBeNull();
-      expect(buildCard({ type: 'buy', kind: 'polo', shade: 'navy', why }, input)).toEqual({ type: 'buy', starterId: 's02', gain: 12, why });
-      expect(buildCard({ type: 'buy', kind: 'polo', shade: 'navy' }, input)).toEqual({ type: 'buy', starterId: 's02', gain: 12 });
+      // The gain is scoring-derived (it moves when the scoring version does), so it is read from the same call without a why.
+      const bare = buildCard({ type: 'buy', kind: 'polo', shade: 'navy' }, input) as unknown as Buy;
+      expect(bare.type).toBe('buy');
+      expect(bare.starterId).toBe('s02');
+      expect(typeof bare.gain).toBe('number');
+      expect(bare.gain as number).toBeGreaterThan(0);
+      expect(Object.keys(bare).sort()).toEqual(['gain', 'starterId', 'type']);
+      expect(buildCard({ type: 'buy', kind: 'polo', shade: 'navy', why }, input)).toEqual({ ...bare, why });
       const ninety = 'It works with both pairs of chinos and the jeans you have, and it keeps every outfit easy.';
       expect(ninety).toHaveLength(90);
       expect(checkSentence(ninety, GATE)).toBeNull();
@@ -887,8 +893,8 @@ describe('KC2.2 · colors cards (the card side of KC3.3), buy cards and what the
       const over = 'It works with both pairs of chinos and the jeans you have, and it keeps every outfit clean.';
       expect(over).toHaveLength(91);
       expect(checkSentence(over, GATE)).toBeNull();
-      expect(buildCard({ type: 'buy', kind: 'polo', shade: 'navy', why: over }, input)).toEqual({ type: 'buy', starterId: 's02', gain: 12 });
-      expect(buildCard({ type: 'buy', kind: 'polo', shade: 'navy', why: 'Nike makes a good one.' }, input)).toEqual({ type: 'buy', starterId: 's02', gain: 12 });
+      expect(buildCard({ type: 'buy', kind: 'polo', shade: 'navy', why: over }, input)).toEqual(bare);
+      expect(buildCard({ type: 'buy', kind: 'polo', shade: 'navy', why: 'Nike makes a good one.' }, input)).toEqual(bare);
     });
 
     it('KC2.2 · buyPiece draws the Starter pick; no pick or an unknown row draws nothing', () => {
