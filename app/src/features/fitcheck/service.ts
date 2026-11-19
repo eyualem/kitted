@@ -25,7 +25,7 @@ import type { FailCode, LookResult, PreparedImage, ReadingSource, ReadKind, Seco
 import type { Scheduler } from '@/services/scheduler';
 import { patchCheckKeepCloset } from '@/features/closet/checkWrites';
 import { isOwned } from '@/features/closet/profile';
-import { createClosetService, type ClosetService, type DuplicateAnswer } from '@/features/closet/service';
+import { createClosetService, type AnswerPick, type ClosetService, type DuplicateAnswer } from '@/features/closet/service';
 import { IDLE, reduce, type CheckMode, type SessionEvent, type SessionState } from './machine';
 import { snapPart } from './finish';
 import { firstStyle, stylesFor } from './lens';
@@ -1376,8 +1376,8 @@ export function createFitCheckService(deps: ServiceDeps) {
       return closet.setUndone(checkId, itemId, undone);
     },
     /** "Same as your khaki chinos?": Yes (merge), No (a new piece), or "It's my {runner-up}". Re-answerable. */
-    answerDuplicate(checkId: string, obsId: string, a: DuplicateAnswer) {
-      return closet.answer(checkId, obsId, a);
+    answerDuplicate(checkId: string, obsId: string, a: DuplicateAnswer, pick?: AnswerPick) {
+      return closet.answer(checkId, obsId, a, pick);
     },
     /** Undo on that answer's toast: the question is open again (#323). */
     unanswerDuplicate(checkId: string, obsId: string) {

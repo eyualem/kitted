@@ -135,6 +135,7 @@ function RootStack({ booted }: { booted: boolean }) {
         <Stack.Screen name="sheets/sample-photos" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/scan-inbox" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/merge/[id]" options={sheet([0.6, 1])} />
+        <Stack.Screen name="sheets/not-same/[checkId]/[obsId]" options={{ ...sheet(isAccessibilitySize ? [1] : [0.6, 1]), sheetInitialDetentIndex: isAccessibilitySize ? 0 : 1 }} />
         {/* A1 (10-onboarding.md): 0.7 leaves room for the email field and its button above the keyboard. */}
         <Stack.Screen name="sheets/sign-in" options={sheet([0.7, 1])} />
       </Stack.Protected>
