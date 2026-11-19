@@ -1,4 +1,4 @@
-// The card's own beat (log #496): wraps a just-finished answer's card or one follow-up tap in its entrance
+// The card's own beat (log #510): wraps a just-finished answer's card or one follow-up tap in its entrance
 // (arrivalMotion.ts). `on` false draws it still: an older answer, Past chats, a remount.
 import { useState, type ReactNode } from 'react';
 import Animated from 'react-native-reanimated';

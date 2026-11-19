@@ -57,7 +57,7 @@ Words approved Nov 10: `I'm Kit, your stylist.` · `From your first check` · `N
 Removed with the tips: there's nothing left to replay. Help & about has no `Show me around` row.
 
 ## SY4. The name (before launch)
-- On setup's About you step (`specs/onboarding-screens.md` OS4), above `How old are you?`: the label `What should Kit call you?` and a text field with the placeholder `First name (optional)`. No Skip button: a blank field is skipping, and `Continue` waits only on the age pick.
+- On setup's About you step (`specs/onboarding-screens.md` OS4), above `How old are you?`: the label `What should Kit call you?` and a text field with the placeholder `First name`, focused with the keyboard up. `Continue` waits for a name and an age; a small `Skip` under it goes on without a name (the founder, Nov 18, #506, replacing "No Skip button": the name stays optional, as Apple 5.1.1(x) requires, but skipping it takes a deliberate tap).
 - Trimmed; up to 30 characters **(assumed)**; blank means no name.
 - Style profile → Basics gets a `Name` row to change or clear it (the same placeholder).
 - Used only in code-written lines (F1.5); never sent to Google, OpenAI or PostHog; Kit's AI answers never say it. Signing in with Apple fills an empty one with Apple's first name (F1.4, built with sign-in).
@@ -106,7 +106,7 @@ Removed with the tips: there's nothing left to replay. Help & about has no `Show
 - SY2.11 VoiceOver: the row reads `Added {n} to Closet`; each new piece reads `New, {piece name}`; the label reads as a heading.
 
 **SY4. The name**
-- SY4.1 The About you step shows `What should Kit call you?` with `First name (optional)` above `How old are you?`; `Continue` is enabled with an age picked and a blank name.
+- SY4.1 The About you step shows `What should Kit call you?` with `First name` above `How old are you?`; with an age picked and a blank name, `Continue` is off and `Skip` goes on without a name.
 - SY4.2 A name is saved trimmed, at most 30 characters; spaces only means no name.
 - SY4.3 Style profile → Basics changes or clears the name; clearing it changes the greetings back (F1.4).
 - SY4.4 No request to the server (fit check, question, any other) carries the name (a test over every request builder).

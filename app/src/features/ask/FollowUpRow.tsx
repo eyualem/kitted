@@ -6,7 +6,7 @@ import { Chip, ChipFlow, space } from '@/design-system';
 import { sendQuestion } from '@/features/stylist/ask';
 import { Enter } from '@/features/stylist/Enter';
 
-/** `enter`: they fade in after the card, 50 ms apart (log #496). */
+/** `enter`: they fade in after the card, 50 ms apart (log #510). */
 export function FollowUpRow({ taps, enter = false }: { taps: readonly string[]; enter?: boolean }) {
   if (taps.length === 0) return null;
   return (

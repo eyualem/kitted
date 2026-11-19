@@ -70,7 +70,7 @@ describe("KC2.10 (the tile) · the You'd need menu", () => {
     expect(c.nextBuy).toMatch(/^s\d+$/);
     expect(needMenuRows(c)).toEqual(['nextBuy']);
   });
-  it('Next buy only when a Starter pick matches kind AND color (the founder, Nov 18, #497)', () => {
+  it('Next buy only when a Starter pick matches kind AND color (the founder, Nov 18, #511)', () => {
     // The only Starter oxford is light blue: an off-white one gets no Next buy, a light blue one does.
     expect(needMenuChoices(p('oxford_shirt', 'off_white_cream', 'Off-white oxford'), null, false).nextBuy).toBeNull();
     expect(needMenuRows(needMenuChoices(p('oxford_shirt', 'off_white_cream', 'Off-white oxford'), null, false))).toEqual([]);

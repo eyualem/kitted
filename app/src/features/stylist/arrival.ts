@@ -22,7 +22,7 @@ export const ARRIVE = {
   settleMs: 500,
 } as const;
 
-/** The card's own beat under a new answer (the founder approved Nov 18, log #496; chat-feel research proposal 1): about
+/** The card's own beat under a new answer (the founder approved Nov 18, log #510; chat-feel research proposal 1): about
  *  120 ms after the words, the card fades in while rising 12 pt over 280 ms, then the follow-up taps fade in 50 ms apart.
  *  Reduce Motion: the same order as plain fades (`fadeMs`). */
 export const ARRIVE_CARD = { delayMs: 120, risePt: 12, riseMs: 280, fadeMs: 200, tapStaggerMs: 50 } as const;

@@ -1,4 +1,4 @@
-// The card's own beat (the founder approved Nov 18, log #496): the card under a just-finished answer fades in while
+// The card's own beat (the founder approved Nov 18, log #510): the card under a just-finished answer fades in while
 // rising 12 pt, 120 ms after the words, then the follow-up taps fade in 50 ms apart. Once per new answer, never in
 // Past chats or when the row is drawn again, and fades only under Reduce Motion.
 // jest hoists the mocks below above these imports.

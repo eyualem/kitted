@@ -1,0 +1,52 @@
+# T113 · Plays the style game on the Looks step (specs/style-game.md): Me on the first ${ME} cards (default 1), Not me
+# on every card after that, then the ranking's left card while it shows (at most 3 taps for 3 Me's), then Continue on
+# Here's your style. A fresh install's card 1 shows the teaching overlay first (SG1.4): one tap on it (counted as a
+# tap). Three fast No's in a row bring "Just checking" (SG7 FS4): Keep going. Taps are by testID: the deal is random on a fresh install, so nothing here depends on which look
+# is on a card.
+# Usage: - runFlow: { file: ../common/play-style-game.yaml, env: { ME: "3" } }
+appId: com.trykitted.kitted
+---
+- extendedWaitUntil:
+    visible:
+      id: "game-me"
+    timeout: 10000
+- runFlow:
+    when:
+      visible: "Swipe right if it's your style, left if it's not\\."
+    commands:
+      - tapOn: "Swipe right if it's your style, left if it's not\\."
+- repeat:
+    times: ${ME || 1}
+    commands:
+      - tapOn:
+          id: "game-me"
+      - waitForAnimationToEnd:
+          timeout: 3000
+- repeat:
+    while:
+      visible:
+        id: "game-notme"
+    commands:
+      - tapOn:
+          id: "game-notme"
+      - waitForAnimationToEnd:
+          timeout: 3000
+      - runFlow:
+          when:
+            visible: "Just checking: left means it's not your style\\."
+          commands:
+            - tapOn: "Keep going"
+- repeat:
+    times: 3
+    while:
+      visible:
+        id: "rank-pick-left"
+    commands:
+      - tapOn:
+          id: "rank-pick-left"
+      - waitForAnimationToEnd:
+          timeout: 3000
+- extendedWaitUntil:
+    visible: "Here's your style"
+    timeout: 10000
+- tapOn: "Continue"

@@ -35,7 +35,7 @@
 - **Add, No thanks, Undo and I have one** draw here; what they do is T106 (adds) and T107 (corrections). Until T106, `I have one` stays out of the menu (an outfit card from the model can reach a tester), and the add and changed cards can't appear outside demo screens (only code builds them).
 
 ## The card's entrance (approved)
-- **The founder approved it on Nov 18** (proposal 1 of `reports/2026-11-18-chat-feel-research.md`, PR #150; relayed by the control session). About 120 ms after the answer's words finish, the card fades in while rising 12 pt over 280 ms, then the follow-up taps fade in 50 ms apart; Reduce Motion: fades only; once per new answer, never in Past chats or on scroll-back. It lands as its own commit for a clean history (log #496).
+- **The founder approved it on Nov 18** (proposal 1 of `reports/2026-11-18-chat-feel-research.md`, PR #150; relayed by the control session). About 120 ms after the answer's words finish, the card fades in while rising 12 pt over 280 ms, then the follow-up taps fade in 50 ms apart; Reduce Motion: fades only; once per new answer, never in Past chats or on scroll-back. It lands as its own commit for a clean history (log #510).
 
 ## Built
 - **Changed:** the outfit card draws his pieces then the drawn ones (dashed with `You'd need`, or plain in an Example titled `Example` with `Check my fit`); the tag reads `<occasion> · From your closet + n`. New views for options, colors (pieces or swatches), the add card (asking, added with Undo and a tap to open the piece, not added; Past chats read-only), Changed · Undo / Changed back, and the drawn buy card (tap → the Next buy sheet on that piece). A `You'd need` tile opens the action sheet when it has a row. The follow-up taps sit under the latest answer only and send as his message. Tiles are 76 pt (up to 1.5x with text); every card hugs its content. `cardSpoken` gives every new card a VoiceOver line made of its own words. Demo screens 400–412.
@@ -55,7 +55,7 @@ Ran `npx jest src/__tests__/T104-cardViews.test.tsx`: 25 passed. `npm run check`
 - KC4.2 add card three states, Past chats read-only (#493): done.
 - KC6.4 buy card drawn, name, price range, reason, tap opens Next buy on that piece, no outfit count: done.
 - Must not break: morning compact tiles kept (OutfitTiles compact path); old needs-less cards draw as before; "bracelet" test passes; no emoji/rank/streak, nothing new leaves the phone.
-- Words: new strings match the spec list; `Options` and the tag orders are from the mockup and logged as #495.
+- Words: new strings match the spec list; `Options` and the tag orders are from the mockup and logged as #509.
 Defects: none open.
 Small things for later (never blocking):
 - OutfitTiles.tsx: the `needs` prop was dropped from `OutfitTiles`; only MorningCard uses it, so fine, but check no other lane's branch passes it.
@@ -68,7 +68,7 @@ Verdict: **Ready** (code and spec checks); the visual checks wait for the shots 
 - KC1.6 default and largest text: done. Tiles are one size, two to a row at the largest size, names no longer break mid-word (shots 01, 06 xxxl; dark 01 shows four tiles in one row, `You'd need` under the dashed tile).
 - Dark-mode legibility: done. Dashed tile border and the copper `You'd need` read in dark (01-dark); the five swatches and their names are legible with a visible ring (05-dark).
 - Add card at accessibility size: done (06-add-asking-light-xxxl): stacked art, name, question, Add and No thanks all whole.
-- Entrance (#496): once per new answer: done (`cards` set filled only from the live row, `cardEnters` false once drawn; tests cover re-render, next answer, rows that moved in whole). Never in Past chats: done (`attachmentEnters` false when read-only; PastChats passes no `enter`). Reduce Motion fades only: done (200 ms FadeIn, no translate). Tests can fail: yes, they assert exact delays, rise, durations and the Past-chats source.
+- Entrance (#510): once per new answer: done (`cards` set filled only from the live row, `cardEnters` false once drawn; tests cover re-render, next answer, rows that moved in whole). Never in Past chats: done (`attachmentEnters` false when read-only; PastChats passes no `enter`). Reduce Motion fades only: done (200 ms FadeIn, no translate). Tests can fail: yes, they assert exact delays, rise, durations and the Past-chats source.
 - Defects: none blocking.
 - Small things for later (never blocking):
   - Enter.tsx / StylistScreen.tsx:121: `arrivals.drawn` runs in an effect and doesn't re-render, so the next render of the row flips `Enter` from an Animated.View to a bare fragment, which remounts the card (and the taps). If any re-render lands inside the first ~400-500 ms, the animation can be cut short and the card redraws once. Fix idea: keep the wrapper stable (always Animated.View, `entering` only when `on`), or latch `on` in a ref. Can't tell on the Simulator without a re-render during the beat; worth one look on a real answer.
@@ -82,6 +82,6 @@ Verdict: **Ready**.
 - Swatches: a colors card holds 3–5 (`buildCard`), so a sixth can't occur.
 
 ### After the live tap-through (Nov 18)
-- **Next buy only on an exact match** (the founder, log #497): a "You'd need" tile's Next buy shows only when a Starter pick matches its kind and color family; a tile with nothing to offer isn't a button. Tests in `T104-cardViews.test.tsx` (the off-white oxford gets none, the light blue one does; no button role or hint).
-- **Cut-off names ("Olive over…") seen once, not reproduced** (log #498): it appeared on one card after the app was reopened on a thread the demo had kept. Four tries since (two captured live arrivals, two reopenings) all wrap correctly, and the demo now reseeds on each launch, so that thread can't come back. Best guess: a text-measuring race on launch. No change (the line cap stays).
+- **Next buy only on an exact match** (the founder, log #511): a "You'd need" tile's Next buy shows only when a Starter pick matches its kind and color family; a tile with nothing to offer isn't a button. Tests in `T104-cardViews.test.tsx` (the off-white oxford gets none, the light blue one does; no button role or hint).
+- **Cut-off names ("Olive over…") seen once, not reproduced** (log #512): it appeared on one card after the app was reopened on a thread the demo had kept. Four tries since (two captured live arrivals, two reopenings) all wrap correctly, and the demo now reseeds on each launch, so that thread can't come back. Best guess: a text-measuring race on launch. No change (the line cap stays).
 - **For T110's checks:** watch for cut-off piece names on a card after reopening the app (also on the founder's phone replay, Y33).

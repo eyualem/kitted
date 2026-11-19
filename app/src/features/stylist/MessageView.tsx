@@ -33,7 +33,7 @@ import { retryQuestion } from './ask';
 import { occasionLabel, type ThreadItem } from './thread';
 
 /** `readOnly`: Past chats (#276): an earlier day's check cards can't be changed, only read (Why, the photo). */
-/** `enter`: the just-finished answer's card and taps get their own beat (log #496); the screen says when, Past chats never. */
+/** `enter`: the just-finished answer's card and taps get their own beat (log #510); the screen says when, Past chats never. */
 export function ThreadRow({ item, readOnly = false, followUps, enter }: { item: ThreadItem; readOnly?: boolean; followUps?: readonly string[]; enter?: boolean }) {
   if (item.type === 'stamp') return <DayStamp>{item.text}</DayStamp>;
   const m = item.message;

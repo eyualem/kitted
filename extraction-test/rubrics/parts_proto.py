@@ -738,7 +738,7 @@ def _band_fault(o, t):
     what = (sub or "top").replace("_", " ")
     if narrow:
         return t["pb"], f"a roomy {what} over slim legs: an oversized top wants a fuller leg"
-    look = f"a {R.STYLE_NAMES[o['label']]} outfit" if o["label"] else "the rest of the outfit"
+    look = f"a {R.STYLE_NAMES[o['look']]} outfit" if o["label"] else "the rest of the outfit"   # T94: the card's look name
     return t["pb"], f"the roomy {what} is roomier than {look} calls for"
 
 
@@ -1247,8 +1247,8 @@ def _shoes(o, occasion, sl, t):
         if heavy:
             pass
         elif role and _earns(S):
-            p.add(0.5 * up, f"a {R.STYLE_NAMES[o['det_noshoe'][0]]} shoe for a {R.STYLE_NAMES[o['det_noshoe'][0]]} outfit"
-                  if len(o["det_noshoe"]) == 1 else "the shoes belong to the look", "SC_chosen_for_look")
+            x = R.STYLE_NAMES[_shown(o["det_noshoe"][0], o["looks_noshoe"])] if len(o["det_noshoe"]) == 1 else None
+            p.add(0.5 * up, f"a {x} shoe for a {x} outfit" if x else "the shoes belong to the look", "SC_chosen_for_look")
         elif t["sc_pair"] and _earns(S) and any(
                 R.STYLES[st][0](S, c)[0] >= 2 and any(R.STYLES[st][0](g, c)[0] >= 2 for g in o["main"]
                                                        if g.get("category") != "footwear")
@@ -1333,11 +1333,14 @@ def _cohesion(o, boldness, t):
         p.na = "fewer than two of top, bottoms and shoes in view"; return p
     det, label = o["det"], o["label"]
     h2_label = o["label_nopick"] if t["h2_pick_free"] else label     # v4: picks never move a number
+    h2_look = o["look_nopick"] if t["h2_pick_free"] else o["look"]   # T94: the name in its line (8 looks)
     subs = {g.get("subcategory") for g in o["main"]}
     suit = "suit_jacket" in subs and "suit_trousers" in subs
     sx, sx_line, sx_tip = o["sx"]                                     # v5 (0 in v1-v4); computed once in score_parts
     if (det or suit) and not sx:
-        p.add(t["h1"], f"reads as {R.STYLE_NAMES[label]}" if label else "a matching suit", "H1_reads_as_style")
+        # T94 (TL2.2): the card's look by name ("reads as tailored" for a suit); "a matching suit" only for a suit that
+        # reads as no look (founder 1: chunky sneakers, a hoodie under it...), with the same +0.5
+        p.add(t["h1"], f"reads as {R.STYLE_NAMES[o['look']]}" if o["look"] else "a matching suit", "H1_reads_as_style")
     # H2: the label style has an anchor (role 2) in all three slots and nothing against it; or a suit over a top
     if sx:
         pass                                                          # v5: a piece from another look: no "reads as"
@@ -1354,7 +1357,7 @@ def _cohesion(o, boldness, t):
                 best[sl] = max(best.get(sl, 0), pos)
                 against += neg
             if all(best.get(s, 0) >= 2 for s in ("upper", "bottom", "shoes")) and against == 0:
-                p.add(t["h2"], f"clearly {R.STYLE_NAMES[h2_label]} top to toe", "H2_clear_top_to_toe")
+                p.add(t["h2"], f"clearly {R.STYLE_NAMES[h2_look]} top to toe", "H2_clear_top_to_toe")
                 break
     elif suit and o["tops"]:
         p.add(t["h2_suit"], "a suit worn properly over a top", "H2_suit")
@@ -1917,10 +1920,7 @@ def _v16_curve(raw, t):
 # where his ratings and theirs clash, Tailored recognized in scoring). The table is rubric/research/rules-by-style.md
 # §3 (PR #127): 1 = the rule's size, 0.5 = half, 0 = off, "2nd" = the first color is free. A mix takes, rule by rule,
 # the friendliest value over its looks (the largest plus, the gentlest charge). A look missing from a row = 1.
-TL_JACKET = {"suit_jacket", "blazer", "sport_coat", "unstructured_blazer"}
-TL_NEVER = {"jeans", "chinos", "cargos", "sweatpants", "joggers", "shorts", "athletic_shorts", "track_pants",
-            "chunky_sneaker", "performance_runner", "basketball_sneaker", "slides_sandals", "work_boot", "hoodie",
-            "sweatshirt", "graphic_tee", "tank_top", "jersey", "fleece"}
+TL_JACKET, TL_NEVER = R.TL_JACKET, R.TL_NEVER   # TL1's sets live in rubric.py with the one is_tailored (log #495)
 TASTE_BY_LOOK = {
     # a. wide or relaxed legs: full where the look is built on volume; off in tailored (sil.8, suit.5)
     "leg_wide": {"vintage_sport": 0.5, "outdoor": 0.5, "workwear": 0.5, "streetwear": 1, "tailored": 0,
@@ -1946,14 +1946,6 @@ L5_BY_LOOK = {"vintage_sport": 0, "outdoor": 0, "workwear": 0, "streetwear": 0, 
               "minimalist": 1, "smart_casual": 0.5, "none": 0}
 
 
-def is_tailored(main):
-    """specs/tailored.md TL1: a tailored jacket and dress trousers, nothing from the 'never' list, nothing at
-    roominess 5 (with a jacket and dress trousers in view, TL1's points rule always passes)."""
-    subs = {g.get("subcategory") for g in main}
-    return (bool(subs & TL_JACKET) and bool(subs & {"suit_trousers", "trousers"}) and not subs & TL_NEVER
-            and all((g.get("volume") or 3) < 5 for g in main))
-
-
 def graded_looks(o, graded_look=None):
     """The look(s) the taste rules follow. graded_look: a look key or a list of them (his pick after the photo, when
     that step exists); None = the outfit's own looks: the pick-free detected set, plus Tailored by TL1. Never his
@@ -1962,7 +1954,7 @@ def graded_looks(o, graded_look=None):
         g = {graded_look} if isinstance(graded_look, str) else set(graded_look)
     else:
         g = set(o["det"])
-        if is_tailored(o["main"]):                                   # TL2's look-alike rule: Tailored stands for the
+        if R.is_tailored(o["main"]):                                   # TL2's look-alike rule: Tailored stands for the
             g = (g - {"smart_casual", "classic_prep"}) | {"tailored"}  # smart casual or prep it also passes
     return g or {"none"}
 
@@ -2286,14 +2278,25 @@ def _outfit(garments, styles):
     bottom = next((g for g in gs if g.get("category") == "bottom"), None)
     shoes = next((g for g in gs if g.get("category") == "footwear"), None)
     main = [g for g in gs if g.get("category") in R.SLOT]
+    noshoe = [g for g in gs if g.get("category") != "footwear"]
     d = R.detect_styles(gs, styles)
-    nd = R.detect_styles([g for g in gs if g.get("category") != "footwear"], styles)
+    nd = R.detect_styles(noshoe, styles)
     d0 = R.detect_styles(gs, {}) if styles else d                    # the label with no picks (v4's H2)
+    # T94: the 8 looks (Tailored added) give only names: the card's look, the look in a line. det, label, label_nopick
+    # and det_noshoe stay the only inputs to points.
+    lk = R.detect_looks(gs, styles)
     return {"tops": tops, "outers": outers, "top": tops[0] if tops else None, "outer": outers[0] if outers else None,
             "bottom": bottom, "shoes": shoes, "main": main, "det": d["detected"], "label": d["label"],
             "label_nopick": d0["label"],
             "det_noshoe": nd["detected"], "slots": {R.SLOT[g["category"]] for g in main}, "credited": set(),
-            "color_fault": False, "mirror": False}
+            "color_fault": False, "mirror": False,
+            "looks": lk["detected"], "look": lk["label"], "look_nopick": R.detect_looks(gs, {})["label"] if styles else lk["label"],
+            "looks_noshoe": R.detect_looks(noshoe, styles)["detected"]}
+
+
+def _shown(style, looks):
+    """T94: the look a line names for one of the 7: Tailored where it stands for smart casual or classic prep."""
+    return "tailored" if style in ("smart_casual", "classic_prep") and "tailored" in looks else style
 
 
 def score_parts(reading, occasion="everyday", styles=None, second_look=None, boldness="a_little", engine="v15", tune=None,
@@ -2396,7 +2399,7 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
         "weights_used": {k: round((t["weights"] or WEIGHTS)[k] / wsum, 3) for k in live},
         "condition": cond, "occasion": occ, "floored": floored, "care_or_strain": care_or_strain,
         "lowest": lowest,
-        "second_look": sl, "detected_styles": o["det"], "style_label": o["label"], "not_rated": not_rated,
+        "second_look": sl, "detected_styles": o["looks"], "style_label": o["look"], "not_rated": not_rated,
         "partial": bool(not_rated),
     }
 
@@ -2416,7 +2419,7 @@ def _v16_result(o, parts, sl, sl_raw, cond, occ, occasion, t, engine, tune, not_
         "weights_used": {k: round((t["weights"] or WEIGHTS)[k] / v["wsum"], 3) for k in live},
         "condition": cond, "occasion": occ, "floored": False, "care_or_strain": care_or_strain,
         "lowest": {"part": low_k, "score": lr["display"], "line": f"{PART_NAMES[low_k]} {lr['display']:g}: {line}"},
-        "second_look": sl, "detected_styles": o["det"], "style_label": o["label"], "not_rated": not_rated,
+        "second_look": sl, "detected_styles": o["looks"], "style_label": o["look"], "not_rated": not_rated,   # T94: names
         "partial": bool(not_rated), "v16": v["v16"],
     }
 
