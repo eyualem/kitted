@@ -72,3 +72,10 @@ Written by the reviewer.
 - Review defect 1 fixed: `rewritePieceNames` now rewrites only after "your" (`gate.ts`). "the/those/that white sneakers" can be a piece he'd buy, so those go to the `fact` rule as before.
 - Two committed tests changed to match: the "The brown boots disappear…" cases now start with "Your"; added "Try the brown boots instead." and "Swap your sneakers for the white sneakers." as unchanged. No test was weakened for a wrong reason: the old case encoded the bug.
 - Small review notes left open (not blocking): a price with no piece noun passes; "I can't show you every outfit." is dropped by `deny`; the tabs line says "today's limits" even with no plan screen.
+
+
+## For T110 (from the control session, Nov 19)
+- **The Thursday knit/woven sentence:** "A knit layer is a soft, woven piece" (screenshot 12 of the Nov 12 chat). Add it to T110's questions as a case Kit must not repeat (KC6.5). The guide's "Words that mean something" bullet is the fix; the gate does not catch this wording, so only the real model run can show it.
+
+## Known issue for T108 (Kit knowing the app)
+- Kit's buy evidence still carries "+N outfits" while Closet's Outfits view is off, so Kit can say "adds 6 outfits" in the beta. Not fixed in T105 (outside its checks). T108 should drop the count from the evidence while `outfitsOn()` is false.
