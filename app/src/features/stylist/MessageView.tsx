@@ -18,6 +18,8 @@ import { RecheckCard } from './cards/RecheckCard';
 import { WhichOneCard } from '@/features/whichOne/WhichOneCard';
 import { SupportCard } from '@/features/ask/SupportCard';
 import { AskAttachment } from '@/features/ask/AskCardView';
+import { FollowUpRow } from '@/features/ask/FollowUpRow';
+import { attachmentEnters, Enter } from './Enter';
 import { AnswerBody, answerLayout, chipActions, useAnswerCloset } from '@/features/ask/AnswerBody';
 import { HeldReadyCard } from '@/features/held/HeldReadyCard';
 import { LimitCard } from '@/features/held/LimitCard';
@@ -31,7 +33,8 @@ import { retryQuestion } from './ask';
 import { occasionLabel, type ThreadItem } from './thread';
 
 /** `readOnly`: Past chats (#276): an earlier day's check cards can't be changed, only read (Why, the photo). */
-export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOnly?: boolean }) {
+/** `enter`: the just-finished answer's card and taps get their own beat (log #510); the screen says when, Past chats never. */
+export function ThreadRow({ item, readOnly = false, followUps, enter }: { item: ThreadItem; readOnly?: boolean; followUps?: readonly string[]; enter?: boolean }) {
   if (item.type === 'stamp') return <DayStamp>{item.text}</DayStamp>;
   const m = item.message;
   if (m.kind === 'photo') return <PhotoMessage m={m} />;
@@ -81,7 +84,29 @@ export function ThreadRow({ item, readOnly = false }: { item: ThreadItem; readOn
   }
   // An answer's one card and its "Saved to what I know · Undo" (07 §1, §4).
   const attached = m.payload.askCard !== undefined || typeof m.payload.savedFact === 'string';
-  if (item.answer) return <AnswerMessage m={m} showHeader={item.showWho} footer={attached ? <AskAttachment m={m} readOnly={readOnly} /> : null} />;
+  // The follow-up taps (KC1.3) under the latest answer only: the screen passes them to that one row; Past chats never do.
+  const enters = attachmentEnters(enter, readOnly);
+  const taps = !readOnly && followUps?.length ? <FollowUpRow taps={followUps} enter={enters} /> : null;
+  if (item.answer) {
+    return (
+      <AnswerMessage
+        m={m}
+        showHeader={item.showWho}
+        footer={
+          attached || taps ? (
+            <>
+              {attached ? (
+                <Enter on={enters}>
+                  <AskAttachment m={m} readOnly={readOnly} />
+                </Enter>
+              ) : null}
+              {taps}
+            </>
+          ) : null
+        }
+      />
+    );
+  }
   return (
     <StylistMessage
       showHeader={item.showWho}

@@ -22,6 +22,11 @@ export const ARRIVE = {
   settleMs: 500,
 } as const;
 
+/** The card's own beat under a new answer (the founder approved Nov 18, log #510; chat-feel research proposal 1): about
+ *  120 ms after the words, the card fades in while rising 12 pt over 280 ms, then the follow-up taps fade in 50 ms apart.
+ *  Reduce Motion: the same order as plain fades (`fadeMs`). */
+export const ARRIVE_CARD = { delayMs: 120, risePt: 12, riseMs: 280, fadeMs: 200, tapStaggerMs: 50 } as const;
+
 /** kv: when he last had the thread in front of him (String(epoch ms)); per device (sync/schema.ts KV_LOCAL). */
 export const SEEN_UNTIL_KEY = 'stylist.seenUntil';
 
@@ -36,13 +41,19 @@ export function createArrivals() {
   /** id → delay in ms (it moves), or null (it never will). */
   const decided = new Map<string, number | null>();
   const played = new Set<string>();
+  /** The answers that just streamed in live: their words stay still, their card and taps enter (ARRIVE_CARD). */
+  const cards = new Set<string>();
   return {
     /**
      * Decides every row not decided before. `seenUntil` is when he last saw the thread; `skip` are ids that must not
      * move (the live answer's finished row). Safe to call on every render: a row's answer never changes.
      */
     plan(rows: readonly Row[], seenUntil: number, skip: Iterable<string> = []): void {
-      for (const id of skip) if (!decided.has(id)) decided.set(id, null);
+      for (const id of skip) {
+        if (decided.has(id)) continue;
+        decided.set(id, null);
+        cards.add(id);
+      }
       const fresh = rows.filter((m) => !decided.has(m.id)).sort((a, b) => a.createdAt - b.createdAt);
       let step = 0;
       for (const m of fresh) {
@@ -62,6 +73,11 @@ export function createArrivals() {
     delayOf(id: string): number | null {
       return played.has(id) ? null : decided.get(id) ?? null;
     },
+    /** The just-finished live answer's card and taps enter, once: true until the screen has drawn that row. Never for a
+     *  row that moved in whole, an old row, or Past chats (which never ask). */
+    cardEnters(id: string): boolean {
+      return cards.has(id) && !played.has(id);
+    },
     /** The screen has put these rows on screen (call after drawing, not while): they never move again. */
     drawn(ids: Iterable<string>): void {
       for (const id of ids) played.add(id);
@@ -70,6 +86,7 @@ export function createArrivals() {
     reset(): void {
       decided.clear();
       played.clear();
+      cards.clear();
     },
   };
 }
