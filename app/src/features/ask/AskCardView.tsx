@@ -3,22 +3,26 @@
 // in your closet". No card ever shows a predicted score, a brand or a link out (R5).
 import { dayKey, localParts } from '@kitted/core';
 import { router, type Href } from 'expo-router';
-import { View } from 'react-native';
+import { useState } from 'react';
+import { useWindowDimensions, View } from 'react-native';
 import { Chip, ChipFlow, KButton, KCard, KCardSection, KText, TagLine, TextLink, space, useTheme } from '@/design-system';
 import { store } from '@/data/db';
 import type { ChatMessage, OutfitRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
-import { useOutfitsOn } from '@/features/closet/outfitsSwitch';
 import { openPiece } from '@/features/closet/pieceActions';
-import { catalogRow } from '@/features/finish/starter';
 import { openLookPage } from '@/features/lookbook/lookPage';
-import { OutfitTiles } from '@/features/stylist/cards/OutfitTiles';
+import { CardRoom, PieceTiles, type Tile } from '@/features/stylist/cards/OutfitTiles';
+import { occasionLabel } from '@/features/stylist/thread';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
 import { weekdayName } from '@/i18n/format';
 import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
-import { buyGainLine, buySpoken, cardControls, cardSpoken, linkedPiece, outfitNow, savedUndoShows, storedCard, type AskCard } from './cards';
+import { ADD_READY, cardActions } from './cardActions';
+import { cardControls, cardSpoken, linkedPiece, needMenuChoices, outfitNow, outfitTag, savedUndoShows, storedCard, tileMark, type AskCard, type CardPiece } from './cards';
+import { AddCard, ChangedCard, ColorsCard, DrawnBuyCard, drawnSpec, OptionsCard } from './KitCardViews';
+import { needMenuRows } from './needChoices';
+import { openNeedMenu } from './needMenu';
 import { undoRemember } from './memory';
 import { tapAnswer } from './session';
 
@@ -27,19 +31,46 @@ const lower = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
 export function AskAttachment({ m, readOnly }: { m: ChatMessage; readOnly: boolean }) {
   const card = storedCard(m.payload.askCard);
   const saved = typeof m.payload.savedFact === 'string' ? m.payload.savedFact : null;
+  const window = useWindowDimensions().width;
+  const [width, setWidth] = useState(0);
   if (!card && !saved) return null;
+  // The width a card's tiles may use: the thread's, less the card's padding and border (KC1.6). Until it's measured,
+  // the screen's width less the thread's margins.
+  const room = (width || window - 2 * space.m) - 2 * space.cardPadH - 2;
   return (
-    <View style={{ gap: space.s, paddingTop: 6 }}>
-      {card ? <CardBody m={m} card={card} readOnly={readOnly} /> : null}
-      {saved ? <SavedLine factId={saved} itemId={typeof m.payload.savedPiece === 'string' ? m.payload.savedPiece : null} readOnly={readOnly} /> : null}
-    </View>
+    <CardRoom.Provider value={room}>
+      <View style={{ gap: space.s, paddingTop: 6 }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+        {card ? <CardBody m={m} card={card} readOnly={readOnly} /> : null}
+        {saved ? <SavedLine factId={saved} itemId={typeof m.payload.savedPiece === 'string' ? m.payload.savedPiece : null} readOnly={readOnly} /> : null}
+      </View>
+    </CardRoom.Provider>
   );
+}
+
+/** A "You'd need" tile's tap (KC2.10): the menu with I have one (once T106 builds it) and Next buy (when the kind has a
+ *  Starter entry). Neither: the tile isn't a button. Past chats: never. */
+function useNeedTile(m: ChatMessage, live: boolean) {
+  const styles = useLive(['profile'], async () => (await store.profile.get('me'))?.styles ?? null, []);
+  return (piece: CardPiece): Partial<Tile> => {
+    if (!live) return {};
+    const rows = needMenuRows(needMenuChoices(piece, styles ?? null, ADD_READY));
+    if (rows.length === 0) return {};
+    const nextBuy = needMenuChoices(piece, styles ?? null, ADD_READY).nextBuy;
+    return {
+      hint: rows.map((r) => (r === 'haveOne' ? t('ask.card.haveOne') : t('ask.card.nextBuy'))).join(', '),
+      onPress: () =>
+        openNeedMenu(piece.name, rows, (c) => {
+          if (c === 'haveOne') void cardActions.haveOne(m, piece);
+          else if (nextBuy) router.push(`/sheets/next-buy?starter=${encodeURIComponent(nextBuy)}` as Href);
+        }),
+    };
+  };
 }
 
 function CardBody({ m, card, readOnly }: { m: ChatMessage; card: AskCard; readOnly: boolean }) {
   switch (card.type) {
     case 'outfit':
-      return <OutfitCard card={card} readOnly={readOnly} />;
+      return <OutfitCard m={m} card={card} readOnly={readOnly} />;
     case 'check':
       return !cardControls(card, { readOnly, tapped: null }).checkIt ? null : (
         <View style={{ alignItems: 'flex-start' }}>
@@ -49,12 +80,25 @@ function CardBody({ m, card, readOnly }: { m: ChatMessage; card: AskCard; readOn
     case 'ask':
       return <AskQuestion m={m} card={card} readOnly={readOnly} />;
     case 'buy':
-      return <BuyCard card={card} />;
+      return <DrawnBuyCard card={card} />;
     case 'link':
       return <LinkRow card={card} />;
     case 'correct':
       return <CorrectRow card={card} readOnly={readOnly} />;
+    case 'options':
+      return <OptionsMessage m={m} card={card} readOnly={readOnly} />;
+    case 'colors':
+      return <ColorsCard card={card} />;
+    case 'add':
+      return <AddCard m={m} card={card} readOnly={readOnly} />;
+    case 'changed':
+      return <ChangedCard m={m} card={card} readOnly={readOnly} />;
   }
+}
+
+function OptionsMessage({ m, card, readOnly }: { m: ChatMessage; card: Extract<AskCard, { type: 'options' }>; readOnly: boolean }) {
+  const needTile = useNeedTile(m, cardControls(card, { readOnly, tapped: null }).needMenu);
+  return <OptionsCard card={card} needTile={needTile} />;
 }
 
 /** "That score is wrong" (09 §20.8 G19): his check's Not quite right?, while that check is still here (today only). */
@@ -72,11 +116,12 @@ function openCamera(occasion: string) {
   router.push({ pathname: '/camera', params: { occasion, from: 'ask' } } as unknown as Href);
 }
 
-function OutfitCard({ card, readOnly }: { card: Extract<AskCard, { type: 'outfit' }>; readOnly: boolean }) {
+function OutfitCard({ m, card, readOnly }: { m: ChatMessage; card: Extract<AskCard, { type: 'outfit' }>; readOnly: boolean }) {
   const { isAccessibilitySize } = useTheme();
   const closet = useLive(['closet'], () => store.closet.all(), []);
+  const needTile = useNeedTile(m, cardControls(card, { readOnly, tapped: null }).needMenu);
   if (!closet) return null;
-  const { items, gone } = outfitNow(card, closet);
+  const { items, needs, example, gone } = outfitNow(card, closet);
   const names = items.map((i) => lower(i.name)).join(', ');
   const wear = async () => {
     const now = sessionClock.nowMs();
@@ -95,17 +140,27 @@ function OutfitCard({ card, readOnly }: { card: Extract<AskCard, { type: 'outfit
   };
   const c = cardControls(card, { readOnly, tapped: null, gone });
   const label = cardSpoken(card, { nameOf: (id) => items.find((i) => i.id === id)?.name ?? null }) ?? '';
-  // VoiceOver: one element for the card, its buttons as actions (02 D12's card rule).
-  const actions = [...(c.wear ? [{ name: 'wear', label: t('idea.wear') }] : []), ...(c.checkIt ? [{ name: 'check', label: t('ask.card.checkIt') }] : [])];
+  const tag = outfitTag(card, occasionLabel(card.occasion));
+  // His pieces first on solid tiles, then the drawn ones: dashed with "You'd need", or plain in an Example (KC2.2, KC2.3).
+  const tiles: Tile[] = [
+    ...items.map((item): Tile => ({ key: item.id, item, mark: tileMark(card, true) })),
+    ...needs.map((p, i): Tile => ({ key: `n${i}`, piece: drawnSpec(p), dashed: !example, mark: tileMark(card, false), ...(example ? {} : needTile(p)) }) as Tile),
+  ];
+  const checkTitle = example ? t('idea.checkFit') : t('ask.card.checkIt');
+  // VoiceOver: one element for the card, its buttons as actions (02 D12's card rule); a card with a tappable tile keeps
+  // its tiles as their own elements, so the tile's menu can be reached.
+  const grouped = !tiles.some((x) => x.onPress);
+  const actions = [...(c.wear ? [{ name: 'wear', label: t('idea.wear') }] : []), ...(c.checkIt ? [{ name: 'check', label: checkTitle }] : [])];
   return (
     <KCard
-      accessibilityLabel={gone ? `${label} ${t('ask.card.gone')}` : label}
-      accessibilityActions={actions}
+      style={{ alignSelf: 'flex-start', maxWidth: '100%' }}
+      accessibilityLabel={grouped ? (gone ? `${label} ${t('ask.card.gone')}` : label) : undefined}
+      accessibilityActions={grouped ? actions : undefined}
       onAccessibilityAction={(e) => (e.nativeEvent.actionName === 'wear' ? void wear() : e.nativeEvent.actionName === 'check' ? openCamera(card.occasion) : undefined)}
     >
       <KCardSection gap={space.s}>
-        <TagLine left={t('idea.tag')} right={t('idea.fromCloset')} />
-        <OutfitTiles items={items} />
+        <TagLine left={tag.left} right={tag.right} />
+        <PieceTiles tiles={tiles} />
         {gone ? (
           <KText variant="subheadline" color="ink2">
             {t('ask.card.gone')}
@@ -114,7 +169,9 @@ function OutfitCard({ card, readOnly }: { card: Extract<AskCard, { type: 'outfit
         {c.wear || c.checkIt ? (
           <View style={isAccessibilitySize ? { gap: space.s } : { flexDirection: 'row', gap: space.s }}>
             {c.wear ? <KButton title={t('idea.wear')} size="regular" fullWidth={isAccessibilitySize} onPress={() => void wear()} /> : null}
-            {c.checkIt ? <KButton title={t('ask.card.checkIt')} icon="camera" kind="secondary" size="regular" fullWidth={isAccessibilitySize} onPress={() => openCamera(card.occasion)} /> : null}
+            {c.checkIt ? (
+              <KButton title={checkTitle} icon="camera" kind={example ? 'primary' : 'secondary'} size="regular" fullWidth={isAccessibilitySize} onPress={() => openCamera(card.occasion)} />
+            ) : null}
           </View>
         ) : null}
       </KCardSection>
@@ -141,27 +198,6 @@ function AskQuestion({ m, card, readOnly }: { m: ChatMessage; card: Extract<AskC
         ))}
       </ChipFlow>
     </View>
-  );
-}
-
-function BuyCard({ card }: { card: Extract<AskCard, { type: 'buy' }> }) {
-  // The "+N outfits" line only while Outfits are on (specs/closet-beta.md CB1.2); VoiceOver reads what's drawn.
-  const on = useOutfitsOn();
-  const row = catalogRow(card.starterId);
-  if (!row) return null;
-  const gain = buyGainLine(card.gain, on);
-  return (
-    <KCard accessibilityLabel={buySpoken(card, on) ?? ''}>
-      <KCardSection gap={4}>
-        <TagLine left={t('ask.card.buy.tag')} right={row.budget} />
-        <KText variant="headline">{row.pick?.name ?? row.name}</KText>
-        {gain ? (
-          <KText variant="subheadline" color="ink2">
-            {gain}
-          </KText>
-        ) : null}
-      </KCardSection>
-    </KCard>
   );
 }
 

@@ -27,6 +27,7 @@ import { morning } from '@/features/morning';
 import { firstCheckPending } from '@/features/onboarding/firstCheckOffer';
 import { liveAnswer, useAskInFlight, useLiveAnswer } from '@/features/ask/live';
 import { LiveAnswerRow, liveRowShows } from '@/features/ask/LiveAnswerRow';
+import { latestFollowUps } from '@/features/ask/pipeline';
 import { Composer } from './Composer';
 import { sendQuestion } from './ask';
 import { ACCESSORY_H, COMPOSER_BOTTOM, DOCK_GAP, KEYBOARD_GAP, THREAD_PAD } from './layout';
@@ -106,6 +107,8 @@ export function StylistScreen() {
     return focused || seenUntil === undefined ? rows : rows.filter((m) => !arrivals.isNew(m, seenUntil));
   }, [messages, replaced, firstCheckHeld, focused, seenUntil]);
   const items = useMemo(() => buildThreadItems(shown, now, sessionClock.offset), [shown, now]);
+  // The follow-up taps under the latest answer only (KC1.3); his next message hides them.
+  const followUps = useMemo(() => latestFollowUps([...shown].sort((a, b) => a.createdAt - b.createdAt)), [shown]);
   const shownIds = useMemo(() => new Set(shown.map((m) => m.id)), [shown]);
   const showLive = liveRowShows(live, shownIds, (at) => dayKey(at, sessionClock.offset) === today);
   // The thread shows the finished answer's own row now: the live copy goes for good (U1, no ghost tomorrow).
@@ -383,7 +386,7 @@ export function StylistScreen() {
               style={i > 0 ? { marginTop: item.gap } : undefined}
               onLayout={item.type === 'msg' ? (e) => rowY.current.set(item.message.id, e.nativeEvent.layout.y) : undefined}
             >
-              <ThreadRow item={item} />
+              <ThreadRow item={item} followUps={item.type === 'msg' && followUps?.messageId === item.message.id && (!live || live.phase === 'done') ? followUps.taps : undefined} />
             </Animated.View>
           );
         })}

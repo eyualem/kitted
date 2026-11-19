@@ -350,6 +350,24 @@ export const SCREENS: readonly ScreenScenario[] = [
     href: `/sheets/why/${STORY_FIRST_CHECK}`, under: '/stylist',
   })),
   { n: 310, name: 'Why · an old v15 check', id: 'S7', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: `/sheets/why/${STORY_FIRST_CHECK}`, under: '/stylist' },
+  // Kit's card views (T104, specs/kit-stylist-chat.md, drawn in mockups/kit-stylist-chat.html): an outfit with a piece
+  // he'd need and follow-up taps (400), six pieces wrapping (401), an Example (402), options (403), colors on a piece and
+  // as swatches (404), the add card asking, added and declined (405–407), a changed piece (408), the drawn buy card (409),
+  // yesterday's cards read-only in Past chats (410), the Next buy sheet opened from the buy card (411), and 404 again
+  // for the largest text size (412). Layout only: the cards are stored directly, not from the model.
+  { n: 400, name: 'Kit · outfit, a piece you would need', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 401, name: 'Kit · outfit, six pieces', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 402, name: 'Kit · an example', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 403, name: 'Kit · options', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 404, name: 'Kit · colors', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 405, name: 'Kit · add card, asking', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 406, name: 'Kit · add card, added', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 407, name: 'Kit · add card, not added', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 408, name: 'Kit · changed', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 409, name: 'Kit · the drawn buy card', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  { n: 410, name: 'Past chats · Kit cards, read-only', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist/day/2026-10-21', under: '/stylist' },
+  { n: 411, name: 'Next buy · from Kit', id: 'C7', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/sheets/next-buy?starter=s07', under: '/stylist' },
+  { n: 412, name: 'Kit · colors (largest text)', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

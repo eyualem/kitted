@@ -71,7 +71,7 @@ jest.mock('@/features/sheet/SheetScaffold', () => {
   };
 });
 jest.mock('@/features/closet/StandingOutfit', () => ({ StandingOutfit: () => null }));
-jest.mock('@/features/stylist/cards/OutfitTiles', () => ({ OutfitTiles: () => null }));
+jest.mock('@/features/stylist/cards/OutfitTiles', () => ({ OutfitTiles: () => null, PieceTiles: () => null, CardRoom: jest.requireActual('react').createContext(0) }));
 jest.mock('@/data/useLive', () => ({ useLive: jest.fn() }));
 // The Closet screen alone (CB1.1's "nothing writes closet.segment while off"): its pieces' tiles, questions and the
 // Outfits view are stand-ins, so what's left is the screen's own choice of what to draw and what to store.
@@ -112,8 +112,11 @@ jest.mock('expo-router', () => {
   return {
     router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn() },
     Redirect: jest.fn(({ href }: { href: string }) => <Text>{`redirect:${href}`}</Text>),
+    useLocalSearchParams: () => ({}),
   };
 });
+// Kit's buy card draws its piece (T104): the drawing needs the theme, which this test doesn't mount.
+jest.mock('@/features/closet/GarmentArt', () => ({ PieceArt: () => null }));
 
 const AS_OF = Date.parse('2026-10-22T12:00:00-04:00');
 

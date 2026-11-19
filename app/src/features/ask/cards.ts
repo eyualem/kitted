@@ -735,19 +735,65 @@ export interface CardWords {
   nameOf: (itemId: string) => string | null;
   /** A check's link words ("Today's check"), or null when it's gone. */
   checkLabel?: (checkId: string) => string | null;
+  /** Past chats: an add card says its outcome ("Added") instead of "Added to Closet". */
+  readOnly?: boolean;
 }
 
 const low = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
 
-/** One VoiceOver line for a card (P1), also read after the answer when it's complete (P2). Null: nothing to say. */
+/**
+ * The outfit card's tag line (KC2.2, KC2.3; the mockup): the occasion on the left and where the pieces come from on the
+ * right; an Example says `Example` on the left and the occasion on the right, and never `From your closet`.
+ */
+export function outfitTag(card: Extract<AskCard, { type: 'outfit' }>, occasion: string): { left: string; right: string } {
+  if (card.example === true) return { left: t('ask.card.example'), right: occasion };
+  const n = card.needs?.length ?? 0;
+  return { left: occasion, right: n > 0 ? t('ask.card.fromClosetPlus', { n }) : t('idea.fromCloset') };
+}
+
+/** The small line under a tile (KC2.2–KC2.4): an outfit's drawn piece is `You'd need` (an Example's is nothing, and his
+ *  own pieces are their names alone, as today); an options card marks each choice `Yours` or `You'd need`. A drawn
+ *  piece is never `Yours`. */
+export function tileMark(card: AskCard, own: boolean): string | null {
+  if (card.type === 'outfit') return own || card.example === true ? null : t('ask.card.need');
+  if (card.type === 'options') return own ? t('ask.card.yours') : t('ask.card.need');
+  return null;
+}
+
+/** What a `You'd need` tile's menu offers (KC2.10): `I have one` once the add exists (T106), `Next buy` when the kind has
+ *  a Starter entry. Neither: the tile isn't a button. */
+export function needMenuChoices(piece: CardPiece, styles: Styles | null, addReady: boolean): { haveOne: boolean; nextBuy: string | null } {
+  return { haveOne: addReady, nextBuy: nextBuyFor(piece, styles) };
+}
+
+/** The colors card's header (KC3.1, KC3.2): `Colors for the shirt`, `Goes with olive`. */
+export function colorsTitle(card: Extract<AskCard, { type: 'colors' }>): string {
+  return card.about === 'piece'
+    ? t('ask.card.colorsFor', { piece: kindNoun(card.kind) })
+    : t('ask.card.goesWith', { color: low(colorName(card.goesWith) ?? card.goesWith) });
+}
+
+/** The add card's status line under the piece: the question while it asks, the outcome after (KC4.2–KC4.4, KC1.5). */
+export function addStatus(card: Extract<AskCard, { type: 'add' }>, readOnly: boolean): string {
+  if (card.outcome === 'added') return readOnly ? t('ask.card.addedPast') : t('ask.card.added');
+  if (card.outcome === 'declined' || readOnly) return t('ask.card.notAdded');
+  return t('ask.card.add.ask');
+}
+
+const listed = (xs: readonly string[]) => xs.map(low).join(', ');
+
+/** One VoiceOver line for a card (P1), also read after the answer when it's complete (P2). Null: nothing to say. Every
+ *  line is made of the words the card shows. */
 export function cardSpoken(card: AskCard | null, w: CardWords): string | null {
   if (!card) return null;
   switch (card.type) {
     case 'outfit': {
-      // A card with drawn pieces or an example isn't "from your closet": T104 writes those VoiceOver lines.
-      if ((card.needs && card.needs.length > 0) || card.example) return null;
-      const names = card.itemIds.map(w.nameOf).filter((x): x is string => !!x).map(low);
-      return names.length ? t('ask.card.a11y.outfit', { names: names.join(', ') }) : t('ask.card.gone');
+      const names = card.itemIds.map(w.nameOf).filter((x): x is string => !!x);
+      const needs = (card.needs ?? []).map((p) => p.name);
+      if (card.example === true) return `${t('ask.card.example')}: ${listed(needs)}.`;
+      if (needs.length === 0) return names.length ? t('ask.card.a11y.outfit', { names: listed(names) }) : t('ask.card.gone');
+      const mine = names.length ? `${t('ask.card.fromClosetPlus', { n: needs.length })}: ${listed(names)}.` : `${t('ask.card.gone')}.`;
+      return `${mine} ${t('ask.card.need')}: ${listed(needs)}.`;
     }
     case 'check':
       return t('ask.card.startCheck');
@@ -764,12 +810,20 @@ export function cardSpoken(card: AskCard | null, w: CardWords): string | null {
     }
     case 'correct':
       return t('card.nqr');
-    // The new shapes get their VoiceOver lines with their views (T104); until then nothing is said.
-    case 'options':
+    case 'options': {
+      const parts = card.options.map((e) => {
+        if ('piece' in e) return `${low(e.piece.name)}, ${low(t('ask.card.need'))}`;
+        const n = w.nameOf(e.itemId);
+        return n ? `${low(n)}, ${low(t('ask.card.yours'))}` : low(t('ask.card.gone'));
+      });
+      return `${t('ask.card.options')}: ${parts.join('; ')}.`;
+    }
     case 'colors':
+      return `${colorsTitle(card)}: ${listed(card.families.map((f) => colorName(f) ?? f))}.`;
     case 'add':
+      return `${card.piece.name}. ${addStatus(card, w.readOnly === true)}`.replace(/([^.?])$/, '$1.');
     case 'changed':
-      return null;
+      return card.undone ? `${card.before.name}.` : `${card.after.name}. ${t('ask.card.changed')}.`;
   }
 }
 
