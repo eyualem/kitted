@@ -50,7 +50,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 - Setup is plain screens: a large title question, its choices, one button at the bottom. No echo bubbles and no Kit bubbles anywhere in setup. Kit's first words are in the Stylist chat after setup (SY2's hello).
 - The steps: **Welcome → Looks → About you → Stylist.** Setup has no agreement step (SY5).
 - The progress bar has 3 segments (Welcome, Looks, About you) and fills on About you. Back works as today.
-- **Looks:** the large title `What's your style?`, then `Pick up to 3 looks you like. Today's outfit comes next.` under it (founder, Nov 11, after a tester read the old title as "what are you wearing now"; DECISIONS-LOG #448). The Kit bubble goes; the tiles, `Something else?` and `Continue · {n} of 3` stay as they are. `Not sure` is gone (founder, Nov 11; DECISIONS-LOG #449): Continue stays off until he picks a look or types his words, so every profile starts with a look or his words.
+- **Looks (from Nov 18: the style game, `specs/style-game.md`, which replaces everything in this bullet; the founder, #488):** the large title `What's your style?`, then `Pick up to 3 looks you like. Today's outfit comes next.` under it (founder, Nov 11, after a tester read the old title as "what are you wearing now"; DECISIONS-LOG #448). The Kit bubble goes; the tiles, `Something else?` and `Continue · {n} of 3` stay as they are. `Not sure` is gone (founder, Nov 11; DECISIONS-LOG #449): Continue stays off until he picks a look or types his words, so every profile starts with a look or his words.
 - **The agreement** (now first shown on the camera, SY5): its Kit bubble becomes plain text at the top. Its words and buttons don't change.
 - **Restore** (from "I already have an account", only once sign-in exists): the About you step with the title `Welcome back` and the line `Your age first, then I'll bring back your fits.` Age only, no name field.
 - **The Example check stays chat-shaped:** it's a preview of the chat itself.
@@ -59,10 +59,10 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 **Top to bottom**
 1. The progress bar and Back.
 2. The large title `About you`.
-3. `What should Kit call you?`, then a text field with the placeholder `First name (optional)` (SY4's rules: trimmed, up to 30 characters, blank means no name).
+3. `What should Kit call you?`, then a text field with the placeholder `First name` (SY4's rules: trimmed, up to 30 characters, blank means no name). When the step opens with the field empty, the field has focus and the keyboard is up (not on Restore, which has no name field).
 4. `How old are you?`, then five choices of equal size and weight, in this order: `Under 18` · `18–21` · `22–25` · `26–30` · `31 or older`. Nothing is picked when the step opens. One tap picks; tapping another moves the pick.
 5. The footnote: `Stays on your phone. It never changes your score.`
-6. At the bottom: `Continue`. While no age is picked, it's off, with `Pick your age to go on.` above it.
+6. At the bottom: `Continue`, on only with a name and an age. While it's off, one hint sits above it: `Add your first name to go on.` while the name is blank, else `Pick your age to go on.` While the name is blank, a small text button `Skip` sits under Continue: with an age picked it does what Continue does, without a name; with no age it's off. (#506: the name stays optional, as Apple requires, but skipping it takes a deliberate tap.)
 
 **What Continue does**
 - **An age of 18 or over:** setup is done (the profile is saved with his looks, name and age band; no agreement yet), and he lands in Stylist (OS5). Once SY6 is built, Apple's age sheet comes first, as SY6 says.
@@ -88,7 +88,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 6. Once he has any scored check (from the card or the chat's camera button), the offer card's buttons are gone for good. The card's words stay as history, like the "Turn on fit checks" card.
 7. An install that finished setup before this change gets no offer card.
 
-**Taps to the camera:** Get started · a look · Continue · an age · Continue · Check my fit · Agree = 7 (F1.1).
+**Taps to the camera:** Get started · a look · Continue · an age · Continue · Check my fit · Agree = 7 (F1.1). From Nov 18 (`specs/style-game.md`): Get started · the card-1 lesson · 8 cards · up to 3 this-or-thats · Continue · an age · Continue · Check my fit · Agree = 18 or fewer with 3 Me's.
 
 ## Rules
 - The age band is kept on his profile with the day he picked it, on this phone only. It's never sent to the server or backed up, the same as the birth year today.
@@ -119,8 +119,8 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 - OS3.3 Looks shows the new title and line word for word; its tiles and buttons behave as before.
 
 **OS4. About you**
-- OS4.1 The step shows the title, the name field and the five age choices in the stated order and words, none picked; Continue is off with the hint until one is picked.
-- OS4.2 A blank name with an age picked is enough to go on; a name is saved trimmed, at most 30 characters (SY4.2).
+- OS4.1 The step shows the title, the name field (focused, the keyboard up) and the five age choices in the stated order and words, none picked; Continue is off with the hint for what's missing (the name first, then the age) until both are given.
+- OS4.2 A blank name with an age picked leaves Continue off and `Skip` on; `Skip` goes on with no name saved; `Skip` is off with no age and gone once a name is typed; a name is saved trimmed, at most 30 characters (SY4.2).
 - OS4.3 An 18+ band saves `ageBand` and `ageBandAt` and lands in Stylist; no birth year is saved.
 - OS4.4 `Under 18` asks once; `Change` changes nothing; `That's right` shows the stop screen with no camera, and it stays after a relaunch and a reinstall (as today).
 - OS4.5 No screen before an age is picked says "18" except the `Under 18` and `18–21` choices.

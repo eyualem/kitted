@@ -49,9 +49,11 @@ export interface LookTileProps {
   /** Bumped on a 4th tap: the tile shakes once. */
   shake: number;
   onPress: () => void;
+  /** T113: the Add a look sheet's tiles are found by it (addlook-tile-<look>). */
+  testID?: string;
 }
 
-export function LookTile({ look, width, selected, order, shake, onPress }: LookTileProps) {
+export function LookTile({ look, width, selected, order, shake, onPress, testID }: LookTileProps) {
   const { colors, a11y } = useTheme();
   const [x] = useState(() => new Animated.Value(0));
   const [fade] = useState(() => new Animated.Value(1));
@@ -72,6 +74,7 @@ export function LookTile({ look, width, selected, order, shake, onPress }: LookT
   return (
     <Animated.View style={{ transform: [{ translateX: x }], opacity: fade }}>
       <Pressable
+        testID={testID}
         onPress={onPress}
         accessibilityRole="button"
         accessibilityState={{ selected }}

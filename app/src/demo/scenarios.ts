@@ -3,7 +3,8 @@
 // phase that builds each screen (P2 Stylist cards, P5 tabs, P6 paywall/limit/share).
 
 import type { AboutYouDemo } from '@/features/aboutYou/demo';
-import type { ProfileRow } from '@/data/types';
+import type { StyleGameDemo } from '@/features/onboarding/styleGameSession';
+import type { ProfileRow, StyleKey } from '@/data/types';
 import type { AboutDraft } from '@/features/onboarding/basics';
 import type { AuthProvider, MockScript } from '@/features/account/auth';
 import type { FinishDemo } from '@/features/finish/demo';
@@ -61,6 +62,8 @@ export interface ScreenScenario {
   /** Kit's first-check offer (T39, OS5): setup finished through About you (no agreement), then the card as is, after
    *  Later, after Not now on the camera's agreement, or after the agreement and one scored check. */
   offer?: 'open' | 'later' | 'notNow' | 'checked';
+  /** The style game in setup (T113): the session as set by seedStyleGameForDemo (a fixed deal, his answers, his changes). */
+  styleGame?: StyleGameDemo;
   /** Fields written over the scenario's profile (T39: his name and age band on Style profile). */
   profilePatch?: Partial<Pick<ProfileRow, 'name' | 'ageBand' | 'ageBandAt'>>;
 }
@@ -88,9 +91,39 @@ export const STORY_KNOWN = 'story-known';
 /** Screens 201–203: a check whose jeans are "Not sure" (09-ui-review §19). */
 export const STORY_DOUBT = 'story-doubt';
 
+// The style game's states (T113, specs/style-game.md; the task's UI inventory), all on seed 42 (Workwear, Classic prep,
+// Streetwear, Minimal, Tailored, Outdoor, Vintage sport, Smart casual).
+const SV: StyleKey[] = ['workwear', 'streetwear', 'outdoor', 'vintage_sport'];
+const SV_PREFER: StyleKey[] = ['streetwear', 'vintage_sport', 'outdoor', 'workwear'];
+const G300: StyleGameDemo = { seed: 42, me: ['workwear'], cards: 2 };
+const G303: StyleGameDemo = { seed: 42, me: SV, rounds: 0 };
+const G304: StyleGameDemo = { seed: 42, me: SV, prefer: SV_PREFER };
+const G305: StyleGameDemo = { seed: 42, me: ['minimalist'] };
+const G310: StyleGameDemo = { seed: 42, me: [] };
+const game = (n: number, name: string, styleGame: StyleGameDemo, more: Partial<ScreenScenario> = {}): ScreenScenario => ({
+  n, name, id: 'O2', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/looks', styleGame, ...more,
+});
+const STYLE_GAME_SCREENS: ScreenScenario[] = [
+  game(320, 'Style game · card 3', G300),
+  game(321, 'Style game · the other outfit', { ...G300, peek: 1 }),
+  game(322, 'Style game · swiped past the line', { ...G300, dragDx: 120 }),
+  game(323, 'Style game · put them in order', G303),
+  game(324, "Here's your style · three looks", G304),
+  game(325, "Here's your style · one look", G305),
+  game(326, "Here's your style · removed, Undo", { ...G304, then: [{ remove: 1 }], toast: true }),
+  game(327, "Here's your style · in and out, Undo", { seed: 42, me: ['outdoor', 'vintage_sport', 'workwear'], prefer: ['outdoor', 'vintage_sport', 'workwear'], then: [{ add: 'streetwear' }], toast: true }),
+  game(328, "Here's your style · typing his words", { ...G304, editingWords: true, words: 'skater but clean' }),
+  game(329, "Here's your style · his words saved", { ...G304, words: 'all black' }),
+  game(330, 'Nothing clicked yet', G310),
+  game(331, 'Nothing clicked yet · his words', { ...G310, words: 'all black' }),
+  game(332, 'Add a look', { ...G305, then: [{ add: 'workwear' }] }, { href: '/onboarding/add-look', under: '/onboarding/looks' }),
+  game(333, "Here's your style · every look removed", { ...G305, then: [{ remove: 0 }] }),
+];
+
 export const SCREENS: readonly ScreenScenario[] = [
   { n: 1, name: 'Welcome', id: 'O1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/welcome' },
-  { n: 2, name: 'Pick looks', id: 'O2', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/looks' },
+  // Looks is the style game since T113 (specs/style-game.md): a fixed deal (seed 42: card 1 is Workwear) so shots repeat.
+  { n: 2, name: 'Style game · card 1', id: 'O2', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/looks', styleGame: { seed: 42, me: [], cards: 0 } },
   { n: 3, name: 'About you', id: 'O3', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/basics' },
   // Was the agreement step (O5), removed by T39: setup ends on About you; this is that step with an age picked.
   { n: 4, name: 'About you · ready', id: 'O3', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/basics', about: { age: '22-25', name: 'Alex' } },
@@ -359,6 +392,8 @@ export const SCREENS: readonly ScreenScenario[] = [
     href: `/sheets/why/${STORY_FIRST_CHECK}`, under: '/stylist',
   })),
   { n: 310, name: 'Why · an old v15 check', id: 'S7', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:43:00', href: `/sheets/why/${STORY_FIRST_CHECK}`, under: '/stylist' },
+  // The style game (T113): 320–333 (300–313 until main's rescoring screens took 300–310).
+  ...STYLE_GAME_SCREENS,
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {
