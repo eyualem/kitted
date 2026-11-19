@@ -25,4 +25,7 @@
 - **Dashed tiles in Closet** are unchanged. See the PR for the finding.
 
 ## Built
-(filled at the end)
+- `__tests__/T106-addCard.test.ts`: 27 tests, KC4.1–KC4.9 and KC2.10, including his exact Nov 19 message through the real pipeline (prepare, gate, card). Updated stale tests: `askC4` (pieces now come from `addChatPiece`; the model's `owns_unphotographed` is dropped), `T104-cardViews` (`ADD_READY` true), `kitWordsPrompt` (version 7), `toast.test` (I have one's Undo is a 5 s add-undo).
+- iOS Simulator, light (demo screens 405, `-demoLatency 0`, real store): `shots/01-add-asking-light.png`, tap Add → `shots/02-add-added-light.png`, Closet afterward shows the piece → `shots/03-closet-after-add-light.png`, No thanks → `shots/04-add-not-added-light.png`.
+- **Not verified in the Simulator:** a live model answer (no paid run, T110 does that), the colour tap question and the explicit "add it" card on screen (covered by the pipeline tests only), Undo and I have one on a device, dark mode and largest text (no colors or layout changed).
+- Closet's dashed tile: unchanged, finding in the PR.
