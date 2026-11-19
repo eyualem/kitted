@@ -268,8 +268,9 @@ function top(s: TopFlat, ctx: Ctx): string {
     const m = (x: number) => cx + side * x;
     if (noSleeves) return { d: '', cuff: null, co: [], ci: [], oPt: [], iPt: [], m };
     if (shortSl && bigTee) {
-      // an oversized tee's sleeves (oversized-tee): wider and dropped from the shoulder, reaching toward the elbow
-      return { d: `M${m(S[0] - 1)},${S[1] - 1} Q${m(hw + 31)},66 ${m(hw + 45)},104 Q${m(hw + 40)},114 ${m(hw + 31)},122 L${m(A[0] - 0.5)},${A[1] + 4} Z`, cuff: null, co: [], ci: [], oPt: [], iPt: [], m };
+      // an oversized tee's half sleeve (oversized-tee): it starts low on the arm, where the dropped shoulder seam lands, then
+      // hangs wide and loose to about the elbow, ending in a level, hemmed opening instead of a short tee's slanted cut
+      return { d: `M${m(S[0] - 1)},${S[1] - 1} Q${m(hw + 35)},64 ${m(hw + 45)},127 L${m(hw + 17)},140 Q${m(hw + 10)},110 ${m(A[0] - 0.5)},${A[1] + 4} Z`, cuff: null, co: [], ci: [], oPt: [], iPt: [], m };
     }
     if (shortSl) {
       return { d: `M${m(S[0] - 1)},${S[1] - 1} Q${m(hw + 24)},58 ${m(hw + 35)},79 Q${m(hw + 29)},88 ${m(hw + 21)},95 L${m(A[0] - 0.5)},${A[1] + 3} Z`, cuff: null, co: [], ci: [], oPt: [], iPt: [], m };
@@ -304,7 +305,11 @@ function top(s: TopFlat, ctx: Ctx): string {
   for (const sl of sleeves) out += `<path d="${sl.d}" fill="${fill}" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/><path d="${sl.d}" fill="url(#${id}ty)"/>`;
   for (const side of sleeves.length ? [-1, 1] : []) {
     const m = (x: number) => cx + side * x;
-    if (shortSl && bigTee) out += fold(ctx, `M${m(hw + 9)},80 Q${m(hw + 20)},88 ${m(hw + 27)},106`, 2.2, 0.8);
+    if (shortSl && bigTee) {
+      out += fold(ctx, `M${m(hw + 9)},84 Q${m(hw + 19)},102 ${m(hw + 23)},124`, 2.2, 0.8);
+      // the sleeve hem's stitch line, just above its opening
+      out += `<path d="M${m(hw + 43.4)},120 L${m(hw + 19.2)},131" ${stitch(s.stitch ?? mix(c, -0.3), 0.6)}/>`;
+    }
     else if (shortSl) out += fold(ctx, `M${m(hw + 6)},70 Q${m(hw + 14)},74 ${m(hw + 20)},84`, 2, 0.8);
     else {
       out += `<path d="M${m(hw + 3)},90 Q${m(hw + 10)},126 ${m(hw + 15)},160" fill="none" stroke="#000" stroke-opacity=".1" stroke-width="4" stroke-linecap="round"/>`;

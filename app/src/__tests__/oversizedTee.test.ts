@@ -45,4 +45,18 @@ describe('oversized-tee · an oversized tee has its own drawing', () => {
     expect(card).not.toBeNull();
     expect(fitOf(card!)).toBe('oversized');
   });
+
+  it('the oversized sleeve is a half sleeve: it hangs to about the elbow, and a regular tee or an oversized polo does not', () => {
+    // the sleeve's lowest drawn point: a short tee's sleeve ends near y 95, a half sleeve at about y 140 (a long sleeve's wrist is 164)
+    const lowest = (xml: string) => Math.max(...[...xml.matchAll(/ [LQ]?-?[\d.]+,(\d+(?:\.\d+)?)/g)].map((m) => Number(m[1])).filter((y) => y < 150));
+    const sleeveDepth = (it: ArtItem) => {
+      const sleeve = draw(it).match(/<path d="(M[^"]*?)"[^>]*stroke-linejoin="round"\/><path d="\1" fill="url\(#xty\)"/)?.[1] ?? '';
+      if (!sleeve) throw new Error('no sleeve path found');
+      return lowest(sleeve);
+    };
+    expect(sleeveDepth(tee('Oversized tee'))).toBeGreaterThanOrEqual(130);
+    expect(sleeveDepth(tee('Charcoal tee'))).toBeLessThan(100);
+    const polo: ArtItem = { garment: { ...G('top', 'polo', 'grey'), volume: 5 }, hex: GREY, art: null, name: 'Oversized polo' };
+    expect(sleeveDepth(polo)).toBeLessThan(100);
+  });
 });
