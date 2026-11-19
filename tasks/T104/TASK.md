@@ -80,3 +80,7 @@ Verdict: **Ready**.
 - **Fixed:** the reviewer's remount note. `Enter` is now always the same `Animated.View`, its entrance fixed at first mount (`useState`), so a re-render after the row is drawn never swaps the wrapper or remounts the card. New test in `T104-cardEntrance.test.ts`; it fails on the old wrapper (checked) and passes now.
 - **Also:** `T35-hello` and `T39-offerCard` render the chat row, which now reaches Reanimated through the wrapper: both got a pass-through mock of `Enter` (like the cards they already mock). No assertion changed.
 - Swatches: a colors card holds 3–5 (`buildCard`), so a sixth can't occur.
+
+### After the live tap-through (Nov 18)
+- **Next buy only on an exact match** (the founder, log #497): a "You'd need" tile's Next buy shows only when a Starter pick matches its kind and color family; a tile with nothing to offer isn't a button. Tests in `T104-cardViews.test.tsx` (the off-white oxford gets none, the light blue one does; no button role or hint).
+- **Cut-off names ("Olive over…") seen once, not reproduced:** it appeared on one card after the app was reopened on a thread the demo had kept. Four tries since (two captured live arrivals, two reopenings) all wrap correctly, and the demo now reseeds on each launch, so that thread can't come back. No fix shipped blind; open with the control session.

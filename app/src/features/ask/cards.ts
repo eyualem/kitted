@@ -760,10 +760,14 @@ export function tileMark(card: AskCard, own: boolean): string | null {
   return null;
 }
 
-/** What a `You'd need` tile's menu offers (KC2.10): `I have one` once the add exists (T106), `Next buy` when the kind has
- *  a Starter entry. Neither: the tile isn't a button. */
+/** What a `You'd need` tile's menu offers (KC2.10): `I have one` once the add exists (T106), and `Next buy` only when a
+ *  Starter pick matches the drawn piece in kind AND color family (the founder, Nov 18, log #497: an off-white oxford
+ *  never opens Next buy on the light blue one). Neither: the tile isn't a button (no menu with only Cancel). */
 export function needMenuChoices(piece: CardPiece, styles: Styles | null, addReady: boolean): { haveOne: boolean; nextBuy: string | null } {
-  return { haveOne: addReady, nextBuy: nextBuyFor(piece, styles) };
+  const id = nextBuyFor(piece, styles);
+  const pick = id ? catalogRow(id)?.pick?.garment : undefined;
+  const same = !!pick && pick.subcategory === piece.kind && pick.color_family === piece.color;
+  return { haveOne: addReady, nextBuy: same ? id : null };
 }
 
 /** The colors card's header (KC3.1, KC3.2): `Colors for the shirt`, `Goes with olive`. */

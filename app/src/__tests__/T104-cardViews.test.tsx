@@ -70,6 +70,19 @@ describe("KC2.10 (the tile) · the You'd need menu", () => {
     expect(c.nextBuy).toMatch(/^s\d+$/);
     expect(needMenuRows(c)).toEqual(['nextBuy']);
   });
+  it('Next buy only when a Starter pick matches kind AND color (the founder, Nov 18, #497)', () => {
+    // The only Starter oxford is light blue: an off-white one gets no Next buy, a light blue one does.
+    expect(needMenuChoices(p('oxford_shirt', 'off_white_cream', 'Off-white oxford'), null, false).nextBuy).toBeNull();
+    expect(needMenuRows(needMenuChoices(p('oxford_shirt', 'off_white_cream', 'Off-white oxford'), null, false))).toEqual([]);
+    expect(needMenuChoices(p('oxford_shirt', 'light_blue', 'Light blue oxford'), null, false).nextBuy).toMatch(/^s\d+$/);
+  });
+  it('a tile with nothing but Cancel to offer is not a button, with no button role or hint for VoiceOver', async () => {
+    await render(<PieceTiles tiles={[{ key: 'a', piece: { kind: 'oxford_shirt', family: 'off_white_cream', name: 'Off-white oxford' }, dashed: true, mark: "You'd need" }]} />);
+    const tile = screen.getByLabelText("Off-white oxford, You'd need");
+    expect(tile.props.accessibilityRole).toBeUndefined();
+    expect(tile.props.accessibilityHint).toBeUndefined();
+    expect(tile.props.onClick ?? tile.props.onPress).toBeUndefined();
+  });
   it('offers nothing for a kind with no Starter entry until I have one exists (the tile is not a button)', () => {
     expect(needMenuRows(needMenuChoices(p('watch', 'black', 'Black watch'), null, ADD_READY))).toEqual([]);
   });
