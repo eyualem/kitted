@@ -48,7 +48,7 @@ Guys who aren't into fashion don't know if an outfit works or what one change wo
 ### First run
 1. Welcome: a code-drawn outfit and its score card, no photo ("See an example check" shows a scored example card, nothing sent; `specs/onboarding-screens.md`).
 2. Play the style game (`specs/style-game.md`): 8 "Me or not me?" cards, a few this-or-thats to order his Me's, then keep, reorder or fix his top looks, or describe his style in his own words (the founder, Nov 18; #488).
-3. About you, a plain form like every setup step: "What should Kit call you?" (first name, optional) above "How old are you?" (age bands, none picked). Under 18: a polite stop. Plus Apple's Declared Age Range.
+3. About you, a plain form like every setup step: "What should Kit call you?" (first name: the keyboard opens on it and Continue waits for it, with a small Skip to go on without one; #497) above "How old are you?" (age bands, none picked). Under 18: a polite stop. Plus Apple's Declared Age Range.
 4. Setup ends in Stylist: Kit's hello and "Want to check a fit now?" (Check my fit / Later). The camera never opens on its own.
 5. Consent, shown when he first opens the camera: names Google (photos), OpenAI (questions) and PostHog (usage counts), says what's sent and kept, and says Kit is an AI.
 6. First fit check → result, with Re-check or Later.
@@ -73,7 +73,7 @@ The first run above, 7 taps to the first check. Goal, boldness and fit are asked
 - F1.1 A fresh install reaches the camera in 18 taps or fewer when he says Me to 3 looks or fewer (17 until Nov 18, before card 1 taught the swipe, #495; 7 until Nov 18, when the style game replaced the tile grid, #488; 6 until Nov 11, #449), with no account and no paywall on the way, and the camera never opens until he taps Check my fit.
 - F1.2 The age question starts with nothing picked; "Under 18" shows the stop screen and no camera; Declared Age Range under 18 does the same.
 - F1.3 Nothing is sent anywhere before consent is agreed; a photo taken before consent is kept and scored after Agree.
-- F1.4 The name is optional: skipping it changes nothing but the greetings ("Morning." instead of "Morning, Alex."). If he signs in with Apple and gave no name, Apple's first name fills it.
+- F1.4 The name is optional (Apple 5.1.1(x): a request for a name must stay optional), but setup nudges for it: the field opens with the keyboard up, Continue waits for a name, and a small `Skip` goes on without one (the founder, Nov 18, #497). Skipping it changes nothing but the greetings ("Morning." instead of "Morning, Alex."). If he signs in with Apple and gave no name, Apple's first name fills it.
 - F1.5 His name is used only in code-written lines (the morning and evening greeting, a few card lines). It is never sent to Google, OpenAI or PostHog, and Kit's AI answers never say it. He can change or clear it in You → Style profile.
 
 ### F2. The fit check
