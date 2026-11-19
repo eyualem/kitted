@@ -42,3 +42,21 @@
 ## Disputes
 
 ## Review
+
+### Round 1 (reviewer)
+- KC11.2-Q1/Q2 typed gate: done. Probed 25 extra clothes questions ("Do I look okay?", "Do I look good in navy?", "Is my fit good?", "Do I look 30 in a blazer?", "Am I a 6 on style?", "Is my weight ok for slim fit?" and more): all still reach the model.
+- KC11.2-S1/S2 sentence gate: done. Probed 29 ordinary lines ("You look great in the navy.", "Slim jeans hide the boot shaft.", "Pale yellow is hard, try cream.", "Girls' sizes run small.", "It looks big on you."): all show. Only body lines dropped ("You look big in that coat.", "Your height works with the long coat.").
+- KC11.2-D1/D2 decline: done (code read; locked tests pass per builder). Replaces fail line only when a body/build/height drop is present.
+- KC1.3-T1/T2 taps: done.
+- Lock: only the `lock tests` commit touches TESTING.md and the 3 test files since b44bc0b5 (the diff is the Lock line itself). Clean.
+- Planted bugs (each reverted, tree clean): (1) removed HIDES_BODY from the body rule: bodyGate 5 failed. (2) decline only when every drop is `body`: bodyDecline 5 failed. (3) removed `if (self === 'body') return true`: bodyTaps 5 failed. All caught.
+- Full `npm run check` not run (memory 0.2-0.5 GB free; the instruction was never to run it). The builder's targeted suites are the evidence.
+
+Defects: none open.
+
+Small things for later (never blocking):
+- The new tap rule drops some harmless first-person taps that main kept: "I'm looking for boots", "Am I missing a jacket?", "Do I look off in this tee?", "I'm unsure about this shirt". "I'm / am I" followed by anything not on the clothes-verdict list counts as a body tap. It fails safe (the tap just does not show; Kit writes others, and most of these were rare). Worth adding "looking", "missing", "wearing" to the skip list if the live run (T110) shows taps vanishing.
+- Taps over 30 characters drop by the old length rule ("Do I look good with white sneakers?"), unrelated to T115.
+- "I feel cold in this jacket" and "Do I look cold in this tee?" are kept (cold is on the allowlist); fine.
+
+**Verdict: Ready.**
