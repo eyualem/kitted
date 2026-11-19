@@ -28,10 +28,13 @@ const APPLE = {
   teamId: '',
 };
 const FREE_TEAM_ID = '6652QVRQAL';
+const SIGN_IN_WITH_APPLE = 'com.apple.developer.applesignin';
 
 /** What the switch sets (pure, for the tests: src/__tests__/approvalDay.test.ts). */
 export function appleSettings(apple: { paid: boolean; teamId: string }, easProfile: string | undefined) {
-  if (!apple.paid) return { teamId: FREE_TEAM_ID, entitlements: {}, locationUsage: LOCATION_USAGE, applePaid: false };
+  // Sign in with Apple is on in every build (T41), split out of the paid-team switch so Apple's weather and the other
+  // three entitlements stay off until approval day.
+  if (!apple.paid) return { teamId: FREE_TEAM_ID, entitlements: { [SIGN_IN_WITH_APPLE]: ['Default'] }, locationUsage: LOCATION_USAGE, applePaid: false };
   if (!/^[A-Z0-9]{10}$/.test(apple.teamId)) {
     throw new Error("app.config.ts: APPLE.paid is on, so APPLE.teamId must be the paid team's 10-character Team ID.");
   }
@@ -42,7 +45,7 @@ export function appleSettings(apple: { paid: boolean; teamId: string }, easProfi
       'com.apple.developer.declared-age-range': true,
       'com.apple.developer.devicecheck.appattest-environment': easProfile === 'development' ? 'development' : 'production',
       'com.apple.developer.weatherkit': true,
-      'com.apple.developer.applesignin': ['Default'],
+      [SIGN_IN_WITH_APPLE]: ['Default'],
     },
     locationUsage: LOCATION_USAGE_PAID,
     applePaid: true,
@@ -154,9 +157,8 @@ const config: ExpoConfig = {
     // Continue with Google (#295): Google's sign-in sheet returns to the app through this URL scheme, the reversed iOS
     // client ID (src/config/firebase.ts GOOGLE_IOS_CLIENT_ID).
     ['@react-native-google-signin/google-signin', { iosUrlScheme: 'com.googleusercontent.apps.1069635510987-h35362quu682rbpvvsdhqdkp4ic295v9' }],
-    // Continue with Apple (T41): this plugin adds the Sign in with Apple entitlement (com.apple.developer.applesignin) on its
-    // own, whatever APPLE.paid says, so the paid-team switch above stays off and Apple's weather stays off with it. The
-    // package needs the founder's next npm install; scripts/check-release-app.js expects the entitlement in every build.
+    // Continue with Apple (T41): the native module. The entitlement itself is in appleSettings (every build, paid team or
+    // not). The package needs the founder's next npm install; scripts/check-release-app.js expects the entitlement.
     'expo-apple-authentication',
     ['expo-secure-store', { faceIDPermission: false }], // no Face ID in Kitted; keeps NSFaceIDUsageDescription out (05 T29)
     // PHPicker needs no Photos permission (09 §3). cameraPermission must be the SAME string as
