@@ -509,6 +509,7 @@ const addedInBuild = {
   'ask.card.addedPast': 'Added',
   'ask.card.notAdded': 'Not added',
   'ask.card.changed': 'Changed',
+  'ask.card.changedBack': 'Changed back',
   'ask.saved': 'Saved to what I know',
   'ask.saved.a11y': 'Saved to what Kit knows. Undo.',
   'ask.saved.undone': 'Removed from what I know.',

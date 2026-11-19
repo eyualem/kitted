@@ -773,11 +773,12 @@ export function colorsTitle(card: Extract<AskCard, { type: 'colors' }>): string 
     : t('ask.card.goesWith', { color: low(colorName(card.goesWith) ?? card.goesWith) });
 }
 
-/** The add card's status line under the piece: the question while it asks, the outcome after (KC4.2–KC4.4, KC1.5). */
-export function addStatus(card: Extract<AskCard, { type: 'add' }>, readOnly: boolean): string {
+/** The add card's status line under the piece: the question while it asks, the outcome after (KC4.2–KC4.4, KC1.5).
+ *  Past chats: `Added` / `Not added`, and a card never answered shows the piece alone (null; the founder, #493). */
+export function addStatus(card: Extract<AskCard, { type: 'add' }>, readOnly: boolean): string | null {
   if (card.outcome === 'added') return readOnly ? t('ask.card.addedPast') : t('ask.card.added');
-  if (card.outcome === 'declined' || readOnly) return t('ask.card.notAdded');
-  return t('ask.card.add.ask');
+  if (card.outcome === 'declined') return t('ask.card.notAdded');
+  return readOnly ? null : t('ask.card.add.ask');
 }
 
 const listed = (xs: readonly string[]) => xs.map(low).join(', ');
@@ -820,10 +821,12 @@ export function cardSpoken(card: AskCard | null, w: CardWords): string | null {
     }
     case 'colors':
       return `${colorsTitle(card)}: ${listed(card.families.map((f) => colorName(f) ?? f))}.`;
-    case 'add':
-      return `${card.piece.name}. ${addStatus(card, w.readOnly === true)}`.replace(/([^.?])$/, '$1.');
+    case 'add': {
+      const status = addStatus(card, w.readOnly === true);
+      return status ? `${card.piece.name}. ${status}`.replace(/([^.?])$/, '$1.') : `${card.piece.name}.`;
+    }
     case 'changed':
-      return card.undone ? `${card.before.name}.` : `${card.after.name}. ${t('ask.card.changed')}.`;
+      return card.undone ? `${card.before.name}. ${t('ask.card.changedBack')}.` : `${card.after.name}. ${t('ask.card.changed')}.`;
   }
 }
 

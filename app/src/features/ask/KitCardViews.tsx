@@ -91,7 +91,7 @@ function Swatches({ families }: { families: readonly string[] }) {
 }
 
 /** The piece drawn small with a line beside it (the add card's outcome, Changed · Undo). */
-function PieceLine({ art, name, status, undo, onOpen }: { art: ReactNode; name?: string; status: string; undo?: () => void; onOpen?: () => void }) {
+function PieceLine({ art, name, status, undo, onOpen }: { art: ReactNode; name?: string; status: string | null; undo?: () => void; onOpen?: () => void }) {
   const { colors, fontScale } = useTheme();
   const side = Math.round(44 * Math.min(1.5, Math.max(1, fontScale)));
   const tile = (
@@ -114,12 +114,14 @@ function PieceLine({ art, name, status, undo, onOpen }: { art: ReactNode; name?:
             {name}
           </KText>
         ) : null}
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: 6 }}>
-          <KText variant="subheadline" color="ink2">
-            {undo ? `${status} ·` : status}
-          </KText>
-          {undo ? <TextLink title={t('common.undo')} compact onPress={undo} /> : null}
-        </View>
+        {status ? (
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: 6 }}>
+            <KText variant="subheadline" color="ink2">
+              {undo ? `${status} ·` : status}
+            </KText>
+            {undo ? <TextLink title={t('common.undo')} compact onPress={undo} /> : null}
+          </View>
+        ) : null}
       </View>
     </View>
   );
@@ -178,8 +180,8 @@ function AddArt({ side, children }: { side: number; children: ReactNode }) {
   );
 }
 
-/** A changed piece (T107 builds it; KC5.1): redrawn with its new name and `Changed · Undo`. Undone, it shows the piece as
- *  it was again, with no line. */
+/** A changed piece (T107 builds it; KC5.1): redrawn with its new name and `Changed · Undo`. Undone, the piece as it was
+ *  again with `Changed back` (the founder, #493). */
 export function ChangedCard({ m, card, readOnly }: { m: ChatMessage; card: Extract<AskCard, { type: 'changed' }>; readOnly: boolean }) {
   const { fontScale } = useTheme();
   const c = cardControls(card, { readOnly, tapped: null });
@@ -189,7 +191,7 @@ export function ChangedCard({ m, card, readOnly }: { m: ChatMessage; card: Extra
     <PieceLine
       art={<PieceArt item={{ garment: f.garment, hex: f.hex, name: f.name }} size={size} />}
       name={f.name}
-      status={card.undone ? '' : t('ask.card.changed')}
+      status={card.undone ? t('ask.card.changedBack') : t('ask.card.changed')}
       undo={c.undo ? () => void cardActions.undo(m) : undefined}
     />
   );

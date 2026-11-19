@@ -152,9 +152,11 @@ describe('KC4.2 (the card) · the add card', () => {
     expect(cardControls(add('added'), { readOnly: false, tapped: null }).undo).toBe(true);
     expect(addStatus(add('declined'), false)).toBe('Not added');
   });
-  it('Past chats show the outcome only, with no buttons (KC1.5)', () => {
+  it('Past chats show the outcome only, with no buttons (KC1.5); a card never answered shows the piece alone (#493)', () => {
     expect(addStatus(add('added'), true)).toBe('Added');
-    expect(addStatus(add('asked'), true)).toBe('Not added');
+    expect(addStatus(add('declined'), true)).toBe('Not added');
+    expect(addStatus(add('asked'), true)).toBeNull();
+    expect(cardSpoken(add('asked'), { ...words, readOnly: true })).toBe('Off-white button-up.');
     const c = cardControls(add('asked'), { readOnly: true, tapped: null });
     expect([c.add, c.noThanks, c.undo]).toEqual([false, false, false]);
     expect(cardSpoken(add('added'), { ...words, readOnly: true })).toBe('Off-white button-up. Added.');
@@ -179,7 +181,7 @@ describe('every new card has a VoiceOver line', () => {
     const fields = (name: string) => ({ name, slot: 'shoes' as const, garment: {} as never, hex: '#000', confirmedFields: [] });
     const changed: AskCard = { type: 'changed', itemId: 'S4', before: fields('Brown Chelsea boots'), after: fields('Black Chelsea boots') };
     expect(cardSpoken(changed, words)).toBe('Black Chelsea boots. Changed.');
-    expect(cardSpoken({ ...changed, undone: true }, words)).toBe('Brown Chelsea boots.');
+    expect(cardSpoken({ ...changed, undone: true }, words)).toBe('Brown Chelsea boots. Changed back.');
     expect(cardSpoken(outfit(), words)).toBe("From your closet + 1: olive overshirt, dark jeans, black Chelsea boots. You'd need: off-white oxford.");
   });
 });

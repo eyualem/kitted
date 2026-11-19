@@ -29,7 +29,7 @@
 
 ## Calls settled while the founder is away (listed for him in the PR)
 - **Words from the mockup, not the spec's copy list:** the options card's tag `Options`; the outfit tag's left side is the occasion (`Dinner`), and an Example's right side is the occasion. The mockup's `Instead of your tan bomber` needs data T102 doesn't store, so it's left out.
-- **Past chats' add card:** `Added` / `Not added` (the spec's KC1.5 words). An add card never answered reads `Not added`.
+- **Already decided by the founder in T102 (#493), followed here:** Past chats' add card says `Added` / `Not added`, and one never answered shows the piece alone with no buttons; an undone change reads `Changed back`; drawn pieces use the closet's own noun (so the colors header reads `Colors for the oxford`, not the mockup's "collared shirt").
 - **The menu is the iOS action sheet** (with Cancel), not the mockup's popover: a popover anchored to a tile needs a new package. Same two choices, same words.
 - **The Next buy sheet is off in the beta** (it sends him to Closet). Opened from Kit's card, it now shows that one piece: drawn, its name, its price range and Got it, with no outfit counts. Settled by Claude; logged.
 - **Add, No thanks, Undo and I have one** draw here; what they do is T106 (adds) and T107 (corrections). Until T106, `I have one` stays out of the menu (an outfit card from the model can reach a tester), and the add and changed cards can't appear outside demo screens (only code builds them).
