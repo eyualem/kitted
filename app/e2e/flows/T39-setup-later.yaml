@@ -1,6 +1,6 @@
 # T39 · OS5.3 (tasks/T39/TESTING.md): from a fresh install, Later on Kit's offer removes its buttons and posts Kit's line,
 # and after a relaunch the buttons stay gone.
-# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T39-setup-later.yaml (Metro running)
+# Run: maestro --device 111D0A09-C2CA-4F72-BF3C-44019A05C89D test app/e2e/flows/T39-setup-later.yaml (Metro running; another worktree's Metro: -e PORT=8082)
 appId: com.trykitted.kitted
 name: T39 · Later on the offer
 ---
@@ -13,22 +13,22 @@ name: T39 · Later on the offer
     when:
       visible: "DEVELOPMENT SERVERS"
     commands:
-      - tapOn: "http://.*:8081"
+      - tapOn: "http://.*:${PORT || '8081'}"
 - extendedWaitUntil:
     visible: "Get started"
     timeout: 90000
 - tapOn: "Get started"
 - extendedWaitUntil:
-    visible: "What's your style\\?"
+    visible: "Is this your style\\?"
     timeout: 10000
-- tapOn: "Streetwear: .*"
-- assertVisible: "Continue · 1 of 3"
-- tapOn: "Continue · 1 of 3"
+# T113: Looks is the style game. The overlay's tap (SG1.4), Yes on card 1, No on the rest, Continue (11 taps).
+- runFlow: ../common/play-style-game.yaml
 - extendedWaitUntil:
     visible: "About you"
     timeout: 10000
 - tapOn: "22–25"
-- tapOn: "Continue"
+# #506: no name typed, so Skip goes on (Continue waits for a name).
+- tapOn: "Skip"
 - extendedWaitUntil:
     visible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
     timeout: 15000
@@ -50,7 +50,7 @@ name: T39 · Later on the offer
     when:
       visible: "DEVELOPMENT SERVERS"
     commands:
-      - tapOn: "http://.*:8081"
+      - tapOn: "http://.*:${PORT || '8081'}"
 - extendedWaitUntil:
     visible: ".*No rush\\. Tap the camera button whenever you're ready\\."
     timeout: 90000

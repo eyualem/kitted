@@ -1,6 +1,6 @@
 {
  "generated_by": "handoff/fixtures/make_readings.py",
- "locked_source": "/Users/eyu/Desktop/files/Kitted/extraction-test/results/lockin-oct6/B-stock/raw_results.json",
+ "locked_source": "extraction-test/results/lockin-oct6/B-stock/raw_results.json",
  "locked_config": {
   "model": "gemini-3.8-flash",
   "thinking": "off",

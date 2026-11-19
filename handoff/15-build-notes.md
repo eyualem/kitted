@@ -38,6 +38,7 @@
 - **UI review checklist (#363):** the project skill `ui-ux-pro-max` (Claude loads it for UI work; from the repo root, `python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<query>" --stack react-native`). It checks; the design system decides.
 
 ## Lessons from the build (details in DECISIONS-LOG)
+- **Run the Python engine's tests and generators with `/usr/bin/python3` (3.9), never plain `python3` (3.14 on this Mac).** Python 3.12+ adds floats more exactly in `sum()`, so a raw score on a half-thousandth rounds the other way (7.3625 → 7.362, not 7.363) and pinned fixtures look "moved" though no engine changed (#499).
 - **Hermes on iOS lacks `Intl.PluralRules` and parts of `Intl` time zones.** No `Intl` in app code without checking it on iOS. Use `app/src/i18n/format.ts` and core `time.ts`.
 - **A scrolling iOS sheet must have its ScrollView as the root.** Use `SheetScaffold`. A sticky header's row layout must sit one View deeper.
 - **No `inverted` FlatList on iOS 26** (the edge fade washes it out). `scrollToEnd` ignores padding, so use a footer spacer.
