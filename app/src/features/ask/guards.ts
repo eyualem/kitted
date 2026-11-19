@@ -2,9 +2,11 @@
 // purpose: a miss here still reaches the model, which handles the subtler cases; a false alarm costs him an answer.
 //   - Distress: phrases only (never a lone "die" or "dead": he dyes jeans and buys deadstock). Caught → the support
 //     card, nothing sent, not counted, only the event name logged.
-//   - Rating him, not the outfit: only when the whole message IS the ask ("Am I ugly?", "Rate my face"). A clothes
-//     question with a body word in it ("Am I too skinny for oversized stuff?") goes to the model, which answers
-//     the clothes part (07 §2.2).
+//   - Rating him, not the outfit: only when the whole message IS the ask ("Am I ugly?", "Rate my face", "Do I look
+//     old?", "Is my stomach ok?", "Do you like my face?"). A clothes question with a body word in it ("Am I too skinny
+//     for oversized stuff?", "Do I look old in this jacket?") goes to the model, which answers the clothes part
+//     (07 §2.2). "this", "that", "it" are not garments: "in this" after an attractiveness ask ("Am I good looking in
+//     this?") still refuses; after any other ("Do I look fat in this?") the model answers (T115).
 
 /** Lowercase, straight apostrophes, no punctuation but the apostrophe, one space between words. */
 export function normalizeQuestion(text: string): string {
@@ -36,14 +38,25 @@ const DISTRESS: readonly RegExp[] = [
 const LEAD = "(?:(?:be honest|honestly|real talk|ok|okay|so|yo|hey|bro|serious question|be real|tell me)\\s)*";
 const TAIL = "(?:\\s(?:or not|be honest|honestly|lol|lmao|please|pls|bro|for real|fr|out of 10|1 to 10|from 1 to 10|1 10|on a scale of 1 to 10))*";
 const BODY_WORDS = "(?:ugly|fat|too fat|hot|attractive|unattractive|good looking|handsome|cute|overweight|chubby|skinny|too skinny|too short|short|fit|ripped|muscular)";
-const BODY_PARTS = "(?:face|body|looks|physique|jawline|appearance|smile|hair|skin|teeth|nose|eyes|build)";
+const BODY_PARTS = "(?:face|body|looks|physique|jawline|appearance|smile|hair|hairline|skin|teeth|nose|eyes|build|stomach|belly|gut|tummy|weight)";
+/** How he asks about a part of him: "Is my stomach ok?", "Is my belly showing?", "Is my hairline bad?". */
+const PART_VERDICT = "(?: (?:too )?(?:good|bad|ok|okay|fine|alright|normal|weird|attractive|ugly|big|showing|noticeable|visible|receding|thinning))?";
+/** His age or a plain verdict on him, with no garment: "Do I look old?", "Do I look 30?", "Do I look good?". */
+const AGE_OR_VERDICT = "(?:(?:too )?(?:old|older|young|younger|good|bad|my age)|(?:about |like )?\\d{1,2})";
+/** Attractiveness words: only these may take an "in this / in that / in it" tail (T115). */
+const ATTRACT = "(?:ugly|hot|attractive|unattractive|good looking|handsome|cute|sexy)";
+const IN_THIS = "(?: in (?:this|that|it))?";
 const whole = (core: string) => new RegExp(`^${LEAD}(?:${core})${TAIL}$`);
 
 const BODY_RATING: readonly RegExp[] = [
   whole(`(?:am i|do i look|would you say i'?m|would u say im|is my body) ${BODY_WORDS}`),
   whole(`(?:rate|judge|score) (?:my|me and my) ${BODY_PARTS}`),
-  whole(`(?:how (?:would you rate|good is|bad is|ugly is|attractive is) my|what do you think (?:of|about) my|is my) ${BODY_PARTS}(?: good| bad| ok| okay| attractive| ugly)?`),
+  whole(`(?:how (?:would you rate|good is|bad is|ugly is|attractive is) my|what do you think (?:of|about) my|(?:do|would) you like my|is my) ${BODY_PARTS}${PART_VERDICT}`),
   whole(`(?:how ugly am i|how hot am i|how attractive am i|am i good looking|am i ugly or not)`),
+  whole(`do i look ${AGE_OR_VERDICT}`),
+  whole(`(?:am i|do i look|would you say i'?m) ${ATTRACT}${IN_THIS}`),
+  whole(`(?:would|do|will) (?:girls|women|ladies|a girl|she|people) (?:find me|think i'?m|say i'?m) ${ATTRACT}${IN_THIS}`),
+  whole(`(?:am i|would you say i'?m) (?:an? )?(?:10|\\d)(?: or (?:an? )?(?:10|\\d))? (?:on|for|in) (?:looks|attractiveness|my looks)`),
 ];
 
 export function isDistress(text: string): boolean {

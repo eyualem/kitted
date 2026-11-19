@@ -21,6 +21,9 @@ import { isBodyRating, isDistress, isUnderage } from './guards';
 import { liveAnswer as defaultLive } from './live';
 import type { AnswerEvent, AnswerSource } from './source';
 
+/** The gate rules about his body: a reply they (with any others) empty is a reply about him, not a failure (T115). */
+const BODY_RULES: ReadonlySet<GateRule> = new Set<GateRule>(['body', 'build', 'height']);
+
 /** No first word by then: "Taking longer…" (07 §6.4). */
 /** The longest question (09 §20.7 R8, #323): the field takes no more, and the send path cuts dictation to it, so a
  *  pasted essay never becomes the prompt (a cost risk once the server pays). */
@@ -284,6 +287,17 @@ export function createAsk(deps: AskDeps) {
     if (!failed && !answer) failed = dropped.length ? 'gated' : 'empty';
     const at = replaces?.createdAt ?? Math.max(clock.nowMs(), question.createdAt + 1);
     try {
+      if (failed === 'gated' && dropped.some((rule) => BODY_RULES.has(rule))) {
+        // Every sentence dropped and at least one by a body rule (T115, KC11.2): it was a reply about him, so the phone's
+        // own refusal, stored the same way (no Retry, not counted, no taps), in the failed line's place on a Retry.
+        const id = replaces?.id ?? ids('M');
+        await store.chat.put(row(id, at, 'stylist', t('ask.refuseFace'), {}, { askRefused: true }));
+        live.clear();
+        deps.reportOnline?.();
+        deps.onPosted?.(t('ask.refuseFace'));
+        log('refused · emptied by the body rules');
+        return { kind: 'answered', messageId: id, counted: false };
+      }
       if (failed === 'paused') {
         // The server's spend stop (C6): its own line, no Retry (it would only be paused again), nothing counted.
         const id = replaces?.id ?? ids('M');

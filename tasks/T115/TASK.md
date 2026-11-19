@@ -20,10 +20,24 @@
 - "Do I look gay?" stays with the model (not a body question; the report's row 16).
 
 ## Built
-- **Changed:** 
-- **Tests added:** 
+- **Changed:**
+  - `app/src/features/ask/guards.ts` · `isBodyRating` gets new whole-message shapes. It now covers his stomach, belly, gut, hairline and weight ("Is my belly showing?", "Is my gut ok?"), "Do I look old / young / good / bad / 30?", "Do you like my face?", "Am I a 6 on looks?" and "Would girls find me attractive?". An "in this / that / it" ending is allowed only on attractiveness asks ("Am I good looking in this?"). Any garment, or any other ending, still goes to the model ("Do I look old in this jacket?", "Do I look fat in this?").
+  - `app/src/features/ask/gate.ts` · the `body` rule catches more shapes:
+    - age, size and comparative words said of him, with up to three modifiers ("you're not too skinny", "makes you look taller", "you look about 25"; "old-school" still passes)
+    - "your" plus his thighs, hairline, age, coloring or complexion
+    - a cut that hides, slims or flatters a body part ("hides the gut", "hides a receding hairline"; "hides the belt" and "hides the waistband" still pass, and "my" never fills the adjective slot)
+    - skin named by its color ("Pale skin…"; "pale blue" still passes)
+    - what girls or women like ("Women's sizes" still passes)
+    - "a 7 on looks"
+  - `app/src/features/ask/pipeline.ts` · when every sentence of a reply is dropped and at least one drop is `body`, `build` or `height`, the row is `ask.refuseFace` with `askRefused`, not the fail line. It has no Retry, isn't counted, gets no taps, and on a Retry it takes the failed line's place (same id and time). The result is `answered` with `counted: false`, like the model's own refusal. A reply emptied only by other rules still gets `fail.ask` with Retry.
+  - `app/src/features/ask/cards.ts` · `aboutHim` gets a new `selfVerdict` step, an allowlist that runs before the garment keep. Wherever he is the subject of look/seem/feel/appear/am/I'm, the next word (after "too", "a bit" and similar) must be a clothes verdict (good, ok, right, sharp, formal, casual, warm, dressed…). If it isn't, the tap is dropped. "Dressed / overdressed / underdressed" keeps the tap even with no garment ("Am I dressed right for it?"). Other verdicts still need a garment, so "Do I look sharp?" is still dropped (T102's test). `bodyTap`'s phrase list also gets "muffin top" and "double chin".
+- **Tests added:** none by the builder. The locked tests are `bodyGate.test.ts`, `bodyDecline.test.ts` and `bodyTaps.test.ts`: 123 tests, all passing.
 - **Screenshots:** none: no screen changes shape; the decline line already exists in the chat (the phone's refusal). 
-- **Not done or not checked:** the live-model check (~5¢) is parked for T110.
+- **Deviations:** none. No new shared file was needed: the typed-gate shapes are whole-message, so they never need a garment word list.
+- **Not done or not checked:**
+  - The live-model check (~5¢) is parked for T110.
+  - The full `npm run check` wasn't run because the Mac had about 0.2–0.7 GB of free memory, under the 1.5 GB line. Run instead, all passing: `tsc --noEmit`; `expo lint src/features/ask`; the 3 new suites; `kitFollowUps`, `kitCards`, `kitCardsStored`, `askGuards`, `askPipeline`, `askVoice`, `askC2`, `askJudge`; and 29 other suites that use the ask feature (`askC3`/`C4`/`C7`, card*, `scenarios`, `chatUi`, `heightBuildRemoved`, `copyChecks`, `fitDoubt`, `nextBuy` and more).
+  - The `@kitted/core` typecheck and parity tests weren't run; core wasn't touched.
 
 ## Disputes
 
