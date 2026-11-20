@@ -145,6 +145,21 @@ describe('AT4.2 · closing the app mid-tour counts as seen', () => {
     expect(beat?.followerIds).toHaveLength(1);
   });
 
+  it('AT3 · Kit\'s first message arrives once: new while he hasn\'t seen Stylist, then in place for good', async () => {
+    const store = await fresh();
+    await continueAbout(store, '22-25', { tour: false });
+    const rows = (await store.chat.all()).map((m) => ({ ...m }));
+    const hello = rows.find((m) => m.role === 'stylist' && m.payload.aiNote === true)!;
+    // The tour is up and Stylist was never in front of him: nothing wrote "seen until", so the hello is new and plays.
+    expect(createArrivals().findBeat(rows, hello.createdAt - 1)?.kind).toBe('hello');
+    // He saw it (Stylist lost focus after it landed, or the app was relaunched): it is just there, no replay.
+    expect(createArrivals().findBeat(rows, hello.createdAt + 1_000)).toBeNull();
+    // Once it has begun this launch, coming back to Stylist never starts it again.
+    const a = createArrivals();
+    a.beatBegan(a.findBeat(rows, hello.createdAt - 1)!.leadId);
+    expect(a.findBeat(rows, hello.createdAt - 1)).toBeNull();
+  });
+
   it('with no "seen until" written (a first launch ever), the hello is still new', async () => {
     const store = await fresh();
     await store.setKv(TOUR_KEY, 'pending');
