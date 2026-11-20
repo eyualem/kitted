@@ -7,6 +7,7 @@ import type { OccasionKey, StyleKey } from '@/data/types';
 import { styleLabel } from '@/features/morning/copy';
 import { occasionLabel } from '@/features/stylist/thread';
 import { t } from '@/i18n/en';
+import { chargedParts } from './charged';
 import type { WhyRow } from './ledgerRows';
 
 /** What the sheet needs from a parts result (a stored check's details.parts, or core PartsScored). */
@@ -75,6 +76,9 @@ const lookWords = (looks: readonly string[]): string => {
   return w.length > 0 ? w.join(' and ') : t('pwhy.lookAny');
 };
 
+/** The Style part already names the look ("Reads as streetwear"), so a "Reads as" row would say it twice (T69's plan, T115). */
+const styleSaysReadsAs = (res: PartsInput): boolean => (res.parts.cohesion?.reasons ?? []).some((x) => /^reads as/i.test(x.line));
+
 /** The rows after the parts on a v16 check: start at 7.0, then one row per step of v16's finish, in the engine's order, so
  *  7 + the rows = the score (the rounding row holds only the half-point rounding and each step's two-decimal display). */
 function v16After(res: PartsInput, v: PartsV16, opts: { occasion: OccasionKey; readsAs: StyleKey | null }): { start: WhyRow; after: WhyRow[] } {
@@ -116,8 +120,8 @@ function v16After(res: PartsInput, v: PartsV16, opts: { occasion: OccasionKey; r
     else row = { key: 'ceiling', rule: t('pwhy.twoHolds'), amount };
     after.push(row);
   }
-  // v16: always shown when it reads as a look (T69-G10's test; the Style part's own "reads as" credit sits in its group)
-  if (opts.readsAs) {
+  // v16: shown when it reads as a look, unless the Style part's own "reads as" credit (in its group) already says it (T115)
+  if (opts.readsAs && !styleSaysReadsAs(res)) {
     after.push({ key: 'readsAs', rule: t('why.readsAs.rule', { style: styleLabel(opts.readsAs).toLowerCase() }), item: t('why.readsAs.item'), amount: 0, zero: 'plusMinus' });
   }
   const sum = after.reduce((s, x) => s + (x.amount ?? 0), 7);
@@ -127,8 +131,9 @@ function v16After(res: PartsInput, v: PartsV16, opts: { occasion: OccasionKey; r
 }
 
 export function whyParts(
-  res: PartsInput, opts: { occasion: OccasionKey; readsAs: StyleKey | null; gainPart: PartName | null },
+  stored: PartsInput, opts: { occasion: OccasionKey; readsAs: StyleKey | null; gainPart: PartName | null },
 ): WhyParts {
+  const res = chargedParts(stored); // T115b: only the charges the score took (a v15 check comes back as it is)
   const order = PARTS_DATA.partOrder as readonly PartName[];
   const names = PARTS_DATA.partNames as Record<PartName, string>;
   const wsum = order.reduce((s, k) => s + (res.weightsUsed[k] ?? 0), 0) || 1;
@@ -182,8 +187,7 @@ export function whyParts(
   if (res.floored) {
     after.push({ key: 'floor', rule: t('pwhy.floor', { occasion: occasionLabel(opts.occasion).toLowerCase() }), amount: r2(PARTS_DATA.final.floor - post) });
   }
-  const styleSaysIt = (res.parts.cohesion?.reasons ?? []).some((x) => /^reads as/i.test(x.line));
-  if (opts.readsAs && !styleSaysIt) {
+  if (opts.readsAs && !styleSaysReadsAs(res)) {
     after.push({ key: 'readsAs', rule: t('why.readsAs.rule', { style: styleLabel(opts.readsAs).toLowerCase() }), item: t('why.readsAs.item'), amount: 0, zero: 'plusMinus' });
   }
   const shown = after.reduce((s, x) => s + (x.amount ?? 0), average);
