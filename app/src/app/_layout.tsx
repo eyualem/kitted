@@ -135,8 +135,8 @@ function RootStack({ booted }: { booted: boolean }) {
         <Stack.Screen name="sheets/sample-photos" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/scan-inbox" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/merge/[id]" options={sheet([0.6, 1])} />
-        {/* A1 (10-onboarding.md): 0.7 leaves room for the email field and its button above the keyboard. */}
-        <Stack.Screen name="sheets/sign-in" options={sheet([0.7, 1])} />
+        {/* A1 (SB2): 0.4 fits the title, body, two buttons and the fine print (it was 0.7 for the email field, now gone); a message line or larger text scrolls, or pulls up to 1. */}
+        <Stack.Screen name="sheets/sign-in" options={sheet([0.4, 1])} />
       </Stack.Protected>
       <Stack.Protected guard={ready && !blocked && paywall}>
         <Stack.Screen name="paywall" options={cover} />
