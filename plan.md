@@ -142,6 +142,7 @@ Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `
 - [ ] **T31** · The name field on the birth-year step; change or clear it in Style profile; your Apple first name fills an empty one · *after T30 · checks: SY4, F1.4, F1.5 · files: onboarding/, you/, data/types.ts, en.ts* · *the setup field and the Style profile row move into T39 (your call, Nov 9); left here: Apple's first name (with T41)*
 - [ ] **T32** · Apple's age check (Declared Age Range) when he taps Looks right; declined or unavailable, the birth year decides · *after T30, T80 · checks: SY6, F1.2 · files: onboarding/, a native module*
 - [ ] **T33** · The setup path matches the spec: 6 taps, consent names PostHog · *after T30, T90 · checks: SY5, F1.1, F1.3 · files: onboarding/, en.ts*
+- [~] **T118** · about-keyboard-dock · tiny · build · About you: while the keyboard is up, Continue, Skip and the hint are hidden (they sat on top of the keyboard and made the name feel required; your yes in chat, Nov 19); picking an age or Done closes the keyboard and brings them back · *spec: `specs/onboarding-screens.md` OS4 (item 6, OS4.1), `specs/setup-and-you.md` SY4.1, log #521 · files: `BasicsScreen.tsx`, `T39-setupScreens.test.tsx`, the About you flows*
 
 ### Sign-in and backup
 *So his fits survive a new phone. Done means optional Apple or Google sign-in, his scores and closet restored on a new phone, photos backed up only if he turns it on, and "Delete account" wiping our server too.*
