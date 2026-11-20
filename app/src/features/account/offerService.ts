@@ -46,11 +46,11 @@ export function createOfferService(deps: OfferDeps) {
         const [account, state, all] = await Promise.all([getAccount(deps.store), getOffer(deps.store), checks()]);
         const busy = deps.busy() || all.some((c) => c.status === 'scoring' || c.status === 'asking') || (deps.holds ? await deps.holds() : false);
         if (!offerDue({ enabled: true, signedIn: account !== null, busy, state, checks: all, visitStartMs: visitStart })) return null;
-        const pieces = (await deps.store.closet.all()).length;
+        const pieces = (await deps.store.closet.all()).filter((i) => !i.isDeleted).length;
         const id = deps.ids('M');
         const m: ChatMessage = {
           id, createdAt: deps.now(), role: 'stylist', kind: 'card', text: null, cardType: 'account', fitCheckId: null, outfitId: null,
-          itemId: null, chips: [], payload: { offer: state.shown + 1, pieces, state: 'open' },
+          itemId: null, chips: [], payload: { offer: state.shown + 1, fits: scoredFullChecks(all), pieces, state: 'open' },
         };
         await deps.store.chat.put(m);
         await saveOffer(deps.store, { ...state, shown: state.shown + 1, declined: false });
