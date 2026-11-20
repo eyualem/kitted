@@ -19,6 +19,8 @@ export interface AccountUser {
 export interface AccountHoldings {
   fits: number;
   pieces: number;
+  /** T41b (SB6): the account has a saved style profile with looks. Absent reads as false. */
+  profile?: boolean;
 }
 
 export type SignInResult =

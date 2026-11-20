@@ -10,7 +10,7 @@ import { store } from '@/data/db';
 import type { ClosetAsk, ClosetItemRow, ClosetObservationRow } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { ClosetTile } from '@/features/closet/ClosetTile';
-import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
+import { DuplicateQuestion, notSameHref } from '@/features/closet/DuplicateQuestion';
 import { openPiece } from '@/features/closet/pieceActions';
 import { CLOSET_DEADLINE_MS } from '@/features/closet/service';
 import { isPending } from '@/features/closet/summaryText';
@@ -120,7 +120,7 @@ export function AddedSheet() {
                   />
                   {ask && candidate && !removed ? (
                     <View style={{ paddingLeft: 72, paddingRight: 16, paddingBottom: 14 }}>
-                      <DuplicateQuestion ask={ask} photo={item} candidate={candidate} runnerUp={runnerUp} onAnswer={(v) => answer(ask, v)} />
+                      <DuplicateQuestion ask={ask} photo={item} candidate={candidate} runnerUp={runnerUp} checkId={checkId} onAnswer={(v) => answer(ask, v)} />
                     </View>
                   ) : null}
                 </View>
@@ -141,10 +141,10 @@ export function AddedSheet() {
                 return (
                   <View key={item.id}>
                     {i > 0 ? <RowDivider /> : null}
-                    <MatchedRow item={item} onSplit={o && o.decision === 'same' ? () => void fitCheck.splitItem(checkId, o.id) : undefined} />
+                    <MatchedRow item={item} onSplit={o && o.decision === 'same' ? () => router.push(notSameHref(checkId, o.id) as never) : undefined} />
                     {ask && photo && candidate ? (
                       <View style={{ paddingLeft: 72, paddingRight: 16, paddingBottom: 14 }}>
-                        <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} onAnswer={(v) => answer(ask, v)} />
+                        <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} checkId={checkId} onAnswer={(v) => answer(ask, v)} />
                       </View>
                     ) : null}
                   </View>

@@ -17,6 +17,7 @@ import { useGate } from '@/state/appGate';
 import { SPLASH_FADE_MS, splashHoldLeft } from '@/state/splashHold';
 import { boot } from '@/state/boot';
 import { startConnectivity } from '@/services/connectivity';
+import { startBackup } from '@/sync/appBackup';
 import { getDemoArgs } from '@/state/session';
 import { CrashScreen } from '@/features/crash/CrashScreen';
 import { demoCrashCheck } from '@/demo/demoCrash';
@@ -53,6 +54,8 @@ export default function RootLayout() {
         setTimeout(() => SplashScreen.hideAsync().catch(() => {}), hold);
         // The offline banner's signal (09 §20.8 G18.1): a check now and on each return to the foreground.
         startConnectivity();
+        // Backup (SB4, SB5): does nothing unless ACCOUNTS_BUILT is on, and a round runs only for a non-guest signed-in account.
+        startBackup();
       });
   }, []);
 
@@ -135,6 +138,7 @@ function RootStack({ booted }: { booted: boolean }) {
         <Stack.Screen name="sheets/sample-photos" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/scan-inbox" options={sheet([0.6, 1])} />
         <Stack.Screen name="sheets/merge/[id]" options={sheet([0.6, 1])} />
+        <Stack.Screen name="sheets/not-same/[checkId]/[obsId]" options={{ ...sheet(isAccessibilitySize ? [1] : [0.6, 1]), sheetInitialDetentIndex: isAccessibilitySize ? 0 : 1 }} />
         {/* A1 (SB2): 0.4 fits the title, body, two buttons and the fine print (it was 0.7 for the email field, now gone); a message line or larger text scrolls, or pulls up to 1. */}
         <Stack.Screen name="sheets/sign-in" options={sheet([0.4, 1])} />
       </Stack.Protected>

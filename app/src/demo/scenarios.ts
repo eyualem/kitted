@@ -39,7 +39,7 @@ export interface ScreenScenario {
   weatherAllowed?: boolean;
   /** Account screens (10-onboarding.md, #289): turns them on with MockAuth's scripted outcome; `signedIn` starts signed
    *  in with that provider; `offer` posts "Keep your fits" (open, or after Not now). */
-  accounts?: { script: MockScript; signedIn?: AuthProvider; offer?: 'open' | 'declined' };
+  accounts?: { script: MockScript; signedIn?: AuthProvider; offer?: 'open' | 'declined'; photos?: 'on' };
   /** The end of onboarding (10-onboarding.md §9, #291): turns the sequence on, scripts the store and the notification
    *  answer, and plays its taps (features/finish/demo.ts). */
   finish?: FinishDemo;
@@ -259,6 +259,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 141, name: 'You · Account, signed out', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', accounts: { script: 'ok' } },
   { n: 142, name: 'You · Account, signed in', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', accounts: { script: 'ok', signedIn: 'apple' } },
   { n: 143, name: 'Privacy · delete account', id: 'Y7a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy', under: '/you', accounts: { script: 'ok', signedIn: 'apple' } },
+  // T41b (SB4): the photo-backup step after a sign-in, and Privacy & data with photo backup on.
+  { n: 144, name: 'Sign in · photo backup step', id: 'A1b', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/sheets/sign-in?from=offer&step=photos', under: '/stylist', accounts: { script: 'ok' } },
+  { n: 146, name: 'Privacy · photo backup on', id: 'Y7a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy', under: '/you', accounts: { script: 'ok', signedIn: 'apple', photos: 'on' } },
   // The end of onboarding (#291, 10-onboarding.md §9; numbered from 150). The story: his first check, the Welcome photo
   // (s14, 7.5 with a fix), at 7:42; the store is the mock one (it sells nothing) and the notification answer is scripted.
   { n: 150, name: 'First check · Later', id: 'S6', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: {} },
@@ -418,6 +421,12 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 410, name: 'Past chats · Kit cards, read-only', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist/day/2026-10-21', under: '/stylist' },
   { n: 411, name: 'Next buy · from Kit', id: 'C7', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/sheets/next-buy?starter=s07', under: '/stylist' },
   { n: 412, name: 'Kit · colors (largest text)', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  // "What is it, then?" (T118, CB4): the sheet over a check's chinos question (420), with nothing else like it (421), and the card after a picked piece (422) and after a new piece with its kind (423).
+  { n: 420, name: 'What is it, then?', id: 'C1n', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/sheets/not-same/{check}/{obs}', under: '/stylist' },
+  { n: 421, name: 'What is it, then? · nothing else like it', id: 'C1n', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/sheets/not-same/{check}/{obs}', under: '/stylist' },
+  { n: 422, name: 'Card · saved as your piece', id: 'C1n', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/stylist' },
+  { n: 423, name: 'Card · saved as its own piece', id: 'C1n', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/stylist' },
+  { n: 424, name: 'Added sheet · a matched piece', id: 'S11', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/sheets/added/{check}', under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

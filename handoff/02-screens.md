@@ -1239,7 +1239,7 @@ The photo bubble stays; its caption becomes the status. Card (`KCard`, pad 14 / 
   - Line (`.subheadline`, `ink2`): `Rotation 21 → 33` with the arrow and the new number in `accent`.
   - Actions: SecondaryButton `Undo` · SecondaryButton `Edit` (→ C3).
 - **At most one follow-up question** after it, as a Question card: `How does it fit?` chips `Slim` · `Regular` · `Relaxed`. **Budget is asked here first** (once ever): `Roughly what do you spend on one piece?` chips `Under $30` · `$30–60` · `$60–100` · `$100+` · `Skip`.
-- **Duplicate:** `Same as your grey quarter-zip?` chips `Yes, same one` · `No, a new one`.
+- **Duplicate:** `Same as your grey quarter-zip?` chips `Yes, same one` · `Not the same`.
 - **Fair-use limit (20 item reads a day):** `That's a lot of new stuff today. Add the rest in Closet with Describe it.`
 - **VoiceOver:** "Added grey quarter-zip. Adds 12 fits. Rotation 21 to 33." Actions Undo, Edit.
 
@@ -1914,7 +1914,7 @@ Every user-facing string, keyed for `Localizable.xcstrings`. `{braces}` are form
 | `budget.over100` | $100+ | N |
 | `item.q.duplicate` | Same as your {item}? | R |
 | `item.dup.yes` | Yes, same one | N |
-| `item.dup.no` | No, a new one | N |
+| `item.dup.no` | Not the same | N |
 | `item.fairUse` | That's a lot of new stuff today. Add the rest in Closet with Describe it. | N |
 | `plan.intro` | Want outfit ideas from your own clothes? This part is optional. | N (#343; was "Here's where to start. Three moves, in order.") |
 | `plan.tag` | Optional | N (#343; was "Your plan") |

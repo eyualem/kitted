@@ -19,6 +19,7 @@ import { runDeleteAllData, runDeleteAllPhotos, runForgetFacts, turnScoringOff, t
 import { LinkRow, Section, SettingsScroll, ToggleRow, ValueRow } from '@/features/settings/SettingsList';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
+import { PHOTO_BACKUP_KEY, isPhotoBackupOn, markPhotoStepOffered, turnOffPhotoBackup, turnOnPhotoBackup } from '@/sync/photoBackup';
 
 function sizeText(bytes: number): string {
   const { n, unit } = bytesParts(bytes);
@@ -48,6 +49,16 @@ function askFirst(title: string, message: string, cta: string, run: () => Promis
   ]);
 }
 
+/** "Turn off photo backup?" (SB4.3): Cancel is the default. */
+function confirmPhotoOff(): Promise<boolean> {
+  return new Promise((resolve) => {
+    Alert.alert(t('privacy.photoBackup.offTitle'), t('privacy.photoBackup.offMsg'), [
+      { text: t('common.cancel'), style: 'cancel', isPreferred: true, onPress: () => resolve(false) },
+      { text: t('privacy.photoBackup.offCta'), style: 'destructive', onPress: () => resolve(true) },
+    ], { cancelable: true, onDismiss: () => resolve(false) });
+  });
+}
+
 function DangerRow({ title, onPress, disabled }: { title: string; onPress: () => void; disabled?: boolean }) {
   const { colors } = useTheme();
   return (
@@ -73,6 +84,7 @@ function DangerRow({ title, onPress, disabled }: { title: string; onPress: () =>
 export default function PrivacyDataScreen() {
   const profile = useLive(['profile'], () => store.profile.get('me'), []);
   const account = useLive(['kv'], () => getAccount(store), [], ACCOUNT_KEY);
+  const photosOn = useLive(['kv'], () => isPhotoBackupOn(store), [], PHOTO_BACKUP_KEY);
   const plan = useLive(['usage', 'fitChecks'], () => quota.snapshot(), []);
   const [usage, refreshUsage] = usePhotoUsage();
   const [busy, setBusy] = useState(false);
@@ -101,6 +113,21 @@ export default function PrivacyDataScreen() {
     else void run(turnScoringOff)();
   };
 
+  /** SB4: on writes the setting (it goes to his account); off asks first, deletes his backed-up photos from the server, and only
+   *  then turns off. Offline or a failure changes nothing and says so. Photos on this iPhone are never touched. */
+  const onPhotos = async (next: boolean) => {
+    if (next) {
+      await markPhotoStepOffered(store);
+      await turnOnPhotoBackup(store);
+      return;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { deleteBackedUpPhotosOnServer } = require('@/services/firebase/data') as typeof import('@/services/firebase/data');
+    const r = await turnOffPhotoBackup({ store, confirm: confirmPhotoOff, deleteBackedUp: deleteBackedUpPhotosOnServer });
+    if (r.status === 'offline') showToast(t('privacy.photoBackup.offline'));
+    else if (r.status === 'failed') showToast(t('privacy.photoBackup.failed'));
+  };
+
   return (
     <SettingsScroll>
       <KCard radius={radius.cardSmall}>
@@ -122,6 +149,20 @@ export default function PrivacyDataScreen() {
         <ToggleRow key="consent" title={t('privacy.consentToggle')} detail={t('privacy.consentSub', { provider })} value={consentOn} onChange={onToggle} disabled={busy || !profile} hint={t(consentOn ? 'privacy.a11y.consentOffHint' : 'privacy.a11y.consentOnHint')} />
         <ValueRow key="photos" label={t('privacy.storage')} value={storageText(usage)} spoken={t('privacy.a11y.storage', { label: t('privacy.storage'), value: storageText(usage) })} />
       </Section>
+
+      {/* Signed in only (SB4): photo backup is off until he turns it on, and belongs to his account. */}
+      {account ? (
+        <Section footer={t('privacy.photoBackup.footer')}>
+          <ToggleRow
+            key="photoBackup"
+            title={t('privacy.photoBackup')}
+            value={photosOn === true}
+            onChange={(next) => void run(() => onPhotos(next))()}
+            disabled={busy}
+            hint={t(photosOn === true ? 'privacy.a11y.photoBackupOffHint' : 'privacy.a11y.photoBackupOnHint')}
+          />
+        </Section>
+      ) : null}
 
       {PRIVACY_URL ? (
         <Section>

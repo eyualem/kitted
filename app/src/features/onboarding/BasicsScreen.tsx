@@ -21,7 +21,7 @@ import { t } from '@/i18n/en';
 import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
 import { setAgeBlocked, setOnboarded } from '@/state/appGate';
-import { parseRestoreParam } from '@/features/account/account';
+import { parseRestoreParam, signOut } from '@/features/account/account';
 import { AGE_CHOICES, ageChoiceLabel, ageChoiceSpoken, ageChoiceTestID, cleanName, EMPTY_ABOUT, finishSetup, NAME_MAX, saveAbout, type AboutDraft, type AgeChoice } from './aboutStep';
 import { loadDraft } from './basics';
 import { ChoiceList, type Choice } from './ChoiceList';
@@ -99,6 +99,8 @@ export function BasicsScreen() {
       // The block is for good (it outlives "Delete all my data"), so a mis-tap gets one chance to change (#276).
       const block = async () => {
         await setAgeBlocked(true);
+        // A restore to an account stops here (SB6.1b): nothing is pulled, and he is signed out of it again.
+        if (restoring) await signOut(store).catch((e: unknown) => console.warn('[restore] sign-out after the age stop failed', e));
         // The gate swaps the stacks; "/" sends him through it to the stop screen.
         router.replace('/');
       };

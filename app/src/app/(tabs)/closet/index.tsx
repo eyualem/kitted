@@ -171,7 +171,7 @@ export default function ClosetScreen() {
             renderCard={(card, slot) => {
               if (card.kind === 'fit') return <FitQuestion item={card.fit.item} doubt={card.fit.doubt} deck={slot} />;
               const { checkId, ask, photo, candidate, runnerUp } = card.q;
-              return <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} deck={slot} onAnswer={(a) => void answerWithUndo(answerDeps, checkId, ask, a, candidate, runnerUp)} />;
+              return <DuplicateQuestion ask={ask} photo={photo} candidate={candidate} runnerUp={runnerUp} deck={slot} checkId={checkId} onAnswer={(a) => void answerWithUndo(answerDeps, checkId, ask, a, candidate, runnerUp)} />;
             }}
           />
           <View style={{ gap: space.xxl }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
