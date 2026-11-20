@@ -1,6 +1,6 @@
 # T41b · Backup, restore and delete for sign-in (the backup half)
 
-**Size:** strict · **From:** `plan.md` → T41b (the founder's yes, Nov 19) · **Spec:** `specs/sign-in-and-backup.md` (approved 2026-11-12; SB6 changed Nov 19 with his yes, log #521), checks SB4.1–SB4.3, SB5.1, SB6.1 (real-data half), SB9.1, plus the review notes below · **Lane:** Sign-in and backup
+**Size:** strict · **From:** `plan.md` → T41b (the founder's yes, Nov 19) · **Spec:** `specs/sign-in-and-backup.md` (approved 2026-11-12; SB6 changed Nov 19 with his yes, log #522), checks SB4.1–SB4.3, SB5.1, SB6.1 (real-data half), SB9.1, plus the review notes below · **Lane:** Sign-in and backup
 
 ## What changes
 - **Goal:** with `ACCOUNTS_BUILT` on, signing in really backs up his fits, closet, outfits, wear log, style profile and what Kit knows, a new phone really restores them, and "Delete account and all data" really runs revoke → server → phone. Chats, name, age band and the under-18 lock never reach the server. Photos only if he turns photo backup on. `ACCOUNTS_BUILT` stays **false**; whether it flips for the second TestFlight build is his call at merge (say so in the PR).
@@ -17,7 +17,7 @@
 - **Restore reads the server first:** holdings (scored full-check count, closet piece count, whether a saved style profile with looks exists) come from the server's own counts before the age question; the pull (counts as they arrive) runs after 18+ is confirmed. Under 18: nothing is pulled or written to the phone, and he's signed out as today.
 - **"Use the account's"** gets the account's real fit IDs from a read-only fetch before the choice is shown; only then is `inAccount` real.
 - **Not touched on delete:** the server's per-phone usage count (T21a's `devices/{hash}` docs) stays; `deleteEverything` removes only `users/{uid}`, `usage/{uid}`, the files and the Auth user.
-- **Words he picked:** `Your style profile is back.` for an account with a saved style profile and no fits (log #521).
+- **Words he picked:** `Your style profile is back.` for an account with a saved style profile and no fits (log #522).
 
 - **From the test writer (session's answers):** a restored phone saves only the age band he just picked (`birthYear` stays null since T39; SB6 asks "age only"), so the tests are right. Turning photo backup off then on again must re-upload every photo: reset the "already uploaded" bookkeeping on a successful turn-off. The wiring files (`appBackup`, the Apple revoke in `firebaseAuth.ts`, `services/firebase/data.ts`, `actions.ts`, the sheet's last step, the switch) have no unit tests; the Simulator screenshots and the reviewer cover them, and the reviewer must read that the wipe never clears the age lock (`kitted.ageBlocked`).
 
