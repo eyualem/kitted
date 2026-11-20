@@ -39,7 +39,7 @@ export interface ScreenScenario {
   weatherAllowed?: boolean;
   /** Account screens (10-onboarding.md, #289): turns them on with MockAuth's scripted outcome; `signedIn` starts signed
    *  in with that provider; `offer` posts "Keep your fits" (open, or after Not now). */
-  accounts?: { script: MockScript; signedIn?: AuthProvider; offer?: 'open' | 'declined' };
+  accounts?: { script: MockScript; signedIn?: AuthProvider; offer?: 'open' | 'declined'; photos?: 'on' };
   /** The end of onboarding (10-onboarding.md §9, #291): turns the sequence on, scripts the store and the notification
    *  answer, and plays its taps (features/finish/demo.ts). */
   finish?: FinishDemo;
@@ -259,6 +259,12 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 141, name: 'You · Account, signed out', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', accounts: { script: 'ok' } },
   { n: 142, name: 'You · Account, signed in', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', accounts: { script: 'ok', signedIn: 'apple' } },
   { n: 143, name: 'Privacy · delete account', id: 'Y7a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy', under: '/you', accounts: { script: 'ok', signedIn: 'apple' } },
+  // T41b (SB4, SB6): the photo-backup step after a sign-in, the restore for a profile-only account and for a server that can't be
+  // reached, and Privacy & data with photo backup on.
+  { n: 144, name: 'Sign in · photo backup step', id: 'A1b', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/sheets/sign-in?from=offer&step=photos', under: '/stylist', accounts: { script: 'ok' } },
+  { n: 145, name: 'Bringing back your style profile', id: 'A4', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/restore?fits=0&pieces=0&profile=1', accounts: { script: 'existing', signedIn: 'apple' } },
+  { n: 146, name: 'Privacy · photo backup on', id: 'Y7a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy', under: '/you', accounts: { script: 'ok', signedIn: 'apple', photos: 'on' } },
+  { n: 147, name: 'Bringing back your fits · no connection', id: 'A4', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/restore?fits=214&pieces=38&state=retry', accounts: { script: 'existing', signedIn: 'apple' } },
   // The end of onboarding (#291, 10-onboarding.md §9; numbered from 150). The story: his first check, the Welcome photo
   // (s14, 7.5 with a fix), at 7:42; the store is the mock one (it sells nothing) and the notification answer is scripted.
   { n: 150, name: 'First check · Later', id: 'S6', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: {} },

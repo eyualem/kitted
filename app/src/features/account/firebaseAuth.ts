@@ -2,15 +2,18 @@
 // token. The rules live in signIn.ts (tested with fakes); this file only plugs in the real modules, and account.ts loads
 // it lazily so the web preview and the tests never touch them. expo-apple-authentication is loaded lazily too: until
 // the founder's next install it isn't there, and Apple then reports `failed` instead of breaking the app.
-// Until backup exists (T41b) an account holds nothing on the server, so `holdings` is null; `deleteAccount` stays as it
-// was (Google's access revoked, then the Auth user deleted); T41b adds Apple's token revoke and the server job.
+// An account's holdings are read from the server before the age question (restore.ts readAccountHoldings); a failed read is a
+// failed or offline sign-in, never an empty account. Deleting an account (SB9) is actions.ts: Apple's token is revoked here
+// (`revokeAppleAccess`), the server job deletes the database, photos and the Auth user, then the phone is wiped.
 import * as Crypto from 'expo-crypto';
 import { GoogleSignin, isErrorWithCode, isSuccessResponse, statusCodes } from '@react-native-google-signin/google-signin';
-import { GoogleAuthProvider, OAuthProvider, deleteUser, linkWithCredential, signInWithCredential, signOut as fbSignOut, type AuthCredential } from 'firebase/auth';
+import { GoogleAuthProvider, OAuthProvider, linkWithCredential, revokeAccessToken, signInWithCredential, signOut as fbSignOut, type AuthCredential } from 'firebase/auth';
 import type { FirebaseError } from 'firebase/app';
 import { GOOGLE_IOS_CLIENT_ID } from '@/config/firebase';
 import { firebaseAuth } from '@/services/firebase/app';
-import type { AuthService } from './auth';
+import { RemoteUnavailable } from '@/sync/remote';
+import type { AccountHoldings, AuthService } from './auth';
+import { readAccountHoldings } from './restore';
 import { createSignIn, type AppleCredential, type Cred, type FbUser } from './signIn';
 
 let configured = false;
@@ -26,7 +29,7 @@ function google(): boolean {
 /** The slice of expo-apple-authentication used here (typed by hand: the package isn't installed yet). */
 interface AppleModule {
   isAvailableAsync(): Promise<boolean>;
-  signInAsync(o: { requestedScopes: number[]; nonce: string }): Promise<{
+  signInAsync(o: { requestedScopes: number[]; nonce?: string }): Promise<{
     identityToken: string | null;
     authorizationCode: string | null;
     email: string | null;
@@ -52,6 +55,42 @@ const isNetwork = (e: unknown) => {
   const code = (e as { code?: string }).code ?? '';
   return code === 'auth/network-request-failed' || code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE || /network/i.test(String((e as Error).message ?? ''));
 };
+
+/** What the account already holds, read from his server folder (never an empty answer when it can't be read: that throws, and the
+ *  sign-in reports offline or failed). */
+async function holdingsOf(uid: string): Promise<AccountHoldings> {
+  /* eslint-disable @typescript-eslint/no-require-imports */
+  const fs = require('firebase/firestore') as typeof import('firebase/firestore');
+  const { firebaseDb } = require('@/services/firebase/data') as typeof import('@/services/firebase/data');
+  const { createFirestoreRemote } = require('@/sync/firestoreRemote') as typeof import('@/sync/firestoreRemote');
+  /* eslint-enable @typescript-eslint/no-require-imports */
+  try {
+    return await readAccountHoldings(createFirestoreRemote({ fs, db: firebaseDb(), uid }));
+  } catch (e: unknown) {
+    // The sign-in's own rule for "no connection" (signIn.ts isNetwork).
+    if (e instanceof RemoteUnavailable) throw Object.assign(new Error('network request failed'), { code: 'auth/network-request-failed' });
+    throw e;
+  }
+}
+
+/** SB9, step 1 for an Apple account: Apple's sheet once, for a fresh authorization code, then Firebase's `revokeAccessToken` (Apple
+ *  requires the sign-in token to be revoked when the account is deleted). `cancelled` when he closes Apple's sheet: nothing is deleted. */
+export async function revokeAppleAccess(): Promise<'ok' | 'cancelled' | 'offline' | 'failed'> {
+  const apple = appleModule();
+  if (!apple || !(await apple.isAvailableAsync().catch(() => false))) return 'failed';
+  try {
+    const a = await apple.signInAsync({ requestedScopes: [] });
+    if (!a.authorizationCode) return 'failed';
+    await revokeAccessToken(firebaseAuth(), a.authorizationCode);
+    return 'ok';
+  } catch (e: unknown) {
+    const code = (e as { code?: string }).code ?? '';
+    if (code === 'ERR_REQUEST_CANCELED') return 'cancelled';
+    if (isNetwork(e)) return 'offline';
+    console.warn('[account] Apple revoke failed', code || e);
+    return 'failed';
+  }
+}
 
 export function createFirebaseAuth(now: () => number = () => Date.now()): AuthService {
   const auth = firebaseAuth();
@@ -100,24 +139,18 @@ export function createFirebaseAuth(now: () => number = () => Date.now()): AuthSe
     link: async (c) => fb((await linkWithCredential(auth.currentUser!, asAuthCred(c))).user),
     signInWith: async (c) => fb((await signInWithCredential(auth, asAuthCred(c))).user),
     signOut: () => fbSignOut(auth),
-    holdingsOf: async () => null,
+    holdingsOf,
     now,
     log: (line) => console.log(line),
   });
   return {
     ...signIn,
+    /** The server step only (database, photos, the Auth user); Apple's revoke and the phone's wipe are actions.ts's (SB9). */
     async deleteAccount() {
-      const user = auth.currentUser;
-      if (!user) return { kind: 'ok' };
-      try {
-        if (google()) await GoogleSignin.revokeAccess().catch(() => undefined);
-        await deleteUser(user);
-        return { kind: 'ok' };
-      } catch (e: unknown) {
-        if (isNetwork(e)) return { kind: 'offline' };
-        console.warn('[account] delete failed', (e as { code?: string }).code ?? e);
-        return { kind: 'failed' };
-      }
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { deleteAccountOnServer } = require('@/services/firebase/data') as typeof import('@/services/firebase/data');
+      const r = await deleteAccountOnServer();
+      return { kind: r === 'ok' ? 'ok' : r } as const;
     },
   };
 }
