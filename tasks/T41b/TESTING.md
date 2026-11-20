@@ -2,7 +2,7 @@
 
 Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** see the Lock log below.
+**Lock:** locked 2026-11-19 at commit `48045386` (`T41b: tests (red)`). Tests: `app/src/__tests__/T41b-photoBackup.test.ts`, `T41b-syncPrivacy.test.ts`, `T41b-restore.test.ts`, `T41b-deleteAccount.test.ts`; `firebase/tests/t41b-rules.test.ts`, `t41b-jobs.test.ts`, `t41b-sync.test.ts`; helper `app/src/testing/t41bBackup.ts`. After this only the test writer changes them, to add or strengthen.
 
 Where: app tests in `app/src/__tests__/T41b-*.test.ts(x)` (Jest, run with `--maxWorkers=2`, one file at a time); server tests in `firebase/tests/` (Vitest on the emulators, `npm --prefix tests run emulate` from `firebase/`). Fakes for the network, Apple, Firebase and Storage everywhere in Jest; the emulator tests use the real Firestore and Storage emulators. Photos in tests are the repo's demo photos, never a real person's. No AI calls. Interfaces the tests need are stubs the test writer names in this file (below, "Interfaces fixed in the stubs") before locking.
 
@@ -70,4 +70,3 @@ The stubs throw `new Error('T41b: not built')` until the implementer writes them
 - `deleteAccount` and the new job no longer requiring App Check (#386) has no behaviour test: `.run()` skips App Check.
 - Turning photo backup off and later on again (the server copies are gone, so every kept photo must go up once more) is not in TESTING.md's criteria and has no test; the implementer must reset the "already uploaded" bookkeeping on a successful turn-off.
 
-**Lock:** not locked yet (filled by the lock commit).
