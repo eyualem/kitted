@@ -386,7 +386,7 @@ describe('OS4.1 · About you', () => {
     expect(await profile()).toBeNull();
   });
 
-  it('OS4.1 · the hint, Continue and Skip are hidden while the keyboard is up (#521); an age pick closes it', async () => {
+  it('OS4.1 · the hint, Continue and Skip are hidden while the keyboard is up (#522); an age pick closes it', async () => {
     await drafts();
     // The jest Keyboard has no emitter: take the screen's own listeners and call them.
     const handlers: Record<string, () => void> = {};

@@ -2,7 +2,7 @@
 // last setup step, a plain screen (no chat bubbles, OS3). A first name ("What should Kit call you?") and five age
 // choices with nothing picked. The name stays optional (Apple 5.1.1(x)) but setup nudges for it (#506): the field opens
 // focused with the keyboard up, Continue waits for a name and an age, and a small Skip under it goes on without a name
-// (off until an age is picked). While the keyboard is up the whole bottom block is hidden (#521: it sat on top of the
+// (off until an age is picked). While the keyboard is up the whole bottom block is hidden (#522: it sat on top of the
 // keys and made the name feel required); Done or an age pick (ChoiceList dismisses the keyboard) closes it and the
 // block returns. His pick and the name as typed wait in kv (onboarding.about, never synced), so a close keeps both.
 //
@@ -75,7 +75,7 @@ export function BasicsScreen() {
     }, [isRestore]),
   );
 
-  // While the keyboard is up the dock is hidden (#521), so nothing sits on top of the keys.
+  // While the keyboard is up the dock is hidden (#522), so nothing sits on top of the keys.
   useEffect(() => {
     const show = Keyboard.addListener('keyboardWillShow', () => setKeyboard(true));
     const hide = Keyboard.addListener('keyboardWillHide', () => setKeyboard(false));
