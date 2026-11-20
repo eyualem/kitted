@@ -67,7 +67,7 @@ describe('T115b · a rule the score does not charge never shows as a cost', () =
       for (const check of uncharged) {
         const seen = Object.values(s.parts).some((p) => p.reasons.some((r) => r.check === check && r.points < 0));
         if (!seen) continue;
-        expect(costs).not.toContain(lineOf(s, check).charAt(0).toUpperCase() + lineOf(s, check).slice(1).toLowerCase());
+        expect(costs).not.toContain(lineOf(s, check).toLowerCase());
         expect(w.groups.flatMap((g) => g.rows).map((r) => r.rule.toLowerCase())).not.toContain(lineOf(s, check).toLowerCase());
         if (check === 'FF7_pooling') pooling++;
       }

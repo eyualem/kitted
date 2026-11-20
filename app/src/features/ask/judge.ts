@@ -9,6 +9,7 @@
 import { outfitReading, scoreParts, type ClosetItem, type Styles } from '@kitted/core';
 import type { ClosetItemRow, FactRow, OccasionKey } from '@/data/types';
 import { scoreOptions } from '@/features/fitcheck/scoring';
+import { chargedParts } from '@/features/why/charged';
 
 export interface Judgement {
   /** yes: no rule finds a problem · depends: a smaller problem (a better swap exists) · no: a big one (a charge of 2 or
@@ -41,7 +42,7 @@ export function judgeOutfit(items: readonly ClosetItemRow[], occasion: OccasionK
     if (l && !list.includes(l)) list.push(l);
   };
   let big = res.occasion.ceiling !== null;
-  for (const part of Object.values(res.parts)) {
+  for (const part of Object.values(chargedParts(res).parts)) { // T115b: a rule the score doesn't charge is no problem
     for (const r of part.reasons) {
       if (ASSUMED.test(r.check)) continue;
       if (r.points < 0) add(problems, r.line);
