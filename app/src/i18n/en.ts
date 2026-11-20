@@ -1091,9 +1091,14 @@ const addedInBuild = {
   'onb.example.a11y': 'Example fit check. {occasion}. Score {score} out of 10, {word}. {summary}',
   'onb.basics.yearHint': 'Pick your birth year to go on.',
   'onb.basics.never': 'Kitted is for 18 and up. It never changes your score.',
-  'onb.consent.footerPath': 'You can turn this off anytime in You → Settings → Privacy & data.',
-  'onb.consent.introLater': "Before I score a photo, here's what happens to it.",
-  'onb.consent.agreeLater': 'Agree',
+  // Nov 19 (#521, SY5): the agreement reads as an agreement. Settings' page went in T34, so the path is You → Privacy & data.
+  'onb.consent.footerPath': 'You can turn this off anytime in You → Privacy & data.',
+  'onb.consent.title': 'Privacy agreement',
+  'onb.consent.lead': 'Please read this and agree before your first fit check. Nothing is sent until you do.',
+  'onb.consent.panelHeader': 'Kitted privacy agreement',
+  'onb.consent.agreeLine': 'By tapping Agree and continue, you agree to this privacy agreement.',
+  'onb.consent.policy': 'Read the full Privacy Policy',
+  'onb.consent.agreeLater': 'Agree and continue',
   // Consent version 2 (#329): questions go to OpenAI (GPT-5.6 Luna), photos still to Google's Gemini; the chat's
   // context (style picks, the fit he likes if given, what he told Kit, the closet as words) is said in full (D2;
   // height and build were sent until #375 and are gone; less is sent, so the version stays 2);

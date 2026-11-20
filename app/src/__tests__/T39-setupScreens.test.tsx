@@ -48,7 +48,7 @@ const HINT = 'Pick your age to go on.';
 const RESTORE_TITLE = 'Welcome back';
 const RESTORE_LINE = "Your age first, then I'll bring back your fits.";
 const OLD_RESTORE = "Welcome back. Your birth year first, then I'll bring back your fits.";
-const INTRO = "Before I score a photo, here's what happens to it.";
+const INTRO = "Please read this and agree before your first fit check. Nothing is sent until you do.";
 const ROWS = [
   { id: 'age-under18', label: 'Under 18', value: 'under18' },
   { id: 'age-18-21', label: '18–21', value: '18-21' },
@@ -249,7 +249,7 @@ describe('OS3.2 · three steps, no agreement', () => {
     await mount(<OnboardingConsent />);
     expect(getId('redirect').props.href).toBe('/onboarding/basics');
     expect(byId('consent-intro')).toBeNull();
-    expect(allTexts().filter((x) => x === 'Before your first fit check')).toEqual([]);
+    expect(allTexts().filter((x) => x === 'Privacy agreement')).toEqual([]);
   });
 });
 

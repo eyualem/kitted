@@ -67,7 +67,7 @@ const JOINED = `${TITLE} ${BODY}`;
 const CHECK_LABEL = 'Check my fit. Opens the camera.';
 const LATER_LINE = "No rush. Tap the camera button whenever you're ready.";
 const TURN_ON = "Send me a fit. I'll score it and start your closet.";
-const INTRO = "Before I score a photo, here's what happens to it.";
+const INTRO = "Please read this and agree before your first fit check. Nothing is sent until you do.";
 
 // ── helpers ───────────────────────────────────────────────────────────────────────────────────────────────────────
 const pushes = () => (router.push as jest.Mock).mock.calls.map((c) => (typeof c[0] === 'string' ? c[0] : String((c[0] as { pathname?: string }).pathname)));
@@ -148,12 +148,16 @@ describe('OS5.2 · Check my fit', () => {
     await seedOffer();
     await mount(<CameraRoute />);
     expect(textAt('consent-intro')).toBe(INTRO);
-    expect(screen.getByText('Before your first fit check')).toBeTruthy();
-    expect(screen.getByText('Agree')).toBeTruthy();
+    expect(screen.getByText('Privacy agreement')).toBeTruthy();
+    expect(screen.getByText('Kitted privacy agreement')).toBeTruthy();
+    // SY5.3: four numbered clauses and the line that says what tapping means, above the buttons.
+    expect(['1', '2', '3', '4'].map((n) => screen.getAllByText(n).length > 0)).toEqual([true, true, true, true]);
+    expect(textAt('consent-agree-line')).toBe('By tapping Agree and continue, you agree to this privacy agreement.');
+    expect(screen.getByText('Agree and continue')).toBeTruthy();
     expect(screen.getByText('Not now')).toBeTruthy();
     expect(screen.getByLabelText('Close')).toBeTruthy();
     expect(byId('camera-screen')).toBeNull();
-    await press(screen.getByText('Agree'));
+    await press(screen.getByText('Agree and continue'));
     const p = (await profile())!;
     expect([p.consentVersion, p.consentAt]).toEqual(['2', T0]);
     expect(byId('camera-screen')).not.toBeNull();
@@ -197,7 +201,7 @@ describe('OS5.2 · Check my fit', () => {
         <CameraRoute />
       </>,
     );
-    await press(screen.getByText('Agree'));
+    await press(screen.getByText('Agree and continue'));
     expect(byId('camera-screen')).not.toBeNull();
     await r.unmount();
     r = await mount(<FirstCheckOfferCard m={offer} />);

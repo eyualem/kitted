@@ -38,7 +38,7 @@ name: T39 · Not now on the agreement after the offer
     below: "Want to check a fit now\\?.*"
     index: 0
 - extendedWaitUntil:
-    visible: "Before your first fit check"
+    visible: "Privacy agreement"
     timeout: 10000
 - assertNotVisible: "Take photo"
 - tapOn: "Not now"
@@ -58,7 +58,7 @@ name: T39 · Not now on the agreement after the offer
 # The camera again, from the accessory: the agreement again, Not now again, still one "Turn on fit checks".
 - tapOn: "Check my fit\\. Opens the camera\\."
 - extendedWaitUntil:
-    visible: "Before your first fit check"
+    visible: "Privacy agreement"
     timeout: 10000
 - tapOn: "Not now"
 - extendedWaitUntil:
