@@ -66,4 +66,41 @@
   Results after the change (Jest, one file at a time, `--maxWorkers=2`): `testGuards` 4, `syncSchema` 10, `scenarios` 3, `T41b-photoBackup` 14, `T41b-syncPrivacy` 7, `T41b-restore` 15, `T41b-deleteAccount` 10, all passing. Commit `9d91426f`.
 
 ## Review
-(Reviewer fills this in.)
+
+### Round 1 (reviewer, Nov 20)
+**Criteria** (spec SB4, SB5, SB6, SB7 ids, SB9; checks from TESTING.md):
+- SB4.1 off by default, no upload while off: done (engine's own `backUp()` and `backup.ts` both gate it; planted bug 1 caught).
+- SB4.2 owner-only rules: done (storage rules untouched; locked emulator test).
+- SB4.3 turn off deletes server photos only after confirm; offline or failed changes nothing: done (`photoBackup.ts`, `privacy.tsx`). Off then on again re-uploads: done by reading (`turnOffPhotoBackup` clears `syncFiles` and every row's `files`), but no test pins it (defect 3).
+- SB5.1 chat, name, age band, birth year, consent, the Keychain lock never leave the phone: done (schema `chat: 'local'`, profile omit list, `onboardingDone` local; the Keychain lock is in no table or kv; planted bug 3 caught).
+- SB6.1 real holdings, profile-only restore, restore pulls then skips setup: done for `restore.ts`. Under 18 pulls nothing: **not done in the real app** (defect 1).
+- SB7.1 real `inAccount`: done (`accountChoice` before the choice; "Use the account's" not offered when ids can't be read; never `[]` for a real account; `[]` only for a demo account).
+- SB9.1 revoke, server, phone, once each, failure leaves the phone: done (`runDeleteAccount`; planted bug 2 caught). Age lock: `deleteAllData` never touches `kitted.ageBlocked`, only the device id. T21a `devices/*` untouched by `deleteEverything`. After a successful delete backup stays paused (defect 2).
+- `ACCOUNTS_BUILT` false: done (still `false`; `syncAllowed()` is false, `startBackup` returns, tracking's `isOn` is false so no write is recorded, the photo switch and photo step need an account or a Firebase sign-in).
+- Merge of main: `firebase/functions/src/api/*` and `app/src/services/server` unchanged by this branch (empty diff vs merge-base).
+- `deleteAccount` and `deleteBackedUpPhotosJob`: uid only from `req.auth`, never from data; signed-out refused. Fine.
+- `purgeInactiveBefore` queries `lastActiveAt < cutoff`; Firestore skips docs without the field, so a port gap cannot delete a live account. The purge simply never sees new accounts (follow-up).
+- Lock: `git diff 68f1e59a..HEAD` on the locked tests is the helper rename `fit` to `fitRow` plus the TESTING.md lock-log line, as Disputes says. Clean.
+- Screenshots (6, light): no clipped text, wrong words or missing elements. The photo step on the sheet keeps the sheet title `Keep your fits` above the signed-in line (matches the spec's step; fine).
+- The session ran `npm run check` (184 suites) and the emulator suite (110/110); not re-run.
+
+**Planted bugs** (each reverted, tree clean after each):
+1. Upload while off (`backup.ts`: `backUpPhotos: () => true` and the files block always runs) with `T41b-photoBackup.test.ts`: 3 failed, 11 passed. Caught.
+2. Wipe before the server answers (`deleteAccount.ts`: wipe moved before `deleteServer`) with `T41b-deleteAccount.test.ts`: 6 failed. Caught.
+3. Chat row synced (`schema.ts`: `chat` back to `chatMessages`) with `T41b-syncPrivacy.test.ts`: 3 failed, 4 passed. Caught.
+
+**Defects**
+1. **code** · `app/src/sync/appBackup.ts` (the `onChange(['kv'], () => schedule(0), ACCOUNT_KEY)` hook) with `backup.ts` `round()` and `account.ts` `afterSignIn`: from Welcome, `afterSignIn` saves `account.user` before the age question, which fires a backup round at once. The round passes the gate (allowed, account saved, Firebase user matches), runs `join` and pulls the account's rows onto the phone and sets `sync.uid`, before he has answered his age. A minor who then picks under 18 is signed out but the account's rows are already on the phone. This breaks SB6.1b ("under 18 pulls nothing"). The same happens if the app is closed between sign-in and the age answer (the next launch's round pulls). Wiring only, so no locked test sees it. Fix: no round (and no recording) while a restore is pending, for example skip the round unless onboarding is done, or while the resume step is `basics` for an account with no `sync.uid`; and a round must also refuse on a phone with the age lock set (`getAgeBlocked()`).
+2. **code** · `app/src/features/account/actions.ts` with `appBackup.ts` (`halted`): `haltBackup()` sets `halted = true` and only `resumeBackup()` clears it. After a successful delete nothing clears it, so if he signs in again in the same session (Welcome after the wipe) every round returns `'off'` until the app is relaunched, while the sheet says `Your fits are backed up.` Fix: clear `halted` after the wipe (the account is gone) or when the account key changes to a new account.
+3. **test** · SB4.3 / the Decisions note: turning photo backup off and on again must re-upload every photo. The code does it, but no locked test pins it (TESTING.md says so itself). A one-test addition in `T41b-photoBackup.test.ts`: photos up, turn off (job ok), turn on, sync, `upload` is called again for every kept photo. Without it, a later edit to `turnOffPhotoBackup` can silently stop re-uploads.
+
+**Small things worth a later look (never blocks)**
+- A round that is already uploading when he turns photo backup off (the cached `photosOn` is true) can upload one more file after the server job ran. Rare; `turnOffPhotoBackup` could wait for the running round (as `haltBackup` does).
+- `isOffline` in `services/firebase/data.ts` matches the words unavailable, deadline, network or offline in a code or message; a server error that mentions "network" would read as offline. Harmless (nothing changes either way).
+- The storage transport's `upload` does not itself check the setting; only the engine and `backup.ts` do. Fine today (one caller).
+- On "Try again" after a failed server step, an Apple account sees Apple's sheet again (the whole order reruns, as the test pins).
+- `RestoreScreen` and `SignInSheet` use the tracked `store`, so a restore's pull is recorded as local changes if `sync.uid` was already set (see defect 1); once defect 1 is fixed this is harmless.
+- `touch`/`lastActiveAt` is not ported, so the 18-month purge never sees new accounts.
+- Not verified: the switch's Cancel path on a device, anything against real Firebase, Apple or Google, dark and largest text.
+
+**Verdict: not ready** (defects 1 and 2 code, defect 3 test).
