@@ -12,7 +12,12 @@
 - **Decided (the founder, Nov 19, "Count stays"):** "Delete account and all data" leaves the phone's hashed count. T42 must not delete `devices/*`. Needs one privacy line, drafted in the PR and shipped only on his yes. The App Store privacy label will need "Device ID, app functionality" (his, in App Store Connect).
 
 ## Built
-(filled in after the build)
+- **Server:** a call may carry `X-Kitted-Device` (16-64 letters, digits, dashes); a bad one is `400 badRequest / device`, a missing one is allowed unless `server/config.requireDevice` is true (default false, only a real `true` counts). The handler hashes it (sha256) and the store counts the day on the account and on `devices/{hash}/usageDays/{day}`: the phone has its own time-zone record (`devices/{hash}`: `tz`, `tzChangedAt`, L8's 20 h rule), both days must say yes and only then both are written, and `finish` gives the check back on both (the Ticket carries `{hash, day}`). The raw ID is never stored or logged. The sweep already covers `devices/*/usageDays` (collection group), so `index.ts` is unchanged.
+- **Extra fix in `store.ts` (not in the tests' list):** the config cache treated a clock that went backwards as fresh (`now() - at < ttl` is true when negative), so a stale config could be served; it now needs age >= 0. The emulator run exposed it (one test moves the clock forward, the next test's clock starts earlier).
+- **App:** `deviceId.ts` reads the Keychain ID (`getDeviceId`), makes a random UUID with expo-crypto and saves it (`setDeviceId`) if none; calls that start together share one lookup. `serverTransport` takes a `device` option and sends `X-Kitted-Device` on photo and ask calls (not the tier GET); if the Keychain can't be read the call goes without it. Wired in `services/server/index.ts`. Where expo-crypto's native module is missing (jest, web preview) it falls back to a Math.random ID.
+- **Files:** `firebase/functions/src/api/handler.ts`, `firebase/functions/src/api/store.ts`, `app/src/services/server/deviceId.ts`, `transport.ts`, `index.ts`.
+- **Results:** emulator run: 95 of 95 pass. App jest: 180 suites, 2903 passed (the 3 device tests included). `npm run check`: tsc, lint and the full jest pass, but its `@kitted/core` vitest step fails on one timeout (the parts parity test, 5.4 s against the 5 s limit; a core file this task does not touch, on a loaded Mac), so `check` as a whole did not finish green.
+- **Demo screens:** none (no user-visible change). Not done: the privacy line and App Store label (the founder's); the T23/T20 gaps listed in the testing contract.
 
 ## Disputes
 
