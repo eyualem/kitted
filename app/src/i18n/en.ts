@@ -119,7 +119,8 @@ const addedInBuild = {
   'game.check.startOver': 'Start over',
   'game.check.keepGoing': 'Keep going',
   'game.order.title': 'Now put them in order',
-  'game.order.line': "Tap the one that's more you.", // the founder, Nov 18: drop "You said Me to {n}."
+  'game.order.line': 'Which one do you like more?', // the founder, Nov 19: "Which one's more you?" might throw him off before his style is narrowed (was "Tap the one that's more you.")
+  'game.order.undo': 'Undo', // SG2: takes back the last this-or-that (on the first pair, the last card); the same step as Back
   'game.results.title': "Here's your style",
   'game.results.line': 'Your top looks, in order. Not quite right? Drag, remove or add one.',
   'game.results.lineOne': 'Your top look. Not quite right? Add one, or play again.',

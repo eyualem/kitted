@@ -64,6 +64,33 @@ name: T113 · the style game
 - assertNotVisible: "Outfit 2 of 8.*"
 - assertVisible: "Is this your style\\?"
 
+# ── Screen 323: put them in order; the line, a pick, Undo twice (SG2.3) ─────────────────────────────────────────────
+- runFlow:
+    file: ../common/open-demo.yaml
+    env:
+      SCREEN: "323"
+- extendedWaitUntil:
+    visible: "Now put them in order"
+    timeout: 90000
+- assertVisible: "Which one do you like more\\?"
+- assertNotVisible: "Tap the one that's more you\\."
+- assertVisible: "Undo"
+- tapOn:
+    id: "rank-pick-left"
+- waitForAnimationToEnd:
+    timeout: 3000
+# Undo takes the pick back: the first pair again.
+- tapOn: "Undo"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Now put them in order"
+# On the first pair, Undo goes back to card 8 (one answer back).
+- tapOn: "Undo"
+- extendedWaitUntil:
+    visible: "Outfit 8 of 8, view 1 of 2\\. .*"
+    timeout: 5000
+- assertNotVisible: "Now put them in order"
+
 # ── Screen 324: Here's your style, three looks ──────────────────────────────────────────────────────────────────────
 - runFlow:
     file: ../common/open-demo.yaml

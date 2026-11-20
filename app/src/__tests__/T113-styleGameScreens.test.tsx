@@ -72,7 +72,8 @@ const START_OVER = 'Start over';
 const KEEP_GOING = 'Keep going';
 const PEEK_HINT = 'Not sure? Tap it for another outfit.';
 const RANK_TITLE = 'Now put them in order';
-const RANK_LINE = "Tap the one that's more you."; // the founder, Nov 18 (#502): no "You said Me to {n}."
+const RANK_LINE = 'Which one do you like more?'; // the founder, Nov 19 (#521); Nov 18 (#502) it was "Tap the one that's more you."
+const RANK_UNDO = 'Undo'; // SG2.3
 const RES_TITLE = "Here's your style";
 const RES_LINE = 'Your top looks, in order. Not quite right? Drag, remove or add one.';
 const RES_ONE = 'Your top look. Not quite right? Add one, or play again.';
@@ -644,6 +645,53 @@ describe('SG2.1 · the ranking', () => {
     await advance(100);
     expect(st().game.rounds).toHaveLength(0);
     await advance(30);
+    expect(st().game.rounds.map((r) => r.win)).toEqual(['streetwear']);
+  });
+});
+
+// ── SG2.3 · Undo under the pair ───────────────────────────────────────────────────────────────────────────────────
+describe('SG2.3 · Undo on the ranking', () => {
+  it('SG2.3 · Undo is shown, takes back the last pick and, on the first pair, goes back to card 8', async () => {
+    await setUpGame(store(), SCREEN_303);
+    await mount(<StyleGameScreen />);
+    expect(textOf(buttonIn('rank-undo'))).toBe(RANK_UNDO);
+    expect(buttonIn('rank-undo').props.accessibilityRole).toBe('button');
+    // The first pair: Undo goes back to the last card, 7 answers kept (the same step as Back).
+    await pressId('rank-undo');
+    await advance(SETTLE_MS);
+    expect(st().stage).toBe('cards');
+    expect(st().game.answers).toHaveLength(7);
+  });
+
+  it('SG2.3 · a pick, then Undo: the first pair again, on the same sides', async () => {
+    await setUpGame(store(), SCREEN_303);
+    await mount(<StyleGameScreen />);
+    await press(getId('rank-pick-left'));
+    await advance(SETTLE_MS);
+    expect(st().game.rounds).toHaveLength(1);
+    const second = [label('rank-pick-left'), label('rank-pick-right')];
+    await pressId('rank-undo');
+    await advance(SETTLE_MS);
+    expect(st().stage).toBe('ranking');
+    expect(st().game.rounds).toHaveLength(0);
+    expect([label('rank-pick-left'), label('rank-pick-right')]).toEqual([desc('workwear', 1), desc('streetwear', 1)]);
+    expect(second).not.toEqual([label('rank-pick-left'), label('rank-pick-right')]);
+  });
+
+  it('SG2.3 · Undo in the pause after a tap takes that tap back and keeps the pair', async () => {
+    await setUpGame(store(), SCREEN_303);
+    await mount(<StyleGameScreen />);
+    await press(getId('rank-pick-left'));
+    await advance(100);
+    await pressId('rank-undo');
+    await advance(SETTLE_MS);
+    expect(st().stage).toBe('ranking');
+    expect(st().game.rounds).toHaveLength(0);
+    expect(st().game.answers).toHaveLength(8);
+    expect([label('rank-pick-left'), label('rank-pick-right')]).toEqual([desc('workwear', 1), desc('streetwear', 1)]);
+    // The pair takes a tap again.
+    await press(getId('rank-pick-right'));
+    await advance(SETTLE_MS);
     expect(st().game.rounds.map((r) => r.win)).toEqual(['streetwear']);
   });
 });
