@@ -49,12 +49,13 @@ Guys who aren't into fashion don't know if an outfit works or what one change wo
 1. Welcome: a code-drawn outfit and its score card, no photo ("See an example check" shows a scored example card, nothing sent; `specs/onboarding-screens.md`).
 2. Play the style game (`specs/style-game.md`): 8 "Me or not me?" cards, a few this-or-thats to order his Me's, then keep, reorder or fix his top looks, or describe his style in his own words (the founder, Nov 18; #488).
 3. About you, a plain form like every setup step: "What should Kit call you?" (first name: the keyboard opens on it and Continue waits for it, with a small Skip to go on without one; #506) above "How old are you?" (age bands, none picked). Under 18: a polite stop. Plus Apple's Declared Age Range.
-4. Setup ends in Stylist: Kit's hello and "Want to check a fit now?" (Check my fit / Later). The camera never opens on its own.
-5. Consent, shown when he first opens the camera: names Google (photos), OpenAI (questions) and PostHog (usage counts), says what's sent and kept, and says Kit is an AI.
-6. First fit check → result, with Re-check or Later.
-7. The optional closet step ("Tap the clothes you already own").
-8. The soft upgrade page (skippable from the first frame).
-9. The notification ask: the time he usually gets dressed, after his first scored fit or when he taps Later at step 4; Apple's prompt only after he says yes on Kit's card (`specs/notifications.md`).
+4. A two-stop tour of the real Closet and Lookbook tabs, each filled with an animated example, with Skip (`specs/app-tour.md`; the founder, Nov 19).
+5. Setup ends in Stylist: Kit's hello and "Want to check a fit now?" (Check my fit / Later), only after the tour. The camera never opens on its own.
+6. Consent, shown when he first opens the camera: names Google (photos), OpenAI (questions) and PostHog (usage counts), says what's sent and kept, and says Kit is an AI.
+7. First fit check → result, with Re-check or Later.
+8. The optional closet step ("Tap the clothes you already own").
+9. The soft upgrade page (skippable from the first frame).
+10. The notification ask: the time he usually gets dressed, after his first scored fit or when he taps Later at step 5; Apple's prompt only after he says yes on Kit's card (`specs/notifications.md`).
 - **Way back:** onboarding has Back; every camera, sheet and paywall has a visible X or Done from the first frame. Closing mid-setup reopens on the step he reached.
 
 ### A fit check
@@ -69,8 +70,8 @@ Offered on Welcome ("I already have an account"), in one chat card after he's se
 ## Features
 
 ### F1. Onboarding
-The first run above, 7 taps to the first check. Goal, boldness and fit are asked later by Kit, when they change an answer. New users learn by doing: the first check is the lesson, and its pieces slide into Closet, which shows a badge; no tour, no tips (`specs/setup-and-you.md` SY2).
-- F1.1 A fresh install reaches the camera in 18 taps or fewer when he says Me to 3 looks or fewer (17 until Nov 18, before card 1 taught the swipe, #504; 7 until Nov 18, when the style game replaced the tile grid, #488; 6 until Nov 11, #449), with no account and no paywall on the way, and the camera never opens until he taps Check my fit.
+The first run above, 7 taps to the first check. Goal, boldness and fit are asked later by Kit, when they change an answer. New users learn by doing: right after setup, a two-stop tour shows Closet and Lookbook filling with an example (`specs/app-tour.md`, the founder, Nov 19); then the first check is the lesson, and its pieces slide into Closet, which shows a badge; no tips (`specs/setup-and-you.md` SY2).
+- F1.1 A fresh install reaches the camera in 20 taps or fewer when he says Me to 3 looks or fewer (18 until Nov 19, before the app tour's Next and Done; 17 until Nov 18, before card 1 taught the swipe, #504; 7 until Nov 18, when the style game replaced the tile grid, #488; 6 until Nov 11, #449), with no account and no paywall on the way, and the camera never opens until he taps Check my fit.
 - F1.2 The age question starts with nothing picked; "Under 18" shows the stop screen and no camera; Declared Age Range under 18 does the same.
 - F1.3 Nothing is sent anywhere before consent is agreed; a photo taken before consent is kept and scored after Agree.
 - F1.4 The name is optional (Apple 5.1.1(x): a request for a name must stay optional), but setup nudges for it: the field opens with the keyboard up, Continue waits for a name, and a small `Skip` goes on without one (the founder, Nov 18, #506). Skipping it changes nothing but the greetings ("Morning." instead of "Morning, Alex."). If he signs in with Apple and gave no name, Apple's first name fills it.
