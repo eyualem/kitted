@@ -27,9 +27,10 @@ After this, a new user finds his style by playing, not by reading style names: e
 - **Back** undoes the last card (or the last ranking pick); on card 1 it goes to Welcome.
 
 ## SG2. Now put them in order
-- Shown only when he said Me to 2 or more looks. Title `Now put them in order`, line `Tap the one that's more you.` (the founder, Nov 18: no "You said Me to {n}.", #502)
+- Shown only when he said Me to 2 or more looks. Title `Now put them in order`, line `Which one do you like more?` (the founder, Nov 19, #521: "Which one's more you?" might throw him off before his style is narrowed; Nov 18 it was `Tap the one that's more you.`, no "You said Me to {n}.", #502). The title stays: it says what the step is for, the line asks the question.
 - Two of his Me's side by side, each on its second drawing, mid-screen in thumb reach. He taps the one that's more him.
 - Each Me is placed into a top 3 by binary insertion: at most 2 taps per Me after the first. The first pair starts on a random side, then sides alternate, so neither side wins more often.
+- **Undo** (the founder, Nov 19, #521): a plain text button `Undo` under the two outfits, always shown. It takes back his last this-or-that pick; on the first pair it goes back to card 8 with his 7 answers kept. It is the same one step as the Back arrow (SG7.4), made visible, so it adds no tap to the happy path. Tapped in the 260 ms pause after a pick, it takes that tap back and the pair stays (Back does the same). After an undo the game is exactly as it was before the pick, so binary insertion (SG2.2) goes on from there.
 - With 1 Me, this step is skipped; with 0, he lands on SG6.
 
 ## SG3. Here's your style
@@ -56,7 +57,7 @@ Three small ones, each kept because it helped in the flow test's simulation (mad
 - **FS3. The results line names the fixes** (words only): `Your top looks, in order. Not quite right? Drag, remove or add one.` *(Why: people fix a wrong result more often when the screen says they can, especially a guy whose style isn't one of the 8.)*
 - **FS4. Catch "swiping to browse" (#503, from a real tester).** If his first 3 answers are all No, each given less than 1.5 s after its card appeared, with no Back in between, a small card shows before card 4: `Just checking: left means it's not your style.` with `Start over` (primary) and `Keep going`. Start over clears those 3 answers and returns to card 1 of the same deal (no overlay again); Keep going goes on to card 4. It shows at most once per game. *(Why: a guy who thinks a swipe means "next" says No to everything at browsing speed; a guy who really dislikes the first three loses one tap.)*
 - **Back, already there, pinned down:** undoes exactly one answer (a card or a this-or-that); on card 1 it goes to the previous setup step, and coming back resumes the same game (same deal, same answers).
-- **Tested and dropped, so not to add:** a visible Undo under the card (Back already does it); a second look offered when he says Me to 0 or 1 (it talked the guy whose style isn't listed into looks he doesn't like, −4.8 points); a double-check at 6+ Me's; an automatic second drawing when he hesitates (a step for nearly everyone).
+- **Tested and dropped, so not to add:** a visible Undo under the card (Back already does it; the this-or-that step got one on Nov 19, SG2, because the founder wanted it visible there); a second look offered when he says Me to 0 or 1 (it talked the guy whose style isn't listed into looks he doesn't like, −4.8 points); a double-check at 6+ Me's; an automatic second drawing when he hesitates (a step for nearly everyone).
 - **Known cost, left alone:** a guy who says Me to all 8 makes about 13 this-or-thats; "likes almost everything" is the weakest group (77 → 78%).
 
 ## SG8. What's saved
@@ -88,6 +89,7 @@ Three small ones, each kept because it helped in the flow test's simulation (mad
 **SG2**
 - SG2.1 With 2+ Me's the ranking shows two Me's on second drawings; with a seeded game, the sides start random and alternate; with 1 Me it's skipped; with 0, SG6.
 - SG2.2 Binary insertion places each Me with at most 2 taps after the first; a player who prefers Streetwear > Vintage sport > Outdoor > Workwear and says Me to those four ends with Streetwear, Vintage sport, Outdoor.
+- SG2.3 The ranking step reads `Which one do you like more?` under `Now put them in order`, with an `Undo` button under the pair. Undo after a pick shows the previous pair again on the same sides; on the first pair it shows card 8 with 7 answers; in the pause after a tap it cancels that tap. A pick undone and answered the other way ranks by the new answer (the streetwear player still ends with Streetwear, Vintage sport, Outdoor after any undos).
 **SG3–SG6**
 - SG3.1 Drag reorders and the numbers follow; × removes with Undo for 5 s; Back restores each change.
 - SG3.2 Continue is off with no looks and no words, on with either; it saves looks in order, words and No's, and goes to About you.
