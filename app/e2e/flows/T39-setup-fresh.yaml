@@ -41,7 +41,7 @@ name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesso
 - assertNotVisible: "Kit: .*"
 - assertNotVisible: ".*Good pick.*"
 - assertNotVisible: "Which of these would you actually wear\\? Tap up to 3\\."
-- assertNotVisible: "Before your first fit check"
+- assertNotVisible: "Privacy agreement"
 - assertNotVisible: "Take photo"
 - assertNotVisible: "Continue free"
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
@@ -98,7 +98,7 @@ name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesso
 - assertNotVisible: "Kit: .*"
 - assertNotVisible: ".*Good pick.*"
 - assertNotVisible: "Not sure yet"
-- assertNotVisible: "Before your first fit check"
+- assertNotVisible: "Privacy agreement"
 - assertNotVisible: "Take photo"
 - assertNotVisible: "Continue free"
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
@@ -125,7 +125,7 @@ name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesso
     text: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
     below: ".*I'm Kit, your stylist\\."
 - assertVisible: "Later"
-- assertNotVisible: "Before your first fit check"
+- assertNotVisible: "Privacy agreement"
 - assertNotVisible: "Continue free"
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
 # The camera doesn't open on its own: wait 3 s, then check.
@@ -134,7 +134,7 @@ name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesso
     timeout: 3000
     optional: true
 - assertNotVisible: "Take photo"
-- assertNotVisible: "Before I score a photo, here's what happens to it\\."
+- assertNotVisible: "Please read this and agree before your first fit check\\. Nothing is sent until you do\\."
 
 # Tap 17: the card's Check my fit (the first of the two "Check my fit" buttons; the accessory's is below it).
 - tapOn:
@@ -142,10 +142,10 @@ name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesso
     below: "Want to check a fit now\\?.*"
     index: 0
 - extendedWaitUntil:
-    visible: "Before your first fit check"
+    visible: "Privacy agreement"
     timeout: 10000
-- assertVisible: "Before I score a photo, here's what happens to it\\."
-- assertVisible: "Agree"
+- assertVisible: "Please read this and agree before your first fit check\\. Nothing is sent until you do\\."
+- assertVisible: "Agree and continue"
 - assertVisible: "Not now"
 - assertNotVisible: "Kit: .*"
 - assertNotVisible: "Take photo"
@@ -153,7 +153,7 @@ name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesso
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
 
 # Tap 18.
-- tapOn: "Agree"
+- tapOn: "Agree and continue"
 - extendedWaitUntil:
     visible: "Take photo"
     timeout: 10000

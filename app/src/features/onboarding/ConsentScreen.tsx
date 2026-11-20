@@ -9,7 +9,7 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Icon, IconButton, KButton, KCard, KText, TextLink, space, useTheme } from '@/design-system';
+import { IconButton, KButton, KText, TextLink, radius, space, useTheme } from '@/design-system';
 import * as WebBrowser from 'expo-web-browser';
 import { PRIVACY_URL } from '@/config/links';
 import { store } from '@/data/db';
@@ -20,12 +20,12 @@ import { dropAfterConsent, resumeAfterConsent } from '@/features/camera/startChe
 import { giveConsent } from './complete';
 import { declineAgreement } from './firstCheckOffer';
 
-type Row = { icon: string; title: StringKey; body?: StringKey; bullets?: StringKey[] };
-const ROWS: Row[] = [
-  { icon: 'face.dashed', title: 'onb.consent.sentTitle', body: 'onb.consent.sentBody', bullets: ['onb.consent.sent1', 'onb.consent.sent2', 'onb.consent.sent3'] },
-  { icon: 'hand.raised', title: 'onb.consent.notTitle', body: 'onb.consent.notBody' },
-  { icon: 'iphone', title: 'onb.consent.keptTitle', bullets: ['onb.consent.kept1', 'onb.consent.kept2', 'onb.consent.kept3'] },
-  { icon: 'info.circle', title: 'onb.consent.aiTitle', body: 'onb.consent.aiBody' },
+type Clause = { title: StringKey; body?: StringKey; bullets?: StringKey[] };
+const CLAUSES: Clause[] = [
+  { title: 'onb.consent.sentTitle', body: 'onb.consent.sentBody', bullets: ['onb.consent.sent1', 'onb.consent.sent2', 'onb.consent.sent3'] },
+  { title: 'onb.consent.notTitle', body: 'onb.consent.notBody' },
+  { title: 'onb.consent.keptTitle', bullets: ['onb.consent.kept1', 'onb.consent.kept2', 'onb.consent.kept3'] },
+  { title: 'onb.consent.aiTitle', body: 'onb.consent.aiBody' },
 ];
 
 /** After "Agree" (sheet only): 'camera' opens it; 'close' just closes (You › Privacy); 'resume' closes and scores the
@@ -85,25 +85,25 @@ export function ConsentScreen({ mode, after = 'camera', onAgreed }: { mode: 'she
     router.back();
   };
 
-  const rows = (
-    <KCard>
-      <KText variant="headline" accessibilityRole="header" style={styles.cardHeader}>
-        {t('onb.consent.header')}
-      </KText>
-      {ROWS.map((r, i) => (
+  const panel = (
+    <View style={[styles.panel, { borderColor: colors.ink3, backgroundColor: colors.surface }]}>
+      <View style={[styles.panelHeader, { backgroundColor: colors.surface2, borderBottomColor: colors.ink3 }]}>
+        <KText variant="subheadline" weight="600" accessibilityRole="header">
+          {t('onb.consent.panelHeader')}
+        </KText>
+      </View>
+      {CLAUSES.map((c, i) => (
         <View
-          key={r.title}
-          style={[styles.row, i > 0 && { borderTopWidth: 1, borderTopColor: colors.line }]}
+          key={c.title}
+          style={[styles.clause, i > 0 && { borderTopWidth: 1, borderTopColor: colors.line }]}
           accessible
-          accessibilityLabel={[t(r.title), r.body ? t(r.body, { provider }) : '', ...(r.bullets ?? []).map((b) => t(b))].filter(Boolean).join(' ')}
+          accessibilityLabel={[`${i + 1}.`, t(c.title), c.body ? t(c.body, { provider }) : '', ...(c.bullets ?? []).map((b) => t(b))].filter(Boolean).join(' ')}
         >
-          <View style={{ width: 23.5, paddingTop: 1 }}>
-            <Icon name={r.icon as never} size={19.5} color="accent" />
-          </View>
+          <KText variant="subheadline" weight="700" style={styles.num}>{i + 1}</KText>
           <View style={{ flex: 1, gap: 4 }}>
-            <KText variant="subheadline" weight="600">{t(r.title)}</KText>
-            {r.body ? <KText variant="footnote" color="ink2">{t(r.body, { provider })}</KText> : null}
-            {(r.bullets ?? []).map((b) => (
+            <KText variant="subheadline" weight="600">{t(c.title)}</KText>
+            {c.body ? <KText variant="footnote" color="ink2">{t(c.body, { provider })}</KText> : null}
+            {(c.bullets ?? []).map((b) => (
               <View key={b} style={{ flexDirection: 'row', gap: 6 }}>
                 <KText variant="footnote" color="ink2">•</KText>
                 <KText variant="footnote" color="ink2" style={{ flex: 1 }}>{t(b)}</KText>
@@ -112,30 +112,39 @@ export function ConsentScreen({ mode, after = 'camera', onAgreed }: { mode: 'she
           </View>
         </View>
       ))}
-    </KCard>
+    </View>
   );
 
   return (
     <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: mode === 'sheet' ? space.l : insets.top }]}>
-      <View style={styles.closeRow}>
-        <IconButton icon="close" label={t('common.close')} onPress={close} />
+      <View style={styles.bar}>
+        <View style={styles.barSide} />
+        <KText variant="headline" accessibilityRole="header" style={styles.barTitle}>
+          {t('onb.consent.title')}
+        </KText>
+        <View style={[styles.barSide, { alignItems: 'flex-end' }]}>
+          <IconButton icon="close" label={t('common.close')} onPress={close} />
+        </View>
       </View>
       <ScrollView contentContainerStyle={styles.thread}>
         {/* Plain text, no Kit bubble (T39, OS3). */}
-        <KText testID="consent-intro" variant="body" color="ink">
-          {t('onb.consent.introLater')}
+        <KText testID="consent-intro" variant="subheadline" color="ink2" style={{ paddingHorizontal: 4 }}>
+          {t('onb.consent.lead')}
         </KText>
-        {rows}
+        {panel}
         <KText variant="footnote" color="ink3" style={{ paddingHorizontal: 4 }}>
           {t('onb.consent.footerPath')}
         </KText>
         {PRIVACY_URL ? (
           <View style={styles.links}>
-            <TextLink title={t('acct.privacy')} color="ink2" onPress={() => void WebBrowser.openBrowserAsync(PRIVACY_URL!)} />
+            <TextLink title={t('onb.consent.policy')} color="ink" onPress={() => void WebBrowser.openBrowserAsync(PRIVACY_URL!)} />
           </View>
         ) : null}
       </ScrollView>
       <View style={[styles.dock, { paddingBottom: Math.max(insets.bottom, space.l), borderTopColor: colors.line }]}>
+        <KText testID="consent-agree-line" variant="footnote" color="ink3" style={styles.agreeLine}>
+          {t('onb.consent.agreeLine')}
+        </KText>
         <KButton title={t('onb.consent.agreeLater')} onPress={() => void finish(true)} disabled={busy} />
         <KButton title={t('onb.consent.notNow')} kind="secondary" onPress={() => void finish(false)} disabled={busy} />
       </View>
@@ -145,11 +154,17 @@ export function ConsentScreen({ mode, after = 'camera', onAgreed }: { mode: 'she
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  closeRow: { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: space.gutter },
-  thread: { paddingHorizontal: space.gutter, paddingTop: space.xs, paddingBottom: space.xl, gap: space.m },
-  cardHeader: { paddingTop: 13, paddingHorizontal: 17 },
-  row: { flexDirection: 'row', gap: 13, paddingVertical: 13, paddingHorizontal: 17 },
+  bar: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: space.gutter, minHeight: 44 },
+  barSide: { width: 44 },
+  barTitle: { flex: 1, textAlign: 'center' },
+  thread: { paddingHorizontal: space.gutter, paddingTop: space.m, paddingBottom: space.xl, gap: space.m },
+  // A bordered page, like a document: a header strip and numbered clauses (Nov 19, SY5).
+  panel: { borderWidth: 1.5, borderRadius: radius.thumb, overflow: 'hidden' },
+  panelHeader: { paddingVertical: 9, paddingHorizontal: 14, borderBottomWidth: 1.5 },
+  clause: { flexDirection: 'row', gap: 10, paddingVertical: 12, paddingHorizontal: 14 },
+  num: { width: 18 },
   // A hairline over the dock so the scrolling text doesn't end in a hard cut under the buttons (09 UI review).
   dock: { paddingHorizontal: space.gutter, paddingTop: space.s, gap: 8, borderTopWidth: StyleSheet.hairlineWidth },
+  agreeLine: { textAlign: 'center', paddingHorizontal: 6 },
   links: { flexDirection: 'row', flexWrap: 'wrap', gap: 18, paddingHorizontal: 4 },
 });

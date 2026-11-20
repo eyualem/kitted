@@ -69,8 +69,9 @@ Removed with the tips: there's nothing left to replay. Help & about has no `Show
 - Used only in code-written lines (F1.5); never sent to Google, OpenAI or PostHog; Kit's AI answers never say it. Signing in with Apple fills an empty one with Apple's first name (F1.4, built with sign-in).
 
 ## SY5. The agreement on the first camera open (before launch)
-- Setup has no agreement step: Welcome → Looks → About you → Stylist (`specs/onboarding-screens.md` OS5): Kit's hello, then Kit's offer card. The camera never opens on its own; the agreement shows on top of the camera the first time he opens it (Check my fit, or the chat's camera button). Same words and buttons as today's agreement step (`Agree & check my fit`, `Not now`, `See an example first`).
-- `Agree & check my fit` → the camera, live. `Not now` → Stylist with the "Turn on fit checks" card, as today.
+- Setup has no agreement step: Welcome → Looks → About you → Stylist (`specs/onboarding-screens.md` OS5): Kit's hello, then Kit's offer card. The camera never opens on its own; the agreement shows on top of the camera the first time he opens it (Check my fit, or the chat's camera button).
+- **It reads and looks like an agreement (the founder, Nov 19, option B: testers "don't think that it's an agreement … it looks like a tutorial").** A title bar `Privacy agreement` with the X; the lead `Please read this and agree before your first fit check. Nothing is sent until you do.`; one bordered panel headed `Kitted privacy agreement` with four numbered clauses (1 `What gets sent`, 2 `What doesn't`, 3 `What happens to it`, 4 `Kit, your stylist, is an AI.`), their words as before and no icons; under it `You can turn this off anytime in You → Privacy & data.`, and `Read the full Privacy Policy` (opens the policy; hidden until the policy has an address). Above the buttons: `By tapping Agree and continue, you agree to this privacy agreement.` Buttons `Agree and continue` and `Not now`, the same size, nothing pre-ticked. The same screen serves the camera's first open and the sheet (You → Privacy & data, the "Turn on fit checks" card, a photo held back).
+- `Agree and continue` → the camera, live. `Not now` → Stylist with the "Turn on fit checks" card, as today. There is no `See an example first` button here (the founder, Nov 19: the example lives on that card and on Welcome).
 - Nothing is sent anywhere before he agrees (F1.3).
 
 ## SY6. Apple's age check (before launch)
@@ -126,7 +127,11 @@ Removed with the tips: there's nothing left to replay. Help & about has no `Show
 
 **SY5. The agreement**
 - SY5.1 Setup has no agreement screen; the camera never opens on its own; the first time he opens it, the agreement is on top.
-- SY5.2 `Agree & check my fit` starts the camera; `Not now` lands in Stylist with the "Turn on fit checks" card; before Agree, nothing is sent (F1.3).
+- SY5.2 `Agree and continue` starts the camera; `Not now` lands in Stylist with the "Turn on fit checks" card; before Agree, nothing is sent (F1.3).
+- SY5.3 The screen calls itself an agreement: its title is `Privacy agreement`, the panel is headed `Kitted privacy agreement`, the clauses are numbered 1 to 4, and the line `By tapping Agree and continue, you agree to this privacy agreement.` sits above the buttons. No word of it reads as a tour ("here's what happens", per-row icons).
+- SY5.4 `Agree and continue` and `Not now` are the same size and at least 44 pt tall; neither is pre-selected; no `See an example first`.
+- SY5.5 `Read the full Privacy Policy` shows only when the policy has an address and opens it; with none, it is not drawn.
+- SY5.6 Light, dark and the largest text size: nothing clipped, the panel scrolls, the buttons stay on screen.
 
 **SY6. Apple's age check**
 - SY6.1 An age band of 18+ and Apple says 18+ → setup goes on; Apple says under 18 → the age stop, no camera.
