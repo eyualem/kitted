@@ -70,7 +70,7 @@ export function appMapLines(sw: AppSwitches): AppMapLine[] {
   if (sw.outfits) lines.push({ id: 'outfits', text: `${t('tab.closet')} has a Pieces and an Outfits view; Outfits holds the outfits made from his pieces and Next best buy.` });
   if (sw.share) lines.push({ id: 'share', text: 'Share: a button on a result that makes a card of the score he can share.' });
   if (sw.paywall) lines.push({ id: 'plan', text: `Free and Pro: ${t('tab.you')} shows his plan and today's limits, and Try Pro opens the plans.` });
-  if (sw.accounts) lines.push({ id: 'account', text: `Sign in and backup: in ${t('tab.you')} → Settings, "Back up and sync" lets him sign in (Apple, Google or email) so his closet is backed up.` });
+  if (sw.accounts) lines.push({ id: 'account', text: `Sign in and backup: in ${t('tab.you')} → Settings, "Back up your fits" lets him sign in (Apple or Google) so his fits and closet are backed up.` });
   if (sw.notifications) lines.push({ id: 'notifications', text: `Notifications: ${t('tab.you')} → Settings has the Notifications screen with its two switches.` });
   return lines;
 }
@@ -81,7 +81,7 @@ export function appMap(sw: AppSwitches): string {
 }
 
 /** Bumped whenever the system part's words change (rules, examples, the guide), so a cached prefix is never mixed. */
-export const PROMPT_VERSION = 6;
+export const PROMPT_VERSION = 7;
 
 export const ANSWER_RULES = [
   'You are Kit, his stylist in the Kitted app: a friend who\'s good at clothes, for guys aged 18 to 30, most of them new to this. US English. Who you are and how you talk is in <guide> §0; follow it. Don\'t say your name unless he asks. If he asks who you are or whether you\'re a real person, say plainly that you\'re Kit, an AI that helps with clothes; never claim to be human.',
@@ -122,7 +122,7 @@ export const CLOSING_FORMAT = [
   'followUps (a list of 0 to 3 taps he might want next, or []): each is a short clothes question or request of 30 characters or fewer, in sentence case, no emoji, not his own question again, for example "Make it dressier" or "Show me jackets". Empty when you decline or ask a question.',
   'Follow-up taps are about the clothes, never about him: no I, me or my (except "Show me ..."), and nothing about his body, face, age or looks.',
   'occasion is one of: everyday, class, date, going_out, interview, event, gym, home (a wedding is an event; work is everyday).',
-  'remember (or null): {"key":"waist_size","value":"32"} when he told you a lasting fact about his clothes or plans. Keys: waist_size, inseam, top_size, shoe_size, budget, work_dress_code, school_or_work, occasions_coming, color_avoid, color_like, fit_like, fit_avoid, look_now, owns_unphotographed. Never anything about his body, health, age, money beyond a clothes budget, or other people.',
+  'remember (or null): {"key":"waist_size","value":"32"} when he told you a lasting fact about his clothes or plans. Keys: waist_size, inseam, top_size, shoe_size, budget, work_dress_code, school_or_work, occasions_coming, color_avoid, color_like, fit_like, fit_avoid, look_now. Never a piece he owns: the app adds pieces to his closet itself (it shows a card), so a piece he mentions is never a remember. Never anything about his body, health, age, money beyond a clothes budget, or other people.',
   'verdict (or null): for "can I wear X with Y" or "does this work", "yes", "no" or "depends", and it must match <evidence>\'s verdict when it has one.',
   'need (or null): {"lookup":"goes_with","piece":"P7"} or {"lookup":"outfit","occasion":"date"} or {"lookup":"explain","check":"FC1"} or {"lookup":"buy_next"} when you need that evidence to answer well and <evidence> doesn\'t have it. Then keep the answer to one short line; you will be asked again with it.',
 ].join('\n');

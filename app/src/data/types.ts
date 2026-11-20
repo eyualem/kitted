@@ -351,6 +351,11 @@ export interface ClosetAsk {
   addedFieldAliases?: Record<string, string[]> | null;
   /** Later sightings that joined this open question (#116) and moved with its "Yes", so a changed answer moves them back. */
   riders?: string[] | null;
+  /** "What is it, then?" (CB4): the piece he pointed at instead of the candidate; the sighting moved there (`answer: 'same'`). */
+  pickedId?: string | null;
+  /** CB4: the kind he confirmed for the photographed piece (`answer: 'new'`), and the piece's fields before it, so Undo and Change restore them. */
+  kind?: string | null;
+  kindUndo?: { garment: Garment; confirmedFields: string[]; profile: ClosetProfile | null; starterId: string | null } | null;
   /** Why it asks, for the card's one plain line (#117): set when the question is made. Missing on older rows. */
   reason?: AskReason | null;
   /** The word that line needs: the layer it was under ("overshirt"), or the type it read as ("sweatshirt"). */

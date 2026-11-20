@@ -2,7 +2,7 @@
 // the same checks as firebase/firestore.rules).
 import { createMemoryStore } from '@/data/memoryStore';
 import { KV, type KittedStore } from '@/data/store';
-import type { ChatMessage, FactRow, ProfileRow } from '@/data/types';
+import type { FactRow, ProfileRow } from '@/data/types';
 import { BASICS_KEY, LOOKS_KEY } from '@/features/onboarding/basics';
 import { createSyncEngine, remoteWins, SyncDisabled } from '@/sync/engine';
 import { createMemoryRemote, type MemoryRemote } from '@/sync/memoryRemote';
@@ -33,9 +33,9 @@ function phone(remote: MemoryRemote, deviceId: string, opts: { backUpPhotos?: bo
   return { inner, app, engine, clock, files, on };
 }
 
-const msg = (id: string, text: string, createdAt = 1): ChatMessage => ({
-  id, createdAt, role: 'user', kind: 'text', text, cardType: null, fitCheckId: null, outfitId: null, itemId: null, chips: [], payload: {},
-});
+// T41b (SB5.1a): chat rows no longer sync, so these engine checks use a facts row as the stand-in for "a row": its `value`
+// is the text, and its `key` can hold a photo path (the file checks), as a chat row's payload did.
+const msg = (id: string, text: string, photo = 'note', createdAt = 1): FactRow => ({ id, key: photo, value: text, source: 'told', createdAt, isDeleted: false });
 const fact = (id: string, value: string): FactRow => ({ id, key: 'budget', value, source: 'told', createdAt: 1, isDeleted: false });
 const profile = (over: Partial<ProfileRow> = {}): ProfileRow => ({
   id: 'me', birthYear: 2003, heightCm: null, build: '', fitPreference: 'regular', styles: [['minimal', 0.5]] as never, boldness: null, budget: null,
@@ -47,23 +47,23 @@ describe('E1 push once', () => {
     const remote = createMemoryRemote(T0);
     const a = phone(remote, 'dev-a');
     a.clock.now = T0 + 10;
-    await a.app.chat.put(msg('M-1', 'What shoes with grey chinos?'));
+    await a.app.facts.put(msg('M-1', 'What shoes with grey chinos?'));
     const r1 = await a.engine.push();
     expect(r1).toMatchObject({ sent: 1, batches: 1, refused: 0 });
-    const doc = remote.docs('chatMessages')[0]!;
+    const doc = remote.docs('facts')[0]!;
     expect(doc).toMatchObject({ id: 'M-1', v: 1, updatedAt: T0 + 10, deleted: false, by: 'dev-a' });
-    expect(doc.data!.chips).toBe('[]');
+    expect(doc.data!.value).toBe('What shoes with grey chinos?');
     expect(await a.engine.push()).toMatchObject({ sent: 0, batches: 0 });
     expect(remote.writes).toBe(1);
   });
   it('two changes in the same millisecond both go up', async () => {
     const remote = createMemoryRemote(T0);
     const a = phone(remote, 'dev-a');
-    await a.app.chat.put(msg('M-1', 'one'));
+    await a.app.facts.put(msg('M-1', 'one'));
     await a.engine.push();
-    await a.app.chat.patch('M-1', { text: 'two' });
+    await a.app.facts.patch('M-1', { value: 'two' });
     expect((await a.engine.push()).sent).toBe(1);
-    expect(remote.docs('chatMessages')[0]!.data!.text).toBe('two');
+    expect(remote.docs('facts')[0]!.data!.value).toBe('two');
   });
 });
 
@@ -72,18 +72,18 @@ describe('E2 deletes', () => {
     const remote = createMemoryRemote(T0);
     const a = phone(remote, 'dev-a');
     const b = phone(remote, 'dev-b');
-    await a.app.chat.put(msg('M-1', 'hi'));
+    await a.app.facts.put(msg('M-1', 'hi'));
     await a.engine.push();
     await b.engine.pull();
-    expect(await b.app.chat.get('M-1')).not.toBeNull();
+    expect(await b.app.facts.get('M-1')).not.toBeNull();
     a.clock.now += 5;
-    await a.app.chat.delete('M-1');
+    await a.app.facts.delete('M-1');
     await a.engine.push();
-    const doc = remote.docs('chatMessages')[0]!;
+    const doc = remote.docs('facts')[0]!;
     expect(doc.deleted).toBe(true);
     expect('data' in doc).toBe(false);
     await b.engine.pull();
-    expect(await b.app.chat.get('M-1')).toBeNull();
+    expect(await b.app.facts.get('M-1')).toBeNull();
   });
 });
 
@@ -126,14 +126,14 @@ describe('E5 two phones offline', () => {
     b.clock.now = T0 + 200;
     await a.app.facts.patch('F-1', { value: 'under $80' });
     await b.app.facts.patch('F-1', { value: 'under $100' });
-    await a.app.chat.put(msg('M-A', 'from a'));
-    await b.app.chat.put(msg('M-B', 'from b'));
+    await a.app.facts.put(msg('M-A', 'from a'));
+    await b.app.facts.put(msg('M-B', 'from b'));
     await a.engine.syncNow();
     await b.engine.syncNow();
     await a.engine.syncNow();
     for (const p of [a, b]) {
       expect((await p.app.facts.get('F-1'))!.value).toBe('under $100');
-      expect((await p.app.chat.all()).map((m) => m.id).sort()).toEqual(['M-A', 'M-B']);
+      expect((await p.app.facts.all()).map((m) => m.id).sort()).toEqual(['F-1', 'M-A', 'M-B']);
       expect(await p.engine.pending()).toBe(0);
     }
   });
@@ -153,10 +153,10 @@ describe('E6 a stale write', () => {
     // a edits earlier than b did, and hasn't pulled.
     a.clock.now = T0 + 300;
     await a.app.facts.patch('F-1', { value: 'older edit' });
-    await a.app.chat.put(msg('M-1', 'unrelated'));
+    await a.app.facts.put(msg('M-1', 'unrelated'));
     const r = await a.engine.push();
     expect(r).toMatchObject({ lost: 1, refused: 0 });
-    expect(remote.docs('chatMessages')).toHaveLength(1);
+    expect(remote.docs('facts').filter((d) => d.id === 'M-1')).toHaveLength(1);
     expect((await a.app.facts.get('F-1'))!.value).toBe('newest');
     expect(await a.engine.pending()).toBe(0);
   });
@@ -166,7 +166,7 @@ describe('E7 batching', () => {
   it('1,000 changes go up in 3 batches of ≤ 400', async () => {
     const remote = createMemoryRemote(T0);
     const a = phone(remote, 'dev-a');
-    for (let i = 0; i < 1000; i += 1) await a.app.chat.put(msg(`M-${i}`, `m${i}`));
+    for (let i = 0; i < 1000; i += 1) await a.app.facts.put(msg(`M-${i}`, `m${i}`));
     const r = await a.engine.push();
     expect(r).toMatchObject({ sent: 1000, batches: 3 });
     expect(remote.commits).toBe(3);
@@ -180,7 +180,7 @@ describe('E8 first sign-in and a new phone', () => {
     a.on.value = false; // signed out: nothing recorded
     await a.app.profile.put(profile());
     await a.app.facts.put(fact('F-1', 'under $60'));
-    await a.app.chat.put(msg('M-1', 'hi'));
+    await a.app.facts.put(msg('M-1', 'hi'));
     await a.app.setKv(LOOKS_KEY, JSON.stringify(['minimal', 'streetwear']));
     await a.app.setKv(KV.appearance, 'dark');
     await a.app.setKv(KV.notifyIdea, '0');
@@ -193,13 +193,14 @@ describe('E8 first sign-in and a new phone', () => {
 
     const b = phone(remote, 'dev-b');
     await b.engine.pull();
-    expect(await b.app.chat.all()).toEqual(await a.app.chat.all());
+    expect(await b.app.facts.all()).toEqual(await a.app.facts.all());
     expect(await b.app.facts.all()).toEqual(await a.app.facts.all());
     expect(await b.app.getKv(LOOKS_KEY)).toBe(await a.app.getKv(LOOKS_KEY));
     expect(await b.app.getKv(KV.appearance)).toBe('dark');
     expect(await b.app.getKv(KV.notifyIdea)).toBeNull();
     expect(await b.app.usage.all()).toEqual([]);
-    expect(await b.app.profile.get('me')).toEqual({ ...profile(), birthYear: null });
+    // T41b (SB5.1b, SB6.1c): the agreement is this phone's own and never travels, so B has none (it was `consentVersion: 'v2'`).
+    expect(await b.app.profile.get('me')).toEqual({ ...profile(), birthYear: null, consentVersion: null, consentAt: null });
   });
 });
 
@@ -223,7 +224,7 @@ describe('E10 offline', () => {
   it('loses nothing when the network fails', async () => {
     const remote = createMemoryRemote(T0);
     const a = phone(remote, 'dev-a');
-    await a.app.chat.put(msg('M-1', 'hi'));
+    await a.app.facts.put(msg('M-1', 'hi'));
     remote.offline = true;
     await expect(a.engine.push()).rejects.toBeInstanceOf(RemoteUnavailable);
     expect(await a.engine.pending()).toBe(1);
@@ -258,12 +259,12 @@ describe('E12 files', () => {
     a.files.set('photos/abc-photo.jpg', 'JPEG');
     a.files.set('scans/def-photo.jpg', 'SCAN');
     a.files.set('scans/def-send.jpg', 'BLURRED');
-    await a.app.chat.put({ ...msg('M-1', ''), kind: 'photo', payload: { photo: 'photos/abc-photo.jpg' } });
+    await a.app.facts.put(msg('M-1', '', 'photos/abc-photo.jpg'));
     await a.app.setKv('scan.inbox', JSON.stringify([{ sha256: 'def', keptPath: 'scans/def-photo.jpg', sendPath: 'scans/def-send.jpg' }]));
     await a.engine.push();
     expect((await a.engine.drainFiles()).moved).toBe(2);
     expect([...remote.files.keys()].sort()).toEqual(['photos/abc-photo.jpg', 'scans/def-photo.jpg']);
-    await a.app.chat.patch('M-1', { text: 'edited' });
+    await a.app.facts.patch('M-1', { value: 'edited' });
     await a.engine.push();
     expect((await a.engine.drainFiles()).moved).toBe(0);
 
@@ -273,7 +274,7 @@ describe('E12 files', () => {
     expect(b.files.has('scans/def-send.jpg')).toBe(false);
 
     a.clock.now += 10;
-    await a.app.chat.delete('M-1');
+    await a.app.facts.delete('M-1');
     await a.engine.push();
     await a.engine.drainFiles();
     expect(remote.files.has('photos/abc-photo.jpg')).toBe(false);
@@ -284,12 +285,12 @@ describe('E12 files', () => {
     const remote = createMemoryRemote(T0);
     const a = phone(remote, 'dev-a');
     a.files.set('photos/abc-photo.jpg', 'JPEG');
-    await a.app.chat.put({ ...msg('M-1', ''), payload: { photo: 'photos/abc-photo.jpg' } });
-    await a.app.chat.put({ ...msg('M-2', ''), payload: { photo: 'photos/abc-photo.jpg' } });
+    await a.app.facts.put(msg('M-1', '', 'photos/abc-photo.jpg'));
+    await a.app.facts.put(msg('M-2', '', 'photos/abc-photo.jpg'));
     await a.engine.push();
     await a.engine.drainFiles();
     a.clock.now += 10;
-    await a.app.chat.delete('M-1');
+    await a.app.facts.delete('M-1');
     await a.engine.push();
     await a.engine.drainFiles();
     expect(remote.files.has('photos/abc-photo.jpg')).toBe(true);
@@ -297,7 +298,7 @@ describe('E12 files', () => {
     const off = createMemoryRemote(T0);
     const c = phone(off, 'dev-c', { backUpPhotos: false });
     c.files.set('photos/x-photo.jpg', 'JPEG');
-    await c.app.chat.put({ ...msg('M-1', ''), payload: { photo: 'photos/x-photo.jpg' } });
+    await c.app.facts.put(msg('M-1', '', 'photos/x-photo.jpg'));
     await c.engine.push();
     expect((await c.engine.drainFiles()).moved).toBe(0);
     expect(off.files.size).toBe(0);
@@ -309,7 +310,7 @@ describe('E13 off means off', () => {
     const remote = createMemoryRemote(T0);
     const a = phone(remote, 'dev-a');
     a.on.value = false;
-    await a.app.chat.put(msg('M-1', 'hi'));
+    await a.app.facts.put(msg('M-1', 'hi'));
     expect(await a.inner.syncRows.all()).toEqual([]);
     await expect(a.engine.push()).rejects.toBeInstanceOf(SyncDisabled);
     await expect(a.engine.pull()).rejects.toBeInstanceOf(SyncDisabled);
@@ -322,9 +323,9 @@ describe('E14 delete all my data', () => {
   it('clears the bookkeeping, so nothing goes up afterwards', async () => {
     const remote = createMemoryRemote(T0);
     const a = phone(remote, 'dev-a');
-    await a.app.chat.put(msg('M-1', 'hi'));
+    await a.app.facts.put(msg('M-1', 'hi'));
     a.files.set('photos/abc-photo.jpg', 'JPEG');
-    await a.app.chat.put({ ...msg('M-2', ''), payload: { photo: 'photos/abc-photo.jpg' } });
+    await a.app.facts.put(msg('M-2', '', 'photos/abc-photo.jpg'));
     await a.app.wipe();
     expect(await a.inner.syncRows.all()).toEqual([]);
     expect(await a.inner.syncFiles.all()).toEqual([]);

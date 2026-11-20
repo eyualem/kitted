@@ -20,7 +20,12 @@ export const TABLE_POLICY: Readonly<Record<TableName, TablePolicy | 'local'>> = 
   // Height and build never leave the phone either (#375): the columns stay, empty, and are never sent.
   // His age band, when he picked it, and his first name (T39, OS4.7, SY4.4) stay on this phone too: never sent, and a
   // pulled row keeps this phone's values. A new phone starts without them (absent, as on a profile from before V9).
-  profile: { collection: 'profile', omit: { birthYear: null, heightCm: null, build: '', ageBand: undefined, ageBandAt: undefined, name: undefined } },
+  // The privacy agreement is per phone too (SB5.1b, SB6.1c): a restored phone asks for it on the camera's first open, so the
+  // agreement never travels and a pulled profile keeps this phone's (none).
+  profile: {
+    collection: 'profile',
+    omit: { birthYear: null, heightCm: null, build: '', ageBand: undefined, ageBandAt: undefined, name: undefined, consentVersion: null, consentAt: null },
+  },
   fitChecks: { collection: 'fitChecks', omit: { demoPhotoId: null } },
   readings: { collection: 'readings', immutable: true },
   closet: { collection: 'closetItems', omit: { demoPhotoId: null } },
@@ -28,7 +33,8 @@ export const TABLE_POLICY: Readonly<Record<TableName, TablePolicy | 'local'>> = 
   outfits: { collection: 'outfits' },
   wearLog: { collection: 'wearLog' },
   corrections: { collection: 'corrections' },
-  chat: { collection: 'chatMessages' },
+  // His questions and Kit's answers never leave the phone (SB5.1a, "the server keeps no questions or answers").
+  chat: 'local',
   dailyIdeas: { collection: 'dailyIdeas' },
   facts: { collection: 'facts' },
   // The server's counters win (the Worker keys limits on the account).
@@ -97,7 +103,6 @@ export const KV_SYNCED: Readonly<Record<string, KvPolicy>> = {
   // The looks he said Not me to in the style game (T113, specs/style-game.md SG8): synced like his looks.
   'looks.notMe': {},
   'onboarding.basics': { outgoing: withoutBirthYear, incoming: keepLocalBirthYear },
-  [KV.onboardingDone]: {},
   [KV.appearance]: {},
   [KV.lastOccasion]: {},
   'goingFor.last': {},
@@ -106,10 +111,15 @@ export const KV_SYNCED: Readonly<Record<string, KvPolicy>> = {
   'scan.inbox': {},
   // Starter essentials marked without a closet piece (the belt, #291): part of his closet.
   'starter.marked': {},
+  // Photo backup belongs to his account (SB4.1c): a new phone follows it. Absent means off (sync/photoBackup.ts).
+  'backup.photos': {},
 };
 
 /** Per-device kv keys, never sent. Exact keys, then prefixes. */
 export const KV_LOCAL: readonly string[] = [
+  // Setup is done per phone (SB6): a restored phone asks the age first, and a synced "done" read at the next launch would skip
+  // that question if he closed the app before answering. The restore marks it done after the age.
+  KV.onboardingDone,
   KV.onboardingStep, KV.scenario, KV.seedLoaded, KV.ideaTime, KV.notifyIdea, KV.notifyReady, KV.notifyTrial, KV.revealFullShown,
   'idea.evening.ignored', 'camera.mode', 'weather.permission', 'closet.pendingDeletes',
   // The end of onboarding's progress (#291): this phone's first-fit sequence, like onboarding.step.

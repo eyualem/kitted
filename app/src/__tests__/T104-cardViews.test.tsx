@@ -83,15 +83,16 @@ describe("KC2.10 (the tile) · the You'd need menu", () => {
     expect(tile.props.accessibilityHint).toBeUndefined();
     expect(tile.props.onClick ?? tile.props.onPress).toBeUndefined();
   });
-  it('offers nothing for a kind with no Starter entry until I have one exists (the tile is not a button)', () => {
-    expect(needMenuRows(needMenuChoices(p('watch', 'black', 'Black watch'), null, ADD_READY))).toEqual([]);
+  it('with the add built (T106), a kind with no Starter entry shows only I have one (KC2.10)', () => {
+    expect(needMenuRows(needMenuChoices(p('watch', 'black', 'Black watch'), null, ADD_READY))).toEqual(['haveOne']);
+    expect(needMenuRows(needMenuChoices(p('watch', 'black', 'Black watch'), null, false))).toEqual([]);
   });
   it('with the add built (T106), I have one comes first; with no Starter entry it is the only row', () => {
     expect(needMenuRows(needMenuChoices(p('overshirt', 'olive', 'Olive overshirt'), null, true))).toEqual(['haveOne', 'nextBuy']);
     expect(needMenuRows(needMenuChoices(p('watch', 'black', 'Black watch'), null, true))).toEqual(['haveOne']);
   });
-  it('I have one stays out of the menu until T106 builds it (an outfit card can reach a tester before then)', () => {
-    expect(ADD_READY).toBe(false);
+  it('T106 built I have one, so the menu shows it', () => {
+    expect(ADD_READY).toBe(true);
   });
   it('the menu is live only: never in Past chats', () => {
     expect(cardControls(outfit(), { readOnly: false, tapped: null }).needMenu).toBe(true);

@@ -24,7 +24,7 @@ import { GoneSheet } from '@/features/gone/Gone';
 const GAP = 10;
 const FIELDS: readonly EditField[] = ['kind', 'color', 'leg', 'fit', 'pattern'];
 
-function Choice({ item, field, option, size, onPick }: { item: ClosetItemRow; field: EditField; option: EditOption; size: number; onPick: () => void }) {
+export function Choice({ item, field, option, size, onPick }: { item: ClosetItemRow; field: EditField; option: EditOption; size: number; onPick: () => void }) {
   const { colors } = useTheme();
   const a11y = optionA11y(field, option);
   const preview = withEdit(item, field, option.value);

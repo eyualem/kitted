@@ -127,20 +127,6 @@
       ]
     },
     {
-      "collectionGroup": "chatMessages",
-      "queryScope": "COLLECTION_GROUP",
-      "fields": [
-        {
-          "fieldPath": "deleted",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "serverAt",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "dailyIdeas",
       "queryScope": "COLLECTION_GROUP",
       "fields": [
@@ -212,11 +198,6 @@
     },
     {
       "collectionGroup": "corrections",
-      "fieldPath": "data",
-      "indexes": []
-    },
-    {
-      "collectionGroup": "chatMessages",
       "fieldPath": "data",
       "indexes": []
     },

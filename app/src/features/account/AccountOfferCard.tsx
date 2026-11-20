@@ -8,11 +8,12 @@ import type { ChatMessage } from '@/data/types';
 import { useLive } from '@/data/useLive';
 import { t } from '@/i18n/en';
 import { ACCOUNT_KEY, getAccount } from './account';
+import { offerBody } from './offerCopy';
 import { accountOffer } from './offerSession';
 
 export function AccountOfferCard({ m, showHeader, readOnly }: { m: ChatMessage; showHeader?: boolean; readOnly?: boolean }) {
   const account = useLive(['kv'], () => getAccount(store), [], ACCOUNT_KEY);
-  const pieces = typeof m.payload.pieces === 'number' ? m.payload.pieces : 0;
+  const count = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0);
   if (account === undefined) return null;
   if (account) {
     return <StylistMessage showHeader={showHeader}>{t('acct.offer.signedIn', { provider: t(`acct.provider.${account.provider}`) })}</StylistMessage>;
@@ -20,7 +21,7 @@ export function AccountOfferCard({ m, showHeader, readOnly }: { m: ChatMessage; 
   if (m.payload.state === 'declined' || readOnly) {
     return m.payload.state === 'declined' ? <StylistMessage showHeader={showHeader}>{t('acct.offer.declined')}</StylistMessage> : null;
   }
-  const body = pieces > 0 ? t('acct.offer.bodyPieces', { n: pieces }) : t('acct.offer.body');
+  const body = offerBody({ fits: Math.max(1, count(m.payload.fits)), pieces: count(m.payload.pieces) });
   return (
     <KCard>
       <KCardSection>

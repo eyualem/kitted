@@ -4,7 +4,7 @@
 // layout; any wrapper View makes it fall back to `setFrame:self.frame`, which moved the content
 // out of view (DECISIONS-LOG #14). Top spacing goes in the header's padding, never as margins.
 // No KeyboardAvoidingView: `automaticallyAdjustKeyboardInsets` handles the inline editors.
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,13 +21,23 @@ export interface SheetScaffoldProps {
   doneLabel?: string;
   /** Where the list opens, in points from the top of the body (iOS `contentOffset`, read once on mount). */
   initialScrollY?: number;
+  /** A back chevron before the title (a sheet with steps, "What is it, then?"). */
+  onBack?: () => void;
+  backLabel?: string;
+  /** Scrolls to the top whenever this changes (a step or a pick that shows its answer at the top). */
+  scrollTopKey?: unknown;
 }
 
-export function SheetScaffold({ title, subtitle, children, onClose, doneLabel, initialScrollY }: SheetScaffoldProps) {
+export function SheetScaffold({ title, subtitle, children, onClose, doneLabel, initialScrollY, onBack, backLabel, scrollTopKey }: SheetScaffoldProps) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
+  const scroll = useRef<ScrollView>(null);
+  useEffect(() => {
+    if (scrollTopKey !== undefined) scroll.current?.scrollTo({ y: 0, animated: true });
+  }, [scrollTopKey]);
   return (
     <ScrollView
+      ref={scroll}
       style={{ flex: 1, backgroundColor: colors.bg }}
       stickyHeaderIndices={[0]}
       contentContainerStyle={{ paddingBottom: insets.bottom + space.xl }}
@@ -41,6 +51,7 @@ export function SheetScaffold({ title, subtitle, children, onClose, doneLabel, i
           `flex: 1`, so the row layout lives one level down. */}
       <View>
         <View style={[styles.header, { backgroundColor: colors.bg }]}>
+          {onBack ? <IconButton icon="back" label={backLabel ?? t('common.close')} onPress={onBack} /> : null}
           <View style={styles.titles}>
             <KText role="sheetTitle" accessibilityRole="header">
               {title}

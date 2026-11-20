@@ -62,6 +62,8 @@ export interface ClosetServiceDeps {
 }
 
 export type DuplicateAnswer = 'same' | 'new' | 'runnerUp';
+/** "What is it, then?" (CB4): `same` with the piece he picked instead of the candidate, `new` with the kind he confirmed. */
+export interface AnswerPick { targetId?: string; kind?: string }
 
 const CLOSET_CATEGORIES: readonly string[] = ['top', 'outerwear', 'bottom', 'footwear'];
 /** The scored bagginess fields: a "Not quite right?" fix of one re-scores its check only (§19, #322). */
@@ -684,7 +686,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
   async function revertAnswer(cs: ReturnType<typeof summaryOf>, ask: ClosetAsk) {
     const now = clock.nowMs();
     if (ask.answer === 'same' || ask.answer === 'runnerUp') {
-      const target = ask.answer === 'same' ? ask.candidateId : ask.runnerUpId!;
+      const target = ask.answer === 'same' ? ask.pickedId ?? ask.candidateId : ask.runnerUpId!;
       const t = await store.closet.get(target);
       await store.closetObs.patch(ask.obsId, { itemId: ask.itemId, decision: 'ask', answeredAt: null });
       await store.closet.patch(ask.itemId, { isDeleted: false, mergedInto: null, maybeSameAs: ask.candidateId, updatedAt: now });
@@ -713,8 +715,21 @@ export function createClosetService(deps: ClosetServiceDeps) {
       if (f) await store.closet.patch(f.id, { maybeSameAs: ask.candidateId, profile: { ...profileOfItem(f), distinctFrom: profileOfItem(f).distinctFrom.filter((x) => x !== ask.candidateId) } });
       if (c) await store.closet.patch(c.id, { profile: { ...profileOfItem(c), distinctFrom: profileOfItem(c).distinctFrom.filter((x) => x !== ask.itemId) } });
       await store.closetObs.patch(ask.obsId, { decision: 'ask', answeredAt: null });
+      // The kind he confirmed in "What is it, then?" goes back to what it was (CB4).
+      if (ask.kindUndo && f) {
+        // The profile as it was before the kind, minus the never-ask-again mark this answer added (removed just above).
+        const was = ask.kindUndo.profile;
+        await store.closet.patch(f.id, {
+          garment: ask.kindUndo.garment, confirmedFields: ask.kindUndo.confirmedFields, starterId: ask.kindUndo.starterId,
+          profile: was ? { ...was, distinctFrom: was.distinctFrom.filter((x) => x !== ask.candidateId) } : was,
+        });
+        await refreshItem(f.id);
+      }
     }
     ask.answer = null;
+    ask.pickedId = null;
+    ask.kind = null;
+    ask.kindUndo = null;
     ask.alias = null;
     ask.replacedSub = null;
     ask.addedFieldAliases = null;
@@ -735,21 +750,29 @@ export function createClosetService(deps: ClosetServiceDeps) {
     }
   }
 
-  async function applyAnswer(checkId: string, obsId: string, a: DuplicateAnswer) {
+  async function applyAnswer(checkId: string, obsId: string, a: DuplicateAnswer, pick: AnswerPick = {}) {
     const row = await store.fitChecks.get(checkId);
     if (!row) return null;
     const cs = summaryOf(row);
     const ask = cs.asks.find((x) => x.obsId === obsId);
     if (!ask) return null;
     if (a === 'runnerUp' && !ask.runnerUpId) return null;
-    if ((ask.answer ?? null) === a) return row;
+    // A piece he picked in "What is it, then?" (CB4): one of his own pieces of the same slot, never the refused candidate.
+    let pickedId: string | null = null;
+    if (a === 'same' && pick.targetId && pick.targetId !== ask.candidateId) {
+      const all = await store.closet.all();
+      const flaggedNow = all.find((c) => c.id === ask.itemId);
+      if (!flaggedNow || !mergeCandidates(flaggedNow, all).some((c) => c.id === pick.targetId)) return null;
+      pickedId = pick.targetId;
+    }
+    if (!pickedId && !pick.kind && (ask.answer ?? null) === a && !ask.pickedId && !ask.kind) return row;
     await revertAnswer(cs, ask);
     const now = clock.nowMs();
     const flagged = await store.closet.get(ask.itemId);
     const obs = await store.closetObs.get(obsId);
     if (!flagged || !obs) return null;
     if (a === 'same' || a === 'runnerUp') {
-      const targetId = a === 'same' ? ask.candidateId : ask.runnerUpId!;
+      const targetId = a === 'same' ? pickedId ?? ask.candidateId : ask.runnerUpId!;
       const target = await store.closet.get(targetId);
       if (!target) return null;
       // He says it's the same piece: the sighting moves over, the flagged copy folds in (and is hidden).
@@ -785,6 +808,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
       cs.matched = uniq([...cs.matched, targetId]);
       cs.links = cs.links.map((l) => (l.obsId === obsId ? { ...l, itemId: targetId } : l));
       ask.answer = a;
+      ask.pickedId = pickedId;
       ask.alias = alias;
       ask.replacedSub = replacedSub;
       ask.addedFieldAliases = Object.keys(addedFieldAliases).length > 0 ? addedFieldAliases : null;
@@ -799,6 +823,15 @@ export function createClosetService(deps: ClosetServiceDeps) {
       if (c) await store.closet.patch(c.id, { profile: { ...profileOfItem(c), distinctFrom: uniq([...profileOfItem(c).distinctFrom, flagged.id]) } });
       await store.closetObs.patch(obsId, { decision: 'answeredNew', answeredAt: now });
       ask.answer = 'new';
+      // "It's a new piece" with its kind confirmed (CB4): the name and drawing follow, as with What it is → Kind.
+      const fresh = await store.closet.get(flagged.id);
+      if (pick.kind && fresh && isOffered(fresh, 'kind', pick.kind)) {
+        const plan = editPlan(fresh, 'kind', pick.kind, sightingsOf(fresh.id, await store.closetObs.all()).map(observationOfRow));
+        ask.kind = pick.kind;
+        ask.kindUndo = { garment: fresh.garment, confirmedFields: [...fresh.confirmedFields], profile: fresh.profile ?? null, starterId: fresh.starterId };
+        await store.closet.patch(fresh.id, { ...plan.patch, updatedAt: now });
+        await refreshItem(fresh.id);
+      }
     }
     cs.touched = true;
     await renameAll();
@@ -1219,7 +1252,7 @@ export function createClosetService(deps: ClosetServiceDeps) {
         await serial(() => writeSnap(parentId, snapReadingId, stored, kind));
       })());
     },
-    answer: (checkId: string, obsId: string, a: DuplicateAnswer) => serial(() => applyAnswer(checkId, obsId, a)),
+    answer: (checkId: string, obsId: string, a: DuplicateAnswer, pick?: AnswerPick) => serial(() => applyAnswer(checkId, obsId, a, pick)),
     unanswer: (checkId: string, obsId: string) => serial(() => applyUnanswer(checkId, obsId), UNDO('unanswer')),
     split: (checkId: string, obsId: string) => serial(() => applySplit(checkId, obsId)),
     setUndone: (checkId: string, itemId: string, undone: boolean) => serial(() => applyUndone(checkId, itemId, undone)),

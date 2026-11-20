@@ -1,271 +1,165 @@
-// A1 · Sign in (10-onboarding.md §4.1–§4.2): one sheet for every way in (Welcome, the save offer, You → Settings).
-// Apple, Google and email, the same size, with a line that says it's optional. Email swaps the sheet's body in place:
-// the address, then the 6-digit code. What a sign-in leads to (restore, set up, which fits to keep, the age stop) is
-// decided by afterSignIn; this screen only shows it.
+// A1 · Sign in (specs/sign-in-and-backup.md SB2): one sheet for every way in (Welcome's "I already have an account", the
+// save card, You's account rows). Continue with Apple first, then Google, the same size, and a line that says it's
+// optional. What a sign-in leads to (restore, set up, which fits to keep, the age stop) is decided by afterSignIn; this
+// screen only shows it. Apple's first name goes to an empty name only (applyAppleFirstName, SB10). After a sign-in that keeps the
+// account here, the last step offers photo backup once (SB4, PhotoStep); a restore offers it at its own end.
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, TextInput, View } from 'react-native';
+import { Alert, View } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
-import { KButton, KText, TextLink, space, useTheme } from '@/design-system';
-import { CONTROL_TEXT_MAX_SCALE, size } from '@/design-system/tokens';
-import { textStyles } from '@/design-system/typography';
+import { KText, TextLink, space } from '@/design-system';
 import { store } from '@/data/db';
 import { PRIVACY_URL, TERMS_URL } from '@/config/links';
 import { SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { showToast } from '@/features/toast/toast';
 import { setResumeStep } from '@/features/onboarding/resume';
 import { t } from '@/i18n/en';
-import { afterSignIn, auth, liveProviders, restoreParam, saveAccount, type SignInFrom } from './account';
+import { getDemoArgs } from '@/state/session';
+import { photoStepFor } from '@/sync/photoBackup';
+import { afterSignIn, liveProviders, resolveChoice, restoreParam, sheetProviders, auth, usesFirebase, type SignInFrom } from './account';
+import { accountRemote } from './accountRemote';
+import { applyAppleFirstName } from './appleName';
 import type { AuthProvider, SignInResult } from './auth';
-import { cleanCode, cleanEmail, countdown, isCompleteCode, isValidEmail, resendLeft, CODE_LENGTH } from './email';
+import { PhotoStep } from './PhotoStep';
 import { ProviderButton } from './ProviderButton';
+import { accountChoice } from './restore';
 
-type View_ = 'options' | 'email' | 'code';
-type Problem = { kind: 'failed'; provider: AuthProvider } | { kind: 'offline' } | { kind: 'wrongCode' } | { kind: 'expired' } | null;
+type Problem = { kind: 'failed'; provider: AuthProvider } | { kind: 'offline' } | null;
 
 const providerName = (p: AuthProvider) => t(`acct.provider.${p}`);
-/** The resend countdown runs on the wall clock (not the demo clock): it's about real seconds. */
-const wallNow = () => Date.now();
 
 export function SignInSheet() {
-  const { colors } = useTheme();
-  // `step` and `email` open the email steps directly (demo screens 134–135).
-  const params = useLocalSearchParams<{ from?: string; step?: string; email?: string }>();
+  const params = useLocalSearchParams<{ from?: string; step?: string }>();
   const from: SignInFrom = params.from === 'welcome' || params.from === 'offer' ? params.from : 'settings';
-  const live = liveProviders();
-  const [view, setView] = useState<View_>(params.step === 'email' ? 'email' : params.step === 'code' && params.email ? 'code' : 'options');
-  const [busy, setBusy] = useState<AuthProvider | 'send' | 'verify' | null>(null);
+  const providers = sheetProviders(liveProviders());
+  const [busy, setBusy] = useState<AuthProvider | null>(null);
   const [problem, setProblem] = useState<Problem>(null);
-  const [email, setEmail] = useState(params.email ?? '');
-  const [code, setCode] = useState('');
-  const [sentAt, setSentAt] = useState<number | null>(() => (params.step === 'code' ? wallNow() : null));
-  const [now, setNow] = useState(() => wallNow());
+  /** SB4's last step: shown in place of the buttons; `Back up photos too` or `Done` runs `next`. */
+  // Demo screen 144 opens on it (`step=photos`); on his phone only a finished sign-in shows it.
+  const [step, setStep] = useState<{ provider: AuthProvider; next: () => void } | null>(() =>
+    params.step === 'photos' && getDemoArgs().demoScreen !== null ? { provider: 'apple', next: () => router.back() } : null,
+  );
   const alive = useRef(true);
   useEffect(() => () => {
     alive.current = false;
   }, []);
-  // The resend countdown ticks only while the code step is open.
-  useEffect(() => {
-    if (view !== 'code') return;
-    const h = setInterval(() => setNow(wallNow()), 1000);
-    return () => clearInterval(h);
-  }, [view]);
 
-  const title = view === 'email' ? t('acct.email.title') : view === 'code' ? t('acct.code.title') : t(from === 'welcome' ? 'acct.sheet.welcome.title' : from === 'offer' ? 'acct.sheet.offer.title' : 'acct.sheet.settings.title');
+  const title = t(from === 'welcome' ? 'acct.sheet.welcome.title' : from === 'offer' ? 'acct.sheet.offer.title' : 'acct.sheet.settings.title');
 
   /** A finished sign-in: close the sheet and go where afterSignIn says. */
   const finish = async (provider: AuthProvider, r: Extract<SignInResult, { kind: 'ok' }>) => {
     const next = await afterSignIn(store, from, r);
     if (!alive.current) return;
-    const done = () => {
-      router.back();
-      showToast(t('acct.signedIn', { provider: providerName(provider) }));
+    /** Apple's first name, once the account is kept (never for a cancelled choice). It goes nowhere but his own name. */
+    const named = () => applyAppleFirstName(store, provider === 'apple' ? r.givenName : null);
+    /** The photo step once (SB4), then `proceed`. Skipped when the account already has photo backup on or it was offered. */
+    const afterPhotoStep = async (proceed: () => void) => {
+      if (!alive.current) return;
+      // Only where backup can run (not on a demo screen's MockAuth).
+      if (usesFirebase() && (await photoStepFor(store)) === 'show') setStep({ provider, next: proceed });
+      else proceed();
+    };
+    const done = async () => {
+      await named();
+      await afterPhotoStep(() => {
+        router.back();
+        showToast(t('acct.signedIn', { provider: providerName(provider) }));
+      });
     };
     switch (next.next) {
       case 'restore':
-        // His birth year first: it never syncs, so every new phone asks (the age gate), then A4 brings his fits back.
+        // His age first: it never syncs, so every new phone asks (the age gate), then A4 brings his fits back.
+        await named();
         await setResumeStep(store, 'basics');
         router.back();
         setTimeout(() => router.push({ pathname: '/onboarding/basics', params: { restore: restoreParam(next.holdings) } }), 350);
         return;
       case 'setup':
+        await named();
         await setResumeStep(store, 'looks');
-        router.back();
-        showToast(t('onb.setup.newAccount'));
-        setTimeout(() => router.push('/onboarding/looks'), 350);
+        await afterPhotoStep(() => {
+          router.back();
+          showToast(t('onb.setup.newAccount'));
+          setTimeout(() => router.push('/onboarding/looks'), 350);
+        });
         return;
       case 'choose': {
-        const keep = async () => {
-          await saveAccount(store, next.user);
-          done();
+        // A5 / SB7: nothing is deleted without a second yes. Which fits the account holds is read first (read-only), so "Use the
+        // account's" deletes only this iPhone's fits that are not in it. If they can't be read, that choice isn't offered.
+        const choice = usesFirebase() ? await accountChoice(accountRemote(next.user.uid)) : { ready: true as const, inAccount: [] as string[] }; // a demo account holds none
+        if (!alive.current) return;
+        const input = { user: next.user, inAccount: choice.ready ? choice.inAccount : [] };
+        const stay = async () => {
+          await resolveChoice(store, 'cancel', input, auth);
+          if (alive.current) setBusy(null);
         };
-        // A5: nothing is deleted without a second yes. (Replacing this phone's fits is the sync engine's job, 08 A2; the
-        // stand-in only signs in.)
+        const keepBoth = async () => {
+          await resolveChoice(store, 'keepBoth', input, auth);
+          await done();
+        };
+        const takeAccount = async () => {
+          await resolveChoice(store, 'useAccount', { ...input, confirmed: true }, auth);
+          await done();
+        };
+        const useAccount = {
+          text: t('acct.choose.useAccount'),
+          onPress: () =>
+            Alert.alert(t('acct.choose.confirmTitle'), t('acct.choose.confirmBody', { local: next.localFits }), [
+              { text: t('common.cancel'), style: 'cancel' as const, onPress: () => void stay() },
+              { text: t('acct.choose.confirmYes'), style: 'destructive' as const, onPress: () => void takeAccount() },
+            ]),
+        };
         Alert.alert(
           t('acct.choose.title'),
           t('acct.choose.body', { provider: providerName(provider), fits: next.holdings.fits, local: next.localFits }),
           [
-            { text: t('acct.choose.keepBoth'), style: 'default', onPress: () => void keep() },
-            {
-              text: t('acct.choose.useAccount'),
-              onPress: () =>
-                Alert.alert(t('acct.choose.confirmTitle'), t('acct.choose.confirmBody', { local: next.localFits }), [
-                  { text: t('common.cancel'), style: 'cancel', onPress: () => setBusy(null) },
-                  { text: t('acct.choose.confirmYes'), style: 'destructive', onPress: () => void keep() },
-                ]),
-            },
-            { text: t('common.cancel'), style: 'cancel', onPress: () => setBusy(null) },
+            { text: t('acct.choose.keepBoth'), style: 'default', onPress: () => void keepBoth() },
+            ...(choice.ready ? [useAccount] : []),
+            { text: t('common.cancel'), style: 'cancel', onPress: () => void stay() },
           ],
         );
         return;
       }
       case 'done':
-        done();
+        await done();
     }
   };
 
-  /** Shared by every way in: cancelled is silent, a failure or no connection says one plain line. */
-  const settle = async (provider: AuthProvider, r: SignInResult | { kind: 'wrongCode' } | { kind: 'expired' }) => {
-    if (!alive.current) return;
-    if (r.kind === 'ok') return finish(provider, r);
-    setBusy(null);
-    if (r.kind === 'cancelled') return;
-    if (r.kind === 'failed') setProblem({ kind: 'failed', provider });
-    else if (r.kind === 'offline') setProblem({ kind: 'offline' });
-    else if (r.kind === 'wrongCode') {
-      // Cleared for the next try (keeping it meant deleting six digits first).
-      setProblem({ kind: 'wrongCode' });
-      setCode('');
-    }
-    else if (r.kind === 'expired') {
-      setProblem({ kind: 'expired' });
-      setCode('');
-      setSentAt(wallNow());
-      void auth.sendEmailCode(cleanEmail(email));
-    }
-  };
-
-  const withProvider = async (provider: 'apple' | 'google') => {
+  const withProvider = async (provider: AuthProvider) => {
     if (busy) return;
     setBusy(provider);
     setProblem(null);
     const r = await auth.signIn(provider);
-    // A finished sign-in keeps its spinner until the sheet closes or the A5 question is answered.
-    if (r.kind === 'ok') return void finish(provider, r);
-    await settle(provider, r);
-  };
-
-  const sendCode = async (again = false) => {
-    if (busy || !isValidEmail(email)) return;
-    setBusy('send');
-    setProblem(null);
-    const r = await auth.sendEmailCode(cleanEmail(email));
     if (!alive.current) return;
+    // A finished sign-in keeps its spinner until the sheet closes or the "both have fits" question is answered.
+    if (r.kind === 'ok') return void finish(provider, r);
     setBusy(null);
-    if (r.kind === 'sent') {
-      setSentAt(wallNow());
-      setNow(wallNow());
-      setCode('');
-      setView('code');
-      if (again) showToast(t('acct.code.resent'));
-    } else setProblem(r.kind === 'offline' ? { kind: 'offline' } : { kind: 'failed', provider: 'email' });
-  };
-
-  const verify = async (value: string) => {
-    if (busy || !isCompleteCode(value)) return;
-    setBusy('verify');
-    setProblem(null);
-    const r = await auth.verifyEmailCode(cleanEmail(email), value);
-    if (r.kind === 'ok') return void finish('email', r);
-    await settle('email', r);
+    // Cancelled is silent; a failure or no connection says one plain line.
+    if (r.kind === 'failed') setProblem({ kind: 'failed', provider });
+    else if (r.kind === 'offline') setProblem({ kind: 'offline' });
   };
 
   const problemLine = problem ? (
     <KText variant="footnote" color="ink" accessibilityRole="alert" style={{ paddingHorizontal: 4 }}>
-      {problem.kind === 'failed' ? t('acct.failed', { provider: providerName(problem.provider) }) : problem.kind === 'offline' ? t('acct.offline') : problem.kind === 'wrongCode' ? t('acct.code.wrong') : t('acct.code.expired')}
+      {problem.kind === 'failed' ? t('acct.failed', { provider: providerName(problem.provider) }) : t('acct.offline')}
     </KText>
   ) : null;
-
-  const inputStyle = {
-    borderWidth: 1, borderColor: colors.line, borderRadius: 22, borderCurve: 'continuous' as const, minHeight: size.buttonLarge,
-    paddingHorizontal: space.l, paddingVertical: space.s, fontSize: textStyles.body.fontSize, color: colors.ink, backgroundColor: colors.surface,
-  };
-
-  if (view === 'email') {
-    return (
-      <SheetScaffold title={title} onClose={() => router.back()}>
-        <View style={{ gap: space.m }}>
-          <TextInput
-            autoFocus
-            value={email}
-            onChangeText={(v) => { setEmail(v); setProblem(null); }}
-            placeholder={t('acct.email.placeholder')}
-            placeholderTextColor={colors.ink3}
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            autoComplete="email"
-            autoCapitalize="none"
-            autoCorrect={false}
-            spellCheck={false}
-            returnKeyType="send"
-            onSubmitEditing={() => void sendCode()}
-            accessibilityLabel={t('acct.email.label')}
-            maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
-            style={inputStyle}
-          />
-          <KText variant="footnote" color="ink2" style={{ paddingHorizontal: 4 }}>
-            {t('acct.email.hint')}
-          </KText>
-          {problemLine}
-          <KButton title={t('acct.email.send')} onPress={() => void sendCode()} disabled={!isValidEmail(email)} loading={busy === 'send'} />
-          <View style={{ alignItems: 'center' }}>
-            <TextLink title={t('acct.email.otherWays')} color="ink2" onPress={() => { setProblem(null); setView('options'); }} />
-          </View>
-        </View>
-      </SheetScaffold>
-    );
-  }
-
-  if (view === 'code') {
-    const left = resendLeft(sentAt, now);
-    return (
-      <SheetScaffold title={title} onClose={() => router.back()}>
-        <View style={{ gap: space.m }}>
-          <KText variant="body" color="ink2">
-            {t('acct.code.body', { email: cleanEmail(email) })}
-          </KText>
-          <TextInput
-            autoFocus
-            value={code}
-            onChangeText={(v) => {
-              const c = cleanCode(v);
-              setCode(c);
-              if (c.length > 0 && (problem?.kind === 'wrongCode' || problem?.kind === 'expired')) setProblem(null);
-              if (isCompleteCode(c)) void verify(c);
-            }}
-            placeholder={'•'.repeat(CODE_LENGTH)}
-            placeholderTextColor={colors.inkFaint}
-            keyboardType="number-pad"
-            textContentType="oneTimeCode"
-            autoComplete="one-time-code"
-            maxLength={CODE_LENGTH + 4}
-            editable={busy !== 'verify'}
-            accessibilityLabel={t('acct.code.label')}
-            maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
-            style={[inputStyle, { fontSize: textStyles.title2.fontSize, letterSpacing: 8, textAlign: 'center', fontVariant: ['tabular-nums'] }]}
-          />
-          {busy === 'verify' ? (
-            <KText variant="footnote" color="ink2" style={{ textAlign: 'center' }}>
-              {t('acct.code.checking')}
-            </KText>
-          ) : null}
-          {problemLine}
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: space.m }}>
-            <TextLink
-              title={left > 0 ? t('acct.code.resendIn', { time: countdown(left) }) : t('acct.code.resend')}
-              color={left > 0 ? 'ink2' : 'ink'}
-              onPress={left > 0 || busy ? undefined : () => void sendCode(true)}
-            />
-            <TextLink title={t('acct.code.otherEmail')} color="ink2" onPress={() => { setProblem(null); setCode(''); setView('email'); }} />
-          </View>
-        </View>
-      </SheetScaffold>
-    );
-  }
 
   const legal = TERMS_URL && PRIVACY_URL;
   return (
     <SheetScaffold title={title} onClose={() => router.back()}>
+      {step ? (
+        <PhotoStep provider={step.provider} onDone={step.next} />
+      ) : (
       <View style={{ gap: space.m }}>
         <KText variant="body" color="ink2">
           {t(from === 'welcome' ? 'acct.sheet.welcome.body' : 'acct.sheet.save.body')}
         </KText>
         {problemLine}
         <View style={{ gap: 10 }}>
-          {(['apple', 'google'] as const).filter((p) => live.includes(p)).map((p) => (
+          {providers.map((p) => (
             <ProviderButton key={p} provider={p} busy={busy === p} disabled={busy !== null} onPress={() => void withProvider(p)} />
           ))}
-          {live.includes('email') && <ProviderButton provider="email" busy={false} disabled={busy !== null} onPress={() => { setProblem(null); setView('email'); }} />}
         </View>
         <KText variant="footnote" color="ink3" style={{ paddingHorizontal: 4 }}>
           {t('acct.optional')}
@@ -277,12 +171,8 @@ export function SignInSheet() {
             <TextLink title={t('acct.privacy')} color="ink2" compact onPress={() => void WebBrowser.openBrowserAsync(PRIVACY_URL!)} />
           </View>
         ) : null}
-        {from === 'welcome' ? (
-          <View style={{ alignItems: 'center' }}>
-            <TextLink title={t('acct.imNew')} color="ink2" onPress={() => router.back()} />
-          </View>
-        ) : null}
       </View>
+      )}
     </SheetScaffold>
   );
 }
