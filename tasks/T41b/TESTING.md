@@ -2,7 +2,7 @@
 
 Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** not locked yet.
+**Lock:** see the Lock log below.
 
 Where: app tests in `app/src/__tests__/T41b-*.test.ts(x)` (Jest, run with `--maxWorkers=2`, one file at a time); server tests in `firebase/tests/` (Vitest on the emulators, `npm --prefix tests run emulate` from `firebase/`). Fakes for the network, Apple, Firebase and Storage everywhere in Jest; the emulator tests use the real Firestore and Storage emulators. Photos in tests are the repo's demo photos, never a real person's. No AI calls. Interfaces the tests need are stubs the test writer names in this file (below, "Interfaces fixed in the stubs") before locking.
 
@@ -27,7 +27,47 @@ Where: app tests in `app/src/__tests__/T41b-*.test.ts(x)` (Jest, run with `--max
 - **SB-GATE** · Nothing backs up or restores with `ACCOUNTS_BUILT` off, for a guest or while signed out · how: unit · expect: with the real flag (false) the engine never starts or records; with it on, an anonymous (guest) Firebase user, a signed-out phone and a different user than the saved account push nothing and call no server · must not: a write for a guest.
 
 ## Interfaces fixed in the stubs
-(The test writer lists the stubs here before locking: file, function, signature, and its doc comment as the contract.)
+The stubs throw `new Error('T41b: not built')` until the implementer writes them; the tests import exactly these names. The implementer may add exports and fields, never rename or re-shape these. The doc comment in each stub file is the contract; the points the tests rely on:
+
+- **`app/src/sync/photoBackup.ts`** (new): `PHOTO_BACKUP_KEY = 'backup.photos'` (must also be a key of `KV_SYNCED`), `PHOTO_STEP_KEY = 'account.photoStep'` (local: the `account.` prefix), `isPhotoBackupOn(store)` (true only for `'on'`), `turnOnPhotoBackup(store)`, `photoStepFor(store): 'show' | 'skip'` (skip when on, or once `markPhotoStepOffered` ran), `markPhotoStepOffered(store)`, `turnOffPhotoBackup({store, confirm, deleteBackedUp}): {status: 'off' | 'cancelled' | 'offline' | 'failed'}` (the job rejects with `RemoteUnavailable` for offline, anything else is failed; on any reject the kv, `syncRows` and `syncFiles` stay exactly as they were; off writes `'off'` or deletes the key).
+- **`app/src/sync/backup.ts`** (new; port of #57's, trimmed): `backsUp(account, firebaseUser)`, `createBackup(deps).syncNow(): 'ok' | 'off' | 'offline' | 'failed'`. Deps: `store` (the inner store), `connect(uid)`, `account()`, `firebaseUser()`, `allowed()`, `online()`, `nowMs()`, `deviceId()`, `log?`. Contract for `syncNow`: gate (`allowed()`, then `backsUp`) before any `connect`; the first round with an account on this phone pulls the account's rows and then sends every row on this phone (so "Keep both" leaves both sets on both sides); files go up only when kv `backup.photos` is `'on'`, read every round, once per kept photo, including photos whose rows were pushed while it was off, never `-send` copies, caches or paths outside `photos/closet/scans`; with it off `upload` is never called, whatever was queued.
+- **`app/src/sync/allowed.ts`** (new): `syncAllowed(env?: {platformOS?, demoScreen?})` = `ACCOUNTS_BUILT && platformOS === 'ios' && demoScreen === null`, `ACCOUNTS_BUILT` read from `@/config/features` when called, no Jest check.
+- **`app/src/sync/firestoreRemote.ts`, `storageTransport.ts`** (new; port #57's, same exports): `createFirestoreRemote({fs, db, uid, timeoutMs?}): RemoteStore`, `createStorageTransport({http, bucket, base, uid, token, canTransfer}): FileTransport`, `StorageHttp` as in the stub. `RemoteMissing` goes in `remote.ts` as on #57. These must import in Node (Vitest) with only the `@` alias: no React Native import in `backup.ts`, `engine.ts`, `schema.ts`, `firestoreRemote.ts`, `storageTransport.ts`, `photoBackup.ts`.
+- **`app/src/features/account/restore.ts`** (new): `readAccountHoldings(remote): {fits, pieces, profile}` (rejects `RemoteUnavailable` offline), `accountChoice(remote): {ready: true, inAccount: string[]} | {ready: false, why: 'offline' | 'failed'}`, `restoreAccount(deps): {kind: 'underage'} | {kind: 'fits', fits, pieces} | {kind: 'profile'} | {kind: 'retry'}`; it reads the age from the About you draft (kv `onboarding.about`). `AccountHoldings` gains optional `profile?: boolean` (`auth.ts`, done in the stub commit); `afterSignIn` from Welcome returns `restore` when `fits > 0` **or** `profile` is true.
+- **`app/src/features/account/deleteAccount.ts`** (new): `runDeleteAccount({provider, revokeApple, deleteServer, wipe}): {kind: 'deleted' | 'offline' | 'failed' | 'cancelled'}`. `actions.ts` `deleteAccountAndData()` wires it (Apple revoke with a fresh authorization code, the server job, `runDeleteAllData`). New string `acct.delete.offline` = `Deleting your account needs a connection. Nothing was deleted.`
+- **`app/src/sync/schema.ts`** (existing, changes the tests pin): `TABLE_POLICY.chat = 'local'`; `TABLE_POLICY.profile.omit` also holds `consentVersion: null, consentAt: null`; `KV_SYNCED` gains `'backup.photos'`.
+- **`firebase/functions/src/index.ts`** (stubs added): `deleteBackedUpPhotos(uid): Promise<{files: number}>` (deletes `users/{uid}/files/` by prefix, nothing else, safe twice) and the callable `deleteBackedUpPhotosJob` (signed-in only, uid from `req.auth`, never from the data); `SYNCED_COLLECTIONS` loses `chatMessages`; `firestore.rules` loses `chatMessages`.
+- **Test-only helper** (the implementer does not edit it): `app/src/testing/t41bBackup.ts`. `firebase/tests/vitest.config.ts` gains the `@` alias to `app/src` (as #57 had).
 
 ## Lock log
-(The test writer fills in: commit, files, red lines, bite lines per criterion.)
+**Tests** (Jest: `--maxWorkers=2`, one file at a time; emulator: `npm --prefix tests run emulate` in `firebase/`):
+- `app/src/__tests__/T41b-photoBackup.test.ts` (SB4.1a, SB4.1c, SB4.3a unit, SB4.3b, SB-GATE) · `T41b-syncPrivacy.test.ts` (SB5.1a, SB5.1b, SB5.1c) · `T41b-restore.test.ts` (SB6.1a, SB6.1b, SB6.1c, SB7.1-ids) · `T41b-deleteAccount.test.ts` (SB9.1a, SB9.1b, SB9.1c unit).
+- `firebase/tests/t41b-rules.test.ts` (SB4.2, SB5.1a) · `t41b-jobs.test.ts` (SB4.3a, SB5.1a, SB9.1c, SB9.1d) · `t41b-sync.test.ts` (SB4.1b).
+- Existing tests changed because a criterion changes them (also in TASK.md → Disputes): `syncEngine.test.ts` (chat rows no longer sync: its engine checks now use facts rows; E8 expects a pulled profile without the consent fields) and `firebase/tests/functions.test.ts` F2 (its chat tombstone is an outfits tombstone).
+
+**red / bites, per criterion** (before the build: 45 Jest tests red and 1 green (the SB5.1b local-keys test, behaviour exists), 6 emulator tests red, the other 8 emulator tests green because the behaviour exists; the changed `syncEngine.test.ts` E8 is red until the consent fields are omitted):
+- **SB4.1a** (3 tests) · red: `createBackup: T41b: not built`. Proven satisfiable against a throwaway reference build.
+- **SB4.1b** (2, emulator) · red: `createBackup: T41b: not built`. Against #57's adapters and a reference `createBackup` both pass; with the setting ignored (always on) the "off" test fails.
+- **SB4.1c** (3) · red: `expect(Object.keys(KV_SYNCED)).toContain('backup.photos')` fails; `photoStepFor: not built`.
+- **SB4.2** (4, emulator) · exists: bites via `storage.rules` `isOwner()` changed to `request.auth != null` (the cross-account and the guest tests fail; R2 fails too).
+- **SB4.3a** unit (2) · red: `turnOffPhotoBackup: not built`. Emulator (2): red `deleteBackedUpPhotos: not built`.
+- **SB4.3b** (2) · red: `turnOffPhotoBackup: not built`.
+- **SB5.1a** (3 unit) · red: `TABLE_POLICY.chat` is `{collection: 'chatMessages'}`, a chat row's text is on the server, a pulled account adds A's chat to B. Rules (1) red: the `chatMessages` write succeeds. Jobs (1) red: `SYNCED_COLLECTIONS` holds `chatMessages`.
+- **SB5.1b** · red: `consentVersion` is a key of the profile doc (consent is not omitted today). The second test (local keys, the lock) exists: bites via adding `'onboarding.about'` to `KV_SYNCED`. The first test's name, band, birth year, height, build and prefs checks bite via removing the `omit` fields or `withoutBirthYear` (each makes it fail).
+- **SB5.1c** · red: the pulled profile carries `consentVersion '2'`. Row for row exists: bites via removing `ageBand/ageBandAt/name` from `omit` or `birthYear` (both fail).
+- **SB6.1a** (5) · red: `readAccountHoldings: not built`.
+- **SB6.1b** (3), **SB6.1c** (3) · red: `restoreAccount: not built`.
+- **SB7.1-ids** (4) · red: `accountChoice: not built`.
+- **SB9.1a** (3), **SB9.1b** (5), **SB9.1c unit** (2) · red: `runDeleteAccount: not built`.
+- **SB9.1c emulator** (1), **SB9.1d** (2) · exists: bite via `deleteEverything` also wiping `devices` (SB9.1c fails) and deleting files by the prefix `users/` (SB9.1d fails; F1 too).
+- **SB-GATE** (4) · red: `syncAllowed`, `backsUp` and `createBackup: not built`.
+
+**Could not be tested properly, and why:**
+- The real wiring (`appBackup`, the Firebase revoke in `firebaseAuth.ts`, `services/firebase/data.ts`'s job call, `actions.ts`, the sheet's last step, the Privacy & data switch) needs Firebase and React Native; the logic they call is tested, the wiring is for the phone and screenshots. A `wipe` wired wrongly in `actions.ts` (clearing the age lock) would not be caught.
+- SB6.1c names "this phone's birth year" as saved; since T39 a new phone saves only the age band (`birthYear` stays null), so the tests pin the band and `birthYear === null`. The founder may want to confirm.
+- SB5.1b "the under-18 lock's storage": it lives only in the Keychain (`data/secure.ts`, `kitted.ageBlocked`), in no kv key and no table, so it cannot reach the engine; the tests check no spelling of it is a synced key and that no doc holds it.
+- The restore's counts "as rows arrive": the tests pin that they never go down and end exactly right; a build that shows only the final count would pass.
+- `deleteAccount` and the new job no longer requiring App Check (#386) has no behaviour test: `.run()` skips App Check.
+- Turning photo backup off and later on again (the server copies are gone, so every kept photo must go up once more) is not in TESTING.md's criteria and has no test; the implementer must reset the "already uploaded" bookkeeping on a successful turn-off.
+
+**Lock:** not locked yet (filled by the lock commit).

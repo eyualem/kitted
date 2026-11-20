@@ -48,6 +48,18 @@ export async function deleteEverything(uid: string): Promise<{ files: number }> 
   return { files: files.length };
 }
 
+/** T41b (SB4.3): deletes every object under users/{uid}/files/ (by prefix, never reading one) and nothing else: no Firestore doc,
+ *  no Auth user, nobody else's files. Safe to run twice. STUB until T41b is built. */
+export async function deleteBackedUpPhotos(_uid: string): Promise<{ files: number }> {
+  throw new Error('T41b: not built');
+}
+
+/** T41b: the phone's call to `deleteBackedUpPhotos` (signed in only: no auth → HttpsError `unauthenticated`; it never takes a uid from
+ *  the request). STUB until T41b is built. */
+export const deleteBackedUpPhotosJob = onCall({ region: REGION }, async () => {
+  throw new Error('T41b: not built');
+});
+
 /** "Delete account and all data". The phone revokes the Sign in with Apple token first (Apple requires it), then calls
  *  this, then wipes itself. */
 export const deleteAccount = onCall({ region: REGION, enforceAppCheck: true }, async (req) => {

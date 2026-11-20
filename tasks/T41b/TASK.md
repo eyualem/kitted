@@ -23,7 +23,9 @@
 (Implementer fills this in.)
 
 ## Disputes
-(None yet.)
+- **Existing tests changed by the test writer, because a locked criterion changes what they pin** (not an implementer dispute):
+  - `app/src/__tests__/syncEngine.test.ts`: it used chat rows as its example row. SB5.1a makes `chat` local, so its checks (E1 to E14) now use facts rows (`value` is the text, `key` can hold a photo path for the file checks); nothing else in them changed. E8 also pinned that a pulled profile carries `consentVersion 'v2'`; SB5.1b/SB6.1c say the agreement never travels, so it now expects `consentVersion: null, consentAt: null` on the other phone (the old #57 omitted them too). Every other assertion is as before.
+  - `firebase/tests/functions.test.ts` F2: its old tombstone in `chatMessages` is now one in `outfits` (the job no longer sweeps a chat collection); expectations unchanged.
 
 ## Review
 (Reviewer fills this in.)
