@@ -126,7 +126,7 @@ Lane files: `firebase/`
 
 ### Setup and You
 *The first minute in the app and the You tab. Done means setup reaches the first check in 6 taps, asks his name (optional) and checks his age the Apple way.*
-- [~] **ranking-undo** · PR (opens with this branch) · normal · *(the founder in chat Nov 19, log #521; spec `specs/style-game.md` SG2, SG2.3)* The style game's this-or-that step now asks `Which one do you like more?` (title unchanged) and has a visible `Undo` under the pair: it takes back your last pick, and on the first pair goes back to the last Yes/No card; no extra tap on the 18-tap path · *files: onboarding/GameRanking.tsx, en.ts, tests, the T113 flow*
+- [~] **ranking-undo** · PR #171 · normal · *(the founder in chat Nov 19, log #521; spec `specs/style-game.md` SG2, SG2.3)* The style game's this-or-that step now asks `Which one do you like more?` (title unchanged) and has a visible `Undo` under the pair: it takes back your last pick, and on the first pair goes back to the last Yes/No card; no extra tap on the 18-tap path · *files: onboarding/GameRanking.tsx, en.ts, tests, the T113 flow*
 
 Spec: `specs/setup-and-you.md` (interview: T30); for T37–T39, `specs/onboarding-screens.md` (interview: T37)  
 Lane files: `app/src/features/{onboarding,you,aboutYou,settings,privacy}` (not `privacy/wipe.ts`)
@@ -287,7 +287,7 @@ Claude builds with the default until you decide.
 
 ## Session log
 The last 15 sessions, newest first.
-- 2026-11-19 · ranking-undo (your ask): the this-or-that step now reads `Which one do you like more?` and has an Undo under the two outfits (takes back your last pick; on the first pair, goes back to the last card); the title stays; no extra tap, still 18 to the camera; in a PR, not merged; log #521
+- 2026-11-19 · ranking-undo (your ask): the this-or-that step now reads `Which one do you like more?` and has an Undo under the two outfits (takes back your last pick; on the first pair, goes back to the last card); the title stays; no extra tap, still 18 to the camera; in PR #171, not merged; log #521
 - 2026-11-19 · t41-sign-in (strict, PR #168; replaces the old #58): Continue with Apple first, then Google, from the four places only; the save card's timing and words follow the spec; restore from Welcome asks age only; sign out keeps fits; Apple's first name fills an empty name only; email sign-in removed; Sign in with Apple's entitlement split from the paid switch (Apple's weather stays off). Reviewer: ready, 3 planted bugs caught. `ACCOUNTS_BUILT` stays off until T41b (backup) lands; `expo-apple-authentication` is installed (his yes) and the sign-in sheet now fits its content.
 - 2026-11-19 · oversized-tee-half-sleeve (control's task, tiny): the oversized tee's sleeves are now half sleeves, low at the dropped shoulder, wide and loose to about the elbow, a level hemmed opening (DECISIONS-LOG #519, PR #161).
 - 2026-11-19 · tier-refresh (your "Yes, fix it"): your phone kept showing the 3-check limit after your account was raised to 50, because the app only hears its limits from server answers and had stopped asking; now, at a limit, it asks the server once (no AI call) and lets you through if the server allows; log #518
