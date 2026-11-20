@@ -19,6 +19,8 @@
 - **Not touched on delete:** the server's per-phone usage count (T21a's `devices/{hash}` docs) stays; `deleteEverything` removes only `users/{uid}`, `usage/{uid}`, the files and the Auth user.
 - **Words he picked:** `Your style profile is back.` for an account with a saved style profile and no fits (log #521).
 
+- **From the test writer (session's answers):** a restored phone saves only the age band he just picked (`birthYear` stays null since T39; SB6 asks "age only"), so the tests are right. Turning photo backup off then on again must re-upload every photo: reset the "already uploaded" bookkeeping on a successful turn-off. The wiring files (`appBackup`, the Apple revoke in `firebaseAuth.ts`, `services/firebase/data.ts`, `actions.ts`, the sheet's last step, the switch) have no unit tests; the Simulator screenshots and the reviewer cover them, and the reviewer must read that the wipe never clears the age lock (`kitted.ageBlocked`).
+
 ## Built
 (Implementer fills this in.)
 
