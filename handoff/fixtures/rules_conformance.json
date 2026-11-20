@@ -1438,7 +1438,7 @@
   {
    "id": "SCO-6-ignored",
    "rule": "SCO-6",
-   "what": "a belt, a watch and an unsure piece change nothing",
+   "what": "a belt, a watch and an unsure accessory change nothing",
    "reading": {
     "scene": {
      "framing": "full_body",
@@ -1550,21 +1550,21 @@
       "shows_below_outer": false
      },
      {
-      "category": "top",
-      "subcategory": "graphic_tee",
-      "color_family": "red",
-      "pattern": "graphic",
+      "category": "accessory",
+      "subcategory": "hat",
+      "color_family": "brown",
+      "pattern": "solid",
       "logo": "none",
       "volume": 3,
       "leg_shape": "na",
       "hem": "na",
-      "tucked": "none",
+      "tucked": "na",
       "condition": "clean",
       "certainty": "unsure",
-      "length": "mid_fly",
+      "length": "na",
       "pattern_scale": "na",
       "saturation": "na",
-      "sleeve_end": "at_wrist",
+      "sleeve_end": "na",
       "strain": "none",
       "distressed_by_design": false,
       "shows_below_outer": false

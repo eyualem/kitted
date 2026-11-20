@@ -28,6 +28,9 @@ RESULTS = os.path.join(KEMPT, "extraction-test/results")
 SCHEMA = json.load(open(os.path.join(KEMPT, "extraction-test/schema.json")))
 GP = SCHEMA["properties"]["garments"]["items"]["properties"]
 ENUM = {k: v["enum"] for k, v in GP.items() if "enum" in v}
+# T61: the reader's four new piece names are left out of the fuzz, so every existing fuzz reading (and its rotating
+# configs) stays exactly as it was; the not-rated cases are hand-written (nr_edge_cases)
+ENUM["subcategory"] = [x for x in ENUM["subcategory"] if x not in ("dress", "skirt", "heels", "traditional_shoe")]
 TEST_STYLES = [["minimalist", 0.5], ["smart_casual", 0.5]]
 OCCASIONS = list(rubric.OCCASION_TARGET) + ["brunch"]          # "brunch" = unknown key -> default (2, 3)
 STYLE_MIXES = [
@@ -61,6 +64,23 @@ def R(*garments, **scene):
 TEE = lambda **kw: G("top", "tee", "white", **{"tucked": "none", "length": "at_belt", **kw})
 JEANS = lambda **kw: G("bottom", "jeans", "denim_mid", **{"leg_shape": "straight", "hem": "slight_break", **kw})
 SNK = lambda **kw: G("footwear", kw.pop("sub", "canvas_sneaker"), kw.pop("color", "white"), **kw)
+
+
+def nr_edge_cases():
+    """T61: appended after the fuzz readings, so no existing reading's rotating configs (index based) move."""
+    E = []
+    add = lambda name, r, occ=None, styles=None, bold=None: E.append((name, r, occ, styles, bold))  # noqa: E731
+    # T61 (specs/not-rated.md NR1, NR2): each new reason, each unreadable slot, and heels / traditional shoes
+    nb = (TEE(), JEANS(color_family="denim_dark"), SNK(sub="white_leather_sneaker"))
+    add("nr_womenswear_dress", R(G("top", "dress", "black", tucked="na", length="mid_fly"), nb[1], nb[2]))
+    add("nr_womenswear_skirt", R(nb[0], G("bottom", "skirt", "black", leg_shape="straight"), nb[2]))
+    add("nr_costume", R(*nb, costume_or_uniform=True))
+    add("nr_unreadable_top", R(TEE(certainty="unsure"), nb[1], nb[2]))
+    add("nr_unreadable_jacket", R(nb[0], G("outerwear", "bomber", "black", certainty="unsure"), nb[1], nb[2]))
+    add("nr_unreadable_pants", R(nb[0], JEANS(color_family="denim_dark", certainty="unsure"), nb[2]))
+    add("nr_shoes_not_rated_heels", R(nb[0], nb[1], SNK(sub="heels", color="black")))
+    add("nr_shoes_not_rated_traditional", R(nb[0], nb[1], G("traditional", "traditional_shoe", "brown")))
+    return E
 
 
 def edge_cases():
@@ -255,7 +275,7 @@ def expected(reading, occ, styles, bold):
     s = K.score(reading, occ, styles, bold)
     keep = ("overall", "reason", "partial", "rules_fired", "raw_score", "raw_unrounded", "subscores", "occasion_adj", "credits",
             "credit_points", "credit_unrounded", "mistake_points", "mistakes_unrounded", "advice", "not_rated",
-            "detected_styles", "style_label")
+            "detected_styles", "style_label", "unreadable_slot")
     return {k: s[k] for k in keep if k in s}
 
 
@@ -318,6 +338,9 @@ def main():
     n_before_fuzz = len(readings)
     for i, r in enumerate(fuzz(900)):
         put(r, f"fuzz:{i}", None)
+    n_after_fuzz = len(readings)
+    for name, r, occ, styles, bold in nr_edge_cases():
+        put(r, "edge:" + name, {"occasion": occ or "everyday", "styles": styles if styles is not None else TEST_STYLES, "boldness": bold or "a_little"})
 
     cases = []
     for i, key in enumerate(order):
@@ -376,7 +399,7 @@ def main():
         "rubric_sha256": hashlib.sha256(open(rubric.__file__, "rb").read()).hexdigest(),   # the file actually imported
         "counts": {"real_runs_read": n_real, "unique_real_readings": n_unique_real, "council_readings": n_council,
                    "demo_and_edge_readings": n_before_fuzz - n_unique_real - n_council,
-                   "fuzz_readings": len(readings) - n_before_fuzz, "readings": len(readings), "cases": len(cases),
+                   "fuzz_readings": n_after_fuzz - n_before_fuzz, "not_rated_readings": len(readings) - n_after_fuzz, "readings": len(readings), "cases": len(cases),
                    "fp_boundary_cases": dict(fpb)},
         "coverage": dict(sorted(cov.items())), "overall_histogram": {str(k): v for k, v in sorted(overall.items(), key=lambda t: (t[0] is None, t[0] or 0))},
         "provenance": {rid: prov[rid]["sources"] for _, (rid, _) in readings.items()},

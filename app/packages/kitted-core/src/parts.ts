@@ -26,7 +26,7 @@
 
 import { PARTS_DATA } from "./partsData";
 import { defaultRubric, type RubricEngine } from "./rubric";
-import type { DetectedStyle, Garment, NotRated, Reading, Scene, Styles } from "./types";
+import type { BlockReason, DetectedStyle, Garment, NotRated, Reading, Scene, Styles, UnreadableSlot } from "./types";
 import { has, isNone, maxOf, minOf, or, pyMax, pyMin, pyRound, replaceAll, roundHalf, sum, truthy } from "./util";
 
 // ================================================================= data and result types
@@ -512,7 +512,9 @@ export interface PartsScored {
 
 export interface PartsUnscored {
   overall: null;
-  reason: "not_fully_clothed" | "nothing_readable" | "no_part_readable";
+  reason: "not_fully_clothed" | "nothing_readable" | "no_part_readable" | BlockReason;
+  /** Only with reason "unreadable" (T61). */
+  unreadableSlot?: UnreadableSlot;
   /** Empty for the first two reasons; every part (all NA) for no_part_readable. */
   parts: Partial<Record<PartName, PartResult>>;
   naParts: PartName[];
@@ -2220,6 +2222,8 @@ export function createParts(data: PartsData, rubric: RubricEngine = defaultRubri
     const prep = H.prepare(reading);
     const scene = prep.scene;
     if (scene.clothed !== "fully") return { overall: null, reason: "not_fully_clothed", parts: {}, naParts: [...ORDER] };
+    const blocked = H.block(reading);
+    if (blocked) return { overall: null, reason: blocked.reason, ...(blocked.slot ? { unreadableSlot: blocked.slot } : {}), parts: {}, naParts: [...ORDER] };
     if (prep.garments.length === 0) return { overall: null, reason: "nothing_readable", parts: {}, naParts: [...ORDER] };
     let garments = refile(prep.garments);
     const Tt: V16Taste = t.taste ?? {};

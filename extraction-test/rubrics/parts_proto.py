@@ -2315,6 +2315,9 @@ def score_parts(reading, occasion="everyday", styles=None, second_look=None, bol
     scene, garments, not_rated = R._prepare(reading)
     if scene.get("clothed") != "fully":
         return {"overall": None, "reason": "not_fully_clothed", "parts": {}, "na_parts": PART_ORDER[:]}
+    blk = R._block(reading)
+    if blk:
+        return R._blocked_result(blk, parts={}, na_parts=PART_ORDER[:])
     if not garments:
         return {"overall": None, "reason": "nothing_readable", "parts": {}, "na_parts": PART_ORDER[:]}
     garments = _refile(R._normalize(garments))

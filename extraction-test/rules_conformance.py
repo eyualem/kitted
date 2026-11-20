@@ -177,8 +177,8 @@ case("SCO-4-picks-sc", "SCO-4", "the same with Smart casual picked: the label ch
      vs={"case": "SCO-4-picks-none", "parts": {k: 0.0 for k in P.PART_ORDER}, "overall": 0.0})
 case("SCO-5-unclothed", "SCO-5", "a photo where he isn't fully clothed isn't scored",
      Rd(TEE, DJEANS, WLS, clothed="partial"), {"unscored": "not_fully_clothed"})
-case("SCO-6-ignored", "SCO-6", "a belt, a watch and an unsure piece change nothing",
-     Rd(TEE, DJEANS, WLS, acc("belt"), acc("watch"), top("graphic_tee", "red", certainty="unsure")),
+case("SCO-6-ignored", "SCO-6", "a belt, a watch and an unsure accessory change nothing",
+     Rd(TEE, DJEANS, WLS, acc("belt"), acc("watch"), mod(acc("hat"), certainty="unsure")),
      {"band": "Put together"},
      vs={"case": "SCO-1-plain", "parts": {k: 0.0 for k in P.PART_ORDER}, "overall": 0.0})
 case("SCO-7-add", "SCO-7", "a hoodie over skinny jeans with chunky sneakers: Proportions 5 and Shoes 5.5, so half of the smaller "

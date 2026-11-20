@@ -626,6 +626,32 @@ def parts_edges():
     add("v14_tucked_layer_wrinkled", Rd(TEE(color="navy", tucked="full", length="na"), OPEN(condition="wrinkled"), JEANS(color="denim_light", leg_shape="relaxed", volume=4), SHOE()))
     add("v10_knit_on_knit", Rd(G("outerwear", "cardigan", "navy"), TEE(sub="sweater", color="grey", length="at_belt"), JEANS(color="denim_dark"), SHOE(sub="suede_chukka", color="brown")))
     add("v8_standout_pattern", Rd(G("outerwear", "overshirt", "green", pattern="checks_plaid", pattern_scale="medium"), TEE(), JEANS(), SHOE(sub="work_boot", color="brown")))
+    # T61 (specs/not-rated.md NR1, NR2): no score for womenswear, traditional, costume and unsure main pieces; heels and
+    # traditional shoes score like a photo with no shoes. Built on a plain base outfit (white tee, dark straight jeans,
+    # white leather sneakers), one change at a time, like not_rated_test.py.
+    nb_tee, nb_jeans, nb_shoe = TEE(), JEANS(color="denim_dark"), SHOE(sub="white_leather_sneaker", color="white")
+    unsure = lambda g: dict(g, certainty="unsure")  # noqa: E731
+    dress = G("top", "dress", "black", tucked="na", length="mid_fly")
+    skirt = G("bottom", "skirt", "black", leg_shape="straight")
+    kurta = G("traditional", "other", "white")
+    bomber = G("outerwear", "bomber", "black")
+    add("nr_dress", Rd(dress, nb_jeans, nb_shoe))
+    add("nr_skirt", Rd(nb_tee, skirt, nb_shoe))
+    add("nr_traditional", Rd(kurta, nb_jeans, nb_shoe))
+    add("nr_costume", Rd(nb_tee, nb_jeans, nb_shoe, costume_or_uniform=True))
+    add("nr_unsure_top", Rd(unsure(nb_tee), nb_jeans, nb_shoe))
+    add("nr_unsure_jacket", Rd(nb_tee, unsure(bomber), nb_jeans, nb_shoe))
+    add("nr_unsure_pants", Rd(nb_tee, unsure(nb_jeans), nb_shoe))
+    add("nr_order_costume_skirt", Rd(nb_tee, skirt, nb_shoe, costume_or_uniform=True))
+    add("nr_order_traditional_dress", Rd(kurta, dress, nb_shoe))
+    add("nr_order_dress_unsure_jacket", Rd(dress, unsure(bomber), nb_shoe))
+    add("nr_dress_unsure", Rd(unsure(dress), nb_jeans, nb_shoe))
+    add("nr_heels", Rd(nb_tee, nb_jeans, SHOE(sub="heels", color="black")))
+    add("nr_traditional_shoe_footwear", Rd(nb_tee, nb_jeans, SHOE(sub="traditional_shoe", color="brown")))
+    add("nr_traditional_shoe_category", Rd(nb_tee, nb_jeans, G("traditional", "traditional_shoe", "brown")))
+    add("nr_unsure_shoes", Rd(nb_tee, nb_jeans, unsure(nb_shoe)))
+    add("nr_toponly_unsure_pants", Rd(nb_tee, unsure(nb_jeans), nb_shoe, framing="upper_only"))
+    add("nr_unsure_watch", Rd(nb_tee, nb_jeans, nb_shoe, unsure(G("accessory", "watch", "black"))))
     return E
 
 

@@ -64,6 +64,8 @@ def partial_label(not_rated):
         return "Partial check: top only"
     if "shoes" in (not_rated or []):
         return "Partial check: shoes not included"
+    if "shoes not rated" in (not_rated or []):
+        return "Partial check: shoes not rated"
     return None
 
 
@@ -364,7 +366,7 @@ def suggest_fixes(reading, occasion="everyday", styles=None, boldness="a_little"
         targets = [k for k in ("K1_layered", "K2_elevated_piece", "K4_shoes_complement") if k not in base["credits"]]
         if occasion in rubric.LOUNGE_OK:   # at the gym or home, a clean outfit has nothing to fix
             targets = []
-        if "shoes" in base["not_rated"] or "bottom half" in base["not_rated"]:
+        if {"shoes", "bottom half", "shoes not rated"} & set(base["not_rated"]):
             targets = [t for t in targets if t != "K4_shoes_complement"]
     if warm:
         targets = [t for t in targets if t != "K1_layered"]

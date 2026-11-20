@@ -187,7 +187,10 @@ def main():
         b0 = F._score(r, occ, dict(st), sl, BOLD, engine, season)
         b1 = F._score(F._working(r), occ, dict(st), sl, BOLD, engine, season)
         bn = F._score(r, occ, {}, sl, BOLD, engine, season)
-        assert b0.get("overall") == b1.get("overall") and b0.get("raw_unrounded") == b1.get("raw_unrounded"), src
+        # T61: a not-rated reading (reason set) has no score and so no fixes; its working copy drops the unsure and
+        # traditional pieces the block was about, so only a scored reading is held to this
+        assert b0.get("reason") in ("costume_or_uniform", "traditional", "womenswear", "unreadable") or (
+            b0.get("overall") == b1.get("overall") and b0.get("raw_unrounded") == b1.get("raw_unrounded")), src
         assert b0.get("overall") == bn.get("overall") and b0.get("raw_unrounded") == bn.get("raw_unrounded"), src
         exp = F.suggest_parts_fixes(r, occ, st, BOLD, sl, CLOSET if closet else [], warm, first, engine=engine, season=season)
         if styles is not None:

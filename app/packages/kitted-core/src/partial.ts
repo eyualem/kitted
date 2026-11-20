@@ -9,6 +9,7 @@ export function partialLabel(notRated: readonly (NotRated | string)[] | null | u
   const nr = notRated ?? [];
   if (nr.includes("bottom half")) return "Partial check: top only";
   if (nr.includes("shoes")) return "Partial check: shoes not included";
+  if (nr.includes("shoes not rated")) return "Partial check: shoes not rated";
   return null;
 }
 

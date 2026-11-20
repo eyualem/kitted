@@ -618,6 +618,13 @@ def detect_looks(garments, picks=None):
     return {"detected": det, "label": _label(det, c, picks or {}, LOOK_ORDER)}
 
 
+SHOES_NOT_RATED = ("heels", "traditional_shoe")        # T61 NR2: dropped like shoes out of the photo, token "shoes not rated"
+
+
+def _is_unrated_shoe(g):
+    return g.get("subcategory") in SHOES_NOT_RATED and g.get("category") in ("footwear", "traditional")
+
+
 def _prepare(ext):
     scene = ext.get("scene", {}) or {}
     garments = [g for g in ext.get("garments", []) if g.get("certainty") != "unsure" and g.get("category") != "accessory"]
@@ -626,10 +633,43 @@ def _prepare(ext):
         garments = [g for g in garments if g.get("category") != "footwear"]; not_rated.append("shoes")
     if scene.get("framing") == "upper_only":
         garments = [g for g in garments if g.get("category") not in ("bottom", "footwear")]; not_rated.append("bottom half")
-    if any(g.get("category") == "traditional" for g in garments):
-        not_rated.append("traditional garment (not rated)")
+    if any(_is_unrated_shoe(g) for g in garments):
+        garments = [g for g in garments if not _is_unrated_shoe(g)]; not_rated.append("shoes not rated")
     garments = [g for g in garments if g.get("category") != "traditional"]
     return scene, garments, not_rated
+
+
+UNREADABLE_SLOT = {"top": "top", "outerwear": "jacket", "bottom": "pants"}
+
+
+def _block(ext):
+    """T61 (specs/not-rated.md NR1): why a fully clothed reading gets no score, or None. After the shoes and framing
+    filters, the first that applies: a costume or uniform; a traditional main piece; a dress or skirt (whatever the
+    certainty of either); an unsure top, jacket or pants (the slot, in reading order). Returns (reason, slot)."""
+    scene = ext.get("scene", {}) or {}
+    gs = [g for g in ext.get("garments", []) if g.get("category") != "accessory"]
+    if not scene.get("shoes_visible", True):
+        gs = [g for g in gs if g.get("category") != "footwear"]
+    if scene.get("framing") == "upper_only":
+        gs = [g for g in gs if g.get("category") not in ("bottom", "footwear")]
+    if scene.get("costume_or_uniform") is True:
+        return "costume_or_uniform", None
+    if any(g.get("category") == "traditional" and g.get("subcategory") != "traditional_shoe" for g in gs):
+        return "traditional", None
+    if any(g.get("subcategory") in ("dress", "skirt") for g in gs):
+        return "womenswear", None
+    for g in gs:
+        if g.get("certainty") == "unsure" and g.get("category") in UNREADABLE_SLOT:
+            return "unreadable", UNREADABLE_SLOT[g["category"]]
+    return None
+
+
+def _blocked_result(blk, **extra):
+    reason, slot = blk
+    out = {"overall": None, "reason": reason, **extra}
+    if slot:
+        out["unreadable_slot"] = slot
+    return out
 
 
 def _normalize(garments):
@@ -651,7 +691,7 @@ def _normalize(garments):
 def scored_garments(ext):
     """The garments score() judges (filters, aliases, re-filed layers), or [] when nothing is scored."""
     scene, garments, _ = _prepare(ext)
-    if scene.get("clothed") != "fully" or not garments:
+    if scene.get("clothed") != "fully" or not garments or _block(ext):
         return []
     return _normalize(garments)
 
@@ -696,6 +736,9 @@ def score(ext: dict, occasion: str = "everyday", styles: dict = None, boldness: 
     scene, garments, not_rated = _prepare(ext)
     if scene.get("clothed") != "fully":
         return {"overall": None, "reason": "not_fully_clothed", "partial": False, "rules_fired": []}
+    blk = _block(ext)
+    if blk:
+        return _blocked_result(blk, partial=False, rules_fired=[])
     if not garments:
         return {"overall": None, "reason": "nothing_readable", "partial": True, "rules_fired": []}
     garments = _normalize(garments)
@@ -907,7 +950,7 @@ def score(ext: dict, occasion: str = "everyday", styles: dict = None, boldness: 
         advice.append(ADVICE["next_level_minimal"] if minimal else ADVICE["next_level"])   # don't tell minimal to add color
 
     # ================= CREDITS: one garment, one credit =================
-    hidden = {"shoes"} if "shoes" in not_rated or "bottom half" in not_rated else set()
+    hidden = {"shoes"} if {"shoes", "bottom half", "shoes not rated"} & set(not_rated) else set()
     cg = [g for g in garments if g.get("category") in ("top", "bottom", "footwear", "outerwear")]
     mg = [g for g in cg if g.get("category") in ("top", "bottom", "outerwear")]
 

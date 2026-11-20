@@ -425,7 +425,7 @@ export function suggestFixes(reading: Reading, opts: FixOptions = {}, engine: Ru
     // clean outfit: credit fixes only (K3 is never a fix, it's the "Next level" tip)
     targets = ["K1_layered", "K2_elevated_piece", "K4_shoes_complement"].filter((k) => !(base.credits as string[]).includes(k));
     if (engine.loungeOk.has(occasion)) targets = []; // at the gym or home, a clean outfit has nothing to fix
-    if (base.notRated.includes("shoes") || base.notRated.includes("bottom half")) targets = targets.filter((t) => t !== "K4_shoes_complement");
+    if (base.notRated.includes("shoes") || base.notRated.includes("bottom half") || base.notRated.includes("shoes not rated")) targets = targets.filter((t) => t !== "K4_shoes_complement");
   }
   if (opts.warm) targets = targets.filter((t) => t !== "K1_layered");
   if (opts.excludeTargets && opts.excludeTargets.length > 0) {
