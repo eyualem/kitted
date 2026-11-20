@@ -45,3 +45,19 @@ Small things, never blocking:
 
 **Verdict: not ready** (defect 1, a code fix; one fix round). Everything else is done.
 
+
+### Round 2 (the fixes in 8ee8dc56 only)
+
+Ran only `T120-graphicPieces`, `drawnPieces`, `pieceEdit` and `kitWordsPrompt`: 4 suites, 111 tests, all pass.
+
+- Defect 1 (side mark hung outside a slim body): fixed. `flats.ts` 542 now places it at `cx - hw + 5`, 22x19. By arithmetic (cx = 100) it starts at 68 for slim (edge 63), 64 regular, 60 relaxed, 55 oversized, and ends at 90 or less, clear of the placket. The slim polo, slim oxford and oversized bomber in both screenshots (light, dark) show the mark inside the body, low on the wearer's right.
+- Defect 2 (denim jacket mark across the seam): fixed. It is 12x10.5 at `cx - 19` (81 to 93), right of the seam at 79 and left of the placket. Both screenshots show it between the lines.
+- Tests: the new test checks the mark against the body edge (`x >= 100 - hw + 3`) and the placket (`x + w < 94`) for polo, oxford and bomber at all four fits, the pullover hoodie keeping its chest mark, and the denim jacket between its seam and the placket. The leg test now pins the mark's centre to the leg centre (to 0 decimals) and keeps it off the crotch gap. Both would fail on the old placement. Only test edits since round 1; no `.skip` or `.only`.
+- Guide wording: the bullet in `rubric/stylist-guide.md` and `guide.generated.ts` now says the clash with dressy trousers and loafers is charged only for a graphic tee or a roomy top. That matches the SX1 reading from round 1. `kitWordsPrompt` is green. The words are in Kit's guide, so the founder's call.
+- Untouched: nothing under `app/packages`, `app/modules`, `app/assets` or `extraction-test` since round 1, and `flatsBaseline.json` is not in the commit.
+
+No open defects.
+
+Small things, never blocking: the screenshots are still headless Chrome, not the iOS Simulator, and the phone check is still open.
+
+**Verdict: ready.**
