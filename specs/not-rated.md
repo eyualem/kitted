@@ -1,5 +1,7 @@
 # Not rated: outfits the scoring can't judge fairly
 
+**Approved by the founder:** 2026-11-20
+
 After this, a check never gets a made-up number. When the photo holds clothes the rules weren't built for (a dress, a skirt, traditional clothing, a costume or a uniform) or a main piece it can't make out, the card says "Not rated" with one honest line, and the check doesn't count toward his day. Heels or traditional shoes with menswear are scored like a photo without shoes. Everything else (niche styles, sportswear worn to play) is rated as today.
 
 **Part of:** `specs.md` → F2.5 (traditional clothing and womenswear are "not rated"; a check with nothing ratable doesn't count), F2.6 (the partial check), F2.4 (nothing saved until it's read), F4 (fixing a misread), the "Nothing ratable" row of Failure and edge cases, and the Non-goals line "Scoring womenswear (dresses, skirts, heels): not rated yet". The scoring rules in plain words live in `rubric/v5-styles.md`, whose [SCO-6] changes in the build. This spec fills in F2.5; it changes nothing in `specs.md`.
