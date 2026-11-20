@@ -1,0 +1,29 @@
+# T41b · Backup, restore and delete for sign-in (the backup half)
+
+**Size:** strict · **From:** `plan.md` → T41b (the founder's yes, Nov 19) · **Spec:** `specs/sign-in-and-backup.md` (approved 2026-11-12; SB6 changed Nov 19 with his yes, log #521), checks SB4.1–SB4.3, SB5.1, SB6.1 (real-data half), SB9.1, plus the review notes below · **Lane:** Sign-in and backup
+
+## What changes
+- **Goal:** with `ACCOUNTS_BUILT` on, signing in really backs up his fits, closet, outfits, wear log, style profile and what Kit knows, a new phone really restores them, and "Delete account and all data" really runs revoke → server → phone. Chats, name, age band and the under-18 lock never reach the server. Photos only if he turns photo backup on. `ACCOUNTS_BUILT` stays **false**; whether it flips for the second TestFlight build is his call at merge (say so in the PR).
+- **Starting point:** the old unmerged PR #57 (`claude/backup-sync-au1-658e0f`, Nov 4, written before the spec): `sync/backup.ts`, `appBackup.ts`, `appTracking.ts`, `tracking.ts`, `firestoreRemote.ts`, `storageTransport.ts`, `deviceFiles.ts`, `services/firebase/data.ts`, `features/account/restore.ts`, `features/privacy/backupLine.ts`, `firebase/tests/sync.test.ts`, `app/src/__tests__/backup.test.ts`. Read it with `git show claude/backup-sync-au1-658e0f:<path>`, port what the spec wants onto main (main's `account/` was reworked by T41), leave the rest. Close #57 with a link when this PR opens. The engine (`sync/engine.ts`), `memoryRemote.ts`, the rules and the server jobs (`deleteEverything`) are already on main.
+- **Files:** `app/src/sync/*` (the engine's wiring, `schema.ts`: `chat` becomes `'local'`, the photo-backup setting) · `app/src/data/db.ts` (+ `db.web.ts`: the tracked store, if the port needs it) · `app/src/features/account/*` (`RestoreScreen`, `restore.ts`, `SignInSheet`: the last step and real `inAccount` ids, `account.ts`, `firebaseAuth.ts`: real holdings and the Apple revoke, `actions.ts`: the delete order) · `app/src/features/privacy/*` (`wipe.ts`; the Privacy & data switch and the delete rows) · `app/src/app/(tabs)/you/privacy.tsx` · `app/src/services/firebase/data.ts` · `app/src/i18n/en.ts` · `firebase/functions/src/index.ts` (a `deleteBackedUpPhotos` job; `deleteAccount` / the new job stop requiring App Check, as #386 decided, because the app sends no App Check token yet) · `firebase/firestore.rules`, `firebase/storage.rules` (chat collection out) · `firebase/tests/*` · `handoff/11-firestore-schema.md` (chat out) · `handoff/DECISIONS-LOG.md`.
+- **Not touched:** `firebase/functions/src/api/limits.ts`, `store.ts`, `handler.ts` and `app/src/services/server` (T21a's lane; a `handler.ts` change only if unavoidable, small, noted in the PR). No deploy of functions or rules (his yes first). No new npm package (the Firebase JS SDK is already in the app; `expo-apple-authentication` is installed).
+- **Done means:** SB4.1–SB4.3, SB5.1, SB6.1, SB7.1's `inAccount` note, SB9.1 hold with the locked tests in `TESTING.md` green, the emulator tests (`npm --prefix tests run emulate` in `firebase/`) green, `npm run check` in `app/` green; light screenshots of the photo-backup step, the restore screens (fits and profile-only) and the delete confirm.
+- **Must not break:** "the server keeps no questions or answers, and no photos unless he turns on photo backup"; the under-18 stop; the guest's account ID; the phone as the real copy that works offline; `ACCOUNTS_BUILT` off means nothing signs in or syncs.
+
+## Decisions made while writing this (the founder can overrule)
+- **Photo backup is a synced pref** (kv `backup.photos`, `'on'`; absent means off), so it belongs to the account and a new phone follows it. The engine's file queue does not run, and the transport's `upload` is never called, while it's off. Server-side the rules stay owner-only (SB4.2); a rule that also checks the flag is not built (needs cross-service Firestore reads in Storage rules and an IAM grant at deploy).
+- **Turning it off:** after the confirm, the phone calls a new server job (`deleteBackedUpPhotos`: deletes the `users/{uid}/files/` prefix, never reads a file) and only then flips the switch off. Offline or a failure: the switch stays on, nothing changes, a toast says so. Photos on the phone stay.
+- **The Apple revoke** is the Firebase SDK's `revokeAccessToken` with a fresh authorization code, which needs Apple's sheet once at delete time (Google accounts have no revoke step). If he cancels Apple's sheet, nothing is deleted and the server isn't called.
+- **Restore reads the server first:** holdings (scored full-check count, closet piece count, whether a saved style profile with looks exists) come from the server's own counts before the age question; the pull (counts as they arrive) runs after 18+ is confirmed. Under 18: nothing is pulled or written to the phone, and he's signed out as today.
+- **"Use the account's"** gets the account's real fit IDs from a read-only fetch before the choice is shown; only then is `inAccount` real.
+- **Not touched on delete:** the server's per-phone usage count (T21a's `devices/{hash}` docs) stays; `deleteEverything` removes only `users/{uid}`, `usage/{uid}`, the files and the Auth user.
+- **Words he picked:** `Your style profile is back.` for an account with a saved style profile and no fits (log #521).
+
+## Built
+(Implementer fills this in.)
+
+## Disputes
+(None yet.)
+
+## Review
+(Reviewer fills this in.)
