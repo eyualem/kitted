@@ -146,7 +146,10 @@ function v16RowProblems(label: string, res: PartsScored, occasion: OccasionKey, 
       if (v.heldBy === 'occasion' && r.item !== res.occasion.status) say(`ceiling item ${r.item}, want ${res.occasion.status}`);
     });
   }
-  if (readsAs && !row('readsAs')) say('readsAs missing');
+  // T115 (log #498): the look is named once. The row shows only when the Style part doesn't already say "reads as …".
+  const styleSays = (res.parts.cohesion?.reasons ?? []).some((x) => /^reads as/i.test(x.line));
+  if (readsAs && !styleSays && !row('readsAs')) say('readsAs missing');
+  if (row('readsAs') && (!readsAs || styleSays)) say('readsAs says the look a second time');
   return bad;
 }
 

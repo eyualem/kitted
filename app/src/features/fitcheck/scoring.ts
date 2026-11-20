@@ -13,6 +13,7 @@ import {
 } from '@kitted/core';
 import { normStyleKey, type CheckDetails, type FitCheckRow, type FitCheckStatus, type OccasionKey, type StoredParts, type StyleKey } from '@/data/types';
 import { t } from '@/i18n/en';
+import { chargedParts } from '@/features/why/charged';
 import { cardSummary } from './explain';
 
 export type ScoringEngine = 'parts' | 'v4';
@@ -180,7 +181,8 @@ function gainPartOf(res: PartsScored, fx: PartsFixSuggestions): PartName | null 
   if (fx.smallerStep) return fx.smallerStep.part;
   if (fx.nextLevel) return fx.nextLevel.part;
   const lowest = res.lowest.part;
-  return lowest && res.parts[lowest].display !== null && res.parts[lowest].display! < 7 ? lowest : null;
+  const shown = lowest ? chargedParts(res).parts[lowest]?.display : null; // T115b: a part lowered only by an uncharged rule has nothing to gain
+  return lowest && shown != null && shown < 7 ? lowest : null;
 }
 
 /** The parts result as a check stores it (enough for the Why sheet; the reading stays the source of truth). */

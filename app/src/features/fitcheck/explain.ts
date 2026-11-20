@@ -4,6 +4,7 @@
 import { garmentName, type Fix, type Reading, type RecheckOutcome } from '@kitted/core';
 import { displayScore, scoreWordLabel } from '@/design-system/score';
 import type { CheckDetails } from '@/data/types';
+import { unchargedChecks } from '@/features/why/charged';
 import { en, t, type StringKey } from '@/i18n/en';
 import { deltaPill } from '@/i18n/format';
 
@@ -92,8 +93,10 @@ const lowerFirst = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : 
  *  no words is left out. At most two. */
 export function newProblemLines(newProblems: readonly string[], details: Pick<CheckDetails, 'parts'>): string[] {
   const out: string[] = [];
+  const uncharged = unchargedChecks(details.parts?.v16); // T115b: a rule the score doesn't charge is no new problem
   for (const id of newProblems) {
     const at = id.indexOf(':');
+    if (at > 0 && uncharged.has(id.slice(at + 1))) continue;
     let line: string | undefined;
     if (at > 0) {
       const part = id.slice(0, at);

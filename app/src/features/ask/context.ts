@@ -21,6 +21,7 @@ import { FITS, fitLabel, type FitPref } from '@/features/onboarding/basics';
 import { occasionLabel } from '@/features/stylist/thread';
 import { liveFacts } from '@/features/you/facts';
 import { asBudget, budgetLabel } from '@/features/you/profile';
+import { chargedParts } from '@/features/why/charged';
 import { t } from '@/i18n/en';
 import { clockTime, signed, weekdayName } from '@/i18n/format';
 
@@ -129,7 +130,7 @@ export function fullCheckLines(
   if (c.isPartial) out.push(`  Partial check: ${c.notRated.includes('bottom half') ? 'only the top half was in the photo' : 'shoes not in the photo'} (what isn't in the photo never costs points)`);
   const worn = piecesOf(c);
   if (worn.length) out.push(`  Pieces: ${worn.join(', ')}`);
-  const parts = c.details.parts;
+  const parts = c.details.parts ? chargedParts(c.details.parts) : undefined; // T115b: what the score took
   if (parts) {
     const names = PARTS_DATA.partNames as Record<PartName, string>;
     const shown = (PARTS_DATA.partOrder as readonly PartName[]).map((k) => {
