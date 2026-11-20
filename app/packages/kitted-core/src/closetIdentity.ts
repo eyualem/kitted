@@ -745,10 +745,12 @@ export interface ReadingReconcileEntry extends Decision {
 }
 
 const CLOSET_CATEGORIES: readonly string[] = ["top", "bottom", "footwear", "outerwear"];
+/** T61 (NR5): womenswear and the shoes the scoring can't rate are never kept in Closet, like traditional pieces. */
+const NEVER_KEPT_SUBCATEGORIES: readonly string[] = ["dress", "skirt", "heels", "traditional_shoe"];
 
 /**
  * What closetPlan() will return once it wraps this engine: worn pieces then held pieces, each same / new / ask.
- * Accessories, traditional garments and unsure reads are skipped, as today. `profiles` adds stored sightings,
+ * Accessories, traditional garments, unsure reads, dresses, skirts, heels and traditional shoes are skipped. `profiles` adds stored sightings,
  * aliases and distinctFrom per item id (the V6 closet tables).
  */
 export function reconcileReading(
@@ -759,6 +761,7 @@ export function reconcileReading(
   const picked: { from: "garment" | "held"; index: number; obs: Observation }[] = [];
   const visit = (g: Garment, from: "garment" | "held", index: number) => {
     if (typeof g.category !== "string" || !CLOSET_CATEGORIES.includes(g.category) || g.certainty === "unsure") return;
+    if (typeof g.subcategory === "string" && NEVER_KEPT_SUBCATEGORIES.includes(g.subcategory)) return;
     picked.push({ from, index, obs: { ...g, lighting: typeof lighting === "string" ? lighting : null } as Observation });
   };
   reading.garments.forEach((g, i) => visit(g, "garment", i));

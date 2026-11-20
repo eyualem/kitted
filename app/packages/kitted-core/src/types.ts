@@ -76,6 +76,8 @@ export interface Scene {
   mirror_selfie?: boolean | null;
   lighting?: Loose<Lighting> | null;
   clothed?: Loose<Clothed> | null;
+  /** T61: a costume or a uniform (the reader's yes/no); missing or false = scored as today. */
+  costume_or_uniform?: boolean | null;
   [extra: string]: unknown;
 }
 
@@ -120,12 +122,20 @@ export type RuleId =
   | "C4a_same_pattern_same_scale" | "C4a_same_pattern_type" | "C4b_three_plus_patterns"
   | "B1_too_many_focal_points" | "C5_near_match_jacket_trousers" | "O1_too_casual" | "O1_too_formal"
   | "O4_loungewear_out" | "S2_shoes_too_casual_for_outfit" | "O3_large_logo";
-export type NotRated = "shoes" | "bottom half" | "traditional garment (not rated)";
+/** "shoes not rated" (T61, NR2): heels or traditional shoes, dropped like shoes out of the photo; it is not "shoes", so
+ *  no shoe snap is offered. The old "traditional garment (not rated)" token is gone: a traditional piece blocks the score. */
+export type NotRated = "shoes" | "bottom half" | "shoes not rated";
+
+/** Why a fully clothed reading gets no score (T61, specs/not-rated.md NR1). */
+export type BlockReason = "costume_or_uniform" | "traditional" | "womenswear" | "unreadable";
+export type UnreadableSlot = "top" | "jacket" | "pants";
 
 /** rubric.py's early return: nothing to score. */
 export interface UnscoredResult {
   overall: null;
-  reason: "not_fully_clothed" | "nothing_readable";
+  reason: "not_fully_clothed" | "nothing_readable" | BlockReason;
+  /** Only with reason "unreadable". */
+  unreadableSlot?: UnreadableSlot;
   partial: boolean;
   rulesFired: RuleId[];
 }

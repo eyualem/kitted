@@ -34,7 +34,7 @@ export function seedCloset(): ClosetItem[] {
 
 /** TS RubricResult -> the dict rubric.py / kitted_logic.score returns (fixture keys). */
 export function toPy(r: RubricResult): Record<string, unknown> {
-  if (r.overall === null) return { overall: null, reason: r.reason, partial: r.partial, rules_fired: r.rulesFired };
+  if (r.overall === null) return { overall: null, reason: r.reason, ...((r as any).unreadableSlot !== undefined ? { unreadable_slot: (r as any).unreadableSlot } : {}), partial: r.partial, rules_fired: r.rulesFired }; // T61: the slot only with reason "unreadable"
   return {
     overall: r.overall, raw_score: r.rawScore, subscores: r.subscores, occasion_adj: r.occasionAdj,
     credits: r.credits, credit_points: r.creditPoints, mistake_points: r.mistakePoints, rules_fired: r.rulesFired,

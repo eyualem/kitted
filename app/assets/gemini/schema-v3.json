@@ -35,6 +35,9 @@
       "fully",
       "partial"
      ]
+    },
+    "costume_or_uniform": {
+     "type": "BOOLEAN"
     }
    },
    "required": [
@@ -43,7 +46,8 @@
     "people_count",
     "mirror_selfie",
     "lighting",
-    "clothed"
+    "clothed",
+    "costume_or_uniform"
    ]
   },
   "garments": {
@@ -124,6 +128,10 @@
        "fleece",
        "shell_jacket",
        "camp_collar_shirt",
+       "dress",
+       "skirt",
+       "heels",
+       "traditional_shoe",
        "other"
       ]
      },

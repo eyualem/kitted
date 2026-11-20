@@ -20,7 +20,7 @@ import { canon, R, sha256, stripDefaults } from "./t69";
 const H15P = "a8b3c28cd3981000874d85db4c1749505f587ae671eff9de1b64db1a2c2358b9"; // 12,021 cases at a2480b09
 const H15F = "e427e6b26b34fa264d70c742837b0be106d029b416e5718ccab9b8acf8754251"; // 30,412 cases
 const H15C = "60dac8e76a6aa7a02b903becbc9f9ec60bfb55918c6bb3b52e1e8ce165313dbe"; // 501 cases
-const N15P = 12021, N15F = 30412, N15C = 501;
+const N15P = 11576, N15F = 30202, N15C = 500; // T61: the filtered sets (see isTrigger)
 // T94 (Tailored, merged after T69; T94's TESTING.md Disputes 4). T94 renames looks in v15 outputs (TL2: "reads as
 // tailored", style_label "tailored", "tailored" among the detected looks) and adds v15 cases (a Tailored picks variant,
 // 26 TLR conformance cases), so the hashes above, taken over whole cases, can't hold. Two hashes keep the guarantee:
@@ -30,13 +30,13 @@ const N15P = 12021, N15F = 30412, N15C = 501;
 // - H94: every v15 case, exactly, hashes to what T94's fixtures gave before T69 merged (27f02eed): merging T69 changed
 //   nothing of v15, names included.
 // Computed by T94's test writer from `git show a2480b09:` and `git show 27f02eed:` with the code below (Nov 18).
-const NAMES15P = "53399894a827d7106bee844110b6bdce3e22109a42735601858828c657b80351";
-const NAMES15F = "1b2c57761080eb70e1e226096112737efc12fd159329a78a5781cef0a4457dfd";
-const NAMES15C = "0d5bd01f7a84f64a4b4fec5377e77568f912ac5769af4524dd982f82800aa7cf";
-const H94P = "fe3224095ca0260933b7d924f3ab018f18875181999fb567ffae497432464e26"; // 12,549 cases at 27f02eed
-const H94F = "ffb0af816c90fd9f24c74d51197753b93fa82f2c86a01bb05d981c263ec8ea60"; // 31,183 cases
-const H94C = "35e224e3749de02014feafdbf355601393f585100d13b616cc9248759aa5cdf6"; // 527 cases
-const N94P = 12549, N94F = 31183, N94C = 527;
+const NAMES15P = "4c99737aeb5a169d21e34a7f616766d6147f710e7f817e9814c528b371cce32f"; // re-pinned by T61 on the filtered set
+const NAMES15F = "564000a1c0da45ee4716a6d76aa344613daf9987f1e2c8df0253c715f1220027";
+const NAMES15C = "3de6002adc195b731c107a6b5abb74e3367ba200d0443e0fb84880b90e835b51";
+const H94P = "ab23f6d930e0f919d22e8f1468c0f8eef3bc74b051f8e6f914ed4d77cd889db8"; // 12,102 cases (T61 filter; was 12,549 unfiltered at 27f02eed)
+const H94F = "b566e40d65f0a547c6d325ff086d268e85771456f2779c58a147c107364a3cf5"; // 30,968 cases (T61 filter; was 31,183)
+const H94C = "d76fbd3290329e2938cbe5a904fffb9de55bfe6d407334e044e60ab88c693a37"; // 526 cases (T61: SCO-6-ignored left out; was 527)
+const N94P = 12102, N94F = 30968, N94C = 526;
 const LOOK_WORDS = /\b(vintage sport|outdoor|workwear|streetwear|tailored|classic prep|minimal|smart casual)\b/g;
 /** The look names masked (see above). */
 function maskNames(x: unknown, key?: string): unknown {
@@ -57,6 +57,29 @@ function maskNames(x: unknown, key?: string): unknown {
   }
   return typeof x === "string" ? x.replace(/a matching suit/g, "reads as <look>").replace(LOOK_WORDS, "<look>") : x;
 }
+// T61 (not rated; T61's TASK.md Disputes): a reading with a trigger is allowed to change (NR8.1: a costume flag, a traditional
+// main piece, a dress or skirt, an unsure top, jacket or pants after the framing and shoe filters, heels or traditional
+// shoes) and the 17 `parts-edge:nr_*` cases are new. The pins below are taken over every other v15 case, so any
+// non-trigger case that moves still fails them. Counts and hashes recomputed by the T61 test writer on the fixtures at
+// 78230a2f (before the T61 build) with this same filter, and equal on the built fixtures.
+function isTrigger(r: Reading | undefined): boolean {
+  if (!r) return false;
+  const scene = (r.scene ?? {}) as Record<string, unknown>;
+  let gs = (r.garments ?? []).filter((g) => g.category !== "accessory") as Garment[];
+  const sub = (g: Garment) => g.subcategory as string;
+  if (scene["costume_or_uniform"] === true) return true;
+  if (gs.some((g) => (g.category as string) === "traditional" && sub(g) !== "traditional_shoe")) return true;
+  if (gs.some((g) => ["dress", "skirt"].includes(sub(g)))) return true;
+  if (gs.some((g) => g.category === "footwear" && ["heels", "traditional_shoe"].includes(sub(g)))) return true;
+  if ((r.garments ?? []).some((g) => (g.category as string) === "traditional" && sub(g) === "traditional_shoe")) return true;
+  if (scene["shoes_visible"] === false) gs = gs.filter((g) => g.category !== "footwear");
+  if (scene["framing"] === "upper_only") gs = gs.filter((g) => g.category !== "bottom" && g.category !== "footwear");
+  return gs.some((g) => g.certainty === "unsure" && ["top", "outerwear", "bottom"].includes(g.category as string));
+}
+// The 25 readings T61's generators added (17 parts-edge nr_* outfits, 8 make_parity nr_edge cases), by their fixture id:
+// every case on them (the case itself, its picks and second-look variants, its fixes) is new, none existed before T61.
+const T61_NEW = new Set(["r0c69507390ed", "r140c38fee578", "r2c9a156c3573", "r2eec48bc1f43", "r40c93962716e", "r41af780fd3c4", "r442cb791d65c", "r494fb321154f", "r58c5d76ffb70", "r6bf72bddcd1f", "r6fbac5ed97b7", "r7f59dabbd6d8", "r906bf2bcc0a2", "r925257b22b56", "r929fbeb5727e", "r973ff12274fc", "r9d615c5b9c80", "r9dd7be593c3c", "raf40d17e2d50", "rb9172e0209b1", "rb9746c7c7a12", "rc80e908691a0", "rde988e222436", "re3b1cadb55b1", "reb5c0a3f480c"]);
+const isNr = (c: object) => T61_NEW.has((c as { reading?: string }).reading as string);
 const tailoredPick = (c: object) => (((c as { styles?: unknown }).styles as [string, number][] | undefined) ?? []).some(([k]) => k === "tailored");
 // parts.json's tune at a2480b09 (v15, parts data 1.14.0)
 const TUNE15 = {"pr1":1.5,"pr1_mirror_short":0.5,"pr1b":0.5,"pr2":1.5,"pr3":1,"prop_cap":2.5,"h1":0.5,"h2":0.5,"h2_suit":0.5,"h4":0,"cp1":0,"cp2":0.5,"cp5":0.5,"lightness":true,"color_cap":2,"suit_shoe":true,"earned":{"over":7.5,"rate":0.5,"cap":0.25,"gate":[6.5,7]},"solid_line":true,"pr4":1,"pr4_shoes":["basketball_sneaker","canvas_sneaker","chunky_sneaker","low_profile_sneaker","retro_runner"],"h4_graphic_street":false,"sw2":0.5,"pr4_legs":["relaxed","wide"],"pr4_signature_v3":false,"pr5":1,"pr5_layers":["chore_coat"],"pr5_bottoms":["cargos","jeans","work_pants"],"pr5_shoes":["chelsea_boot","suede_chukka","work_boot"],"pr6":0.5,"pr6_layers":["fleece","rain_jacket","shell_jacket"],"pr6_shoes":["trail_shoe"],"short_layers_extra":["track_jacket"],"sc_pair":true,"h2_pick_free":true,"sx":3,"sx_street_tops":["graphic_tee"],"sx_dressy":["blazer","cardigan","chinos","derby","dress_shirt","dress_shoe","knit_polo","loafer","overcoat","oxford_shirt","polo","rugby_shirt","sport_coat","suit_jacket","suit_trousers","trousers","unstructured_blazer"],"sx_min_dressy":2,"sx_quiet":{"minimalist":4,"smart_casual":3,"classic_prep":3},"pb":1.5,"pb_roomy_full":["minimalist","outdoor","streetwear","vintage_sport","workwear"],"pb_roomy_narrow":["outdoor"],"pb_wide_ok":["minimalist","outdoor","streetwear","vintage_sport","workwear"],"h2_any":true,"occ_target":{"event":[3,4]},"cond_clear_only":true,"sk1_soft":0.5,"lounge_style":0.5,"weights":{"proportions":0.3,"fit":0.15,"color":0.2,"shoes":0.15,"cohesion":0.2},"pr1_ribbed_loose":true,"pr2b":1,"penalty":{"under":6.5,"rate":0.5,"cap":1},"ff5_roomy":true,"ff7_loose":true,"pn_narrow":1,"pn_skinny":1,"pn_rip":0.5,"pr1_loose":1.5,"pr1_straight":0.5,"sd3_off":true,"sw3_off":true,"sk2_runner":5,"cl1":1.5,"tk1":2,"int_top":6,"int_hoodie":5,"dd_same":1,"gt1":1.5,"cl1_own":true,"pn_slim_soft":true,"cp1_dark":0.5,"h3_base_covered":true,"pn_lounge_skinny":2,"cl1_scale":true,"pn_fitted_vol":2,"ll1":1,"wr_look":true,"wr_half":0.2,"wr_knit_tailored":0.2,"wr_knit_clean":0.2,"sh_prop":true,"sh_shape":1,"sh_layer":1,"sh_cap":1.5,"sh_roomy_fitted":1.5,"sh_fitted":1,"sd1_any_sneaker":true,"goes_together":0.5,"tracksuit":0.5,"gym_runner_unheld":true,"sweatsuit_sign":true,"sweatsuit_shape":1,"look_sign":true,"kit_cap":6,"kit_fit_rate":0.5,"sw1_blocks_credit":true,"pr1_tucked_layer":true,"peek_clearly_only":true,"hl":1.5,"cp8":0.5};
@@ -77,7 +100,7 @@ describe("v15 byte-identical (T69-G2)", () => {
       for (const k of ["condition", "occasion", "lowest", "weights_used"]) if (k in out) out[k] = at(out[k]);
       return out;
     };
-    const v15p = P.cases.filter((c) => !c.tune).map((c) => ({ ...stripDefaults(c, [["season"], ["graded_look"]]), expected: expand(c.expected),
+    const v15p = P.cases.filter((c) => !c.tune && !isNr(c) && !isTrigger(P.readings[c.reading] ?? RP[c.reading])).map((c) => ({ ...stripDefaults(c, [["season"], ["graded_look"]]), expected: expand(c.expected),
       reading_value: P.readings[c.reading] ?? RP[c.reading] }));
     expect(v15p.length).toBe(N94P);
     expect(sha256(canon(v15p))).toBe(H94P);
@@ -87,7 +110,7 @@ describe("v15 byte-identical (T69-G2)", () => {
 
     const F = loadJSON<{ pool: unknown[]; readings: Record<string, Reading>;
       cases: (Record<string, unknown> & { reading: string; tune?: string; engine?: string; expected: { fixes: number[]; smaller_step: number | null } })[] }>("parts_fixes.json");
-    const v15f = F.cases.filter((c) => !c.tune && (c.engine ?? "v15") === "v15").map((c) => ({
+    const v15f = F.cases.filter((c) => !c.tune && (c.engine ?? "v15") === "v15" && !isNr(c) && !isTrigger(F.readings[c.reading] ?? RP[c.reading])).map((c) => ({
       ...stripDefaults(c, [["season"], ["engine", "v15"], ["graded_look"]]),
       expected: { ...c.expected, fixes: c.expected.fixes.map((i) => F.pool[i]), smaller_step: c.expected.smaller_step === null ? null : F.pool[c.expected.smaller_step] },
       reading_value: F.readings[c.reading] ?? RP[c.reading],
@@ -101,7 +124,7 @@ describe("v15 byte-identical (T69-G2)", () => {
     expect(F.cases.length).toBeGreaterThan(N15F);
 
     const C = loadJSON<{ cases: (Record<string, unknown> & { engine?: string })[] }>("rules_conformance.json");
-    const v15c = C.cases.filter((c) => (c.engine ?? "v15") === "v15").map((c) => stripDefaults(c, [["engine", "v15"], ["season"], ["graded_look"]]));
+    const v15c = C.cases.filter((c) => (c.engine ?? "v15") === "v15" && c["id"] !== "SCO-6-ignored").map((c) => stripDefaults(c, [["engine", "v15"], ["season"], ["graded_look"]]));
     expect(v15c.length).toBe(N94C);
     expect(sha256(canon(v15c))).toBe(H94C);
     const pre94c = v15c.filter((c) => !String(c["rule"]).startsWith("TLR-")).map((c) => maskNames(c));

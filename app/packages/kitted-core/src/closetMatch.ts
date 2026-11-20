@@ -47,7 +47,7 @@ export interface ClosetPlan {
 
 /**
  * Worn pieces first (garments order), then held pieces (ruling: held items are auto-added like worn ones,
- * with Undo). Accessories, traditional garments and unsure reads are never added. `profiles` adds each item's
+ * with Undo). Accessories, traditional garments, dresses, skirts, heels, traditional shoes and unsure reads are never added. `profiles` adds each item's
  * stored sightings, aliases and "different from" list. Garments may carry the closet call's fields
  * (shade, details, logo_text…); the plan's garments are copies of whatever was passed in.
  */

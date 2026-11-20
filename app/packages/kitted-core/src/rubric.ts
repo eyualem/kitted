@@ -12,7 +12,7 @@
 
 import { RUBRIC_DATA } from "./rubricData";
 import type {
-  Band, CreditId, DetectedStyle, Garment, NotRated, Reading, RubricData, RubricResult, RuleConfig, RuleId, Scene,
+  Band, BlockReason, CreditId, DetectedStyle, Garment, NotRated, Reading, RubricData, RubricResult, RuleConfig, RuleId, Scene, UnreadableSlot,
   ScoreOptions, ShoeKind, Styles, SubscoreName, TapOption, TapQuestion,
 } from "./types";
 import { clone, has, isNone, maxOf, or, pyMax, pyMin, pyRound, roundHalf, sum, truthy } from "./util";
@@ -93,6 +93,8 @@ export interface RubricEngine {
 export interface RubricHelpers {
   /** rubric._prepare + rubric._normalize on a deep copy: the scene, the scored garments (our own copies), what isn't rated. */
   prepare(reading: Reading): { scene: Scene; garments: Garment[]; notRated: NotRated[] };
+  /** T61: why the reading gets no score (rubric._block), or null. */
+  block(reading: Reading): { reason: BlockReason; slot?: UnreadableSlot } | null;
   /** rubric.Outfit(garments). */
   outfit(garments: readonly Garment[]): Outfit;
   /** rubric.STYLES[style][0](g, c): (positive, negative) for one garment. */
@@ -625,6 +627,10 @@ export function createRubric(data: RubricData): RubricEngine {
   }
 
   // ================= PREPARE =================
+  const UNREADABLE_SLOT: Record<string, UnreadableSlot> = { top: "top", outerwear: "jacket", bottom: "pants" };
+  /** T61 NR2: heels and traditional shoes are dropped like shoes out of the photo (token "shoes not rated"). */
+  const isUnratedShoe = (g: Garment): boolean =>
+    (g.subcategory === "heels" || g.subcategory === "traditional_shoe") && (g.category === "footwear" || g.category === "traditional");
   function prepare(ext: Reading): { scene: Scene; garments: Garment[]; notRated: NotRated[] } {
     const scene: Scene = (truthy(ext.scene) ? ext.scene : {}) as Scene;
     let garments: Garment[] = (ext.garments ?? []).filter((g) => g.certainty !== "unsure" && g.category !== "accessory");
@@ -637,9 +643,30 @@ export function createRubric(data: RubricData): RubricEngine {
       garments = garments.filter((g) => g.category !== "bottom" && g.category !== "footwear");
       notRated.push("bottom half");
     }
-    if (garments.some((g) => g.category === "traditional")) notRated.push("traditional garment (not rated)");
+    if (garments.some(isUnratedShoe)) {
+      garments = garments.filter((g) => !isUnratedShoe(g));
+      notRated.push("shoes not rated");
+    }
     garments = garments.filter((g) => g.category !== "traditional");
     return { scene, garments, notRated };
+  }
+
+  /** T61 (rubric._block): why a fully clothed reading gets no score, or null. After the shoes and framing filters, the
+   *  first that applies: a costume or uniform; a traditional main piece; a dress or skirt (whatever the certainty);
+   *  an unsure top, jacket or pants (the slot, in reading order). */
+  function block(ext: Reading): { reason: BlockReason; slot?: UnreadableSlot } | null {
+    const scene: Scene = (truthy(ext.scene) ? ext.scene : {}) as Scene;
+    let gs: Garment[] = (ext.garments ?? []).filter((g) => g.category !== "accessory");
+    if (!truthy(has(scene, "shoes_visible") ? scene.shoes_visible : true)) gs = gs.filter((g) => g.category !== "footwear");
+    if (scene.framing === "upper_only") gs = gs.filter((g) => g.category !== "bottom" && g.category !== "footwear");
+    if (scene.costume_or_uniform === true) return { reason: "costume_or_uniform" };
+    if (gs.some((g) => g.category === "traditional" && g.subcategory !== "traditional_shoe")) return { reason: "traditional" };
+    if (gs.some((g) => g.subcategory === "dress" || g.subcategory === "skirt")) return { reason: "womenswear" };
+    for (const g of gs) {
+      const slot = g.category ? UNREADABLE_SLOT[g.category] : undefined;
+      if (g.certainty === "unsure" && slot) return { reason: "unreadable", slot };
+    }
+    return null;
   }
 
   /** In place on our own copy: leg aliases; an open shirt/fleece worn over another top is a layer (ruling 43). */
@@ -664,7 +691,7 @@ export function createRubric(data: RubricData): RubricEngine {
 
   function scoredGarments(reading: Reading): Garment[] {
     const { scene, garments } = prepare(clone(reading));
-    if (scene.clothed !== "fully" || garments.length === 0) return [];
+    if (scene.clothed !== "fully" || garments.length === 0 || block(reading)) return [];
     normalize(garments);
     return garments;
   }
@@ -687,6 +714,10 @@ export function createRubric(data: RubricData): RubricEngine {
     const { scene, garments, notRated } = prepare(ext);
     if (scene.clothed !== "fully") {
       return { overall: null, reason: "not_fully_clothed", partial: false, rulesFired: [] };
+    }
+    const blocked = block(ext);
+    if (blocked) {
+      return { overall: null, reason: blocked.reason, ...(blocked.slot ? { unreadableSlot: blocked.slot } : {}), partial: false, rulesFired: [] };
     }
     if (garments.length === 0) {
       return { overall: null, reason: "nothing_readable", partial: true, rulesFired: [] };
@@ -939,7 +970,7 @@ export function createRubric(data: RubricData): RubricEngine {
     if (fired.length === 0 && focal === 0 && boldness !== "subtle") advice.push(minimal ? A.nextLevelMinimal : A.nextLevel);
 
     // ================= CREDITS: one garment, one credit =================
-    const hidden = new Set<string>(notRated.includes("shoes") || notRated.includes("bottom half") ? ["shoes"] : []);
+    const hidden = new Set<string>(notRated.includes("shoes") || notRated.includes("bottom half") || notRated.includes("shoes not rated") ? ["shoes"] : []);
     const cg = garments.filter((g) => CORE_CATEGORIES.includes(g.category));
     const mg = cg.filter((g) => MAIN_CATEGORIES.includes(g.category));
     const earns = (g: Garment): boolean => !careSet.has(g); // a stained or worn piece earns no credit
@@ -1188,6 +1219,7 @@ export function createRubric(data: RubricData): RubricEngine {
   }
 
   const helpers: RubricHelpers = {
+    block: (reading) => block(reading),
     prepare(reading) {
       const p = prepare(clone(reading));
       normalize(p.garments);

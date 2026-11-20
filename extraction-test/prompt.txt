@@ -20,4 +20,9 @@ Rules:
 - "pooling" means fabric collapses or drags heavily on the shoe. A wide-leg hem simply resting on the shoe is "slight_break" or "full_break", not pooling.
 - Use "low_profile_sneaker" for slim, flat sneakers (Samba/Gazelle/GAT style), "unstructured_blazer" for soft unlined blazers.
 - Use "drawstring_trousers" for relaxed pull-on, elastic or drawstring-waist trousers (linen or cotton summer pants); "trousers" is for tailored, belted trousers only.
+- Use "dress" (category "top") for a dress or any one-piece garment that covers the body from the shoulders down.
+- Use "skirt" (category "bottom") for a skirt of any length.
+- Use "heels" (category "footwear") for high-heeled shoes, pumps and stilettos.
+- Use "traditional_shoe" (category "footwear") for traditional or cultural shoes such as juttis, mojaris, geta or babouches.
+- scene.costume_or_uniform: true if the outfit is a costume (Halloween, cosplay) or a uniform (scrubs, chef whites, a work uniform, a team kit with pads or a helmet); false for ordinary clothes, including sportswear worn to play or train.
 Return only JSON that matches the schema.
