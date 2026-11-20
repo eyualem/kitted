@@ -40,8 +40,9 @@ export function TourHost() {
       {/* The header's buttons (Closet's +) out of reach too (AT3.3): a transparent block over the navigation bar. */}
       <View style={{ position: 'absolute', left: 0, right: 0, top: 0, height: insets.top + 56 }} />
       {/* The tab bar dimmed and out of reach (AT3): a screen-coloured veil over it that takes the touch. The native bar
-          draws above the screens, so its items are also disabled (app/(tabs)/_layout.tsx). */}
-      <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: barTop + 8, backgroundColor: colors.bg, opacity: 0.6 }} />
+          draws above the screens, so its items are also disabled (app/(tabs)/_layout.tsx). Neither hides the bar from
+          VoiceOver (AT5.1 for the bar: not verified). */}
+      <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: barTop + 8, backgroundColor: colors.bg, opacity: 0.6 }} />
       <View style={{ position: 'absolute', left: space.gutter, right: space.gutter, bottom }} onLayout={(e) => setCardH(e.nativeEvent.layout.height)}>
         <TourCard stop={stop} onNext={() => (stop === 1 ? nextStop() : void endTour(store))} onSkip={() => void endTour(store)} />
       </View>

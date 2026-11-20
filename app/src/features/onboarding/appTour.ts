@@ -74,8 +74,17 @@ export async function settleTourAtLaunch(store: Pick<KittedStore, 'getKv' | 'set
   if (!Number.isFinite(seen) || seen >= hello.createdAt) await store.setKv(SEEN_UNTIL_KEY, String(hello.createdAt - 1));
 }
 
+let settling: Promise<void> | null = null;
+
+/** The launch settle, once per launch: the tab bar starts it and Stylist waits for it before it reads "seen until", so the
+ *  corrected mark is always the one Stylist reads (whichever of them mounts first). */
+export function settleTourOnce(store: Pick<KittedStore, 'getKv' | 'setKv' | 'chat'>): Promise<void> {
+  return (settling ??= settleTourAtLaunch(store));
+}
+
 /** A demo screen or a test: forget the stop in memory (nothing is saved or navigated). */
 export function resetTour(): void {
   stop = null;
+  settling = null;
   emit();
 }

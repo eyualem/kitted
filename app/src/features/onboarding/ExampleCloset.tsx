@@ -28,7 +28,8 @@ export function ExampleCloset() {
   const sections = exampleCloset();
   const cols = ax ? 2 : 3;
   const tile = width > 0 ? Math.floor((width - GAP * (cols - 1)) / cols) : 0;
-  let n = 0;
+  // Each piece's place in the drop, in the order the sections list them.
+  const order = new Map(sections.flatMap((s) => s.pieces).map((p, i) => [p.id, i]));
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
@@ -49,7 +50,7 @@ export function ExampleCloset() {
             <TagLine left={t(s.titleKey)} right={String(s.pieces.length)} />
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: GAP, rowGap: GAP }}>
               {s.pieces.map((p) => (
-                <Animated.View key={p.id} entering={a11y.reduceMotion ? undefined : arrivalEntering(DROP_STAGGER_MS * n++, false)}>
+                <Animated.View key={p.id} entering={a11y.reduceMotion ? undefined : arrivalEntering(DROP_STAGGER_MS * (order.get(p.id) ?? 0), false)}>
                   <ClosetTile item={p.item} size={tile} aspect={0.92} radius={radius.tile} label={p.name} decorative />
                 </Animated.View>
               ))}

@@ -36,7 +36,7 @@ import { ARRIVE, arrivals, parseSeenUntil, SEEN_UNTIL_KEY } from './arrival';
 import { arrivalEntering } from './arrivalMotion';
 import { KitTypingRow } from './KitTypingRow';
 import { useTypingBeat } from './useTypingBeat';
-import { getTourStop } from '@/features/onboarding/appTour';
+import { getTourStop, settleTourOnce } from '@/features/onboarding/appTour';
 import { OfflineBanner } from './OfflineBanner';
 import { LatestPill } from './LatestPill';
 import { AT_BOTTOM_PT, latestPillShows } from './latestShows';
@@ -84,7 +84,8 @@ export function StylistScreen() {
   const [seenUntil, setSeenUntil] = useState<number | undefined>(undefined);
   useEffect(() => {
     let alive = true;
-    void store.getKv(SEEN_UNTIL_KEY).then(
+    // After the app tour's launch settle (a tour the app closed on counts as seen and moves this mark back before Kit's hello).
+    void settleTourOnce(store).then(() => store.getKv(SEEN_UNTIL_KEY)).then(
       (raw) => {
         // Never written (an install from before this, or the first launch): what's made during this launch is new.
         if (alive) setSeenUntil(parseSeenUntil(raw) ?? sessionClock.nowMs() - (Date.now() - LAUNCHED_AT));

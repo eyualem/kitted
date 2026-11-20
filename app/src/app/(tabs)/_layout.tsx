@@ -13,7 +13,8 @@ import { useComposerOpen } from '@/features/stylist/composerState';
 import { badgeColor } from '@/features/closet/arrivals';
 import { closetBadge } from '@/features/closet/ClosetBadge';
 import { useClosetArrivals } from '@/features/closet/useArrivals';
-import { settleTourAtLaunch, useTourStop } from '@/features/onboarding/appTour';
+import { settleTourOnce, useTourStop } from '@/features/onboarding/appTour';
+import { useTourBlindTab } from '@/features/onboarding/tourTab';
 import { store } from '@/data/db';
 
 export default function TabsLayout() {
@@ -36,9 +37,9 @@ export default function TabsLayout() {
   // be tapped while it plays (AT3). A tour still pending at launch means the app closed during it: that counts as seen.
   const tour = useTourStop() !== null;
   useEffect(() => {
-    void settleTourAtLaunch(store);
+    void settleTourOnce(store);
   }, []);
-  const added = useClosetArrivals(tour ? undefined : tab);
+  const added = useClosetArrivals(useTourBlindTab(tab, tour));
   const badge = badgeColor(colors, scheme);
   return (
     // The selected tab is ink, not copper (founder, #276): copper is for score movement only.

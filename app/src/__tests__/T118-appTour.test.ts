@@ -13,8 +13,9 @@ import { scoreWordLabel } from '@/design-system/score';
 import { FIRST_VISIT_KEY, LAST_OPENED_KEY, startArrivals } from '@/features/closet/arrivals';
 import { finishSetup, saveAbout } from '@/features/onboarding/aboutStep';
 import {
-  endTour, getTourStop, nextStop, resetTour, settleTourAtLaunch, startTour, TOUR_KEY,
+  endTour, getTourStop, nextStop, resetTour, settleTourAtLaunch, settleTourOnce, startTour, TOUR_KEY, useTourStop,
 } from '@/features/onboarding/appTour';
+import { useTourBlindTab } from '@/features/onboarding/tourTab';
 import { LOOKS_KEY } from '@/features/onboarding/basics';
 import { completeOnboarding } from '@/features/onboarding/complete';
 import { exampleCheck } from '@/features/onboarding/exampleCheck';
@@ -152,6 +153,18 @@ describe('AT4.2 · closing the app mid-tour counts as seen', () => {
     expect(Number(await store.getKv(SEEN_UNTIL_KEY))).toBeLessThan(T0 + 5);
   });
 
+  it('the settle runs once per launch and is one promise for the tab bar and Stylist, so Stylist reads the corrected mark', async () => {
+    const store = await fresh();
+    await store.setKv(TOUR_KEY, 'pending');
+    await store.chat.put(textMessage('hello', T0 + 5, 'stylist', null, { aiNote: true }));
+    await store.setKv(SEEN_UNTIL_KEY, String(T0 + 1_000_000));
+    const first = settleTourOnce(store); // the tab bar's effect, or Stylist's read: whichever comes first
+    const second = settleTourOnce(store);
+    expect(second).toBe(first);
+    await second; // what Stylist waits for before it reads "seen until"
+    expect(Number(await store.getKv(SEEN_UNTIL_KEY))).toBeLessThan(T0 + 5);
+  });
+
   it('a tour that is on screen is not settled by another call', async () => {
     const store = await fresh();
     await continueAbout(store);
@@ -203,21 +216,70 @@ describe('AT4.4 · Restore, the under-18 stop and a phone from before this updat
 });
 
 describe('AT6.1 · the tour is not "opening Closet"', () => {
-  it('the tab bar sees no tab during the tour: closet.lastOpened and closet.firstVisit are as they were, after it too', async () => {
-    const store = await fresh();
-    await startArrivals(store, T0);
-    const before = [await store.getKv(LAST_OPENED_KEY), await store.getKv(FIRST_VISIT_KEY)];
-    expect(before[1]).toBe(`waiting:${T0}`);
-    // app/(tabs)/_layout.tsx passes undefined for the tab while the tour is up, then the tab on screen once it's over.
+  /** The tab bar's own wiring (app/(tabs)/_layout.tsx): the tour's state and the tab on screen decide what Closet's arrivals see. */
+  async function tabBar() {
     const { useClosetArrivals } = jest.requireActual('@/features/closet/useArrivals') as typeof import('@/features/closet/useArrivals');
     const settle = () => act(async () => void (await new Promise((r) => setTimeout(r, 20))));
-    const { rerender } = await renderHook(({ tab }: { tab: string | undefined }) => useClosetArrivals(tab), { initialProps: { tab: undefined } as { tab: string | undefined } });
+    const view = await renderHook(
+      ({ tab }: { tab: string | undefined }) => useClosetArrivals(useTourBlindTab(tab, useTourStop() !== null)),
+      { initialProps: { tab: undefined } as { tab: string | undefined } },
+    );
     await settle();
-    await rerender({ tab: undefined }); // stop 1: Closet, stop 2: Lookbook
+    return { settle, rerender: view.rerender };
+  }
+  const marks = async (store: KittedStore) => [await store.getKv(LAST_OPENED_KEY), await store.getKv(FIRST_VISIT_KEY)];
+
+  it('Skip on stop 1: Closet was on screen the whole tour and a render after it; lastOpened and firstVisit are as they were', async () => {
+    const store = await fresh();
+    await startArrivals(store, T0);
+    const before = await marks(store);
+    expect(before[1]).toBe(`waiting:${T0}`);
+    const { settle, rerender } = await tabBar();
+    await act(async () => startTour(store));
+    await rerender({ tab: 'closet' }); // stop 1
     await settle();
-    await rerender({ tab: 'stylist' }); // the tour ended: Stylist
+    await act(async () => endTour(store)); // Skip: the route is still Closet for a render
+    await rerender({ tab: 'closet' });
     await settle();
-    expect([await store.getKv(LAST_OPENED_KEY), await store.getKv(FIRST_VISIT_KEY)]).toEqual(before);
+    await rerender({ tab: 'stylist' }); // Kit's hello
+    await settle();
+    expect(await marks(store)).toEqual(before);
+  });
+
+  it('Done on stop 2: Closet then Lookbook, then Stylist; the marks are as they were', async () => {
+    const store = await fresh();
+    await startArrivals(store, T0);
+    const before = await marks(store);
+    const { settle, rerender } = await tabBar();
+    await act(async () => startTour(store));
+    await rerender({ tab: 'closet' });
+    await settle();
+    await act(async () => nextStop());
+    await rerender({ tab: 'lookbook' });
+    await settle();
+    await act(async () => endTour(store));
+    await rerender({ tab: 'lookbook' });
+    await settle();
+    await rerender({ tab: 'stylist' });
+    await settle();
+    expect(await marks(store)).toEqual(before);
+  });
+
+  it('after the tour, a real visit to Closet still counts as opening it (the guard doesn\'t outlive the tour)', async () => {
+    const store = await fresh();
+    await startArrivals(store, T0);
+    const before = await marks(store);
+    const { settle, rerender } = await tabBar();
+    await act(async () => startTour(store));
+    await rerender({ tab: 'closet' });
+    await act(async () => endTour(store));
+    await rerender({ tab: 'closet' });
+    await rerender({ tab: 'stylist' });
+    await settle();
+    await new Promise((r) => setTimeout(r, 5)); // time passes
+    await rerender({ tab: 'closet' }); // his first real visit
+    await settle();
+    expect((await marks(store))[0]).not.toBe(before[0]);
   });
 });
 
