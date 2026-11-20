@@ -16,10 +16,11 @@ service cloud.firestore {
       return n is int || (n is float && n == math.floor(n));
     }
 
-    // Keep in step with app/src/sync/schema.ts (SYNCED_COLLECTIONS).
+    // Keep in step with app/src/sync/schema.ts (SYNCED_COLLECTIONS). No chatMessages: his questions and Kit's answers
+    // never reach the server.
     function syncedCollection(coll) {
       return coll in ['profile', 'prefs', 'fitChecks', 'readings', 'closetItems', 'closetObservations',
-        'outfits', 'wearLog', 'corrections', 'chatMessages', 'dailyIdeas', 'facts'];
+        'outfits', 'wearLog', 'corrections', 'dailyIdeas', 'facts'];
     }
 
     // The envelope every synced document carries (§2.1).

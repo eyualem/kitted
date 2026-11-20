@@ -1,6 +1,8 @@
 // SQLite KittedStore (iOS, Android). Tables come from the specs in tables.ts; JSON columns are
 // TEXT, booleans 0/1. Migrations run once before the first read (PRAGMA user_version).
 import * as SQLite from 'expo-sqlite';
+import { appTracking } from '@/sync/appTracking';
+import { trackChanges } from '@/sync/tracker';
 import { emitChange } from './changes';
 import { LATEST_VERSION, TABLES, pendingMigrations } from './migrations';
 import { SPECS, colName, colType, decode, decodeRowSafely, encode, type Table, type TableName, type Tables, type TableSpec } from './tables';
@@ -94,7 +96,8 @@ const tables = Object.fromEntries(
   (Object.keys(SPECS) as TableName[]).map((n) => [n, sqliteTable(n, SPECS[n] as TableSpec<unknown>)]),
 ) as unknown as Tables;
 
-export const store: KittedStore = {
+/** The store as it is, without recording changes: the sync engine writes here, so what it pulls is never pushed back. */
+export const rawStore: KittedStore = {
   ...tables,
   async init() {
     await getDb();
@@ -136,5 +139,12 @@ export const store: KittedStore = {
     emitChange('kv');
   },
 };
+
+/** Whether this phone records its changes for backup: only once an account has synced here (sync/tracking.ts). */
+export const tracking = appTracking(rawStore);
+
+/** The store every screen uses: each write to a synced table or key is recorded for backup once an account has synced on this
+ *  phone; otherwise it is the same store. */
+export const store: KittedStore = trackChanges(rawStore, tracking.options);
 
 export { LATEST_VERSION };

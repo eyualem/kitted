@@ -8,7 +8,7 @@
 
 - **The phone stays the real copy.** Every screen keeps reading SQLite. Firestore is a mirror per account that lets a second phone (or a reinstall) get everything back. Nothing changes for someone who never signs in.
 - **One folder per person:** everything he owns lives under `users/{uid}/…` in Firestore and `users/{uid}/files/…` in Storage. The rules let only that signed-in person read or write it. No document is shared between people, so there's nothing to leak sideways.
-- **One document per row.** Each SQLite row becomes one Firestore document in a collection named after its table (`fitChecks`, `closetItems`, `chatMessages`, …). Each preference becomes one document in `prefs`.
+- **One document per row.** Each SQLite row becomes one Firestore document in a collection named after its table (`fitChecks`, `closetItems`, `outfits`, …). Each preference becomes one document in `prefs`.
 - **Every document has the same envelope:** `id`, `v` (schema version), `updatedAt` (when he changed it, on his phone), `serverAt` (when the server got it), `deleted`, `by` (which device), and `data` (the row). The newest `updatedAt` wins.
 - **Photos:** his kept fit-check photos go up as a 1600 px copy (about 0.3–0.5 MB), plus thumbs, closet cut-outs and clothes scans, each at the same relative path it has on the phone (`photos/<sha>-photo.jpg`). Face-blurred send copies, close-ups and caches **never** go up.
 - **What never leaves the phone:** his birth year, the usage counters (the server keeps its own), the analytics queue, per-device settings (notifications, camera mode, weather permission), demo data, and every face-hidden upload copy.
@@ -22,11 +22,12 @@
 
 | What | Where | Size per user (1 year) | Synced? |
 |---|---|---|---|
-| Rows (checks, closet, chats, ideas, facts…) | Firestore `users/{uid}/{collection}/{id}` | ~0.7 MB, ~3,000 docs | Yes, when signed in |
+| Rows (checks, closet, outfits, ideas, facts…) | Firestore `users/{uid}/{collection}/{id}` | ~0.7 MB, ~3,000 docs | Yes, when signed in |
+| Chat messages (his questions and Kit's answers) | The phone only | — | Never (SB5.1a, T41b: the server keeps no questions or answers) |
 | Preferences (picked looks, appearance, Going-for…) | Firestore `users/{uid}/prefs/{key}` | ~10 docs | Yes |
 | Account info | Firestore `users/{uid}` | 1 doc | Yes |
 | His devices | Firestore `users/{uid}/devices/{deviceId}` | 1–3 docs | Yes (for "signed in on 2 phones" and cleanup) |
-| Kept photos (1600 px), thumbs | Storage `users/{uid}/files/photos/<sha>-photo.jpg`, `-thumb.jpg` | ~40 MB | Yes, if "Back up photos" is on (default on, E3) |
+| Kept photos (1600 px), thumbs | Storage `users/{uid}/files/photos/<sha>-photo.jpg`, `-thumb.jpg` | ~40 MB | Only if "Back up photos" is on (off by default, SB4, T41b; kv `backup.photos`, a synced pref, so a new phone follows it) |
 | Closet cut-outs + fingerprints | Storage `users/{uid}/files/closet/<sha>-<key>.png`, `.print` | ~3 MB | Yes |
 | Clothes scans (kept, thumb) | Storage `users/{uid}/files/scans/<sha>-photo.jpg`, `-thumb.jpg` | small | Yes |
 | The full 12 MP photo | Only the phone that took it | — | Never |
@@ -53,7 +54,6 @@ users/{uid}                              the account (§2.3)
   ├─ outfits/{id}                        OutfitRow
   ├─ wearLog/{day}                       WearLogRow ("2026-10-15")
   ├─ corrections/{id}                    CorrectionRow
-  ├─ chatMessages/{id}                   ChatMessage (the Stylist thread)
   ├─ dailyIdeas/{id}                     DailyIdeaRow (the morning and evening cards)
   ├─ facts/{id}                          FactRow ("what your stylist knows", tombstones kept)
   └─ devices/{deviceId}                  { platform, appVersion, createdAt, lastSyncAt }
@@ -61,10 +61,10 @@ users/{uid}                              the account (§2.3)
 
 **Why subcollections per table (not one big doc, not one collection with a `type` field):**
 - A document can hold at most 1 MiB; a year of checks can't fit in one.
-- Each table pulls its own changes with one simple query (`serverAt > cursor`), and the rules can treat readings (never edited) differently from chats (edited).
+- Each table pulls its own changes with one simple query (`serverAt > cursor`), and the rules can treat readings (never edited) differently from rows that are edited.
 - Deleting an account is one recursive delete of `users/{uid}`.
 
-**Why chat messages are one document each, not one document per day:** messages are edited (cards change state, "ready" placeholders are replaced), and per-message docs keep every edit to a single small write. A year of chat is ~2,000 docs: a full restore reads them for about $0.0006.
+**Chat messages are not synced (T41b, SB5.1a).** The Stylist thread, his questions and Kit's answers, stay on the phone: the sync schema has the `chat` table as local, `firestore.rules` refuse a `chatMessages` collection, and the server jobs' list has none. A new phone starts with an empty thread; Kit's hello is posted again by the restore. (The earlier design backed them up as one document each; the spec's hard line "the server keeps no questions or answers" wins.) Also never synced: his name, age band and birth year, the under-18 lock, and the privacy agreement (a restored phone asks on the camera's first open).
 
 **Document IDs** are the row keys, which are already UUIDs (`services/ids.ts`, e.g. `FC-3f2a…`), so two phones never collide. `wearLog` uses the day key and `profile` the fixed `me`, which is right: one per day, one per person. kv keys are valid IDs (dots are allowed; no key contains `/`).
 
@@ -127,7 +127,7 @@ Every table and every kv key is classified in `app/src/sync/schema.ts`. A test f
 | `outfits` | `outfits` | |
 | `wear_log` | `wearLog` | |
 | `corrections` | `corrections` | |
-| `chat_messages` | `chatMessages` | edited and deleted locally, so not append-only |
+| `chat_messages` | (none) | local only, never synced (SB5.1a) |
 | `daily_ideas` | `dailyIdeas` | |
 | `facts` | `facts` | his own tombstones (`isDeleted`) sync too, so a forgotten fact stays forgotten on every phone |
 | `usage_days` | — | **local**: the server's counters win |
@@ -293,7 +293,7 @@ Each check has an ID; the test or step that proves it is named. **Status Oct 15 
 - **D1** Sign in with Apple works, asks for the email but no name, and the account doc has no personal fields (no email, name or age).
 - **D2** Two phones (or the phone + Simulator): a fit check on one shows on the other within 5 s while both are open.
 - **D3** Airplane mode: a check and a closet edit made offline sync after reconnecting, with nothing lost or doubled.
-- **D4** A fresh install, signed in: closet, Lookbook, chats and facts come back; photos follow; onboarding is skipped; the birth year is asked.
+- **D4** A fresh install, signed in: closet, Lookbook and facts come back (not chats); photos follow only if photo backup is on; onboarding is skipped; the birth year is asked.
 - **D5** Delete account: the Apple token is revoked (the app disappears from Settings → Apple ID → Sign in with Apple), the Firestore and Storage folders are empty in the console, and the phone is wiped.
 - **D6** Cost: one fit check writes ≤ 14 docs (Firestore usage tab).
 
