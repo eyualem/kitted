@@ -9,19 +9,15 @@ export const PAYWALL_BUILT = false;
  *  a build that has the capture and sharing modules (features/share/shareNative.ts). */
 export const SHARE_CARD_BUILT = true;
 
-/** Accounts (10-onboarding.md): Continue with Apple, Google or email. Off until Firebase is set up (08 §6 A0–A1), so no
- *  sign-in shows on his phone that does nothing; demo screens 130–143 turn them on (features/account/account.ts). */
+/** Accounts (10-onboarding.md, specs/sign-in-and-backup.md): Continue with Apple or Google. The one switch for every
+ *  sign-in entry point (Welcome's account button, the save card, You's rows): off, none shows outside demo screens
+ *  130–143 (features/account/account.ts). Don't turn it on for a build until backup is in (T41b): the card says "Your
+ *  fits are backed up", and deleting the account must revoke Apple's token. */
 export const ACCOUNTS_BUILT = false;
 
 /** The notification ask (02 S15) and the scheduled daily idea. Off until expo-notifications is installed (a new
  *  package, the founder's OK): without it the ask can't ask, so it isn't shown (10-onboarding.md §9.5). */
 export const NOTIFICATIONS_BUILT = false;
-
-/** Sign-in methods wired to the real Firebase project (#295), shown in You → Settings → Account on dev builds while the
- *  rest of accounts stays off (ACCOUNTS_BUILT): Google only. Apple waits for the $99 program, email for the Worker's
- *  code route. Signing in backs nothing up yet (sync isn't wired), which is why the save offer and Welcome's "I already
- *  have an account" stay hidden. */
-export const SIGN_IN_LIVE: readonly ('apple' | 'google' | 'email')[] = __DEV__ ? ['google'] : [];
 
 /** Outfits, Next best buy and Goes with (specs/closet-beta.md CB1): off for the beta. Closet opens on his pieces with no
  *  Pieces | Outfits switch, a piece's page has no Outfits row or Goes with, and nothing shows an outfit count. The code

@@ -1,5 +1,6 @@
 // The onboarding and account checks set before building (handoff/10-onboarding.md §6): F1–F7 and A1–A9, as far as
-// they can be checked without a screen. The screens themselves were checked in the preview (DECISIONS-LOG #289).
+// they can be checked without a screen. T41 removed email sign-in (A1–A3's email lines, specs/sign-in-and-backup.md SB2.1)
+// and the chat count from the restore (SB6.1); the T41-*.test files carry the new checks. The screens themselves were checked in the preview (DECISIONS-LOG #289).
 import { createMemoryStore } from '@/data/memoryStore';
 import type { ChatMessage, FitCheckRow } from '@/data/types';
 import { manualClock } from '@/services/clock';
@@ -8,8 +9,7 @@ import { ACCOUNTS_BUILT } from '@/config/features';
 import {
   accountsOn, afterSignIn, getAccount, getOffer, parseAccount, parseRestoreParam, restoreParam, saveAccount, setDemoAccounts, signOut,
 } from '@/features/account/account';
-import { createMockAuth, MOCK_CODE, MOCK_HOLDINGS, type AccountUser, type MockScript } from '@/features/account/auth';
-import { cleanCode, cleanEmail, countdown, emailKey, isCompleteCode, isRelayEmail, isValidEmail, RESEND_WAIT_S, resendLeft } from '@/features/account/email';
+import { createMockAuth, MOCK_HOLDINGS, type AccountUser, type MockScript } from '@/features/account/auth';
 import { CHECKS_BEFORE_SECOND, NEW_VISIT_AFTER_MS, NO_OFFER, nextVisitStart, offerDue, parseOffer, type OfferCheck, type OfferInput } from '@/features/account/offer';
 import { createOfferService } from '@/features/account/offerService';
 import { exampleCheck } from '@/features/onboarding/exampleCheck';
@@ -37,44 +37,6 @@ async function freshStore() {
   return store;
 }
 
-describe('A3 · email', () => {
-  it('accepts real addresses, trims spaces, compares lower-case', () => {
-    expect(isValidEmail('sam@gmail.com')).toBe(true);
-    expect(isValidEmail('  Sam.Lee+kit@uni.edu ')).toBe(true);
-    expect(isValidEmail('sam@gmail')).toBe(false);
-    expect(isValidEmail('sam@@gmail.com')).toBe(false);
-    expect(isValidEmail('sam gmail.com')).toBe(false);
-    expect(isValidEmail('')).toBe(false);
-    expect(isValidEmail('@gmail.com')).toBe(false);
-    expect(cleanEmail('  Sam@Gmail.com ')).toBe('Sam@Gmail.com');
-    expect(emailKey('  Sam@Gmail.com ')).toBe('sam@gmail.com');
-  });
-
-  it('keeps only 6 digits of a code, from a paste too', () => {
-    expect(cleanCode('123 456')).toBe('123456');
-    expect(cleanCode('Code: 1234567')).toBe('123456');
-    expect(isCompleteCode('12345')).toBe(false);
-    expect(isCompleteCode('123456')).toBe(true);
-  });
-
-  it('counts the resend wait down from 30 s', () => {
-    expect(RESEND_WAIT_S).toBe(30);
-    expect(resendLeft(null, T0)).toBe(0);
-    expect(resendLeft(T0, T0)).toBe(30);
-    expect(resendLeft(T0, T0 + 29_100)).toBe(1);
-    expect(resendLeft(T0, T0 + 30_000)).toBe(0);
-    expect(countdown(30)).toBe('0:30');
-    expect(countdown(5)).toBe('0:05');
-  });
-
-  it('reads Apple relay addresses as hidden (A7)', () => {
-    expect(isRelayEmail('k7p2xq9wmd@privaterelay.appleid.com')).toBe(true);
-    expect(isRelayEmail('sam@gmail.com')).toBe(false);
-    expect(isRelayEmail(null)).toBe(false);
-    expect(t('acct.settings.hiddenEmail')).toBe('Hidden email');
-  });
-});
-
 describe('A2 · the sign-in outcomes (MockAuth, the shape FirebaseAuth will return)', () => {
   const run = (s: MockScript) => createMockAuth({ script: () => s, latencyMs: 0, now: () => T0 });
   it('scripts every result the sheet handles', async () => {
@@ -85,17 +47,6 @@ describe('A2 · the sign-in outcomes (MockAuth, the shape FirebaseAuth will retu
     expect(ok.kind === 'ok' && ok.holdings).toBeNull();
     const ex = await run('existing').signIn('google');
     expect(ex.kind === 'ok' && ex.holdings).toEqual(MOCK_HOLDINGS);
-  });
-
-  it('email: a wrong code says so, 000000 is expired, the right one signs in; a cancel never applies to email', async () => {
-    const a = run('cancel');
-    expect((await a.sendEmailCode('sam@gmail.com')).kind).toBe('sent');
-    expect((await a.verifyEmailCode('sam@gmail.com', '111111')).kind).toBe('wrongCode');
-    expect((await a.verifyEmailCode('sam@gmail.com', '000000')).kind).toBe('expired');
-    const r = await a.verifyEmailCode('sam@gmail.com', MOCK_CODE);
-    expect(r.kind).toBe('ok');
-    expect(r.kind === 'ok' && r.user.provider).toBe('email');
-    expect((await run('offline').sendEmailCode('sam@gmail.com')).kind).toBe('offline');
   });
 });
 
@@ -190,7 +141,9 @@ describe('A4–A5 · after a sign-in', () => {
     const store = await freshStore();
     expect(await afterSignIn(store, 'welcome', ok(MOCK_HOLDINGS))).toEqual({ next: 'restore', holdings: MOCK_HOLDINGS });
     expect(parseRestoreParam(restoreParam(MOCK_HOLDINGS))).toEqual(MOCK_HOLDINGS);
-    expect(parseRestoreParam('214,38')).toBeNull();
+    // T41 (SB6.1): two numbers, no chat count; the old three-number param is nothing.
+    expect(parseRestoreParam('214,38')).toEqual({ fits: 214, pieces: 38 });
+    expect(parseRestoreParam('214,38,61')).toBeNull();
     expect(parseRestoreParam(undefined)).toBeNull();
   });
 

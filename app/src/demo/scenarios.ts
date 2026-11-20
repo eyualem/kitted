@@ -244,15 +244,15 @@ export const SCREENS: readonly ScreenScenario[] = [
   // S17h the next morning (#281): "Ready to score last night's photo?" with Score it / Not this one.
   { n: 121, name: 'Ready to score last night\'s photo?', id: 'S17h', scenario: 'full', onboarded: true, now: '2026-10-23T07:31:00', href: '/stylist' },
   // Onboarding and accounts (#289, handoff/10-onboarding.md; numbered from 130 so parallel sessions don't collide).
-  // Sign-in runs on MockAuth: `accounts.script` picks the outcome; the email code it accepts is 123456 (000000 = expired).
+  // Sign-in runs on MockAuth: `accounts.script` picks the outcome; Apple and Google only (T41); 134 and 135 were the email screens and now show the sheet from the card and from You.
   { n: 130, name: 'Welcome · with sign-in', id: 'O1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/welcome', accounts: { script: 'ok' } },
   { n: 131, name: 'Example check', id: 'O1e', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/example', under: '/onboarding/welcome' },
   { n: 132, name: 'Sign in · from Welcome', id: 'A1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/sheets/sign-in?from=welcome', under: '/onboarding/welcome', accounts: { script: 'existing' } },
   { n: 133, name: 'Sign in · it fails', id: 'A1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/sheets/sign-in?from=welcome', under: '/onboarding/welcome', accounts: { script: 'error' } },
-  { n: 134, name: 'Email · the address', id: 'A2', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/sheets/sign-in?from=welcome&step=email', under: '/onboarding/welcome', accounts: { script: 'ok' } },
-  { n: 135, name: 'Email · the code', id: 'A2', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/sheets/sign-in?from=welcome&step=code&email=sam%40gmail.com', under: '/onboarding/welcome', accounts: { script: 'ok' } },
-  { n: 136, name: 'Basics · welcome back', id: 'A4', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/basics?restore=214,38,61', accounts: { script: 'existing', signedIn: 'apple' } },
-  { n: 137, name: 'Bringing back your fits', id: 'A4', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/restore?fits=214&pieces=38&chats=61', accounts: { script: 'existing', signedIn: 'apple' } },
+  { n: 134, name: 'Sign in · from the card', id: 'A1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/sheets/sign-in?from=offer', under: '/onboarding/welcome', accounts: { script: 'ok' } },
+  { n: 135, name: 'Sign in · from You', id: 'A1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/sheets/sign-in?from=settings', under: '/onboarding/welcome', accounts: { script: 'ok' } },
+  { n: 136, name: 'Basics · welcome back', id: 'A4', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/basics?restore=214,38', accounts: { script: 'existing', signedIn: 'apple' } },
+  { n: 137, name: 'Bringing back your fits', id: 'A4', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/restore?fits=214&pieces=38', accounts: { script: 'existing', signedIn: 'apple' } },
   { n: 138, name: 'Keep your fits', id: 'A3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/stylist', accounts: { script: 'ok', offer: 'open' } },
   { n: 139, name: 'Keep your fits · Not now', id: 'A3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/stylist', accounts: { script: 'ok', offer: 'declined' } },
   { n: 140, name: 'Sign in · from the offer, fits on both', id: 'A5', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/sheets/sign-in?from=offer', under: '/stylist', accounts: { script: 'existing', offer: 'open' } },

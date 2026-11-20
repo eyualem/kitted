@@ -1,8 +1,7 @@
-// A1's three buttons (10-onboarding.md §4.1), all the same size (Apple 4.8 and Google's guidelines: none smaller than
-// the others). Apple: black on light, white on dark, the Apple logo and "Continue with Apple" (HIG). Google: the
-// four-color G, never recolored, on white with a #747775 border (light) or #131314 with #8E918F (dark). Email: the
-// app's secondary button. The stand-in draws Apple's button with the SF Symbol; the Firebase build swaps in the system
-// AppleAuthenticationButton (expo-apple-authentication), which App Review prefers.
+// A1's two buttons (SB2.1), the same size (Apple 4.8 and Google's guidelines: none smaller than the other). Apple: black
+// on light, white on dark, the Apple logo and "Continue with Apple" (HIG). Google: the four-color G, never recolored, on
+// white with a #747775 border (light) or #131314 with #8E918F (dark). Apple's button is drawn with the SF Symbol here;
+// the system AppleAuthenticationButton (expo-apple-authentication) is a later swap.
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { Icon, KText, opacity, useTheme } from '@/design-system';
@@ -25,26 +24,22 @@ export function GoogleG({ size: s = 18 }: { size?: number }) {
   );
 }
 
-const LABEL = { apple: 'acct.apple', google: 'acct.google', email: 'acct.email' } as const;
+const LABEL = { apple: 'acct.apple', google: 'acct.google' } as const;
 
 export function ProviderButton({ provider, onPress, busy, disabled }: { provider: AuthProvider; onPress: () => void; busy: boolean; disabled: boolean }) {
-  const { colors, scheme, isAccessibilitySize } = useTheme();
+  const { scheme, isAccessibilitySize } = useTheme();
   const dark = scheme === 'dark';
   const look =
     provider === 'apple'
       ? { bg: dark ? '#FFFFFF' : '#000000', fg: dark ? '#000000' : '#FFFFFF', border: 'transparent' }
-      : provider === 'google'
-        ? { bg: dark ? '#131314' : '#FFFFFF', fg: dark ? '#E3E3E3' : '#1F1F1F', border: dark ? '#8E918F' : '#747775' }
-        : { bg: colors.surface2, fg: colors.ink, border: 'transparent' };
+      : { bg: dark ? '#131314' : '#FFFFFF', fg: dark ? '#E3E3E3' : '#1F1F1F', border: dark ? '#8E918F' : '#747775' };
   const title = busy ? t('acct.signingIn') : t(LABEL[provider]);
   const logo = busy ? (
     <ActivityIndicator color={look.fg} />
   ) : provider === 'apple' ? (
     <Icon name="apple.logo" size={19} color={look.fg} weight="medium" />
-  ) : provider === 'google' ? (
-    <GoogleG size={18} />
   ) : (
-    <Icon name="envelope" size={18} color={look.fg} weight="medium" />
+    <GoogleG size={18} />
   );
   return (
     <Pressable
