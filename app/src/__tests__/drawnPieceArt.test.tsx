@@ -1,5 +1,5 @@
 // T101 · The component half of the drawn pieces (tasks/T101/TESTING.md): PieceArt draws a drawn piece and a closet row
-// alike (KC2.2), and a chat-added watch is a ghosted Closet tile with the accessory drawing (KC9.3).
+// alike (KC2.2), and a chat-added watch is a solid Closet tile with the accessory drawing (KC9.3; solid since Nov 19, KC4.3).
 //
 // Set-up: react-native-svg's SvgXml is a View carrying its `xml` (testID `svg`); the theme is mocked to the scheme under
 // test; GarmentArt's own drawing is replaced by a marker View (testID `garment-art`) carrying its `spec` and `size` for the
@@ -142,7 +142,7 @@ describe('KC9.3 · a chat-added piece is a Closet tile with the accessory drawin
     return null;
   };
 
-  it('KC9.3 · a chat-added watch is a dashed, faded Closet tile with the accessory drawing', async () => {
+  it('KC9.3 · a chat-added watch is a solid, full-strength Closet tile with the accessory drawing', async () => {
     const item = row(must(spec)) as unknown as Parameters<typeof ClosetTile>[0]['item'];
     await show(<ClosetTile item={item} size={110} />);
     const marker = cur.getByTestId('garment-art', ANY);
@@ -150,35 +150,48 @@ describe('KC9.3 · a chat-added piece is a Closet tile with the accessory drawin
     expect(marker.props.spec).toEqual(artSpec(must(spec)));
     expect(marker.props.size).toBe(tileArtBox('accessory' as never, 110, 110, 0.8).size);
     expect(marker.props.size).toBe(88);
-    expect(above(marker, (s) => s.borderStyle === 'dashed')).toMatchObject({ borderStyle: 'dashed', borderWidth: 1.5 });
-    expect(above(marker, (s) => s.opacity === 0.5)).not.toBeNull();
+    expect(above(marker, (s) => s.borderStyle === 'dashed')).toBeNull();
+    expect(above(marker, (s) => s.opacity === 0.5)).toBeNull();
     // the only words: the piece's name
     const tile = cur.getByLabelText('Gold digital watch');
     expect(tile.props.accessibilityLabel).toBe('Gold digital watch');
     expect(cur.queryByText(/./)).toBeNull();
   });
 
-  it('KC9.3 · a ghosted tee is still dashed and faded, and a photographed one solid (the tile rule is unchanged)', async () => {
+  it('KC9.3 · an unphotographed tee is solid like a photographed one, and says `No photo yet` only when the tile carries its name (KC4.3, Nov 19)', async () => {
     const tee = { garment: G('top', 'tee', 'navy'), hex: FAMILY_HEX.navy, art: null, name: 'Navy tee' };
     const { unmount } = await show(<ClosetTile item={{ ...tee, isPhotographed: false }} size={110} />);
     let marker = cur.getByTestId('garment-art', ANY);
     expect((marker.props.spec as { shape: string }).shape).toBe('top');
-    expect(above(marker, (s) => s.borderStyle === 'dashed')).toMatchObject({ borderStyle: 'dashed', borderWidth: 1.5 });
-    expect(above(marker, (s) => s.opacity === 0.5)).not.toBeNull();
+    expect(above(marker, (s) => s.borderStyle === 'dashed')).toBeNull();
+    expect(above(marker, (s) => s.backgroundColor === '#EEE')).not.toBeNull();
+    expect(above(marker, (s) => s.opacity === 0.5)).toBeNull();
+    // no name line on a bare thumbnail: no words, the name alone for VoiceOver
     expect(cur.getByLabelText('Navy tee').props.accessibilityLabel).toBe('Navy tee');
+    expect(cur.queryByText('No photo yet')).toBeNull();
     await unmount();
+    // named (the Closet grid): the line sits under the name, and VoiceOver hears it
+    await show(<ClosetTile item={{ ...tee, isPhotographed: false }} size={110} label="Navy tee" />);
+    expect(cur.getByText('No photo yet')).toBeTruthy();
+    expect(cur.getByLabelText('Navy tee, no photo yet')).toBeTruthy();
+    await cur.unmount();
+    await show(<ClosetTile item={{ ...tee, isPhotographed: true }} size={110} label="Navy tee" />);
+    expect(cur.queryByText('No photo yet')).toBeNull();
+    await cur.unmount();
     await show(<ClosetTile item={{ ...tee, isPhotographed: true }} size={110} />);
     marker = cur.getByTestId('garment-art', ANY);
-    expect(above(marker, (s) => s.borderStyle === 'solid')).toMatchObject({ borderWidth: 0 });
+    expect(above(marker, (s) => s.borderStyle === 'dashed')).toBeNull();
+    expect(above(marker, (s) => s.backgroundColor === '#EEE')).not.toBeNull();
     expect(above(marker, (s) => s.opacity === 0.5)).toBeNull();
   });
 
-  it('KC9.3 · the same watch, photographed, is a solid full-strength tile (the ghost is for chat pieces only)', async () => {
+  it('KC9.3 · the same watch, photographed, is a solid full-strength tile with no `No photo yet` line', async () => {
     const item = row(must(spec), { isPhotographed: true }) as unknown as Parameters<typeof ClosetTile>[0]['item'];
     await show(<ClosetTile item={item} size={110} />);
     const marker = cur.getByTestId('garment-art', ANY);
     expect((marker.props.spec as { shape: string }).shape).toBe('accessory');
-    expect(above(marker, (s) => s.borderStyle === 'solid')).toMatchObject({ borderStyle: 'solid', borderWidth: 0 });
+    expect(above(marker, (s) => s.borderStyle === 'dashed')).toBeNull();
+    expect(above(marker, (s) => s.backgroundColor === '#EEE')).not.toBeNull();
     expect(above(marker, (s) => s.opacity === 0.5)).toBeNull();
   });
 
