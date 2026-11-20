@@ -49,3 +49,17 @@
 - `ExampleCloset` increments `n` during render; harmless, but fragile.
 
 **Verdict: not ready** (defects 1 to 3 code, defect 4 is a weak test; the builder fixes the code and tightens the tests).
+
+### Round 2 (normal mode; the fix commit 203dcdff only; read the diff and the tests, nothing re-run, `npm run check` per the session)
+- **Defect 1 (AT4.2, Stylist reads before the settle) fixed.** `settleTourOnce` caches one promise per launch; `StylistScreen` reads `stylist.seenUntil` only after `settleTourOnce(store).then(...)`, and it is the only reader of that key (grep). So whichever of the tab bar and Stylist mounts first, Stylist reads the corrected mark. The write on losing focus waits for `seenUntil !== undefined`, so it can't overwrite before the settle. A failed settle falls to the existing error branch (everything seen), same as a failed read.
+- **Defect 2 (VoiceOver on the native bar):** accepted as not verified, now stated in TASK.md and in the `TourHost.tsx` comment (the misleading `accessibilityElementsHidden` is gone).
+- **Defect 3 (AT6.1, Skip on stop 1) fixed.** Traced `useTourBlindTab`: during the tour `held` follows the stop's tab and the hook returns undefined; Skip on stop 1 leaves `held = closet`, the render after it still reports undefined, the move to Stylist clears `held` and reports `stylist`; Done on stop 2 behaves the same with `lookbook`; a later real visit to Closet (`held` null) reports `closet` and counts. The layout calls `useClosetArrivals(useTourBlindTab(tab, tour))`, the same composition the tests use.
+- **Defect 4 (tests) fixed.** The AT6.1 tests now go through `useTourBlindTab` with the real tab, cover Skip on stop 1, Done on stop 2 and a later real visit (which proves the guard doesn't outlive the tour); the Skip test would fail on the old `tour ? undefined : tab` (the builder's mutation did fail it). The AT4.2 test checks the shared promise and the corrected mark after it. `resetTour()` clears the cached promise, so tests stay independent.
+- **Small items:** `ExampleCloset` no longer counts during render; the stale "see Review notes" lines were left as they were.
+
+**Defects open: none. Verdict: ready.**
+
+Small things for later, never blocking:
+- No test renders `StylistScreen` to prove it awaits the settle; the guarantee rests on the code (one reader, one `.then` chain) and the shared-promise test.
+- The AT6.1 tests copy the layout's one-line wiring instead of rendering the layout; a future edit of `_layout.tsx` could drift from them.
+- Still not verified: VoiceOver on the tab bar, AT3.3 by tapping the veiled tabs, Lookbook at the largest text, dark-mode contrast.
