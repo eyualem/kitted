@@ -539,7 +539,8 @@ function top(s: TopFlat, ctx: Ctx): string {
   }
   if (s.print && (jacket || collared || t === 'cardigan' || t === 'quarter_zip' || s.details?.fullZip)) {
     // a zip, placket, collar or pockets run down the middle: the mark sits low on the wearer's right side instead (T120)
-    out += printMark(cx - 42, hood ? 84 : 96, 26, 22, c);
+    // inside the body edge for every fit; a denim jacket's is smaller, between its left pleat seam and the placket
+    out += t === 'denim_jacket' ? printMark(cx - 19, 96, 12, 10.5, c) : printMark(cx - hw + 5, hood ? 84 : 96, 22, 19, c);
   } else if (s.print) {
     const pc = contrastLine(c);
     out += `<rect x="${cx - 19}" y="${hood ? 98 : 66}" width="38" height="34" rx="5" fill="${pc}" opacity=".5"/><path d="M${cx - 12},${hood ? 120 : 88} L${cx - 3},${hood ? 108 : 76} L${cx + 4},${hood ? 116 : 84} L${cx + 8},${hood ? 112 : 80} L${cx + 13},${hood ? 120 : 88} Z" fill="${pc}" opacity=".7"/>`;

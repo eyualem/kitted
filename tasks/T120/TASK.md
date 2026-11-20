@@ -16,7 +16,7 @@
 - No scoring, privacy or prompt file touched.
 
 ## Built
-- Tests: `app/src/__tests__/T120-graphicPieces.test.ts` (18). Five expectations in `pieceEdit.test.ts` updated for the new bottoms row.
+- Tests: `app/src/__tests__/T120-graphicPieces.test.ts` (19). Five expectations in `pieceEdit.test.ts` updated for the new bottoms row.
 - Before/after (rendered from the real `renderFlat` output in headless Chrome, not the Simulator: the Mac had under 550 MB free): `tasks/T120/shots/graphic-before-after-light.png`, `-dark.png`.
 
 ## Review
