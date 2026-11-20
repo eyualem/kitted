@@ -40,6 +40,8 @@
 
 **Demo screens:** 144 (the photo-backup step), 146 (Privacy & data with photo backup on), existing 137 (restore with counts), 143 (Privacy & data signed in; the delete confirm is the native alert from its red row). A restore screen for a profile-only account and one for a server that can't be reached are not demo screens: `scenarios.test.ts` pins the screens that run before onboarding to 1–4, 130–137 and 320–333, and the onboarding routes are unreachable once onboarded. The restore screen's demo path does take `?profile=1` and `?state=retry` (a screenshot can open it by those links in the web preview, or by two more scenarios once that test allows two more numbers).
 
+**Screenshots** (light, iPhone 17e Simulator, Metro from this worktree on port 8083, demo screens; the main Simulator was in use by another session): `tasks/T41b/shots/01-photo-step-light.png` (144, the sheet's last step), `02-restore-fits-back-light.png` (137), `03-restore-profile-only-light.png` (a temporary demo screen with `?profile=1`, not committed: the scenarios test pins the pre-onboarding screens), `04-privacy-photo-backup-on-light.png` (146, the switch and its footnote above the three deletes), `05-turn-off-confirm-light.png` (the off-confirm; its Cancel left the switch on, so that path is checked), `06-delete-confirm-light.png` (143's red row). Not shot: the in-progress `Bringing back your fits…` state, the restore retry state, the largest text size, dark.
+
 **Not done / not verified:**
 - No Simulator screenshots yet (memory was low); the reviewer or the session takes them from the demo screens above.
 - Nothing ran against real Firebase, Apple or Google (founder's phone); the emulator tests cover the real Firestore and Storage adapters and rules.
