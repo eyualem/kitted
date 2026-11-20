@@ -1,0 +1,10 @@
+# T118 · Setup now ends in the app tour (specs/app-tour.md): Closet, then Lookbook, with Kit's hello waiting. A flow that
+# is about something after the tour taps Skip here (one tap), then waits for Kit as before.
+# Usage: - runFlow: ../common/skip-tour.yaml
+appId: com.trykitted.kitted
+---
+- extendedWaitUntil:
+    visible: ".*Your closet builds itself\\..*"
+    timeout: 15000
+- assertNotVisible: ".*I'm Kit, your stylist\\..*"
+- tapOn: "Skip"

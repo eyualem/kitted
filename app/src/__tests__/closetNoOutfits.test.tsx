@@ -31,6 +31,12 @@ import { t } from '@/i18n/en';
 import { manualClock } from '@/services/clock';
 import { counterIds } from '@/services/ids';
 
+// Closet's screen now reaches the app tour's examples (T118), which animate with Reanimated.
+jest.mock('react-native-reanimated', () => {
+  const { View } = jest.requireActual('react-native') as typeof import('react-native');
+  return { __esModule: true, default: { View }, Easing: {}, FadeIn: {}, ReduceMotion: {}, withDelay: () => 0, withTiming: () => 0 };
+});
+
 // The card and the sheet alone: the design system pulls in Reanimated, which needs the native runtime.
 jest.mock('@/design-system', () => {
   const { Text, View } = jest.requireActual('react-native');

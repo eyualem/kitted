@@ -14,6 +14,8 @@ import { goToStylist } from '@/router/stylistAction';
 import { longDate } from '@/i18n/format';
 import { t } from '@/i18n/en';
 import { sessionClock } from '@/state/session';
+import { useTourStop } from '@/features/onboarding/appTour';
+import { ExampleLookbook } from '@/features/onboarding/ExampleLookbook';
 
 interface Look {
   check: FitCheckRow;
@@ -32,6 +34,9 @@ export default function LookbookScreen() {
       .map((c): Look => ({ check: c, latest: recheckOf.get(c.id) ?? c }))
       .sort((a, b) => b.check.createdAt - a.check.createdAt);
   }, []);
+  // The app tour's second stop (specs/app-tour.md AT2): the example lookbook in place of this screen.
+  const tourStop = useTourStop();
+  if (tourStop === 2) return <ExampleLookbook />;
   if (!looks) return null;
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ backgroundColor: colors.bg }} contentContainerStyle={{ padding: space.gutter, gap: space.stack }}>

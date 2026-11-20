@@ -1,8 +1,9 @@
 # T39 · OS3.1, OS3.2, OS5.1, OS5.2 (Agree), OS5.5, F1.1, SY4.1 (tasks/T39/TESTING.md), retargeted by T113 (the style
-# game, specs/style-game.md; F1.1 is now "18 taps or fewer with 3 Me's", #504, the lesson's tap included): a fresh install
-# reaches a live camera in at most 18 taps: Get started (1), card 1's lesson (2, SG1.4, #503), Yes on 3 cards (3–5),
+# game, specs/style-game.md; F1.1 is "18 taps or fewer with 3 Me's", #504, the lesson's tap included) and by T118 (the app
+# tour, specs/app-tour.md AT6.3: Next and Done are two more, so F1.1 is now 20): a fresh install reaches a live camera in
+# at most 20 taps: Get started (1), card 1's lesson (2, SG1.4, #503), Yes on 3 cards (3–5),
 # No on 5 (6–10), the ranking's left card while it shows (at most 3: 11–13), Continue (14), 22–25 (15), Continue (16),
-# the card's Check my fit (17), Agree (18). The lesson shows on the first game only. No bubble on
+# the tour's Next (17) and Done (18), the card's Check my fit (19), Agree (20). Kit's hello and offer wait for the tour. The lesson shows on the first game only. No bubble on
 # Looks or About you, no agreement screen in setup, no sign-in and no paywall on the way, and the camera never opens on
 # its own. The name is typed (#506: the field opens focused, and typing isn't a tap). Taps on the game are by testID: the deal is random on a fresh
 # install, so nothing here depends on which look is on a card.
@@ -12,7 +13,7 @@
 # Matching: Maestro matches an element's WHOLE text or label. A Kit line is one element "Kit: <text>"; the offer's title
 # and body are one VoiceOver element.
 appId: com.trykitted.kitted
-name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesson's tap included)
+name: T39 · fresh install to a live camera (3 Yes's; 20 taps at most, the lesson's and the tour's taps included)
 ---
 - launchApp:
     clearState: true
@@ -24,6 +25,7 @@ name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesso
       visible: "DEVELOPMENT SERVERS"
     commands:
       - tapOn: "http://.*:${PORT || '8081'}"
+- runFlow: ../common/dismiss-dev-menu.yaml
 - extendedWaitUntil:
     visible: "Get started"
     timeout: 90000
@@ -117,6 +119,23 @@ name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesso
 
 # Tap 16.
 - tapOn: "Continue"
+# T118 · The app tour (AT1–AT3): Closet with its example pieces, Next, Lookbook, Done. Kit has not said a word yet.
+- extendedWaitUntil:
+    visible: ".*Your closet builds itself\\..*"
+    timeout: 15000
+- assertVisible: "Example closet, .* pieces"
+- assertNotVisible: "Kit: .*"
+- assertNotVisible: ".*I'm Kit, your stylist\\..*"
+- assertNotVisible: "Want to check a fit now\\?.*"
+- assertVisible: "Skip"
+# Tap 17.
+- tapOn: "Next"
+- extendedWaitUntil:
+    visible: ".*Every look, saved\\..*"
+    timeout: 10000
+- assertNotVisible: ".*I'm Kit, your stylist\\..*"
+# Tap 18.
+- tapOn: "Done"
 - extendedWaitUntil:
     visible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
     timeout: 15000
@@ -136,7 +155,7 @@ name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesso
 - assertNotVisible: "Take photo"
 - assertNotVisible: "Before I score a photo, here's what happens to it\\."
 
-# Tap 17: the card's Check my fit (the first of the two "Check my fit" buttons; the accessory's is below it).
+# Tap 19: the card's Check my fit (the first of the two "Check my fit" buttons; the accessory's is below it).
 - tapOn:
     text: "Check my fit\\. Opens the camera\\."
     below: "Want to check a fit now\\?.*"
@@ -152,7 +171,7 @@ name: T39 · fresh install to a live camera (3 Yes's; 18 taps at most, the lesso
 - assertNotVisible: "Continue free"
 - assertNotVisible: "Up to .* checks a day\\.[\\s\\S]*"
 
-# Tap 18.
+# Tap 20.
 - tapOn: "Agree"
 - extendedWaitUntil:
     visible: "Take photo"

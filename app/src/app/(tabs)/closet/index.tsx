@@ -45,6 +45,8 @@ import { OutfitsView } from '@/features/closet/OutfitsView';
 import { closetView, outfitCount, SEGMENT_KEY } from '@/features/closet/outfits';
 import { useOutfitsOn } from '@/features/closet/outfitsSwitch';
 import { Segmented } from '@/features/onboarding/Segmented';
+import { useTourStop } from '@/features/onboarding/appTour';
+import { ExampleCloset } from '@/features/onboarding/ExampleCloset';
 import { t } from '@/i18n/en';
 
 /** A "To confirm" answer leaves the card: a toast says it, with Undo (09 §20.7 R10, #323). */
@@ -97,6 +99,9 @@ export default function ClosetScreen() {
     if (tag != null) AccessibilityInfo.setAccessibilityFocus(tag);
   };
   const firstVisit = useFirstVisitCheck();
+  // The app tour's first stop (specs/app-tour.md AT1): the example closet in place of this screen, saving nothing.
+  const tourStop = useTourStop();
+  if (tourStop === 1) return <ExampleCloset />;
   if (!data) return null;
   const { items, byId, previews, asks, all, fitChecks, styles, count, fit } = data;
   // His first visit (SY2.8): that check's pieces first, out of the sections below.

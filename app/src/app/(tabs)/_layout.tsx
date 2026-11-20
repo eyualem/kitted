@@ -2,6 +2,7 @@
 // itself (02 §1.1, 05 S4). Labels always on, Stylist first, tint = accent. Don't hand-draw it.
 // Outline symbols in both states, as the mockup draws them: `hanger` has no fill variant, so
 // filled selections made Closet the odd one out (DECISIONS-LOG #56).
+import { useEffect } from 'react';
 import { useSegments } from 'expo-router';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { useTheme } from '@/design-system';
@@ -12,6 +13,8 @@ import { useComposerOpen } from '@/features/stylist/composerState';
 import { badgeColor } from '@/features/closet/arrivals';
 import { closetBadge } from '@/features/closet/ClosetBadge';
 import { useClosetArrivals } from '@/features/closet/useArrivals';
+import { settleTourAtLaunch, useTourStop } from '@/features/onboarding/appTour';
+import { store } from '@/data/db';
 
 export default function TabsLayout() {
   const { colors, scheme } = useTheme();
@@ -29,7 +32,13 @@ export default function TabsLayout() {
   // in light; in dark his chat bubbles' navy (`me`), since iOS always draws the number white and dark `primary` is near
   // white (founder, Nov 10, #439). Only Closet ever gets one (SY2.6).
   const tab = segments[0] === '(tabs)' ? segments[1] : undefined;
-  const added = useClosetArrivals(tab);
+  // The app tour (specs/app-tour.md): the tabs it shows aren't "opening Closet" (AT6.1), and the tab bar is dimmed and can't
+  // be tapped while it plays (AT3). A tour still pending at launch means the app closed during it: that counts as seen.
+  const tour = useTourStop() !== null;
+  useEffect(() => {
+    void settleTourAtLaunch(store);
+  }, []);
+  const added = useClosetArrivals(tour ? undefined : tab);
   const badge = badgeColor(colors, scheme);
   return (
     // The selected tab is ink, not copper (founder, #276): copper is for score movement only.
@@ -39,20 +48,20 @@ export default function TabsLayout() {
           <StylistBar />
         </NativeTabs.BottomAccessory>
       ) : null}
-      <NativeTabs.Trigger name="stylist">
+      <NativeTabs.Trigger name="stylist" disabled={tour}>
         <NativeTabs.Trigger.Label>{t('tab.stylist')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={sym.tabStylist} md="chat_bubble" />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="closet">
+      <NativeTabs.Trigger name="closet" disabled={tour}>
         <NativeTabs.Trigger.Label>{t('tab.closet')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={sym.tabCloset} md="checkroom" />
         {closetBadge(added, badge)}
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="lookbook">
+      <NativeTabs.Trigger name="lookbook" disabled={tour}>
         <NativeTabs.Trigger.Label>{t('tab.lookbook')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={sym.tabLookbook} md="grid_view" />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="you">
+      <NativeTabs.Trigger name="you" disabled={tour}>
         <NativeTabs.Trigger.Label>{t('tab.you')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={sym.tabYou} md="person" />
       </NativeTabs.Trigger>

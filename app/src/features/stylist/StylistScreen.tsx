@@ -36,6 +36,7 @@ import { ARRIVE, arrivals, parseSeenUntil, SEEN_UNTIL_KEY } from './arrival';
 import { arrivalEntering } from './arrivalMotion';
 import { KitTypingRow } from './KitTypingRow';
 import { useTypingBeat } from './useTypingBeat';
+import { getTourStop } from '@/features/onboarding/appTour';
 import { OfflineBanner } from './OfflineBanner';
 import { LatestPill } from './LatestPill';
 import { AT_BOTTOM_PT, latestPillShows } from './latestShows';
@@ -126,6 +127,8 @@ export function StylistScreen() {
   }, [items, seenUntil]);
   // Written when the thread loses focus or the app leaves the front: the next launch draws what he saw as it was.
   const markSeen = useCallback(() => {
+    // Not while the app tour is up: Kit's hello hasn't been seen, and it plays when the tour ends (specs/app-tour.md AT3.2).
+    if (getTourStop() !== null) return;
     if (seenUntil !== undefined) void store.setKv(SEEN_UNTIL_KEY, String(sessionClock.nowMs())).catch(() => {});
   }, [seenUntil]);
   useFocusEffect(

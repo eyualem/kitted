@@ -12,6 +12,7 @@ import { SHARE_CARD_BUILT } from '@/config/features';
 import { usePaywallOn } from '@/features/paywall/switch';
 import { ToastHost } from '@/features/toast/ToastHost';
 import { SlideHost } from '@/features/closet/SlideHost';
+import { TourHost } from '@/features/onboarding/TourHost';
 import { useDemoState } from '@/demo/demoState';
 import { useGate } from '@/state/appGate';
 import { SPLASH_FADE_MS, splashHoldLeft } from '@/state/splashHold';
@@ -74,6 +75,8 @@ export default function RootLayout() {
             <RootStack booted={booted} />
             {/* The slide into Closet (SY2.2): above the iOS tab bar, which draws above every screen. */}
             <SlideHost />
+            {/* The app tour's card (specs/app-tour.md), over the tabs while it plays. */}
+            <TourHost />
             <ToastHost />
             {/* After boot: the demo arguments are read then (and the compiler would keep a first-render read). */}
             {DEMO_ENABLED && booted ? <DemoCrash /> : null}

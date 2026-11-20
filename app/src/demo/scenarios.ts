@@ -62,6 +62,8 @@ export interface ScreenScenario {
   /** Kit's first-check offer (T39, OS5): setup finished through About you (no agreement), then the card as is, after
    *  Later, after Not now on the camera's agreement, or after the agreement and one scored check. */
   offer?: 'open' | 'later' | 'notNow' | 'checked';
+  /** The app tour (T118, specs/app-tour.md): setup finished as `offer` does, with the tour on this stop. */
+  tour?: 1 | 2;
   /** Kit's rows are new to him (T116): the thread's "seen until" starts at 0 (`true`), or just after setup ('afterSetup': the hello
    *  is old, what follows is new), so the hello and the first-moves line play their typing beat. */
   fresh?: true | 'afterSetup';
@@ -418,6 +420,9 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 410, name: 'Past chats · Kit cards, read-only', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist/day/2026-10-21', under: '/stylist' },
   { n: 411, name: 'Next buy · from Kit', id: 'C7', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/sheets/next-buy?starter=s07', under: '/stylist' },
   { n: 412, name: 'Kit · colors (largest text)', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  // The app tour (T118, specs/app-tour.md): right after About you, Closet then Lookbook with their examples and the card.
+  { n: 430, name: 'App tour · Closet', id: 'T118a', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:40:30', href: '/closet', offer: 'open', tour: 1 },
+  { n: 431, name: 'App tour · Lookbook', id: 'T118b', scenario: 'firstRun', onboarded: true, now: '2026-10-22T07:40:30', href: '/lookbook', offer: 'open', tour: 2 },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

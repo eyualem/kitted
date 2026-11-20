@@ -137,6 +137,8 @@ export const KV_LOCAL: readonly string[] = [
   // When Closet was last opened (its badge) and the first-visit mark (SY2, features/closet/arrivals.ts): this phone's,
   // never backed up; "Delete all my data" empties them with the rest of the kv table.
   'closet.lastOpened', 'closet.firstVisit',
+  // The app tour's state (specs/app-tour.md): pending from setup's end, done when it closes; this phone's, never backed up.
+  'appTour.state',
   // When he last had the Stylist thread in front of him (features/stylist/arrival.ts): what moves in is what's newer; this phone's.
   'stylist.seenUntil',
 ];

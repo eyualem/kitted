@@ -13,6 +13,7 @@ import type { OccasionKey, StyleKey } from '@/data/types';
 import { WEATHER_PERMISSION_KV } from '@/services/weather';
 import { completeOnboarding, giveConsent } from '@/features/onboarding/complete';
 import { finishSetup, saveAbout } from '@/features/onboarding/aboutStep';
+import { nextStop, resetTour, startTour } from '@/features/onboarding/appTour';
 import { endStyleGame, seedStyleGameForDemo } from '@/features/onboarding/styleGameSession';
 import { LOOKS_KEY } from '@/features/onboarding/basics';
 import { declineAgreement, tapLater } from '@/features/onboarding/firstCheckOffer';
@@ -425,7 +426,7 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
 async function prepareOffer(offer: NonNullable<ScreenScenario['offer']>): Promise<void> {
   await store.setKv(LOOKS_KEY, JSON.stringify(['smart_casual', 'workwear']));
   await saveAbout(store, { age: '22-25', name: '' });
-  await finishSetup(store, at('2026-10-22T07:40:00'), newId);
+  await finishSetup(store, at('2026-10-22T07:40:00'), newId, { tour: false });
   if (offer === 'later') await tapLater(store, at('2026-10-22T07:40:30'), newId);
   if (offer === 'notNow') await declineAgreement(store, at('2026-10-22T07:40:30'), newId);
   if (offer === 'checked') await giveConsent(store, at('2026-10-22T07:41:00'));
@@ -465,11 +466,17 @@ async function playStory(sc: ScreenScenario): Promise<void> {
   setDemoArgs({ ...args, latency: 0 });
   // The connection is pinned (G18): online, or offline on the offline screens, whatever the Mac's Wi-Fi is doing.
   connectivity.force(!sc.offline);
+  // The app tour only plays on its own screens (T118); another screen after one never inherits its stop.
+  resetTour();
 
   if (sc.scenario === 'full') {
     await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: at(story.asOf ?? sc.now) });
   } else if (sc.offer) {
     await prepareOffer(sc.offer);
+    if (sc.tour) {
+      await startTour(store);
+      if (sc.tour === 2) nextStop();
+    }
   } else if (sc.onboarded) {
     const a = seed.scenarios.firstRun.onboardingAnswers;
     await completeOnboarding(

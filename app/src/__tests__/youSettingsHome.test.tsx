@@ -34,6 +34,9 @@ import { demoEntitlements } from '@/services/entitlements';
 import { LIMITS, type QuotaSnapshot } from '@/services/quota';
 import { resetTierForTests, setDemoTier } from '@/services/server/tier';
 
+// Closet's screen now reaches the app tour's examples (T118), which animate with Reanimated.
+jest.mock('react-native-reanimated', () => jest.requireActual('react-native-reanimated/mock'));
+
 // ── stand-ins ───────────────────────────────────────────────────────────────────────────────────────────────────
 let mockStore: KittedStore;
 let mockParams: Record<string, string> = {};

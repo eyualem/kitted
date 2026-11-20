@@ -10,6 +10,7 @@ import { t, type StringKey } from '@/i18n/en';
 import { ABOUT_KEY, BASICS_KEY, GAME_DRAFT_KEY, isAgeBand, isUnderAge, loadDraft, LOOKS_KEY, type AboutDraft, type AgeChoice } from './basics';
 import { completeOnboarding } from './complete';
 import { postFirstCheckOffer } from './firstCheckOffer';
+import { startTour } from './appTour';
 import { picksToStyles } from './looks';
 import { clearResumeStep } from './resume';
 import { endStyleGame } from './styleGameSession';
@@ -81,7 +82,7 @@ export function profileAgeBand(p: Pick<ProfileRow, 'ageBand' | 'birthYear'>, cur
  * words from "Something else?" stay in kv, as before. Rejects, writing nothing, when no age is picked or it's under 18.
  * Sends nothing. The screen then calls setOnboarded(true) and router.replace('/').
  */
-export async function finishSetup(store: KittedStore, nowMs: number, ids: (prefix: string) => string): Promise<void> {
+export async function finishSetup(store: KittedStore, nowMs: number, ids: (prefix: string) => string, opts: { tour?: boolean } = {}): Promise<void> {
   const d = await loadDraft(store);
   const age = d.about.age;
   if (!isAgeBand(age)) throw new Error(age === 'under18' ? 'finishSetup: under 18 has no setup' : 'finishSetup: no age picked');
@@ -107,4 +108,6 @@ export async function finishSetup(store: KittedStore, nowMs: number, ids: (prefi
   await store.deleteKv(GAME_DRAFT_KEY);
   endStyleGame();
   await clearResumeStep(store);
+  // The app tour (specs/app-tour.md AT4): once, at the end of a new setup. Never Restore (it doesn't come through here).
+  if (opts.tour !== false) await startTour(store);
 }

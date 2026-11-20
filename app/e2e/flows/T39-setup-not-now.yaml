@@ -15,6 +15,7 @@ name: T39 · Not now on the agreement after the offer
       visible: "DEVELOPMENT SERVERS"
     commands:
       - tapOn: "http://.*:${PORT || '8081'}"
+- runFlow: ../common/dismiss-dev-menu.yaml
 - extendedWaitUntil:
     visible: "Get started"
     timeout: 90000
@@ -30,6 +31,8 @@ name: T39 · Not now on the agreement after the offer
 - tapOn: "22–25"
 # #506: no name typed, so Skip goes on (Continue waits for a name).
 - tapOn: "Skip"
+# T118: the app tour plays first; Skip it.
+- runFlow: ../common/skip-tour.yaml
 - extendedWaitUntil:
     visible: "Want to check a fit now\\? Stand back so your shoes are in the shot\\. Not dressed for it\\? Later works\\."
     timeout: 15000
