@@ -33,7 +33,7 @@
 - `app/src/features/ask/judge.ts` (lines ~45-50): Kit's judgement of a closet outfit with no photo still lists every negative reason as a "Problem:" (and counts a big minus toward the "no" verdict) from raw `scoreParts` parts, so an unsteady rule such as pooling can still reach him there as a problem. Same family as T115b; it reads the engine's parts, not a stored check. A one-line `chargedParts(res)` would cover it. Code.
 - `T115-cardWording.test.ts`, the "no row, no number" test: the first `not.toContain(...)` compares a capitalised string with lower-cased rows, so it can never fail; only the second (`rule.toLowerCase()` vs the line) does the work. The part-adds-up check also tolerates 0.51. The real checks (pooling count over 5, charged parts rebuilt to 7.0, re-check) are sound. Test.
 - `subscores` stored on the row (scoring.ts ~232) still holds core's part numbers, uncharged. Nothing reads them for display today; fix if something starts to.
-- Screenshot 04: the Tools gear sits over the sheet's close button in the Simulator frame (the same on 04 and the page's own "before" frame? only 04 shows it clearly); looks like the chat's Tools button drawn above the sheet, not from this change.
+- Screenshot 04: the Tools gear sits over the sheet's close button in the Simulator frame ; looks like the chat's Tools button drawn above the sheet, not from this change.
 - The founder's open call: dealbreaker-owned charges stay shown (already logged in #522). A fix card's "Raises Fit to 7" is core's text and can lag a part number (logged).
 
 **Verdict: Ready.** No strict-mode checks needed (normal). `npm run check` was left to the session.
