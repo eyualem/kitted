@@ -22,10 +22,11 @@ const DAY_MS = 86_400_000;
 export const TOMBSTONE_DAYS = 180;
 /** Accounts idle this long are deleted (§5, stated in the privacy policy). */
 export const INACTIVE_DAYS = 548; // 18 months
-/** Keep in step with app/src/sync/schema.ts (SYNCED_COLLECTIONS) and firestore.rules. */
+/** Keep in step with app/src/sync/schema.ts (SYNCED_COLLECTIONS) and firestore.rules. Chat messages are not here: his
+ *  questions and Kit's answers never reach the server (SB5.1a). */
 export const SYNCED_COLLECTIONS = [
   'profile', 'prefs', 'fitChecks', 'readings', 'closetItems', 'closetObservations',
-  'outfits', 'wearLog', 'corrections', 'chatMessages', 'dailyIdeas', 'facts',
+  'outfits', 'wearLog', 'corrections', 'dailyIdeas', 'facts',
 ] as const;
 
 /** Everything one person has with us: every doc under users/{uid}, every file under users/{uid}/, then the account.
@@ -48,9 +49,30 @@ export async function deleteEverything(uid: string): Promise<{ files: number }> 
   return { files: files.length };
 }
 
+/** SB4.3: deletes every object under users/{uid}/files/ (by prefix, never reading one) and nothing else: no Firestore doc,
+ *  no Auth user, nobody else's files. Safe to run twice. */
+export async function deleteBackedUpPhotos(uid: string): Promise<{ files: number }> {
+  const bucket = getStorage().bucket();
+  const prefix = `users/${uid}/files/`;
+  const [files] = await bucket.getFiles({ prefix });
+  await bucket.deleteFiles({ prefix, force: true });
+  return { files: files.length };
+}
+
+/** The phone's call to `deleteBackedUpPhotos` after he confirms "Turn off photo backup?". Signed in only: the uid comes from the
+ *  request's auth, never from its data. No App Check enforcement yet (the app sends no token, #386), like `deleteAccount`. */
+export const deleteBackedUpPhotosJob = onCall({ region: REGION }, async (req) => {
+  const uid = req.auth?.uid;
+  if (!uid) throw new HttpsError('unauthenticated', 'Sign in first.');
+  const { files } = await deleteBackedUpPhotos(uid);
+  logger.info('deleteBackedUpPhotos', { uid, files });
+  return { ok: true };
+});
+
 /** "Delete account and all data". The phone revokes the Sign in with Apple token first (Apple requires it), then calls
- *  this, then wipes itself. */
-export const deleteAccount = onCall({ region: REGION, enforceAppCheck: true }, async (req) => {
+ *  this, then wipes itself. No App Check enforcement yet: the app sends no token, so enforcing it would refuse every real
+ *  call (#386); the caller must still be signed in. */
+export const deleteAccount = onCall({ region: REGION }, async (req) => {
   const uid = req.auth?.uid;
   if (!uid) throw new HttpsError('unauthenticated', 'Sign in first.');
   const { files } = await deleteEverything(uid);

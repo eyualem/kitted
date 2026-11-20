@@ -25,6 +25,8 @@ import { CONFIRM_OPEN_KEY } from '@/features/closet/toConfirm';
 import { FIT_LINE_KEY } from '@/features/closet/fitLine';
 import { FIT_LOG_KEY } from '@/features/closet/fitLog';
 import { SERVER_TIER_KV } from '@/services/server/tier';
+import { PHOTO_BACKUP_KEY, PHOTO_STEP_KEY } from '@/sync/photoBackup';
+import { SYNC_UID_KEY } from '@/sync/backup';
 
 const fs = jest.requireActual('fs') as {
   readFileSync(p: string, e: string): string;
@@ -144,7 +146,7 @@ describe('S5 and S6 everything is classified', () => {
       PERMISSION_KV: WEATHER_PERMISSION_KV, MODE_KEY: 'camera.mode', REVEAL_KV: KV.revealFullShown,
       ACCOUNT_KEY: 'account.user', OFFER_KEY: 'account.offer', ONBOARDING_STEP_KEY: KV.onboardingStep,
       FINISH_KEY, STARTER_MARKS_KEY, SEGMENT_KEY, CONFIRM_OPEN_KEY, FIT_SKIP_KEY, FIT_LINE_KEY, FIT_LOG_KEY, SERVER_TIER_KV, ABOUT_YOU_KEY,
-      LAST_OPENED_KEY, FIRST_VISIT_KEY, SEEN_UNTIL_KEY,
+      LAST_OPENED_KEY, FIRST_VISIT_KEY, SEEN_UNTIL_KEY, PHOTO_BACKUP_KEY, PHOTO_STEP_KEY, SYNC_UID_KEY,
     };
     const resolve = (expr: string): string[] | null => {
       const e = expr.trim();
@@ -186,6 +188,9 @@ describe('S5 and S6 everything is classified', () => {
       }
     }
     expect(unclassified).toEqual([]);
+    // T41b: photo backup is his account's setting and travels; the step mark and the signed-in uid are this phone's.
+    expect({ [PHOTO_BACKUP_KEY]: kvPolicy(PHOTO_BACKUP_KEY), [PHOTO_STEP_KEY]: kvPolicy(PHOTO_STEP_KEY), [SYNC_UID_KEY]: kvPolicy(SYNC_UID_KEY) })
+      .toEqual({ 'backup.photos': {}, 'account.photoStep': 'local', 'sync.uid': 'local' });
     expect(scanned).toBeGreaterThan(20);
     for (const v of Object.values(KV)) expect({ key: v, classified: kvPolicy(v) !== null }).toEqual({ key: v, classified: true });
   });
