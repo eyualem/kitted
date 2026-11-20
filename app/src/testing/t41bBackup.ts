@@ -15,7 +15,7 @@ import { trackChanges } from '@/sync/tracker';
 
 export const T0 = 1_760_000_000_000;
 
-export function fit(id: string, o: Partial<FitCheckRow> = {}): FitCheckRow {
+export function fitRow(id: string, o: Partial<FitCheckRow> = {}): FitCheckRow {
   return {
     id, createdAt: T0 - 1000, dayKey: '2026-10-22', photoFile: null, thumbFile: null, demoPhotoId: null, imageHash: id, occasion: 'everyday', style: null,
     status: 'scored', isPartial: false, notRated: [], score: 7.5, rawScore: 7.5, subscores: {}, occasionAdj: 0, rulesFired: [], credits: [], advice: [],

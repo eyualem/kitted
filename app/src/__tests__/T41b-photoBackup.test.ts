@@ -6,14 +6,14 @@ import { RemoteUnavailable } from '@/sync/remote';
 import { KV_SYNCED, isSyncedKv, kvPolicy } from '@/sync/schema';
 import { backsUp } from '@/sync/backup';
 import { PHOTO_BACKUP_KEY, PHOTO_STEP_KEY, isPhotoBackupOn, markPhotoStepOffered, photoStepFor, turnOffPhotoBackup, turnOnPhotoBackup } from '@/sync/photoBackup';
-import { backupRig, fit, newPhone, piece, T0, type Phone } from '@/testing/t41bBackup';
+import { backupRig, fitRow, newPhone, piece, T0, type Phone } from '@/testing/t41bBackup';
 
 /** A phone with kept photos in the three backed-up folders, plus things that must never go up: a face-hidden send copy, a cache file and a
  *  path outside the three folders, all named inside the rows. */
 async function photoPhone(remote: ReturnType<typeof createMemoryRemote>, id = 'dev-a'): Promise<Phone> {
   const p = newPhone(remote, id);
   await p.inner.fitChecks.put(
-    fit('FC1', {
+    fitRow('FC1', {
       photoFile: 'photos/FC1-photo.jpg',
       thumbFile: 'photos/FC1-thumb.jpg',
       details: { sendCopy: 'photos/FC1-photo-send.jpg', cache: 'file:///var/mobile/Containers/Data/Application/X/Library/Caches/upload/c.jpg', other: 'tmp/kitted-capture-1.jpg' } as never,
@@ -40,7 +40,7 @@ describe('SB4.1a · photo backup is off after sign-in; with it off no photo is u
 
     // A photo added after the sign-in (through the tracked store), then the app comes back to the foreground (another round).
     a.clock.now += 50;
-    await a.app.fitChecks.put(fit('FC2', { photoFile: 'photos/FC2-photo.jpg' }));
+    await a.app.fitChecks.put(fitRow('FC2', { photoFile: 'photos/FC2-photo.jpg' }));
     a.files.set('photos/FC2-photo.jpg', 'BYTES');
     expect(await rig.backup.syncNow()).toBe('ok');
     expect(await rig.backup.syncNow()).toBe('ok');
@@ -75,7 +75,7 @@ describe('SB4.1a · photo backup is off after sign-in; with it off no photo is u
     expect(rig.uploads).toHaveLength(4);
     // A photo he adds afterwards goes up too, once.
     a.clock.now += 50;
-    await a.app.fitChecks.put(fit('FC3', { photoFile: 'photos/FC3-photo.jpg' }));
+    await a.app.fitChecks.put(fitRow('FC3', { photoFile: 'photos/FC3-photo.jpg' }));
     a.files.set('photos/FC3-photo.jpg', 'BYTES');
     await rig.backup.syncNow();
     expect(sorted(rig.uploads)).toEqual(sorted([...KEPT, 'photos/FC3-photo.jpg']));
@@ -100,7 +100,7 @@ describe('SB4.1a · photo backup is off after sign-in; with it off no photo is u
     expect(remote.files.size).toBe(0);
     // A new photo while it is off: still nothing.
     a.clock.now += 50;
-    await a.app.fitChecks.put(fit('FC4', { photoFile: 'photos/FC4-photo.jpg' }));
+    await a.app.fitChecks.put(fitRow('FC4', { photoFile: 'photos/FC4-photo.jpg' }));
     a.files.set('photos/FC4-photo.jpg', 'BYTES');
     await rig.backup.syncNow();
     expect(rig.uploads).toEqual([]);

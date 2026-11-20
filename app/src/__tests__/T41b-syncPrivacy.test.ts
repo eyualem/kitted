@@ -8,7 +8,7 @@ import type { ChatMessage } from '@/data/types';
 import { rowToData } from '@/sync/codec';
 import { createMemoryRemote } from '@/sync/memoryRemote';
 import { KV_SYNCED, SYNCED_COLLECTIONS, SYNCED_TABLES, TABLE_POLICY, isSyncedKv, kvPolicy, tableForCollection } from '@/sync/schema';
-import { fit, newPhone, profileRow, T0 } from '@/testing/t41bBackup';
+import { fitRow, newPhone, profileRow, T0 } from '@/testing/t41bBackup';
 
 const NAME = 'Zelda-SENTINEL';
 const BAND = '22-25';
@@ -158,7 +158,7 @@ describe('SB5.1c · what is backed up does come back', () => {
   it('SB5.1c · fits, closet, outfits, wear log, Lookbook flags, looks and fit, and Kit\'s facts written on phone A are on phone B, row for row', async () => {
     const remote = createMemoryRemote(T0);
     const a = await seededPhone(remote, 'dev-a');
-    await a.inner.fitChecks.put(fit('FC-FAV', { isFavorite: true, occasion: 'date', style: 'streetwear' as never, score: 8.5, fixes: [] }));
+    await a.inner.fitChecks.put(fitRow('FC-FAV', { isFavorite: true, occasion: 'date', style: 'streetwear' as never, score: 8.5, fixes: [] }));
     await a.inner.facts.put({ id: 'F-9', key: 'budget', value: 'under $60', source: 'told', createdAt: 5, isDeleted: false });
     await a.inner.profile.put(profileRow({ name: NAME, ageBand: BAND as never, birthYear: 1999, consentVersion: '2', consentAt: 5 }));
     await a.engine.markAllDirty();

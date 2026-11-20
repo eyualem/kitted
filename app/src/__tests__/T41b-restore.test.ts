@@ -15,7 +15,7 @@ import { mayUpload } from '@/features/privacy/wipe';
 import { counterIds } from '@/services/ids';
 import { createMemoryRemote, type MemoryRemote } from '@/sync/memoryRemote';
 import { RemoteUnavailable, type RemoteStore } from '@/sync/remote';
-import { backupRig, fit, fitIds, newPhone, piece, profileRow, T0 } from '@/testing/t41bBackup';
+import { backupRig, fitRow, fitIds, newPhone, piece, profileRow, T0 } from '@/testing/t41bBackup';
 
 const T1 = T0 + 5_000_000;
 const user: AccountUser = { uid: 'U1', provider: 'apple', email: null, signedInAt: T0 };
@@ -35,11 +35,11 @@ interface AccountShape {
 /** An account: a first phone pushes these rows to the server through the engine. */
 async function makeAccount(remote: MemoryRemote, o: AccountShape) {
   const a = newPhone(remote, 'dev-a');
-  for (let i = 1; i <= (o.fits ?? 0); i++) await a.app.fitChecks.put(fit(`FA${i}`));
-  for (let i = 1; i <= (o.rechecks ?? 0); i++) await a.app.fitChecks.put(fit(`FA-RC${i}`, { parentId: 'FA1' }));
-  for (let i = 1; i <= (o.failedFits ?? 0); i++) await a.app.fitChecks.put(fit(`FA-FAIL${i}`, { status: 'failed', score: null }));
+  for (let i = 1; i <= (o.fits ?? 0); i++) await a.app.fitChecks.put(fitRow(`FA${i}`));
+  for (let i = 1; i <= (o.rechecks ?? 0); i++) await a.app.fitChecks.put(fitRow(`FA-RC${i}`, { parentId: 'FA1' }));
+  for (let i = 1; i <= (o.failedFits ?? 0); i++) await a.app.fitChecks.put(fitRow(`FA-FAIL${i}`, { status: 'failed', score: null }));
   for (let i = 1; i <= (o.deletedFits ?? 0); i++) {
-    await a.app.fitChecks.put(fit(`FA-GONE${i}`));
+    await a.app.fitChecks.put(fitRow(`FA-GONE${i}`));
     a.clock.now += 10;
     await a.app.fitChecks.delete(`FA-GONE${i}`);
   }
@@ -251,9 +251,9 @@ describe('SB7.1 · "Use the account\'s" uses the account\'s real fit ids', () =>
     const a = await makeAccount(remote, { fits: 3 });
     const p = newPhone(remote, 'dev-p');
     for (const id of ['FA1', 'FA2']) await p.inner.fitChecks.put((await a.inner.fitChecks.get(id))!);
-    await p.inner.fitChecks.put(fit('FP1'));
-    await p.inner.fitChecks.put(fit('FP2'));
-    await p.inner.fitChecks.put(fit('FPR1', { parentId: 'FP1' }));
+    await p.inner.fitChecks.put(fitRow('FP1'));
+    await p.inner.fitChecks.put(fitRow('FP2'));
+    await p.inner.fitChecks.put(fitRow('FPR1', { parentId: 'FP1' }));
     return { remote, p };
   }
   const liveOnServer = (remote: MemoryRemote) => remote.docs('fitChecks').filter((d) => !d.deleted).map((d) => d.id).sort();
