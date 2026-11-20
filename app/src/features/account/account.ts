@@ -150,7 +150,7 @@ export async function afterSignIn(
   const hasFits = !!h && h.fits > 0;
   if (from === 'welcome') {
     await saveAccount(store, result.user);
-    // An account counts as existing, so setup is skipped, when it has fits or a saved style profile (SB6, log #522).
+    // An account counts as existing, so setup is skipped, when it has fits or a saved style profile (SB6, log #523).
     return h && (hasFits || h.profile === true) ? { next: 'restore', holdings: h } : { next: 'setup' };
   }
   const localFits = await localFitCount(store);

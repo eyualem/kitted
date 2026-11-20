@@ -560,6 +560,8 @@ const addedInBuild = {
   'ask.card.colorsFor': 'Colors for the {piece}',
   'ask.card.goesWith': 'Goes with {color}',
   'ask.card.add.ask': 'Want me to add this to your closet?',
+  'ask.card.addKind': 'What kind of piece is it?',
+  'ask.card.addColor': 'What color is it?',
   'ask.card.add': 'Add',
   'ask.card.noThanks': 'No thanks',
   'ask.card.added': 'Added to Closet',
@@ -1128,7 +1130,7 @@ const addedInBuild = {
   'acct.restore.basics': "Welcome back. Your birth year first, then I'll bring back your fits.",
   'acct.restore.counts': '{fits} fits · {pieces} pieces',
   'acct.restore.done': 'Your fits are back.',
-  // An account with a saved style profile and no fits (SB6, log #522): no counts line.
+  // An account with a saved style profile and no fits (SB6, log #523): no counts line.
   'acct.restore.profileDone': 'Your style profile is back.',
   'acct.restore.retryBody': "Couldn't reach your account. Nothing was changed.",
   'acct.restore.retry': 'Try again',
