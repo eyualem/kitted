@@ -622,6 +622,16 @@ const addedInBuild = {
   'item.dup.saidSame': 'Saved as your {item}.',
   'item.dup.saidNew': 'Kept as a new piece.',
   'item.dup.change': 'Change',
+  // "What is it, then?" (specs/closet-beta.md CB4, founder Nov 19): the sheet `Not the same` opens. Its kind step's
+  // title is T106's `ask.card.addKind` (`What kind of piece is it?`).
+  'notSame.title': 'What is it, then?',
+  'notSame.sub': 'Pick the one it is, or add it as new.',
+  'notSame.new': "It's a new piece",
+  'notSame.empty': 'Nothing else like it in your closet yet.',
+  'notSame.more': 'Something else',
+  'notSame.a11y.back': 'Back',
+  'notSame.a11y.pickHint': 'Picks it',
+  'notSame.a11y.selected': 'Selected',
   'item.dup.a11y': 'Same as your {item}? This photo: {photo}. In your closet: {closet}.',
   'closet.ask.tag': 'A quick question',
   // The closet question card (#117, founder Oct 8): picture first, one plain reason, asked on the score card and in Closet.

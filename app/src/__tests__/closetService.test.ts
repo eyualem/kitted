@@ -812,3 +812,82 @@ describe('removing a piece or a look (#118)', () => {
     expect(await env.closet.renameItem('C-nope', 'x')).toBeNull();
   });
 });
+
+// CB4 (specs/closet-beta.md): "What is it, then?": `Not the same` answers with a picked piece or a confirmed kind.
+describe('CB4 · What is it, then? (the answers)', () => {
+  async function world() {
+    const env = await setup({ scenario: 'full' });
+    const b1 = (await env.store.closet.get('B1'))!;
+    // Another bottom he owns, so there is something to point at besides the refused B1.
+    await env.store.closet.put({ ...b1, id: 'B9', name: 'Brown chinos', garment: { ...b1.garment, color_family: 'brown' }, confirmedFields: [], addedAt: b1.addedAt + 1 });
+    const id = await env.check('p01b');
+    await env.closet.settle();
+    const ask = (await env.row(id)).details.closetSummary!.asks![0]!;
+    return { env, id, ask, scoreBefore: (await env.row(id)).score };
+  }
+
+  it('CB4.5 · a picked piece takes the sighting exactly as Yes does; Undo and the old rows come back; the score never moves', async () => {
+    const { env, id, ask, scoreBefore } = await world();
+    const b9Worn = (await env.store.closet.get('B9'))!.wornCount;
+    const b1Worn = (await env.store.closet.get('B1'))!.wornCount;
+    await env.svc.answerDuplicate(id, ask.obsId, 'same', { targetId: 'B9' });
+    const row = await env.row(id);
+    const a = row.details.closetSummary!.asks![0]!;
+    expect([a.answer, a.pickedId]).toEqual(['same', 'B9']);
+    expect(row.details.closetSummary!.matched).toContain('B9');
+    expect(row.details.closetSummary!.added).not.toContain(ask.itemId);
+    expect(await env.store.closet.get(ask.itemId)).toMatchObject({ isDeleted: true, mergedInto: 'B9' });
+    expect(await env.store.closetObs.get(ask.obsId)).toMatchObject({ itemId: 'B9', decision: 'answeredSame' });
+    expect((await env.store.closet.get('B9'))!.wornCount).toBe(b9Worn + 1);
+    expect((await env.store.closet.get('B1'))!.wornCount).toBe(b1Worn);
+    expect(row.score).toBe(scoreBefore);
+    expect(await env.closet.openAsks()).toEqual([]);
+    await env.svc.unanswerDuplicate(id, ask.obsId);
+    const back = await env.row(id);
+    expect(back.details.closetSummary!.asks![0]).toMatchObject({ answer: null, pickedId: null });
+    expect(await env.store.closet.get(ask.itemId)).toMatchObject({ isDeleted: false, mergedInto: null, maybeSameAs: 'B1' });
+    expect([(await env.store.closet.get('B9'))!.wornCount, (await env.store.closetObs.get(ask.obsId))!.decision]).toEqual([b9Worn, 'ask']);
+    expect(back.score).toBe(scoreBefore);
+  });
+
+  it('CB4.5 · only one of his own pieces of the slot can be picked', async () => {
+    const { env, id, ask } = await world();
+    expect(await env.svc.answerDuplicate(id, ask.obsId, 'same', { targetId: 'T1' })).toBeNull();
+    expect(await env.svc.answerDuplicate(id, ask.obsId, 'same', { targetId: 'nope' })).toBeNull();
+    expect((await env.row(id)).details.closetSummary!.asks![0]!.answer ?? null).toBeNull();
+  });
+
+  it('CB4.7 / CB4.17 · a new piece with its kind confirmed: named by it, a photographed piece; Undo gives the old kind back', async () => {
+    const { env, id, ask, scoreBefore } = await world();
+    const before = (await env.store.closet.get(ask.itemId))!;
+    await env.svc.answerDuplicate(id, ask.obsId, 'new', { kind: 'trousers' });
+    const made = (await env.store.closet.get(ask.itemId))!;
+    expect(made.garment.subcategory).toBe('trousers');
+    expect(made.confirmedFields).toContain('subcategory');
+    expect(made.name.toLowerCase()).toContain('trousers');
+    expect([made.isPhotographed, made.isDeleted]).toEqual([true, false]);
+    expect((await env.row(id)).details.closetSummary!.asks![0]).toMatchObject({ answer: 'new', kind: 'trousers' });
+    expect((await env.row(id)).score).toBe(scoreBefore);
+    await env.svc.unanswerDuplicate(id, ask.obsId);
+    const undone = (await env.store.closet.get(ask.itemId))!;
+    expect([undone.garment.subcategory, undone.confirmedFields, undone.name]).toEqual([before.garment.subcategory, before.confirmedFields, before.name]);
+    expect((await env.row(id)).details.closetSummary!.asks![0]).toMatchObject({ answer: null, kind: null });
+    // The never-ask-again mark of the "new" answer goes with it, on both pieces (the reviewer's find).
+    expect([profileOfItem(undone).distinctFrom, profileOfItem((await env.store.closet.get('B1'))!).distinctFrom]).toEqual([[], []]);
+  });
+
+  it('CB4.16 · Change: a new answer replaces the earlier save (a kind, then a pick, then Yes)', async () => {
+    const { env, id, ask } = await world();
+    const sub = (await env.store.closet.get(ask.itemId))!.garment.subcategory;
+    await env.svc.answerDuplicate(id, ask.obsId, 'new', { kind: 'trousers' });
+    await env.svc.answerDuplicate(id, ask.obsId, 'same', { targetId: 'B9' });
+    // The kind he confirmed for the copy is gone with it; the copy folded into B9.
+    expect((await env.store.closet.get(ask.itemId))).toMatchObject({ isDeleted: true, mergedInto: 'B9' });
+    await env.svc.answerDuplicate(id, ask.obsId, 'same');
+    const a = (await env.row(id)).details.closetSummary!.asks![0]!;
+    expect([a.answer, a.pickedId ?? null, a.kind ?? null]).toEqual(['same', null, null]);
+    expect(await env.store.closet.get(ask.itemId)).toMatchObject({ mergedInto: 'B1' });
+    expect((await env.store.closet.get('B9'))!.wornCount).toBe(seed.scenarios.full.closet.find((c) => c.id === 'B1')!.wornCount);
+    void sub;
+  });
+});

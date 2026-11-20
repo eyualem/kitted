@@ -35,7 +35,8 @@ import { ClosetSummaryRow } from '@/features/closet/ClosetSummaryRow';
 import { DoubtLine } from '@/features/closet/DoubtLine';
 import { addedIds, closetSummaryText, openAsks } from '@/features/closet/summaryText';
 import { endedUnscored, holdBadge, noRowToSlide, noSlide } from '@/features/closet/slide';
-import { DuplicateQuestion } from '@/features/closet/DuplicateQuestion';
+import { answerLine } from '@/features/closet/answerToast';
+import { DuplicateQuestion, notSameHref } from '@/features/closet/DuplicateQuestion';
 import { askQuestionText, askReasonText, isPluralPiece } from '@/features/closet/askText';
 import { PieceArt } from '@/features/closet/GarmentArt';
 import { noteLive, wasLive } from '@/features/fitcheck/reveal';
@@ -347,10 +348,15 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
   const askItem = askCandidate ? lowerFirst(askCandidate.name) : '';
   const askLine = firstAsk && askPhoto && askCandidate
     ? firstAsk.answer
-      ? firstAsk.answer === 'new' ? t('item.dup.saidNew') : t('item.dup.saidSame', { item: firstAsk.answer === 'runnerUp' && askRunnerUp ? lowerFirst(askRunnerUp.name) : askItem })
+      ? answerLine(firstAsk.answer, askCandidate, askRunnerUp, { picked: firstAsk.pickedId ? closet.find((c) => c.id === firstAsk.pickedId) ?? null : null, newPiece: firstAsk.kind ? askPhoto : null })
       : `${askQuestionText(askItem, askCandidate.slot)} ${askReasonText(firstAsk, isPluralPiece(askCandidate.slot))}`
     : '';
-  const answerAsk = (a: 'same' | 'new' | 'runnerUp') => { if (firstAsk) void fitCheck.answerDuplicate(row.id, firstAsk.obsId, a); };
+  // `Not the same` asks which piece it is, in place (CB4); the other answers save at once.
+  const answerAsk = (a: 'same' | 'new' | 'runnerUp') => {
+    if (!firstAsk) return;
+    if (a === 'new') router.push(notSameHref(row.id, firstAsk.obsId) as Href);
+    else void fitCheck.answerDuplicate(row.id, firstAsk.obsId, a);
+  };
   const scoreText = displayScore(score);
   // The Going-for move is already a fix on the card: say so instead of drawing it twice.
   const moveFix = advice?.move ? fixes.findIndex((f) => f.copy === advice.move!.copy) : -1;
@@ -559,7 +565,7 @@ function ScoredCard({ row, wxTip, asked, readOnly }: { row: FitCheckRow; wxTip: 
             /> : null}
           {firstAsk && askPhoto && askCandidate ? (
             <View style={{ paddingTop: 6, paddingBottom: 4, gap: 8 }}>
-              <DuplicateQuestion ask={firstAsk} photo={askPhoto} candidate={askCandidate} runnerUp={askRunnerUp} compact onAnswer={answerAsk} />
+              <DuplicateQuestion ask={firstAsk} photo={askPhoto} candidate={askCandidate} runnerUp={askRunnerUp} compact checkId={row.id} onAnswer={answerAsk} />
               {moreAsks > 0 ? (
                 <TextLink title={moreAsks === 1 ? t('closet.q.more1') : t('closet.q.more', { n: moreAsks })} onPress={() => router.navigate('/closet')} compact />
               ) : null}
