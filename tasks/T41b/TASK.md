@@ -107,3 +107,30 @@
 - Not verified: the switch's Cancel path on a device, anything against real Firebase, Apple or Google, dark and largest text.
 
 **Verdict: not ready** (defects 1 and 2 code, defect 3 test).
+
+### Round 2 (reviewer, Nov 20)
+Scope: the fixes only (`git diff 004b0342..HEAD -- app/src`, `T41b-backupReady.test.ts`, SB4.3c in `T41b-photoBackup.test.ts`, TESTING.md SB6.1d and SB4.3c). Lock: no change to any locked test since the round 3 lock commit `4a77597d`.
+
+**Criteria**
+- Defect 1 (no round before the age answer): done. Traced the real wiring in `appBackup.ts`:
+  - Welcome sign-in saves `account.user`; the hook fires a round; `ready()` is false (account saved, no `sync.uid`, `onboarding.done` unset), so no connect, no pull, no rows.
+  - Under 18: `BasicsScreen` sets the Keychain lock, then signs out. `ready()` is false throughout (lock, then no account), so nothing ever lands.
+  - 18 or over, with account data: `restoreAccount` pulls with its own engine (the tracked store records nothing while `sync.uid` is absent), sets `sync.uid` last, and `RestoreScreen` then sets onboarding done. `ready()` is true from `sync.uid` on, and the new `onboarding.done` hook schedules a round that pushes.
+  - 18 or over, empty account: `finishSetup`, then `setOnboarded(true)`, so the hook fires and the first round joins and sends the phone's rows.
+  - A phone that finished setup before signing in: `onboarding.done` is `'1'`, so `ready()` is true and the sign-in hook starts the round at once.
+  - Under-18 lock set: `ready()` is false whatever else is true. A failed read counts as not ready, which is the safe side.
+- Defect 2 (`halted`): done. `backupAccountDeleted()` clears it after a successful delete, the account hook clears it when a (new) account is saved, and a failed or offline delete still calls `resumeBackup()`. The wipe's own account change leaves no account to read, so it cannot un-halt during the delete.
+- Defect 3 (test): done. SB4.3c has two tests (off-then-on re-uploads 4 more photos, once each, and not a third time; a failed turn-off leaves `syncRows` and `syncFiles` byte-identical).
+- Results, single files, `--maxWorkers=2`: `T41b-backupReady` 3 passed, `T41b-photoBackup` 16 passed. Not re-run: the full check and the emulator (as asked).
+
+**Planted bugs** (each reverted, tree clean after)
+1. `backup.ts` `round()` without the `ready()` check, against `T41b-backupReady`: 3 failed, 0 passed. Caught.
+2. `photoBackup.ts` `turnOffPhotoBackup` no longer clears each row's `files`, against `T41b-photoBackup`: 1 failed (SB4.3c off-then-on), 15 passed. Caught.
+
+**Defects:** none open.
+
+**Small things worth a later look (never blocks)**
+- The `ready` wiring and the `halted` clearing have no unit test (wiring, as TESTING.md says). A future edit to `ready()` (for example dropping the `sync.uid` or `onboarding.done` read) would not be caught; a Maestro flow that signs in from Welcome, answers under 18 and checks no rows landed would cover it. Not verified on a device.
+- Still open from round 1 (non-blocking): a round already uploading when photo backup is turned off can send one more file; `isOffline` matches loosely; the 18-month purge never sees new accounts.
+
+**Verdict: ready.**
