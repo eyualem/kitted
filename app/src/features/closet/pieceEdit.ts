@@ -48,6 +48,8 @@ export const LEGS: readonly string[] = ['skinny', 'slim', 'straight', 'relaxed',
 /** Fit is the reading's volume, 2–5 (as "Not quite right?" offers). */
 export const FITS: readonly number[] = [2, 3, 4, 5];
 export const PATTERNS: readonly string[] = ['solid', 'stripes', 'checks_plaid', 'graphic'];
+/** A bottom offers the two patterns its drawing shows: plain, or a printed graphic on the thigh (T120). */
+export const BOTTOM_PATTERNS: readonly string[] = ['solid', 'graphic'];
 const COLOR_GROUPS: readonly [StringKey, readonly string[]][] = [
   ['closet.edit.color.blues', ['denim_light', 'denim_mid', 'denim_dark', 'navy', 'light_blue', 'blue']],
   ['closet.edit.color.neutrals', ['white', 'off_white_cream', 'light_grey', 'grey', 'charcoal', 'black']],
@@ -153,7 +155,7 @@ function valueWord(field: EditField, v: EditValue | null): string {
   return PATTERN_WORD[String(v)] ? t(PATTERN_WORD[String(v)]!) : String(v);
 }
 
-/** The rows a piece shows: Kind, Color, then Fit + Pattern (tops, layers) or Leg (bottoms but shorts). A Fit or Leg
+/** The rows a piece shows: Kind, Color, then Fit + Pattern (tops, layers) or Leg (bottoms but shorts) + Pattern (bottoms). A Fit or Leg
  *  its photos disagree on (fitDoubt, §18) reads "Not sure" with the line that says what it was seen as. */
 export function editRows(item: EditableSlot, doubt: FitDoubt | null = null): EditRow[] {
   const slot = slotOf(item);
@@ -161,6 +163,7 @@ export function editRows(item: EditableSlot, doubt: FitDoubt | null = null): Edi
   const fields: EditField[] = ['kind', 'color'];
   if (slot === 'top' || slot === 'outer') fields.push('fit', 'pattern');
   if (slot === 'bottom' && !NO_LEG.includes(String(item.garment.subcategory))) fields.push('leg');
+  if (slot === 'bottom') fields.push('pattern');
   return fields.map((field) => (doubt && doubt.field === field
     ? { field, label: t(FIELD_LABEL[field]), value: t('closet.unsure.value'), detail: doubtLine(doubt) }
     : { field, label: t(FIELD_LABEL[field]), value: valueWord(field, currentValue(item, field)) }));
@@ -189,8 +192,9 @@ export function editOptions(item: EditableSlot, field: EditField, o: { unsure?: 
   if (field === 'leg') return { main: LEGS.map(opt), more: [] };
   if (field === 'fit') return { main: FITS.map(opt), more: [] };
   if (field === 'pattern') {
-    const p = typeof cur === 'string' && !PATTERNS.includes(cur) ? [cur] : [];
-    return { main: [...PATTERNS, ...p].map(opt), more: [] };
+    const base = slotOf(item) === 'bottom' ? BOTTOM_PATTERNS : PATTERNS;
+    const p = typeof cur === 'string' && !base.includes(cur) ? [cur] : [];
+    return { main: [...base, ...p].map(opt), more: [] };
   }
   const denimOk = DENIM_KINDS.includes(String(kindOf(item)));
   const groups = COLOR_GROUPS.map(([title, fams]) => ({

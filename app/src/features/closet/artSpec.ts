@@ -177,7 +177,7 @@ export function artSpec(item: ArtItem): ArtSpec {
       pattern: type === 'joggers' ? (heather ? { type: 'heather' } : { type: 'solid' }) : type === 'trousers' ? { type: 'solid' } : { type: 'twill' },
       stitch: jeans ? (denim ? '#C8925A' : mix(c, 0.32)) : undefined,
       buttonColor: jeans && !denim ? '#8D9096' : undefined,
-      brand,
+      brand, print: pattern === 'graphic',
     };
     if (type === 'cargos') glyphs.add('cargoPockets');
     if (flat.sideStripe) glyphs.add('sideStripe');
