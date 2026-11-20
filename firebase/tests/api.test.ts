@@ -1,6 +1,7 @@
 // The AI proxy's checks P, L, M, D (handoff/13-server.md §7), on the Firestore and Auth emulators.
 // The handler runs in this process behind a local HTTP server, with its real Firestore store and real sign-in
 // verification; Gemini is a fake on another local port, and App Check a fake verifier (it has no emulator).
+import { createHash } from 'node:crypto';
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { initializeApp } from 'firebase-admin/app';
@@ -96,7 +97,7 @@ const askBody = (q = 'What goes with my olive overshirt?') => ({
   generationConfig: { temperature: 0.3, maxOutputTokens: 420 },
 });
 
-interface CallOpts { token?: string | null; check?: string; kind?: string; tz?: string; model?: string; appCheck?: string; free?: string; method?: string; raw?: string; signal?: AbortSignal }
+interface CallOpts { token?: string | null; check?: string; kind?: string; tz?: string; model?: string; appCheck?: string; free?: string; device?: string; method?: string; raw?: string; signal?: AbortSignal }
 let me: { token: string; uid: string };
 async function call(route: string, body: unknown, o: CallOpts = {}) {
   const headers: Record<string, string> = { 'content-type': 'application/json' };
@@ -109,6 +110,7 @@ async function call(route: string, body: unknown, o: CallOpts = {}) {
   if (o.tz) headers['x-kitted-tz'] = o.tz;
   if (o.appCheck) headers['x-firebase-appcheck'] = o.appCheck;
   if (o.free) headers['x-kitted-free'] = o.free;
+  if (o.device !== undefined) headers['x-kitted-device'] = o.device;
   const method = o.method ?? (route === 'health' || route === 'tier' ? 'GET' : 'POST');
   return fetch(`${apiUrl}/v1/${route}${o.model ? `?model=${o.model}` : ''}`, {
     method, headers, signal: o.signal, ...(method === 'GET' ? {} : { body: o.raw ?? JSON.stringify(body) }),
@@ -186,7 +188,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  for (const c of ['usage', 'spend', 'server']) await db.recursiveDelete(db.collection(c));
+  for (const c of ['usage', 'spend', 'server', 'devices']) await db.recursiveDelete(db.collection(c));
   await setConfig({ tier: 'free' });
   fake.calls = [];
   fake.sent = [];
@@ -597,6 +599,239 @@ describe('L10 accounts apart', () => {
     expect(await read('C-1')).toBe(200);
     me = await signUp();
     expect(await read('C-1')).toBe(200);
+  });
+});
+
+// ---- F10.1 · the day counts per phone, not only per account (T21a) -----------------------------------------------------
+describe('F10.1 per-phone counts', () => {
+  const D = 'phone-AAAAAAAAAAAAAAAA';
+  const D2 = 'phone-BBBBBBBBBBBBBBBB';
+  const hash = (id: string) => createHash('sha256').update(id).digest('hex');
+  type Row = Record<string, unknown> & { id: string };
+  const rows = async (path: string) => (await db.collection(path).get()).docs.map((d) => ({ id: d.id, ...d.data() }) as Row).sort((a, b) => a.id.localeCompare(b.id));
+  const phoneDays = (id: string) => rows(`devices/${hash(id)}/usageDays`);
+  const acctDays = (uid: string) => rows(`usage/${uid}/usageDays`);
+  const sum = (r: Row[], f: string) => r.reduce((n, d) => n + (typeof d[f] === 'number' ? (d[f] as number) : 0), 0);
+  const phoneTotal = async (id: string, f: string) => sum(await phoneDays(id), f);
+  const acctTotal = async (uid: string, f: string) => sum(await acctDays(uid), f);
+  const readOn = async (device: string, id: string, respond: Respond = sse()) => {
+    fake.respond = respond;
+    const r = await call('read', photoBody(), { check: id, device });
+    await r.arrayBuffer();
+    return r.status;
+  };
+  const askOn = async (device: string, respond: Respond = sse()) => {
+    fake.respond = respond;
+    const r = await call('ask', askBody(), { device });
+    await r.arrayBuffer();
+    return r.status;
+  };
+  /** Signing out: the next call is a new guest uid, on the same phone. */
+  const signOut = async () => {
+    me = await signUp();
+  };
+
+  it('F10.1 · a new guest on the same phone is still refused (checks)', async () => {
+    expect(await readOn(D, 'C-1')).toBe(200);
+    await signOut();
+    fake.calls = [];
+    fake.respond = sse();
+    await expectLimit(call('read', photoBody(), { check: 'C-2', device: D }), 'checks');
+    expect(fake.calls).toHaveLength(0); // refused before Gemini is called
+    // A hedge on the check the phone already counted is not a new check (see the retry test); the new check is.
+    await expectLimit(call('read', photoBody(), { check: 'C-3', device: D }), 'checks');
+  });
+
+  it('F10.1 · a new guest on the same phone is still refused (questions)', async () => {
+    for (let i = 0; i < 7; i++) expect(await askOn(D)).toBe(200); // free: 5 + 2
+    await signOut();
+    fake.calls = [];
+    fake.respond = sse();
+    await expectLimit(call('ask', askBody(), { device: D }), 'questions');
+    expect(fake.calls).toHaveLength(0);
+    expect(await phoneTotal(D, 'questions')).toBe(7);
+  });
+
+  it('F10.1 · another phone is untouched', async () => {
+    expect(await readOn(D, 'C-1')).toBe(200);
+    await signOut();
+    expect(await readOn(D2, 'C-1')).toBe(200);
+    expect(await askOn(D2)).toBe(200);
+    expect([await phoneTotal(D, 'checks'), await phoneTotal(D2, 'checks')]).toEqual([1, 1]);
+    // D2 has its own day: its second new check is refused, on D2's own count.
+    await expectLimit(call('read', photoBody(), { check: 'C-2', device: D2 }), 'checks');
+  });
+
+  it("F10.1 · the same check id on the same phone isn't counted twice", async () => {
+    expect(await readOn(D, 'C-1')).toBe(200);
+    await signOut();
+    // The phone's day has no room for a new check, but C-1 is already counted there: a retry, not a new check.
+    expect(await readOn(D, 'C-1')).toBe(200);
+    expect(await phoneTotal(D, 'checks')).toBe(1);
+    expect((await phoneDays(D)).map((d) => Object.keys(d.ids as object))).toEqual([['C-1']]);
+    await expectLimit(call('read', photoBody(), { check: 'C-2', device: D }), 'checks');
+    expect(await phoneTotal(D, 'checks')).toBe(1);
+  });
+
+  it('F10.1 · a refusal on either side counts nothing on the other', async () => {
+    // The phone's day refuses a new guest: the guest's own day is untouched.
+    expect(await readOn(D, 'C-1')).toBe(200);
+    const phoneBefore = await phoneDays(D);
+    await signOut();
+    await expectLimit(call('read', photoBody(), { check: 'C-2', device: D }), 'checks');
+    expect(await acctDays(me.uid)).toEqual([]);
+    expect(await phoneDays(D)).toEqual(phoneBefore);
+
+    // The account's day refuses while another phone has room: that phone's day is untouched.
+    await signOut();
+    expect(await readOn(D, 'C-1')).toBe(200); // the retry passes; this guest has now counted C-1 on its own day
+    const acctBefore = await acctDays(me.uid);
+    expect(acctBefore).toHaveLength(1);
+    await expectLimit(call('read', photoBody(), { check: 'C-9', device: D2 }), 'checks');
+    expect(await phoneDays(D2)).toEqual([]);
+    expect(await acctDays(me.uid)).toEqual(acctBefore);
+    expect(await phoneTotal(D, 'checks')).toBe(1);
+  });
+
+  it('F10.1 · a failed read gives the check back on both days', async () => {
+    const back = async () => {
+      expect([await acctTotal(me.uid, 'checks'), await phoneTotal(D, 'checks')]).toEqual([0, 0]);
+      expect([await acctTotal(me.uid, 'questions'), await phoneTotal(D, 'questions')]).toEqual([0, 0]);
+    };
+    expect(await readOn(D, 'A-1', reply(500))).toBe(502);
+    await back();
+    expect(await readOn(D, 'A-2', sse('MAX_TOKENS'))).toBe(200);
+    await back();
+    await setConfig({ tier: 'free', timeoutMs: 300 });
+    fake.respond = () => {}; // never answers
+    const r = await call('read', photoBody(), { check: 'A-3', device: D });
+    expect([r.status, await json(r)]).toEqual([504, { error: 'timeout' }]);
+    await setConfig({ tier: 'free' });
+    await back();
+    expect(await askOn(D, sse('MAX_TOKENS'))).toBe(200);
+    await back();
+    // A retry then passes, for a new guest on the same phone too, and the phone counts it once.
+    await signOut();
+    expect(await readOn(D, 'B-1')).toBe(200);
+    expect(await phoneTotal(D, 'checks')).toBe(1);
+    await signOut();
+    await expectLimit(call('read', photoBody(), { check: 'B-2', device: D }), 'checks');
+  });
+
+  it("F10.1 · a new guest cannot move the phone's day with a time zone", async () => {
+    clockMs = Date.UTC(2026, 9, 21, 7, 59); // 3:59 am in New York: still the 20th's day there
+    fake.respond = sse();
+    expect((await call('read', photoBody(), { check: 'C-1', device: D, tz: '-240' }).then(async (r) => (await r.arrayBuffer(), r.status)))).toBe(200);
+    expect((await phoneDays(D)).map((d) => d.id)).toEqual(['2026-10-20']);
+    // A new guest claims Tokyo (it would be the 21st there, a fresh day): the phone keeps New York's day.
+    await signOut();
+    await expectLimit(call('read', photoBody(), { check: 'C-2', device: D, tz: '540' }), 'checks');
+    expect((await phoneDays(D)).map((d) => d.id)).toEqual(['2026-10-20']);
+    // After 20 h the phone's own change is taken (L8's rule): the same claim now sets the day.
+    clockMs += 21 * 3600_000; // 4:59 am UTC on the 22nd: the 22nd in Tokyo, the 21st in New York
+    await signOut();
+    fake.respond = sse();
+    expect((await call('read', photoBody(), { check: 'C-3', device: D, tz: '540' }).then(async (r) => (await r.arrayBuffer(), r.status)))).toBe(200);
+    expect((await phoneDays(D)).map((d) => d.id)).toEqual(['2026-10-20', '2026-10-22']);
+  });
+
+  it('F10.1 · the device header', async () => {
+    const BAD = ['short', 'a'.repeat(15), `${'a'.repeat(16)}!`, `${'a'.repeat(10)} ${'b'.repeat(10)}`, 'a'.repeat(65), `phone_${'A'.repeat(16)}`];
+    for (const bad of BAD) {
+      for (const route of ['read', 'ask']) {
+        fake.respond = sse();
+        const r = await (route === 'read' ? call('read', photoBody(), { device: bad }) : call('ask', askBody(), { device: bad }));
+        expect([bad, r.status, await json(r)]).toEqual([bad, 400, { error: 'badRequest', reason: 'device' }]);
+      }
+    }
+    expect(fake.calls).toHaveLength(0);
+    expect(await acctDays(me.uid)).toEqual([]);
+    expect(await db.collection('devices').listDocuments()).toEqual([]);
+
+    // The edges of the shape pass: 16 and 64 characters of letters, digits and dashes.
+    expect(await readOn('Ab3-' + '1'.repeat(12), 'E-1')).toBe(200);
+    await signOut();
+    expect(await readOn('z9-'.repeat(21) + 'z', 'E-2')).toBe(200);
+
+    // No header: as today, the account only.
+    await signOut();
+    fake.respond = sse();
+    expect((await call('read', photoBody(), { check: 'N-1' }).then(async (r) => (await r.arrayBuffer(), r.status)))).toBe(200);
+    expect(await acctTotal(me.uid, 'checks')).toBe(1);
+    expect((await db.collection('devices').listDocuments()).map((r) => r.id).sort()).toEqual([hash('Ab3-' + '1'.repeat(12)), hash('z9-'.repeat(21) + 'z')].sort());
+
+    // requireDevice: true refuses a call with no header, before anything is counted, and accepts one with it.
+    await setConfig({ tier: 'free', requireDevice: true });
+    await signOut();
+    for (const r of [await call('read', photoBody(), { check: 'R-1' }), await call('ask', askBody())]) {
+      expect([r.status, await json(r)]).toEqual([400, { error: 'badRequest', reason: 'device' }]);
+    }
+    expect(await acctDays(me.uid)).toEqual([]);
+    expect(await readOn(D, 'R-1')).toBe(200);
+
+    // Missing or not a boolean means false.
+    for (const v of ['true', 1, 'yes', null, undefined]) {
+      await setConfig(v === undefined ? { tier: 'free' } : { tier: 'free', requireDevice: v });
+      await signOut();
+      fake.respond = sse();
+      const r = await call('read', photoBody(), { check: 'R-2' });
+      await r.arrayBuffer();
+      expect([String(v), r.status]).toEqual([String(v), 200]);
+    }
+  });
+
+  it('F10.1 · the phone\'s record holds only a hash and counts', async () => {
+    const RAW = 'raw-PHONE-id-0123456789abcdef';
+    expect(await readOn(RAW, 'C-1')).toBe(200);
+    expect(await askOn(RAW)).toBe(200);
+    type Doc = { path: string; data: Record<string, unknown> };
+    const dump = async (ref: FirebaseFirestore.DocumentReference): Promise<Doc[]> => {
+      const out: Doc[] = [];
+      const s = await ref.get();
+      if (s.exists) out.push({ path: ref.path, data: s.data() as Record<string, unknown> });
+      for (const c of await ref.listCollections()) for (const d of await c.listDocuments()) out.push(...(await dump(d)));
+      return out;
+    };
+    const docs: Doc[] = [];
+    for (const r of await db.collection('devices').listDocuments()) docs.push(...(await dump(r)));
+    const h = hash(RAW);
+    expect(docs.length).toBeGreaterThanOrEqual(1);
+    for (const d of docs) expect(d.path.startsWith(`devices/${h}`)).toBe(true);
+    const days = docs.filter((d) => d.path.startsWith(`devices/${h}/usageDays/`));
+    expect(days).toHaveLength(1);
+    expect([days[0]!.data.checks, days[0]!.data.questions]).toEqual([1, 1]);
+    const DAY_FIELDS = ['checks', 'rechecks', 'snaps', 'questions', 'taps', 'photoCalls', 'askCalls', 'ids', 'at'];
+    for (const d of days) for (const k of Object.keys(d.data)) expect([d.path, DAY_FIELDS.includes(k)]).toEqual([d.path, true]);
+    for (const e of Object.values(days[0]!.data.ids as Record<string, Record<string, unknown>>)) expect(Object.keys(e).sort()).toEqual(['calls', 'inflight', 'kind', 'ok']);
+    for (const d of docs.filter((x) => x.path === `devices/${h}`)) for (const k of Object.keys(d.data)) expect(['tz', 'tzChangedAt']).toContain(k);
+    // The phone's records hold no uid and no text; and the raw ID is nowhere the server writes, nor in a log line.
+    const phoneBlob = JSON.stringify(docs);
+    for (const secret of [RAW, 'raw-PHONE', me.uid, 'olive overshirt', PHOTO.slice(0, 40)]) expect(phoneBlob).not.toContain(secret);
+    const elsewhere: string[] = [JSON.stringify(logs)];
+    for (const c of ['usage', 'spend', 'server']) {
+      for (const r of await db.collection(c).listDocuments()) elsewhere.push(...(await dump(r)).map((x) => JSON.stringify(x.data)));
+    }
+    for (const secret of [RAW, 'raw-PHONE']) expect(elsewhere.join('\n')).not.toContain(secret);
+  });
+
+  it('F10.1 · no header and other phones keep accounts apart; the tier route never counts', async () => {
+    // L10 with no device header: two accounts stay apart.
+    fake.respond = sse();
+    expect((await call('read', photoBody(), { check: 'C-1' }).then(async (r) => (await r.arrayBuffer(), r.status)))).toBe(200);
+    await signOut();
+    expect((await call('read', photoBody(), { check: 'C-1' }).then(async (r) => (await r.arrayBuffer(), r.status)))).toBe(200);
+    // The tier route answers and counts nothing, with or without a phone, on a phone that has a day.
+    await signOut();
+    expect(await readOn(D, 'T-1')).toBe(200);
+    const before = await phoneDays(D);
+    await signOut();
+    const r = await call('tier', null, { device: D });
+    expect([r.status, r.headers.get('x-kitted-tier'), await json(r)]).toEqual([200, 'free', { tier: 'free' }]);
+    expect(await phoneDays(D)).toEqual(before);
+    expect(await acctDays(me.uid)).toEqual([]);
+    const r2 = await call('tier', null, { device: D2 });
+    expect(r2.status).toBe(200);
+    expect(await phoneDays(D2)).toEqual([]);
   });
 });
 
