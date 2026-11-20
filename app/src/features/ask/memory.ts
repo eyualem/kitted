@@ -4,11 +4,12 @@
 //     clothes budget or other people is dropped, whatever key it came under.
 //   · A fact he deleted is never learned again (its deleted row is the tombstone).
 //   · budget also sets profile.budget; look_now never touches his picked looks.
-//   · owns_unphotographed ("black Chelsea boots") becomes a closet piece from chat: not photographed, a dashed tile,
-//     "From chat"; used in outfit ideas, never in a "+N outfits" count; a fit check that sees it asks "Same as your …?".
-import { displayHex, G, garmentName, parseShade, type Garment } from '@kitted/core';
+//   · A closet piece from chat (T106, KC4) is never written from the model's remember: the code reads what he says
+//     (`readAdd` in router.ts, `planAdd` in addCard.ts) and the add card writes it through the closet service
+//     (closet/chatAdd.ts). owns_unphotographed stays a key only so old saved facts still read ("You own a grey hoodie").
+import { G, parseShade, type Garment } from '@kitted/core';
 import type { KittedStore } from '@/data/store';
-import type { ClosetItemRow, FactRow } from '@/data/types';
+import type { FactRow } from '@/data/types';
 import type { Clock } from '@/services/clock';
 import { BUDGETS, type Budget } from '@/features/you/profile';
 import { t, type StringKey } from '@/i18n/en';
@@ -38,6 +39,8 @@ export function parseRemember(raw: unknown): { key: RememberKey; value: string }
   if (!raw || typeof raw !== 'object') return null;
   const o = raw as Record<string, unknown>;
   if (typeof o.key !== 'string' || !(REMEMBER_KEYS as readonly string[]).includes(o.key)) return null;
+  // KC4: a piece he owns is the add card's job (asked, then written through the closet service), never a silent save.
+  if (o.key === 'owns_unphotographed') return null;
   if (typeof o.value !== 'string' && typeof o.value !== 'number') return null;
   const value = clean(String(o.value));
   if (!value || value.length < 1) return null;
@@ -82,7 +85,6 @@ const PIECE_WORDS: readonly [RegExp, string, string][] = [
   [/\bpolo\b/, 'top', 'polo'], [/\boxford\b/, 'top', 'oxford_shirt'], [/\bflannel\b/, 'top', 'flannel_shirt'], [/\bgraphic tee\b/, 'top', 'graphic_tee'],
   [/\b(?:tee|t-shirt|t shirt)\b/, 'top', 'tee'], [/\bshirt\b/, 'top', 'oxford_shirt'],
 ];
-const SLOT: Record<string, ClosetItemRow['slot']> = { top: 'top', bottom: 'bottom', footwear: 'shoes', outerwear: 'outer' };
 
 /** "black Chelsea boots" → a garment (null when no kind of piece is named). */
 export function garmentOf(value: string): Garment | null {
@@ -95,43 +97,60 @@ export function garmentOf(value: string): Garment | null {
   return g;
 }
 
-/** "Black Chelsea boots": his words, cleaned, capitalised (the closet's own namer takes over once a photo sees it). */
-function pieceName(value: string, g: Garment): string {
-  const words = value.replace(/^(?:a |an |my |some |the |pair of |a pair of )+/i, '').trim();
-  const name = words.length >= 3 && words.length <= 40 ? words : garmentName(g);
-  return name.charAt(0).toUpperCase() + name.slice(1);
+/** A fit word he says about a piece ("oversized tee"), kept in the piece's name: the closet draws "Grey oversized tee" oversized. */
+export function fitWordOf(text: string): string | null {
+  const m = /\b(over-?sized|boxy|relaxed|cropped|slim|drop[- ]?shoulders?)\b/i.exec(text);
+  if (!m) return null;
+  const w = m[1]!.toLowerCase();
+  return /^over/.test(w) ? 'oversized' : /^drop/.test(w) ? 'drop-shoulder' : w;
+}
+
+/** A color family from his words ("off white" first: core's parser reads it as white). Null when none is named. */
+export function colorOf(words: string): string | null {
+  if (/\boff[ -]?white\b/i.test(words)) return 'off_white_cream';
+  const family = (w: string) => {
+    const f = parseShade(w)?.family;
+    return f && f !== 'unknown' && f !== 'multicolor' ? f : null;
+  };
+  // "light blue", "dark brown": the two-word shade first, then single words from the end ("my olive" → olive).
+  const toks = words.toLowerCase().split(/\s+/).filter(Boolean);
+  for (let i = toks.length - 2; i >= 0; i--) {
+    const f = family(`${toks[i]} ${toks[i + 1]}`);
+    if (f && family(toks[i]!) === null) return f;
+  }
+  for (let i = toks.length - 1; i >= 0; i--) {
+    const f = family(toks[i]!);
+    if (f) return f;
+  }
+  return null;
+}
+
+/**
+ * The piece he describes: its kind (a closet subcategory, 'tee', 'work_boot') and the color word right before the kind,
+ * within the same clause ("an oversized Uniqlo tee" has none). Brands and other words are ignored. Null kind: no piece.
+ */
+export function pieceWordsOf(text: string): { kind: string | null; color: string | null } {
+  const v = ` ${text.toLowerCase()} `;
+  const hit = PIECE_WORDS.find(([re]) => re.test(v));
+  // No kind of piece named: a color he gave still counts ("add that top in black").
+  if (!hit) return { kind: null, color: colorOf(text) };
+  const at = v.search(hit[0]);
+  const clause = v.slice(0, at).split(/[,.;!?]| and | but | with /).pop() ?? '';
+  const color = colorOf(clause.split(/\s+/).filter(Boolean).slice(-4).join(' '));
+  return { kind: hit[2], color };
 }
 
 /**
  * Saves the model's remember (M1–M4). Returns the fact's id (for "Saved · Undo"), or null when nothing was saved
  * (not allowed, already known, or deleted by him before).
  */
-export async function applyRemember(raw: unknown, at: number, deps: MemoryDeps): Promise<{ factId: string; itemId?: string } | null> {
+export async function applyRemember(raw: unknown, at: number, deps: MemoryDeps): Promise<{ factId: string } | null> {
   const r = parseRemember(raw);
   if (!r) return null;
   const facts = await deps.store.facts.all();
   const text = factText(r.key, r.value);
   // A fact he deleted is a tombstone: never learned again. One already known isn't saved twice.
   if (facts.some((f) => f.key === r.key && same(f.value, text))) return null;
-  const now = deps.clock.nowMs();
-  let itemId: string | null = null;
-  if (r.key === 'owns_unphotographed') {
-    const g = garmentOf(r.value);
-    const slot = g ? SLOT[String(g.category)] : undefined;
-    if (!g || !slot) return null;
-    itemId = deps.ids('C');
-    // A color in his words ("black work boots") is "he said so", like a color he picks on the piece's page: a later photo
-    // that reads the piece differently never repaints it, so its name and its drawing stay one color (Nov 12: named
-    // "Black work boots", drawn brown from the photos' read).
-    const said = typeof g.color_family === 'string' && g.color_family !== 'unknown' ? g.color_family : null;
-    const item: ClosetItemRow = {
-      id: itemId, name: pieceName(r.value, g), slot, garment: g, confirmedFields: said ? ['color_family'] : [], hex: displayHex(g.color_family), photoFile: null, demoPhotoId: null,
-      isPhotographed: false, source: 'chat', starterId: null, wornCount: 0, lastWornAt: null, addedAt: now, isDeleted: false,
-      mergedInto: null, maybeSameAs: null, cropFile: null, cropScore: null, updatedAt: now,
-      profile: { aliases: [], distinctFrom: [], confirmed: said ? { color_family: said } : {}, autoName: false },
-    };
-    await deps.store.closet.put(item);
-  }
   if (r.key === 'budget') {
     const b = budgetOf(r.value);
     const p = await deps.store.profile.get('me');
@@ -139,10 +158,10 @@ export async function applyRemember(raw: unknown, at: number, deps: MemoryDeps):
   }
   const fact: FactRow = { id: deps.ids('F'), key: r.key, value: text, source: 'told', createdAt: at, isDeleted: false };
   await deps.store.facts.put(fact);
-  return { factId: fact.id, ...(itemId ? { itemId } : {}) };
+  return { factId: fact.id };
 }
 
-/** "Saved · Undo": the fact goes (and stays a tombstone); a piece it added (`itemId`) leaves the closet. */
+/** "Saved · Undo": the fact goes (and stays a tombstone). `itemId` is only on rows saved before T106, which added a piece. */
 export async function undoRemember(factId: string, itemId: string | null, deps: Pick<MemoryDeps, 'store'>): Promise<void> {
   const f = await deps.store.facts.get(factId);
   if (!f) return;

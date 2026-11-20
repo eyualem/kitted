@@ -4,6 +4,7 @@
 import type { ClosetItemRow, FitCheckRow, OccasionKey } from '@/data/types';
 import { displayScore } from '@/design-system/score';
 import type { StylistContext } from './context';
+import { fitWordOf, pieceWordsOf } from './memory';
 import type { AskKind } from './prompt';
 
 export interface Route {
@@ -15,6 +16,17 @@ export interface Route {
   occasion: OccasionKey | null;
   /** false: the router guessed; the model may ask for one lookup (R3). */
   sure: boolean;
+  /** T106 (KC4): he said he owns a piece (`mention`) or asked to add it (`ask`); what his words say of its kind and color. */
+  add?: AddRead | null;
+}
+
+export interface AddRead {
+  mode: 'mention' | 'ask';
+  /** A closet subcategory ('tee', 'work_boot'), or null when his words name no kind of piece. */
+  kind: string | null;
+  color: string | null;
+  /** A fit word he said (oversized, boxy…), kept in the piece's name. */
+  fit?: string | null;
 }
 
 // Lower case, quotes straightened, punctuation gone (a "." stays only inside a number like 6.5).
@@ -34,6 +46,25 @@ const KINDS: readonly [AskKind, RegExp][] = [
   ['shape', / (too (long|short|baggy|big|tight|wide)|bunch(es|ing)?( up)?|stack(s|ing)?|the break|tuck(ed|ing)?|crop(ped)?|proportion(s)?|silhouette|how should .* sit|look(s)? off|boxy|sits (right|wrong)|hang(s)? (low|long)) /],
   ['fitHowTo', / (how (should|do|does|to|can|tight|loose|long)|fit|fitted|sizing|size up|size down|hem(med)?|cuff|roll|tailor(ed|ing)?|shrink|iron|wash|care for|steam|break in|lace) /],
 ];
+
+/** "Add it", "can you add that to my closet", "add my white tee to my closet": he asks for the add (KC4.5). */
+const ADD_ASK = / (?:add|save|put|log) (?:it|that|this|these|those|them) | (?:add|save|put) [a-z0-9' -]{0,60} (?:to|in|into) (?:my|the) (?:closet|wardrobe) /;
+/** "I have…", "I own…", "I got…", "I bought…" (KC4.1): a plain mention, never an ask. */
+const OWN_MENTION = /(?:^| (?:and|but|so|also|then)|[.!?,;]) (?:i have|i'?ve got|i own|i got|i bought|i just (?:got|bought)|i also (?:have|own|got|bought)) ([^.!?]*)/;
+const NOT_ADD = / (?:(?:don'?t|do not|never|no need to|not|should i|would it be worth) (?:add|save|put)|(?:should|would) i (?:even )?add) /;
+
+/** What his words say about adding a piece (KC4.1, KC4.5): an ask beats a mention. Null when it is neither. */
+export function readAdd(question: string): AddRead | null {
+  const q = norm(question);
+  if (NOT_ADD.test(q)) return null;
+  if (ADD_ASK.test(q)) return { mode: 'ask', ...pieceWordsOf(q), fit: fitWordOf(q) };
+  const own = OWN_MENTION.exec(q);
+  if (own) {
+    const w = pieceWordsOf(own[1]!);
+    return w.kind ? { mode: 'mention', ...w, fit: fitWordOf(own[1]!) } : null;
+  }
+  return null;
+}
 
 /** The occasion a question names, in the app's 8 (a wedding is an event; work has no key of its own: everyday). */
 const OCCASIONS: readonly [OccasionKey, RegExp][] = [
@@ -150,7 +181,10 @@ export interface RouteInput {
 
 export function routeQuestion(question: string, input: RouteInput): Route {
   const q = norm(question);
-  const kind = KINDS.find(([, re]) => re.test(q))?.[0] ?? 'general';
+  const add = readAdd(question);
+  // "Can you add that to my closet?" is not a buy question ("add to my closet" is in buyNext's words); with an add read,
+  // the kind is the plain one, so Kit gets no buy evidence and the code's add card does the work.
+  const kind = add?.mode === 'ask' ? 'remember' : (KINDS.find(([, re]) => re.test(q))?.[0] ?? 'general');
   const byId = new Map(input.closet.map((c) => [c.id, c]));
   const refs: PieceRef[] = [];
   const checks: { handle: string; row: FitCheckRow; dow: number; today: boolean }[] = [];
@@ -170,5 +204,5 @@ export function routeQuestion(question: string, input: RouteInput): Route {
   const sure = kind !== 'general'
     && !(NEEDS_CHECK.has(kind) && !check)
     && !(kind === 'goesWith' && pieces.length === 0);
-  return { kind, pieces, check, occasion, sure };
+  return { kind, pieces, check, occasion, sure, add };
 }
