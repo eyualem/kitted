@@ -405,6 +405,49 @@ describe('SG7.2 · the full-list swap', () => {
   });
 });
 
+// ── SG2.3 · binary insertion after an undo ────────────────────────────────────────────────────────────────────────
+describe('SG2.3 · Undo on the ranking', () => {
+  it('SG2.3 · an undone pick can be answered the other way and the ranking follows the new answer', async () => {
+    await start(42);
+    await cards(SV);
+    const first = rankStep(st().game);
+    if (first.done) throw new Error('expected a first pair');
+    const before = st().game;
+    // Pick the look the player prefers LESS, then undo it: the game is exactly as it was, so the pair, its sides and
+    // every later pair are the same.
+    const wrong = SV.indexOf(first.pair[0]) < SV.indexOf(first.pair[1]) ? first.pair[1] : first.pair[0];
+    await pickInRanking(store, wrong);
+    expect(st().game.rounds).toHaveLength(1);
+    expect(await back(store)).toBe('undone');
+    expect(st().game).toEqual(before);
+    expect(rankStep(st().game)).toEqual(first);
+    // Now the right way, all the way: still Streetwear, Vintage sport, Outdoor, no tap more than the rules allow.
+    await rank(SV);
+    expect(st().results?.picks).toEqual(SVO);
+    expect(st().game.rounds.length).toBeLessThanOrEqual(5);
+  });
+
+  it('SG2.3 · undoing in the middle of the ranking and answering differently ranks by the new answers', async () => {
+    await start(42);
+    await cards(SV);
+    // He changes his mind: first prefers the reverse order for 2 picks, undoes both, then plays the streetwear order.
+    const reverse = [...SV].reverse();
+    await rank(reverse, 2);
+    expect(await back(store)).toBe('undone');
+    expect(await back(store)).toBe('undone');
+    expect(st().game.rounds).toHaveLength(0);
+    expect(st().stage).toBe('ranking');
+    await rank(SV);
+    expect(st().results?.picks).toEqual(SVO);
+    // Undo through every pick then card 8, then forward again: the same ranking.
+    while (st().canUndo && st().stage !== 'cards') await back(store);
+    expect(st().game.answers).toHaveLength(7);
+    await cards(SV);
+    await rank(SV);
+    expect(st().results?.picks).toEqual(SVO);
+  });
+});
+
 // ── SG7.4 · Back, exactly one ─────────────────────────────────────────────────────────────────────────────────────
 describe('SG7.4 · Back', () => {
   it('SG7.4 · Back undoes exactly one answer', async () => {

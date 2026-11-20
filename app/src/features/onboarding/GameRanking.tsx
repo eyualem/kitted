@@ -12,7 +12,8 @@ import { t } from '@/i18n/en';
 import { LOOKS } from './looks';
 import { Outfit } from './LookTile';
 import { descKey } from './styleGame';
-import { pickInRanking } from './styleGameSession';
+import { back, holdAnswer, pickInRanking } from './styleGameSession';
+import { CappedLink } from './GameResults';
 
 export function GameRanking({ pair, mes, width }: { pair: readonly [StyleKey, StyleKey]; mes: number; width: number }) {
   const { a11y, isAccessibilitySize: ax } = useTheme();
@@ -29,8 +30,17 @@ export function GameRanking({ pair, mes, width }: { pair: readonly [StyleKey, St
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     const ms = a11y.reduceMotion ? 120 : 260;
     Animated.timing(dim, { toValue: 0.35, duration: ms, useNativeDriver: true }).start();
+    // A Back or Undo in the pause takes this tap back (the pair stays), instead of the pick before it.
+    const letGo = holdAnswer(() => {
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = null;
+      dim.stopAnimation();
+      dim.setValue(1);
+      setChosen(null);
+    });
     timer.current = setTimeout(() => {
       timer.current = null;
+      letGo();
       void pickInRanking(store, look);
     }, ms);
   };
@@ -50,6 +60,9 @@ export function GameRanking({ pair, mes, width }: { pair: readonly [StyleKey, St
         {pair.map((look, i) => (
           <RankCard key={look} side={i === 0 ? 'left' : 'right'} look={look} width={cardW} chosen={chosen === look} faded={chosen !== null && chosen !== look ? dim : null} onPress={() => pick(look)} />
         ))}
+      </View>
+      <View testID="rank-undo" style={styles.undo}>
+        <CappedLink title={t('game.order.undo')} onPress={() => void back(store)} />
       </View>
     </View>
   );
@@ -78,6 +91,7 @@ function RankCard({ side, look, width, chosen, faded, onPress }: { side: 'left' 
 const styles = StyleSheet.create({
   wrap: { gap: space.xl },
   title: { gap: space.xs },
+  undo: { alignItems: 'center' },
   pair: { justifyContent: 'center', alignItems: 'center', gap: space.m },
   card: { alignItems: 'center', paddingVertical: space.l, borderRadius: 18, borderCurve: 'continuous', borderWidth: 2.5 },
 });
