@@ -105,6 +105,9 @@ export interface ServerTransportOptions {
   tzMinutes: () => number;
   /** The tier the server answered with (x-kitted-tier), on every success. */
   onTier?: (tier: ServerTier) => void;
+  /** The phone's own ID (X-Kitted-Device), the same across guests; the server keeps only its hash. If it can't be
+   *  read (no Keychain), the call goes without it and is counted on the account alone, as before. */
+  device?: () => Promise<string>;
 }
 
 function refused(status: number, refusal: Refusal, text = JSON.stringify(refusal)): AiResponse {
@@ -132,6 +135,13 @@ export function serverTransport(o: ServerTransportOptions): AiTransport {
       headers['X-Kitted-Kind'] = req.tag.kind;
     }
     if (req.free) headers['X-Kitted-Free'] = req.free;
+    if (o.device) {
+      try {
+        headers['X-Kitted-Device'] = await o.device();
+      } catch {
+        // No readable Keychain: send without it rather than fail the check.
+      }
+    }
     const res = await o.fetch(`${o.base}/v1/${req.route}?model=${encodeURIComponent(req.model)}`, { method: 'POST', headers, body: req.body, signal: req.signal });
     if (res.ok) {
       const tier = parseTier(res.headers?.get('x-kitted-tier'));

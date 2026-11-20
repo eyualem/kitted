@@ -1047,6 +1047,7 @@ const addedInBuild = {
   // promise (one line, was two: "saved on this iPhone and in its own backup…" + "A face-free copy…") and the switch
   // "Score my fits" (was "Send to Google for fit checks and questions"). The other privacy.* deck keys are used as is.
   'privacy.promise': "Your photos are saved only on this iPhone. To score a fit, a copy with your face blurred goes to Google's Gemini. Google keeps it up to 55 days to check for misuse and doesn't train on it. Questions you type to Kit go to OpenAI, which keeps them up to 30 days to check for misuse and doesn't train on them either.",
+  'privacy.phoneCount': "To keep free limits fair, Kitted remembers how many checks and questions this iPhone has used today, under a random number that isn't tied to your name or photos. Deleting your account doesn't reset it.",
   'privacy.consentToggle': 'Score my fits',
   'privacy.consentSub': 'Face-blurred photos go to {provider}, questions to OpenAI',
   'privacy.storageValueOne': '1 photo · {size}',
