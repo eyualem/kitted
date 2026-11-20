@@ -6,6 +6,7 @@ import { Platform } from 'react-native';
 import { store } from '@/data/db';
 import { sessionClock } from '@/state/session';
 import { AI_PATH, type AiPath } from './config';
+import { deviceId } from './deviceId';
 import { createGuestToken } from './guest';
 import { tierRecorder } from './tier';
 import { directTransport, serverTransport, type AiFetch, type AiTransport } from './transport';
@@ -23,6 +24,7 @@ function build(path: AiPath): AiTransport | null {
     token: createGuestToken(async () => (await import('./firebaseGuest')).firebaseGuest(), (l) => console.log(l)),
     tzMinutes: () => sessionClock.offset(sessionClock.nowMs()) / 60_000,
     onTier: tierRecorder(store),
+    device: deviceId,
   });
 }
 

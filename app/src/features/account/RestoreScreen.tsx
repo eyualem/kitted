@@ -1,5 +1,5 @@
-// A4 · Bringing back your fits (10-onboarding.md §4.4): Welcome → sign in → an account that already holds his fits.
-// No Back. Basics asked his birth year first (it never syncs, so the age gate runs on every new phone); then the counts,
+// A4 · Bringing back your fits (SB6): Welcome → sign in → an account that already holds his fits.
+// No Back. About you asked his age first (it never syncs, so the age gate runs on every new phone); then the counts,
 // then Stylist with the rest of setup skipped. The camera still asks for the agreement once on this phone (#252).
 // Stand-in: the counts come from the mock account and no rows arrive; the sync engine (08 A2) fills this phone.
 import { router, useLocalSearchParams } from 'expo-router';
@@ -13,7 +13,8 @@ import { sessionClock } from '@/state/session';
 import { setOnboarded } from '@/state/appGate';
 import { completeOnboarding } from '@/features/onboarding/complete';
 import { clearResumeStep } from '@/features/onboarding/resume';
-import { BASICS_KEY, loadDraft } from '@/features/onboarding/basics';
+import { cleanName } from '@/features/onboarding/aboutStep';
+import { ABOUT_KEY, BASICS_KEY, isAgeBand, loadDraft } from '@/features/onboarding/basics';
 import { t } from '@/i18n/en';
 
 const num = (v: string | undefined) => (v && /^\d+$/.test(v) ? Number(v) : 0);
@@ -21,8 +22,8 @@ const num = (v: string | undefined) => (v && /^\d+$/.test(v) ? Number(v) : 0);
 export function RestoreScreen() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const p = useLocalSearchParams<{ fits?: string; pieces?: string; chats?: string }>();
-  const counts = t('acct.restore.counts', { fits: num(p.fits), pieces: num(p.pieces), chats: num(p.chats) });
+  const p = useLocalSearchParams<{ fits?: string; pieces?: string }>();
+  const counts = t('acct.restore.counts', { fits: num(p.fits), pieces: num(p.pieces) });
   const [arrived, setArrived] = useState(false);
 
   useEffect(() => {
@@ -32,13 +33,16 @@ export function RestoreScreen() {
       if (!alive) return;
       setArrived(true);
       void (async () => {
-        // What Basics asked on this phone; his looks and the rest arrive with his synced profile (08 A2).
+        // What About you asked on this phone: his age band, and Apple's first name if the sign-in left one in the draft
+        // (SB6, SB10). His looks and the rest arrive with his synced profile (T41b); no agreement is saved, so the
+        // camera asks on its first open on this phone, as before (consent: false, stepFourBatch checks it).
         const d = await loadDraft(store);
         await completeOnboarding(store, {
-          styles: [], fitPreference: d.basics.fit ?? '',
-          birthYear: d.basics.birthYear, consent: false,
+          styles: [], fitPreference: d.basics.fit ?? '', birthYear: null,
+          ageBand: isAgeBand(d.about.age) ? d.about.age : null, name: cleanName(d.about.name), consent: false,
         }, sessionClock.nowMs(), newId);
         await store.deleteKv(BASICS_KEY);
+        await store.deleteKv(ABOUT_KEY);
         await clearResumeStep(store);
         await new Promise((r) => setTimeout(r, 900));
         if (!alive) return;

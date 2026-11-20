@@ -96,8 +96,7 @@ export const DEMO_CARD_ANSWERS: readonly SeededAnswer[] = [
   },
   {
     question: 'I also have a grey hoodie.',
-    answer: "Got it. I'll use your grey hoodie in outfit ideas. Wear it in a fit check and I'll add its photo.",
-    remember: { key: 'owns_unphotographed', value: 'grey hoodie' },
+    answer: "Nice, grey goes with almost everything you own. Wear it in a fit check and I'll score it.",
   },
 ];
 

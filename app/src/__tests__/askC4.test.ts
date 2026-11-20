@@ -15,6 +15,8 @@ import { createDemoSource, seededAnswers } from '@/features/ask/source';
 import { starterGain } from '@/features/finish/gains';
 import { STARTER } from '@/features/finish/starter';
 import { liveFacts, sourceLine } from '@/features/you/facts';
+import { addChatPiece, removeChatPiece } from '@/features/closet/chatAdd';
+import { cardPiece } from '@/features/ask/cards';
 import { artSpec } from '@/features/closet/artSpec';
 import { artOf, hexOfArt } from '@/features/closet/profile';
 import { createClosetService } from '@/features/closet/service';
@@ -116,9 +118,9 @@ describe('M3 · budget sets the profile; look_now never touches his looks', () =
 describe('M4 · a piece he mentions', () => {
   it('becomes a closet piece from chat: not photographed, in outfits, never in a "+N" count', async () => {
     const { store, clock, ids } = await setup();
-    const r = await applyRemember({ key: 'owns_unphotographed', value: 'grey hoodie' }, NOW, { store, clock, ids });
-    expect(r?.itemId).toBeTruthy();
-    const it = (await store.closet.get(r!.itemId!))!;
+    const r = { itemId: await addChatPiece({ store, clock, ids }, cardPiece('hoodie', 'grey')!) };
+    expect(r.itemId).toBeTruthy();
+    const it = (await store.closet.get(r.itemId!))!;
     expect(it).toMatchObject({ source: 'chat', isPhotographed: false, slot: 'top', name: 'Grey hoodie' });
     expect(it.garment).toMatchObject({ category: 'top', subcategory: 'hoodie', color_family: 'grey' });
     // In the pack and usable for an outfit card…
@@ -134,8 +136,8 @@ describe('M4 · a piece he mentions', () => {
     const closet = await store.closet.all();
     const polo = STARTER.find((e) => e.id === 's02')!;
     expect(starterGain(closet, snap.profile?.styles ?? null, polo)).toBe(starterGain(closet.filter((c) => c.id !== it.id), snap.profile?.styles ?? null, polo));
-    // Undo takes the piece out of the closet too.
-    await undoRemember(r!.factId, r!.itemId!, { store });
+    // Undo (the add card's) takes the piece out of the closet.
+    await removeChatPiece({ store }, r.itemId!);
     expect((await store.closet.get(it.id))!.isDeleted).toBe(true);
   });
 
@@ -143,8 +145,8 @@ describe('M4 · a piece he mentions', () => {
     // Nov 12: he told Kit "my boots are black"; the piece was named "Black work boots" but a later brown reading of his
     // photos redrew it brown, so the name and the drawing disagreed.
     const { store, clock, ids } = await setup();
-    const r = await applyRemember({ key: 'owns_unphotographed', value: 'black work boots' }, NOW, { store, clock, ids });
-    const it = (await store.closet.get(r!.itemId!))!;
+    const r = { itemId: await addChatPiece({ store, clock, ids }, cardPiece('work_boot', 'black')!) };
+    const it = (await store.closet.get(r.itemId!))!;
     expect(it.name).toBe('Black work boots');
     const brownSighting = { ...G('footwear', 'work_boot', 'brown'), shade: 'dark brown' };
     const art = artOf(it, [brownSighting]);
@@ -158,6 +160,8 @@ describe('M4 · a piece he mentions', () => {
   it('nothing that isn\'t a piece of clothing becomes one', async () => {
     const { store, clock, ids } = await setup();
     expect(await applyRemember({ key: 'owns_unphotographed', value: 'a car' }, NOW, { store, clock, ids })).toBeNull();
+    // T106: and a real piece is no longer saved from the model's block either (the add card does it).
+    expect(await applyRemember({ key: 'owns_unphotographed', value: 'black tee' }, NOW, { store, clock, ids })).toBeNull();
   });
 
   it('the first fit check that sees it asks "Same as your …?" (or links it), never makes a silent duplicate', async () => {
@@ -166,8 +170,7 @@ describe('M4 · a piece he mentions', () => {
     await loadScenario(store, seed, { scenario: 'full', zone: US_EASTERN, asOfMs: Date.parse('2026-10-22T07:41:00-04:00') });
     for (const c of await store.closet.all()) if (!['B1', 'S1'].includes(c.id)) await store.closet.patch(c.id, { isDeleted: true });
     const ids = counterIds();
-    const r = await applyRemember({ key: 'owns_unphotographed', value: 'white tee' }, clock.nowMs(), { store, clock, ids });
-    const chatTee = r!.itemId!;
+    const chatTee = (await addChatPiece({ store, clock, ids }, cardPiece('tee', 'white')!))!;
     const closet = createClosetService({ store, clock, scheduler: realScheduler, ids, source: createMockClosetSource(), measure: async () => new Map() });
     const svc = createFitCheckService({
       store, source: createMockReadingSource({ latency: () => 0, scheduler: realScheduler }), prep: demoImagePrep,

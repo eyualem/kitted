@@ -195,7 +195,7 @@ export function NotSameSheet() {
   };
 
   const back = cur === 'all' ? () => setStep('kinds') : cur === 'kinds' && !content.empty ? () => { setSelectedId(null); setStep('list'); } : undefined;
-  const title = cur === 'list' ? t('notSame.title') : t('notSame.kindTitle');
+  const title = cur === 'list' ? t('notSame.title') : t('ask.card.addKind');
   const subtitle = cur === 'list' ? t('notSame.sub') : cur === 'kinds' && content.empty ? t('notSame.empty') : undefined;
 
   const kindGrid = (list: readonly EditOption[], size: number) => (

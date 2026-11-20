@@ -16,7 +16,7 @@
 - Not touched: `ClosetTile`, `ask/*`, `closet/chatAdd.ts`.
 
 ## Notes for the control session
-- The kind table (`KIND_SHORTLIST` in `closet/notSame.ts`) is T106's table plus Shirt for tops; T106's `ask/addCard.ts` still holds its own copy. When both are on main, `addCard.ts` should import this one, and the sheet's title should take T106's `ask.card.addKind` (same words; `notSame.kindTitle` stands in until then).
+- The kind table (`KIND_SHORTLIST` in `closet/notSame.ts`) is T106's table plus Shirt for tops; T106's `ask/addCard.ts` still holds its own copy. When both are on main, `addCard.ts` should import this one, and the sheet's title should take T106's `ask.card.addKind` (same words; the sheet already uses it).
 
 ## Done means
 CB4.1–CB4.17 (see the spec). Logic is covered by `notSame.test.ts` (CB4.2, 4.3, 4.6, 4.8, 4.14, the lines) and `closetService.test.ts` (CB4.5, 4.7, 4.10, 4.16, 4.17); the deck test covers CB4.1. Words, layout and VoiceOver are checked by screenshots / not verified (see Built).

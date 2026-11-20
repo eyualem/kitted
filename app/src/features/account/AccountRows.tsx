@@ -1,6 +1,6 @@
-// You → Settings → Account (10-onboarding.md §4.6): signed out, "Back up and sync" opens A1; signed in, which account
-// (an Apple relay address reads "Hidden email") and Sign out, which keeps his fits on this phone (AC4's default).
-// Hidden in real builds until Firebase exists (ACCOUNTS_BUILT).
+// You's account rows (SB1.4, SB8): signed out, "Back up your fits" opens the sheet; signed in, which account (an Apple
+// relay address reads "Hidden email") and Sign out, which keeps his fits on this phone. Hidden while ACCOUNTS_BUILT is
+// off, outside demo screens.
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
 import { store } from '@/data/db';
@@ -8,11 +8,11 @@ import { useLive } from '@/data/useLive';
 import { LinkRow, Section, ValueRow } from '@/features/settings/SettingsList';
 import { showToast } from '@/features/toast/toast';
 import { t } from '@/i18n/en';
-import { ACCOUNT_KEY, getAccount, settingsAccountOn, signOut, useAccountsOn } from './account';
+import { ACCOUNT_KEY, getAccount, signOut, useAccountsOn } from './account';
 import { isRelayEmail } from './email';
 
 export function AccountSection() {
-  const on = useAccountsOn() || settingsAccountOn();
+  const on = useAccountsOn();
   const account = useLive(['kv'], () => getAccount(store), [], ACCOUNT_KEY);
   if (!on || account === undefined) return null;
   if (!account) {
