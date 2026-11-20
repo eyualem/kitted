@@ -3,6 +3,10 @@
 # installs it and opens it on the Metro server on this Mac (same Wi-Fi). Rerun every 7 days.
 # The phone: plugged in, unlocked, Developer Mode on, "Apple Development: …" trusted once in
 # Settings → General → VPN & Device Management.
+# It opens the app as a tester would: a fresh install starts at Welcome and plays today's setup;
+# a phone that finished setup keeps its data and opens in the app. To play setup again, delete
+# Kitted from the phone first (that erases the phone's fits and closet). A TestFlight copy of
+# Kitted carries its own frozen code: delete it before the first install from this script.
 set -e
 cd "$(dirname "$0")/../../app/ios"
 DEVICE_UDID=$(xcrun xctrace list devices 2>/dev/null | awk -F'[()]' '/iPhone/ && !/Simulator/ {print $(NF-1); exit}')
@@ -21,5 +25,5 @@ codesign --verify --deep --strict "$APP"
 xcrun devicectl device install app --device "$DEVICE_ID" "$APP" >/dev/null
 IP=$(ipconfig getifaddr en0)
 xcrun devicectl device process launch --device "$DEVICE_ID" --terminate-existing \
-  --payload-url "exp+kitted://expo-development-client/?url=http%3A%2F%2F$IP%3A8081" com.trykitted.kitted -skipOnboarding true >/dev/null
+  --payload-url "exp+kitted://expo-development-client/?url=http%3A%2F%2F$IP%3A8081" com.trykitted.kitted >/dev/null
 echo "Installed and opened on the iPhone (Metro at $IP:8081)."
