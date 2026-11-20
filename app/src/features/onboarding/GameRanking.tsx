@@ -20,8 +20,10 @@ export function GameRanking({ pair, mes, width }: { pair: readonly [StyleKey, St
   const [chosen, setChosen] = useState<StyleKey | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [dim] = useState(() => new Animated.Value(1));
+  const hold = useRef<(() => void) | null>(null);
   useEffect(() => () => {
     if (timer.current) clearTimeout(timer.current);
+    hold.current?.(); // never leave a stale hold for Back to land on
   }, []);
 
   const pick = (look: StyleKey) => {
@@ -32,14 +34,17 @@ export function GameRanking({ pair, mes, width }: { pair: readonly [StyleKey, St
     Animated.timing(dim, { toValue: 0.35, duration: ms, useNativeDriver: true }).start();
     // A Back or Undo in the pause takes this tap back (the pair stays), instead of the pick before it.
     const letGo = holdAnswer(() => {
+      hold.current = null;
       if (timer.current) clearTimeout(timer.current);
       timer.current = null;
       dim.stopAnimation();
       dim.setValue(1);
       setChosen(null);
     });
+    hold.current = letGo;
     timer.current = setTimeout(() => {
       timer.current = null;
+      hold.current = null;
       letGo();
       void pickInRanking(store, look);
     }, ms);
