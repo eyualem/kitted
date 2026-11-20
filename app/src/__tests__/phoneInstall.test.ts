@@ -19,4 +19,11 @@ describe('phone install script', () => {
     expect(cable).toBeGreaterThan(-1);
     expect(wifi).toBeGreaterThan(cable);
   });
+
+  it('--standalone builds Release and opens it without Metro (DECISIONS-LOG #530)', () => {
+    expect(script).toMatch(/== --standalone \]\] && \{ CONFIG=Release;/);
+    const release = script.slice(script.indexOf('if [[ $CONFIG == Release ]]'), script.indexOf('exit 0'));
+    expect(release).toMatch(/process launch/);
+    expect(release).not.toMatch(/payload-url/);
+  });
 });
