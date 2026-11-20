@@ -1,3 +1,4 @@
+// "Not the same" (was "No, a new one") opens "What is it, then?" (CB4, NotSameSheet) when the caller gives `checkId`.
 // "Is this your grey Nike hoodie?" (#117; was "Same as your …?", 02 S11 / #91): asked on the score card right after
 // the rating and in Closet's "To confirm". Picture first: this photo cropped to the piece (outlined, the rest dimmed)
 // next to the piece in his closet (its best earlier photo, else its drawing), one plain reason, and on his first
@@ -8,9 +9,13 @@
 // largest sizes; none on a lone question). Without `deck` it is exactly the score card's and the Added sheet's.
 import { useState } from 'react';
 import { View } from 'react-native';
+import { router } from 'expo-router';
 import { Chip, ChipFlow, KText, TextLink, useTheme } from '@/design-system';
+import { store } from '@/data/db';
 import type { ClosetAsk, ClosetItemRow } from '@/data/types';
+import { useLive } from '@/data/useLive';
 import { t } from '@/i18n/en';
+import { answerLine } from './answerToast';
 import { askQuestionText, askReasonText, isPluralPiece } from './askText';
 import { SCORE_LINE_UNTIL, useAskEvidence, type Shot } from './askEvidence';
 import { ClosetTile } from './ClosetTile';
@@ -24,6 +29,8 @@ export interface DuplicateQuestionProps {
   candidate: ClosetItemRow;
   runnerUp?: ClosetItemRow | null;
   onAnswer: (a: 'same' | 'new' | 'runnerUp') => void;
+  /** The check this question belongs to: `Not the same` opens "What is it, then?" for it (CB4). Without it the chip answers `new` as before. */
+  checkId?: string;
   /** On the score card: smaller pictures, so the card stays short. */
   compact?: boolean;
   /** In Closet's To confirm deck: its place, Skip and the answer guard (CB2). */
@@ -36,19 +43,22 @@ const DECK_H = 110;
 
 const lower = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
 
+/** The route of "What is it, then?" for a question; `toast` makes the sheet say its answer in a toast with Undo (the deck, where the card leaves). */
+export const notSameHref = (checkId: string, obsId: string, toast = false) => `/sheets/not-same/${checkId}/${obsId}${toast ? '?toast=1' : ''}`;
+
 function Frame({ shot, item, w, h }: { shot: Shot | null; item: ClosetItemRow; w: number; h: number }) {
   if (shot) return <SightingCrop source={shot.photo.source} aspect={shot.photo.aspect} box={shot.box} top={shot.top} mirrored={shot.mirrored} width={w} height={h} radius={14} />;
   return <ClosetTile item={item} size={w} aspect={h / w} radius={14} scale={0.7} decorative />;
 }
 
-export function DuplicateQuestion({ ask, photo, candidate, runnerUp, onAnswer, compact, deck }: DuplicateQuestionProps) {
+export function DuplicateQuestion({ ask, photo, candidate, runnerUp, onAnswer, checkId, compact, deck }: DuplicateQuestionProps) {
   const { isAccessibilitySize } = useTheme();
   const [changing, setChanging] = useState(false);
   const [width, setWidth] = useState(0);
   const ev = useAskEvidence(ask);
-  const target = ask.answer === 'runnerUp' ? runnerUp ?? candidate : candidate;
+  const picked = useLive(['closet'], async () => (ask.pickedId ? (await store.closet.get(ask.pickedId)) ?? null : null), [ask.pickedId]) ?? null;
   if (ask.answer && !changing) {
-    const line = ask.answer === 'new' ? t('item.dup.saidNew') : t('item.dup.saidSame', { item: lower(target.name) });
+    const line = answerLine(ask.answer, candidate, runnerUp ?? null, { picked, newPiece: ask.kind ? photo : null });
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
         <KText variant="footnote" color="ink2" style={{ flexShrink: 1 }}>
@@ -64,10 +74,14 @@ export function DuplicateQuestion({ ask, photo, candidate, runnerUp, onAnswer, c
   const scoreLine = ev !== undefined && ev.answered < SCORE_LINE_UNTIL;
   const answer = (a: 'same' | 'new' | 'runnerUp') => {
     setChanging(false);
-    onAnswer(a);
+    // `Not the same` asks which piece it is, right here (CB4); nothing is saved until he picks in the sheet.
+    if (a === 'new' && checkId) router.push(notSameHref(checkId, ask.obsId, !!deck) as never);
+    else onAnswer(a);
   };
   if (deck) {
     const pick = (a: 'same' | 'new' | 'runnerUp') => {
+      // The sheet answers for it later (the card leaves when it does, as for any answer given elsewhere): no guard here.
+      if (a === 'new' && checkId) return answer(a);
       if (!deck.willAnswer()) return;
       answer(a);
     };
@@ -101,8 +115,8 @@ export function DuplicateQuestion({ ask, photo, candidate, runnerUp, onAnswer, c
         </View>
       ) : null}
       <ChipFlow accessibilityLabel={question}>
-        <Chip title={t('item.dup.yes')} small onPress={() => answer('same')} state={ask.answer === 'same' ? 'selected' : 'normal'} />
-        <Chip title={t('item.dup.no')} small onPress={() => answer('new')} state={ask.answer === 'new' ? 'selected' : 'normal'} />
+        <Chip title={t('item.dup.yes')} small onPress={() => answer('same')} state={ask.answer === 'same' && !ask.pickedId ? 'selected' : 'normal'} />
+        <Chip title={t('item.dup.no')} small onPress={() => answer('new')} state={ask.answer === 'new' || (ask.answer === 'same' && !!ask.pickedId) ? 'selected' : 'normal'} />
         {runnerUp ? (
           <Chip title={t('item.dup.runnerUp', { item: lower(runnerUp.name) })} small onPress={() => answer('runnerUp')} state={ask.answer === 'runnerUp' ? 'selected' : 'normal'} />
         ) : null}

@@ -1,6 +1,6 @@
 // tools/phone/install.sh opens the app the way a tester meets it: a fresh install plays setup.
 // It used to launch with -skipOnboarding true, which marked setup done on every install, so the
-// founder's phone could never reach the style game (DECISIONS-LOG #526).
+// founder's phone could never reach the style game (DECISIONS-LOG #528).
 import { readFileSync } from 'fs';
 import { join } from 'path';
 

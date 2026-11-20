@@ -361,7 +361,7 @@ export const enGenerated = {
   "budget.over100": "$100+",
   "item.q.duplicate": "Same as your {item}?",
   "item.dup.yes": "Yes, same one",
-  "item.dup.no": "No, a new one",
+  "item.dup.no": "Not the same",
   "item.fairUse": "That's a lot of new stuff today. Add the rest in Closet with Describe it.",
   "plan.intro": "Want outfit ideas from your own clothes? This part is optional.",
   "plan.tag": "Optional",

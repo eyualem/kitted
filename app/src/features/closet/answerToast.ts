@@ -6,10 +6,17 @@ import { t } from '@/i18n/en';
 
 const lower = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
 
-/** The toast's line: the same words the score card's row shows once answered. */
-export function answerLine(a: DuplicateAnswer, candidate: Pick<ClosetItemRow, 'name'>, runnerUp: Pick<ClosetItemRow, 'name'> | null): string {
-  if (a === 'new') return t('item.dup.saidNew');
-  const target = a === 'runnerUp' ? runnerUp ?? candidate : candidate;
+/**
+ * The line the card and the toast say: "Saved as your {item}." (a piece he picked in "What is it, then?" counts as the
+ * piece it went to), "Saved as its own piece: {item}." for a new piece with its kind confirmed (CB4), and for answers
+ * given before CB4 "Kept as a new piece.".
+ */
+export function answerLine(
+  a: DuplicateAnswer, candidate: Pick<ClosetItemRow, 'name'>, runnerUp: Pick<ClosetItemRow, 'name'> | null,
+  o: { picked?: Pick<ClosetItemRow, 'name'> | null; newPiece?: Pick<ClosetItemRow, 'name'> | null } = {},
+): string {
+  if (a === 'new') return o.newPiece ? t('closet.piece.splitOff', { item: lower(o.newPiece.name) }) : t('item.dup.saidNew');
+  const target = a === 'runnerUp' ? runnerUp ?? candidate : o.picked ?? candidate;
   return t('item.dup.saidSame', { item: lower(target.name) });
 }
 

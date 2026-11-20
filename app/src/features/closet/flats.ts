@@ -62,6 +62,8 @@ export interface BottomFlat extends FlatBase {
   wash?: 'rinse' | 'washed' | 'faded';
   ripped?: boolean;
   sideStripe?: boolean;
+  /** A printed graphic on the thigh (graphic jeans, sweatpants, shorts: T120). Drawn as the tee's chest mark, smaller. */
+  print?: boolean;
 }
 
 export interface ShoeFlat extends FlatBase {
@@ -231,6 +233,17 @@ function zip(cx: number, y0: number, y1: number, c: string): string {
 }
 
 // ======================================================================== TOPS
+/** The print mark (the picture-in-a-frame the graphic tee has always had), at any size: a frame and a peak, in the piece's
+ *  contrast line. T120 uses it for the side placements on a placketed or zipped top and on a leg; the tee's own chest
+ *  mark in top() is left as it was. */
+function printMark(x: number, y: number, w: number, h: number, c: string): string {
+  const pc = contrastLine(c);
+  const px = (u: number) => f(x + u * w);
+  const py = (v: number) => f(y + v * h);
+  return `<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" rx="${f(Math.min(w, h) * 0.14)}" fill="${pc}" opacity=".5"/>`
+    + `<path d="M${px(0.18)},${py(0.8)} L${px(0.42)},${py(0.34)} L${px(0.6)},${py(0.62)} L${px(0.72)},${py(0.48)} L${px(0.86)},${py(0.8)} Z" fill="${pc}" opacity=".7"/>`;
+}
+
 function top(s: TopFlat, ctx: Ctx): string {
   const { id } = ctx;
   const cx = 100;
@@ -524,7 +537,11 @@ function top(s: TopFlat, ctx: Ctx): string {
     out += `<path d="M${cx - 25},${py + 2.2} H${cx + 25} M${cx - 24.5},${py + 4} Q${cx - 27.5},${py + 17} ${cx - 36},${py + 28} M${cx + 24.5},${py + 4} Q${cx + 27.5},${py + 17} ${cx + 36},${py + 28}" ${stitch(mix(c, -0.3), 0.55)}/>`;
     if (s.details.fullZip) out += zip(cx, py - 2, pb, c);
   }
-  if (s.print) {
+  if (s.print && (jacket || collared || t === 'cardigan' || t === 'quarter_zip' || s.details?.fullZip)) {
+    // a zip, placket, collar or pockets run down the middle: the mark sits low on the wearer's right side instead (T120)
+    // inside the body edge for every fit; a denim jacket's is smaller, between its left pleat seam and the placket
+    out += t === 'denim_jacket' ? printMark(cx - 19, 96, 12, 10.5, c) : printMark(cx - hw + 5, hood ? 84 : 96, 22, 19, c);
+  } else if (s.print) {
     const pc = contrastLine(c);
     out += `<rect x="${cx - 19}" y="${hood ? 98 : 66}" width="38" height="34" rx="5" fill="${pc}" opacity=".5"/><path d="M${cx - 12},${hood ? 120 : 88} L${cx - 3},${hood ? 108 : 76} L${cx + 4},${hood ? 116 : 84} L${cx + 8},${hood ? 112 : 80} L${cx + 13},${hood ? 120 : 88} Z" fill="${pc}" opacity=".7"/>`;
   }
@@ -665,6 +682,13 @@ function bottom(s: BottomFlat, ctx: Ctx): string {
       out += `<path d="M${x},${y} H${x + 22} V${y + 30} H${x} Z" fill="#000" opacity=".12" transform="translate(.8,1.4)"/><path d="M${x},${y} H${x + 22} V${y + 30} H${x} Z" fill="${fill}" stroke="${edge}" stroke-width=".9"/>`;
       out += `<path d="M${x - 1},${y - 2} H${x + 23} V${y + 7} H${x - 1} Z" fill="${fill}" stroke="${edge}" stroke-width=".9"/><path d="M${x + 1.5},${y + 9} V${y + 28} H${x + 20.5} V${y + 9}" ${stitch(st, 0.55)}/>`;
     }
+  }
+  // a printed graphic on the wearer's right thigh (T120), below the cargo pocket on cargos
+  if (s.print) {
+    const w = Math.min(24, legHalf * 2 - 6);
+    const h = w * 0.9;
+    const cy = shorts ? hipY + 28 : t === 'cargos' ? hipY + 82 : hipY + 46;
+    out += printMark(cx - g - legHalf - w / 2, cy - h / 2, w, h, c);
   }
   // hem: a turned-up cuff, or stitching
   if (s.hem === 'cuffed' && !jog) {

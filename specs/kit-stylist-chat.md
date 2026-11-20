@@ -101,7 +101,8 @@ Asked where to buy, Kit says so plainly and gives what to look for, with the pie
 ## KC4. The add card
 - KC4.1 When he mentions owning a piece ("I have…", "I own…", "I got…", "I bought…"), the code reads its kind and color from his words. If his closet already has a piece of the same kind and color family, there's no card, and Kit uses that piece by its closet name.
 - KC4.2 Otherwise the add card shows: the piece drawn, its name, `Want me to add this to your closet?`, `Add`, `No thanks`. Nothing is written to Closet before `Add`.
-- KC4.3 `Add` writes one closet piece through the closet service (`source: 'chat'`, not photographed, dashed tile, `From chat`). The card becomes `Added to Closet · Undo`, and Undo removes the piece. Tapping the drawn piece opens its Closet page.
+- KC4.3 `Add` writes one closet piece through the closet service (`source: 'chat'`, not photographed, a solid tile with `No photo yet` under its name, `From chat`). The card becomes `Added to Closet · Undo`, and Undo removes the piece. Tapping the drawn piece opens its Closet page.
+  *Nov 19: the founder said yes: a piece he owns but hasn't photographed (from chat, a Starter or described) is a solid tile with `No photo yet` everywhere in Closet, not dashed and faded. The dashed tile now means only `You'd need`, a piece he doesn't own (KC2.2). The words `No photo yet` are approved.*
 - KC4.4 `No thanks` writes no piece. The card reads `Not added`, and that kind-and-color is never offered again unless he asks to add it.
 - KC4.5 **He asks to add it** ("add it", "can you add that to my closet"): the code adds it before Kit answers, Kit's words say it's added, and the answer shows `Added to Closet · Undo` with the drawing.
 - KC4.6 For a mention, Kit's words say nothing about adding (the card does the asking). They never say "I can't add" and never say "added" unless the code added it.

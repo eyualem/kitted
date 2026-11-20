@@ -622,6 +622,16 @@ const addedInBuild = {
   'item.dup.saidSame': 'Saved as your {item}.',
   'item.dup.saidNew': 'Kept as a new piece.',
   'item.dup.change': 'Change',
+  // "What is it, then?" (specs/closet-beta.md CB4, founder Nov 19): the sheet `Not the same` opens. Its kind step's
+  // title is T106's `ask.card.addKind` (`What kind of piece is it?`).
+  'notSame.title': 'What is it, then?',
+  'notSame.sub': 'Pick the one it is, or add it as new.',
+  'notSame.new': "It's a new piece",
+  'notSame.empty': 'Nothing else like it in your closet yet.',
+  'notSame.more': 'Something else',
+  'notSame.a11y.back': 'Back',
+  'notSame.a11y.pickHint': 'Picks it',
+  'notSame.a11y.selected': 'Selected',
   'item.dup.a11y': 'Same as your {item}? This photo: {photo}. In your closet: {closet}.',
   'closet.ask.tag': 'A quick question',
   // The closet question card (#117, founder Oct 8): picture first, one plain reason, asked on the score card and in Closet.
@@ -656,6 +666,8 @@ const addedInBuild = {
   'closet.firstCheck': 'From your first check',
   'closet.new': 'New',
   'closet.new.a11y': 'New, {name}',
+  // A piece he owns but hasn't photographed: a solid tile with this line under its name (words approved by the founder Nov 19).
+  'closet.tile.noPhoto': 'No photo yet',
   // Removing a piece or a look (#118, founder Oct 9): long-press → an action sheet → a toast with Undo.
   'closet.remove.action': 'Remove from Closet',
   'closet.removed': 'Removed your {item}.',
