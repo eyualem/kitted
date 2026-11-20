@@ -1,6 +1,6 @@
 # Setup and You
 
-**Approved by the founder:** 2026-11-09 (SY2.1, SY4–SY6 changed with his yes the same day, to match `specs/onboarding-screens.md`). SY2–SY3 rewritten 2026-11-10 with his yes (direction A, `tasks/T36/`); SY2's badge color and the slide's start changed the same day with his yes (#439). SY2.12–SY2.18 (Kit types before it speaks) added Nov 18 with his yes in chat, from proposal 4 and mockup 3 of `reports/2026-11-18-chat-feel-research.md`
+**Approved by the founder:** 2026-11-09 (SY2.1, SY4–SY6 changed with his yes the same day, to match `specs/onboarding-screens.md`). SY2–SY3 rewritten 2026-11-10 with his yes (direction A, `tasks/T36/`); SY2's badge color and the slide's start changed the same day with his yes (#439). SY2.12–SY2.18 (Kit types before it speaks) added Nov 18 with his yes in chat, from proposal 4 and mockup 3 of `reports/2026-11-18-chat-feel-research.md`. SY2 changed 2026-11-19 with his yes in chat: the app tour plays before Kit's hello (`specs/app-tour.md`).
 
 After this, a new user learns Stylist and Closet by doing his first fit check and seeing his pieces land in Closet, finds every setting on You without digging, and setup asks his name (optional), checks his age the Apple way and asks for the privacy agreement when he first opens the camera.
 
@@ -13,7 +13,7 @@ The founder's first TestFlight use (Nov 8): "The You tab is empty and pointless"
 
 ## Scope
 - **In:** You as the settings home (SY1); Kit's hello and the slide into Closet (SY2); the name field (SY4); the agreement on the first camera open (SY5); Apple's age check (SY6).
-- **Out (non-goals):** a swipe tour or any screens before the first check; a guided first check; tips or `Got it` cards anywhere; any Kit line that explains a feature, and any list in a Kit message; suggestion chips outside the opened composer; a Lookbook badge; "Show me around" (SY3, removed); a "go through setup again" button (to see setup as a new user, delete Kitted and reinstall it from TestFlight); renaming You; a gear or a separate Settings page anywhere; TipKit or any new package; the notification settings themselves (`specs/notifications.md`); sign-in's rows (`specs/sign-in-and-backup.md`); naming PostHog in the agreement (T33 with T90).
+- **Out (non-goals):** a swipe tour of screens before the first check (the walk through the real tabs is `specs/app-tour.md`, Nov 19); a guided first check; tips or `Got it` cards anywhere; any Kit line that explains a feature, and any list in a Kit message; suggestion chips outside the opened composer; a Lookbook badge; "Show me around" (SY3, removed); a "go through setup again" button (to see setup as a new user, delete Kitted and reinstall it from TestFlight); renaming You; a gear or a separate Settings page anywhere; TipKit or any new package; the notification settings themselves (`specs/notifications.md`); sign-in's rows (`specs/sign-in-and-backup.md`); naming PostHog in the agreement (T33 with T90).
 - **For the beta:** SY1–SY2. **Before launch:** SY4–SY6 (SY6 needs the paid Apple team, T80).
 
 ## SY1. You is the settings home
@@ -33,12 +33,12 @@ One page under the tab name **You**, large title, no button in its header (the g
 The pages these rows open (Plan & usage, Notifications, Privacy & data, Acknowledgements) don't change; their Back reads `You`. The old Privacy & data card on You goes: Privacy & data shows once, in the rows.
 
 ## SY2. Learning by doing: Kit's hello, and where the pieces go
-No tour, no tips, no `Got it` cards. He learns Stylist by doing his first check, and Closet by seeing his pieces land there.
+No tips, no `Got it` cards. One short tour of Closet and Lookbook right after setup (`specs/app-tour.md`, the founder, Nov 19); after it, he learns Stylist by doing his first check, and Closet by seeing his pieces land there.
 
-**Kit's hello.** At setup's end (About you's `Continue`), Kit's first message is `I'm Kit, your stylist.`, above Kit's offer card (`specs/onboarding-screens.md` OS5). Today's AI note goes: the agreement says `Kit, your stylist, is an AI.` and shows before his first check or question, and Kit says so plainly when asked (F5.1).
+**Kit's hello.** At setup's end (About you's `Continue`, then the app tour), Kit's first message is `I'm Kit, your stylist.`, above Kit's offer card (`specs/onboarding-screens.md` OS5). Today's AI note goes: the agreement says `Kit, your stylist, is an AI.` and shows before his first check or question, and Kit says so plainly when asked (F5.1).
 
 **Kit types before it speaks** (his yes in chat, Nov 18; no word changes, only when they appear). The first two times Kit speaks on its own in his first minutes, three typing dots show first, then the words:
-1. Setup slides away and Kit's typing dots show for about 0.9 s. Then `I'm Kit, your stylist.` lands, and a beat later (about 0.6 s) Kit's offer card (`Want to check a fit now?`) arrives, with one soft haptic tap.
+1. Setup slides away, the app tour plays (`specs/app-tour.md`), and once it ends (Done or Skip) Kit's typing dots show for about 0.9 s. Then `I'm Kit, your stylist.` lands, and a beat later (about 0.6 s) Kit's offer card (`Want to check a fit now?`) arrives, with one soft haptic tap.
 2. After his first scored check, the same typing beat comes before Kit's line that opens the optional step after it (the `Your first 3 moves` post; today `Want outfit ideas from your own clothes? This part is optional.`), then its card a beat later. No haptic there.
 3. Never on a normal answer (it has its own dots) or the morning and evening card. Each of the two plays once per phone, never when he scrolls back, reopens the app or reads Past chats.
 4. Reduce Motion: a still `…` for the same pause, then plain fades. VoiceOver reads `Kit is writing`, then the line.

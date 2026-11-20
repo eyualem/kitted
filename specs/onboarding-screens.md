@@ -1,6 +1,6 @@
 # Setup screens
 
-**Approved by the founder:** 2026-11-09
+**Approved by the founder:** 2026-11-09. OS5 changed 2026-11-19 with his yes in chat (the app tour, `specs/app-tour.md`).
 
 After this, a new user meets setup as three plain screens with no stranger's photo and no pretend chat. Setup asks his age with one tap and ends in the Stylist chat, where Kit offers a fit check now or later; the camera opens only when he taps.
 
@@ -75,7 +75,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 - A `Name` row changes or clears his name (SY4).
 
 ## OS5. Setup ends in Stylist
-1. About you's Continue lands him on Stylist. The camera stays shut.
+1. About you's Continue starts the app tour (`specs/app-tour.md`, Nov 19); when it ends he lands on Stylist. The camera stays shut.
 2. Kit's hello posts, as SY2 says. Until SY2 is built, it's today's AI note.
 3. Under it, Kit's offer card:
    - title `Want to check a fit now?`
@@ -88,7 +88,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 6. Once he has any scored check (from the card or the chat's camera button), the offer card's buttons are gone for good. The card's words stay as history, like the "Turn on fit checks" card.
 7. An install that finished setup before this change gets no offer card.
 
-**Taps to the camera:** Get started · a look · Continue · an age · Continue · Check my fit · Agree = 7 (F1.1). From Nov 18 (`specs/style-game.md`): Get started · the card-1 lesson · 8 cards · up to 3 this-or-thats · Continue · an age · Continue · Check my fit · Agree = 18 or fewer with 3 Me's.
+**Taps to the camera:** Get started · a look · Continue · an age · Continue · Check my fit · Agree = 7 (F1.1). From Nov 18 (`specs/style-game.md`): Get started · the card-1 lesson · 8 cards · up to 3 this-or-thats · Continue · an age · Continue · Check my fit · Agree = 18 or fewer with 3 Me's. From Nov 19 (`specs/app-tour.md`): plus the tour's Next and Done = 20 or fewer.
 
 ## Rules
 - The age band is kept on his profile with the day he picked it, on this phone only. It's never sent to the server or backed up, the same as the birth year today.
