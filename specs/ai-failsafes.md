@@ -1,5 +1,7 @@
 # AI fail-safes
 
+**Approved by the founder:** 2026-11-20
+
 After this, when Google can't read photos or OpenAI can't answer, the founder gets an email and a text within minutes that says why and what fixes it. The user sees an honest card: scoring is down on Kitted's side, his photo is saved on his phone, and it scores itself once it's back without using a check before then. Brief blips are retried quietly on the server. The live server's Gemini credit has its own wallet with auto-reload, so a test run can never drain it again.
 
 **Part of:** `specs.md` → Privacy, Build structure ("Budget"), F2 (fit check failure states) and F13 (notifications). Works with `handoff/13-server.md` (the server), `specs/notifications.md` (the daily nudge, NT2) and `specs/free-and-pro.md` ("What counts").
