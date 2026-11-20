@@ -58,7 +58,7 @@ function partToPy(p: PartResult): Record<string, unknown> {
 function toPy(r: PartsResult): Record<string, unknown> {
   const parts: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(r.parts)) parts[k] = partToPy(v);
-  if (r.overall === null) return { overall: null, reason: r.reason, parts, na_parts: r.naParts };
+  if (r.overall === null) return { overall: null, reason: r.reason, ...((r as any).unreadableSlot !== undefined ? { unreadable_slot: (r as any).unreadableSlot } : {}), parts, na_parts: r.naParts }; // T61: the slot only with reason "unreadable"
   return {
     overall: r.overall, raw_score: r.rawScore, average: r.average, earned_bonus: r.earnedBonus, piled_penalty: r.piledPenalty, version: r.version, engine: r.engine,
     parts, na_parts: r.naParts, weights_used: r.weightsUsed,
