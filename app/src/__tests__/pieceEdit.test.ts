@@ -185,18 +185,18 @@ describe('X1 the lists', () => {
 
 // ---------------------------------------------------------------- X2 the rows
 describe('X2 the rows', () => {
-  it('rows by slot, no Leg for shorts', async () => {
+  it('rows by slot, no Leg for shorts, a Pattern row on every bottom (T120)', async () => {
     const env = await setup({ only: 'all' });
     const fields = async (id: string) => editRows(await piece(env.store, id)).map((r) => r.field);
     expect(await fields('T2')).toEqual(['kind', 'color', 'fit', 'pattern']);
     expect(await fields('L1')).toEqual(['kind', 'color', 'fit', 'pattern']);
-    expect(await fields('B3')).toEqual(['kind', 'color', 'leg']);
+    expect(await fields('B3')).toEqual(['kind', 'color', 'leg', 'pattern']);
     expect(await fields('S1')).toEqual(['kind', 'color']);
     const b1 = await piece(env.store, 'B1');
-    expect(editRows({ ...b1, garment: { ...b1.garment, subcategory: 'shorts' } }).map((r) => r.field)).toEqual(['kind', 'color']);
-    expect(editRows({ ...b1, garment: { ...b1.garment, subcategory: 'athletic_shorts' } }).map((r) => r.field)).toEqual(['kind', 'color']);
+    expect(editRows({ ...b1, garment: { ...b1.garment, subcategory: 'shorts' } }).map((r) => r.field)).toEqual(['kind', 'color', 'pattern']);
+    expect(editRows({ ...b1, garment: { ...b1.garment, subcategory: 'athletic_shorts' } }).map((r) => r.field)).toEqual(['kind', 'color', 'pattern']);
     const row = editRows(await piece(env.store, 'B3'));
-    expect(row.map((r) => [r.label, r.value])).toEqual([[t('closet.edit.kind'), 'Jeans'], [t('closet.edit.color'), 'Dark-wash denim'], [t('closet.edit.leg'), 'Slim']]);
+    expect(row.map((r) => [r.label, r.value])).toEqual([[t('closet.edit.kind'), 'Jeans'], [t('closet.edit.color'), 'Dark-wash denim'], [t('closet.edit.leg'), 'Slim'], [t('closet.edit.pattern'), 'Plain']]);
   });
 
   it('denim washes only for jeans and denim jackets, or as the current value', async () => {
@@ -696,7 +696,7 @@ describe('X15 more kinds (#361)', () => {
     const j = await piece(env.store, 'B3');
     expect(j.garment).toMatchObject({ subcategory: 'shorts', color_family: 'denim_dark' });
     expect(j.name).toBe('Dark jean shorts');
-    expect(editRows(j).map((x) => x.field)).toEqual(['kind', 'color']);
+    expect(editRows(j).map((x) => x.field)).toEqual(['kind', 'color', 'pattern']);
     expect(editOptions(j, 'color').main.map((o) => o.value)).toEqual(expect.arrayContaining(['denim_light', 'denim_mid', 'denim_dark']));
     expect((artSpec(j).flat as { stitch?: string }).stitch).toBeDefined();
     expect(draw(j)).not.toBe(draw(withEdit(b3, 'kind', 'shorts')));
