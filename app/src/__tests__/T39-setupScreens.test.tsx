@@ -8,7 +8,8 @@
 import {
   advance, allTexts, byId, everyString, flat, flush, getId, idsInOrder, mockT39, mount, press, setUpT39Tests, T0, textAt, textOf, themeFor, typeIn, type Node,
 } from '@/testing/t39ScreenMocks';
-import { isHiddenFromAccessibility, screen, within } from '@testing-library/react-native';
+import { act, isHiddenFromAccessibility, screen, within } from '@testing-library/react-native';
+import { Keyboard } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { StylistMessage, UserBubble } from '@/design-system';
@@ -383,6 +384,35 @@ describe('OS4.1 · About you', () => {
     await press(continueBtn());
     expect([router.replace, router.push].map((f) => (f as jest.Mock).mock.calls.length)).toEqual([0, 0]);
     expect(await profile()).toBeNull();
+  });
+
+  it('OS4.1 · the hint, Continue and Skip are hidden while the keyboard is up (#521); an age pick closes it', async () => {
+    await drafts();
+    // The jest Keyboard has no emitter: take the screen's own listeners and call them.
+    const handlers: Record<string, () => void> = {};
+    const listen = jest.spyOn(Keyboard, 'addListener').mockImplementation(((event: string, fn: () => void) => {
+      handlers[event] = fn;
+      return { remove: () => undefined };
+    }) as unknown as typeof Keyboard.addListener);
+    await mount(<BasicsScreen />);
+    const fire = (event: string) => act(async () => handlers[event]());
+    const dock = () => [byId('about-dock'), byId('about-hint'), byId('about-continue'), byId('about-skip')];
+    // Keyboard closed: the whole block shows.
+    expect(dock().map((n) => n !== null)).toEqual([true, true, true, true]);
+    await fire('keyboardWillShow');
+    // Keyboard up: nothing sits on top of it, and the field and the ages stay.
+    expect(dock()).toEqual([null, null, null, null]);
+    expect([byId('about-name-input') !== null, byId('about-age-list') !== null]).toEqual([true, true]);
+    // Picking an age closes the keyboard (ChoiceList does it).
+    const dismiss = jest.spyOn(Keyboard, 'dismiss');
+    await press(getId('age-22-25'));
+    expect(dismiss).toHaveBeenCalled();
+    dismiss.mockRestore();
+    await fire('keyboardWillHide');
+    // Back with the age picked and no name: the name hint, Continue off, Skip on.
+    expect(dock().map((n) => n !== null)).toEqual([true, true, true, true]);
+    expect([textAt('about-hint'), isDisabled(continueBtn()), isDisabled(skipBtn())]).toEqual([NAME_HINT, true, false]);
+    listen.mockRestore();
   });
 
   it('OS4.1 · the rows are equal until one is picked', async () => {
