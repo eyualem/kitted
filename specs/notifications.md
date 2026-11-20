@@ -18,6 +18,7 @@ The beta needs testers to come back and check fits; without a nudge most drift a
 - **His get-dressed time:** half-hour steps from 5:00 am to 1:00 pm (17 choices), default 8:00 am. A time he set before that's off the list is kept (as built). The time follows the phone's clock, so it stays 8:00 local when he travels **(assumed)**.
 - **Local only:** the phone schedules every nudge itself. Each time the app opens, comes back to the foreground, or goes to the background, it replaces whatever was scheduled with the next 7 days. Nothing is sent to or kept on a server.
 - **What each day's nudge says** (the founder, Nov 9): only the next nudge names an outfit, the one that day's morning card will show (a pick reads what he wore and added since, so later days can't be known ahead; the plain line covers them). Named outfits come only once the morning card can suggest outfits (two different outfits that work, `specs.md` F6.2; T55 in the morning lane decides, and this task asks the morning service, `canSuggest()`). Until then, the "Check today's fit" line. The first day it can suggest gets the "big enough" line, once ever.
+- **A photo waiting to score** (the founder, Nov 20; `specs/ai-failsafes.md` AF6): when scoring was down and a photo is waiting, the next scheduled nudge says `Your saved fit is still waiting. Open Kitted and I'll score it.` instead of that day's line; later days keep theirs. Still one a day; the next reschedule drops it once nothing waits. Tapping it opens Stylist at the waiting card.
 - **A week with no visit:** the 7 scheduled days run out and nothing more is scheduled. On his next open, Kit asks the comeback question once (NT4). Until he answers it (or turns the switch back on in Settings), nothing is scheduled.
 - **Apple's prompt** shows only after he taps `Send me ideas` on Kit's card, or turns on `Daily outfit idea` in You → Notifications when it was never asked. Never at launch, never on its own.
 - **`No thanks` is final:** Kit never asks again; You → Notifications is the only way back.
@@ -120,6 +121,7 @@ The `Notifications` row on You (its first row group, `specs/setup-and-you.md`) s
 - NT2.3 While the morning service says it can't suggest (empty closet, or one outfit that works), every day gets `Check today's fit. Each one teaches me your closet.`
 - NT2.6 The first scheduled day on which it can suggest gets `Your closet's big enough now: here's today's idea.`; later days get `Today: …`; the "big enough" line is never scheduled again once it has been delivered, including after reinstalling nudges or changing the time.
 - NT2.4 Tapping a nudge opens Stylist at today's card.
+- NT2.8 With a photo waiting to score, the next scheduled nudge has the waiting line (above) and later days keep their own; with none waiting, no nudge has it.
 - NT2.5 No other notification is ever scheduled: no `Fit check ready`, no `Trial ending`, nothing at another time (a test over every schedule call).
 
 **You → Notifications (NT3)**
