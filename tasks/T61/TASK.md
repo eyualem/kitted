@@ -38,3 +38,25 @@
 - **Regeneration check:** `make_parity.py` rerun from the committed generator reproduces `rubric_parity.json` byte for byte (git shows no change). `make_parts_parity.py` could not be rerun here: it reads git-ignored data that is not in this worktree (phone pulls, `results/gold1`, `phone-0d39d6`), and the main checkout's copy does not match, so `parts_parity.json` and `parts_fixes.json` byte-for-byte reproduction is NOT verified; the pre/post comparison above and the passing parity suites are the evidence. To verify: run the generators in a checkout that has the data (the founder's main checkout once T61 is merged) and confirm `git status` stays clean.
 
 ## Review
+
+### Round 1
+- **NR1.1 to NR1.5:** done. `rubric.py` `_block` and core `rubric.ts` `block` have the same order (costume, traditional main piece, dress or skirt, unsure top/jacket/pants in reading order) and run after the shoes and framing filters; slots `top`/`jacket`/`pants`; `unreadable_slot` / `unreadableSlot` only with `unreadable`. Both engines call it (`parts_proto.score_parts` via `R._block`, core `createParts` via `H.block`).
+- **NR1.6:** done (not_rated_test.py 27/27; notRated 23, notRatedParity + rubric.parity 28/28, rerun here).
+- **NR1.7:** done for rubric. For parts, the `nr_*` cases are in the fixtures and core matches them; byte-for-byte regeneration of `parts_parity.json` / `parts_fixes.json` is not verified (git-ignored data missing), see Disputes.
+- **NR2.1 to NR2.3:** done; `shoes not rated` token and `partialLabel`, and the credits/fix-target hiding in both languages (`kitted_logic.py`, `fixes.ts`).
+- **NR5.1 (core half):** done (`NEVER_KEPT_SUBCATEGORIES` in `closetIdentity.ts`).
+- **NR8.1:** done; the v15 guard was re-scoped by the test writer, not weakened (see Disputes).
+- **NR8.2:** done; `changed-readings.md` shows 6 of 1,270 changed, all traditional, 0 outside the allowed kinds.
+- **NR9.1 (schema and prompt):** done; the app and `extraction-test/` schema and prompt twins are identical (`geminiSource.test.ts` compares them). Accuracy on real photos: can't tell (Y55).
+- **"No visible change" claim:** checked. `app/src/features/fitcheck/scoring.ts` lines 147 and 210 map every null reason that is not `not_fully_clothed` to `unreadable`. The old token `traditional garment (not rated)` appears only in comments or nowhere in app/core src now (grep).
+- **Hook workaround:** generator edits are small and legitimate (new hand-built cases appended after the fuzz so rotating configs don't move; new subcategories kept out of the fuzz enum; `unreadable_slot` kept in the expected keys; a narrow exemption in `make_parts_fixes.py` that only applies when the reason is one of the four new ones). No fixture value was hand-written. Reproduction of `rubric_parity.json` is byte for byte per the implementer; parts is unverified.
+- **Planted bugs (3, all reverted, tree clean):** (1) Python `_block` without the upper_only filter: `not_rated_test.py` fails NR1.4 (top-only with unsure jeans); (2) core Closet keep without `skirt`: notRated.test.ts fails NR5.1; (3) core `block` with womenswear and traditional swapped: notRated.test.ts fails NR1.5. All caught.
+- **Defects:** none open.
+- **Worth a later look:**
+  - Parity coverage: rubric_parity has 6,702 of 7,257 cases still scored and parts_parity 40,568 of 42,086 (about 5% and 3.6% moved to null reasons). The paths that disappeared (scoring with an unsure top/jacket/pants) no longer exist in the engine, so nothing live is left uncovered. Not hollowed out.
+  - Verify the parts fixtures reproduce byte for byte in the main checkout once merged (`git status` clean after running `make_parts_parity.py` and `make_parts_fixes.py`).
+  - The dispute entry says "Commit: see T61: dispute" without a SHA; add 08306dfa for the lock audit trail.
+  - The Python engine uses a falsy test for `shoes_visible`, core uses `has()` then truthy; same results on all fixtures, but a `null` value is worth a unit case someday.
+  - Python tests for `parts_test.py` and siblings were not runnable here; run them where the data exists.
+
+**Verdict: ready.**
