@@ -666,6 +666,8 @@ const addedInBuild = {
   'closet.firstCheck': 'From your first check',
   'closet.new': 'New',
   'closet.new.a11y': 'New, {name}',
+  // A piece he owns but hasn't photographed: a solid tile with this line under its name (words approved by the founder Nov 19).
+  'closet.tile.noPhoto': 'No photo yet',
   // Removing a piece or a look (#118, founder Oct 9): long-press → an action sheet → a toast with Undo.
   'closet.remove.action': 'Remove from Closet',
   'closet.removed': 'Removed your {item}.',
