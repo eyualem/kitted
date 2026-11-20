@@ -109,7 +109,7 @@ export function BasicsScreen() {
       return;
     }
     if (restoring) {
-      router.replace({ pathname: '/onboarding/restore', params: { fits: restoring.fits, pieces: restoring.pieces, chats: restoring.chats } });
+      router.replace({ pathname: '/onboarding/restore', params: { fits: restoring.fits, pieces: restoring.pieces } });
       return;
     }
     setBusy(true);

@@ -79,15 +79,27 @@ describe('A · build profiles', () => {
       PAID_ENTITLEMENTS: string[];
     };
     const privacy = loadConfig().default.ios.privacyManifests;
-    const clean = { info: { CFBundleName: 'Kitted' }, privacy, entitlements: {}, paid: false };
+    // T41-ENT: Sign in with Apple is on in every build, paid team or not; the other three entitlements are the paid team's.
+    const SIGN_IN = 'com.apple.developer.applesignin';
+    const clean = { info: { CFBundleName: 'Kitted' }, privacy, entitlements: { [SIGN_IN]: ['Default'] }, paid: false };
     expect(checkApp(clean)).toEqual([]);
     expect(checkApp({ ...clean, info: { NSBonjourServices: ['_expo._tcp'], NSLocalNetworkUsageDescription: 'Expo Dev Launcher uses the local network…', EXDevMenuIsOnboardingFinished: true } })).toHaveLength(3);
     expect(checkApp({ ...clean, privacy: null })).toEqual(['no PrivacyInfo.xcprivacy in the app']);
     expect(checkApp({ ...clean, privacy: { NSPrivacyTracking: false, NSPrivacyAccessedAPITypes: [], NSPrivacyCollectedDataTypes: [] } }).length).toBe(5);
     const paidEnt = Object.fromEntries(PAID_ENTITLEMENTS.map((k) => [k, true]));
-    expect(checkApp({ ...clean, entitlements: paidEnt })).toHaveLength(4);
+    // Unpaid with all four: only the other three are flagged, never Sign in with Apple.
+    const unpaidAll = checkApp({ ...clean, entitlements: paidEnt });
+    expect(unpaidAll).toHaveLength(3);
+    expect(unpaidAll.some((p) => p.includes(SIGN_IN))).toBe(false);
+    for (const k of PAID_ENTITLEMENTS.filter((e) => e !== SIGN_IN)) expect(unpaidAll.some((p) => p.includes(k))).toBe(true);
+    // Unpaid without Sign in with Apple: it is required (one problem, naming it).
+    const noSignIn = checkApp({ ...clean, entitlements: {} });
+    expect(noSignIn).toHaveLength(1);
+    expect(noSignIn[0]).toContain(SIGN_IN);
     expect(checkApp({ ...clean, entitlements: paidEnt, paid: true })).toEqual([]);
-    expect(checkApp({ ...clean, paid: true })).toHaveLength(4);
+    // Paid with only Sign in with Apple: the other three are missing; with nothing: all four.
+    expect(checkApp({ ...clean, paid: true })).toHaveLength(3);
+    expect(checkApp({ ...clean, entitlements: {}, paid: true })).toHaveLength(4);
     expect((JSON.parse(read('package.json')) as { scripts: Record<string, string> }).scripts['check:app']).toBe('node scripts/check-release-app.js');
   });
 });
@@ -132,10 +144,11 @@ describe('P · the privacy manifest', () => {
 });
 
 describe('S · the paid-team switch', () => {
-  it('S1 off by default: the free team, no entitlements, NWS in the location string, applePaid false', () => {
+  it('S1 off by default: the free team, only the Sign in with Apple entitlement, NWS in the location string, applePaid false', () => {
     const c = loadConfig({ EAS_BUILD_PROFILE: undefined }).default;
     expect(c.ios.appleTeamId).toBe('6652QVRQAL');
-    expect(c.ios.entitlements).toEqual({});
+    // T41-ENT: Sign in with Apple only (the paid team's other three stay off with the switch).
+    expect(c.ios.entitlements).toEqual({ 'com.apple.developer.applesignin': ['Default'] });
     expect(c.ios.infoPlist.NSLocationWhenInUseUsageDescription).toMatch(/only to the US National Weather Service/);
     expect(c.extra.applePaid).toBe(false);
     expect(read('app.config.ts')).toMatch(/const APPLE = \{\n {2}paid: false,/);
@@ -155,6 +168,14 @@ describe('S · the paid-team switch', () => {
     expect(appleSettings({ paid: true, teamId: 'AB12CD34EF' }, 'development').entitlements['com.apple.developer.devicecheck.appattest-environment']).toBe('development');
     expect(prod.locationUsage).toMatch(/Apple Weather/);
     expect(prod.applePaid).toBe(true);
+    // Unpaid: Sign in with Apple alone, whatever the profile; team, location string and applePaid as before (T41-ENT).
+    for (const profile of [undefined, 'production', 'development']) {
+      const off = appleSettings({ paid: false, teamId: '' }, profile);
+      expect(off.entitlements).toEqual({ 'com.apple.developer.applesignin': ['Default'] });
+      expect(off.teamId).toBe('6652QVRQAL');
+      expect(off.locationUsage).toMatch(/only to the US National Weather Service/);
+      expect(off.applePaid).toBe(false);
+    }
   });
 
   it('S3 the app reads only extra.applePaid; WeatherKit answers only with the switch on and the native call there', () => {

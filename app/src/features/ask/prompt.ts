@@ -70,7 +70,7 @@ export function appMapLines(sw: AppSwitches): AppMapLine[] {
   if (sw.outfits) lines.push({ id: 'outfits', text: `${t('tab.closet')} has a Pieces and an Outfits view; Outfits holds the outfits made from his pieces and Next best buy.` });
   if (sw.share) lines.push({ id: 'share', text: 'Share: a button on a result that makes a card of the score he can share.' });
   if (sw.paywall) lines.push({ id: 'plan', text: `Free and Pro: ${t('tab.you')} shows his plan and today's limits, and Try Pro opens the plans.` });
-  if (sw.accounts) lines.push({ id: 'account', text: `Sign in and backup: in ${t('tab.you')} → Settings, "Back up and sync" lets him sign in (Apple, Google or email) so his closet is backed up.` });
+  if (sw.accounts) lines.push({ id: 'account', text: `Sign in and backup: in ${t('tab.you')} → Settings, "Back up your fits" lets him sign in (Apple or Google) so his fits and closet are backed up.` });
   if (sw.notifications) lines.push({ id: 'notifications', text: `Notifications: ${t('tab.you')} → Settings has the Notifications screen with its two switches.` });
   return lines;
 }

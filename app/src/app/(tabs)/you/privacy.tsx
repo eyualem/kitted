@@ -110,6 +110,8 @@ export default function PrivacyDataScreen() {
           </View>
           <KText variant="subheadline" color="ink2" style={{ flex: 1 }}>
             {t('privacy.promise')}
+            {'\n\n'}
+            {t('privacy.phoneCount')}
           </KText>
         </View>
       </KCard>
