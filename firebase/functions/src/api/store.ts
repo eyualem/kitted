@@ -23,7 +23,7 @@ export interface Ticket {
   day: string;
   took: Took;
   /** The phone's record, when the call came with a device ID: the sha256 of the ID (never the ID) and its own day. */
-  device?: { hash: string; day: string };
+  device?: { hash: string; day: string; took: Took };
 }
 
 export interface Store {
@@ -31,7 +31,7 @@ export interface Store {
   spentCents(utcDay: string): Promise<number>;
   addSpend(utcDay: string, cents: number): Promise<void>;
   /** `device` is the sha256 hex of the X-Kitted-Device ID: the phone's own day must say yes too, and only then are both written. */
-  reserve(a: { uid: string; device?: string; route: RouteName; checkId?: string; kind?: Kind; tap?: boolean; tz: number; tier: Tier; nowMs: number }): Promise<{ result: Reserve; day: string; phoneDay?: string }>;
+  reserve(a: { uid: string; device?: string; route: RouteName; checkId?: string; kind?: Kind; tap?: boolean; tz: number; tier: Tier; nowMs: number }): Promise<{ result: Reserve; day: string; phoneDay?: string; phoneTook?: Took }>;
   finish(t: Ticket, finished: boolean): Promise<void>;
 }
 
@@ -100,7 +100,7 @@ export function firestoreStore(db: Firestore, opts: { configTtlMs?: number; now?
             tx.set(phoneDayDoc(a.device, phone.day), { ...phone.d, at: a.nowMs });
           }
         }
-        return { result, day, phoneDay: phone?.day };
+        return { result, day, phoneDay: phone?.day, phoneTook: phoneResult?.ok ? phoneResult.took : undefined };
       });
     },
     async finish(t, finished) {
@@ -116,7 +116,7 @@ export function firestoreStore(db: Firestore, opts: { configTtlMs?: number; now?
         }
         if (pRef && pSnap?.exists) {
           const d = readDay(pSnap);
-          finish(d, t.took, finished);
+          finish(d, t.device!.took, finished);
           tx.set(pRef, { ...d, at: now() });
         }
       });

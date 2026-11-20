@@ -134,14 +134,14 @@ export function createApi(deps: ApiDeps) {
     // A founder account gets the founder's day; everyone else the config's tier. The header tells the app which.
     const tier: Tier = config.founderUids.includes(uid) ? 'founder' : config.tier;
     const tap = route.name === 'ask' && header(req, 'x-kitted-free') === 'tap';
-    const { result, day, phoneDay } = await deps.store.reserve({
+    const { result, day, phoneDay, phoneTook } = await deps.store.reserve({
       uid, device, route: route.name, checkId, kind, tap, tz: parseTz(header(req, 'x-kitted-tz')), tier, nowMs: t0,
     });
     if (!result.ok) {
       deps.log({ route: route.name, uid, outcome: 'limit', which: result.which });
       return send(res, 429, { error: 'limit', which: result.which });
     }
-    const ticket: Ticket = { uid, day, took: result.took, device: device && phoneDay ? { hash: device, day: phoneDay } : undefined };
+    const ticket: Ticket = { uid, day, took: result.took, device: device && phoneDay && phoneTook ? { hash: device, day: phoneDay, took: phoneTook } : undefined };
 
     // Gemini, with our key and nothing the app sent but the checked body (P4).
     const ac = new AbortController();

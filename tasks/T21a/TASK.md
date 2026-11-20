@@ -52,3 +52,6 @@ Planted bugs (each reverted; `git status` clean):
 - The account's tz note is written on a phone refusal; intended (comment says so).
 
 **Verdict: not ready** (1 code defect, 1 test defect).
+
+### Fix round (review defect 1)
+`store.reserve` now also returns the phone's own `took`; the Ticket carries it as `device.took`; `finish` gives each day back with its own `took`. Files: `firebase/functions/src/api/store.ts`, `handler.ts`. Emulator: 97 of 97 pass. `npm run check`: core vitest `parts.parity.test.ts` timed out under memory pressure (5 s); alone it passes (11 of 11).
