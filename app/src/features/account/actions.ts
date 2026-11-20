@@ -39,7 +39,10 @@ export async function deleteAccountAndData(): Promise<void> {
   };
   if (live) await backupControl().haltBackup();
   const r = await runDeleteAccount(deps);
-  if (r.kind === 'deleted') return;
+  if (r.kind === 'deleted') {
+    if (live) backupControl().backupAccountDeleted(); // the account is gone: signing in again in this session backs up
+    return;
+  }
   if (live) backupControl().resumeBackup();
   if (r.kind === 'offline') showToast(t('acct.delete.offline'));
   else if (r.kind === 'failed') {

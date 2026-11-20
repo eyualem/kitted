@@ -5,12 +5,14 @@
 import { AppState } from 'react-native';
 import { onChange } from '@/data/changes';
 import { rawStore, tracking } from '@/data/db';
+import { getAgeBlocked } from '@/data/secure';
+import { KV } from '@/data/store';
 import { ACCOUNT_KEY, getAccount } from '@/features/account/account';
 import { fitCheck } from '@/features/fitcheck/session';
 import { connectivity } from '@/services/connectivity';
 import { realScheduler } from '@/services/scheduler';
 import { syncAllowed } from './allowed';
-import { createBackup, type BackupConnection } from './backup';
+import { createBackup, SYNC_UID_KEY, type BackupConnection } from './backup';
 
 /** A change goes up this long after the last one (several writes of one fit check go in one batch). */
 export const PUSH_DELAY_MS = 5_000;
@@ -61,12 +63,27 @@ async function connect(uid: string): Promise<BackupConnection | null> {
 let halted = false;
 let inFlight: Promise<unknown> | null = null;
 
+/** SB6.1d: no round while the under-18 lock is set, and none while a Welcome restore waits for the age answer (an account is
+ *  saved, setup is not done and the phone has not joined it yet: `restoreAccount` does its own pull once the age is 18 or over). A
+ *  phone that has `sync.uid`, or that finished setup before signing in, backs up as before. A failed read counts as not ready. */
+async function ready(): Promise<boolean> {
+  try {
+    if (await getAgeBlocked()) return false;
+    if (!(await getAccount(rawStore))) return true;
+    if ((await rawStore.getKv(SYNC_UID_KEY)) !== null) return true;
+    return (await rawStore.getKv(KV.onboardingDone)) === '1';
+  } catch {
+    return false;
+  }
+}
+
 export const backup = createBackup({
   store: rawStore,
   connect,
   account: () => getAccount(rawStore),
   firebaseUser,
   allowed: () => !halted && syncAllowed(),
+  ready,
   online: () => connectivity.get().online,
   nowMs: () => Date.now(),
   deviceId: () => tracking.deviceId(),
@@ -101,6 +118,11 @@ export async function haltBackup(): Promise<void> {
   await inFlight?.catch(() => undefined);
 }
 
+/** The account and the phone's data are gone (SB9): a new sign-in in this session backs up again. */
+export function backupAccountDeleted(): void {
+  halted = false;
+}
+
 /** The delete did not happen: backup goes on. */
 export function resumeBackup(): void {
   halted = false;
@@ -123,6 +145,14 @@ export function startBackup(): void {
     tracking.reset();
     backup.reset();
   }, WIPE_ONLY);
-  // A sign-in or sign-out changes the saved account.
-  onChange(['kv'], () => schedule(0), ACCOUNT_KEY);
+  // A sign-in or sign-out changes the saved account. A new account is not the one being deleted: backup is no longer halted.
+  // From Welcome the round is refused until the age is answered (`ready`).
+  onChange(['kv'], () => {
+    void getAccount(rawStore).then((a) => {
+      if (a) halted = false;
+    }, () => undefined);
+    schedule(0);
+  }, ACCOUNT_KEY);
+  // Setup finishing (a restore after the age answer, or the first setup) lets the round that `ready` refused go ahead.
+  onChange(['kv'], () => schedule(PUSH_DELAY_MS), KV.onboardingDone);
 }

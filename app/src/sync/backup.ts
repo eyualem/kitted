@@ -99,6 +99,7 @@ export function createBackup(d: BackupDeps): Backup {
 
   async function round(): Promise<SyncOutcome> {
     if (!d.allowed()) return 'off';
+    if (!(await d.ready())) return 'off';
     const who = backsUp(await d.account(), await d.firebaseUser());
     if (!who) return 'off';
     if (!d.online()) return 'offline';
