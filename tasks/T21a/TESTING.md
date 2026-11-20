@@ -2,7 +2,7 @@
 
 Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** `f2ecae9d9c4f82df40ec5d7c63840243939f4702` · 2026-11-19 · tests: `firebase/tests/api.test.ts`, `firebase/tests/functions.test.ts`, `app/src/__tests__/serverDevice.test.ts` (app stub: `app/src/services/server/deviceId.ts` exporting `deviceId(): Promise<string>`, passed to `serverTransport` as the `device` option; extra tests beyond the list: the k test in api.test.ts, and two more in serverDevice.test.ts)
+**Lock:** `f2ecae9d9c4f82df40ec5d7c63840243939f4702` · 2026-11-19 (strengthened after review, F10.1 m and n: `2c92974974a076ba38a33203713b90492d06ca99`) · tests: `firebase/tests/api.test.ts`, `firebase/tests/functions.test.ts`, `app/src/__tests__/serverDevice.test.ts` (app stub: `app/src/services/server/deviceId.ts` exporting `deviceId(): Promise<string>`, passed to `serverTransport` as the `device` option; extra tests beyond the list: the k test in api.test.ts, and two more in serverDevice.test.ts)
 
 ## How the server is tested
 `firebase/tests/api.test.ts` on the emulator (a real in-process handler, Firestore emulator, fake Gemini). Add `devices` to the collections cleared in `beforeEach`. A new request header `X-Kitted-Device: <id>` (16–64 characters: letters, digits, dashes). "Signs out" = a second `signUp()` (a new guest uid) sending the same device ID. Beta/free numbers are the ones already in `limits.ts`. The device document id is `sha256(deviceId)` as lowercase hex; its day lives at `devices/{hash}/usageDays/{day}`.
