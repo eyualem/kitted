@@ -12,4 +12,11 @@ describe('phone install script', () => {
     expect(launch.length).toBeGreaterThan(0);
     for (const line of launch) expect(line).not.toMatch(/skipOnboarding/);
   });
+
+  it('opens Metro over the USB cable before trying Wi-Fi (DECISIONS-LOG #529)', () => {
+    const cable = script.indexOf('169.254.');
+    const wifi = script.indexOf('ipconfig getifaddr en0');
+    expect(cable).toBeGreaterThan(-1);
+    expect(wifi).toBeGreaterThan(cable);
+  });
 });

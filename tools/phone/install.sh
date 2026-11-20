@@ -1,6 +1,6 @@
 #!/bin/zsh
 # Builds the dev app for the founder's iPhone (free Personal Team, 7-day installs), signs it,
-# installs it and opens it on the Metro server on this Mac (same Wi-Fi). Rerun every 7 days.
+# installs it and opens it on the Metro server on this Mac (over the USB cable, else the same Wi-Fi). Rerun every 7 days.
 # The phone: plugged in, unlocked, Developer Mode on, "Apple Development: …" trusted once in
 # Settings → General → VPN & Device Management.
 # It opens the app as a tester would: a fresh install starts at Welcome and plays today's setup;
@@ -23,7 +23,18 @@ for f in "$APP"/Frameworks/*.framework; do codesign --force --sign "$ID" --times
 codesign --force --sign "$ID" --entitlements "$ENT" --timestamp=none "$APP" 2>/dev/null
 codesign --verify --deep --strict "$APP"
 xcrun devicectl device install app --device "$DEVICE_ID" "$APP" >/dev/null
-IP=$(ipconfig getifaddr en0)
+# Metro's address: the USB cable when the phone is plugged in (the cable is a small network of its own,
+# with a 169.254.x.x address on the Mac), else Wi-Fi. School and public Wi-Fi often block a phone from
+# reaching the Mac, so the cable comes first (DECISIONS-LOG #529).
+IP=""; VIA="USB cable"
+for IF in $(ifconfig -l); do
+  [[ "$IF" == en0 ]] && continue
+  ADDR=$(ipconfig getifaddr "$IF" 2>/dev/null || true)
+  [[ "$ADDR" == 169.254.* ]] && { IP=$ADDR; break; }
+done
+[[ -z "$IP" ]] && { IP=$(ipconfig getifaddr en0); VIA="Wi-Fi (same network as the phone)"; }
 xcrun devicectl device process launch --device "$DEVICE_ID" --terminate-existing \
   --payload-url "exp+kitted://expo-development-client/?url=http%3A%2F%2F$IP%3A8081" com.trykitted.kitted >/dev/null
-echo "Installed and opened on the iPhone (Metro at $IP:8081)."
+echo "Installed and opened on the iPhone (Metro at $IP:8081, over the $VIA)."
+[[ "$VIA" == "USB cable" ]] && echo "Keep the phone plugged in: unplugged, it loses Metro (plug in again and reopen Kitted)."
+exit 0
