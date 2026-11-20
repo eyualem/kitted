@@ -18,4 +18,22 @@
 - none
 
 ## Review
-Written by the reviewer.
+
+### Round 1 (normal)
+- The look is named once in Why (v16 "Reads as" row only when the Style part has no "reads as" line; same test v15 used): **done** (partsRows.ts, T115 test over ~300 parity cases, T69 updated to the intended behaviour; both files pass, 8 tests).
+- No unsteady or waived rule shows as a minus in Why's part rows or numbers, parts still add up: **done** (charged.ts rebuilds the part number clamped to the part's range and rounded to the half; screenshots 03/04 show Fit 7.0 "Nothing moved it" where 01/02 showed 5.5 with the pooling minus; the score 3.5, the Shoes row and every row after the parts are unchanged).
+- Kit's context, the part with the most to gain, a re-check's "New: ..." read the same charged parts: **done** (context.ts, scoring.ts `gainPartOf`, explain.ts `newProblemLines`).
+- No score moves, core untouched: **done** (`git diff main...HEAD -- app/packages` is empty; the new code only reads `v16.owned`/`caps` and `PARTS_DATA`; `whyParts` still returns `total: res.overall` and the after-rows are core's).
+- A v15 check and a dealbreaker-owned charge unchanged: **done** (`unchargedChecks` returns empty without v16; cap-owned checks are removed from "uncharged"; the v15 test asserts identity).
+- Dark theme and largest text: **can't tell** (not shot; no color or layout change, so low risk).
+
+**Defects:** none open that blocks.
+
+**Worth a later look (never blocks):**
+- `app/src/features/ask/judge.ts` (lines ~45-50): Kit's judgement of a closet outfit with no photo still lists every negative reason as a "Problem:" (and counts a big minus toward the "no" verdict) from raw `scoreParts` parts, so an unsteady rule such as pooling can still reach him there as a problem. Same family as T115b; it reads the engine's parts, not a stored check. A one-line `chargedParts(res)` would cover it. Code.
+- `T115-cardWording.test.ts`, the "no row, no number" test: the first `not.toContain(...)` compares a capitalised string with lower-cased rows, so it can never fail; only the second (`rule.toLowerCase()` vs the line) does the work. The part-adds-up check also tolerates 0.51. The real checks (pooling count over 5, charged parts rebuilt to 7.0, re-check) are sound. Test.
+- `subscores` stored on the row (scoring.ts ~232) still holds core's part numbers, uncharged. Nothing reads them for display today; fix if something starts to.
+- Screenshot 04: the Tools gear sits over the sheet's close button in the Simulator frame (the same on 04 and the page's own "before" frame? only 04 shows it clearly); looks like the chat's Tools button drawn above the sheet, not from this change.
+- The founder's open call: dealbreaker-owned charges stay shown (already logged in #522). A fix card's "Raises Fit to 7" is core's text and can lag a part number (logged).
+
+**Verdict: Ready.** No strict-mode checks needed (normal). `npm run check` was left to the session.
