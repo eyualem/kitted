@@ -55,3 +55,10 @@ Planted bugs (each reverted; `git status` clean):
 
 ### Fix round (review defect 1)
 `store.reserve` now also returns the phone's own `took`; the Ticket carries it as `device.took`; `finish` gives each day back with its own `took`. Files: `firebase/functions/src/api/store.ts`, `handler.ts`. Emulator: 97 of 97 pass. `npm run check`: core vitest `parts.parity.test.ts` timed out under memory pressure (5 s); alone it passes (11 of 11).
+
+### Round 2 (strict, fixes only; Review)
+- Defect 1 (code): closed. `reserve` returns `phoneTook` only when the phone's own reserve ran and said yes; the Ticket gets `device.took` only then; `finish` gives each day back with its own `took`. An account-only call (no header), a refused call, and the tier route are unchanged (no `device` in the Ticket); a founder call takes the same path as before. The raw ID is still never stored or logged (the Ticket holds the hash).
+- Defect 2 (test): closed. F10.1 m (log and body scan on 429, 400 and 502) and F10.1 n (a failed ask where account and phone chose differently, both directions, plus a finished one that keeps its counts) are in and read as sound.
+- Emulator, F10.1 only: 12 of 12 pass.
+- Planted bug (1): `finish` gives the phone back with the account's `took` again. Caught: F10.1 n failed (the other 11 passed). Reverted; `git status` clean.
+- No new defect. **Verdict: ready.**
