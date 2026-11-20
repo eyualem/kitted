@@ -95,6 +95,7 @@ export function backupRig(p: Phone, remote: MemoryRemote, o: Partial<BackupDeps>
     account: async () => ({ uid: 'U1' }),
     firebaseUser: async () => ({ uid: 'U1', isAnonymous: false }),
     allowed: () => true,
+    ready: () => true,
     online: () => !remote.offline,
     nowMs: () => (p.clock.now += 10),
     deviceId: async () => p.deviceId,

@@ -30,6 +30,11 @@ export interface BackupDeps {
   /** `syncAllowed()`: the ACCOUNTS_BUILT switch, iPhone, not a demo screen. */
   allowed(): boolean;
   online(): boolean;
+  /** T41b round 3 (SB6.1d): true when this phone may back up now. False while a Welcome restore is waiting for the age answer
+   *  (the account is saved but onboarding is not done and there is no `sync.uid` yet) and false while the under-18 lock is set.
+   *  When it is false a round returns `'off'` and does nothing: no `connect`, no pull, no row written, no `sync.uid`. When it turns
+   *  true the next round runs as usual. Checked after `allowed()` and before any `connect`. The app wires it in appBackup.ts. */
+  ready(): Promise<boolean> | boolean;
   nowMs(): number;
   /** This phone's id (the sync engine's `by`). */
   deviceId(): Promise<string>;

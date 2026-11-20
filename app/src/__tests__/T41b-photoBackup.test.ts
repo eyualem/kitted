@@ -165,6 +165,8 @@ describe('SB4.3a and SB4.3b · turning photo backup off', () => {
     await p.inner.syncRows.put({ id: 'fitChecks/FC1', coll: 'fitChecks', rowKey: 'FC1', localAt: 5, pushedAt: 5, deleted: false, by: 'dev-a', files: KEPT });
     return p;
   }
+  /** The "already uploaded" lists: every row's files, plus the queue. */
+  const syncedFileLists = async (p: Phone) => [...(await p.inner.syncRows.all()).flatMap((r) => r.files), ...(await p.inner.syncFiles.all()).map((f) => f.path)];
   const snapshot = async (p: Phone) =>
     JSON.stringify([await p.inner.syncRows.all(), await p.inner.syncFiles.all(), await p.inner.fitChecks.all(), await p.inner.closet.all(), [...p.files.entries()]]);
 
@@ -196,6 +198,63 @@ describe('SB4.3a and SB4.3b · turning photo backup off', () => {
     expect(log).toEqual(['confirm']);
     expect(await p.inner.getKv(PHOTO_BACKUP_KEY)).toBe('on');
     expect(await snapshot(p)).toBe(before);
+  });
+
+  it('SB4.3c · off, then on again: every kept photo is uploaded once more (the server\'s copies are gone, so none counts as backed up)', async () => {
+    const remote = createMemoryRemote(T0);
+    const p = await photoPhone(remote);
+    const rig = backupRig(p, remote);
+    await turnOnPhotoBackup(p.app);
+    expect(await rig.backup.syncNow()).toBe('ok');
+    expect(sorted(rig.uploads)).toEqual(KEPT);
+    expect([...remote.files.keys()].sort()).toEqual(KEPT);
+    // Off with the job ok: the job empties the server's folder; the phone's photos stay.
+    const r = await turnOffPhotoBackup({
+      store: p.inner,
+      confirm: async () => true,
+      deleteBackedUp: async () => remote.files.clear(),
+    });
+    expect(r).toEqual({ status: 'off' });
+    expect(await syncedFileLists(p)).toEqual([]);
+    // While it is off nothing goes up, even after more rounds.
+    p.clock.now += 50;
+    expect(await rig.backup.syncNow()).toBe('ok');
+    expect(rig.uploads).toHaveLength(4);
+    expect(remote.files.size).toBe(0);
+    // On again: all four kept photos go up once more (8 uploads in all), once each, and the server has them again.
+    p.clock.now += 50;
+    await turnOnPhotoBackup(p.app);
+    expect(await rig.backup.syncNow()).toBe('ok');
+    expect(sorted(rig.uploads.slice(4))).toEqual(KEPT);
+    expect(rig.uploads).toHaveLength(8);
+    expect([...remote.files.keys()].sort()).toEqual(KEPT);
+    // And not a third time.
+    expect(await rig.backup.syncNow()).toBe('ok');
+    expect(rig.uploads).toHaveLength(8);
+  });
+
+  it('SB4.3c · a failed turn-off leaves the already-uploaded bookkeeping as it was, so nothing is uploaded twice', async () => {
+    const remote = createMemoryRemote(T0);
+    const p = await photoPhone(remote);
+    const rig = backupRig(p, remote);
+    await turnOnPhotoBackup(p.app);
+    await rig.backup.syncNow();
+    expect(rig.uploads).toHaveLength(4);
+    const before = JSON.stringify([await p.inner.syncRows.all(), await p.inner.syncFiles.all()]);
+    const filesOnRows = (await p.inner.syncRows.all()).flatMap((x) => x.files);
+    expect(sorted(filesOnRows)).toEqual(KEPT);
+    const r = await turnOffPhotoBackup({
+      store: p.inner,
+      confirm: async () => true,
+      deleteBackedUp: async () => {
+        throw new RemoteUnavailable();
+      },
+    });
+    expect(r).toEqual({ status: 'offline' });
+    expect(JSON.stringify([await p.inner.syncRows.all(), await p.inner.syncFiles.all()])).toBe(before);
+    p.clock.now += 50;
+    await rig.backup.syncNow();
+    expect(rig.uploads).toHaveLength(4);
   });
 
   it('SB4.3b · offline: the job rejects, the setting stays on, the bookkeeping is unchanged, and the result says offline', async () => {
