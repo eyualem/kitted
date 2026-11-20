@@ -62,7 +62,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 3. `What should Kit call you?`, then a text field with the placeholder `First name` (SY4's rules: trimmed, up to 30 characters, blank means no name). When the step opens with the field empty, the field has focus and the keyboard is up (not on Restore, which has no name field).
 4. `How old are you?`, then five choices of equal size and weight, in this order: `Under 18` · `18–21` · `22–25` · `26–30` · `31 or older`. Nothing is picked when the step opens. One tap picks; tapping another moves the pick.
 5. The footnote: `Stays on your phone. It never changes your score.`
-6. At the bottom: `Continue`, on only with a name and an age. While it's off, one hint sits above it: `Add your first name to go on.` while the name is blank, else `Pick your age to go on.` While the name is blank, a small text button `Skip` sits under Continue: with an age picked it does what Continue does, without a name; with no age it's off. (#506: the name stays optional, as Apple requires, but skipping it takes a deliberate tap.)
+6. At the bottom: `Continue`, on only with a name and an age. While it's off, one hint sits above it: `Add your first name to go on.` while the name is blank, else `Pick your age to go on.` While the name is blank, a small text button `Skip` sits under Continue: with an age picked it does what Continue does, without a name; with no age it's off. (#506: the name stays optional, as Apple requires, but skipping it takes a deliberate tap.) While the keyboard is up, this whole block (hint, Continue, `Skip`) is hidden, so nothing sits on top of the keyboard; picking an age, or the keyboard's Done, closes the keyboard and the block comes back (#522).
 
 **What Continue does**
 - **An age of 18 or over:** setup is done (the profile is saved with his looks, name and age band; no agreement yet), and he lands in Stylist (OS5). Once SY6 is built, Apple's age sheet comes first, as SY6 says.
@@ -119,7 +119,7 @@ Research (Nov 9): Apple doesn't require a US 18+ app to collect age itself. Decl
 - OS3.3 Looks shows the new title and line word for word; its tiles and buttons behave as before.
 
 **OS4. About you**
-- OS4.1 The step shows the title, the name field (focused, the keyboard up) and the five age choices in the stated order and words, none picked; Continue is off with the hint for what's missing (the name first, then the age) until both are given.
+- OS4.1 The step shows the title, the name field (focused, the keyboard up) and the five age choices in the stated order and words, none picked; Continue is off with the hint for what's missing (the name first, then the age) until both are given; while the keyboard is up (it opens with the name field), none of that block shows, and it comes back when the keyboard closes.
 - OS4.2 A blank name with an age picked leaves Continue off and `Skip` on; `Skip` goes on with no name saved; `Skip` is off with no age and gone once a name is typed; a name is saved trimmed, at most 30 characters (SY4.2).
 - OS4.3 An 18+ band saves `ageBand` and `ageBandAt` and lands in Stylist; no birth year is saved.
 - OS4.4 `Under 18` asks once; `Change` changes nothing; `That's right` shows the stop screen with no camera, and it stays after a relaunch and a reinstall (as today).

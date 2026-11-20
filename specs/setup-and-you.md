@@ -119,7 +119,7 @@ Removed with the tips: there's nothing left to replay. Help & about has no `Show
 - SY2.18 Past chats and a stored hello read as before: the hello is still one stored message that draws `I'm Kit, your stylist.` (SY2.1, SY2.9).
 
 **SY4. The name**
-- SY4.1 The About you step shows `What should Kit call you?` with `First name` above `How old are you?`; with an age picked and a blank name, `Continue` is off and `Skip` goes on without a name.
+- SY4.1 The About you step shows `What should Kit call you?` with `First name` above `How old are you?`; with an age picked and a blank name, `Continue` is off and `Skip` goes on without a name. Continue, `Skip` and the hint are hidden while the keyboard is up (#522).
 - SY4.2 A name is saved trimmed, at most 30 characters; spaces only means no name.
 - SY4.3 Style profile → Basics changes or clears the name; clearing it changes the greetings back (F1.4).
 - SY4.4 No request to the server (fit check, question, any other) carries the name (a test over every request builder).

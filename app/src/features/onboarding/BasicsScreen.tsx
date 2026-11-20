@@ -2,8 +2,9 @@
 // last setup step, a plain screen (no chat bubbles, OS3). A first name ("What should Kit call you?") and five age
 // choices with nothing picked. The name stays optional (Apple 5.1.1(x)) but setup nudges for it (#506): the field opens
 // focused with the keyboard up, Continue waits for a name and an age, and a small Skip under it goes on without a name
-// (off until an age is picked). His pick and the name as typed wait in kv (onboarding.about, never synced), so a close
-// keeps both.
+// (off until an age is picked). While the keyboard is up the whole bottom block is hidden (#522: it sat on top of the
+// keys and made the name feel required); Done or an age pick (ChoiceList dismisses the keyboard) closes it and the
+// block returns. His pick and the name as typed wait in kv (onboarding.about, never synced), so a close keeps both.
 //
 // Continue with an 18+ band ends setup (finishSetup: the profile with his band, no birth year, no agreement; Kit's
 // first-check offer) and lands in Stylist; the camera opens only when he taps Check my fit there. "Under 18" asks once
@@ -74,7 +75,7 @@ export function BasicsScreen() {
     }, [isRestore]),
   );
 
-  // The dock rides above the keyboard with a small gap instead of the home-indicator inset.
+  // While the keyboard is up the dock is hidden (#522), so nothing sits on top of the keys.
   useEffect(() => {
     const show = Keyboard.addListener('keyboardWillShow', () => setKeyboard(true));
     const hide = Keyboard.addListener('keyboardWillHide', () => setKeyboard(false));
@@ -177,36 +178,38 @@ export function BasicsScreen() {
           {t('onb.about.footnote')}
         </KText>
       </ScrollView>
-      <View style={[styles.dock, { paddingBottom: keyboard ? space.s : Math.max(insets.bottom, space.l) }]}>
-        {/* Why the button is off (09 UI review): the one answer it waits for. VoiceOver hears it as Continue's hint. */}
-        {hint !== null ? (
-          <KText testID="about-hint" variant="footnote" color="ink2" style={styles.center} {...HIDDEN}>
-            {hint}
-          </KText>
-        ) : null}
-        <View testID="about-continue">
-          <KButton
-            title={t('onb.basics.cta')}
-            disabled={none || noName || busy}
-            accessibilityHint={hint ?? undefined}
-            onPress={() => void done()}
-          />
-        </View>
-        {/* #506: the only way on without a name; it does what Continue does, so it waits for an age too. */}
-        {noName ? (
-          <View testID="about-skip">
+      {keyboard ? null : (
+      <View testID="about-dock" style={[styles.dock, { paddingBottom: Math.max(insets.bottom, space.l) }]}>
+          {/* Why the button is off (09 UI review): the one answer it waits for. VoiceOver hears it as Continue's hint. */}
+          {hint !== null ? (
+            <KText testID="about-hint" variant="footnote" color="ink2" style={styles.center} {...HIDDEN}>
+              {hint}
+            </KText>
+          ) : null}
+          <View testID="about-continue">
             <KButton
-              title={t('onb.about.skip')}
-              kind="ghost"
-              size="regular"
-              fullWidth
-              disabled={none || busy}
-              accessibilityHint={none ? t('onb.about.hint') : t('onb.about.skipHint')}
+              title={t('onb.basics.cta')}
+              disabled={none || noName || busy}
+              accessibilityHint={hint ?? undefined}
               onPress={() => void done()}
             />
           </View>
-        ) : null}
-      </View>
+          {/* #506: the only way on without a name; it does what Continue does, so it waits for an age too. */}
+          {noName ? (
+            <View testID="about-skip">
+              <KButton
+                title={t('onb.about.skip')}
+                kind="ghost"
+                size="regular"
+                fullWidth
+                disabled={none || busy}
+                accessibilityHint={none ? t('onb.about.hint') : t('onb.about.skipHint')}
+                onPress={() => void done()}
+              />
+            </View>
+          ) : null}
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 }
