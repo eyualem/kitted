@@ -814,6 +814,70 @@ describe('F10.1 per-phone counts', () => {
     for (const secret of [RAW, 'raw-PHONE']) expect(elsewhere.join('\n')).not.toContain(secret);
   });
 
+  it('F10.1 · a refused or failed call never puts the raw device ID in a log line or a response', async () => {
+    const RAW = 'raw-PHONE-id-0123456789abcdef';
+    const BADRAW = 'raw-PHONE-bad!id-0123456789';
+    const bodies: string[] = [];
+    const take = async (r: Response) => {
+      bodies.push(await r.text());
+      return r.status;
+    };
+    // The 429 limit path, on a check and on a question.
+    expect(await readOn(RAW, 'C-1')).toBe(200);
+    for (let i = 0; i < 6; i++) expect(await askOn(RAW)).toBe(200);
+    await signOut();
+    expect(await take(await call('read', photoBody(), { check: 'C-2', device: RAW }))).toBe(429);
+    expect(await take(await call('ask', askBody(), { device: RAW }))).toBe(200); // the phone's 7th question
+    expect(await take(await call('ask', askBody(), { device: RAW }))).toBe(429);
+    // The 400 bad-header path, with the raw text in the bad value.
+    expect(await take(await call('read', photoBody(), { check: 'C-3', device: BADRAW }))).toBe(400);
+    expect(await take(await call('ask', askBody(), { device: BADRAW }))).toBe(400);
+    // The 502 upstream-failure path.
+    await signOut();
+    fake.respond = reply(500);
+    expect(await take(await call('ask', askBody(), { device: RAW }))).toBe(429); // phone full: refused, still no ID
+    expect(await take(await call('read', photoBody(), { check: 'C-1', device: RAW }))).toBe(502);
+    expect(logs.length).toBeGreaterThan(0);
+    for (const secret of [RAW, BADRAW, 'raw-PHONE']) {
+      expect([secret, JSON.stringify(logs).includes(secret)]).toEqual([secret, false]);
+      expect([secret, bodies.join('\n').includes(secret)]).toEqual([secret, false]);
+    }
+  });
+
+  it('F10.1 · a failed ask gives back what each day took when the account and the phone chose differently', async () => {
+    const askTap = async (device: string, respond: Respond) => {
+      fake.respond = respond;
+      const r = await call('ask', askBody(), { device, free: 'tap' });
+      await r.arrayBuffer();
+      return r.status;
+    };
+    const counts = async (uid: string, device: string) => ({
+      acct: [await acctTotal(uid, 'taps'), await acctTotal(uid, 'questions')],
+      phone: [await phoneTotal(device, 'taps'), await phoneTotal(device, 'questions')],
+    });
+    // The account's taps are used up on phone D; phone D2 is fresh. The account must take a question, D2 a tap.
+    for (let i = 0; i < 10; i++) expect(await askTap(D, sse())).toBe(200);
+    expect(await counts(me.uid, D)).toEqual({ acct: [10, 0], phone: [10, 0] });
+    const before1 = await counts(me.uid, D2);
+    expect(before1).toEqual({ acct: [10, 0], phone: [0, 0] });
+    expect(await askTap(D2, reply(500))).toBe(502);
+    expect(await counts(me.uid, D2)).toEqual(before1);
+    expect(await askTap(D2, sse('MAX_TOKENS'))).toBe(200); // unfinished: also given back
+    expect(await counts(me.uid, D2)).toEqual(before1);
+
+    // The reverse: a new guest has tap room, phone D's taps are used up. The account takes a tap, the phone a question.
+    await signOut();
+    const before2 = await counts(me.uid, D);
+    expect(before2).toEqual({ acct: [0, 0], phone: [10, 0] });
+    expect(await askTap(D, reply(500))).toBe(502);
+    expect(await counts(me.uid, D)).toEqual(before2);
+    expect(await askTap(D, sse('MAX_TOKENS'))).toBe(200);
+    expect(await counts(me.uid, D)).toEqual(before2);
+    // A finished one does keep what each took (the give-back is not a blanket reset).
+    expect(await askTap(D, sse())).toBe(200);
+    expect(await counts(me.uid, D)).toEqual({ acct: [1, 0], phone: [10, 1] });
+  });
+
   it('F10.1 · no header and other phones keep accounts apart; the tier route never counts', async () => {
     // L10 with no device header: two accounts stay apart.
     fake.respond = sse();

@@ -21,6 +21,8 @@
 
 ## Disputes
 
+- **Strengthened after review** (test writer, Nov 19): the reviewer planted a raw device ID in the 429 limit log and it passed (the privacy scan covered only successful calls), and found a real code defect (a failed ask gives back with the account's `took` on the phone too). Added F10.1·m (log and body scan on the 429, 400 and 502 paths; bites via planted logs on the 429 and 400 paths) and F10.1·n (a failed ask where each day chose a tap or a question differently; red on a wrong phone give-back). No test was changed or removed. Commit: the `T21a: strengthen tests` commit that follows the lock.
+
 ## Review
 
 ### Round 1 (strict)
