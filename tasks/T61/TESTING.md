@@ -2,7 +2,7 @@
 
 Written by the session; tests written and locked by the test writer. The task's logic criteria go here, never words, labels or layout. **Locked once the Lock line is filled.** After that only the test writer changes this file or the tests, only to add or strengthen, with the reason in TASK.md → Disputes.
 
-**Lock:** `<commit SHA>` · <date> · tests: `extraction-test/not_rated_test.py`, `app/packages/kitted-core/test/notRated.test.ts`, `app/packages/kitted-core/test/notRatedParity.test.ts`, `app/src/__tests__/notRatedSchema.test.ts`
+**Lock:** `e4340c2f00687fb9fa3d2f11e98719aba8bb6759` · 2026-11-20 · tests: `extraction-test/not_rated_test.py`, `app/packages/kitted-core/test/notRated.test.ts`, `app/packages/kitted-core/test/notRatedParity.test.ts`, `app/src/__tests__/notRatedSchema.test.ts`
 
 ## How it's tested
 - **Python first:** the engine's tests in `extraction-test/` (pytest or the existing test style there), on hand-built readings: a plain base outfit (a white tee, dark straight jeans, white leather sneakers, `clothed: fully`, `framing: full_body`, `shoes_visible: true`, every piece `certainty: clear`), changed one field at a time. Both the parts engine (`rubrics/parts_proto.py` `score`, the app's engine) and the old `rubric.py` `score` (they share `_prepare`).
