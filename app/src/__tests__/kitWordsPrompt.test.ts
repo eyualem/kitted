@@ -113,8 +113,8 @@ describe('KC6.1 · app map', () => {
     }
   });
 
-  it('KC6.1 · the prompt version is 6', () => {
-    expect(PROMPT_VERSION).toBe(6);
+  it('KC6.1 · the prompt version is 7 (T106 changed the remember keys)', () => {
+    expect(PROMPT_VERSION).toBe(7);
   });
 });
 

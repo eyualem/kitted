@@ -1,7 +1,8 @@
 // A1 · Sign in (specs/sign-in-and-backup.md SB2): one sheet for every way in (Welcome's "I already have an account", the
 // save card, You's account rows). Continue with Apple first, then Google, the same size, and a line that says it's
 // optional. What a sign-in leads to (restore, set up, which fits to keep, the age stop) is decided by afterSignIn; this
-// screen only shows it. Apple's first name goes to an empty name only (applyAppleFirstName, SB10).
+// screen only shows it. Apple's first name goes to an empty name only (applyAppleFirstName, SB10). After a sign-in that keeps the
+// account here, the last step offers photo backup once (SB4, PhotoStep); a restore offers it at its own end.
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, View } from 'react-native';
@@ -13,21 +14,31 @@ import { SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { showToast } from '@/features/toast/toast';
 import { setResumeStep } from '@/features/onboarding/resume';
 import { t } from '@/i18n/en';
-import { afterSignIn, liveProviders, resolveChoice, restoreParam, sheetProviders, auth, type SignInFrom } from './account';
+import { getDemoArgs } from '@/state/session';
+import { photoStepFor } from '@/sync/photoBackup';
+import { afterSignIn, liveProviders, resolveChoice, restoreParam, sheetProviders, auth, usesFirebase, type SignInFrom } from './account';
+import { accountRemote } from './accountRemote';
 import { applyAppleFirstName } from './appleName';
 import type { AuthProvider, SignInResult } from './auth';
+import { PhotoStep } from './PhotoStep';
 import { ProviderButton } from './ProviderButton';
+import { accountChoice } from './restore';
 
 type Problem = { kind: 'failed'; provider: AuthProvider } | { kind: 'offline' } | null;
 
 const providerName = (p: AuthProvider) => t(`acct.provider.${p}`);
 
 export function SignInSheet() {
-  const params = useLocalSearchParams<{ from?: string }>();
+  const params = useLocalSearchParams<{ from?: string; step?: string }>();
   const from: SignInFrom = params.from === 'welcome' || params.from === 'offer' ? params.from : 'settings';
   const providers = sheetProviders(liveProviders());
   const [busy, setBusy] = useState<AuthProvider | null>(null);
   const [problem, setProblem] = useState<Problem>(null);
+  /** SB4's last step: shown in place of the buttons; `Back up photos too` or `Done` runs `next`. */
+  // Demo screen 144 opens on it (`step=photos`); on his phone only a finished sign-in shows it.
+  const [step, setStep] = useState<{ provider: AuthProvider; next: () => void } | null>(() =>
+    params.step === 'photos' && getDemoArgs().demoScreen !== null ? { provider: 'apple', next: () => router.back() } : null,
+  );
   const alive = useRef(true);
   useEffect(() => () => {
     alive.current = false;
@@ -41,10 +52,19 @@ export function SignInSheet() {
     if (!alive.current) return;
     /** Apple's first name, once the account is kept (never for a cancelled choice). It goes nowhere but his own name. */
     const named = () => applyAppleFirstName(store, provider === 'apple' ? r.givenName : null);
+    /** The photo step once (SB4), then `proceed`. Skipped when the account already has photo backup on or it was offered. */
+    const afterPhotoStep = async (proceed: () => void) => {
+      if (!alive.current) return;
+      // Only where backup can run (not on a demo screen's MockAuth).
+      if (usesFirebase() && (await photoStepFor(store)) === 'show') setStep({ provider, next: proceed });
+      else proceed();
+    };
     const done = async () => {
       await named();
-      router.back();
-      showToast(t('acct.signedIn', { provider: providerName(provider) }));
+      await afterPhotoStep(() => {
+        router.back();
+        showToast(t('acct.signedIn', { provider: providerName(provider) }));
+      });
     };
     switch (next.next) {
       case 'restore':
@@ -57,14 +77,18 @@ export function SignInSheet() {
       case 'setup':
         await named();
         await setResumeStep(store, 'looks');
-        router.back();
-        showToast(t('onb.setup.newAccount'));
-        setTimeout(() => router.push('/onboarding/looks'), 350);
+        await afterPhotoStep(() => {
+          router.back();
+          showToast(t('onb.setup.newAccount'));
+          setTimeout(() => router.push('/onboarding/looks'), 350);
+        });
         return;
       case 'choose': {
-        // A5 / SB7: nothing is deleted without a second yes. Which of this iPhone's fits the account holds comes with the
-        // sync's pull (T41b); until then the account holds none of them.
-        const input = { user: next.user, inAccount: [] as string[] };
+        // A5 / SB7: nothing is deleted without a second yes. Which fits the account holds is read first (read-only), so "Use the
+        // account's" deletes only this iPhone's fits that are not in it. If they can't be read, that choice isn't offered.
+        const choice = usesFirebase() ? await accountChoice(accountRemote(next.user.uid)) : { ready: true as const, inAccount: [] as string[] }; // a demo account holds none
+        if (!alive.current) return;
+        const input = { user: next.user, inAccount: choice.ready ? choice.inAccount : [] };
         const stay = async () => {
           await resolveChoice(store, 'cancel', input, auth);
           if (alive.current) setBusy(null);
@@ -77,19 +101,20 @@ export function SignInSheet() {
           await resolveChoice(store, 'useAccount', { ...input, confirmed: true }, auth);
           await done();
         };
+        const useAccount = {
+          text: t('acct.choose.useAccount'),
+          onPress: () =>
+            Alert.alert(t('acct.choose.confirmTitle'), t('acct.choose.confirmBody', { local: next.localFits }), [
+              { text: t('common.cancel'), style: 'cancel' as const, onPress: () => void stay() },
+              { text: t('acct.choose.confirmYes'), style: 'destructive' as const, onPress: () => void takeAccount() },
+            ]),
+        };
         Alert.alert(
           t('acct.choose.title'),
           t('acct.choose.body', { provider: providerName(provider), fits: next.holdings.fits, local: next.localFits }),
           [
             { text: t('acct.choose.keepBoth'), style: 'default', onPress: () => void keepBoth() },
-            {
-              text: t('acct.choose.useAccount'),
-              onPress: () =>
-                Alert.alert(t('acct.choose.confirmTitle'), t('acct.choose.confirmBody', { local: next.localFits }), [
-                  { text: t('common.cancel'), style: 'cancel', onPress: () => void stay() },
-                  { text: t('acct.choose.confirmYes'), style: 'destructive', onPress: () => void takeAccount() },
-                ]),
-            },
+            ...(choice.ready ? [useAccount] : []),
             { text: t('common.cancel'), style: 'cancel', onPress: () => void stay() },
           ],
         );
@@ -123,6 +148,9 @@ export function SignInSheet() {
   const legal = TERMS_URL && PRIVACY_URL;
   return (
     <SheetScaffold title={title} onClose={() => router.back()}>
+      {step ? (
+        <PhotoStep provider={step.provider} onDone={step.next} />
+      ) : (
       <View style={{ gap: space.m }}>
         <KText variant="body" color="ink2">
           {t(from === 'welcome' ? 'acct.sheet.welcome.body' : 'acct.sheet.save.body')}
@@ -144,6 +172,7 @@ export function SignInSheet() {
           </View>
         ) : null}
       </View>
+      )}
     </SheetScaffold>
   );
 }

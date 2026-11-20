@@ -71,7 +71,7 @@ describe('F2 purgeTombstones', () => {
   it('removes only tombstones older than the cutoff', async () => {
     const now = Date.now();
     await db.doc('users/alice/facts/old-tomb').set(envelope('old-tomb', now - 200 * DAY, true));
-    await db.doc('users/alice/chatMessages/old-tomb').set(envelope('old-tomb', now - 181 * DAY, true));
+    await db.doc('users/alice/outfits/old-tomb').set(envelope('old-tomb', now - 181 * DAY, true));
     await db.doc('users/alice/facts/new-tomb').set(envelope('new-tomb', now - 10 * DAY, true));
     await db.doc('users/alice/facts/old-live').set(envelope('old-live', now - 400 * DAY));
     await db.doc('users/bob/readings/old-tomb').set(envelope('old-tomb', now - 300 * DAY, true));
@@ -79,7 +79,7 @@ describe('F2 purgeTombstones', () => {
     expect(removed).toBe(3);
     const left = async (p: string) => (await db.doc(p).get()).exists;
     expect(await left('users/alice/facts/old-tomb')).toBe(false);
-    expect(await left('users/alice/chatMessages/old-tomb')).toBe(false);
+    expect(await left('users/alice/outfits/old-tomb')).toBe(false);
     expect(await left('users/bob/readings/old-tomb')).toBe(false);
     expect(await left('users/alice/facts/new-tomb')).toBe(true);
     expect(await left('users/alice/facts/old-live')).toBe(true);
