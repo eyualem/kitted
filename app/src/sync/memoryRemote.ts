@@ -2,7 +2,7 @@
 // firebase/firestore.rules (envelope, collections, newest wins, readings never change, 48 fields, the 1-day clock bound)
 // and storage.rules (folders, names), and merges `data` the way the Firestore adapter will (set with merge), so the
 // engine's tests exercise the real rules' consequences. Keep it in step with the rules files.
-import { MAX_BATCH, RemoteRefused, RemoteUnavailable, type FileTransport, type RemoteStore } from './remote';
+import { MAX_BATCH, RemoteMissing, RemoteRefused, RemoteUnavailable, type FileTransport, type RemoteStore } from './remote';
 import { SYNCED_COLLECTIONS, syncedFilePath } from './schema';
 import type { Cursor, RemoteDoc, RemoteWrite, StoredDoc } from './types';
 
@@ -127,7 +127,7 @@ export function createMemoryRemote(startMs = 1_760_000_000_000): MemoryRemote {
         async download(p) {
           if (r.offline) throw new RemoteUnavailable();
           const body = files.get(p);
-          if (body === undefined) throw new Error(`no remote file ${p}`);
+          if (body === undefined) throw new RemoteMissing(`no remote file ${p}`);
           local.set(p, body);
         },
         async remove(p) {

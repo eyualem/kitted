@@ -1,4 +1,5 @@
-// T41b (SB9): "Delete account and all data", the order and what a failure leaves. STUB: runDeleteAccount throws.
+// "Delete account and all data" (specs/sign-in-and-backup.md SB9): the order, and what a failure leaves. The three steps come in
+// as functions, so the order and the failures are tested with fakes (actions.ts wires the real ones).
 export interface DeleteAccountDeps {
   provider: 'apple' | 'google';
   /** Apple only: Firebase's `revokeAccessToken` with a fresh authorization code from Apple's sheet. */
@@ -20,6 +21,13 @@ export type DeleteAccountResult =
 
 /** The order, each step at most once per call and only if the one before said ok: Apple → `revokeApple()`; then `deleteServer()`; then
  *  `wipe()`. Google skips the revoke. Any other answer stops the call: no later step runs, nothing on the phone changes. */
-export async function runDeleteAccount(_d: DeleteAccountDeps): Promise<DeleteAccountResult> {
-  throw new Error('T41b: not built');
+export async function runDeleteAccount(d: DeleteAccountDeps): Promise<DeleteAccountResult> {
+  if (d.provider === 'apple') {
+    const revoked = await d.revokeApple();
+    if (revoked !== 'ok') return { kind: revoked };
+  }
+  const server = await d.deleteServer();
+  if (server !== 'ok') return { kind: server };
+  await d.wipe();
+  return { kind: 'deleted' };
 }

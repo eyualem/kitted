@@ -54,6 +54,11 @@ export function liveProviders(): readonly ('apple' | 'google')[] {
   return GOOGLE_IOS_CLIENT_ID !== '' ? ['apple', 'google'] : ['apple'];
 }
 
+/** Whether sign-in, backup and delete run on Firebase here (not on a demo screen's MockAuth). */
+export function usesFirebase(): boolean {
+  return demoScript === null && liveProviders().length > 0;
+}
+
 /** You's account rows show when accounts are on (the one switch). */
 export function settingsAccountOn(): boolean {
   return accountsOn();
@@ -103,7 +108,7 @@ export async function saveAccount(store: Pick<KittedStore, 'setKv'>, user: Accou
 }
 
 /** Sign out: the account goes, his fits stay on this phone (AC4's default). */
-export async function signOut(store: Pick<KittedStore, 'deleteKv'>, service: AuthService = auth): Promise<void> {
+export async function signOut(store: Pick<KittedStore, 'deleteKv'>, service: Pick<AuthService, 'signOut'> = auth): Promise<void> {
   await service.signOut();
   await store.deleteKv(ACCOUNT_KEY);
 }
@@ -145,7 +150,8 @@ export async function afterSignIn(
   const hasFits = !!h && h.fits > 0;
   if (from === 'welcome') {
     await saveAccount(store, result.user);
-    return hasFits ? { next: 'restore', holdings: h } : { next: 'setup' };
+    // An account counts as existing, so setup is skipped, when it has fits or a saved style profile (SB6, log #521).
+    return h && (hasFits || h.profile === true) ? { next: 'restore', holdings: h } : { next: 'setup' };
   }
   const localFits = await localFitCount(store);
   if (hasFits && localFits > 0) return { next: 'choose', user: result.user, holdings: h, localFits };
