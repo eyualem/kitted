@@ -22,3 +22,31 @@
 ## Disputes
 
 ## Review
+
+### Round 1 (strict)
+**Lock:** `git diff f2ecae9d..HEAD` on the three locked test files is empty; TESTING.md only gained the Lock line. No disputes.
+
+- F10.1 a, b, c, d, e, f, g (server): done (emulator 10 of 10 F10.1 tests pass; builder's 95 of 95 not re-run, memory).
+- F10.1 h (header: bad ID 400, none allowed, `requireDevice`): done. The 400 body names only `reason: 'device'`, never the ID.
+- F10.1 i (privacy): done. Only sha256 is a doc id and key; the Ticket carries the hash; no log line in the diff includes the header.
+- F10.1 j (sweep): done (collection-group sweep covers it). F10.1 k (old builds, tier route, L10): done.
+- F10.1 l (app): done by reading; jest not re-run (memory). `deviceId.ts`: concurrent calls share one promise; a Keychain error clears it and the transport sends without the header; Math.random runs only if `Crypto.randomUUID` throws or returns a bad value.
+- `npm run check`: not re-run (about 190 MB free). The builder's run did not finish green (one core vitest timeout, a file this task does not touch): still unproven.
+- store.ts `config()` clock change: harmless in production. A negative age only happens if the clock steps back; the cost is one extra read of `server/config`.
+
+Planted bugs (each reverted; `git status` clean):
+1. Write the account's day when the phone refuses: caught (`a refusal on either side counts nothing on the other`).
+2a. Log the raw ID on the 429 limit path: NOT caught (10 of 10 pass).
+2b. Log the raw ID on the settle log (ok path): caught (`the phone's record holds only a hash and counts`).
+3. Skip the phone's give-back in `finish`: caught (`a failed read gives the check back on both days`).
+
+**Defects**
+1. **code** (`handler.ts` Ticket `took: result.took`, `store.ts` `finish`): one `took` (the account's) is used to give back on both days. For asks, the two days can pick differently (a free tap on one, a question on the other, e.g. a new guest has taps left but the phone's taps are used). A failed ask then gives back a tap on the phone that it counted as a question: the phone gains a tap and keeps the question. Photo calls are fine (give-back is by check id). Fix: return the phone's own `took` in the Ticket (`device.took`) and finish the phone's day with it.
+2. **test** (test-writer): the privacy log scan (F10.1 i) covers only a successful photo and ask. A raw ID in the 429 limit log (or the 400 and 502 paths) passes. Add a refused call (limit, and bad-header 400) before the log scan. Add a failed ask where the account and phone differ on tap vs question (defect 1).
+
+**Small, never blocks**
+- `deviceId()` keeps its promise for the app's life: after "Delete all my data" clears the Keychain ID, the phone keeps sending the old ID until restart.
+- If the Keychain read wrongly returns null, a new ID overwrites the old one (evades the count); acceptable for beta.
+- The account's tz note is written on a phone refusal; intended (comment says so).
+
+**Verdict: not ready** (1 code defect, 1 test defect).
