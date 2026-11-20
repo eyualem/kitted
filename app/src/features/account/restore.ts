@@ -7,7 +7,6 @@ import { cleanName } from '@/features/onboarding/aboutStep';
 import { completeOnboarding } from '@/features/onboarding/complete';
 import { picksToStyles } from '@/features/onboarding/looks';
 import { clearResumeStep } from '@/features/onboarding/resume';
-import { SYNC_UID_KEY } from '@/sync/backup';
 import { createSyncEngine } from '@/sync/engine';
 import { RemoteUnavailable, type FileTransport, type RemoteStore } from '@/sync/remote';
 import type { StoredDoc } from '@/sync/types';
@@ -160,7 +159,7 @@ export async function restoreAccount(d: RestoreDeps): Promise<RestoreResult> {
   await clearResumeStep(store);
   // This phone now belongs to the account: later changes are recorded and go up with the next round (sync/backup.ts).
   const account = await getAccount(store);
-  if (account) await store.setKv(SYNC_UID_KEY, account.uid);
+  if (account) await store.setKv('sync.uid', account.uid); // SYNC_UID_KEY
 
   const looks = !!pulled && pulled.styles.length > 0;
   if (counts.fits === 0 && looks) return { kind: 'profile' };

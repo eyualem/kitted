@@ -4,7 +4,6 @@ import type { KittedStore } from '@/data/store';
 import type { ScreenScenario } from '@/demo/scenarios';
 import { saveAccount, setDemoAccounts } from './account';
 import { MOCK_EMAILS } from './auth';
-import { PHOTO_BACKUP_KEY } from '@/sync/photoBackup';
 import { accountOffer } from './offerSession';
 
 export async function prepareAccountDemo(store: Pick<KittedStore, 'setKv'>, sc: ScreenScenario, nowMs: number): Promise<void> {
@@ -12,7 +11,7 @@ export async function prepareAccountDemo(store: Pick<KittedStore, 'setKv'>, sc: 
   if (!sc.accounts) return;
   const p = sc.accounts.signedIn;
   if (p) await saveAccount(store, { uid: 'mock-demo', provider: p, email: MOCK_EMAILS[p], signedInAt: nowMs });
-  if (sc.accounts.photos === 'on') await store.setKv(PHOTO_BACKUP_KEY, 'on');
+  if (sc.accounts.photos === 'on') await store.setKv('backup.photos', 'on'); // PHOTO_BACKUP_KEY
   if (sc.accounts.offer) {
     const id = await accountOffer.ensure();
     if (id && sc.accounts.offer === 'declined') await accountOffer.decline(id);

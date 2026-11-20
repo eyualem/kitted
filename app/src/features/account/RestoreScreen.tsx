@@ -10,7 +10,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, AccessibilityInfo, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KButton, KText, WovenLabel, space, useTheme } from '@/design-system';
-import { rawStore, tracking } from '@/data/db';
+import { store, tracking } from '@/data/db';
 import { newId } from '@/services/ids';
 import { sessionClock } from '@/state/session';
 import { setAgeBlocked, setOnboarded } from '@/state/appGate';
@@ -35,7 +35,8 @@ export function RestoreScreen() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const p = useLocalSearchParams<{ fits?: string; pieces?: string; profile?: string; state?: string }>();
-  const [counts, setCounts] = useState({ fits: 0, pieces: 0 });
+  // The account's own counts, read from the server before the age question, come in the route; rows landing only raise them.
+  const [counts, setCounts] = useState({ fits: num(p.fits), pieces: num(p.pieces) });
   const [phase, setPhase] = useState<Phase>('running');
   const [photos, setPhotos] = useState<AuthProvider | null>(null);
   const alive = useRef(true);
@@ -54,8 +55,8 @@ export function RestoreScreen() {
       setPhase(kind);
       await new Promise((r) => setTimeout(r, 900));
       if (!alive.current) return;
-      const account = await getAccount(rawStore);
-      if (account && (await photoStepFor(rawStore)) === 'show') setPhotos(account.provider);
+      const account = await getAccount(store);
+      if (account && (await photoStepFor(store)) === 'show') setPhotos(account.provider);
       else await leave();
     },
     [leave],
@@ -63,17 +64,17 @@ export function RestoreScreen() {
 
   /** The real restore: the account's rows come down onto this phone. */
   const restoreReal = useCallback(async (): Promise<RestoreResult> => {
-    const account = await getAccount(rawStore);
+    const account = await getAccount(store);
     if (!account) return { kind: 'retry' };
     return restoreAccount({
-      store: rawStore,
+      store: store,
       remote: accountRemote(account.uid),
       deviceId: await tracking.deviceId(),
       nowMs: () => sessionClock.nowMs(),
       ids: newId,
       auth,
       setAgeBlocked,
-      onProgress: (c) => alive.current && setCounts(c),
+      onProgress: (c) => alive.current && setCounts((was) => ({ fits: Math.max(was.fits, c.fits), pieces: Math.max(was.pieces, c.pieces) })),
     });
   }, []);
 
@@ -82,15 +83,14 @@ export function RestoreScreen() {
     const fits = num(p.fits);
     const pieces = num(p.pieces);
     if (p.state === 'retry') return { kind: 'retry' };
-    setCounts({ fits, pieces });
-    const d = await loadDraft(rawStore);
-    await completeOnboarding(rawStore, {
+    const d = await loadDraft(store);
+    await completeOnboarding(store, {
       styles: [], fitPreference: d.basics.fit ?? '', birthYear: null,
-      ageBand: isAgeBand(d.about.age) ? d.about.age : null, name: cleanName(d.about.name), consent: 'later',
+      ageBand: isAgeBand(d.about.age) ? d.about.age : null, name: cleanName(d.about.name), consent: false,
     }, sessionClock.nowMs(), newId);
-    await rawStore.deleteKv(BASICS_KEY);
-    await rawStore.deleteKv(ABOUT_KEY);
-    await clearResumeStep(rawStore);
+    await store.deleteKv(BASICS_KEY);
+    await store.deleteKv(ABOUT_KEY);
+    await clearResumeStep(store);
     return fits === 0 && p.profile === '1' ? { kind: 'profile' } : { kind: 'fits', fits, pieces };
   }, [p.fits, p.pieces, p.profile, p.state]);
 
@@ -112,9 +112,11 @@ export function RestoreScreen() {
 
   useEffect(() => {
     alive.current = true;
-    void run();
+    // A tick after the screen opens (a demo screen lingers on "Bringing back your fits…" a moment, as the real pull does).
+    const h = setTimeout(() => void run(), syncAllowed() ? 0 : 1200);
     return () => {
       alive.current = false;
+      clearTimeout(h);
     };
     // Runs once, when the screen opens (Try again calls it again).
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -15,7 +15,7 @@ export async function isPhotoBackupOn(store: Pick<KittedStore, 'getKv'>): Promis
 
 /** Writes kv `backup.photos` = `'on'`. */
 export async function turnOnPhotoBackup(store: Pick<KittedStore, 'setKv'>): Promise<void> {
-  await store.setKv(PHOTO_BACKUP_KEY, 'on');
+  await store.setKv('backup.photos', 'on'); // PHOTO_BACKUP_KEY: a literal, so the kv scan in syncSchema.test classifies it
 }
 
 export type PhotoStep = 'show' | 'skip';
@@ -29,7 +29,7 @@ export async function photoStepFor(store: Pick<KittedStore, 'getKv'>): Promise<P
 
 /** Records that the step was offered, so the next launch and the next call of `photoStepFor` say `'skip'`. */
 export async function markPhotoStepOffered(store: Pick<KittedStore, 'setKv'>): Promise<void> {
-  await store.setKv(PHOTO_STEP_KEY, '1');
+  await store.setKv('account.photoStep', '1'); // PHOTO_STEP_KEY
 }
 
 export type TurnOffResult =
@@ -62,6 +62,6 @@ export async function turnOffPhotoBackup(d: {
   // Nothing is queued to go up or down any more, and no row counts a photo as backed up.
   for (const f of await d.store.syncFiles.all()) await d.store.syncFiles.delete(f.path);
   for (const r of await d.store.syncRows.all()) if (r.files.length > 0) await d.store.syncRows.put({ ...r, files: [] });
-  await d.store.setKv(PHOTO_BACKUP_KEY, 'off');
+  await d.store.setKv('backup.photos', 'off'); // PHOTO_BACKUP_KEY
   return { status: 'off' };
 }

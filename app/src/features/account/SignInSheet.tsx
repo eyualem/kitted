@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Alert, View } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import { KText, TextLink, space } from '@/design-system';
-import { rawStore, store } from '@/data/db';
+import { store } from '@/data/db';
 import { PRIVACY_URL, TERMS_URL } from '@/config/links';
 import { SheetScaffold } from '@/features/sheet/SheetScaffold';
 import { showToast } from '@/features/toast/toast';
@@ -16,7 +16,7 @@ import { setResumeStep } from '@/features/onboarding/resume';
 import { t } from '@/i18n/en';
 import { getDemoArgs } from '@/state/session';
 import { photoStepFor } from '@/sync/photoBackup';
-import { afterSignIn, liveProviders, resolveChoice, restoreParam, sheetProviders, auth, type SignInFrom } from './account';
+import { afterSignIn, liveProviders, resolveChoice, restoreParam, sheetProviders, auth, usesFirebase, type SignInFrom } from './account';
 import { accountRemote } from './accountRemote';
 import { applyAppleFirstName } from './appleName';
 import type { AuthProvider, SignInResult } from './auth';
@@ -55,7 +55,8 @@ export function SignInSheet() {
     /** The photo step once (SB4), then `proceed`. Skipped when the account already has photo backup on or it was offered. */
     const afterPhotoStep = async (proceed: () => void) => {
       if (!alive.current) return;
-      if ((await photoStepFor(rawStore)) === 'show') setStep({ provider, next: proceed });
+      // Only where backup can run (not on a demo screen's MockAuth).
+      if (usesFirebase() && (await photoStepFor(store)) === 'show') setStep({ provider, next: proceed });
       else proceed();
     };
     const done = async () => {
@@ -85,20 +86,19 @@ export function SignInSheet() {
       case 'choose': {
         // A5 / SB7: nothing is deleted without a second yes. Which fits the account holds is read first (read-only), so "Use the
         // account's" deletes only this iPhone's fits that are not in it. If they can't be read, that choice isn't offered.
-        const choice = await accountChoice(accountRemote(next.user.uid));
+        const choice = usesFirebase() ? await accountChoice(accountRemote(next.user.uid)) : { ready: true as const, inAccount: [] as string[] }; // a demo account holds none
         if (!alive.current) return;
         const input = { user: next.user, inAccount: choice.ready ? choice.inAccount : [] };
         const stay = async () => {
-          await resolveChoice(rawStore, 'cancel', input, auth);
+          await resolveChoice(store, 'cancel', input, auth);
           if (alive.current) setBusy(null);
         };
-        // The choice's own writes go to the raw store: a fit removed here is the account's to keep, never a delete to send up.
         const keepBoth = async () => {
-          await resolveChoice(rawStore, 'keepBoth', input, auth);
+          await resolveChoice(store, 'keepBoth', input, auth);
           await done();
         };
         const takeAccount = async () => {
-          await resolveChoice(rawStore, 'useAccount', { ...input, confirmed: true }, auth);
+          await resolveChoice(store, 'useAccount', { ...input, confirmed: true }, auth);
           await done();
         };
         const useAccount = {

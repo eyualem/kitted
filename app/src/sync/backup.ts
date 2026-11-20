@@ -87,7 +87,7 @@ export function createBackup(d: BackupDeps): Backup {
   async function join(e: SyncEngine, uid: string): Promise<void> {
     await e.clearBookkeeping();
     const { applied } = await e.pull();
-    await d.store.setKv(SYNC_UID_KEY, uid);
+    await d.store.setKv('sync.uid', uid); // SYNC_UID_KEY (a literal for the kv scan in syncSchema.test)
     const own = await e.markAllDirty({ onlyUntracked: true });
     log(`joined: ${applied} from the account, ${own} from this phone`);
   }
