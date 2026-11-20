@@ -146,7 +146,7 @@ describe('OS3.1 · setup screens are plain', () => {
 
         // Restore ("Welcome back").
         jest.clearAllMocks();
-        mockT39.params = { restore: '214,38,61' };
+        mockT39.params = { restore: '214,38' };
         r = await mount(<BasicsScreen />);
         expect([tag, 'restore', bubbles()]).toEqual([tag, 'restore', [0, 0, 0, 0]]);
         expectNoBubbleWords();
@@ -239,7 +239,7 @@ describe('OS3.2 · three steps, no agreement', () => {
     r = await mount(<BasicsScreen />);
     expect(getId('onb-progress').props.accessibilityLabel).toBe('Step 3 of 3');
     await r.unmount();
-    mockT39.params = { restore: '214,38,61' };
+    mockT39.params = { restore: '214,38' };
     r = await mount(<BasicsScreen />);
     expect(byId('onb-progress')).toBeNull();
     await r.unmount();
@@ -367,7 +367,7 @@ describe('OS4.1 · About you', () => {
     expect(focus).toHaveBeenCalledTimes(1);
     await r.unmount();
     focus.mockClear();
-    mockT39.params = { restore: '214,38,61' };
+    mockT39.params = { restore: '214,38' };
     r = await mount(<BasicsScreen />);
     await advance(FOCUS_AFTER_PUSH_MS + 50);
     expect(focus).not.toHaveBeenCalled();
@@ -716,7 +716,7 @@ describe('SY4.1 · the name field', () => {
     await r.unmount();
 
     // No name field on Restore.
-    mockT39.params = { restore: '214,38,61' };
+    mockT39.params = { restore: '214,38' };
     r = await mount(<BasicsScreen />);
     expect(byId('about-name-input')).toBeNull();
     expect(byId('about-name-label')).toBeNull();

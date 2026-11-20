@@ -57,6 +57,9 @@ type Step =
    *  he owns, the last with a runner-up, as the C2 test builds its five; the real checks' own questions depend on the
    *  photo's sampled colors and come out differently on a device. */
   | { at: string; do: 'askCopies'; n: number }
+  /** "What is it, then?" (T118, CB4): the first open question's ids become `{check}` and `{obs}` in the screen's link; `empty`
+   *  leaves it no other piece of its slot to point at; `answer` saves it the sheet's way (a picked piece, or a new piece with its kind). */
+  | { at: string; do: 'notSame'; empty?: boolean; answer?: 'pick' | 'kind' }
   /** "No, a new one" to every open closet question; the first piece kept that way is the `{dup}` in the screen's link (#280). */
   | { at: string; do: 'closetNo' }
   /** Clothes scans saved on the Simulator (the sample flat lay, no file), a minute apart (#280). */
@@ -300,6 +303,15 @@ const STORY: Record<number, { asOf?: string; steps: Step[] }> = {
   // offers "Same as another piece…", and its picker lists the khaki chinos.
   112: { steps: DUP_STORY },
   113: { steps: DUP_STORY },
+  // "What is it, then?" (T118, CB4), over the card of screen 264's story (p01b, its chinos question): 420 the sheet with his
+  // other bottoms to point at; 421 nothing else in the slot (straight to the kinds); 422 and 423 the card after a picked
+  // piece and after a new piece with its kind confirmed ("Change" on both).
+  420: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'notSame' }] },
+  421: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'notSame', empty: true }] },
+  422: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'notSame', answer: 'pick' }] },
+  // 424: the Added sheet over the same story, whose matched pieces (the white tee, the shoes) offer `Not the same`.
+  424: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'notSame' }] },
+  423: { asOf: '2026-10-22T07:41:00', steps: [{ at: '2026-10-22T07:42:00', do: 'check', photoId: 'p01b', occasion: 'date' }, { at: '2026-10-22T07:43:00', do: 'notSame', answer: 'kind' }] },
   // A photo on the wrong card (#289, 09-ui-review §8 W7): screen 96's story with the grey tee in the closet too, so the
   // white tee's page has two photos (p01b, p01a) and another top; each photo's long-press offers Not this piece and
   // It's another piece… (its picker lists the grey tee).
@@ -545,6 +557,20 @@ async function playStory(sc: ScreenScenario): Promise<void> {
         asks.push({ ...rest, obsId: `${obs.id}-copy${i}`, itemId: `${flagged.id}-copy${i}`, candidateId: candidate.id, answer: null, ...(runnerUp ? { runnerUpId: runnerUp } : {}) });
       }
       await store.fitChecks.patch(first.checkId, { details: { ...row.details, closetSummary: { ...row.details.closetSummary, asks } } });
+      continue;
+    }
+    if (step.do === 'notSame') {
+      await fitCheck.closet.settle();
+      const first = (await fitCheck.closet.openAsks())[0];
+      if (!first) continue;
+      demoLinkIds.check = first.checkId;
+      demoLinkIds.obs = first.ask.obsId;
+      const all = await store.closet.all();
+      const flagged = all.find((c) => c.id === first.ask.itemId);
+      const others = all.filter((c) => flagged && c.slot === flagged.slot && !c.isDeleted && !c.mergedInto && !c.maybeSameAs && c.id !== first.ask.candidateId && c.id !== flagged.id);
+      if (step.empty) for (const o of others) await store.closet.patch(o.id, { isDeleted: true });
+      if (step.answer === 'pick' && others[0]) await fitCheck.answerDuplicate(first.checkId, first.ask.obsId, 'same', { targetId: others[0].id });
+      if (step.answer === 'kind') await fitCheck.answerDuplicate(first.checkId, first.ask.obsId, 'new', { kind: 'trousers' });
       continue;
     }
     if (step.do === 'closetYes') {

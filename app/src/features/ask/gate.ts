@@ -466,10 +466,10 @@ export function colorsNamed(sentence: string): string[] {
 }
 
 // ---- the T105 sentence rules
-const CAN_NOT = "(?:can['’]?t|cannot|unable\\s+to|not\\s+able\\s+to)";
+const CAN_NOT = "(?:can['’]?t|cannot|won['’]t\\s+be\\s+able\\s+to|unable\\s+to|not\\s+able\\s+to)";
 const DENY = new RegExp(
-  `\\b${CAN_NOT}\\s+(?:\\w+\\s+){0,2}?(?:(?:add|save|put)\\b[^.!?]*\\b(?:closet|wardrobe|pieces?|items?)|(?:change|update|fix|rename|correct|edit)\\b[^.!?]*\\b(?:closet|pieces?|colou?rs?|names?)|show\\b[^.!?]*\\b(?:outfits?|examples?))\\b`, 'i');
-const CLAIM_ADD = /\b(?:I(?:\s+have|['’]ve)?\s+(?:just\s+)?added|(?:it|that)(?:['’]s|\s+is)\s+(?:now\s+)?added)\b[^.!?]*\b(?:closet|wardrobe)\b/i;
+  `\\b${CAN_NOT}\\s+(?:\\w+\\s+){0,2}?(?:(?:add|save|put)\\b[^.!?]*\\b(?:closet|wardrobe|pieces?|items?)|(?:add|save)\\s+(?:that|it|this|them|these|those)\\b|(?:change|update|fix|rename|correct|edit)\\b[^.!?]*\\b(?:closet|pieces?|colou?rs?|names?)|show\\b[^.!?]*\\b(?:outfits?|examples?))\\b`, 'i');
+const CLAIM_ADD = /\b(?:I(?:\s+have|['’]ve)?\s+(?:just\s+)?added|(?:it|that)(?:['’]s|\s+is)\s+(?:now\s+)?added)\b[^.!?]*\b(?:closet|wardrobe)\b|\b(?:done|all set)\b[^.!?]{0,40}\b(?:closet|wardrobe)\b|\b(?:it|that)(?:['’]s|\s+is)\s+now\s+in\s+your\s+(?:closet|wardrobe)\b/i;
 const CLAIM_CHANGE = /\bI(?:\s+have|['’]ve)?\s+(?:just\s+)?(?:changed|updated|renamed|corrected|fixed|redrew)\s+(?:your|the|that|it)\b/i;
 const PLACE_BUY = /\b(?:next[-\s]buy|buy[-\s]next|best[-\s]buy)\s+(?:section|tab|screen|page|list|view|menu)\b/i;
 const PLACE_OUTFITS = /\boutfits?\s+(?:tab|view|section|screen|page)\b/i;

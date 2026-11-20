@@ -39,7 +39,7 @@ export interface ScreenScenario {
   weatherAllowed?: boolean;
   /** Account screens (10-onboarding.md, #289): turns them on with MockAuth's scripted outcome; `signedIn` starts signed
    *  in with that provider; `offer` posts "Keep your fits" (open, or after Not now). */
-  accounts?: { script: MockScript; signedIn?: AuthProvider; offer?: 'open' | 'declined' };
+  accounts?: { script: MockScript; signedIn?: AuthProvider; offer?: 'open' | 'declined'; photos?: 'on' };
   /** The end of onboarding (10-onboarding.md §9, #291): turns the sequence on, scripts the store and the notification
    *  answer, and plays its taps (features/finish/demo.ts). */
   finish?: FinishDemo;
@@ -244,21 +244,24 @@ export const SCREENS: readonly ScreenScenario[] = [
   // S17h the next morning (#281): "Ready to score last night's photo?" with Score it / Not this one.
   { n: 121, name: 'Ready to score last night\'s photo?', id: 'S17h', scenario: 'full', onboarded: true, now: '2026-10-23T07:31:00', href: '/stylist' },
   // Onboarding and accounts (#289, handoff/10-onboarding.md; numbered from 130 so parallel sessions don't collide).
-  // Sign-in runs on MockAuth: `accounts.script` picks the outcome; the email code it accepts is 123456 (000000 = expired).
+  // Sign-in runs on MockAuth: `accounts.script` picks the outcome; Apple and Google only (T41); 134 and 135 were the email screens and now show the sheet from the card and from You.
   { n: 130, name: 'Welcome · with sign-in', id: 'O1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/welcome', accounts: { script: 'ok' } },
   { n: 131, name: 'Example check', id: 'O1e', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/example', under: '/onboarding/welcome' },
   { n: 132, name: 'Sign in · from Welcome', id: 'A1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/sheets/sign-in?from=welcome', under: '/onboarding/welcome', accounts: { script: 'existing' } },
   { n: 133, name: 'Sign in · it fails', id: 'A1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/sheets/sign-in?from=welcome', under: '/onboarding/welcome', accounts: { script: 'error' } },
-  { n: 134, name: 'Email · the address', id: 'A2', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/sheets/sign-in?from=welcome&step=email', under: '/onboarding/welcome', accounts: { script: 'ok' } },
-  { n: 135, name: 'Email · the code', id: 'A2', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/sheets/sign-in?from=welcome&step=code&email=sam%40gmail.com', under: '/onboarding/welcome', accounts: { script: 'ok' } },
-  { n: 136, name: 'Basics · welcome back', id: 'A4', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/basics?restore=214,38,61', accounts: { script: 'existing', signedIn: 'apple' } },
-  { n: 137, name: 'Bringing back your fits', id: 'A4', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/restore?fits=214&pieces=38&chats=61', accounts: { script: 'existing', signedIn: 'apple' } },
+  { n: 134, name: 'Sign in · from the card', id: 'A1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/sheets/sign-in?from=offer', under: '/onboarding/welcome', accounts: { script: 'ok' } },
+  { n: 135, name: 'Sign in · from You', id: 'A1', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/sheets/sign-in?from=settings', under: '/onboarding/welcome', accounts: { script: 'ok' } },
+  { n: 136, name: 'Basics · welcome back', id: 'A4', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/basics?restore=214,38', accounts: { script: 'existing', signedIn: 'apple' } },
+  { n: 137, name: 'Bringing back your fits', id: 'A4', scenario: 'firstRun', onboarded: false, now: FIRST_RUN_NOW, href: '/onboarding/restore?fits=214&pieces=38', accounts: { script: 'existing', signedIn: 'apple' } },
   { n: 138, name: 'Keep your fits', id: 'A3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/stylist', accounts: { script: 'ok', offer: 'open' } },
   { n: 139, name: 'Keep your fits · Not now', id: 'A3', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/stylist', accounts: { script: 'ok', offer: 'declined' } },
   { n: 140, name: 'Sign in · from the offer, fits on both', id: 'A5', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/sheets/sign-in?from=offer', under: '/stylist', accounts: { script: 'existing', offer: 'open' } },
   { n: 141, name: 'You · Account, signed out', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', accounts: { script: 'ok' } },
   { n: 142, name: 'You · Account, signed in', id: 'Y1', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you?at=settings', accounts: { script: 'ok', signedIn: 'apple' } },
   { n: 143, name: 'Privacy · delete account', id: 'Y7a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy', under: '/you', accounts: { script: 'ok', signedIn: 'apple' } },
+  // T41b (SB4): the photo-backup step after a sign-in, and Privacy & data with photo backup on.
+  { n: 144, name: 'Sign in · photo backup step', id: 'A1b', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/sheets/sign-in?from=offer&step=photos', under: '/stylist', accounts: { script: 'ok' } },
+  { n: 146, name: 'Privacy · photo backup on', id: 'Y7a', scenario: 'full', onboarded: true, now: '2026-10-22T12:22:00', href: '/you/privacy', under: '/you', accounts: { script: 'ok', signedIn: 'apple', photos: 'on' } },
   // The end of onboarding (#291, 10-onboarding.md §9; numbered from 150). The story: his first check, the Welcome photo
   // (s14, 7.5 with a fix), at 7:42; the store is the mock one (it sells nothing) and the notification answer is scripted.
   { n: 150, name: 'First check · Later', id: 'S6', scenario: 'firstRun', onboarded: true, now: FIRST_CHECK_NOW, href: '/stylist', finish: {} },
@@ -418,6 +421,12 @@ export const SCREENS: readonly ScreenScenario[] = [
   { n: 410, name: 'Past chats · Kit cards, read-only', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist/day/2026-10-21', under: '/stylist' },
   { n: 411, name: 'Next buy · from Kit', id: 'C7', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/sheets/next-buy?starter=s07', under: '/stylist' },
   { n: 412, name: 'Kit · colors (largest text)', id: 'S25', scenario: 'full', onboarded: true, now: '2026-10-22T12:10:00', href: '/stylist' },
+  // "What is it, then?" (T118, CB4): the sheet over a check's chinos question (420), with nothing else like it (421), and the card after a picked piece (422) and after a new piece with its kind (423).
+  { n: 420, name: 'What is it, then?', id: 'C1n', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/sheets/not-same/{check}/{obs}', under: '/stylist' },
+  { n: 421, name: 'What is it, then? · nothing else like it', id: 'C1n', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/sheets/not-same/{check}/{obs}', under: '/stylist' },
+  { n: 422, name: 'Card · saved as your piece', id: 'C1n', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/stylist' },
+  { n: 423, name: 'Card · saved as its own piece', id: 'C1n', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/stylist' },
+  { n: 424, name: 'Added sheet · a matched piece', id: 'S11', scenario: 'full', onboarded: true, now: '2026-10-22T07:45:00', href: '/sheets/added/{check}', under: '/stylist' },
 ];
 
 export function screenScenario(n: number): ScreenScenario | undefined {

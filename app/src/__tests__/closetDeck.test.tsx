@@ -615,19 +615,20 @@ describe('CB2.2 · an answer saves, says so, and shows the next card', () => {
     expect(fitCheck.unanswerDuplicate).not.toHaveBeenCalled();
   });
 
-  it('CB2.2 · No, a new one and the runner-up chip', async () => {
+  it('CB2.2 · Not the same opens the sheet (CB4.1) and the runner-up chip answers at once', async () => {
     const w = await world({ asks: FOUR, fit: true });
     await openCloset();
-    await tap('No, a new one');
-    expect(jest.mocked(fitCheck.answerDuplicate).mock.calls).toEqual([['K-a', 'O-qa', 'new']]);
-    expect(jest.mocked(showToast).mock.calls.map((c) => c[0])).toEqual(['Kept as a new piece.']);
+    await tap('Not the same');
+    // Nothing is saved by the chip: the sheet asks which piece it is, and the deck's card leaves when it answers.
+    expect(fitCheck.answerDuplicate).not.toHaveBeenCalled();
+    expect(jest.mocked(router.push).mock.calls).toEqual([['/sheets/not-same/K-a/O-qa?toast=1']]);
     await setOpen([QB, QC, QD]);
     // Card 1 of 4 (three questions and the fit question) is the navy crewneck, with its runner-up.
     expect(shown()).toEqual({ tag: tagOf(1, 4), label: wordsOf(QB, w.byId).label(1, 4) });
     await tap("It's my black sweatshirt");
-    expect(jest.mocked(fitCheck.answerDuplicate).mock.calls).toEqual([['K-a', 'O-qa', 'new'], ['K-b', 'O-qb', 'runnerUp']]);
-    expect(jest.mocked(showToast).mock.calls.map((c) => c[0])).toEqual(['Kept as a new piece.', 'Saved as your black sweatshirt.']);
-    expect(typeof jest.mocked(showToast).mock.calls[1]![1]).toBe('function');
+    expect(jest.mocked(fitCheck.answerDuplicate).mock.calls).toEqual([['K-b', 'O-qb', 'runnerUp']]);
+    expect(jest.mocked(showToast).mock.calls.map((c) => c[0])).toEqual(['Saved as your black sweatshirt.']);
+    expect(typeof jest.mocked(showToast).mock.calls[0]![1]).toBe('function');
     // The store drops it: the loafers, 1 of 3 (two questions and the fit question).
     await setOpen([QC, QD]);
     expect(shown()).toEqual({ tag: tagOf(1, 3), label: wordsOf(QC, w.byId).label(1, 3) });
@@ -956,9 +957,9 @@ describe('CB2.6 · the last answer', () => {
     const w = await world({ asks: [QA], fit: false });
     await openCloset();
     expect(shown().tag).toEqual(tagOf(1, 1));
-    await tap('No, a new one');
-    expect(jest.mocked(fitCheck.answerDuplicate).mock.calls).toEqual([['K-a', 'O-qa', 'new']]);
-    expect(jest.mocked(showToast).mock.calls.map((c) => c[0])).toEqual(['Kept as a new piece.']);
+    await tap('Yes, same one');
+    expect(jest.mocked(fitCheck.answerDuplicate).mock.calls).toEqual([['K-a', 'O-qa', 'same']]);
+    expect(jest.mocked(showToast).mock.calls.map((c) => c[0])).toEqual([expect.stringMatching(/^Saved as your /)]);
     await setOpen([]);
     await settle();
     expect(byTestId('closet-confirm-card')).toHaveLength(0);
@@ -1123,7 +1124,7 @@ describe('CB2.8 · VoiceOver and targets', () => {
     await world({ asks: FOUR, fit: true });
     await openCloset();
     await skip(); // card 2 has a runner-up
-    for (const name of ['Yes, same one', 'No, a new one', "It's my black sweatshirt"]) {
+    for (const name of ['Yes, same one', 'Not the same', "It's my black sweatshirt"]) {
       const chip = screen.getByRole('button', { name }) as unknown as HostEl;
       expect([name, chip.props.accessibilityLabel]).toEqual([name, name]);
       expect([name, flat(chip).paddingVertical]).toEqual([name, 6]);

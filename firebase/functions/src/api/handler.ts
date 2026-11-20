@@ -1,6 +1,7 @@
 // The AI proxy (handoff/13-server.md): sign-in → App Check → shape → spending stop → today's allowance → Gemini with
 // the server's key → the answer relayed as it arrives → spend and allowance settled. Never stores or logs a photo,
 // a question or an answer (check D1). Written against Node's request/response so the tests can run it in-process.
+import { createHash } from 'node:crypto';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { costCents } from './prices';
 import { CHECK_ID, KINDS, ROUTES, checkShape, providerOf, type Kind, type RouteName } from './routes';
@@ -28,6 +29,9 @@ export interface ApiDeps {
 }
 
 export type ApiRequest = IncomingMessage & { rawBody?: Buffer };
+
+/** X-Kitted-Device: the phone's own random ID. Only its sha256 is ever stored or used as a key; the raw ID is never logged. */
+const DEVICE_ID = /^[A-Za-z0-9-]{16,64}$/;
 
 const header = (req: IncomingMessage, name: string): string | undefined => {
   const v = req.headers[name];
@@ -114,6 +118,13 @@ export function createApi(deps: ApiDeps) {
     const shape = checkShape(route, raw.toString('utf8'), url.searchParams.get('model'));
     if (!shape.ok) return send(res, 400, { error: 'badRequest', reason: shape.reason });
 
+    // The phone's ID (F10.1): malformed, or missing when the config requires it, is refused before anything is counted.
+    const deviceRaw = header(req, 'x-kitted-device');
+    if ((deviceRaw === undefined && config.requireDevice) || (deviceRaw !== undefined && !DEVICE_ID.test(deviceRaw))) {
+      return send(res, 400, { error: 'badRequest', reason: 'device' });
+    }
+    const device = deviceRaw === undefined ? undefined : createHash('sha256').update(deviceRaw).digest('hex');
+
     // The spending stop (M2), then today's allowance (L1–L10).
     const utcDay = new Date(t0).toISOString().slice(0, 10);
     if ((await deps.store.spentCents(utcDay)) >= config.spendCapCents) {
@@ -123,14 +134,14 @@ export function createApi(deps: ApiDeps) {
     // A founder account gets the founder's day; everyone else the config's tier. The header tells the app which.
     const tier: Tier = config.founderUids.includes(uid) ? 'founder' : config.tier;
     const tap = route.name === 'ask' && header(req, 'x-kitted-free') === 'tap';
-    const { result, day } = await deps.store.reserve({
-      uid, route: route.name, checkId, kind, tap, tz: parseTz(header(req, 'x-kitted-tz')), tier, nowMs: t0,
+    const { result, day, phoneDay, phoneTook } = await deps.store.reserve({
+      uid, device, route: route.name, checkId, kind, tap, tz: parseTz(header(req, 'x-kitted-tz')), tier, nowMs: t0,
     });
     if (!result.ok) {
       deps.log({ route: route.name, uid, outcome: 'limit', which: result.which });
       return send(res, 429, { error: 'limit', which: result.which });
     }
-    const ticket: Ticket = { uid, day, took: result.took };
+    const ticket: Ticket = { uid, day, took: result.took, device: device && phoneDay && phoneTook ? { hash: device, day: phoneDay, took: phoneTook } : undefined };
 
     // Gemini, with our key and nothing the app sent but the checked body (P4).
     const ac = new AbortController();

@@ -4,7 +4,7 @@
 import type { KittedStore } from '@/data/store';
 import type { Table } from '@/data/tables';
 import { dataToRow, rowKey, rowToData } from './codec';
-import { MAX_BATCH, RemoteRefused, RemoteUnavailable, type FileTransport, type RemoteStore } from './remote';
+import { MAX_BATCH, RemoteMissing, RemoteRefused, RemoteUnavailable, type FileTransport, type RemoteStore } from './remote';
 import {
   KV_SYNCED, PREFS_COLLECTION, SYNCED_COLLECTIONS, SYNCED_TABLES, SYNC_SCHEMA_VERSION, fileRefs, isSyncedKv, kvPolicy, tableForCollection,
   tablePolicy, type SyncedTable,
@@ -21,8 +21,11 @@ export interface SyncEngineOptions {
   nowMs(): number;
   /** Signed in, sync on, not a demo build (E13). */
   enabled(): boolean;
-  /** "Back up photos" (E3 in 08 §8, on by default). */
+  /** "Back up photos" (SB4: off until he turns it on, kv `backup.photos`). Off: no file is queued, in either direction. Default
+   *  true, as the engine's own checks run. */
   backUpPhotos?(): boolean;
+  /** After each page of a pull has been applied (the restore screen's counts). */
+  onPage?(coll: string): void | Promise<void>;
 }
 
 export interface PushResult {
@@ -37,6 +40,10 @@ export interface PushResult {
 const CURSOR_KV = (coll: string) => `sync.cursor.${coll}`;
 const PULL_PAGE = 500;
 const MAX_FILE_TRIES = 8;
+/** A photo whose row arrived before the photo did (his other phone hasn't uploaded it yet): retried for ~4 days with
+ *  the backoff capped at 6 h, then dropped. */
+const MAX_MISSING_TRIES = 24;
+const MAX_BACKOFF_MS = 6 * 3_600_000;
 
 const isDirty = (r: SyncRow) => r.pushedAt === null || r.localAt > r.pushedAt;
 /** Does the remote doc win over this phone's change? Newer wins; a tie goes to the higher device id, the same answer on
@@ -86,8 +93,7 @@ export function createSyncEngine(o: SyncEngineOptions) {
   // ---- files ----
 
   async function queueFile(path: string, op: SyncFile['op']) {
-    if (!o.files) return;
-    if (op === 'up' && !backUp()) return;
+    if (!o.files || !backUp()) return;
     const prev = await store.syncFiles.get(path);
     if (prev && prev.op === op) return;
     await store.syncFiles.put({ path, op, tries: 0, nextAt: 0, queuedAt: o.nowMs() });
@@ -108,8 +114,14 @@ export function createSyncEngine(o: SyncEngineOptions) {
    *  for a delete) are removed remotely unless another row still uses them. */
   async function afterPushed(r: SyncRow, data: Record<string, unknown> | null) {
     const files = data ? fileRefs(data) : [];
-    for (const f of files) if (!r.files.includes(f)) await queueFile(f, 'up');
     const dropped = r.files.filter((f) => !files.includes(f));
+    if (!backUp()) {
+      // Photo backup is off: nothing is queued, and the row does not claim files the server never got (queueFiles finds them
+      // when he turns it on).
+      await markPushed(r, r.files.filter((f) => files.includes(f)));
+      return;
+    }
+    for (const f of files) if (!r.files.includes(f)) await queueFile(f, 'up');
     if (dropped.length > 0) {
       const used = await stillReferenced(dropped, r.id);
       for (const f of dropped) if (!used.has(f)) await queueFile(f, 'gone');
@@ -159,28 +171,32 @@ export function createSyncEngine(o: SyncEngineOptions) {
         files = fileRefs(row);
       }
     }
-    for (const f of files) if (o.files && !o.files.exists(f)) await queueFile(f, 'down');
+    const held = backUp() ? files : [];
+    for (const f of held) if (o.files && !o.files.exists(f)) await queueFile(f, 'down');
     // Deleted (or no longer pointed at) on his other phone: this phone's copy goes too, unless another row still uses it.
     const dropped = (local?.files ?? []).filter((f) => !files.includes(f));
     if (o.files && dropped.length > 0) {
       const used = await stillReferenced(dropped, id);
       for (const f of dropped) if (!used.has(f)) o.files.removeLocal(f);
     }
-    await store.syncRows.put({ id, coll, rowKey: d.id, localAt: d.updatedAt, pushedAt: d.updatedAt, deleted: d.deleted, by: d.by, files });
+    await store.syncRows.put({ id, coll, rowKey: d.id, localAt: d.updatedAt, pushedAt: d.updatedAt, deleted: d.deleted, by: d.by, files: held });
     return true;
   }
 
   // ---- the public steps ----
 
   return {
-    /** First sign-in on this phone: every synced row and key counts as changed, once (E8). */
-    async markAllDirty(): Promise<number> {
+    /** First sign-in on this phone: every synced row and key counts as changed, once (E8). `onlyUntracked` skips rows the
+     *  engine already knows (pulled from the account, or tracked since): joining an account after a pull sends only this
+     *  phone's own rows ("Keep both"). */
+    async markAllDirty(opts: { onlyUntracked?: boolean } = {}): Promise<number> {
       guard();
       let n = 0;
       const now = o.nowMs();
       const mark = async (coll: string, key: string) => {
         const id = syncRowId(coll, key);
         const prev = await store.syncRows.get(id);
+        if (prev && opts.onlyUntracked) return;
         const localAt = Math.max(now, (prev?.localAt ?? 0) + 1);
         await store.syncRows.put({ id, coll, rowKey: key, localAt, pushedAt: prev?.pushedAt ?? null, deleted: false, by: o.deviceId, files: prev?.files ?? [] });
         n += 1;
@@ -243,6 +259,7 @@ export function createSyncEngine(o: SyncEngineOptions) {
         for (;;) {
           const page = await remote.changesSince(coll, cursor, PULL_PAGE);
           for (const d of page) if (await apply(coll, d)) applied += 1;
+          if (page.length > 0) await o.onPage?.(coll);
           const last = page[page.length - 1];
           if (last) {
             cursor = { at: last.serverAt, id: last.id };
@@ -259,6 +276,36 @@ export function createSyncEngine(o: SyncEngineOptions) {
       guard();
       let n = 0;
       for (const d of docs) if (await apply(coll, d)) n += 1;
+      return n;
+    },
+
+    /** Forgets every change record, queued file and cursor: signing in to another account starts from nothing. */
+    async clearBookkeeping(): Promise<void> {
+      for (const r of await store.syncRows.all()) await store.syncRows.delete(r.id);
+      for (const f of await store.syncFiles.all()) await store.syncFiles.delete(f.path);
+      for (const coll of SYNCED_COLLECTIONS) await store.deleteKv(CURSOR_KV(coll));
+    },
+
+    /** Photo backup is on (SB4.1): every kept photo of every live row that the server does not hold is queued, once: up when
+     *  it is on this phone (also the rows pushed while it was off), down when it is not (the account's, from another phone).
+     *  The row's `files` is what the server holds or has queued, so a second call queues nothing. Off: queues nothing. */
+    async queueFiles(): Promise<number> {
+      guard();
+      if (!o.files || !backUp()) return 0;
+      let n = 0;
+      for (const r of await store.syncRows.all()) {
+        if (r.deleted) continue;
+        const data = await currentData(r);
+        if (!data) continue;
+        const todo = fileRefs(data).filter((f) => !r.files.includes(f));
+        if (todo.length === 0) continue;
+        for (const f of todo) {
+          await queueFile(f, o.files.exists(f) ? 'up' : 'down');
+          n += 1;
+        }
+        const now = (await store.syncRows.get(r.id)) ?? r;
+        await store.syncRows.put({ ...now, files: [...new Set([...now.files, ...todo])] });
+      }
       return n;
     },
 
@@ -291,8 +338,25 @@ export function createSyncEngine(o: SyncEngineOptions) {
           moved += 1;
         } catch (e: unknown) {
           if (e instanceof RemoteUnavailable) break;
+          if (e instanceof RemoteMissing && f.op === 'gone') {
+            // Already gone from the server: that's what a delete wants.
+            await store.syncFiles.delete(f.path);
+            moved += 1;
+            continue;
+          }
           failed += 1;
-          if (f.tries + 1 >= MAX_FILE_TRIES) {
+          if (e instanceof RemoteRefused) {
+            // A rule said no (over 3 MB, a name the rules don't allow): trying again won't change that.
+            console.warn(`[sync] refused ${f.op} ${f.path}`, e.message);
+            await store.syncFiles.delete(f.path);
+          } else if (e instanceof RemoteMissing) {
+            if (f.tries + 1 >= MAX_MISSING_TRIES) {
+              console.warn(`[sync] never arrived: ${f.path}`);
+              await store.syncFiles.delete(f.path);
+            } else {
+              await store.syncFiles.put({ ...f, tries: f.tries + 1, nextAt: now + Math.min(2 ** f.tries * 30_000, MAX_BACKOFF_MS) });
+            }
+          } else if (f.tries + 1 >= MAX_FILE_TRIES) {
             console.warn(`[sync] gave up on ${f.op} ${f.path}`, e);
             await store.syncFiles.delete(f.path);
           } else {

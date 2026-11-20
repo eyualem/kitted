@@ -1,13 +1,13 @@
 // Sign-in (10-onboarding.md §4–§5): the one interface the account screens talk to. Firebase isn't set up yet, so the
 // app runs on MockAuth, which scripts each outcome for the demo screens; `FirebaseAuth` will implement the same
-// interface (08 §6 A1: @react-native-firebase/auth with expo-apple-authentication and Google Sign-In, a guest account
-// upgraded with linkWithCredential, and the email code checked by the Worker, which mints a custom token).
+// interface (signIn.ts, wired in firebaseAuth.ts: Apple's and Google's own sheets, a guest account upgraded with
+// linkWithCredential). Apple first, Google second; no email sign-in (specs/sign-in-and-backup.md SB2.1).
 // Nothing here sends anything anywhere.
 
-export type AuthProvider = 'apple' | 'google' | 'email';
+export type AuthProvider = 'apple' | 'google';
 
-/** What the app keeps about the account (kv `account.user`). No name: Apple's is offered once and the app has no use
- *  for it (a name is never sent to the stylist, 07 §4). The email is shown only in You → Settings. */
+/** What the app keeps about the account (kv `account.user`). No name: Apple's first name goes to his profile's name
+ *  only when it is empty (appleName.ts, SB10) and never into this row. The email is shown only in You. */
 export interface AccountUser {
   uid: string;
   provider: AuthProvider;
@@ -19,25 +19,22 @@ export interface AccountUser {
 export interface AccountHoldings {
   fits: number;
   pieces: number;
-  chats: number;
+  /** T41b (SB6): the account has a saved style profile with looks. Absent reads as false. */
+  profile?: boolean;
 }
 
 export type SignInResult =
-  | { kind: 'ok'; user: AccountUser; holdings: AccountHoldings | null }
+  /** `givenName`: Apple's first name (SB10), set by createSignIn for Apple only (null for Google, absent from mocks). */
+  | { kind: 'ok'; user: AccountUser; holdings: AccountHoldings | null; givenName?: string | null }
   | { kind: 'cancelled' }
   | { kind: 'failed' }
   | { kind: 'offline' };
 
-export type SendCodeResult = { kind: 'sent' } | { kind: 'failed' } | { kind: 'offline' };
-export type VerifyCodeResult = SignInResult | { kind: 'wrongCode' } | { kind: 'expired' };
 export type DeleteResult = { kind: 'ok' } | { kind: 'failed' } | { kind: 'offline' };
 
 export interface AuthService {
   /** The provider's own sheet (Apple, Google); `cancelled` when he closes it. */
   signIn(provider: 'apple' | 'google'): Promise<SignInResult>;
-  /** Emails a 6-digit code (A2). */
-  sendEmailCode(email: string): Promise<SendCodeResult>;
-  verifyEmailCode(email: string, code: string): Promise<VerifyCodeResult>;
   signOut(): Promise<void>;
   /** Deletes the account and its server copy (Apple: the token is revoked first, TN3194). */
   deleteAccount(): Promise<DeleteResult>;
@@ -46,10 +43,8 @@ export interface AuthService {
 /** The scripted outcomes (demo screens 130–143). `ok`: a new, empty account; `existing`: one that already holds fits. */
 export type MockScript = 'ok' | 'existing' | 'cancel' | 'error' | 'offline';
 
-/** The mock account's holdings for `existing` (A4's "214 fits · 38 pieces · 61 chats"). */
-export const MOCK_HOLDINGS: AccountHoldings = { fits: 214, pieces: 38, chats: 61 };
-/** The code the mock accepts (any other 6 digits is "didn't match"; `000000` is "expired"). */
-export const MOCK_CODE = '123456';
+/** The mock account's holdings for `existing` (A4's "214 fits · 38 pieces"). */
+export const MOCK_HOLDINGS: AccountHoldings = { fits: 214, pieces: 38 };
 export const MOCK_EMAILS: Record<'apple' | 'google', string> = { apple: 'k7p2xq9wmd@privaterelay.appleid.com', google: 'demo.kitted@gmail.com' };
 
 export function createMockAuth(o: { script?: () => MockScript; now?: () => number; latencyMs?: number; uid?: () => string } = {}): AuthService {
@@ -60,8 +55,7 @@ export function createMockAuth(o: { script?: () => MockScript; now?: () => numbe
   const uid = o.uid ?? (() => `mock-${++n}`);
   const outcome = (provider: AuthProvider, email: string | null): SignInResult => {
     const s = script();
-    // A cancel only exists on Apple's and Google's own sheets; a typed code just goes through.
-    if (s === 'cancel' && provider !== 'email') return { kind: 'cancelled' };
+    if (s === 'cancel') return { kind: 'cancelled' };
     if (s === 'error') return { kind: 'failed' };
     if (s === 'offline') return { kind: 'offline' };
     const holdings = s === 'existing' ? MOCK_HOLDINGS : null;
@@ -71,17 +65,6 @@ export function createMockAuth(o: { script?: () => MockScript; now?: () => numbe
     async signIn(provider) {
       await wait();
       return outcome(provider, MOCK_EMAILS[provider]);
-    },
-    async sendEmailCode() {
-      await wait();
-      const s = script();
-      return s === 'error' ? { kind: 'failed' } : s === 'offline' ? { kind: 'offline' } : { kind: 'sent' };
-    },
-    async verifyEmailCode(email, code) {
-      await wait();
-      if (code === '000000') return { kind: 'expired' };
-      if (code !== MOCK_CODE) return { kind: 'wrongCode' };
-      return outcome('email', email);
     },
     async signOut() {},
     async deleteAccount() {

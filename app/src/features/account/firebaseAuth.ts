@@ -1,17 +1,23 @@
-// The real sign-in (#295): Continue with Google through Google's own sheet, then Firebase Auth with that Google token.
-// Implements the same AuthService as MockAuth. Apple waits for the $99 program and email for the Worker's code route, so
-// both report `failed` here and the sheet doesn't offer them (SIGN_IN_LIVE).
-// Sync isn't wired yet, so an account holds nothing on the server: `holdings` is null and deleting the account deletes
-// the Auth user only. When sync is wired, deleteAccount calls the server job instead (firebase/functions deleteAccount).
+// The real sign-in (T41, specs/sign-in-and-backup.md SB2): Apple's and Google's own sheets, then Firebase Auth with that
+// token. The rules live in signIn.ts (tested with fakes); this file only plugs in the real modules, and account.ts loads
+// it lazily so the web preview and the tests never touch them. expo-apple-authentication is loaded lazily too: until
+// the founder's next install it isn't there, and Apple then reports `failed` instead of breaking the app.
+// An account's holdings are read from the server before the age question (restore.ts readAccountHoldings); a failed read is a
+// failed or offline sign-in, never an empty account. Deleting an account (SB9) is actions.ts: Apple's token is revoked here
+// (`revokeAppleAccess`), the server job deletes the database, photos and the Auth user, then the phone is wiped.
+import * as Crypto from 'expo-crypto';
 import { GoogleSignin, isErrorWithCode, isSuccessResponse, statusCodes } from '@react-native-google-signin/google-signin';
-import { GoogleAuthProvider, deleteUser, linkWithCredential, signInWithCredential, signOut as fbSignOut } from 'firebase/auth';
+import { GoogleAuthProvider, OAuthProvider, linkWithCredential, revokeAccessToken, signInWithCredential, signOut as fbSignOut, type AuthCredential } from 'firebase/auth';
+import type { FirebaseError } from 'firebase/app';
 import { GOOGLE_IOS_CLIENT_ID } from '@/config/firebase';
 import { firebaseAuth } from '@/services/firebase/app';
-import { keepGuest } from '@/services/server/guest';
-import type { AuthService, SignInResult } from './auth';
+import { RemoteUnavailable } from '@/sync/remote';
+import type { AccountHoldings, AuthService } from './auth';
+import { readAccountHoldings } from './restore';
+import { createSignIn, type AppleCredential, type Cred, type FbUser } from './signIn';
 
 let configured = false;
-function configure(): boolean {
+function google(): boolean {
   if (!GOOGLE_IOS_CLIENT_ID) return false;
   if (!configured) {
     GoogleSignin.configure({ iosClientId: GOOGLE_IOS_CLIENT_ID });
@@ -20,62 +26,131 @@ function configure(): boolean {
   return true;
 }
 
+/** The slice of expo-apple-authentication used here (typed by hand: the package isn't installed yet). */
+interface AppleModule {
+  isAvailableAsync(): Promise<boolean>;
+  signInAsync(o: { requestedScopes: number[]; nonce?: string }): Promise<{
+    identityToken: string | null;
+    authorizationCode: string | null;
+    email: string | null;
+    fullName: { givenName: string | null; familyName: string | null } | null;
+  }>;
+  AppleAuthenticationScope: { FULL_NAME: number; EMAIL: number };
+}
+
+/** The module, or null when this build doesn't have it. */
+function appleModule(): AppleModule | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('expo-apple-authentication') as AppleModule;
+  } catch {
+    return null;
+  }
+}
+
+const fb = (u: { uid: string; email: string | null; isAnonymous: boolean }): FbUser => ({ uid: u.uid, email: u.email, isAnonymous: u.isAnonymous });
+const asAuthCred = (c: Cred) => c as unknown as AuthCredential;
+
 const isNetwork = (e: unknown) => {
   const code = (e as { code?: string }).code ?? '';
   return code === 'auth/network-request-failed' || code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE || /network/i.test(String((e as Error).message ?? ''));
 };
 
+/** What the account already holds, read from his server folder (never an empty answer when it can't be read: that throws, and the
+ *  sign-in reports offline or failed). */
+async function holdingsOf(uid: string): Promise<AccountHoldings> {
+  /* eslint-disable @typescript-eslint/no-require-imports */
+  const fs = require('firebase/firestore') as typeof import('firebase/firestore');
+  const { firebaseDb } = require('@/services/firebase/data') as typeof import('@/services/firebase/data');
+  const { createFirestoreRemote } = require('@/sync/firestoreRemote') as typeof import('@/sync/firestoreRemote');
+  /* eslint-enable @typescript-eslint/no-require-imports */
+  try {
+    return await readAccountHoldings(createFirestoreRemote({ fs, db: firebaseDb(), uid }));
+  } catch (e: unknown) {
+    // The sign-in's own rule for "no connection" (signIn.ts isNetwork).
+    if (e instanceof RemoteUnavailable) throw Object.assign(new Error('network request failed'), { code: 'auth/network-request-failed' });
+    throw e;
+  }
+}
+
+/** SB9, step 1 for an Apple account: Apple's sheet once, for a fresh authorization code, then Firebase's `revokeAccessToken` (Apple
+ *  requires the sign-in token to be revoked when the account is deleted). `cancelled` when he closes Apple's sheet: nothing is deleted. */
+export async function revokeAppleAccess(): Promise<'ok' | 'cancelled' | 'offline' | 'failed'> {
+  const apple = appleModule();
+  if (!apple || !(await apple.isAvailableAsync().catch(() => false))) return 'failed';
+  try {
+    const a = await apple.signInAsync({ requestedScopes: [] });
+    if (!a.authorizationCode) return 'failed';
+    await revokeAccessToken(firebaseAuth(), a.authorizationCode);
+    return 'ok';
+  } catch (e: unknown) {
+    const code = (e as { code?: string }).code ?? '';
+    if (code === 'ERR_REQUEST_CANCELED') return 'cancelled';
+    if (isNetwork(e)) return 'offline';
+    console.warn('[account] Apple revoke failed', code || e);
+    return 'failed';
+  }
+}
+
 export function createFirebaseAuth(now: () => number = () => Date.now()): AuthService {
-  return {
-    async signIn(provider): Promise<SignInResult> {
-      if (provider !== 'google' || !configure()) return { kind: 'failed' };
-      try {
-        const res = await GoogleSignin.signIn();
-        if (!isSuccessResponse(res)) return { kind: 'cancelled' };
-        const idToken = res.data.idToken;
-        if (!idToken) return { kind: 'failed' };
-        // A guest (the server's silent account, 13-server.md §8) keeps its uid: Google is linked to it (A11).
-        const auth = firebaseAuth();
-        const google = GoogleAuthProvider.credential(idToken);
-        const cred = await keepGuest(auth.currentUser, () => linkWithCredential(auth.currentUser!, google), () => signInWithCredential(auth, google));
+  const auth = firebaseAuth();
+  const signIn = createSignIn({
+    ready: () => auth.authStateReady(),
+    current: () => (auth.currentUser ? fb(auth.currentUser) : null),
+    apple: {
+      available: async () => (await appleModule()?.isAvailableAsync()) ?? false,
+      async signIn(hashedNonce): Promise<AppleCredential> {
+        const apple = appleModule();
+        if (!apple) throw Object.assign(new Error('no Apple module'), { code: 'kitted/no-apple' });
+        // Name and email (SB10): only the first name is kept, and only when his own name is empty (appleName.ts).
+        const a = await apple.signInAsync({ requestedScopes: [apple.AppleAuthenticationScope.FULL_NAME, apple.AppleAuthenticationScope.EMAIL], nonce: hashedNonce });
         return {
-          kind: 'ok',
-          user: { uid: cred.user.uid, provider: 'google', email: cred.user.email ?? res.data.user.email ?? null, signedInAt: now() },
-          holdings: null,
+          identityToken: a.identityToken,
+          authorizationCode: a.authorizationCode,
+          email: a.email,
+          givenName: a.fullName?.givenName ?? null,
+          familyName: a.fullName?.familyName ?? null,
         };
-      } catch (e: unknown) {
-        if (isErrorWithCode(e) && e.code === statusCodes.IN_PROGRESS) return { kind: 'cancelled' };
-        if (isNetwork(e)) return { kind: 'offline' };
-        console.warn('[account] Google sign-in failed', (e as { code?: string }).code ?? e);
-        return { kind: 'failed' };
-      }
+      },
     },
-    async sendEmailCode() {
-      return { kind: 'failed' };
+    google: {
+      async signIn() {
+        if (!google()) throw Object.assign(new Error('no Google client'), { code: 'kitted/no-client' });
+        try {
+          const res = await GoogleSignin.signIn();
+          if (!isSuccessResponse(res)) return null;
+          return { idToken: res.data.idToken, email: res.data.user.email ?? null };
+        } catch (e: unknown) {
+          if (isErrorWithCode(e) && e.code === statusCodes.IN_PROGRESS) throw Object.assign(new Error('in progress'), { code: 'kitted/cancelled' });
+          throw e;
+        }
+      },
+      async signOut() {
+        if (google()) await GoogleSignin.signOut();
+      },
     },
-    async verifyEmailCode() {
-      return { kind: 'failed' };
+    async nonce() {
+      const raw = Crypto.randomUUID() + Crypto.randomUUID();
+      return { raw, hashed: await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, raw) };
     },
-    async signOut() {
-      try {
-        if (configure()) await GoogleSignin.signOut();
-      } catch (e: unknown) {
-        console.warn('[account] Google sign-out', e);
-      }
-      await fbSignOut(firebaseAuth());
-    },
+    appleCred: (idToken, rawNonce) => new OAuthProvider('apple.com').credential({ idToken, rawNonce }),
+    googleCred: (idToken) => GoogleAuthProvider.credential(idToken),
+    credFromError: (e) => OAuthProvider.credentialFromError(e as FirebaseError) ?? GoogleAuthProvider.credentialFromError(e as FirebaseError),
+    link: async (c) => fb((await linkWithCredential(auth.currentUser!, asAuthCred(c))).user),
+    signInWith: async (c) => fb((await signInWithCredential(auth, asAuthCred(c))).user),
+    signOut: () => fbSignOut(auth),
+    holdingsOf,
+    now,
+    log: (line) => console.log(line),
+  });
+  return {
+    ...signIn,
+    /** The server step only (database, photos, the Auth user); Apple's revoke and the phone's wipe are actions.ts's (SB9). */
     async deleteAccount() {
-      const user = firebaseAuth().currentUser;
-      if (!user) return { kind: 'ok' };
-      try {
-        if (configure()) await GoogleSignin.revokeAccess().catch(() => undefined);
-        await deleteUser(user);
-        return { kind: 'ok' };
-      } catch (e: unknown) {
-        if (isNetwork(e)) return { kind: 'offline' };
-        console.warn('[account] delete failed', (e as { code?: string }).code ?? e);
-        return { kind: 'failed' };
-      }
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { deleteAccountOnServer } = require('@/services/firebase/data') as typeof import('@/services/firebase/data');
+      const r = await deleteAccountOnServer();
+      return { kind: r === 'ok' ? 'ok' : r } as const;
     },
   };
 }

@@ -71,7 +71,7 @@ describe('F2 purgeTombstones', () => {
   it('removes only tombstones older than the cutoff', async () => {
     const now = Date.now();
     await db.doc('users/alice/facts/old-tomb').set(envelope('old-tomb', now - 200 * DAY, true));
-    await db.doc('users/alice/chatMessages/old-tomb').set(envelope('old-tomb', now - 181 * DAY, true));
+    await db.doc('users/alice/outfits/old-tomb').set(envelope('old-tomb', now - 181 * DAY, true));
     await db.doc('users/alice/facts/new-tomb').set(envelope('new-tomb', now - 10 * DAY, true));
     await db.doc('users/alice/facts/old-live').set(envelope('old-live', now - 400 * DAY));
     await db.doc('users/bob/readings/old-tomb').set(envelope('old-tomb', now - 300 * DAY, true));
@@ -79,7 +79,7 @@ describe('F2 purgeTombstones', () => {
     expect(removed).toBe(3);
     const left = async (p: string) => (await db.doc(p).get()).exists;
     expect(await left('users/alice/facts/old-tomb')).toBe(false);
-    expect(await left('users/alice/chatMessages/old-tomb')).toBe(false);
+    expect(await left('users/alice/outfits/old-tomb')).toBe(false);
     expect(await left('users/bob/readings/old-tomb')).toBe(false);
     expect(await left('users/alice/facts/new-tomb')).toBe(true);
     expect(await left('users/alice/facts/old-live')).toBe(true);
@@ -95,5 +95,22 @@ describe('F3 purgeInactive', () => {
     expect(deleted).toBe(1);
     expect(await holdings('idle')).toEqual({ docs: 0, files: 0, user: 0 });
     expect((await holdings('recent')).user).toBe(1);
+  });
+});
+
+describe('F10.1 the phone\'s days', () => {
+  it("F10.1 · the sweep also clears the phone's old days", async () => {
+    for (const c of ['usage', 'spend', 'devices']) await db.recursiveDelete(db.collection(c));
+    const now = Date.UTC(2026, 9, 30);
+    const phone = 'f'.repeat(64); // a device document id is the sha256 hex of the ID
+    await db.doc(`devices/${phone}`).set({ tz: -240, tzChangedAt: now - 20 * DAY });
+    await db.doc(`devices/${phone}/usageDays/2026-10-20`).set({ checks: 1, at: now - (jobs.USAGE_DAYS + 3) * DAY });
+    await db.doc(`devices/${phone}/usageDays/2026-10-28`).set({ checks: 1, at: now - 2 * DAY });
+    await db.doc('usage/u1/usageDays/2026-10-20').set({ checks: 1, at: now - (jobs.USAGE_DAYS + 3) * DAY });
+    expect(await jobs.purgeUsageBefore(now)).toEqual({ usage: 2, spend: 0 });
+    expect((await db.collection(`devices/${phone}/usageDays`).get()).docs.map((d) => d.id)).toEqual(['2026-10-28']);
+    expect((await db.collection('usage/u1/usageDays').get()).size).toBe(0);
+    // The phone's own record (its tz) stays: only old days go.
+    expect((await db.doc(`devices/${phone}`).get()).data()).toEqual({ tz: -240, tzChangedAt: now - 20 * DAY });
   });
 });

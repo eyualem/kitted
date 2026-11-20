@@ -77,7 +77,8 @@ An inline Kit card in the Stylist thread, never a modal.
 - Sheet → an account with fits → the Restore step, age only (OS3: `Welcome back` · `Your age first, then I'll bring back your fits.`).
   - Under 18 → the age stop, as always.
   - 18 or over → a full screen with no Back: `Bringing back your fits…`, the counts as they arrive (`214 fits · 38 pieces`), then `Your fits are back.` → Stylist, with the rest of setup skipped.
-- An empty account → `No fits saved to that account yet. Let's set you up.` → Looks, signed in.
+- An account counts as existing, so setup is skipped after the age question, when it has fits **or a saved style profile**. With fits: the counts, then `Your fits are back.` With a style profile and no fits: `Your style profile is back.` (no counts line) → Stylist.
+- Only a truly empty account (no fits and no saved style profile) → `No fits saved to that account yet. Let's set you up.` → Looks, signed in.
 - The privacy agreement still shows on the first camera open on this phone (SY5).
 - His name isn't restored: Apple's first name fills it (SB10), or he sets it in Style profile.
 
@@ -125,7 +126,7 @@ An inline Kit card in the Stylist thread, never a modal.
 - SB4.2 Another account can't read his photos (security rules test).
 - SB4.3 Turning it off deletes his backed-up photos from Storage after the confirm.
 - SB5.1 Chat messages, name, age band and the under-18 lock are never written to the server (sync schema test).
-- SB6.1 From Welcome, an account with fits asks age only, then restores and skips setup. Under 18 stops. An empty account continues setup signed in.
+- SB6.1 From Welcome, an account with fits or a saved style profile asks age only, then restores and skips setup. Under 18 stops. Only a truly empty account (no fits, no style profile) continues setup signed in.
 - SB7.1 Keep both merges. `Use the account's` deletes only after the second confirm. Cancel stays signed out.
 - SB8.1 Sign out keeps every fit on the phone and stops backup.
 - SB9.1 Delete runs revoke → server → phone. Offline or a server failure deletes nothing. The under-18 lock stays.

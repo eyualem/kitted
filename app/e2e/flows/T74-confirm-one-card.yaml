@@ -21,7 +21,7 @@ name: CB2 · To confirm, one card at a time
 - assertNotVisible: "Question [2-5] of 5\\..*"
 - assertNotVisible: ".*Question 1 of 4\\..*"
 - assertVisible: "Yes, same one"
-- assertVisible: "No, a new one"
+- assertVisible: "Not the same"
 - assertVisible: "Skip"
 
 # CB2.2 · 262: Yes, same one saves, says so with Undo, and the next question shows as 1 of 4.
@@ -248,9 +248,18 @@ name: CB2 · To confirm, one card at a time
 - assertNotVisible: "Skip"
 - assertNotVisible: ".*Saved as your .*"
 - assertNotVisible: ".*Kept as a new piece\\..*"
-- tapOn: "No, a new one"
+# CB4: Not the same opens "What is it, then?"; a new piece with its kind confirmed answers it, and the toast says so.
+- tapOn: "Not the same"
 - extendedWaitUntil:
-    visible: ".*Kept as a new piece\\..*"
+    visible: "What is it, then?"
+    timeout: 5000
+- tapOn: "It's a new piece"
+- extendedWaitUntil:
+    visible: "What kind of piece is it?"
+    timeout: 5000
+- tapOn: "Chinos"
+- extendedWaitUntil:
+    visible: ".*Saved as its own piece: .*"
     timeout: 5000
 - extendedWaitUntil:
     notVisible: "Question .*"

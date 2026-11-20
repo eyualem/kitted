@@ -90,6 +90,7 @@ describe('U3 · which Undo gets which window', () => {
     'features/morning/MorningCard.tsx · toast.logged': false,
     'features/stylist/cards/OutfitIdeaCard.tsx · toast.logged': false,
     'features/ask/AskCardView.tsx · toast.logged': false,
+    'features/ask/cardActions.ts · toast: (text, undo)': false, // I have one adds a piece (T106); Undo takes it back
     'features/closet/OutfitsView.tsx · toast.logged': false,
     'features/finish/StarterScreen.tsx · (text, undo);': false, // a pick on the list of what he owns (#343)
     'features/finish/StarterScreen.tsx · (text, undo, {': true, // Remove from closet on that list
@@ -98,6 +99,8 @@ describe('U3 · which Undo gets which window', () => {
     'features/closet/pieceActions.ts · closet.piece.photoRemoved': true,
     'features/closet/pieceActions.ts · toast: (text, undo)': true, // merge, Not this piece, It's another piece
     'features/closet/pieceActions.ts · editToast': true, // a "What it is" change
+    'features/closet/NotSameSheet.tsx · if (toast === ': true, // "What is it, then?": a picked piece or a new piece on a question (CB4)
+    'features/closet/NotSameSheet.tsx · newPiece: piece ??': true, // a matched photo split off as a new piece
     'features/morning/SwapSheet.tsx · swap.done': true, // Swap one rewrites the card, and the piece stays out of it (#377)
     // The style game's results (T113, technical default 11): the app's 5 s toast, since Back also undoes them.
     'features/onboarding/GameResults.tsx · game.results.removed': false, // × on a row
