@@ -15,7 +15,8 @@
 // No dev placeholder text in a tab (DECISIONS-LOG #56). The ScrollView stays the first child (tab bar
 // minimize behavior).
 import { useRef, useState, type RefObject } from 'react';
-import { AccessibilityInfo, findNodeHandle, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import { focusForVoiceOver } from '@/design-system/a11yFocus';
 import { router, type Href } from 'expo-router';
 import { EmptyState, KButton, KCard, KCardSection, KText, TagLine, radius, space, useTheme } from '@/design-system';
 import type { ClosetItemRow } from '@/data/types';
@@ -93,8 +94,7 @@ export default function ClosetScreen() {
   // After the last question leaves, VoiceOver goes to the first section title, where the card was (CB2.6).
   const firstTitle = useRef<View | null>(null);
   const focusFirstSection = () => {
-    const tag = firstTitle.current ? findNodeHandle(firstTitle.current) : null;
-    if (tag != null) AccessibilityInfo.setAccessibilityFocus(tag);
+    focusForVoiceOver(firstTitle.current);
   };
   const firstVisit = useFirstVisitCheck();
   if (!data) return null;

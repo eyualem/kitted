@@ -8,9 +8,10 @@
 // sideways, never after 10 pt up or down first, and the screen stops scrolling while it holds.
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactElement, type ReactNode } from 'react';
 import {
-  AccessibilityInfo, Animated, Easing, findNodeHandle, PanResponder, Platform, Pressable, View, useWindowDimensions,
+  AccessibilityInfo, Animated, Easing, PanResponder, Platform, Pressable, View, useWindowDimensions,
   type GestureResponderEvent, type LayoutChangeEvent, type PanResponderGestureState,
 } from 'react-native';
+import { focusForVoiceOver } from '@/design-system/a11yFocus';
 import * as Haptics from 'expo-haptics';
 import { Icon, KCard, KCardSection, KText, TagLine, opacity, radius, space, useTheme } from '@/design-system';
 import type { ClosetItemRow } from '@/data/types';
@@ -202,8 +203,7 @@ export function ConfirmDeck<Q extends { ask: { obsId: string } }, F extends { it
       }
       if (tr.focus === 'none') return;
       const node = latest.current.node;
-      const tagId = node ? findNodeHandle(node) : null;
-      if (tagId != null) AccessibilityInfo.setAccessibilityFocus(tagId);
+      focusForVoiceOver(node);
     };
     // The change has ended once the card's own animation says so (it runs on the native side and can lag the JS clock
     // on a busy phone) and the change's time is up. Ending on the clock alone let the card switch to following the
