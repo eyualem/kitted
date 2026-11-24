@@ -268,6 +268,7 @@ Lane files: `app/app.config.ts`, `extraction-test/results`, `market/`
 - [!] **Y5** · **T81** · Run the "fix works" test on the fix photos · *after T62 · checks: F3.1 (18 of 20 go up) · files: `extraction-test/results`*
 - [!] **Y6** · **T82** · Run the "fair score" test on the rating set, by age band and look · *checks: the bar in `specs.md` → "The launch" · files: `extraction-test/results`*
 - [ ] **T83** · Check every criterion F1.1–F16.2, saying how; the privacy label matches the spec's Data table · *after everything above*
+- [~] **public-repo** kitted-open-source · normal · *(the founder in chat Nov 24: public, all rights reserved; web demo + README video)* The GitHub repo goes public as a portfolio piece: no open-source license (all rights reserved), full history kept; a root README with screenshots and a Simulator recording; the demo screens exported as a static web demo on GitHub Pages (demo mode, no server calls, $0). Audit Nov 24: no keys in any of the 1,812 commits, private photos never committed, the $3/day spend cap bounds abuse until App Check (before launch). Flipping public and merging wait for his yes · *files: README.md, NOTICE, .github/workflows/, app web-only files, app/assets/demo-photos/README.md*
 - [!] **Y2** · **T84** · Build and submit to the App Store · *after T83, Y10*
 
 ### Analytics (last, since it touches every lane's files)
