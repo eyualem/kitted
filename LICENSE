@@ -1,0 +1,10 @@
+Copyright (c) 2026 Eyu Haile. All rights reserved.
+
+This repository is public so its source can be read and reviewed. No license is
+granted to copy, modify, distribute or use any part of it, in whole or in part,
+without the copyright holder's written permission.
+
+Third-party material keeps its own license: the Archivo fonts are under the SIL
+Open Font License (app/assets/fonts/OFL.txt), the demo photos under the Unsplash
+and Pexels licenses (README.md, "Photo credits"), and npm dependencies under
+their own licenses.

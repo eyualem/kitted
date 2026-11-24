@@ -171,7 +171,8 @@ const config: ExpoConfig = {
     './plugins/withStoreKitConfig.js',
     // P6: 'expo-notifications',
   ],
-  experiments: { typedRoutes: true, reactCompiler: true },
+  // KITTED_WEB_BASE: the web demo's sub-path on GitHub Pages ('/kitted/app', .github/workflows/pages.yml); unset everywhere else.
+  experiments: { typedRoutes: true, reactCompiler: true, ...(process.env.KITTED_WEB_BASE ? { baseUrl: process.env.KITTED_WEB_BASE } : {}) },
   // The EAS project @matemind/kitted (made Nov 8 with `eas init`); EAS builds and submits read it.
   extra: { demo, applePaid: apple.applePaid, eas: { projectId: 'a8fb4438-eccf-4126-be62-873103370419' } },
   owner: 'matemind',

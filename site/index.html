@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kitted demo</title>
+<meta name="description" content="Kitted: send an outfit photo, get a fit score out of 10 and the one fix that raises it. A clickable demo of the iOS app.">
+<style>
+  :root {
+    --bg: #F3F4F6; --surface: #FFFFFF; --ink: #121628; --ink2: #585E70; --line: #DCDFE5;
+    --accent: #9C5326; --primary: #1A2448; --on-primary: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0C0E14; --surface: #161922; --ink: #ECEEF3; --ink2: #A2A7B5; --line: #2A2E3A;
+      --accent: #DE9762; --primary: #ECEEF3; --on-primary: #0C0E14;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  }
+  main {
+    max-width: 1080px; margin: 0 auto; padding: 48px 16px 64px;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 56px; align-items: start;
+  }
+  h1 { font-size: 40px; line-height: 1.1; margin: 0 0 12px; letter-spacing: -0.02em; }
+  h2 { font-size: 15px; margin: 32px 0 8px; color: var(--ink2); font-weight: 600; }
+  p { margin: 0 0 12px; max-width: 34em; }
+  .lede { font-size: 19px; color: var(--ink2); }
+  ul { margin: 0; padding-left: 20px; max-width: 34em; }
+  li { margin-bottom: 6px; }
+  a { color: var(--accent); }
+  code { font: 14px ui-monospace, "SF Mono", Menlo, monospace; }
+  .links { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0 0; }
+  .btn {
+    display: inline-block; padding: 10px 18px; border-radius: 999px; text-decoration: none;
+    background: var(--primary); color: var(--on-primary); font-weight: 600;
+  }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  .phone-col { position: sticky; top: 24px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .phone {
+    width: calc(402px * var(--s)); height: calc(874px * var(--s));
+    border-radius: calc(56px * var(--s)); overflow: hidden; background: #000;
+    box-shadow: 0 0 0 calc(10px * var(--s)) #1c1f27, 0 24px 60px rgba(0,0,0,.25);
+    --s: 0.82;
+  }
+  .phone iframe { width: 402px; height: 874px; border: 0; transform: scale(var(--s)); transform-origin: 0 0; display: block; }
+  .picker { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 360px; }
+  .picker button {
+    font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  }
+  .picker button[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+  .note { font-size: 13px; color: var(--ink2); text-align: center; max-width: 340px; margin: 0; }
+  @media (max-width: 860px) {
+    main { grid-template-columns: 1fr; gap: 32px; padding-top: 32px; }
+    .phone-col { position: static; }
+    .phone { --s: 0.78; }
+  }
+  @media (max-width: 380px) { .phone { --s: 0.7; } }
+</style>
+</head>
+<body>
+<main>
+  <section>
+    <h1>Kitted</h1>
+    <p class="lede">Send an outfit photo, get a fit score out of 10 with one word for it, and the one fix that raises it. The app learns your closet as you go.</p>
+    <p>An iOS app for guys 18 to 30, built solo by Eyu Haile. The stylist is Kit, an AI persona; the score is computed by code, not by a model.</p>
+    <div class="links">
+      <a class="btn" href="https://github.com/eyualem/kitted">Read the code</a>
+      <a class="btn ghost" href="https://github.com/eyualem/kitted#how-its-built">How it's built</a>
+    </div>
+
+    <h2>How a fit check works</h2>
+    <ul>
+      <li><strong>The AI sees.</strong> A vision model only describes the clothes: each piece, its color, fit and length.</li>
+      <li><strong>The code judges.</strong> A deterministic scoring engine turns that description into the score, so the same photo always gets the same number.</li>
+      <li><strong>The AI explains.</strong> The model only puts the code's verdict into words.</li>
+      <li><strong>Privacy first.</strong> Faces are blurred on the phone before anything is sent; if the head can't be found, nothing is sent.</li>
+    </ul>
+
+    <h2>Under the hood</h2>
+    <ul>
+      <li>React Native and Expo (iOS first), TypeScript, Expo Router, SQLite on the phone.</li>
+      <li>The scoring engine was designed in Python, then ported to TypeScript; thousands of parity tests keep the two identical.</li>
+      <li>A Firebase server (Cloud Functions, Firestore) holds the AI keys, daily limits and a spend cap.</li>
+      <li>On-device face finding and blurring with Apple's Vision framework, in a native Swift module.</li>
+    </ul>
+
+    <h2>About this demo</h2>
+    <p>This is the real app's code running in your browser with scripted demo data: no account, no camera, and no AI calls. The web build is for layout; the app itself runs on iOS, where some screens look and move a little differently.</p>
+  </section>
+
+  <aside class="phone-col" aria-label="Interactive demo">
+    <div class="phone"><iframe id="app" title="Kitted app demo" loading="eager"></iframe></div>
+    <div class="picker" role="group" aria-label="Demo screens" id="picker"></div>
+    <div class="picker" role="group" aria-label="Appearance">
+      <button type="button" data-theme-btn="light" aria-pressed="true">Light</button>
+      <button type="button" data-theme-btn="dark" aria-pressed="false">Dark</button>
+    </div>
+    <p class="note">Pick a screen, then tap around inside the phone.</p>
+  </aside>
+</main>
+<script>
+  // The demo screens are the app's own /demo/screen/<n> routes (app/src/demo/scenarios.ts → SCREENS).
+  var SCREENS = [
+    [1, 'Welcome'], [2, 'Style game'], [12, 'Stylist'], [7, 'Fit check'], [8, 'Why this score'],
+    [10, 'Re-check'], [25, 'Morning card'], [15, 'Closet'], [16, 'Lookbook'], [17, 'You']
+  ];
+  // Local testing only: ?app=http://localhost:8081/ points the frame at Metro. Anything else uses the bundled app.
+  var q = new URLSearchParams(location.search).get('app');
+  var APP = q && /^http:\/\/localhost:\d+\/$/.test(q) ? q : 'app/';
+  var state = { n: 12, theme: 'light' };
+  var frame = document.getElementById('app');
+  var picker = document.getElementById('picker');
+
+  function load() {
+    frame.src = APP + 'demo/screen/' + state.n + '?theme=' + state.theme + '&frame=1&latency=0';
+    picker.querySelectorAll('button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(Number(b.dataset.n) === state.n));
+    });
+    document.querySelectorAll('[data-theme-btn]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.themeBtn === state.theme));
+    });
+  }
+  SCREENS.forEach(function (s) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.dataset.n = s[0]; b.textContent = s[1];
+    b.addEventListener('click', function () { state.n = s[0]; load(); });
+    picker.appendChild(b);
+  });
+  document.querySelectorAll('[data-theme-btn]').forEach(function (b) {
+    b.addEventListener('click', function () { state.theme = b.dataset.themeBtn; load(); });
+  });
+  load();
+</script>
+</body>
+</html>
