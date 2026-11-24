@@ -5,8 +5,9 @@
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
-  AccessibilityInfo, Animated, findNodeHandle, Keyboard, PanResponder, Pressable, ScrollView, StyleSheet, TextInput, View,
+  AccessibilityInfo, Animated, Keyboard, PanResponder, Pressable, ScrollView, StyleSheet, TextInput, View,
 } from 'react-native';
+import { focusForVoiceOver } from '@/design-system/a11yFocus';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { Icon, KButton, KText, opacity, space, useTheme } from '@/design-system';
@@ -144,8 +145,7 @@ export function GameResults({ session, nav }: { session: SessionState; nav: Reac
   const focusAfterRemove = (i: number, left: number) => {
     setTimeout(() => {
       const node = i < left ? rowNodes.current[i] : addNode.current;
-      const tag = node ? findNodeHandle(node) : null;
-      if (tag != null) AccessibilityInfo.setAccessibilityFocus(tag);
+      focusForVoiceOver(node);
     }, 300);
   };
 

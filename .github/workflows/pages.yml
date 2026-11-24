@@ -1,0 +1,76 @@
+# The public web demo on GitHub Pages: site/index.html (the showcase page) with the app's demo screens
+# exported for the web under /kitted/app. Demo mode only: scripted data, no account, no server or AI calls.
+# Pull requests build it (so a broken export shows up there); only main deploys.
+name: Web demo
+
+on:
+  push:
+    branches: [main]
+    paths: ['app/**', 'site/**', '.github/workflows/pages.yml']
+  pull_request:
+    paths: ['app/**', 'site/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install
+        working-directory: app
+        run: npm ci
+
+      - name: Export the demo screens for the web
+        working-directory: app
+        env:
+          KITTED_DEMO: '1'            # keep the /demo routes in a production export
+          KITTED_WEB_BASE: /kitted/app # Pages serves the repo at /kitted; the app lives under /app
+          NODE_ENV: production
+        run: npx expo export --platform web --output-dir dist
+
+      - name: Assemble the site
+        run: |
+          mkdir -p _site
+          cp -R site/. _site/
+          cp -R app/dist _site/app
+          # Pages has no rewrites: unknown paths (a deep link like /kitted/app/demo/screen/7) get 404.html,
+          # so make it the app's own page and let the router read the path.
+          cp _site/app/index.html _site/404.html
+          # The build has no .env files, so no key can be in it; prove it anyway.
+          if grep -rIlE 'AIza[0-9A-Za-z_-]{35}|sk-(ant-|proj-)?[A-Za-z0-9_-]{20,}' _site; then
+            echo "A key-shaped string is in the site; refusing to publish." >&2
+            exit 1
+          fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
