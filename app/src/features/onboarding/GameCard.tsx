@@ -7,7 +7,8 @@
 // a spring back. An answer (swipe or the dock's buttons, through `ask`) flies the card off from where it is, or
 // fades it under Reduce Motion, then the session moves on; a second answer while it leaves is ignored (a double tap).
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Animated, findNodeHandle, PanResponder, StyleSheet, View } from 'react-native';
+import { Animated, PanResponder, StyleSheet, View } from 'react-native';
+import { focusForVoiceOver } from '@/design-system/a11yFocus';
 import * as Haptics from 'expo-haptics';
 import { KText, space, useTheme } from '@/design-system';
 import { shadow } from '@/design-system/tokens';
@@ -218,8 +219,7 @@ export function GameCard({ look, index, peek, leaned, dragDx, width, ask, onAnsw
   useEffect(() => {
     if (!focusOnMount) return;
     const id = setTimeout(() => {
-      const tag = node.current ? findNodeHandle(node.current) : null;
-      if (tag != null) AccessibilityInfo.setAccessibilityFocus(tag);
+      focusForVoiceOver(node.current);
     }, 100);
     return () => clearTimeout(id);
   }, [focusOnMount]);
