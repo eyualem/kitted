@@ -12,7 +12,7 @@
 // view across ↑ → 🎙 → ■ → ↑ and the cursor stays on it; with VoiceOver on it never closes itself (the escape gesture
 // does), and where the pressed control goes away the cursor moves to the field.
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Keyboard, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { AccessibilityInfo, Keyboard, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Chip, ChipFlow, CONTROL_TEXT_MAX_SCALE, Icon, KText, opacity, space, textStyles, useTheme } from '@/design-system';
@@ -50,6 +50,10 @@ function hasGlass(): boolean {
   }
   return glass;
 }
+
+// Web preview only (undefined on iOS): the browser's textarea is two rows tall by default and sits under the capsule's
+// absolutely positioned background, which hid the placeholder. One row, and drawn above the background.
+const webField = Platform.OS === 'web' ? ({ props: { numberOfLines: 1 }, style: { position: 'relative' } } as const) : null;
 
 const H = 52;
 const BTN = 40;
@@ -245,7 +249,8 @@ export function Composer({ mode, onCamera, onSend, sendDisabled, autoFocus, star
             // (TextInput takes no dynamicTypeRamp, so it scales linearly like the other controls).
             allowFontScaling
             maxFontSizeMultiplier={CONTROL_TEXT_MAX_SCALE}
-            style={[styles.input, { color: colors.ink, paddingLeft: leadButton ? 4 : 12, maxHeight: inputMax }]}
+            {...webField?.props}
+            style={[styles.input, webField?.style, { color: colors.ink, paddingLeft: leadButton ? 4 : 12, maxHeight: inputMax }]}
           />
         )}
         {trailButton}

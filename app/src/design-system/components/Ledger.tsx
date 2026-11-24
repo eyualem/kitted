@@ -68,7 +68,7 @@ export function LedgerRow({ rule, item, amount, valueText, zero = 'plus', plain,
         {plain ? <KText role="ledgerLabel" color="ink">{rule}</KText> : <KText role="ledgerRule">{rule}</KText>}
         {item ? ` · ${item}` : ''}
       </KText>
-      <KText role="ledgerValue" color={valueColor} numberOfLines={1}>
+      <KText role="ledgerValue" color={valueColor} numberOfLines={1} style={{ flexShrink: 0 }}>
         {value}
       </KText>
     </View>
